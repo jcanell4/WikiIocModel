@@ -1,0 +1,8 @@
+base   wikiiocmodel
+author Josep Cañellas
+email  jcanell4@ioc.cat
+date   2014-03-01
+name   wikiiocmodel plugin
+desc   This plugin defines a interface to access easily to the dokuwiki data 
+       since other plugins.  It is a wrap to access data needed by IOC.
+url    ???
