@@ -16,6 +16,7 @@ require_once DOKU_INC . 'inc/confutils.php';
 require_once DOKU_INC . 'inc/io.php';
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_PLUGIN. 'wikiiocmodel/WikiIocModel.php');
+require_once(DOKU_PLUGIN. 'wikiiocmodel/WikiIocModelExceptions.php');
 
 if(!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
 if(!defined('DW_ACT_SHOW')) define('DW_ACT_SHOW', "show");
@@ -109,18 +110,37 @@ function wrapper_tpl_toc() {
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
 class DokuModelAdapter implements WikiIocModel {
+    const ADMIN_PERMISSION = "admin";
+
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
 
+    public function createPage($pid) {
+        global $INFO;
+        $this->startPageProcess(DW_ACT_SHOW, $pid);
+        if($INFO["exists"]){
+            throw new PageAlreadyExistsException($pid);
+        }
+        $this->doFormatedPagePreProcess();
+        return $this->getFormatedPageResponse();
+    }
+
     public function getHtmlPage($pid, $prev = NULL) {
+        global $INFO;
         $this->startPageProcess(DW_ACT_SHOW, $pid, $prev);
+        if(!$INFO["exists"]){
+            throw new PageNotFoundException($pid);
+        }
         $this->doFormatedPagePreProcess();
         return $this->getFormatedPageResponse();
     }
 
     public function getCodePage($pid, $prev = NULL, $prange = NULL, $psum=NULL) {
         $this->startPageProcess(DW_ACT_EDIT, $pid, $prev, $prange, $psum);
+        if(!$INFO["exists"]){
+            throw new PageNotFoundException($pid);
+        }
         $this->doEditPagePreProcess();
         return $this->getCodePageResponse();
     }
