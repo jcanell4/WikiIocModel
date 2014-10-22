@@ -118,12 +118,12 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function createPage($pid) {
         global $INFO;
-        $this->startPageProcess(DW_ACT_SHOW, $pid);
+        $this->startPageProcess(DW_ACT_EDIT, $pid, 0);
         if($INFO["exists"]){
             throw new PageAlreadyExistsException($pid);
         }
-        $this->doFormatedPagePreProcess();
-        return $this->getFormatedPageResponse();
+        $this->doEditPagePreProcess();
+        return $this->getCodePageResponse();
     }
 
     public function getHtmlPage($pid, $prev = NULL) {

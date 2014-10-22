@@ -10,7 +10,11 @@
  *
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
-class WikiIocModelException extends Exception {}
+class WikiIocModelException extends Exception {
+    public function __construct($message, $code, $previous=NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+}
 class PageNotFoundException extends WikiIocModelException {
     public function __construct($page, $message="Page %s not found", 
                                                 $code=1001, $previous=NULL) {
