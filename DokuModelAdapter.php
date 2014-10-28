@@ -137,6 +137,7 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     public function getCodePage($pid, $prev = NULL, $prange = NULL, $psum=NULL) {
+        global $INFO;
         $this->startPageProcess(DW_ACT_EDIT, $pid, $prev, $prange, $psum);
         if(!$INFO["exists"]){
             throw new PageNotFoundException($pid);

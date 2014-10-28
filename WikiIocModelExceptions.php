@@ -23,7 +23,7 @@ class PageNotFoundException extends WikiIocModelException {
 }
 class PageAlreadyExistsException extends WikiIocModelException {
     public function __construct($page, $message="The page %s already exists", 
-                                                $code=1001, $previous=NULL) {
+                                                $code=1002, $previous=NULL) {
         parent::__construct(sprintf($message, $page), $code, $previous);
     }
 }
