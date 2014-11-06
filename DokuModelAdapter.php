@@ -116,7 +116,7 @@ class DokuModelAdapter implements WikiIocModel {
     protected $dataTmp;
     protected $ppEvt;
 
-    public function createPage($pid) {
+   public function createPage($pid) {
         global $INFO;
         $this->startPageProcess(DW_ACT_EDIT, $pid, 0);
         if($INFO["exists"]){
@@ -194,6 +194,7 @@ class DokuModelAdapter implements WikiIocModel {
             $path = str_replace($conf['mediadir'], "", $path);
         }
         $id = str_replace('/', ':', $path);
+        return $id;
     }
 
     public function getPageFileName($id, $rev = '') {
