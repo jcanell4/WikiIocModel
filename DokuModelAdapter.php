@@ -191,7 +191,7 @@ class DokuModelAdapter implements WikiIocModel {
     public function imagePathToId($path) {
         global $conf;
         if($this->starsWith($path, "/")) { //absolute path
-            $path = str_replace($conf['mediadir'], "", $path);
+            $path = str_replace($conf['mediadir']."/", "", $path);
         }
         $id = str_replace('/', ':', $path);
         return $id;
