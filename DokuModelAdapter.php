@@ -202,13 +202,13 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     /**
-     * @param string $id
+     * @param string $image //abans era $id. $id no s'utilitzava
      * @param bool   $rev
      * @param bool   $meta
      *
      * @return string
      */
-    public function getMediaUrl($id, $rev = FALSE, $meta = FALSE) {
+    public function getMediaUrl($image, $rev = FALSE, $meta = FALSE) {
         $size = media_image_preview_size($image, $rev, $meta);
         if($size) {
             $more = array();
