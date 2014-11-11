@@ -399,6 +399,11 @@ class DokuModelAdapter implements WikiIocModel {
         return $lang[$id];
     }
 
+    /**
+     * Crea el directori on ubicar el fitxer referenciat per $filePath després 
+     * d'extreure'n el nom del fitxer. Aquesta funció no crea directoris recursivamnent.
+     * @param type $filePath
+     */
     public function makeFileDir($filePath) {
         io_makeFileDir($filePath);
     }
