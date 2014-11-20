@@ -14,6 +14,7 @@ require_once DOKU_INC . 'inc/media.php';
 require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/confutils.php';
 require_once DOKU_INC . 'inc/io.php';
+require_once DOKU_INC . 'inc/auth.php';
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_PLUGIN. 'wikiiocmodel/WikiIocModel.php');
 require_once(DOKU_PLUGIN. 'wikiiocmodel/WikiIocModelExceptions.php');
@@ -26,8 +27,8 @@ if(!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
 if(!defined('DW_ACT_PREVIEW')) define('DW_ACT_PREVIEW', "preview");
 if(!defined('DW_ACT_RECOVER')) define('DW_ACT_RECOVER', "recover");
 if(!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
+if(!defined('DW_ACT_MEDIA_DETAIL')) define('DW_ACT_MEDIA_DETAIL', "media_detail");
 
-//    const DW_ACT_SAVE="save";
 //    const DW_ACT_BACKLINK="backlink";
 //    const DW_ACT_REVISIONS="revisions";    
 //    const DW_ACT_DIFF="diff";
@@ -256,7 +257,77 @@ class DokuModelAdapter implements WikiIocModel {
                         , $overWrite, "copy"
         );
     }
+    
+    public function getImageDetail($imageId, $fromPage=NULL){
+        $error = $this->startMediaProcess(DW_ACT_MEDIA_DETAIL, $imageId, $fromPage);
+        if($error==401){
+            throw new HttpErrorCodeException($error, "Access denied");
+        }else if($error==404){
+            throw new HttpErrorCodeException($error, "Resource ". $imageId . " not found.");
+        }
+        return $this->_getImageDetail();
+        
+    }
 
+    public function getNsTree($currentnode, $sortBy, $onlyDirs = FALSE) {
+        global $conf;
+        $sortOptions = array(0 => 'name', 'date');
+        $nodeData    = array();
+        $children    = array();
+        $tree;
+
+        if($currentnode == "_") {
+            return array('id' => "", 'name' => "", 'type' => 'd');
+        }
+        if($currentnode) {
+            $node  = $currentnode;
+            $aname = split(":", $currentnode);
+            $level = count($aname);
+            $name  = $aname[$level - 1];
+        } else {
+            $node  = '';
+            $name  = '';
+            $level = 0;
+        }
+        $sort = $sortOptions[$sortBy];
+        $base = $conf['datadir'];
+
+        $opts = array('ns' => $node);
+        $dir  = str_replace(':', '/', $node);
+        search(
+            $nodeData, $base, 'search_index',
+            $opts, $dir, 1
+        );
+        foreach(array_keys($nodeData) as $item) {
+            if($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
+                $children[$item]['id']   = $nodeData[$item]['id'];
+                $aname                   = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
+                $children[$item]['name'] = $aname[$level];
+                $children[$item]['type'] = $nodeData[$item]['type'];
+            }
+        }
+
+        $tree = array(
+            'id'   => $node, 'name' => $node,
+            'type' => 'd', 'children' => $children
+        );
+        return $tree;
+    }
+
+    public function getGlobalMessage($id) {
+        global $lang;
+        return $lang[$id];
+    }
+
+    /**
+     * Crea el directori on ubicar el fitxer referenciat per $filePath després 
+     * d'extreure'n el nom del fitxer. Aquesta funció no crea directoris recursivamnent.
+     * @param type $filePath
+     */
+    public function makeFileDir($filePath) {
+        io_makeFileDir($filePath);
+    }
+    
     /**
      * Retorna si s'ha trobat la cadena que es cerca al principi de la cadena on es busca.
      *
@@ -349,66 +420,7 @@ class DokuModelAdapter implements WikiIocModel {
         return $res;
     }
 
-    public function getNsTree($currentnode, $sortBy, $onlyDirs = FALSE) {
-        global $conf;
-        $sortOptions = array(0 => 'name', 'date');
-        $nodeData    = array();
-        $children    = array();
-        $tree;
-
-        if($currentnode == "_") {
-            return array('id' => "", 'name' => "", 'type' => 'd');
-        }
-        if($currentnode) {
-            $node  = $currentnode;
-            $aname = split(":", $currentnode);
-            $level = count($aname);
-            $name  = $aname[$level - 1];
-        } else {
-            $node  = '';
-            $name  = '';
-            $level = 0;
-        }
-        $sort = $sortOptions[$sortBy];
-        $base = $conf['datadir'];
-
-        $opts = array('ns' => $node);
-        $dir  = str_replace(':', '/', $node);
-        search(
-            $nodeData, $base, 'search_index',
-            $opts, $dir, 1
-        );
-        foreach(array_keys($nodeData) as $item) {
-            if($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
-                $children[$item]['id']   = $nodeData[$item]['id'];
-                $aname                   = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
-                $children[$item]['name'] = $aname[$level];
-                $children[$item]['type'] = $nodeData[$item]['type'];
-            }
-        }
-
-        $tree = array(
-            'id'   => $node, 'name' => $node,
-            'type' => 'd', 'children' => $children
-        );
-        return $tree;
-    }
-
-    public function getGlobalMessage($id) {
-        global $lang;
-        return $lang[$id];
-    }
-
-    /**
-     * Crea el directori on ubicar el fitxer referenciat per $filePath després 
-     * d'extreure'n el nom del fitxer. Aquesta funció no crea directoris recursivamnent.
-     * @param type $filePath
-     */
-    public function makeFileDir($filePath) {
-        io_makeFileDir($filePath);
-    }
-
-    /**
+        /**
      * Inicia tractament d'una pàgina de la dokuwiki
      */
     private function startPageProcess($pdo, $pid = NULL, $prev = NULL, $prange = NULL,
@@ -457,6 +469,87 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     /**
+     * Inicia tractament d'una pàgina de la dokuwiki
+     */
+    private function startMediaProcess($pdo, $pImageId = NULL, $pFromId = NULL) {
+        global $ID;
+        global $AUTH;
+        global $vector_action;
+        global $vector_context;
+        global $loginname;
+        $src;
+        $ret=0;
+        
+        $this->params['action'] = $pdo;
+        if($pdo===DW_ACT_MEDIA_DETAIL){
+            $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "detail";
+        }
+        if($pImageId) {
+            $this->params['imageId'] = $pImageId;
+        }
+        if($pFromId) {
+            $ID = $this->params['id'] = $pFromId;
+        }
+        // check image permissions
+        $AUTH = auth_quickaclcheck($pImageId);
+        if($AUTH >= AUTH_READ){
+            // check if image exists
+            $src = mediaFN($pImageId);
+            if(!@file_exists($src)){
+                $ret = 404;
+            }
+        }else{
+            // no auth
+            $ret = 401;
+        }
+        
+        if($ret){
+            $this->fillInfo();
+        }
+        
+        /**
+        * Stores the template wide context
+        *
+        * This template offers discussion pages via common articles, which should be
+        * marked as "special". DokuWiki does not know any "special" articles, therefore
+        * we have to take care about detecting if the current page is a discussion
+        * page or not.
+        *
+        * @var string
+        * @author Andreas Haerter <development@andreas-haerter.com>
+        */
+        $vector_context = $this->params['vector_context'] = "article";
+        if (preg_match("/^".tpl_getConf("vector_discuss_ns")."?$|^".tpl_getConf("vector_discuss_ns").".*?$/i", ":".getNS(getID()))){
+            $vector_context = $this->params['vector_context'] = "discuss";
+        }
+        
+        /**
+        * Stores the name the current client used to login
+        *
+        * @var string
+        * @author Andreas Haerter <development@andreas-haerter.com>
+        */
+        $loginname = $this->params['loginName'] = "";
+        if (!empty($conf["useacl"])){
+            if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
+                $_SERVER["REMOTE_USER"] !== ""){
+                $loginname = $this->params['loginName'] = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
+                                                      //current IP differs from the one used to login)
+            }
+        }
+        
+        //detect revision
+        $rev = $this->params['rev'] = (int)$INFO["rev"]; //$INFO comes from the DokuWiki core
+        if ($rev < 1){
+            $rev = $this->params['rev'] = (int)$INFO["lastmod"];
+        }
+
+//        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
+//        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
+        return $ret;
+    }
+
+    /**
      * Realitza el per-procés d'una pàgina de la dokuwiki en format HTML.
      * Permet afegir etiquetes HTML al contingut final durant la fase de
      * preprocés
@@ -469,6 +562,22 @@ class DokuModelAdapter implements WikiIocModel {
             unlock($this->params['id']); //try to unlock   
         }
         $this->runAfterPreprocess($content);
+        return $content;
+    }
+
+    /**
+     * Realitza el per-procés per recuperar el detall d'una imatge de la dokuwiki.
+     * Permet afegir etiquetes HTML al contingut final durant la fase de
+     * preprocés
+     *
+     * @return string
+     */
+    private function _getImageDetail() {
+        $content;
+        //TO DO
+        ob_start();
+        include DOKU_TPLINC."inc_detail.php";
+        $content = ob_get_clean();        
         return $content;
     }
 
@@ -512,7 +621,7 @@ class DokuModelAdapter implements WikiIocModel {
         return $this->getContentPage($pageToSend);
     }
 
-    private function getMetaResponse() {
+    public function getMetaResponse() {
         global $lang;
         $ret  = array('docId' => \str_replace(":", "_", $this->params['id']));
         $meta = array();

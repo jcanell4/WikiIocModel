@@ -39,4 +39,7 @@ interface WikiIocModel {
     
     public function makeFileDir($filePath);
     
+    public function createPage($pid); 
+    
+    public function getImageDetail($idImage, $fromPage=NULL);
 }

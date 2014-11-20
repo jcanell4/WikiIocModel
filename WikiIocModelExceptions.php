@@ -28,3 +28,9 @@ class PageAlreadyExistsException extends WikiIocModelException {
     }
 }
 
+class HttpErrorCodeException extends WikiIocModelException {
+    public function __construct($code, $message="", $previous=NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+}
+
