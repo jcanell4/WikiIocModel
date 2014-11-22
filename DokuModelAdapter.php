@@ -15,6 +15,7 @@ require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/confutils.php';
 require_once DOKU_INC . 'inc/io.php';
 require_once DOKU_INC . 'inc/auth.php';
+require_once DOKU_INC . 'inc/template.php';
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_PLUGIN. 'wikiiocmodel/WikiIocModel.php');
 require_once(DOKU_PLUGIN. 'wikiiocmodel/WikiIocModelExceptions.php');
@@ -221,7 +222,7 @@ class DokuModelAdapter implements WikiIocModel {
             }
             $more['w'] = $size[0];
             $more['h'] = $size[1];
-            $src       = ml($image, $more);
+            $src = ml($image, $more);
         } else {
             $src = ml($image, "", TRUE);
         }
@@ -259,13 +260,23 @@ class DokuModelAdapter implements WikiIocModel {
     }
     
     public function getImageDetail($imageId, $fromPage=NULL){
+        global $lang;
+        
         $error = $this->startMediaProcess(DW_ACT_MEDIA_DETAIL, $imageId, $fromPage);
         if($error==401){
             throw new HttpErrorCodeException($error, "Access denied");
         }else if($error==404){
             throw new HttpErrorCodeException($error, "Resource ". $imageId . " not found.");
         }
-        return $this->_getImageDetail();
+        $title = $lang['img_detail_title'].$imageId;
+        $ret = array(
+            "content" => $this->_getImageDetail(),
+            "imageTitle" => $title,
+            "imageName" => $imageId,
+            "modifyImageLabel" => $lang['img_manager'],
+            "closeDialogLabel" => $lang['img_backto']
+        );
+        return $ret;
         
     }
 
@@ -326,6 +337,16 @@ class DokuModelAdapter implements WikiIocModel {
      */
     public function makeFileDir($filePath) {
         io_makeFileDir($filePath);
+    }
+    
+    public function tplIncDir(){
+        global $conf;
+        if(is_callable('tpl_incdir')){
+            $ret=  tpl_incdir();
+        }else{
+            $ret=DOKU_INC.'lib/tpl/'.$conf['template'].'/';
+        }
+        return $ret;
     }
     
     /**
@@ -477,15 +498,20 @@ class DokuModelAdapter implements WikiIocModel {
         global $vector_action;
         global $vector_context;
         global $loginname;
-        $src;
-        $ret=0;
+        global $IMG;
+        global $ERROR;
+        global $SRC;
+        global $conf;
+        global $lang;
+        
+        $ret = $ERROR = 0;
         
         $this->params['action'] = $pdo;
         if($pdo===DW_ACT_MEDIA_DETAIL){
             $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "detail";
         }
         if($pImageId) {
-            $this->params['imageId'] = $pImageId;
+            $IMG=$this->params['imageId'] = $pImageId;
         }
         if($pFromId) {
             $ID = $this->params['id'] = $pFromId;
@@ -494,18 +520,20 @@ class DokuModelAdapter implements WikiIocModel {
         $AUTH = auth_quickaclcheck($pImageId);
         if($AUTH >= AUTH_READ){
             // check if image exists
-            $src = mediaFN($pImageId);
-            if(!@file_exists($src)){
-                $ret = 404;
+            $SRC = mediaFN($pImageId);
+            if(!@file_exists($SRC)){
+                $ret = $ERROR = 404;
             }
         }else{
             // no auth
-            $ret = 401;
+            $ret = $ERROR = 401;
         }
         
-        if($ret){
-            $this->fillInfo();
+        if($ret!=0){
+            return $ret;
         }
+        
+        $INFO = array_merge(pageinfo(),mediainfo());
         
         /**
         * Stores the template wide context
@@ -537,6 +565,18 @@ class DokuModelAdapter implements WikiIocModel {
                                                       //current IP differs from the one used to login)
             }
         }
+        
+        //get needed language array
+        include $this->tplIncDir()."lang/en/lang.php";
+        //overwrite English language values with available translations
+        if (!empty($conf["lang"]) &&
+            $conf["lang"] !== "en" &&
+            file_exists($this->tplIncDir()."/lang/".$conf["lang"]."/lang.php")){
+            //get language file (partially translated language files are no problem
+            //cause non translated stuff is still existing as English array value)
+            include $this->tplIncDir()."/lang/".$conf["lang"]."/lang.php";
+        }
+
         
         //detect revision
         $rev = $this->params['rev'] = (int)$INFO["rev"]; //$INFO comes from the DokuWiki core
@@ -573,11 +613,27 @@ class DokuModelAdapter implements WikiIocModel {
      * @return string
      */
     private function _getImageDetail() {
+global $ID;
+        global $AUTH;
+        global $vector_action;
+        global $vector_context;
+        global $loginname;
+        global $IMG;
+        global $ERROR;
+        global $SRC;
+        global $conf;
+        global $lang;
+                
         $content;
         //TO DO
         ob_start();
-        include DOKU_TPLINC."inc_detail.php";
-        $content = ob_get_clean();        
+        include $this->tplIncDir()."inc_detail.php";
+        $content = ob_get_clean();
+//        $content = preg_replace(
+//            '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i',
+//            '$1<div class="dokuwiki">$2$4</div>$6', $toc
+//        );
+
         return $content;
     }
 
