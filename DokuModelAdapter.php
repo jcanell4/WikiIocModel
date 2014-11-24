@@ -272,7 +272,7 @@ class DokuModelAdapter implements WikiIocModel {
         $ret = array(
             "content" => $this->_getImageDetail(),
             "imageTitle" => $title,
-            "imageName" => $imageId,
+            "imageId" => $imageId,
             "modifyImageLabel" => $lang['img_manager'],
             "closeDialogLabel" => $lang['img_backto']
         );
