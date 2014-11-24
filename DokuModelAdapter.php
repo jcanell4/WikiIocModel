@@ -521,7 +521,7 @@ class DokuModelAdapter implements WikiIocModel {
         if($AUTH >= AUTH_READ){
             // check if image exists
             $SRC = mediaFN($pImageId);
-            if(!@file_exists($SRC)){
+            if(!file_exists($SRC)){
                 $ret = $ERROR = 404;
             }
         }else{
