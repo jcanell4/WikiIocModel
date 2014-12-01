@@ -693,18 +693,19 @@ global $ID;
         return $ret;
     }
 
-    private function getJsInfo() {
+    public function getJsInfo() {
         global $JSINFO;
         $this->fillInfo();
         return $JSINFO;
     }
 
-    private function getToolbarIds() {
-        return array(
-            "varName"    => "toolbar",
-            "toolbarId"  => "tool__bar",
-            "wikiTextId" => "wiki__text"
-        );
+    public function getToolbarIds(&$value){
+        $value["varName"] = "toolbar";
+        $value["toolbarId"] = "tool__bar";
+        $value["wikiTextId"] = "wiki__text";
+        $value["editBarId"] = "wiki__editbar";
+        $value["editFormId"] = "dw__editform";
+        $value["summaryId"] = "edit__summary";
     }
 
     private function runBeforePreprocess(&$content) {
@@ -733,8 +734,15 @@ global $ID;
 
         $INFO = pageinfo();
         //export minimal infos to JS, plugins can add more
-        $JSINFO['id']        = $ID;
-        $JSINFO['namespace'] = (string) $INFO['namespace'];
+//        $JSINFO['id']        = $ID;
+//        $JSINFO['namespace'] = (string) $INFO['namespace'];        
+        if($INFO['userinfo']['name']){
+            $JSINFO['user'] = (string) $INFO['userinfo']['name']; 
+        }else{
+            $JSINFO['user'] = " "; 
+        }
+        return $JSINFO;                        
+        
     }
 
     private function getContentPage($pageToSend) {
