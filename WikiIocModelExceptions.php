@@ -28,6 +28,20 @@ class PageAlreadyExistsException extends WikiIocModelException {
     }
 }
 
+class DateConflictSavingException extends WikiIocModelException {
+    public function __construct($page, $message="There are date conflicts saving teh page %s. Changes will be lost", 
+                                                $code=1003, $previous=NULL) {
+        parent::__construct(sprintf($message, $page), $code, $previous);
+    }
+}
+
+class WordBlockedException extends WikiIocModelException {
+    public function __construct($page, $message="Your change was not saved because it contains blocked text (spam).", 
+                                                $code=1004, $previous=NULL) {
+        parent::__construct(sprintf($message, $page), $code, $previous);
+    }
+}
+
 class HttpErrorCodeException extends WikiIocModelException {
     public function __construct($code, $message="", $previous=NULL) {
         parent::__construct($message, $code, $previous);

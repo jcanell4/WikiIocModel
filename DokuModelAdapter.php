@@ -118,14 +118,25 @@ class DokuModelAdapter implements WikiIocModel {
     protected $dataTmp;
     protected $ppEvt;
 
-   public function createPage($pid) {
+   public function createPage($pid, $text=NULL) {
         global $INFO;
-        $this->startPageProcess(DW_ACT_EDIT, $pid, 0);
+        global $lang;
+        
+        $this->startUpLang();
+        
+        if(!$text){
+            $text = $lang['createDefaultText'];
+        }
+        
+        $this->startPageProcess(
+             DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL,
+             "", $text, ""
+        );
         if($INFO["exists"]){
             throw new PageAlreadyExistsException($pid);
         }
-        $this->doEditPagePreProcess();
-        return $this->getCodePageResponse();
+        $this->doSavePreProcess();
+        return $this->getFormatedPageResponse();
     }
 
     public function getHtmlPage($pid, $prev = NULL) {
@@ -160,9 +171,9 @@ class DokuModelAdapter implements WikiIocModel {
              DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate,
              $ppre, $ptext, $psuf
         );
-        $this->doSavePreProcess();
-        $this->doEditPagePreProcess();
-        return $this->getCodePageResponse();
+        $this->startUpLang();
+        $code = $this->doSavePreProcess();  
+        return $this->getSaveInfoResponse($code);
     }
 
     public function isDenied() {
@@ -566,16 +577,7 @@ class DokuModelAdapter implements WikiIocModel {
             }
         }
         
-        //get needed language array
-        include $this->tplIncDir()."lang/en/lang.php";
-        //overwrite English language values with available translations
-        if (!empty($conf["lang"]) &&
-            $conf["lang"] !== "en" &&
-            file_exists($this->tplIncDir()."/lang/".$conf["lang"]."/lang.php")){
-            //get language file (partially translated language files are no problem
-            //cause non translated stuff is still existing as English array value)
-            include $this->tplIncDir()."/lang/".$conf["lang"]."/lang.php";
-        }
+        $this->startUpLang();
 
         
         //detect revision
@@ -587,6 +589,27 @@ class DokuModelAdapter implements WikiIocModel {
 //        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
 //        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
         return $ret;
+    }
+    
+    private function startUpLang(){
+        global $conf;
+        global $lang;
+        
+        //get needed language array
+        include $this->tplIncDir()."lang/en/lang.php";
+        //overwrite English language values with available translations
+        if (!empty($conf["lang"]) &&
+                $conf["lang"] !== "en" &&
+                file_exists($this->tplIncDir()."/lang/".$conf["lang"]."/lang.php")){
+            //get language file (partially translated language files are no problem
+            //cause non translated stuff is still existing as English array value)
+            include $this->tplIncDir()."/lang/".$conf["lang"]."/lang.php";            
+        }        
+        if (!empty($conf["lang"]) &&
+                $conf["lang"] !== "en" &&
+                file_exists(DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php")){
+            include DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php";            
+        }
     }
 
     /**
@@ -652,10 +675,22 @@ global $ID;
 
     private function doSavePreProcess() {
         global $ACT;
-
-        act_save($ACT);
-        $ACT = $this->params['do'] = "edit";
-        $this->doEditPagePreProcess();
+        
+        $code = 0;
+        $ret = act_save($ACT);
+        if($ret==='edit'){
+            $code = 1004;    
+        }else if($ret==='conflict'){
+            $code = 1003;
+        }
+        if($code==0){
+            $ACT = $this->params['do'] = DW_ACT_EDIT;
+            $this->doEditPagePreProcess();
+        }else{
+            $ACT = $this->params['do'] = DW_ACT_SHOW;
+            $this->doFormatedPagePreProcess();            
+        }
+        return $code;
     }
 
     private function doCancelEditPreProcess() {
@@ -675,6 +710,24 @@ global $ID;
     private function getCodePageResponse() {
         $pageToSend = $this->_getCodePage();
         return $this->getContentPage($pageToSend);
+    }
+    
+    private function getSaveInfoResponse($code){
+        global $lang;
+        if($code==1004){
+            $ret = array();
+            $ret["code"]=$code;
+            $ret["info"]=$lang['wordblock'];
+            $ret["page"] = $this->getFormatedPageResponse();
+        }elseif ($code==1003) {
+            $ret = array();
+            $ret["code"] = $code;
+            $ret["info"] = $lang['conflictsSaving']; //conflict
+            $ret["page"] = $this->getFormatedPageResponse();
+        }else{
+            $ret = array("code" => $code, "info" => $lang["saved"]);
+        }
+        return $ret;
     }
 
     public function getMetaResponse() {
@@ -728,19 +781,12 @@ global $ID;
     }
 
     private function fillInfo() {
-        global $INFO;
         global $JSINFO;
-        global $ID;
+        global $INFO;
 
         $INFO = pageinfo();
         //export minimal infos to JS, plugins can add more
-//        $JSINFO['id']        = $ID;
-//        $JSINFO['namespace'] = (string) $INFO['namespace'];        
-        if($INFO['userinfo']['name']){
-            $JSINFO['user'] = (string) $INFO['userinfo']['name']; 
-        }else{
-            $JSINFO['user'] = " "; 
-        }
+
         return $JSINFO;                        
         
     }
