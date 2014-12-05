@@ -732,11 +732,15 @@ global $ID;
 
     public function getMetaResponse() {
         global $lang;
+        global $ACT;
+        $act_aux = $ACT;
         $ret  = array('docId' => \str_replace(":", "_", $this->params['id']));
         $meta = array();
         $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
         if($mEvt->advise_before()) {
+            $ACT="show";
             $toc    = wrapper_tpl_toc();
+            $ACT=$act_aux;
             $metaId = \str_replace(":", "_", $this->params['id']) . '_toc';
             $meta[] = $this->getMetaPage($metaId, $lang['toc'], $toc);
         }
