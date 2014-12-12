@@ -144,7 +144,7 @@ class DokuModelAdapter implements WikiIocModel {
         global $INFO;
         global $lang;
         $this->startPageProcess(DW_ACT_SHOW, $pid, $prev);
-        if(!$INFO["exists"]){            
+        if(!$INFO["exists"]){
             throw new PageNotFoundException($pid,$lang['pageNotFound']);
         }
         $this->doFormatedPagePreProcess();
@@ -535,6 +535,7 @@ class DokuModelAdapter implements WikiIocModel {
         /**
          * FI Miguel Angel Lozano 12/12/2014
          */
+
         if($pImageId) {
             $IMG=$this->params['imageId'] = $pImageId;
         }
