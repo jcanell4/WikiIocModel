@@ -29,6 +29,7 @@ if(!defined('DW_ACT_PREVIEW')) define('DW_ACT_PREVIEW', "preview");
 if(!defined('DW_ACT_RECOVER')) define('DW_ACT_RECOVER', "recover");
 if(!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
 if(!defined('DW_ACT_MEDIA_DETAIL')) define('DW_ACT_MEDIA_DETAIL', "media_detail");
+if(!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
 
 //    const DW_ACT_BACKLINK="backlink";
 //    const DW_ACT_REVISIONS="revisions";    
@@ -133,7 +134,7 @@ class DokuModelAdapter implements WikiIocModel {
              "", $text, ""
         );
         if($INFO["exists"]){
-            throw new PageAlreadyExistsException($pid);
+            throw new PageAlreadyExistsException($pid,$lang['pageExists']);
         }
         $this->doSavePreProcess();
         return $this->getFormatedPageResponse();
@@ -141,9 +142,10 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function getHtmlPage($pid, $prev = NULL) {
         global $INFO;
+        global $lang;
         $this->startPageProcess(DW_ACT_SHOW, $pid, $prev);
-        if(!$INFO["exists"]){
-            throw new PageNotFoundException($pid);
+        if(!$INFO["exists"]){            
+            throw new PageNotFoundException($pid,$lang['pageNotFound']);
         }
         $this->doFormatedPagePreProcess();
         return $this->getFormatedPageResponse();
@@ -151,9 +153,10 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function getCodePage($pid, $prev = NULL, $prange = NULL, $psum=NULL) {
         global $INFO;
+        global $lang;        
         $this->startPageProcess(DW_ACT_EDIT, $pid, $prev, $prange, $psum);
         if(!$INFO["exists"]){
-            throw new PageNotFoundException($pid);
+            throw new PageNotFoundException($pid,$lang['pageNotFound']);
         }
         $this->doEditPagePreProcess();
         return $this->getCodePageResponse();
@@ -495,6 +498,7 @@ class DokuModelAdapter implements WikiIocModel {
         }
 
         $this->fillInfo();
+        $this->startUpLang();
 
 //        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
 //        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
@@ -521,6 +525,16 @@ class DokuModelAdapter implements WikiIocModel {
         if($pdo===DW_ACT_MEDIA_DETAIL){
             $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "detail";
         }
+        /**
+        * Miguel Angel Lozano 12/12/2014
+        * - Obtenir el gestor de medis: aquest mètode també el fem servir en getMediaManager
+        */
+        if($pdo===DW_ACT_MEDIA_MANAGER){
+            $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "media";
+        }
+        /**
+         * FI Miguel Angel Lozano 12/12/2014
+         */
         if($pImageId) {
             $IMG=$this->params['imageId'] = $pImageId;
         }
@@ -701,8 +715,6 @@ global $ID;
     }
 
     private function getFormatedPageResponse() {
-        $id         = $this->params['id'];
-        $pageTitle  = tpl_pagetitle($this->params['id'], TRUE);
         $pageToSend = $this->getFormatedPage();
         return $this->getContentPage($pageToSend);
     }
@@ -833,4 +845,49 @@ global $ID;
         $html_output = ob_get_clean() . "\n";
         return $html_output;
     }
+    
+    /**
+     * Miguel Angel Lozano 12/12/2014
+     * - Obtenir el gestor de medis
+     */
+    public function getMediaManager($imageId=NULL, $fromPage=NULL){
+        global $lang;
+        
+        $error = $this->startMediaProcess(DW_ACT_MEDIA_MANAGER, $imageId, $fromPage);
+        if($error==401){
+            throw new HttpErrorCodeException($error, "Access denied");
+        }else if($error==404){
+            throw new HttpErrorCodeException($error, "Resource ". $imageId . " not found.");
+        }
+        $title = $lang['img_manager'];
+        $ret = array(
+            "content" => $this->doMediaManagerPreProcess(),
+            "imageTitle" => $title,
+            "imageId" => $imageId,
+            "modifyImageLabel" => $lang['img_manager'],
+            "closeDialogLabel" => $lang['img_backto']
+        );
+        return $ret;
+        
+    }
+    
+    private function doMediaManagerPreProcess() {
+        global $ACT;
+
+        $content = "";
+        if($this->runBeforePreprocess($content)) {
+            ob_start();
+            tpl_media();
+            $content .= ob_get_clean();
+            // check permissions again - the action may have changed
+            $ACT = act_permcheck($ACT);
+        }
+        $this->runAfterPreprocess($content);
+        return $content;
+    }    
+    
+    /**
+     * FI Miguel Angel Lozano 12/12/2014
+     */
+    
 }
