@@ -134,7 +134,7 @@ class DokuModelAdapter implements WikiIocModel {
              "", $text, ""
         );
         if($INFO["exists"]){
-            throw new PageAlreadyExistsException($pid);
+            throw new PageAlreadyExistsException($pid,$lang['pageExists']);
         }
         $this->doSavePreProcess();
         return $this->getFormatedPageResponse();
@@ -142,9 +142,10 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function getHtmlPage($pid, $prev = NULL) {
         global $INFO;
+        global $lang;
         $this->startPageProcess(DW_ACT_SHOW, $pid, $prev);
         if(!$INFO["exists"]){
-            throw new PageNotFoundException($pid);
+            throw new PageNotFoundException($pid,$lang['pageNotFound']);
         }
         $this->doFormatedPagePreProcess();
         return $this->getFormatedPageResponse();
@@ -152,9 +153,10 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function getCodePage($pid, $prev = NULL, $prange = NULL, $psum=NULL) {
         global $INFO;
+        global $lang;        
         $this->startPageProcess(DW_ACT_EDIT, $pid, $prev, $prange, $psum);
         if(!$INFO["exists"]){
-            throw new PageNotFoundException($pid);
+            throw new PageNotFoundException($pid,$lang['pageNotFound']);
         }
         $this->doEditPagePreProcess();
         return $this->getCodePageResponse();
@@ -496,6 +498,7 @@ class DokuModelAdapter implements WikiIocModel {
         }
 
         $this->fillInfo();
+        $this->startUpLang();
 
 //        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
 //        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
@@ -713,8 +716,6 @@ global $ID;
     }
 
     private function getFormatedPageResponse() {
-        $id         = $this->params['id'];
-        $pageTitle  = tpl_pagetitle($this->params['id'], TRUE);
         $pageToSend = $this->getFormatedPage();
         return $this->getContentPage($pageToSend);
     }
