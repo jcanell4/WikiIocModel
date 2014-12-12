@@ -42,4 +42,6 @@ interface WikiIocModel {
     public function createPage($pid); 
     
     public function getImageDetail($idImage, $fromPage=NULL);
+    
+    public function getMediaManager($idImage, $fromPage=NULL);
 }

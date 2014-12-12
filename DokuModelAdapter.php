@@ -29,6 +29,7 @@ if(!defined('DW_ACT_PREVIEW')) define('DW_ACT_PREVIEW', "preview");
 if(!defined('DW_ACT_RECOVER')) define('DW_ACT_RECOVER', "recover");
 if(!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
 if(!defined('DW_ACT_MEDIA_DETAIL')) define('DW_ACT_MEDIA_DETAIL', "media_detail");
+if(!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
 
 //    const DW_ACT_BACKLINK="backlink";
 //    const DW_ACT_REVISIONS="revisions";    
@@ -521,6 +522,17 @@ class DokuModelAdapter implements WikiIocModel {
         if($pdo===DW_ACT_MEDIA_DETAIL){
             $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "detail";
         }
+        /**
+        * Miguel Angel Lozano 12/12/2014
+        * - Obtenir el gestor de medis: aquest mètode també el fem servir en getMediaManager
+        */
+        if($pdo===DW_ACT_MEDIA_MANAGER){
+            $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "media";
+        }
+        /**
+         * FI Miguel Angel Lozano 12/12/2014
+         */
+        
         if($pImageId) {
             $IMG=$this->params['imageId'] = $pImageId;
         }
@@ -833,4 +845,49 @@ global $ID;
         $html_output = ob_get_clean() . "\n";
         return $html_output;
     }
+    
+    /**
+     * Miguel Angel Lozano 12/12/2014
+     * - Obtenir el gestor de medis
+     */
+    public function getMediaManager($imageId=NULL, $fromPage=NULL){
+        global $lang;
+        
+        $error = $this->startMediaProcess(DW_ACT_MEDIA_MANAGER, $imageId, $fromPage);
+        if($error==401){
+            throw new HttpErrorCodeException($error, "Access denied");
+        }else if($error==404){
+            throw new HttpErrorCodeException($error, "Resource ". $imageId . " not found.");
+        }
+        $title = $lang['img_manager'];
+        $ret = array(
+            "content" => $this->doMediaManagerPreProcess(),
+            "imageTitle" => $title,
+            "imageId" => $imageId,
+            "modifyImageLabel" => $lang['img_manager'],
+            "closeDialogLabel" => $lang['img_backto']
+        );
+        return $ret;
+        
+    }
+    
+    private function doMediaManagerPreProcess() {
+        global $ACT;
+
+        $content = "";
+        if($this->runBeforePreprocess($content)) {
+            ob_start();
+            tpl_media();
+            $content .= ob_get_clean();
+            // check permissions again - the action may have changed
+            $ACT = act_permcheck($ACT);
+        }
+        $this->runAfterPreprocess($content);
+        return $content;
+    }    
+    
+    /**
+     * FI Miguel Angel Lozano 12/12/2014
+     */
+    
 }
