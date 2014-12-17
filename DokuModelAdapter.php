@@ -174,7 +174,6 @@ class DokuModelAdapter implements WikiIocModel {
              DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate,
              $ppre, $ptext, $psuf
         );
-        $this->startUpLang();
         $code = $this->doSavePreProcess();  
         return $this->getSaveInfoResponse($code);
     }
@@ -530,7 +529,7 @@ class DokuModelAdapter implements WikiIocModel {
         * - Obtenir el gestor de medis: aquest mètode també el fem servir en getMediaManager
         */
         if($pdo===DW_ACT_MEDIA_MANAGER){
-            $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "media";
+            $vector_action =  $GET["vecdo"] = $this->params['vector_action'] = "media";
         }
         /**
          * FI Miguel Angel Lozano 12/12/2014
@@ -573,10 +572,12 @@ class DokuModelAdapter implements WikiIocModel {
         * @author Andreas Haerter <development@andreas-haerter.com>
         */
         $vector_context = $this->params['vector_context'] = "article";
-        if (preg_match("/^".tpl_getConf("vector_discuss_ns")."?$|^".tpl_getConf("vector_discuss_ns").".*?$/i", ":".getNS(getID()))){
+        if ($pFromId && preg_match("/^".tpl_getConf("vector_discuss_ns")."?$|^"
+                            .tpl_getConf("vector_discuss_ns").".*?$/i", ":"
+                            .getNS(getID()))){
             $vector_context = $this->params['vector_context'] = "discuss";
         }
-        
+               
         /**
         * Stores the name the current client used to login
         *
@@ -651,7 +652,7 @@ class DokuModelAdapter implements WikiIocModel {
      * @return string
      */
     private function _getImageDetail() {
-global $ID;
+        global $ID;
         global $AUTH;
         global $vector_action;
         global $vector_context;
@@ -727,6 +728,7 @@ global $ID;
     
     private function getSaveInfoResponse($code){
         global $lang;
+        global $TEXT;
         if($code==1004){
             $ret = array();
             $ret["code"]=$code;
@@ -739,6 +741,11 @@ global $ID;
             $ret["page"] = $this->getFormatedPageResponse();
         }else{
             $ret = array("code" => $code, "info" => $lang["saved"]);
+            //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg
+            //      dw__editform, date i changecheck
+            $ret["formId"] = "dw__editform";
+            $ret["inputs"]=array("date" => @filemtime(wikiFN($ID)),
+                                  "changecheck" => md5($TEXT));
         }
         return $ret;
     }
