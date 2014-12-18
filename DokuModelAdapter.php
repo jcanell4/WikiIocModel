@@ -729,6 +729,7 @@ class DokuModelAdapter implements WikiIocModel {
     private function getSaveInfoResponse($code){
         global $lang;
         global $TEXT;
+        global $ID;
         if($code==1004){
             $ret = array();
             $ret["code"]=$code;
