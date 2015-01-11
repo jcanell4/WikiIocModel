@@ -346,6 +346,7 @@ class DokuModelAdapter implements WikiIocModel {
     /**
      * Crea el directori on ubicar el fitxer referenciat per $filePath després 
      * d'extreure'n el nom del fitxer. Aquesta funció no crea directoris recursivamnent.
+     *
      * @param type $filePath
      */
     public function makeFileDir($filePath) {
@@ -572,9 +573,12 @@ class DokuModelAdapter implements WikiIocModel {
         * @author Andreas Haerter <development@andreas-haerter.com>
         */
         $vector_context = $this->params['vector_context'] = "article";
-        if ($pFromId && preg_match("/^".tpl_getConf("vector_discuss_ns")."?$|^"
+        if($pFromId && preg_match(
+                "/^" . tpl_getConf("vector_discuss_ns") . "?$|^"
                             .tpl_getConf("vector_discuss_ns").".*?$/i", ":"
-                            .getNS(getID()))){
+                . getNS(getID())
+            )
+        ) {
             $vector_context = $this->params['vector_context'] = "discuss";
         }
                
@@ -587,7 +591,8 @@ class DokuModelAdapter implements WikiIocModel {
         $loginname = $this->params['loginName'] = "";
         if (!empty($conf["useacl"])){
             if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
-                $_SERVER["REMOTE_USER"] !== ""){
+                $_SERVER["REMOTE_USER"] !== ""
+            ) {
                 $loginname = $this->params['loginName'] = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
                                                       //current IP differs from the one used to login)
             }
@@ -616,14 +621,16 @@ class DokuModelAdapter implements WikiIocModel {
         //overwrite English language values with available translations
         if (!empty($conf["lang"]) &&
                 $conf["lang"] !== "en" &&
-                file_exists($this->tplIncDir()."/lang/".$conf["lang"]."/lang.php")){
+            file_exists($this->tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php")
+        ) {
             //get language file (partially translated language files are no problem
             //cause non translated stuff is still existing as English array value)
             include $this->tplIncDir()."/lang/".$conf["lang"]."/lang.php";            
         }        
         if (!empty($conf["lang"]) &&
                 $conf["lang"] !== "en" &&
-                file_exists(DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php")){
+            file_exists(DOKU_PLUGIN . "wikiiocmodel/lang/" . $conf["lang"] . "/lang.php")
+        ) {
             include DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php";            
         }
     }
@@ -722,10 +729,78 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     private function getCodePageResponse() {
-        $pageToSend = $this->_getCodePage();
-        return $this->getContentPage($pageToSend);
+        $pageToSend = $this->cleanResponse($this->_getCodePage());
+        $resp = $this->getContentPage($pageToSend['content']);
+        $resp['meta'] = $pageToSend['meta'];
+        $resp['info'] = $pageToSend['info'];
+        
+        return $resp;
     }
     
+    private function cleanResponse($text) {
+        global $lang;
+        $patternStart = ".*(<p>\nEditeu la pàgina.*?"; // Fins la primera coincidencia de tancament
+        $patternCloseA = "<\/p>)";
+        $patternCloseB = "\\*!]]>\\*\/<\/script>)";
+
+        // Capturem la informació
+        $pattern = '/' . $patternStart . $patternCloseA . '/s';
+        preg_match($pattern, $text, $match);
+        $info = $match[1];
+
+        // Eliminem la informació i el script inicial del contingut
+        $pattern = '/' . $patternStart . $patternCloseB . '\\s*/s';
+        $text = preg_replace($pattern, "", $text);
+
+        // Eliminem les etiquetes no desitgades
+        $pattern = "/<div id=\"size__ctl\".*?<\/div>\\s*/s";
+        $text = preg_replace($pattern, "", $text);
+
+        // Eliminem les etiquetes no desitgades
+        $pattern = "/<div class=\"editButtons\".*?<\/div>\\s*/s";
+        $text = preg_replace($pattern, "", $text);
+
+        // Copiem el license
+        $pattern = "/<div class=\"license\".*?<\/div>\\s*/s";
+        preg_match($pattern, $text, $match);
+        $license = $match[0];
+
+        // Eliminem la etiqueta
+        $text = preg_replace($pattern, "", $text);
+
+
+        // Copiem el wiki__editbar
+        $pattern = "/<div id=\"wiki__editbar\".*?<\/div>\\s*<\/div>\\s*/s";
+        preg_match($pattern, $text, $match);
+        $meta= $match[0];
+
+        // Eliminem la etiqueta
+        $text = preg_replace($pattern, "", $text);
+
+        // Capturem el id del formulari
+        $pattern = "/<form id=\"(.*?)\"/";
+        //$form = "dw__editform";
+        preg_match($pattern, $text, $match);
+        $form = $match[1];
+
+
+        // Afegim el id del formulari als inputs
+        $pattern = "/<input/";
+        $replace = "<input form=\"". $form . "\"";
+        $meta = preg_replace($pattern, $replace, $meta);
+
+
+
+        $response["content"] = $text;
+        $response["info"] = [$info, $license];
+        $metaId = \str_replace(":", "_", $this->params['id']) . '_metaEditForm';
+        $response["meta"] = [$this->getMetaPage($metaId, 
+                                            $lang['metaEditForm'], 
+                                            $meta)];
+
+        return $response;
+    }
+
     private function getSaveInfoResponse($code){
         global $lang;
         global $TEXT;
@@ -745,8 +820,10 @@ class DokuModelAdapter implements WikiIocModel {
             //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg
             //      dw__editform, date i changecheck
             $ret["formId"] = "dw__editform";
-            $ret["inputs"]=array("date" => @filemtime(wikiFN($ID)),
-                                  "changecheck" => md5($TEXT));
+            $ret["inputs"] = array(
+                "date"        => @filemtime(wikiFN($ID)),
+                "changecheck" => md5($TEXT)
+            );
         }
         return $ret;
     }

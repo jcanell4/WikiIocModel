@@ -12,4 +12,5 @@ $lang['conflictsSaving'] = "Hi ha confictes amb altres versions. No s'han pogut 
 $lang['saved'] = "Els canvis s'han guardat correctament";
 $lang['pageNotFound'] = "La pàgina %s no s'ha trobat";
 $lang['pageExists'] = "La pàgina %s ja existeix";
+$lang['metaEditForm'] = "Camps Edició";
 
