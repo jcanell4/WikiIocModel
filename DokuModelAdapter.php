@@ -5,7 +5,8 @@
  *
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
-if(!defined('DOKU_INC')) die();
+if (!defined('DOKU_INC'))
+    die();
 //require common
 require_once DOKU_INC . 'inc/actions.php';
 require_once DOKU_INC . 'inc/pageutils.php';
@@ -16,20 +17,31 @@ require_once DOKU_INC . 'inc/confutils.php';
 require_once DOKU_INC . 'inc/io.php';
 require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/template.php';
-if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-require_once(DOKU_PLUGIN. 'wikiiocmodel/WikiIocModel.php');
-require_once(DOKU_PLUGIN. 'wikiiocmodel/WikiIocModelExceptions.php');
+if (!defined('DOKU_PLUGIN'))
+    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocModel.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocModelExceptions.php');
 
-if(!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
-if(!defined('DW_ACT_SHOW')) define('DW_ACT_SHOW', "show");
-if(!defined('DW_ACT_DRAFTDEL')) define('DW_ACT_DRAFTDEL', "draftdel");
-if(!defined('DW_ACT_DRAFTDEL')) define('DW_ACT_SAVE', "save");
-if(!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
-if(!defined('DW_ACT_PREVIEW')) define('DW_ACT_PREVIEW', "preview");
-if(!defined('DW_ACT_RECOVER')) define('DW_ACT_RECOVER', "recover");
-if(!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
-if(!defined('DW_ACT_MEDIA_DETAIL')) define('DW_ACT_MEDIA_DETAIL', "media_detail");
-if(!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
+if (!defined('DW_DEFAULT_PAGE'))
+    define('DW_DEFAULT_PAGE', "start");
+if (!defined('DW_ACT_SHOW'))
+    define('DW_ACT_SHOW', "show");
+if (!defined('DW_ACT_DRAFTDEL'))
+    define('DW_ACT_DRAFTDEL', "draftdel");
+if (!defined('DW_ACT_DRAFTDEL'))
+    define('DW_ACT_SAVE', "save");
+if (!defined('DW_ACT_EDIT'))
+    define('DW_ACT_EDIT', "edit");
+if (!defined('DW_ACT_PREVIEW'))
+    define('DW_ACT_PREVIEW', "preview");
+if (!defined('DW_ACT_RECOVER'))
+    define('DW_ACT_RECOVER', "recover");
+if (!defined('DW_ACT_DENIED'))
+    define('DW_ACT_DENIED', "denied");
+if (!defined('DW_ACT_MEDIA_DETAIL'))
+    define('DW_ACT_MEDIA_DETAIL', "media_detail");
+if (!defined('DW_ACT_MEDIA_MANAGER'))
+    define('DW_ACT_MEDIA_MANAGER', "media");
 
 //    const DW_ACT_BACKLINK="backlink";
 //    const DW_ACT_REVISIONS="revisions";    
@@ -77,7 +89,7 @@ function onFormatRender($data) {
 function onCodeRender($data) {
     global $TEXT;
 
-    switch($data) {
+    switch ($data) {
         case 'edit':
         case 'recover':
             html_edit();
@@ -100,8 +112,7 @@ function onCodeRender($data) {
 function wrapper_tpl_toc() {
     $toc = tpl_toc(TRUE);
     $toc = preg_replace(
-        '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i',
-        '$1<div class="dokuwiki">$2$4</div>$6', $toc
+            '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i', '$1<div class="dokuwiki">$2$4</div>$6', $toc
     );
     return $toc;
 }
@@ -113,27 +124,27 @@ function wrapper_tpl_toc() {
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
 class DokuModelAdapter implements WikiIocModel {
+
     const ADMIN_PERMISSION = "admin";
 
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
 
-   public function createPage($pid, $text=NULL) {
+    public function createPage($pid, $text = NULL) {
         global $INFO;
         global $lang;
-        
+
         $this->startUpLang();
-        
-        if(!$text){
+
+        if (!$text) {
             $text = $lang['createDefaultText'];
         }
-        
+
         $this->startPageProcess(
-             DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL,
-             "", $text, ""
+                DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL, "", $text, ""
         );
-        if($INFO["exists"]){
+        if ($INFO["exists"]) {
             throw new PageAlreadyExistsException($pid);
         }
         $this->doSavePreProcess();
@@ -143,17 +154,17 @@ class DokuModelAdapter implements WikiIocModel {
     public function getHtmlPage($pid, $prev = NULL) {
         global $INFO;
         $this->startPageProcess(DW_ACT_SHOW, $pid, $prev);
-        if(!$INFO["exists"]){
+        if (!$INFO["exists"]) {
             throw new PageNotFoundException($pid);
         }
         $this->doFormatedPagePreProcess();
         return $this->getFormatedPageResponse();
     }
 
-    public function getCodePage($pid, $prev = NULL, $prange = NULL, $psum=NULL) {
+    public function getCodePage($pid, $prev = NULL, $prange = NULL, $psum = NULL) {
         global $INFO;
         $this->startPageProcess(DW_ACT_EDIT, $pid, $prev, $prange, $psum);
-        if(!$INFO["exists"]){
+        if (!$INFO["exists"]) {
             throw new PageNotFoundException($pid);
         }
         $this->doEditPagePreProcess();
@@ -166,18 +177,18 @@ class DokuModelAdapter implements WikiIocModel {
         return $this->getFormatedPageResponse();
     }
 
-    public function saveEdition($pid, $prev = NULL, $prange = NULL,
-        $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL) {
+    public function saveEdition($pid, $prev = NULL, $prange = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL) {
         $this->startPageProcess(
-             DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate,
-             $ppre, $ptext, $psuf
+                DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate, $ppre, $ptext, $psuf
         );
         $this->startUpLang();
-        $code = $this->doSavePreProcess();  
+        $code = $this->doSavePreProcess();
         return $this->getSaveInfoResponse($code);
     }
 
     public function isDenied() {
+        global $ACT;
+        $this->params['do'] = $ACT;
         return $this->params['do'] == DW_ACT_DENIED;
     }
 
@@ -190,9 +201,9 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     public function getMediaList($ns) {
-        $dir      = $this->getMediaFileName($ns);
+        $dir = $this->getMediaFileName($ns);
         $arrayDir = scandir($dir);
-        if($arrayDir) {
+        if ($arrayDir) {
             unset($arrayDir[0]);
             unset($arrayDir[1]);
             $arrayDir = array_values($arrayDir);
@@ -204,8 +215,8 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function imagePathToId($path) {
         global $conf;
-        if($this->starsWith($path, "/")) { //absolute path
-            $path = str_replace($conf['mediadir']."/", "", $path);
+        if ($this->starsWith($path, "/")) { //absolute path
+            $path = str_replace($conf['mediadir'] . "/", "", $path);
         }
         $id = str_replace('/', ':', $path);
         return $id;
@@ -224,12 +235,12 @@ class DokuModelAdapter implements WikiIocModel {
      */
     public function getMediaUrl($image, $rev = FALSE, $meta = FALSE) {
         $size = media_image_preview_size($image, $rev, $meta);
-        if($size) {
+        if ($size) {
             $more = array();
-            if($rev) {
+            if ($rev) {
                 $more['rev'] = $rev;
             } else {
-                $t         = @filemtime(mediaFN($image));
+                $t = @filemtime(mediaFN($image));
                 $more['t'] = $t;
             }
             $more['w'] = $size[0];
@@ -251,7 +262,7 @@ class DokuModelAdapter implements WikiIocModel {
      */
     public function uploadImage($nsTarget, $idTarget, $filePathSource, $overWrite = FALSE) {
         return $this->_saveImage(
-                    $nsTarget, $idTarget, $filePathSource
+                        $nsTarget, $idTarget, $filePathSource
                         , $overWrite, "move_uploaded_file"
         );
     }
@@ -266,21 +277,21 @@ class DokuModelAdapter implements WikiIocModel {
      */
     public function saveImage($nsTarget, $idTarget, $filePathSource, $overWrite = FALSE) {
         return $this->_saveImage(
-                    $nsTarget, $idTarget, $filePathSource
+                        $nsTarget, $idTarget, $filePathSource
                         , $overWrite, "copy"
         );
     }
-    
-    public function getImageDetail($imageId, $fromPage=NULL){
+
+    public function getImageDetail($imageId, $fromPage = NULL) {
         global $lang;
-        
+
         $error = $this->startMediaProcess(DW_ACT_MEDIA_DETAIL, $imageId, $fromPage);
-        if($error==401){
+        if ($error == 401) {
             throw new HttpErrorCodeException($error, "Access denied");
-        }else if($error==404){
-            throw new HttpErrorCodeException($error, "Resource ". $imageId . " not found.");
+        } else if ($error == 404) {
+            throw new HttpErrorCodeException($error, "Resource " . $imageId . " not found.");
         }
-        $title = $lang['img_detail_title'].$imageId;
+        $title = $lang['img_detail_title'] . $imageId;
         $ret = array(
             "content" => $this->_getImageDetail(),
             "imageTitle" => $title,
@@ -289,49 +300,47 @@ class DokuModelAdapter implements WikiIocModel {
             "closeDialogLabel" => $lang['img_backto']
         );
         return $ret;
-        
     }
 
     public function getNsTree($currentnode, $sortBy, $onlyDirs = FALSE) {
         global $conf;
         $sortOptions = array(0 => 'name', 'date');
-        $nodeData    = array();
-        $children    = array();
+        $nodeData = array();
+        $children = array();
         $tree;
 
-        if($currentnode == "_") {
+        if ($currentnode == "_") {
             return array('id' => "", 'name' => "", 'type' => 'd');
         }
-        if($currentnode) {
-            $node  = $currentnode;
+        if ($currentnode) {
+            $node = $currentnode;
             $aname = split(":", $currentnode);
             $level = count($aname);
-            $name  = $aname[$level - 1];
+            $name = $aname[$level - 1];
         } else {
-            $node  = '';
-            $name  = '';
+            $node = '';
+            $name = '';
             $level = 0;
         }
         $sort = $sortOptions[$sortBy];
         $base = $conf['datadir'];
 
         $opts = array('ns' => $node);
-        $dir  = str_replace(':', '/', $node);
+        $dir = str_replace(':', '/', $node);
         search(
-            $nodeData, $base, 'search_index',
-            $opts, $dir, 1
+                $nodeData, $base, 'search_index', $opts, $dir, 1
         );
-        foreach(array_keys($nodeData) as $item) {
-            if($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
-                $children[$item]['id']   = $nodeData[$item]['id'];
-                $aname                   = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
+        foreach (array_keys($nodeData) as $item) {
+            if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
+                $children[$item]['id'] = $nodeData[$item]['id'];
+                $aname = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
                 $children[$item]['name'] = $aname[$level];
                 $children[$item]['type'] = $nodeData[$item]['type'];
             }
         }
 
         $tree = array(
-            'id'   => $node, 'name' => $node,
+            'id' => $node, 'name' => $node,
             'type' => 'd', 'children' => $children
         );
         return $tree;
@@ -350,17 +359,17 @@ class DokuModelAdapter implements WikiIocModel {
     public function makeFileDir($filePath) {
         io_makeFileDir($filePath);
     }
-    
-    public function tplIncDir(){
+
+    public function tplIncDir() {
         global $conf;
-        if(is_callable('tpl_incdir')){
-            $ret=  tpl_incdir();
-        }else{
-            $ret=DOKU_INC.'lib/tpl/'.$conf['template'].'/';
+        if (is_callable('tpl_incdir')) {
+            $ret = tpl_incdir();
+        } else {
+            $ret = DOKU_INC . 'lib/tpl/' . $conf['template'] . '/';
         }
         return $ret;
     }
-    
+
     /**
      * Retorna si s'ha trobat la cadena que es cerca al principi de la cadena on es busca.
      *
@@ -408,40 +417,36 @@ class DokuModelAdapter implements WikiIocModel {
      *      -8 = XSS_CONTENT
      */
     private function _saveImage($nsTarget, $idTarget, $filePathSource, $overWrite
-        , $copyFunction) {
+    , $copyFunction) {
         global $conf;
         $res = NULL; //(0=OK, -1=UNAUTHORIZED, -2=OVER_WRITING_NOT_ALLOWED,
         //-3=OVER_WRITING_UNAUTHORIZED, -5=FAILS, -4=WRONG_PARAMS
         //-6=BAD_CONTENT, -7=SPAM_CONTENT, -8=XSS_CONTENT)
         $auth = auth_quickaclcheck(getNS($idTarget) . ":*");
 
-        if($auth >= AUTH_UPLOAD) {
+        if ($auth >= AUTH_UPLOAD) {
             io_createNamespace("$nsTarget:xxx", 'media');
             list($ext, $mime, $dl) = mimetype($idTarget);
             $res_media = media_save(
-                array(
-                    'name' => $filePathSource,
-                    'mime' => $mime,
-                    'ext'  => $ext
-                ),
-                $nsTarget . ':' . $idTarget,
-                $overWrite,
-                $auth,
-                $copyFunction
+                    array(
+                'name' => $filePathSource,
+                'mime' => $mime,
+                'ext' => $ext
+                    ), $nsTarget . ':' . $idTarget, $overWrite, $auth, $copyFunction
             );
 
-            if(is_array($res_media)) {
-                if($res_media[1] == 0) {
-                    if($auth < (($conf['mediarevisions']) ? AUTH_UPLOAD : AUTH_DELETE)) {
+            if (is_array($res_media)) {
+                if ($res_media[1] == 0) {
+                    if ($auth < (($conf['mediarevisions']) ? AUTH_UPLOAD : AUTH_DELETE)) {
                         $res = -3;
                     } else {
                         $res = -2;
                     }
-                } else if($res_media[1] == -1) {
+                } else if ($res_media[1] == -1) {
                     $res = -5;
                     $res += media_contentcheck($filePathSource, $mime);
                 }
-            } else if(!$res_media) {
+            } else if (!$res_media) {
                 $res = -4;
             } else {
                 $res = 0;
@@ -453,11 +458,10 @@ class DokuModelAdapter implements WikiIocModel {
         return $res;
     }
 
-        /**
+    /**
      * Inicia tractament d'una pàgina de la dokuwiki
      */
-    private function startPageProcess($pdo, $pid = NULL, $prev = NULL, $prange = NULL,
-         $psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL) {
+    private function startPageProcess($pdo, $pid = NULL, $prev = NULL, $prange = NULL, $psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL) {
         global $ID;
         global $ACT;
         global $REV;
@@ -469,29 +473,29 @@ class DokuModelAdapter implements WikiIocModel {
         global $SUM;
 
         $ACT = $this->params['do'] = $pdo;
-        if(!$pid) {
+        if (!$pid) {
             $pid = DW_DEFAULT_PAGE;
         }
         $ID = $this->params['id'] = $pid;
-        if($prev) {
+        if ($prev) {
             $REV = $this->params['rev'] = $prev;
         }
-        if($prange) {
+        if ($prange) {
             $RANGE = $this->params['range'] = $prange;
         }
-        if($pdate) {
+        if ($pdate) {
             $DATE = $this->params['date'] = $pdate;
         }
-        if($ppre) {
+        if ($ppre) {
             $PRE = $this->params['pre'] = cleanText(substr($ppre, 0, -1));
         }
-        if($ptext) {
+        if ($ptext) {
             $TEXT = $this->params['text'] = cleanText($ptext);
         }
-        if($psuf) {
+        if ($psuf) {
             $SUF = $this->params['suf'] = cleanText($psuf);
         }
-        if($psum) {
+        if ($psum) {
             $SUM = $this->params['sum'] = $psum;
         }
 
@@ -515,112 +519,103 @@ class DokuModelAdapter implements WikiIocModel {
         global $SRC;
         global $conf;
         global $lang;
-        
+        global $INFO;
+
         $ret = $ERROR = 0;
-        
+
         $this->params['action'] = $pdo;
-        if($pdo===DW_ACT_MEDIA_DETAIL){
+        if ($pdo === DW_ACT_MEDIA_DETAIL) {
             $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "detail";
         }
-        /**
-        * Miguel Angel Lozano 12/12/2014
-        * - Obtenir el gestor de medis: aquest mètode també el fem servir en getMediaManager
-        */
-        if($pdo===DW_ACT_MEDIA_MANAGER){
-            $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "media";
+
+        if ($pImageId) {
+            $IMG = $this->params['imageId'] = $pImageId;
         }
-        /**
-         * FI Miguel Angel Lozano 12/12/2014
-         */
-        
-        if($pImageId) {
-            $IMG=$this->params['imageId'] = $pImageId;
-        }
-        if($pFromId) {
+        if ($pFromId) {
             $ID = $this->params['id'] = $pFromId;
         }
         // check image permissions
         $AUTH = auth_quickaclcheck($pImageId);
-        if($AUTH >= AUTH_READ){
+        if ($AUTH >= AUTH_READ) {
             // check if image exists
             $SRC = mediaFN($pImageId);
-            if(!file_exists($SRC)){
+            if (!file_exists($SRC)) {
                 $ret = $ERROR = 404;
             }
-        }else{
+        } else {
             // no auth
             $ret = $ERROR = 401;
         }
-        
-        if($ret!=0){
+
+        if ($ret != 0) {
             return $ret;
         }
-        
-        $INFO = array_merge(pageinfo(),mediainfo());
-        
+
+        $INFO = array_merge(pageinfo(), mediainfo());
+
         /**
-        * Stores the template wide context
-        *
-        * This template offers discussion pages via common articles, which should be
-        * marked as "special". DokuWiki does not know any "special" articles, therefore
-        * we have to take care about detecting if the current page is a discussion
-        * page or not.
-        *
-        * @var string
-        * @author Andreas Haerter <development@andreas-haerter.com>
-        */
+         * Stores the template wide context
+         *
+         * This template offers discussion pages via common articles, which should be
+         * marked as "special". DokuWiki does not know any "special" articles, therefore
+         * we have to take care about detecting if the current page is a discussion
+         * page or not.
+         *
+         * @var string
+         * @author Andreas Haerter <development@andreas-haerter.com>
+         */
         $vector_context = $this->params['vector_context'] = "article";
-        if (preg_match("/^".tpl_getConf("vector_discuss_ns")."?$|^".tpl_getConf("vector_discuss_ns").".*?$/i", ":".getNS(getID()))){
+        if (preg_match("/^" . tpl_getConf("ioc_template_discuss_ns") . "?$|^" . tpl_getConf("ioc_template_discuss_ns") . ".*?$/i", ":" . getNS(getID()))) {
             $vector_context = $this->params['vector_context'] = "discuss";
         }
-        
+
         /**
-        * Stores the name the current client used to login
-        *
-        * @var string
-        * @author Andreas Haerter <development@andreas-haerter.com>
-        */
+         * Stores the name the current client used to login
+         *
+         * @var string
+         * @author Andreas Haerter <development@andreas-haerter.com>
+         */
         $loginname = $this->params['loginName'] = "";
-        if (!empty($conf["useacl"])){
+        if (!empty($conf["useacl"])) {
             if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
-                $_SERVER["REMOTE_USER"] !== ""){
+                    $_SERVER["REMOTE_USER"] !== "") {
                 $loginname = $this->params['loginName'] = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
-                                                      //current IP differs from the one used to login)
+                //current IP differs from the one used to login)
             }
         }
-        
+
         $this->startUpLang();
 
-        
+
         //detect revision
-        $rev = $this->params['rev'] = (int)$INFO["rev"]; //$INFO comes from the DokuWiki core
-        if ($rev < 1){
-            $rev = $this->params['rev'] = (int)$INFO["lastmod"];
+        $rev = $this->params['rev'] = (int) $INFO["rev"]; //$INFO comes from the DokuWiki core
+        if ($rev < 1) {
+            $rev = $this->params['rev'] = (int) $INFO["lastmod"];
         }
 
 //        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
 //        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
         return $ret;
     }
-    
-    private function startUpLang(){
+
+    private function startUpLang() {
         global $conf;
         global $lang;
-        
+
         //get needed language array
-        include $this->tplIncDir()."lang/en/lang.php";
+        include $this->tplIncDir() . "lang/en/lang.php";
         //overwrite English language values with available translations
         if (!empty($conf["lang"]) &&
                 $conf["lang"] !== "en" &&
-                file_exists($this->tplIncDir()."/lang/".$conf["lang"]."/lang.php")){
+                file_exists($this->tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php")) {
             //get language file (partially translated language files are no problem
             //cause non translated stuff is still existing as English array value)
-            include $this->tplIncDir()."/lang/".$conf["lang"]."/lang.php";            
-        }        
+            include $this->tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php";
+        }
         if (!empty($conf["lang"]) &&
                 $conf["lang"] !== "en" &&
-                file_exists(DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php")){
-            include DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php";            
+                file_exists(DOKU_PLUGIN . "wikiiocmodel/lang/" . $conf["lang"] . "/lang.php")) {
+            include DOKU_PLUGIN . "wikiiocmodel/lang/" . $conf["lang"] . "/lang.php";
         }
     }
 
@@ -633,7 +628,7 @@ class DokuModelAdapter implements WikiIocModel {
      */
     private function doFormatedPagePreProcess() {
         $content = "";
-        if($this->runBeforePreprocess($content)) {
+        if ($this->runBeforePreprocess($content)) {
             unlock($this->params['id']); //try to unlock   
         }
         $this->runAfterPreprocess($content);
@@ -648,7 +643,7 @@ class DokuModelAdapter implements WikiIocModel {
      * @return string
      */
     private function _getImageDetail() {
-global $ID;
+        global $ID;
         global $AUTH;
         global $vector_action;
         global $vector_context;
@@ -658,11 +653,11 @@ global $ID;
         global $SRC;
         global $conf;
         global $lang;
-                
+
         $content;
         //TO DO
         ob_start();
-        include $this->tplIncDir()."inc_detail.php";
+        include $this->tplIncDir() . "inc_detail.php";
         $content = ob_get_clean();
 //        $content = preg_replace(
 //            '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i',
@@ -676,7 +671,7 @@ global $ID;
         global $ACT;
 
         $content = "";
-        if($this->runBeforePreprocess($content)) {
+        if ($this->runBeforePreprocess($content)) {
             $ACT = act_edit($ACT);
             // check permissions again - the action may have changed
             $ACT = act_permcheck($ACT);
@@ -687,20 +682,20 @@ global $ID;
 
     private function doSavePreProcess() {
         global $ACT;
-        
+
         $code = 0;
         $ret = act_save($ACT);
-        if($ret==='edit'){
-            $code = 1004;    
-        }else if($ret==='conflict'){
+        if ($ret === 'edit') {
+            $code = 1004;
+        } else if ($ret === 'conflict') {
             $code = 1003;
         }
-        if($code==0){
+        if ($code == 0) {
             $ACT = $this->params['do'] = DW_ACT_EDIT;
             $this->doEditPagePreProcess();
-        }else{
+        } else {
             $ACT = $this->params['do'] = DW_ACT_SHOW;
-            $this->doFormatedPagePreProcess();            
+            $this->doFormatedPagePreProcess();
         }
         return $code;
     }
@@ -713,8 +708,8 @@ global $ID;
     }
 
     private function getFormatedPageResponse() {
-        $id         = $this->params['id'];
-        $pageTitle  = tpl_pagetitle($this->params['id'], TRUE);
+        $id = $this->params['id'];
+        $pageTitle = tpl_pagetitle($this->params['id'], TRUE);
         $pageToSend = $this->getFormatedPage();
         return $this->getContentPage($pageToSend);
     }
@@ -723,20 +718,20 @@ global $ID;
         $pageToSend = $this->_getCodePage();
         return $this->getContentPage($pageToSend);
     }
-    
-    private function getSaveInfoResponse($code){
+
+    private function getSaveInfoResponse($code) {
         global $lang;
-        if($code==1004){
+        if ($code == 1004) {
             $ret = array();
-            $ret["code"]=$code;
-            $ret["info"]=$lang['wordblock'];
+            $ret["code"] = $code;
+            $ret["info"] = $lang['wordblock'];
             $ret["page"] = $this->getFormatedPageResponse();
-        }elseif ($code==1003) {
+        } elseif ($code == 1003) {
             $ret = array();
             $ret["code"] = $code;
             $ret["info"] = $lang['conflictsSaving']; //conflict
             $ret["page"] = $this->getFormatedPageResponse();
-        }else{
+        } else {
             $ret = array("code" => $code, "info" => $lang["saved"]);
         }
         return $ret;
@@ -746,13 +741,13 @@ global $ID;
         global $lang;
         global $ACT;
         $act_aux = $ACT;
-        $ret  = array('docId' => \str_replace(":", "_", $this->params['id']));
+        $ret = array('docId' => \str_replace(":", "_", $this->params['id']));
         $meta = array();
         $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
-        if($mEvt->advise_before()) {
-            $ACT="show";
-            $toc    = wrapper_tpl_toc();
-            $ACT=$act_aux;
+        if ($mEvt->advise_before()) {
+            $ACT = "show";
+            $toc = wrapper_tpl_toc();
+            $ACT = $act_aux;
             $metaId = \str_replace(":", "_", $this->params['id']) . '_toc';
             $meta[] = $this->getMetaPage($metaId, $lang['toc'], $toc);
         }
@@ -768,7 +763,7 @@ global $ID;
         return $JSINFO;
     }
 
-    public function getToolbarIds(&$value){
+    public function getToolbarIds(&$value) {
         $value["varName"] = "toolbar";
         $value["toolbarId"] = "tool__bar";
         $value["wikiTextId"] = "wiki__text";
@@ -784,7 +779,7 @@ global $ID;
         // give plugins an opportunity to process the action
         $this->ppEvt = new Doku_Event('ACTION_ACT_PREPROCESS', $ACT);
         ob_start();
-        $brun    = ($this->ppEvt->advise_before());
+        $brun = ($this->ppEvt->advise_before());
         $content = ob_get_clean();
         return $brun;
     }
@@ -803,16 +798,15 @@ global $ID;
         $INFO = pageinfo();
         //export minimal infos to JS, plugins can add more
 
-        return $JSINFO;                        
-        
+        return $JSINFO;
     }
 
     private function getContentPage($pageToSend) {
-        $pageTitle   = tpl_pagetitle($this->params['id'], TRUE);
+        $pageTitle = tpl_pagetitle($this->params['id'], TRUE);
         $contentData = array(
-            'id'      => \str_replace(":", "_", $this->params['id']),
-            'ns'      => $this->params['id'],
-            'title'   => $pageTitle,
+            'id' => \str_replace(":", "_", $this->params['id']),
+            'ns' => $this->params['id'],
+            'title' => $pageTitle,
             'content' => $pageToSend
         );
         return $contentData;
@@ -820,8 +814,8 @@ global $ID;
 
     private function getMetaPage($metaId, $metaTitle, $metaToSend) {
         $contentData = array(
-            'id'      => $metaId,
-            'title'   => $metaTitle,
+            'id' => $metaId,
+            'title' => $metaTitle,
             'content' => $metaToSend
         );
         return $contentData;
@@ -845,49 +839,160 @@ global $ID;
         $html_output = ob_get_clean() . "\n";
         return $html_output;
     }
-    
+
     /**
      * Miguel Angel Lozano 12/12/2014
      * - Obtenir el gestor de medis
      */
-    public function getMediaManager($imageId=NULL, $fromPage=NULL){
+    public function getMediaManager($imageId = NULL, $fromPage = NULL, $prev = NULL) {
         global $lang;
-        
-        $error = $this->startMediaProcess(DW_ACT_MEDIA_MANAGER, $imageId, $fromPage);
-        if($error==401){
+
+        $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $imageId, $fromPage, $prev);
+        if ($error == 401) {
             throw new HttpErrorCodeException($error, "Access denied");
-        }else if($error==404){
-            throw new HttpErrorCodeException($error, "Resource ". $imageId . " not found.");
+        } else if ($error == 404) {
+            throw new HttpErrorCodeException($error, "Resource " . $imageId . " not found.");
         }
         $title = $lang['img_manager'];
         $ret = array(
             "content" => $this->doMediaManagerPreProcess(),
             "imageTitle" => $title,
             "imageId" => $imageId,
+            "fromId" => $fromPage,
             "modifyImageLabel" => $lang['img_manager'],
             "closeDialogLabel" => $lang['img_backto']
         );
         return $ret;
-        
     }
-    
+
+    /**
+     * Init per a l'obtenció del MediaManager
+     * Nota: aquesta funció ha tingut com a base startMediaProcess, però la separem per les següents raons:
+     * - ha de considerar que és un altre $pdo
+     * - ha de consdierar que l'Id de la imatge pot ser null
+     * - en el futur volem partir la resposta de getMediaManager per ubicar cada component en l'àrea adient
+     *   de la nostra pàgina principal de la dokuwiki_30
+     */
+    private function startMediaManager($pdo, $pImageId = NULL, $pFromId = NULL, $prev = NULL) {
+        global $ID;
+        global $AUTH;
+        //global $vector_action;
+        //global $vector_context;
+        //global $loginname;
+        global $IMG;
+        global $ERROR;
+        global $SRC;
+        global $conf;
+        global $lang;
+        global $INFO;
+        global $REV;
+
+        $ret = $ERROR = 0;
+
+        $this->params['action'] = $pdo;
+
+        if ($pdo === DW_ACT_MEDIA_MANAGER) {
+            $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "media";
+        }
+
+
+        if ($pImageId) {
+            $IMG = $this->params['imageId'] = $pImageId;
+        }
+        if ($pFromId) {
+            $ID = $this->params['id'] = $pFromId;
+        }
+        if ($prev) {
+            $REV = $this->params['rev'] = $prev;
+        }
+        // check image permissions
+        if ($pImageId) {
+            $AUTH = auth_quickaclcheck($pImageId);
+            if ($AUTH >= AUTH_READ) {
+                // check if image exists
+                $SRC = mediaFN($pImageId);
+                if (!file_exists($SRC)) {
+                    $ret = $ERROR = 404;
+                }
+            } else {
+                // no auth
+                $ret = $ERROR = 401;
+            }
+        }
+
+        if ($ret != 0) {
+            return $ret;
+        }
+
+        $INFO = array_merge(pageinfo(), mediainfo());
+
+        /**
+         * Stores the template wide context
+         *
+         * This template offers discussion pages via common articles, which should be
+         * marked as "special". DokuWiki does not know any "special" articles, therefore
+         * we have to take care about detecting if the current page is a discussion
+         * page or not.
+         *
+         * @var string
+         * @author Andreas Haerter <development@andreas-haerter.com>
+         */
+        /* $vector_context = $this->params['vector_context'] = "article";
+          if (preg_match("/^".tpl_getConf("ioc_template_discuss_ns")."?$|^".tpl_getConf("ioc_template_discuss_ns").".*?$/i", ":".getNS(getID()))){
+          $vector_context = $this->params['vector_context'] = "discuss";
+          } */
+
+        /**
+         * Stores the name the current client used to login
+         *
+         * @var string
+         * @author Andreas Haerter <development@andreas-haerter.com>
+         */
+        /* $loginname = $this->params['loginName'] = "";
+          if (!empty($conf["useacl"])) {
+          if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
+          $_SERVER["REMOTE_USER"] !== "") {
+          $loginname = $this->params['loginName'] = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
+          //current IP differs from the one used to login)
+          }
+          } */
+
+        $this->startUpLang();
+
+
+        //detect revision
+        $rev = $this->params['rev'] = (int) $INFO["rev"]; //$INFO comes from the DokuWiki core
+        if ($rev < 1) {
+            $rev = $this->params['rev'] = (int) $INFO["lastmod"];
+        }
+
+//        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
+//        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
+        return $ret;
+    }
+
     private function doMediaManagerPreProcess() {
         global $ACT;
+        global $JUMPTO;
 
         $content = "";
-        if($this->runBeforePreprocess($content)) {
+        if ($this->runBeforePreprocess($content)) {
             ob_start();
             tpl_media();
+            if (isset($JUMPTO)) {
+                if ($JUMPTO == false) {
+                    throw new HttpErrorCodeException($error, "Bad request");
+                }
+            }
             $content .= ob_get_clean();
             // check permissions again - the action may have changed
             $ACT = act_permcheck($ACT);
         }
         $this->runAfterPreprocess($content);
         return $content;
-    }    
-    
+    }
+
     /**
      * FI Miguel Angel Lozano 12/12/2014
      */
-    
 }
