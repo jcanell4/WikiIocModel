@@ -7,3 +7,8 @@
 
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :
+$lang['createDefaultText'] = 'Pagina creada per defecte';
+$lang['conflictsSaving'] = "Hi ha confictes amb altres versions. No s'han pogut guardar els canvis";
+$lang['saved'] = "Els canvis s'han guardat correctament";
+$lang['pageNotFound'] = "Page %s not found";
+$lang['pageExists'] = "The page %s already exists";
