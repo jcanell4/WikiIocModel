@@ -30,6 +30,7 @@ if(!defined('DW_ACT_RECOVER')) define('DW_ACT_RECOVER', "recover");
 if(!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
 if(!defined('DW_ACT_MEDIA_DETAIL')) define('DW_ACT_MEDIA_DETAIL', "media_detail");
 if(!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
+if(!defined('DW_ACT_EXPORT_ADMIN')) define('DW_ACT_EXPORT_ADMIN', "admin");
 
 //    const DW_ACT_BACKLINK="backlink";
 //    const DW_ACT_REVISIONS="revisions";    
@@ -50,7 +51,6 @@ if(!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
 //    const DW_ACT_LOGOUT="logout";
 //    const DW_ACT_EXPORT_PROFILE="profile";
 //    const DW_ACT_EXPORT_RESENDPWD="resendpwd";
-//    const DW_ACT_EXPORT_ADMIN="admin";
 //    const DW_ACT_DRAFT="draft";
 //    const DW_ACT_WORDBLOCK="wordblock";
 //    const DW_ACT_CONFLICT="conflict";
@@ -118,8 +118,19 @@ class DokuModelAdapter implements WikiIocModel {
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
+    
+    public function getAdminTaskList(){
+        global $INFO;
+        global $lang;
+        
+        $this->startAdminTaskListProcess();
+        
+        $this->doAdminTaskListPreProcess();
+        
+        return $this->getAdminTaskListResponse();        
+    }
 
-   public function createPage($pid, $text=NULL) {
+    public function createPage($pid, $text=NULL) {
         global $INFO;
         global $lang;
         
@@ -455,6 +466,18 @@ class DokuModelAdapter implements WikiIocModel {
         return $res;
     }
 
+            /**
+     * Inicia tractament per obtenir la llista de gestions d'administració
+     */
+    private function startAdminTaskListProcess() {
+        global $ACT;
+        
+        $ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
+
+        $this->fillInfo();
+        $this->startUpLang();
+    }
+
         /**
      * Inicia tractament d'una pàgina de la dokuwiki
      */
@@ -688,9 +711,18 @@ class DokuModelAdapter implements WikiIocModel {
 
         $content = "";
         if($this->runBeforePreprocess($content)) {
-            $ACT = act_edit($ACT);
-            // check permissions again - the action may have changed
-            $ACT = act_permcheck($ACT);
+            $this->doCommonPreProcess();
+        }
+        $this->runAfterPreprocess($content);
+        return $content;
+    }
+
+    private function doAdminTaskListPreProcess() {
+        global $ACT;
+
+        $content = "";
+        if($this->runBeforePreprocess($content)) {
+            $this->doCommonPreProcess();
         }
         $this->runAfterPreprocess($content);
         return $content;
@@ -726,6 +758,54 @@ class DokuModelAdapter implements WikiIocModel {
     private function getFormatedPageResponse() {
         $pageToSend = $this->getFormatedPage();
         return $this->getContentPage($pageToSend);
+    }
+
+    private function getAdminTaskListResponse() {
+        $pageToSend = $this->getAdminTaskListHtml();
+        //[TO DO] -- Josep
+        //return $this->getContentPage($pageToSend);
+    }
+    
+    private function getAdminTaskListHtml(){
+        global $INFO;
+        global $conf;
+        
+        ob_start();
+        //trigger_event('TPL_ACT_RENDER', $ACT);
+
+        // build menu of admin functions from the plugins that handle them
+        $pluginlist = plugin_list('admin');
+        $menu = array();
+        foreach ($pluginlist as $p) {
+            if($obj =& plugin_load('admin',$p) === null) continue;
+
+            // check permissions
+            if($obj->forAdminOnly() && !$INFO['isadmin']) continue;
+
+            $menu[$p] = array('plugin' => $p,
+                    'prompt' => $obj->getMenuText($conf['lang']),
+                    'sort' => $obj->getMenuSort()
+                    );
+        }
+    
+        // Admin Tasks
+        if(count($menu)){
+            usort($menu, 'p_sort_modes');
+            // output the menu
+            ptln('<div class="clearer"></div>');
+            print p_locale_xhtml('adminplugins');
+            ptln('<ul>');
+            foreach ($menu as $item) {
+                if (!$item['prompt']) continue;
+                ptln('  <li><div class="li"><a href="'.DOKU_BASE.DOKU_SCRIPT.'?'
+                        .'do=admin&amp;page='.$item['plugin'].'">'.$item['prompt']
+                        .'</a></div></li>');
+            }
+            ptln('</ul>');
+        }       
+        
+        $html_output = ob_get_clean() . "\n";
+        return $html_output;
     }
 
     private function getCodePageResponse() {
@@ -976,4 +1056,24 @@ class DokuModelAdapter implements WikiIocModel {
      * FI Miguel Angel Lozano 12/12/2014
      */
     
+    private function doCommonPreProcess(){
+        global $ACT;
+                
+        $ACT = act_clean($ACT);
+        $ACT = act_permcheck($ACT);
+    }
+    
+    private function getLoginName(){
+        global $_SERVER;
+        
+        $loginname = "";
+        if (!empty($conf["useacl"])){
+            if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
+                $_SERVER["REMOTE_USER"] !== ""){
+                $loginname = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
+                                                      //current IP differs from the one used to login)
+            }
+        }
+        return  $loginname;
+    }
 }
