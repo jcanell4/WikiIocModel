@@ -750,8 +750,9 @@ class DokuModelAdapter implements WikiIocModel {
 
     private function getAdminTaskListResponse() {
         $pageToSend = $this->getAdminTaskListHtml();
-        //[TO DO] -- Josep
-        //return $this->getContentPage($pageToSend);
+        //TO DO [JOSEP] Cal agafar l'ide del contenidor del mainCFG o similar
+        $containerId = "tb_admin";
+        return $this->getAdminTaskListPage($containerId, $pageToSend);
     }
     
     private function getAdminTaskListHtml(){
@@ -899,6 +900,16 @@ class DokuModelAdapter implements WikiIocModel {
             'id' => $metaId,
             'title' => $metaTitle,
             'content' => $metaToSend
+        );
+        return $contentData;
+    }
+
+    private function getAdminTaskListPage($id, $toSend) {
+        global $lang;
+        $contentData = array(
+            'id' => $id,
+            'title' => $lang['btn_admin'] ,
+            'content' => $toSend
         );
         return $contentData;
     }
