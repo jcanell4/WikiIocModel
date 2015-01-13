@@ -296,6 +296,7 @@ class DokuModelAdapter implements WikiIocModel {
             "content" => $this->_getImageDetail(),
             "imageTitle" => $title,
             "imageId" => $imageId,
+            "fromId" => $fromPage,
             "modifyImageLabel" => $lang['img_manager'],
             "closeDialogLabel" => $lang['img_backto']
         );
@@ -844,20 +845,20 @@ class DokuModelAdapter implements WikiIocModel {
      * Miguel Angel Lozano 12/12/2014
      * - Obtenir el gestor de medis
      */
-    public function getMediaManager($imageId = NULL, $fromPage = NULL, $prev = NULL) {
+    public function getMediaManager($image = NULL, $fromPage = NULL, $prev = NULL) {
         global $lang;
 
-        $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $imageId, $fromPage, $prev);
+        $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
         if ($error == 401) {
             throw new HttpErrorCodeException($error, "Access denied");
         } else if ($error == 404) {
-            throw new HttpErrorCodeException($error, "Resource " . $imageId . " not found.");
+            throw new HttpErrorCodeException($error, "Resource " . $image . " not found.");
         }
         $title = $lang['img_manager'];
         $ret = array(
             "content" => $this->doMediaManagerPreProcess(),
             "imageTitle" => $title,
-            "imageId" => $imageId,
+            "image" => $image,
             "fromId" => $fromPage,
             "modifyImageLabel" => $lang['img_manager'],
             "closeDialogLabel" => $lang['img_backto']
@@ -873,7 +874,7 @@ class DokuModelAdapter implements WikiIocModel {
      * - en el futur volem partir la resposta de getMediaManager per ubicar cada component en l'àrea adient
      *   de la nostra pàgina principal de la dokuwiki_30
      */
-    private function startMediaManager($pdo, $pImageId = NULL, $pFromId = NULL, $prev = NULL) {
+    private function startMediaManager($pdo, $pImage = NULL, $pFromId = NULL, $prev = NULL) {
         global $ID;
         global $AUTH;
         //global $vector_action;
@@ -896,8 +897,8 @@ class DokuModelAdapter implements WikiIocModel {
         }
 
 
-        if ($pImageId) {
-            $IMG = $this->params['imageId'] = $pImageId;
+        if ($pImage) {
+            $IMG = $this->params['image'] = $pImage;
         }
         if ($pFromId) {
             $ID = $this->params['id'] = $pFromId;
@@ -906,11 +907,11 @@ class DokuModelAdapter implements WikiIocModel {
             $REV = $this->params['rev'] = $prev;
         }
         // check image permissions
-        if ($pImageId) {
-            $AUTH = auth_quickaclcheck($pImageId);
+        if ($pImage) {
+            $AUTH = auth_quickaclcheck($pImage);
             if ($AUTH >= AUTH_READ) {
                 // check if image exists
-                $SRC = mediaFN($pImageId);
+                $SRC = mediaFN($pImage);
                 if (!file_exists($SRC)) {
                     $ret = $ERROR = 404;
                 }
