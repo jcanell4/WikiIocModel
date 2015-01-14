@@ -156,8 +156,8 @@ class DokuModelAdapter implements WikiIocModel {
         $this->startPageProcess(
                 DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL, "", $text, ""
         );
-        if ($INFO["exists"]) {
-            throw new PageAlreadyExistsException($pid);
+        if($INFO["exists"]){
+            throw new PageAlreadyExistsException($pid,$lang['pageExists']);
         }
         $this->doSavePreProcess();
         return $this->getFormatedPageResponse();
@@ -165,9 +165,10 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function getHtmlPage($pid, $prev = NULL) {
         global $INFO;
+        global $lang;
         $this->startPageProcess(DW_ACT_SHOW, $pid, $prev);
-        if (!$INFO["exists"]) {
-            throw new PageNotFoundException($pid);
+        if(!$INFO["exists"]){
+            throw new PageNotFoundException($pid,$lang['pageNotFound']);
         }
         $this->doFormatedPagePreProcess();
         return $this->getFormatedPageResponse();
@@ -175,9 +176,10 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function getCodePage($pid, $prev = NULL, $prange = NULL, $psum = NULL) {
         global $INFO;
+        global $lang;        
         $this->startPageProcess(DW_ACT_EDIT, $pid, $prev, $prange, $psum);
-        if (!$INFO["exists"]) {
-            throw new PageNotFoundException($pid);
+        if(!$INFO["exists"]){
+            throw new PageNotFoundException($pid,$lang['pageNotFound']);
         }
         $this->doEditPagePreProcess();
         return $this->getCodePageResponse();
@@ -525,6 +527,7 @@ class DokuModelAdapter implements WikiIocModel {
         }
 
         $this->fillInfo();
+        $this->startUpLang();
 
 //        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
 //        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
@@ -742,8 +745,6 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     private function getFormatedPageResponse() {
-        $id = $this->params['id'];
-        $pageTitle = tpl_pagetitle($this->params['id'], TRUE);
         $pageToSend = $this->getFormatedPage();
         return $this->getContentPage($pageToSend);
     }
@@ -798,13 +799,83 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     private function getCodePageResponse() {
-        $pageToSend = $this->_getCodePage();
-        return $this->getContentPage($pageToSend);
+        $pageToSend = $this->cleanResponse($this->_getCodePage());
+        $resp = $this->getContentPage($pageToSend['content']);
+        $resp['meta'] = $pageToSend['meta'];
+        $resp['info'] = $pageToSend['info'];
+        
+        return $resp;
     }
 
-    private function getSaveInfoResponse($code) {
+    private function cleanResponse($text) {
         global $lang;
-        if ($code == 1004) {
+        $patternStart = ".*(<p>\nEditeu la pàgina.*?"; // Fins la primera coincidencia de tancament
+        $patternCloseA = "<\/p>)";
+        $patternCloseB = "\\*!]]>\\*\/<\/script>)";
+
+        // Capturem la informació
+        $pattern = '/' . $patternStart . $patternCloseA . '/s';
+        preg_match($pattern, $text, $match);
+        $info = $match[1];
+
+        // Eliminem la informació i el script inicial del contingut
+        $pattern = '/' . $patternStart . $patternCloseB . '\\s*/s';
+        $text = preg_replace($pattern, "", $text);
+
+        // Eliminem les etiquetes no desitgades
+        $pattern = "/<div id=\"size__ctl\".*?<\/div>\\s*/s";
+        $text = preg_replace($pattern, "", $text);
+
+        // Eliminem les etiquetes no desitgades
+        $pattern = "/<div class=\"editButtons\".*?<\/div>\\s*/s";
+        $text = preg_replace($pattern, "", $text);
+
+        // Copiem el license
+        $pattern = "/<div class=\"license\".*?<\/div>\\s*/s";
+        preg_match($pattern, $text, $match);
+        $license = $match[0];
+
+        // Eliminem la etiqueta
+        $text = preg_replace($pattern, "", $text);
+
+
+        // Copiem el wiki__editbar
+        $pattern = "/<div id=\"wiki__editbar\".*?<\/div>\\s*<\/div>\\s*/s";
+        preg_match($pattern, $text, $match);
+        $meta= $match[0];
+
+        // Eliminem la etiqueta
+        $text = preg_replace($pattern, "", $text);
+
+        // Capturem el id del formulari
+        $pattern = "/<form id=\"(.*?)\"/";
+        //$form = "dw__editform";
+        preg_match($pattern, $text, $match);
+        $form = $match[1];
+
+
+        // Afegim el id del formulari als inputs
+        $pattern = "/<input/";
+        $replace = "<input form=\"". $form . "\"";
+        $meta = preg_replace($pattern, $replace, $meta);
+
+
+
+        $response["content"] = $text;
+        $response["info"] = [$info, $license];
+        $metaId = \str_replace(":", "_", $this->params['id']) . '_metaEditForm';
+        $response["meta"] = [$this->getMetaPage($metaId, 
+                                            $lang['metaEditForm'], 
+                                            $meta)];
+
+        return $response;
+    }
+
+    private function getSaveInfoResponse($code){
+        global $lang;
+        global $TEXT;
+        global $ID;
+        if($code==1004){
             $ret = array();
             $ret["code"] = $code;
             $ret["info"] = $lang['wordblock'];
@@ -816,6 +887,13 @@ class DokuModelAdapter implements WikiIocModel {
             $ret["page"] = $this->getFormatedPageResponse();
         } else {
             $ret = array("code" => $code, "info" => $lang["saved"]);
+            //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg
+            //      dw__editform, date i changecheck
+            $ret["formId"] = "dw__editform";
+            $ret["inputs"] = array(
+                "date"        => @filemtime(wikiFN($ID)),
+                "changecheck" => md5($TEXT)
+            );
         }
         return $ret;
     }
