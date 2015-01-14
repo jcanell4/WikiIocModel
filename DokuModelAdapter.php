@@ -113,7 +113,8 @@ function onCodeRender($data) {
 function wrapper_tpl_toc() {
     $toc = tpl_toc(TRUE);
     $toc = preg_replace(
-            '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i', '$1<div class="dokuwiki">$2$4</div>$6', $toc
+        '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i',
+        '$1<div class="dokuwiki">$2$4</div>$6', $toc
     );
     return $toc;
 }
@@ -125,7 +126,6 @@ function wrapper_tpl_toc() {
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
 class DokuModelAdapter implements WikiIocModel {
-
     const ADMIN_PERMISSION = "admin";
 
     protected $params;
@@ -154,7 +154,8 @@ class DokuModelAdapter implements WikiIocModel {
         }
 
         $this->startPageProcess(
-                DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL, "", $text, ""
+             DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL,
+             "", $text, ""
         );
         if($INFO["exists"]){
             throw new PageAlreadyExistsException($pid,$lang['pageExists']);
@@ -191,12 +192,13 @@ class DokuModelAdapter implements WikiIocModel {
         return $this->getFormatedPageResponse();
     }
 
-    public function saveEdition($pid, $prev = NULL, $prange = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL) {
+    public function saveEdition($pid, $prev = NULL, $prange = NULL,
+        $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL) {
         $this->startPageProcess(
-                DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate, $ppre, $ptext, $psuf
+             DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate,
+             $ppre, $ptext, $psuf
         );
-        $this->startUpLang();
-        $code = $this->doSavePreProcess();
+        $code = $this->doSavePreProcess();  
         return $this->getSaveInfoResponse($code);
     }
 
@@ -343,7 +345,8 @@ class DokuModelAdapter implements WikiIocModel {
         $opts = array('ns' => $node);
         $dir = str_replace(':', '/', $node);
         search(
-                $nodeData, $base, 'search_index', $opts, $dir, 1
+            $nodeData, $base, 'search_index',
+            $opts, $dir, 1
         );
         foreach (array_keys($nodeData) as $item) {
             if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
@@ -369,6 +372,7 @@ class DokuModelAdapter implements WikiIocModel {
     /**
      * Crea el directori on ubicar el fitxer referenciat per $filePath després 
      * d'extreure'n el nom del fitxer. Aquesta funció no crea directoris recursivamnent.
+     *
      * @param type $filePath
      */
     public function makeFileDir($filePath) {
@@ -443,11 +447,15 @@ class DokuModelAdapter implements WikiIocModel {
             io_createNamespace("$nsTarget:xxx", 'media');
             list($ext, $mime, $dl) = mimetype($idTarget);
             $res_media = media_save(
-                    array(
-                'name' => $filePathSource,
-                'mime' => $mime,
-                'ext' => $ext
-                    ), $nsTarget . ':' . $idTarget, $overWrite, $auth, $copyFunction
+                array(
+                    'name' => $filePathSource,
+                    'mime' => $mime,
+                    'ext'  => $ext
+                ),
+                $nsTarget . ':' . $idTarget,
+                $overWrite,
+                $auth,
+                $copyFunction
             );
 
             if (is_array($res_media)) {
@@ -488,7 +496,8 @@ class DokuModelAdapter implements WikiIocModel {
         /**
      * Inicia tractament d'una pàgina de la dokuwiki
      */
-    private function startPageProcess($pdo, $pid = NULL, $prev = NULL, $prange = NULL, $psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL) {
+    private function startPageProcess($pdo, $pid = NULL, $prev = NULL, $prange = NULL,
+         $psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL) {
         global $ID;
         global $ACT;
         global $REV;
@@ -500,6 +509,8 @@ class DokuModelAdapter implements WikiIocModel {
         global $SUM;
 
         $ACT = $this->params['do'] = $pdo;
+        $ACT = act_clean($ACT);
+        
         if (!$pid) {
             $pid = DW_DEFAULT_PAGE;
         }
@@ -593,7 +604,12 @@ class DokuModelAdapter implements WikiIocModel {
          * @author Andreas Haerter <development@andreas-haerter.com>
          */
         $vector_context = $this->params['vector_context'] = "article";
-        if (preg_match("/^" . tpl_getConf("ioc_template_discuss_ns") . "?$|^" . tpl_getConf("ioc_template_discuss_ns") . ".*?$/i", ":" . getNS(getID()))) {
+        if($pFromId && preg_match(
+                "/^" . tpl_getConf("vector_discuss_ns") . "?$|^"
+                            .tpl_getConf("vector_discuss_ns").".*?$/i", ":"
+                . getNS(getID())
+            )
+        ) {
             $vector_context = $this->params['vector_context'] = "discuss";
         }
 
@@ -606,7 +622,8 @@ class DokuModelAdapter implements WikiIocModel {
         $loginname = $this->params['loginName'] = "";
         if (!empty($conf["useacl"])) {
             if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
-                    $_SERVER["REMOTE_USER"] !== "") {
+                $_SERVER["REMOTE_USER"] !== ""
+            ) {
                 $loginname = $this->params['loginName'] = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
                 //current IP differs from the one used to login)
             }
@@ -635,15 +652,17 @@ class DokuModelAdapter implements WikiIocModel {
         //overwrite English language values with available translations
         if (!empty($conf["lang"]) &&
                 $conf["lang"] !== "en" &&
-                file_exists($this->tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php")) {
+            file_exists($this->tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php")
+        ) {
             //get language file (partially translated language files are no problem
             //cause non translated stuff is still existing as English array value)
             include $this->tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php";
         }
         if (!empty($conf["lang"]) &&
                 $conf["lang"] !== "en" &&
-                file_exists(DOKU_PLUGIN . "wikiiocmodel/lang/" . $conf["lang"] . "/lang.php")) {
-            include DOKU_PLUGIN . "wikiiocmodel/lang/" . $conf["lang"] . "/lang.php";
+            file_exists(DOKU_PLUGIN . "wikiiocmodel/lang/" . $conf["lang"] . "/lang.php")
+        ) {
+            include DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php";            
         }
     }
 
@@ -700,7 +719,8 @@ class DokuModelAdapter implements WikiIocModel {
 
         $content = "";
         if($this->runBeforePreprocess($content)) {
-            $this->doCommonPreProcess();
+            $ACT = act_edit($ACT);
+            $ACT = act_permcheck($ACT);
         }
         $this->runAfterPreprocess($content);
         return $content;
@@ -711,7 +731,7 @@ class DokuModelAdapter implements WikiIocModel {
 
         $content = "";
         if($this->runBeforePreprocess($content)) {
-            $this->doCommonPreProcess();
+            $ACT = act_permcheck($ACT);
         }
         $this->runAfterPreprocess($content);
         return $content;
@@ -731,6 +751,10 @@ class DokuModelAdapter implements WikiIocModel {
             $ACT = $this->params['do'] = DW_ACT_EDIT;
             $this->doEditPagePreProcess();
         } else {
+            //S'han trobat conflictes i no s'ha pogut guardar
+            //TO DO [Josep] de moment tornem a la versió original, però cal 
+            //cercar una solució més operativa com ara emmagatzemar un esborrany
+            //per tal que l'usuari pugui comparar i acceptar canvis
             $ACT = $this->params['do'] = DW_ACT_SHOW;
             $this->doFormatedPagePreProcess();
         }
@@ -1166,13 +1190,6 @@ class DokuModelAdapter implements WikiIocModel {
     /**
      * FI Miguel Angel Lozano 12/12/2014
      */
-    
-    private function doCommonPreProcess(){
-        global $ACT;
-                
-        $ACT = act_clean($ACT);
-        $ACT = act_permcheck($ACT);
-    }
     
     private function getLoginName(){
         global $_SERVER;
