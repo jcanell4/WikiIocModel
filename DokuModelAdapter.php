@@ -136,10 +136,8 @@ class DokuModelAdapter implements WikiIocModel {
         global $INFO;
         global $lang;
         
-        $this->startAdminTaskListProcess();
-        
-        $this->doAdminTaskListPreProcess();
-        
+        $this->startAdminTaskListProcess();        
+        $this->doAdminTaskListPreProcess();        
         return $this->getAdminTaskListResponse();        
     }
 
