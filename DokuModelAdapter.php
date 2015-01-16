@@ -700,7 +700,6 @@ class DokuModelAdapter implements WikiIocModel {
         global $lang;
 
         $content;
-        //TO DO
         ob_start();
         include $this->tplIncDir() . "inc_detail.php";
         $content = ob_get_clean();
@@ -750,7 +749,7 @@ class DokuModelAdapter implements WikiIocModel {
             $this->doEditPagePreProcess();
         } else {
             //S'han trobat conflictes i no s'ha pogut guardar
-            //TO DO [Josep] de moment tornem a la versió original, però cal 
+            //TODO[Josep] de moment tornem a la versió original, però cal 
             //cercar una solució més operativa com ara emmagatzemar un esborrany
             //per tal que l'usuari pugui comparar i acceptar canvis
             $ACT = $this->params['do'] = DW_ACT_SHOW;
@@ -773,7 +772,7 @@ class DokuModelAdapter implements WikiIocModel {
 
     private function getAdminTaskListResponse() {
         $pageToSend = $this->getAdminTaskListHtml();
-        //TO DO [JOSEP] Cal agafar l'ide del contenidor del mainCFG o similar
+        //TODO[JOSEP] Cal agafar l'ide del contenidor del mainCFG o similar
         $containerId = "tb_admin";
         return $this->getAdminTaskListPage($containerId, $pageToSend);
     }
@@ -917,6 +916,10 @@ class DokuModelAdapter implements WikiIocModel {
                 "changecheck" => md5($TEXT)
             );
         }
+
+        $info = array("documentId" => str_replace(":", "_", $this->params['id']), "info" => $ret["info"]);
+        $ret["info"] = $info;
+
         return $ret;
     }
 
