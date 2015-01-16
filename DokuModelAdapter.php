@@ -917,6 +917,10 @@ class DokuModelAdapter implements WikiIocModel {
                 "changecheck" => md5($TEXT)
             );
         }
+
+        $info = array("documentId" => str_replace(":", "_", $this->params['id']), "info" => $ret["info"]);
+        $ret["info"] = $info;
+
         return $ret;
     }
 
