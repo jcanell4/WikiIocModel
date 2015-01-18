@@ -885,7 +885,7 @@ class DokuModelAdapter implements WikiIocModel {
 
         $response["content"] = $text;
         $response["info"] = [$info, $license];
-        $metaId = \str_replace(":", "_", $this->params['id']) . '_metaEditForm';
+        $metaId = str_replace(":", "_", $this->params['id']) . '_metaEditForm';
         $response["meta"] = [$this->getMetaPage($metaId, 
                                             $lang['metaEditForm'], 
                                             $meta)];
