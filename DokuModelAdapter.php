@@ -136,7 +136,7 @@ class DokuModelAdapter implements WikiIocModel {
         
         $this->startAdminTaskProcess($ptask);        
         $this->doAdminTaskPreProcess();        
-        return $this->getAdminTaskListResponse();        
+        return $this->getAdminTaskResponse();        
     }
 
     public function getAdminTaskList(){
@@ -814,9 +814,8 @@ class DokuModelAdapter implements WikiIocModel {
 
     private function getAdminTaskResponse() {
         $pageToSend = $this->getAdminTaskHtml();
-        //TODO[JOSEP] Cal agafar l'ide del contenidor del mainCFG o similar
-        $containerId = "tb_admin";
-        return $this->getAdminTaskListPage($containerId, $pageToSend);
+        $id = "admin_".$this->params["task"];
+        return $this->getAdminTaskPage($id, $this->params["task"], $pageToSend);
     }
     
     private function getAdminTaskHtml(){
@@ -946,7 +945,7 @@ class DokuModelAdapter implements WikiIocModel {
         $response["content"] = $text;
         $response["info"] = [$info, $license];
         $metaId = str_replace(":", "_", $this->params['id']) . '_metaEditForm';
-        $response["meta"] = [$this->getMetaPage($metaId, 
+        $response["meta"] = [$this->getCommonPage($metaId, 
                                             $lang['metaEditForm'], 
                                             $meta)];
 
@@ -996,7 +995,7 @@ class DokuModelAdapter implements WikiIocModel {
             $toc = wrapper_tpl_toc();
             $ACT = $act_aux;
             $metaId = \str_replace(":", "_", $this->params['id']) . '_toc';
-            $meta[] = $this->getMetaPage($metaId, $lang['toc'], $toc);
+            $meta[] = $this->getCommonPage($metaId, $lang['toc'], $toc);
         }
         $mEvt->advise_after();
         unset($mEvt);
@@ -1059,21 +1058,31 @@ class DokuModelAdapter implements WikiIocModel {
         return $contentData;
     }
 
-    private function getMetaPage($metaId, $metaTitle, $metaToSend) {
-        $contentData = array(
-            'id' => $metaId,
-            'title' => $metaTitle,
-            'content' => $metaToSend
-        );
-        return $contentData;
-    }
+//    private function getMetaPage($metaId, $metaTitle, $metaToSend) {
+//        $contentData = array(
+//            'id' => $metaId,
+//            'title' => $metaTitle,
+//            'content' => $metaToSend
+//        );
+//        return $contentData;
+//    }
 
     private function getAdminTaskListPage($id, $toSend) {
         global $lang;
+        return $this->getCommonPage($id, $lang['btn_admin'], $toSend);
+    }
+    
+    private function getAdminTaskPage($id, $task, $toSend) {
+        //TO DO [JOSEP] Pasar el títol correcte segons idiaoma. Cal extreure'l de
+        //plugin(admin)->getMenuText($language);
+        return $this->getCommonPage($id, $task, $toSend);
+    }
+    
+    private function getCommonPage($id, $title, $content){
         $contentData = array(
             'id' => $id,
-            'title' => $lang['btn_admin'] ,
-            'content' => $toSend
+            'title' => $title,
+            'content' => $content
         );
         return $contentData;
     }
