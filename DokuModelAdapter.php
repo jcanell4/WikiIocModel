@@ -170,7 +170,10 @@ class DokuModelAdapter implements WikiIocModel {
             throw new PageNotFoundException($pid,$lang['pageNotFound']);
         }
         $this->doFormatedPagePreProcess();
-        return $this->getFormatedPageResponse();
+
+        $response = $this->getFormatedPageResponse();
+        $response['info'] = $this->generateInfo("info", $lang['document_loaded']);
+        return $response;
     }
 
     public function getCodePage($pid, $prev = NULL, $prange = NULL, $psum = NULL) {
@@ -185,9 +188,15 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     public function cancelEdition($pid, $prev = NULL) {
+        global $lang;
+
         $this->startPageProcess(DW_ACT_DRAFTDEL, $pid, $prev);
         $this->doCancelEditPreprocess();
-        return $this->getFormatedPageResponse();
+
+        $response = $this->getFormatedPageResponse();
+        $response ['info'] = $this->generateInfo("info", $lang['edition_cancelled']);
+
+        return $response;
     }
 
     public function saveEdition($pid, $prev = NULL, $prange = NULL,
@@ -322,7 +331,6 @@ class DokuModelAdapter implements WikiIocModel {
         $sortOptions = array(0 => 'name', 'date');
         $nodeData = array();
         $children = array();
-        $tree;
 
         if ($currentnode == "_") {
             return array('id' => "", 'name' => "", 'type' => 'd');
@@ -699,7 +707,6 @@ class DokuModelAdapter implements WikiIocModel {
         global $conf;
         global $lang;
 
-        $content;
         ob_start();
         include $this->tplIncDir() . "inc_detail.php";
         $content = ob_get_clean();
@@ -766,8 +773,11 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     private function getFormatedPageResponse() {
+        GLOBAL $lang;
         $pageToSend = $this->getFormatedPage();
-        return $this->getContentPage($pageToSend);
+
+        $response = $this->getContentPage($pageToSend);
+        return $response;
     }
 
     private function getAdminTaskListResponse() {
@@ -823,8 +833,8 @@ class DokuModelAdapter implements WikiIocModel {
         $pageToSend = $this->cleanResponse($this->_getCodePage());
         $resp = $this->getContentPage($pageToSend['content']);
         $resp['meta'] = $pageToSend['meta'];
-        $resp['info'] = $pageToSend['info'];
-        
+        $resp["info"] = $this->generateInfo("info", $pageToSend['info']);
+
         return $resp;
     }
 
@@ -883,42 +893,79 @@ class DokuModelAdapter implements WikiIocModel {
 
 
         $response["content"] = $text;
-        $response["info"] = [$info, $license];
-        $metaId = str_replace(":", "_", $this->params['id']) . '_metaEditForm';
+
+        $id = str_replace(":", "_", $this->params['id']);
+        $metaId = $id . '_metaEditForm';
         $response["meta"] = [$this->getMetaPage($metaId, 
                                             $lang['metaEditForm'], 
                                             $meta)];
 
+        $response["info"] = [$info, $license];
+
         return $response;
+    }
+
+    /**
+     * Genera un element amb la informació correctament formatada i afegeix el timestamp. Si no s'especifica el id
+     * s'assignarà el id del document que s'estigui gestionant actualment.
+     *
+     * Per generar un info associat al esdeveniment global s'ha de passar el id com a buit, es a dir
+     *
+     * @param string $type - tipus de missatge
+     * @param string|string[] $message - Missatge o missatges associats amb aquesta informació
+     * @param string $id - id del document al que pertany el missatge
+     * @param int $duration - Si existeix indica la quantitat de segons que es mostrarà el missatge
+     *
+     * @return array - array amb la configuració del item de informació
+     */
+    private function generateInfo($type, $message, $id = null, $duration = -1) {
+        if ($id === null) {
+            $id = str_replace(":", "_", $this->params['id']);
+        }
+
+        return array (
+            "id" => $id,
+            "type" => $type,
+            "message" => $message,
+            "duration" => $duration,
+            "timestamp" => date("d-m-Y H:i:s"));
     }
 
     private function getSaveInfoResponse($code){
         global $lang;
         global $TEXT;
         global $ID;
+
+        $duration = -1;
+
         if($code==1004){
             $ret = array();
             $ret["code"] = $code;
             $ret["info"] = $lang['wordblock'];
             $ret["page"] = $this->getFormatedPageResponse();
+            $type = "error";
         } elseif ($code == 1003) {
             $ret = array();
             $ret["code"] = $code;
             $ret["info"] = $lang['conflictsSaving']; //conflict
             $ret["page"] = $this->getFormatedPageResponse();
+            $type = "error";
         } else {
             $ret = array("code" => $code, "info" => $lang["saved"]);
             //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg
+            //      dw__editform, date i changecheck
             //      dw__editform, date i changecheck
             $ret["formId"] = "dw__editform";
             $ret["inputs"] = array(
                 "date"        => @filemtime(wikiFN($ID)),
                 "changecheck" => md5($TEXT)
             );
+            $type = 'success';
+            $duration = 10;
         }
 
-        $info = array("documentId" => str_replace(":", "_", $this->params['id']), "info" => $ret["info"]);
-        $ret["info"] = $info;
+        // TODO[Xavi] PROVES, En cas d'exit el missatge només ha de durar 10s
+        $ret["info"] = $this->generateInfo($type, $ret["info"], null, $duration);
 
         return $ret;
     }
