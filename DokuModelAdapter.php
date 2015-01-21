@@ -132,11 +132,16 @@ class DokuModelAdapter implements WikiIocModel {
     protected $dataTmp;
     protected $ppEvt;
     
-    public function getAdminTaskList(){
-        global $INFO;
-        global $lang;
+    public function getAdminTask($ptask){
         
-        $this->startAdminTaskListProcess();        
+        $this->startAdminTaskProcess($ptask);        
+        $this->doAdminTaskPreProcess();        
+        return $this->getAdminTaskResponse();        
+    }
+
+    public function getAdminTaskList(){
+        
+        $this->startAdminTaskProcess();        
         $this->doAdminTaskListPreProcess();        
         return $this->getAdminTaskListResponse();        
     }
@@ -490,13 +495,20 @@ class DokuModelAdapter implements WikiIocModel {
             /**
      * Inicia tractament per obtenir la llista de gestions d'administració
      */
-    private function startAdminTaskListProcess() {
+    private function startAdminTaskProcess($ptask=null) {
         global $ACT;
+        global $_REQUEST;
         
         $ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
 
         $this->fillInfo();
         $this->startUpLang();
+        if($ptask){
+            if(!$_REQUEST['page'] || $_REQUEST['page']!=$ptask){
+                $_REQUEST['page']=$ptask;
+            }
+            $this->params['admin_task'] = $ptask;
+        }
     }
 
         /**
@@ -730,6 +742,36 @@ class DokuModelAdapter implements WikiIocModel {
         return $content;
     }
 
+    private function doAdminTaskPreProcess() {
+        global $ACT;
+
+        $content = "";
+        if($this->runBeforePreprocess($content)) {
+            $ACT = act_permcheck($ACT);
+            //handle admin tasks
+            // retrieve admin plugin name from $_REQUEST['page']
+            if (!empty($_REQUEST['page'])) {
+                $pluginlist = plugin_list('admin');
+                if (in_array($_REQUEST['page'], $pluginlist)) {
+                    // attempt to load the plugin
+                    if ($plugin =& plugin_load('admin',$_REQUEST['page']) !== null){
+                        if($plugin->forAdminOnly() && !$INFO['isadmin']){
+                            // a manager tried to load a plugin that's for admins only
+                            unset($_REQUEST['page']);
+                            msg('For admins only',-1);
+                        }else{
+                            $plugin->handle();
+                        }
+                    }
+                }
+            }
+            // check permissions again - the action may have changed
+            $ACT = act_permcheck($ACT);            
+        }
+        $this->runAfterPreprocess($content);
+        return $content;
+    }
+
     private function doAdminTaskListPreProcess() {
         global $ACT;
 
@@ -773,13 +815,31 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     private function getFormatedPageResponse() {
-        GLOBAL $lang;
+        global $lang;
         $pageToSend = $this->getFormatedPage();
 
         $response = $this->getContentPage($pageToSend);
         return $response;
     }
 
+    private function getAdminTaskResponse() {
+        $pageToSend = $this->getAdminTaskHtml();
+        $id = "admin_".$this->params["task"];
+        return $this->getAdminTaskPage($id, $this->params["task"], $pageToSend);
+    }
+    
+    private function getAdminTaskHtml(){
+        global $INFO;
+        global $conf;
+        
+        ob_start();
+        trigger_event('TPL_ACT_RENDER', $ACT, "tpl_admin");
+        
+        $html_output = ob_get_clean() . "\n";
+        return $html_output;
+    }
+
+    
     private function getAdminTaskListResponse() {
         $pageToSend = $this->getAdminTaskListHtml();
         //TODO[JOSEP] Cal agafar l'ide del contenidor del mainCFG o similar
@@ -792,7 +852,7 @@ class DokuModelAdapter implements WikiIocModel {
         global $conf;
         
         ob_start();
-        //trigger_event('TPL_ACT_RENDER', $ACT);
+        trigger_event('TPL_ACT_RENDER', $ACT);
 
         // build menu of admin functions from the plugins that handle them
         $pluginlist = plugin_list('admin');
@@ -893,14 +953,11 @@ class DokuModelAdapter implements WikiIocModel {
 
 
         $response["content"] = $text;
-
-        $id = str_replace(":", "_", $this->params['id']);
-        $metaId = $id . '_metaEditForm';
-        $response["meta"] = [$this->getMetaPage($metaId, 
+        $response["info"] = [$info, $license];
+        $metaId = str_replace(":", "_", $this->params['id']) . '_metaEditForm';
+        $response["meta"] = [$this->getCommonPage($metaId, 
                                             $lang['metaEditForm'], 
                                             $meta)];
-
-        $response["info"] = [$info, $license];
 
         return $response;
     }
@@ -954,7 +1011,6 @@ class DokuModelAdapter implements WikiIocModel {
             $ret = array("code" => $code, "info" => $lang["saved"]);
             //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg
             //      dw__editform, date i changecheck
-            //      dw__editform, date i changecheck
             $ret["formId"] = "dw__editform";
             $ret["inputs"] = array(
                 "date"        => @filemtime(wikiFN($ID)),
@@ -982,7 +1038,7 @@ class DokuModelAdapter implements WikiIocModel {
             $toc = wrapper_tpl_toc();
             $ACT = $act_aux;
             $metaId = \str_replace(":", "_", $this->params['id']) . '_toc';
-            $meta[] = $this->getMetaPage($metaId, $lang['toc'], $toc);
+            $meta[] = $this->getCommonPage($metaId, $lang['toc'], $toc);
         }
         $mEvt->advise_after();
         unset($mEvt);
@@ -1045,21 +1101,31 @@ class DokuModelAdapter implements WikiIocModel {
         return $contentData;
     }
 
-    private function getMetaPage($metaId, $metaTitle, $metaToSend) {
-        $contentData = array(
-            'id' => $metaId,
-            'title' => $metaTitle,
-            'content' => $metaToSend
-        );
-        return $contentData;
-    }
+//    private function getMetaPage($metaId, $metaTitle, $metaToSend) {
+//        $contentData = array(
+//            'id' => $metaId,
+//            'title' => $metaTitle,
+//            'content' => $metaToSend
+//        );
+//        return $contentData;
+//    }
 
     private function getAdminTaskListPage($id, $toSend) {
         global $lang;
+        return $this->getCommonPage($id, $lang['btn_admin'], $toSend);
+    }
+    
+    private function getAdminTaskPage($id, $task, $toSend) {
+        //TO DO [JOSEP] Pasar el títol correcte segons idiaoma. Cal extreure'l de
+        //plugin(admin)->getMenuText($language);
+        return $this->getCommonPage($id, $task, $toSend);
+    }
+    
+    private function getCommonPage($id, $title, $content){
         $contentData = array(
             'id' => $id,
-            'title' => $lang['btn_admin'] ,
-            'content' => $toSend
+            'title' => $title,
+            'content' => $content
         );
         return $contentData;
     }
@@ -1068,7 +1134,6 @@ class DokuModelAdapter implements WikiIocModel {
         global $ACT;
 
         ob_start();
-//        trigger_event('TPL_ACT_RENDER', $do, "tpl_content_core");
         trigger_event('TPL_ACT_RENDER', $ACT, 'onFormatRender');
         $html_output = ob_get_clean() . "\n";
         return $html_output;
@@ -1239,7 +1304,7 @@ class DokuModelAdapter implements WikiIocModel {
      * FI Miguel Angel Lozano 12/12/2014
      */
     
-    private function getLoginName(){
+    public function getLoginName(){
         global $_SERVER;
         
         $loginname = "";
