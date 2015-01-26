@@ -744,6 +744,7 @@ class DokuModelAdapter implements WikiIocModel {
 
     private function doAdminTaskPreProcess() {
         global $ACT;
+        global $INFO;
 
         $content = "";
         if($this->runBeforePreprocess($content)) {
