@@ -1174,7 +1174,9 @@ class DokuModelAdapter implements WikiIocModel {
         $content = "";
         if ($this->runBeforePreprocess($content)) {
             ob_start();
-            tpl_media();
+            // tpl_media(); //crida antiga total del media manager
+            //crida parcial: només a la llista de fitxers del directori
+            $this->mediaManagerFileList();
             if (isset($JUMPTO)) {
                 if ($JUMPTO == false) {
                     throw new HttpErrorCodeException($error, "Bad request");
@@ -1188,6 +1190,142 @@ class DokuModelAdapter implements WikiIocModel {
         return $content;
     }
 
+    /**
+ * Prints full-screen media manager
+ *
+ * @author Kate Arzamastseva <pshns@ukr.net>
+ */
+function mediaManagerFileList() {
+    global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
+    $fullscreen = true;
+    require_once DOKU_INC . 'lib/exe/mediamanager.php';
+
+    $rev = '';
+    $image = cleanID($INPUT->str('image'));
+    if (isset($IMG))
+        $image = $IMG;
+    if (isset($JUMPTO))
+        $image = $JUMPTO;
+    if (isset($REV) && !$JUMPTO)
+        $rev = $REV;
+
+    echo '<div id="mediamanager__page">' . NL;
+    echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
+    html_msgarea();
+
+    echo '<div class="panel namespaces">' . NL;
+    echo '<h2>' . $lang['namespaces'] . '</h2>' . NL;
+    echo '<div class="panelHeader">';
+    echo $lang['media_namespaces'];
+    echo '</div>' . NL;
+
+   
+    echo '<div class="panel filelist">' . NL;
+    tpl_mediaFileList();
+    echo '</div>' . NL;
+    echo '</div>' . NL;
+    echo '</div>' . NL;
+}
+    
+public function getMediaMetaResponse() {
+    global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
+    $fullscreen = true;
+    require_once DOKU_INC . 'lib/exe/mediamanager.php';
+
+    $rev = '';
+    $image = cleanID($INPUT->str('image'));
+    if (isset($IMG))
+        $image = $IMG;
+    if (isset($JUMPTO))
+        $image = $JUMPTO;
+    if (isset($REV) && !$JUMPTO)
+        $rev = $REV;
+            ob_start();
+
+
+    echo '<div id="mediamanager__meta">' . NL;
+    echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
+    html_msgarea();
+
+    echo '<div class="panel namespaces">' . NL;
+    echo '<h2>' . $lang['namespaces'] . '</h2>' . NL;
+    echo '<div class="panelHeader">';
+    echo $lang['media_namespaces'];
+    echo '</div>' . NL;
+
+    echo '<div class="panelContent" id="media__tree">' . NL;
+    media_nstree($NS);
+    echo '</div>' . NL;
+    echo '</div>' . NL;
+    echo '</div>' . NL;    
+
+    
+
+    echo '</div>' . NL;
+        $meta = ob_get_clean();
+        $ret = array('docId' => $NS);
+       // $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
+       /* if ($mEvt->advise_before()) {
+            $ACT = "show";
+            $toc = wrapper_tpl_toc();
+            $ACT = $act_aux;
+            $metaId = \str_replace(":", "_", $this->params['id']) . '_toc';
+            $meta[] = $this->getMetaPage($metaId, $lang['toc'], $toc);
+        }*/
+        //$mEvt->advise_after();
+        //unset($mEvt);
+        $ret['meta'] = $meta;
+        return $ret;
+    }
+    
+    public function getNsMediaTree($currentnode, $sortBy, $onlyDirs = FALSE) {
+        global $conf;
+        $sortOptions = array(0 => 'name', 'date');
+        $nodeData = array();
+        $children = array();
+        $tree;
+
+        if ($currentnode == "_") {
+            return array('id' => "", 'name' => "", 'type' => 'd');
+        }
+        if ($currentnode) {
+            $node = $currentnode;
+            $aname = split(":", $currentnode);
+            $level = count($aname);
+            $name = $aname[$level - 1];
+        } else {
+            $node = '';
+            $name = '';
+            $level = 0;
+        }
+        $sort = $sortOptions[$sortBy];
+        $base = $conf['datadir'];
+
+        $opts = array('ns' => $node);
+        $dir = str_replace(':', '/', $node);
+        search(
+            $nodeData, $base, 'search_index',
+            $opts, $dir, 1
+        );
+        foreach (array_keys($nodeData) as $item) {
+            if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
+                $children[$item]['id'] = $nodeData[$item]['id'];
+                $aname = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
+                $children[$item]['name'] = $aname[$level];
+                $children[$item]['type'] = $nodeData[$item]['type'];
+            }
+        }
+
+        /*$tree = array(
+            'id' => $node, 'name' => $node,
+            'type' => 'd', 'children' => $children
+        );*/
+        $tree = array(
+            'id' => $node, 'title' => $node,
+            'type' => 'd', 'content' => '<div>HOLA HOLA </div>'
+        );
+        return $tree;
+    }
     /**
      * FI Miguel Angel Lozano 12/12/2014
      */
