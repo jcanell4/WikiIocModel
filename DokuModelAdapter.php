@@ -1165,6 +1165,9 @@ class DokuModelAdapter implements WikiIocModel {
         $title = $lang['img_manager'];
         $ret = array(
             "content" => $this->doMediaManagerPreProcess(),
+            "id" => "media",
+            "title" => "media",
+            "ns" => $fromPage,
             "imageTitle" => $title,
             "image" => $image,
             "fromId" => $fromPage,
