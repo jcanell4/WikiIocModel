@@ -507,7 +507,7 @@ class DokuModelAdapter implements WikiIocModel {
             if(!$_REQUEST['page'] || $_REQUEST['page']!=$ptask){
                 $_REQUEST['page']=$ptask;
             }
-            $this->params['admin_task'] = $ptask;
+            $this->params['task'] = $ptask;
         }
     }
 
@@ -745,6 +745,7 @@ class DokuModelAdapter implements WikiIocModel {
     private function doAdminTaskPreProcess() {
         global $ACT;
         global $INFO;
+        global $conf;
 
         $content = "";
         if($this->runBeforePreprocess($content)) {
@@ -762,6 +763,7 @@ class DokuModelAdapter implements WikiIocModel {
                             msg('For admins only',-1);
                         }else{
                             $plugin->handle();
+                            $this->dataTmp["title"]= $plugin->getMenuText($conf['lang']);
                         }
                     }
                 }
