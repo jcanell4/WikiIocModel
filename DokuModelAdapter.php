@@ -136,7 +136,9 @@ class DokuModelAdapter implements WikiIocModel {
         
         $this->startAdminTaskProcess($ptask);        
         $this->doAdminTaskPreProcess();        
-        return $this->getAdminTaskResponse();        
+        $response = $this->getAdminTaskResponse();           
+        $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
+        return $response;
     }
 
     public function getAdminTaskList(){
