@@ -1437,8 +1437,8 @@ public function getMediaMetaResponse() {
             'type' => 'd', 'children' => $children
         );*/
         $tree = array(
-            'id' => $node, 'title' => $node,
-            'type' => 'd', 'content' => '<div>HOLA HOLA </div>'
+            'id' => 'metaMedia', 'title' => $node,
+            'content' => '<div>HOLA HOLA </div>'
         );
         return $tree;
     }
