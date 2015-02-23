@@ -1315,7 +1315,32 @@ class DokuModelAdapter implements WikiIocModel {
  *
  * @author Kate Arzamastseva <pshns@ukr.net>
  */
-function mediaManagerFileList() {
+    
+ function mediaManagerFileList() {
+    global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT,$AUTH;
+    $fullscreen = true;
+    require_once DOKU_INC . 'lib/exe/mediamanager.php';
+
+    $rev = '';
+    $image = cleanID($INPUT->str('image'));
+    if (isset($IMG))
+        $image = $IMG;
+    if (isset($JUMPTO))
+        $image = $JUMPTO;
+    if (isset($REV) && !$JUMPTO)
+        $rev = $REV;
+
+    echo '<div id="mediamanager__page">' . NL;
+   
+    echo '<div class="panel filelist ui-resizable">' . NL;
+    echo '<div class="panelContent">'.NL;
+    media_tab_files($NS, $AUTH, $JUMPTO);
+    echo '</div>' . NL;
+    echo '</div>' . NL;
+    echo '</div>' . NL;
+}
+    
+function mediaManagerFileListAntiga() {
     global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
     $fullscreen = true;
     require_once DOKU_INC . 'lib/exe/mediamanager.php';
