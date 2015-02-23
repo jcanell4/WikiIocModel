@@ -47,7 +47,7 @@ if(!defined('DW_ACT_EXPORT_ADMIN'))
     define('DW_ACT_EXPORT_ADMIN', "admin");
 
 //    const DW_ACT_BACKLINK="backlink";
-//    const DW_ACT_REVISIONS="revisions";    
+//    const DW_ACT_REVISIONS="revisions";
 //    const DW_ACT_DIFF="diff";
 //    const DW_ACT_SUBSCRIBE="subscribe";
 //    const DW_ACT_UNSUBSCRIBE="unsubscribe";
@@ -131,8 +131,9 @@ class DokuModelAdapter implements WikiIocModel {
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
-    
+
     public function getAdminTask($ptask){
+        global $lang;
         
         $this->startAdminTaskProcess($ptask);        
         $this->doAdminTaskPreProcess();        
@@ -142,10 +143,10 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     public function getAdminTaskList(){
-        
-        $this->startAdminTaskProcess();        
-        $this->doAdminTaskListPreProcess();        
-        return $this->getAdminTaskListResponse();        
+
+        $this->startAdminTaskProcess();
+        $this->doAdminTaskListPreProcess();
+        return $this->getAdminTaskListResponse();
     }
 
     public function createPage($pid, $text = NULL) {
@@ -185,7 +186,7 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function getCodePage($pid, $prev = NULL, $prange = NULL, $psum = NULL) {
         global $INFO;
-        global $lang;        
+        global $lang;
         $this->startPageProcess(DW_ACT_EDIT, $pid, $prev, $prange, $psum);
         if(!$INFO["exists"]){
             throw new PageNotFoundException($pid,$lang['pageNotFound']);
@@ -212,7 +213,7 @@ class DokuModelAdapter implements WikiIocModel {
              DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate,
              $ppre, $ptext, $psuf
         );
-        $code = $this->doSavePreProcess();  
+        $code = $this->doSavePreProcess();
         return $this->getSaveInfoResponse($code);
     }
 
@@ -383,7 +384,7 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     /**
-     * Crea el directori on ubicar el fitxer referenciat per $filePath després 
+     * Crea el directori on ubicar el fitxer referenciat per $filePath després
      * d'extreure'n el nom del fitxer. Aquesta funció no crea directoris recursivamnent.
      *
      * @param type $filePath
@@ -500,7 +501,7 @@ class DokuModelAdapter implements WikiIocModel {
     private function startAdminTaskProcess($ptask=null) {
         global $ACT;
         global $_REQUEST;
-        
+
         $ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
 
         $this->fillInfo();
@@ -530,7 +531,7 @@ class DokuModelAdapter implements WikiIocModel {
 
         $ACT = $this->params['do'] = $pdo;
         $ACT = act_clean($ACT);
-        
+
         if (!$pid) {
             $pid = DW_DEFAULT_PAGE;
         }
@@ -682,7 +683,7 @@ class DokuModelAdapter implements WikiIocModel {
                 $conf["lang"] !== "en" &&
             file_exists(DOKU_PLUGIN . "wikiiocmodel/lang/" . $conf["lang"] . "/lang.php")
         ) {
-            include DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php";            
+            include DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php";
         }
     }
 
@@ -696,7 +697,7 @@ class DokuModelAdapter implements WikiIocModel {
     private function doFormatedPagePreProcess() {
         $content = "";
         if ($this->runBeforePreprocess($content)) {
-            unlock($this->params['id']); //try to unlock   
+            unlock($this->params['id']); //try to unlock
         }
         $this->runAfterPreprocess($content);
         return $content;
@@ -771,7 +772,7 @@ class DokuModelAdapter implements WikiIocModel {
                 }
             }
             // check permissions again - the action may have changed
-            $ACT = act_permcheck($ACT);            
+            $ACT = act_permcheck($ACT);
         }
         $this->runAfterPreprocess($content);
         return $content;
@@ -803,7 +804,7 @@ class DokuModelAdapter implements WikiIocModel {
             $this->doEditPagePreProcess();
         } else {
             //S'han trobat conflictes i no s'ha pogut guardar
-            //TODO[Josep] de moment tornem a la versió original, però cal 
+            //TODO[Josep] de moment tornem a la versió original, però cal
             //cercar una solució més operativa com ara emmagatzemar un esborrany
             //per tal que l'usuari pugui comparar i acceptar canvis
             $ACT = $this->params['do'] = DW_ACT_SHOW;
@@ -832,30 +833,30 @@ class DokuModelAdapter implements WikiIocModel {
         $id = "admin_".$this->params["task"];
         return $this->getAdminTaskPage($id, $this->params["task"], $pageToSend);
     }
-    
+
     private function getAdminTaskHtml(){
         global $INFO;
         global $conf;
-        
+
         ob_start();
         trigger_event('TPL_ACT_RENDER', $ACT, "tpl_admin");
-        
+
         $html_output = ob_get_clean() . "\n";
         return $html_output;
     }
 
-    
+
     private function getAdminTaskListResponse() {
         $pageToSend = $this->getAdminTaskListHtml();
         //TODO[JOSEP] Cal agafar l'ide del contenidor del mainCFG o similar
         $containerId = "tb_admin";
         return $this->getAdminTaskListPage($containerId, $pageToSend);
     }
-    
+
     private function getAdminTaskListHtml(){
         global $INFO;
         global $conf;
-        
+
         ob_start();
         trigger_event('TPL_ACT_RENDER', $ACT);
 
@@ -873,7 +874,7 @@ class DokuModelAdapter implements WikiIocModel {
                     'sort' => $obj->getMenuSort()
                     );
         }
-    
+
         // Admin Tasks
         if(count($menu)){
             usort($menu, 'p_sort_modes');
@@ -888,8 +889,8 @@ class DokuModelAdapter implements WikiIocModel {
                         .'</a></div></li>');
             }
             ptln('</ul>');
-        }       
-        
+        }
+
         $html_output = ob_get_clean() . "\n";
         return $html_output;
     }
@@ -960,8 +961,8 @@ class DokuModelAdapter implements WikiIocModel {
         $response["content"] = $text;
         $response["info"] = [$info, $license];
         $metaId = str_replace(":", "_", $this->params['id']) . '_metaEditForm';
-        $response["meta"] = [$this->getCommonPage($metaId, 
-                                            $lang['metaEditForm'], 
+        $response["meta"] = [$this->getCommonPage($metaId,
+                                            $lang['metaEditForm'],
                                             $meta)];
 
         return $response;
@@ -1119,13 +1120,13 @@ class DokuModelAdapter implements WikiIocModel {
         global $lang;
         return $this->getCommonPage($id, $lang['btn_admin'], $toSend);
     }
-    
+
     private function getAdminTaskPage($id, $task, $toSend) {
         //TO DO [JOSEP] Pasar el títol correcte segons idiaoma. Cal extreure'l de
         //plugin(admin)->getMenuText($language);
         return $this->getCommonPage($id, $task, $toSend);
     }
-    
+
     private function getCommonPage($id, $title, $content){
         $contentData = array(
             'id' => $id,
@@ -1449,10 +1450,10 @@ public function getMediaMetaResponse() {
     /**
      * FI Miguel Angel Lozano 12/12/2014
      */
-    
+
     public function getLoginName(){
         global $_SERVER;
-        
+
         $loginname = "";
         if (!empty($conf["useacl"])){
             if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
@@ -1462,5 +1463,17 @@ public function getMediaMetaResponse() {
             }
         }
         return  $loginname;
+    }
+
+   /**
+   * Afegeix al paràmetre els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin ACL
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getAclSelectors(&$value) {
+        $value["saveSelector"] = "#acl__detail form:submit";
+        $value["updateSelector"] = "#acl_manager .level2 form:submit";
     }
 }
