@@ -451,7 +451,7 @@ class DokuModelAdapter implements WikiIocModel {
      */
     private function _saveImage($nsTarget, $idTarget, $filePathSource, $overWrite
     , $copyFunction) {
-        global $conf;
+      global $conf;
         $res = NULL; //(0=OK, -1=UNAUTHORIZED, -2=OVER_WRITING_NOT_ALLOWED,
         //-3=OVER_WRITING_UNAUTHORIZED, -5=FAILS, -4=WRONG_PARAMS
         //-6=BAD_CONTENT, -7=SPAM_CONTENT, -8=XSS_CONTENT)
@@ -495,12 +495,19 @@ class DokuModelAdapter implements WikiIocModel {
         return $res;
     }
 
-            /**
-     * Inicia tractament per obtenir la llista de gestions d'administració
-     */
+   /**
+    * Inicia tractament per obtenir la llista de gestions d'administració
+    */
     private function startAdminTaskProcess($ptask=null) {
-        global $ACT;
-        global $_REQUEST;
+       global $ACT;
+       global $_REQUEST;
+       global $ID;
+       global $conf;
+
+       // Agafem l'index
+       if (!isset($ID)) {
+          $ID = $conf['start'];
+       }
 
         $ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
 
@@ -767,9 +774,6 @@ class DokuModelAdapter implements WikiIocModel {
                             unset($_REQUEST['page']);
                             msg('For admins only',-1);
                         }else{
-                            if (!isset($ID)) {
-                              $ID = 'index';
-                            }
                             $plugin->handle();
                             $this->dataTmp["title"]= $plugin->getMenuText($conf['lang']);
                         }
