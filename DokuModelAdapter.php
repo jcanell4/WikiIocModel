@@ -134,10 +134,10 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function getAdminTask($ptask){
         global $lang;
-        
-        $this->startAdminTaskProcess($ptask);        
-        $this->doAdminTaskPreProcess();        
-        $response = $this->getAdminTaskResponse();           
+
+        $this->startAdminTaskProcess($ptask);
+        $this->doAdminTaskPreProcess();
+        $response = $this->getAdminTaskResponse();
         $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
         return $response;
     }
@@ -749,6 +749,8 @@ class DokuModelAdapter implements WikiIocModel {
         global $ACT;
         global $INFO;
         global $conf;
+        global $ID;
+
 
         $content = "";
         if($this->runBeforePreprocess($content)) {
@@ -765,6 +767,9 @@ class DokuModelAdapter implements WikiIocModel {
                             unset($_REQUEST['page']);
                             msg('For admins only',-1);
                         }else{
+                            if (!isset($ID)) {
+                              $ID = 'index';
+                            }
                             $plugin->handle();
                             $this->dataTmp["title"]= $plugin->getMenuText($conf['lang']);
                         }
@@ -1340,14 +1345,14 @@ function mediaManagerFileList() {
     echo $lang['media_namespaces'];
     echo '</div>' . NL;
 
-   
+
     echo '<div class="panel filelist">' . NL;
     tpl_mediaFileList();
     echo '</div>' . NL;
     echo '</div>' . NL;
     echo '</div>' . NL;
 }
-    
+
 public function getMediaMetaResponse() {
     global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
     $fullscreen = true;
@@ -1378,9 +1383,9 @@ public function getMediaMetaResponse() {
     media_nstree($NS);
     echo '</div>' . NL;
     echo '</div>' . NL;
-    echo '</div>' . NL;    
+    echo '</div>' . NL;
 
-    
+
 
     echo '</div>' . NL;
         $meta = ob_get_clean();
@@ -1398,7 +1403,7 @@ public function getMediaMetaResponse() {
         $ret['meta'] = $meta;
         return $ret;
     }
-    
+
     public function getNsMediaTree($currentnode, $sortBy, $onlyDirs = FALSE) {
         global $conf;
         $sortOptions = array(0 => 'name', 'date');
