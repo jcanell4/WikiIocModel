@@ -138,7 +138,22 @@ class DokuModelAdapter implements WikiIocModel {
         $this->startAdminTaskProcess($ptask);
         $this->doAdminTaskPreProcess();
         $response = $this->getAdminTaskResponse();
-        $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
+        // Informació a pantalla
+        $info_time_visible = 5;
+        switch ($_REQUEST['cmd']) {
+          case null:
+             $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
+          break;
+          case 'del':
+             $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_delete'],null,$info_time_visible);
+          break;
+          case 'save':
+          case 'update':
+             $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_update'],null,$info_time_visible);
+          break;
+          default:
+             $response['info'] = $this->generateInfo("info", $_REQUEST['cmd']);
+        }
         return $response;
     }
 
@@ -504,7 +519,7 @@ class DokuModelAdapter implements WikiIocModel {
        global $ID;
        global $conf;
 
-       // Agafem l'index
+       // Agafem l'index de la configuració
        if (!isset($ID)) {
           $ID = $conf['start'];
        }
