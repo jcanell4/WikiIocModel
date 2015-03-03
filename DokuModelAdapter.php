@@ -17,6 +17,7 @@ require_once DOKU_INC . 'inc/confutils.php';
 require_once DOKU_INC . 'inc/io.php';
 require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/template.php';
+require_once DOKU_INC . 'inc/JSON.php';
 
 if (!defined('DOKU_PLUGIN'))
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
@@ -1424,11 +1425,12 @@ public function getMediaMetaResponse() {
     }
     
     public function getNsMediaTree($currentnode, $sortBy, $onlyDirs = FALSE) {
-        global $conf;
+        /*global $conf;
         $sortOptions = array(0 => 'name', 'date');
         $nodeData = array();
         $children = array();
         $tree;
+        $json = new JSON();
 
         if ($currentnode == "_") {
             return array('id' => "", 'name' => "", 'type' => 'd');
@@ -1455,21 +1457,53 @@ public function getMediaMetaResponse() {
         foreach (array_keys($nodeData) as $item) {
             if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
                 $children[$item]['id'] = $nodeData[$item]['id'];
-                $aname = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
+                $aname = split(":", $nodeData[$item]['id']); 
                 $children[$item]['name'] = $aname[$level];
                 $children[$item]['type'] = $nodeData[$item]['type'];
             }
         }
 
-        /*$tree = array(
+        $tree = array(
             'id' => $node, 'name' => $node,
             'type' => 'd', 'children' => $children
-        );*/
-        $tree = array(
-            'id' => 'metaMedia', 'title' => $node,
-            'content' => '<div>HOLA HOLA </div>'
         );
-        return $tree;
+        $strData = $json->enc($tree);*/
+        global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
+        $fullscreen = true;
+        require_once DOKU_INC . 'lib/exe/mediamanager.php';
+
+        $rev = '';
+        $image = cleanID($INPUT->str('image'));
+        if (isset($IMG))
+            $image = $IMG;
+        if (isset($JUMPTO))
+            $image = $JUMPTO;
+        if (isset($REV) && !$JUMPTO)
+            $rev = $REV;
+        ob_start();
+
+        echo '<div id="mediamanager__meta">' . NL;
+        echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
+        html_msgarea();
+
+        echo '<div class="panel namespaces">' . NL;
+        echo '<h2>' . $lang['namespaces'] . '</h2>' . NL;
+        echo '<div class="panelHeader">';
+        echo $lang['media_namespaces'];
+        echo '</div>' . NL;
+
+        echo '<div class="panelContent dokuwiki" id="media__tree">' . NL;
+        media_nstree($NS);
+        echo '</div>' . NL;
+        echo '</div>' . NL;
+        echo '</div>' . NL;        
+        echo '</div>' . NL;
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMedia', 'title' => $node,
+            'content' => $strData
+        );
+        return $tree_ret;
     }
     /**
      * FI Miguel Angel Lozano 12/12/2014
