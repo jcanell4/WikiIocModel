@@ -1500,4 +1500,17 @@ public function getMediaMetaResponse() {
         $value["saveSelector"] = "#acl__detail form:submit";
         $value["updateSelector"] = "#acl_manager .level2 form:submit";
     }
+
+   /**
+   * Afegeix al paràmetre els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin PLUGIN
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getPluginSelectors(&$value) {
+        $value["commonSelector"] = "div.common form:submit";
+        $value["pluginsSelector"] = "form.plugins:submit";
+    }
+
 }
