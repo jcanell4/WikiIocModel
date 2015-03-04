@@ -1490,7 +1490,7 @@ public function getMediaMetaResponse() {
     }
 
    /**
-   * Afegeix al paràmetre els selectors css que es
+   * Afegeix al paràmetre $value els selectors css que es
    * fan servir per seleccionar els forms al html del pluguin ACL
    *
    * @param array $value - array de paràmetres
@@ -1502,7 +1502,7 @@ public function getMediaMetaResponse() {
     }
 
    /**
-   * Afegeix al paràmetre els selectors css que es
+   * Afegeix al paràmetre $value els selectors css que es
    * fan servir per seleccionar els forms al html del pluguin PLUGIN
    *
    * @param array $value - array de paràmetres
@@ -1512,5 +1512,17 @@ public function getMediaMetaResponse() {
         $value["commonSelector"] = "div.common form:submit";
         $value["pluginsSelector"] = "form.plugins:submit";
     }
+
+   /**
+   * Afegeix al paràmetre $value els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin CONFIG
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getConfigSelectors(&$value) {
+        $value["configSelector"] = "#config__manager form:submit";
+    }
+
 
 }
