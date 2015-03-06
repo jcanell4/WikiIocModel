@@ -140,20 +140,34 @@ class DokuModelAdapter implements WikiIocModel {
         $response = $this->getAdminTaskResponse();
         // Informació a pantalla
         $info_time_visible = 5;
-        switch ($_REQUEST['cmd']) {
-          case null:
-             $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
-          break;
-          case 'del':
-             $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_delete'],null,$info_time_visible);
-          break;
-          case 'save':
-          case 'update':
-             $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_update'],null,$info_time_visible);
-          break;
-          default:
-             $response['info'] = $this->generateInfo("info", $_REQUEST['cmd']);
-        }
+      switch ($_REQUEST['page']) {
+        case 'config':
+            // TODO[eduard] MODIFICAR MISSATGE
+            $response['info'] = $this->generateInfo("info", 'config',null,$info_time_visible);
+       break;    
+       case 'plugin':
+            // TODO[eduard] MODIFICAR MISSATGE
+            $response['info'] = $this->generateInfo("info", 'plugin',null,$info_time_visible);
+       break;    
+       case 'acl':
+            switch ($_REQUEST['cmd']) {
+                case null:
+                   $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
+                break;
+                case 'del':
+                   $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_delete'],null,$info_time_visible);
+                break;
+                case 'save':
+                case 'update':
+                   $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_update'],null,$info_time_visible);
+                break;
+                default:
+                   $response['info'] = $this->generateInfo("info", $_REQUEST['cmd']);
+             }
+        break;
+        //default:
+        //break;
+      }
         return $response;
     }
 
