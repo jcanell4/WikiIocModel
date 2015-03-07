@@ -1504,7 +1504,7 @@ public function getMediaMetaResponse() {
 
         // DO real
 
-        global $cache_revinfo;
+        global $cache_revinfo; // aixó no cal, només el declaro per veure que efectivament es carrega el caché COMPTE! aquest no inclou el document actual
 
         $revisions = getRevisions($ID, -1, 50);
 
@@ -1513,7 +1513,7 @@ public function getMediaMetaResponse() {
         foreach ($revisions as $revision) {
             $ret[$revision] = getRevisionInfo($ID, $revision);
             $ret[$revision]['date'] = date("d-m-Y H:i:s", $ret[$revision]['date']);
-            unset ($ret[$revision]['id']);
+            //unset ($ret[$revision]['id']);
         }
 
         $temp = [];
