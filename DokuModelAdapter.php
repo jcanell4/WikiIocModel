@@ -140,34 +140,34 @@ class DokuModelAdapter implements WikiIocModel {
         $response = $this->getAdminTaskResponse();
         // Informació a pantalla
         $info_time_visible = 5;
-      switch ($_REQUEST['page']) {
-        case 'config':
-            // TODO[eduard] MODIFICAR MISSATGE
-            $response['info'] = $this->generateInfo("info", 'config',null,$info_time_visible);
-       break;    
-       case 'plugin':
+        switch ($_REQUEST['page']) {
+          case 'config':
+             // TODO[eduard] MODIFICAR MISSATGE
+             $response['info'] = $this->generateInfo("info", 'config',null,$info_time_visible);
+         break;    
+         case 'plugin':
             // TODO[eduard] MODIFICAR MISSATGE
             $response['info'] = $this->generateInfo("info", 'plugin',null,$info_time_visible);
-       break;    
-       case 'acl':
-            switch ($_REQUEST['cmd']) {
-                case null:
-                   $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
-                break;
-                case 'del':
-                   $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_delete'],null,$info_time_visible);
-                break;
-                case 'save':
-                case 'update':
-                   $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_update'],null,$info_time_visible);
-                break;
-                default:
-                   $response['info'] = $this->generateInfo("info", $_REQUEST['cmd']);
-             }
-        break;
-        //default:
-        //break;
-      }
+            break;    
+         case 'acl':
+              switch ($_REQUEST['cmd']) {
+                  case null:
+                     $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
+                  break;
+                  case 'del':
+                     $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_delete'],null,$info_time_visible);
+                  break;
+                  case 'save':
+                  case 'update':
+                     $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_update'],null,$info_time_visible);
+                  break;
+                  default:
+                     $response['info'] = $this->generateInfo("info", $_REQUEST['cmd']);
+               }
+          break;
+          //default:
+          //break;
+        }
         return $response;
     }
 
@@ -803,8 +803,18 @@ class DokuModelAdapter implements WikiIocModel {
                             unset($_REQUEST['page']);
                             msg('For admins only',-1);
                         }else{
+                            if(is_callable(array($plugin, "preventRefresh"))){
+                                $allowedRefresh= $plugin->preventRefresh();
+                            }
                             $plugin->handle();
+                            $this->dataTmp["needRefresh"]=
+                                    !is_callable(array($plugin, "isRefreshNeeded")) 
+                                                            || $plugin->isRefreshNeeded();
                             $this->dataTmp["title"]= $plugin->getMenuText($conf['lang']);
+                            if(isset($allowedRefresh )
+                                    && is_callable(array($plugin, "setAllowedRefresh"))){
+                                $plugin->setAllowedRefresh($allowedRefresh);                                        
+                            }
                         }
                     }
                 }
@@ -867,9 +877,13 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     private function getAdminTaskResponse() {
-        $pageToSend = $this->getAdminTaskHtml();
-        $id = "admin_".$this->params["task"];
-        return $this->getAdminTaskPage($id, $this->params["task"], $pageToSend);
+        if(!$this->dataTmp["needRefresh"]){
+            $pageToSend = $this->getAdminTaskHtml();
+            $id = "admin_".$this->params["task"];
+            $ret = $this->getAdminTaskPage($id, $this->params["task"], $pageToSend);
+        }
+        $ret["needRefresh"]=$this->dataTmp["needRefresh"];
+        return $ret;
     }
 
     private function getAdminTaskHtml(){
