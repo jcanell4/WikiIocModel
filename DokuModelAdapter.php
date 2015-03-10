@@ -807,9 +807,10 @@ class DokuModelAdapter implements WikiIocModel {
                                 $allowedRefresh= $plugin->preventRefresh();
                             }
                             $plugin->handle();
-                            $this->dataTmp["needRefresh"]=
-                                    !is_callable(array($plugin, "isRefreshNeeded")) 
-                                                            || $plugin->isRefreshNeeded();
+                         $this->dataTmp["needRefresh"]= is_callable(array($plugin, "isRefreshNeeded"));
+                         if ($this->dataTmp["needRefresh"]) {
+                                 $this->dataTmp["needRefresh"]= $plugin->isRefreshNeeded();   
+                         } 
                             $this->dataTmp["title"]= $plugin->getMenuText($conf['lang']);
                             if(isset($allowedRefresh )
                                     && is_callable(array($plugin, "setAllowedRefresh"))){
