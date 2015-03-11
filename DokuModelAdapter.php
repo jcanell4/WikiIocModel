@@ -141,32 +141,33 @@ class DokuModelAdapter implements WikiIocModel {
         // Informació a pantalla
         $info_time_visible = 5;
         switch ($_REQUEST['page']) {
-          case 'config':
-             // TODO[eduard] MODIFICAR MISSATGE
-             $response['info'] = $this->generateInfo("info", 'config',null,$info_time_visible);
-         break;    
-         case 'plugin':
-            // TODO[eduard] MODIFICAR MISSATGE
-            $response['info'] = $this->generateInfo("info", 'plugin',null,$info_time_visible);
-            break;    
-         case 'acl':
-              switch ($_REQUEST['cmd']) {
-                  case null:
-                     $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
-                  break;
-                  case 'del':
-                     $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_delete'],null,$info_time_visible);
-                  break;
-                  case 'save':
-                  case 'update':
-                     $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_update'],null,$info_time_visible);
-                  break;
-                  default:
-                     $response['info'] = $this->generateInfo("info", $_REQUEST['cmd']);
+            case 'config':
+                 // TODO[eduard] MODIFICAR MISSATGE
+                 $response['info'] = $this->generateInfo("info", 'config',null,$info_time_visible);
+            break;
+            case 'plugin':
+                // TODO[eduard] MODIFICAR MISSATGE
+                $response['info'] = $this->generateInfo("info", 'plugin',null,$info_time_visible);
+            break;
+            case 'acl':
+                switch ($_REQUEST['cmd']) {
+                    case null:
+                        $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
+                    break;
+                    case 'del':
+                        $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_delete'],null,$info_time_visible);
+                    break;
+                    case 'save':
+                    case 'update':
+                        $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_update'],null,$info_time_visible);
+                    break;
+                    default:
+                        $response['info'] = $this->generateInfo("info", $_REQUEST['cmd']);
                }
           break;
-          //default:
-          //break;
+          default:
+                        $response['info'] = $this->generateInfo("info","Emplenar a DokumodelAdapter->getAdminTask");
+          break;
         }
         return $response;
     }
@@ -809,12 +810,12 @@ class DokuModelAdapter implements WikiIocModel {
                             $plugin->handle();
                          $this->dataTmp["needRefresh"]= is_callable(array($plugin, "isRefreshNeeded"));
                          if ($this->dataTmp["needRefresh"]) {
-                                 $this->dataTmp["needRefresh"]= $plugin->isRefreshNeeded();   
-                         } 
+                                 $this->dataTmp["needRefresh"]= $plugin->isRefreshNeeded();
+                         }
                             $this->dataTmp["title"]= $plugin->getMenuText($conf['lang']);
                             if(isset($allowedRefresh )
                                     && is_callable(array($plugin, "setAllowedRefresh"))){
-                                $plugin->setAllowedRefresh($allowedRefresh);                                        
+                                $plugin->setAllowedRefresh($allowedRefresh);
                             }
                         }
                     }
@@ -1553,5 +1554,38 @@ public function getMediaMetaResponse() {
         $value["configSelector"] = "#config__manager form:submit";
     }
 
+   /**
+   * Afegeix al paràmetre $value els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin USERMANAGER
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getUserManagerSelectors(&$value) {
+        $value["formsSelector"] = "#user__manager form:submit";
+     }
+
+   /**
+   * Afegeix al paràmetre $value els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin REVERT
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getRevertSelectors(&$value) {
+        $value["revertSelector"] = "#admin_revert form:submit";
+    }
+
+   /**
+   * Afegeix al paràmetre $value els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin LATEX
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getLatexSelectors(&$value) {
+        $value["purgeSelector"] = "";
+        $value["testSelector"] = "";
+    }
 
 }
