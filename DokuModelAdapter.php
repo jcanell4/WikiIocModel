@@ -1563,6 +1563,7 @@ public function getMediaMetaResponse() {
    */
     public function getUserManagerSelectors(&$value) {
         $value["formsSelector"] = "#user__manager form:submit";
+       $value["exportCsvName"] = "fn[export]";
      }
 
    /**
