@@ -142,12 +142,40 @@ class DokuModelAdapter implements WikiIocModel {
         $info_time_visible = 5;
         switch ($_REQUEST['page']) {
             case 'config':
-                 // TODO[eduard] MODIFICAR MISSATGE
-                 $response['info'] = $this->generateInfo("info", 'config',null,$info_time_visible);
+                if (!$response['needRefresh']) {
+                    if (isset($_REQUEST['do'])){
+                           $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+                  } else {
+                           
+                           $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $lang['button_desa'] . '"',null,$info_time_visible);
+                  }
+                }
+                /* 
+                     switch () {
+                        case null:
+                            // call from the admin tab
+                            $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+                      break;
+                      default:
+                             $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $_REQUEST['submit'] . '"',null,$info_time_visible);
+                     }
+                 */   
+               // }     
             break;
             case 'plugin':
-                // TODO[eduard] MODIFICAR MISSATGE
-                $response['info'] = $this->generateInfo("info", 'plugin',null,$info_time_visible);
+                 switch (key($_REQUEST['fn'])) {
+                    case null:
+                        // call from the admin tab
+                        $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+                    break;
+                  default:
+                        // call from the user plugin tab
+                        $fn = $_REQUEST['fn'];
+                     if (is_array($fn[key($fn)])){
+                          $fn = $fn[key($fn)];
+                     }   
+                     $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $fn[key($fn)] . '"',null,$info_time_visible);
+               }
             break;
             case 'acl':
                 switch ($_REQUEST['cmd']) {
@@ -164,9 +192,23 @@ class DokuModelAdapter implements WikiIocModel {
                     default:
                         $response['info'] = $this->generateInfo("info", $_REQUEST['cmd']);
                }
+                 break;
+         case 'usermanager':
+             switch (key($_REQUEST['fn'])) {
+                    case null:
+                        // call from the admin tab
+                        $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+                    break;
+                  default:
+                        // call from the user plugin tab
+                        $fn = $_REQUEST['fn'];
+                     $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $fn[key($fn)] . '"',null,$info_time_visible);
+                     $response['iframe'] = TRUE;
+               }
+                 break;
           break;
           default:
-                        $response['info'] = $this->generateInfo("info","Emplenar a DokumodelAdapter->getAdminTask");
+                        $response['info'] = $this->generateInfo("info","Emplenar a DokumodelAdapter->getAdminTask:"+ $_REQUEST['page']);
           break;
         }
         return $response;
@@ -1585,8 +1627,9 @@ public function getMediaMetaResponse() {
    *
    */
     public function getLatexSelectors(&$value) {
-        $value["purgeSelector"] = "";
-        $value["testSelector"] = "";
+        $value["latexSelector"] = "div.level2 form:submit"; //form
+        $value["latexpurge"] = "latexpurge"; // input name purge
+        $value["dotest"] = "dotest"; // input name test 
     }
 
 }
