@@ -203,7 +203,6 @@ class DokuModelAdapter implements WikiIocModel {
                         // call from the user plugin tab
                         $fn = $_REQUEST['fn'];
                      $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $fn[key($fn)] . '"',null,$info_time_visible);
-                     $response['iframe'] = TRUE;
                }
                  break;
           break;
