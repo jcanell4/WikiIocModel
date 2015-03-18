@@ -1159,7 +1159,9 @@ class DokuModelAdapter implements WikiIocModel {
      * - Obtenir el gestor de medis
      */
     public function getMediaManager($image = NULL, $fromPage = NULL, $prev = NULL) {
-        global $lang;
+        global $lang,$NS;
+     //   $NS = getNS($fromPage);
+        //$NS = $fromPage;
 
         $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
         if ($error == 401) {
@@ -1172,7 +1174,7 @@ class DokuModelAdapter implements WikiIocModel {
             "content" => $this->doMediaManagerPreProcess(),
             "id" => "media",
             "title" => "media",
-            "ns" => $fromPage,
+            "ns" => $NS,
             "imageTitle" => $title,
             "image" => $image,
             "fromId" => $fromPage,
@@ -1341,37 +1343,7 @@ class DokuModelAdapter implements WikiIocModel {
     echo '</div>' . NL;
 }
     
-function mediaManagerFileListAntiga() {
-    global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
-    $fullscreen = true;
-    require_once DOKU_INC . 'lib/exe/mediamanager.php';
 
-    $rev = '';
-    $image = cleanID($INPUT->str('image'));
-    if (isset($IMG))
-        $image = $IMG;
-    if (isset($JUMPTO))
-        $image = $JUMPTO;
-    if (isset($REV) && !$JUMPTO)
-        $rev = $REV;
-
-    echo '<div id="mediamanager__page">' . NL;
-    echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
-    html_msgarea();
-
-    echo '<div class="panel namespaces">' . NL;
-    echo '<h2>' . $lang['namespaces'] . '</h2>' . NL;
-    echo '<div class="panelHeader">';
-    echo $lang['media_namespaces'];
-    echo '</div>' . NL;
-
-   
-    echo '<div class="panel filelist">' . NL;
-    tpl_mediaFileList();
-    echo '</div>' . NL;
-    echo '</div>' . NL;
-    echo '</div>' . NL;
-}
     
 public function getMediaMetaResponse() {
     global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
@@ -1399,7 +1371,7 @@ public function getMediaMetaResponse() {
     echo $lang['media_namespaces'];
     echo '</div>' . NL;
 
-    echo '<div class="panelContent" id="media__tree">' . NL;
+    echo '<div class="panelContent" id="metamedia__tree">' . NL;
     media_nstree($NS);
     echo '</div>' . NL;
     echo '</div>' . NL;
@@ -1410,64 +1382,12 @@ public function getMediaMetaResponse() {
     echo '</div>' . NL;
         $meta = ob_get_clean();
         $ret = array('docId' => $NS);
-       // $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
-       /* if ($mEvt->advise_before()) {
-            $ACT = "show";
-            $toc = wrapper_tpl_toc();
-            $ACT = $act_aux;
-            $metaId = \str_replace(":", "_", $this->params['id']) . '_toc';
-            $meta[] = $this->getMetaPage($metaId, $lang['toc'], $toc);
-        }*/
-        //$mEvt->advise_after();
-        //unset($mEvt);
         $ret['meta'] = $meta;
         return $ret;
     }
     
     public function getNsMediaTree($currentnode, $sortBy, $onlyDirs = FALSE) {
-        /*global $conf;
-        $sortOptions = array(0 => 'name', 'date');
-        $nodeData = array();
-        $children = array();
-        $tree;
-        $json = new JSON();
-
-        if ($currentnode == "_") {
-            return array('id' => "", 'name' => "", 'type' => 'd');
-        }
-        if ($currentnode) {
-            $node = $currentnode;
-            $aname = split(":", $currentnode);
-            $level = count($aname);
-            $name = $aname[$level - 1];
-        } else {
-            $node = '';
-            $name = '';
-            $level = 0;
-        }
-        $sort = $sortOptions[$sortBy];
-        $base = $conf['datadir'];
-
-        $opts = array('ns' => $node);
-        $dir = str_replace(':', '/', $node);
-        search(
-            $nodeData, $base, 'search_index',
-            $opts, $dir, 1
-        );
-        foreach (array_keys($nodeData) as $item) {
-            if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
-                $children[$item]['id'] = $nodeData[$item]['id'];
-                $aname = split(":", $nodeData[$item]['id']); 
-                $children[$item]['name'] = $aname[$level];
-                $children[$item]['type'] = $nodeData[$item]['type'];
-            }
-        }
-
-        $tree = array(
-            'id' => $node, 'name' => $node,
-            'type' => 'd', 'children' => $children
-        );
-        $strData = $json->enc($tree);*/
+        
         global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
         $fullscreen = true;
         require_once DOKU_INC . 'lib/exe/mediamanager.php';
@@ -1492,7 +1412,7 @@ public function getMediaMetaResponse() {
         echo $lang['media_namespaces'];
         echo '</div>' . NL;
 
-        echo '<div class="panelContent dokuwiki" id="media__tree">' . NL;
+        echo '<div class="panelContent dokuwiki" id="metamedia__tree">' . NL;
         media_nstree($NS);
         echo '</div>' . NL;
         echo '</div>' . NL;
@@ -1500,11 +1420,110 @@ public function getMediaMetaResponse() {
         echo '</div>' . NL;
         $strData = ob_get_clean();
         $tree_ret = array(
-            'id' => 'metaMedia', 'title' => $node,
+            'id' => 'metaMedia', 'title' => "Índex Media",
             'content' => $strData
         );
         return $tree_ret;
     }
+    
+    public function getMediaTabFileOptions() {        
+        ob_start();        
+        /*echo '  <input type="radio" name="drink" id="radioOne" checked value="tea"/>
+                <label for="radioOne">Tea</label> <br />';*/
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="thumbs" value="thumbs" checked/>
+                <label for="radioOne">Thumbnails</label> <br />';
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="rows" value="rows"/>
+                <label for="radioTwo">Rows</label> <br />';
+        //echo '<div class="panelContent dokuwiki" id="metamedia__fileoptions">' . NL;
+        //media_tab_files_options();       
+        //echo '</div>' . NL;
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediafileoptions', 'title' => "Visualització",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    public function getMediaTabFileSort() {  
+        global $INPUT;
+        $checkedNom = "checked";
+        $checkedData = "";
+        if($INPUT->str('sort')){
+            if($INPUT->str('sort')=="date"){
+                $checkedNom = "";
+                $checkedData = "checked";
+            }
+        }
+        
+        ob_start();        
+        /*echo '  <input type="radio" name="drink" id="radioOne" checked value="tea"/>
+                <label for="radioOne">Tea</label> <br />';*/
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="nom" value="nom" '.$checkedNom. '/>
+                <label for="nom">Nom</label> <br />';
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="data" value="data" '.$checkedData. '/>
+                <label for="data">Data</label> <br />';
+        //echo '<div class="panelContent dokuwiki" id="metamedia__fileoptions">' . NL;
+        //media_tab_files_options();       
+        //echo '</div>' . NL;
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediafilesort', 'title' => "Ordenació",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    public function getMediaFileUpload() {  
+        global $NS,$AUTH,$JUMPTO;        
+        ob_start();        
+        media_tab_upload($NS, $AUTH, $JUMPTO);
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediafileupload', 'title' => "Càrrega de fitxers",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    function MediaUpload(){
+        global $NS, $MSG, $INPUT;
+
+        if ($_FILES['qqfile']['tmp_name']) {
+          $id = $INPUT->post->str('mediaid', $_FILES['qqfile']['name']);
+        } elseif ($INPUT->get->has('qqfile')) {
+           $id = $INPUT->get->str('qqfile');
+        }
+
+        $id = cleanID($id);
+
+        $NS = $INPUT->str('ns');
+        $ns = $NS.':'.getNS($id);
+
+        $AUTH = auth_quickaclcheck("$ns:*");
+        if($AUTH >= AUTH_UPLOAD) { io_createNamespace("$ns:xxx", 'media'); }
+
+        if ($_FILES['qqfile']['error']) unset($_FILES['qqfile']);
+
+        if ($_FILES['qqfile']['tmp_name']) $res = media_upload($NS, $AUTH, $_FILES['qqfile']);
+        if ($INPUT->get->has('qqfile')) $res = media_upload_xhr($NS, $AUTH);
+
+        if ($res) $result = array('success' => true,
+            'link' => media_managerURL(array('ns' => $ns, 'image' => $NS.':'.$id), '&'),
+            'id' => $NS.':'.$id, 'ns' => $NS);
+
+        if (!$result) {
+            $error = '';
+            if (isset($MSG)) {
+                foreach($MSG as $msg) $error .= $msg['msg'];
+            }
+            $result = array('error' => $msg['msg'], 'ns' => $NS);
+        }
+        //$json = new JSON;
+        //echo htmlspecialchars($json->encode($result), ENT_NOQUOTES);
+    }
+    
+
     /**
      * FI Miguel Angel Lozano 12/12/2014
      */
