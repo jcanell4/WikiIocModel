@@ -150,17 +150,6 @@ class DokuModelAdapter implements WikiIocModel {
                            $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $lang['button_desa'] . '"',null,$info_time_visible);
                   }
                 }
-                /* 
-                     switch () {
-                        case null:
-                            // call from the admin tab
-                            $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
-                      break;
-                      default:
-                             $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $_REQUEST['submit'] . '"',null,$info_time_visible);
-                     }
-                 */   
-               // }     
             break;
             case 'plugin':
                  switch (key($_REQUEST['fn'])) {
@@ -194,22 +183,60 @@ class DokuModelAdapter implements WikiIocModel {
                }
                  break;
          case 'usermanager':
-             switch (key($_REQUEST['fn'])) {
-                    case null:
-                        // call from the admin tab
-                        $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
-                    break;
-                  default:
-                        // call from the user plugin tab
-                        $fn = $_REQUEST['fn'];
-                     $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $fn[key($fn)] . '"',null,$info_time_visible);
-                     $response['iframe'] = TRUE;
-               }
+             $fn = $_REQUEST['fn'];
+            $key = key($fn);
+            if (!isset($key)) {
+                // call from the admin tab
+                $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+            } else {   
+                // call from the user plugin tab
+                if (is_array($fn)) {
+                   $cmd = key($fn);
+              } else {
+                   $cmd = $fn;
+              }
+
+               switch($cmd){
+                   case "add":
+                   case "delete":
+                   case "export" : 
+                   case "import" :
+                   case "importfails":
+                   case "modify":
+                   case "start":
+                   case "next":
+                   case "last":
+                   case "prev":
+                       $param =$fn[key($fn)]; 
                  break;
+                 case "edit"   : $param = $lang['button_edit_user']; break;
+                 case "search" : $param = $lang['button_filter_user']; break;
+              }
+                $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $param . '"',null,$info_time_visible);
+              $response['iframe'] = TRUE;
+            }
           break;
-          default:
-                        $response['info'] = $this->generateInfo("info","Emplenar a DokumodelAdapter->getAdminTask:"+ $_REQUEST['page']);
-          break;
+         case "revert":
+           if (isset($_REQUEST['revert'])) {
+               $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $lang['button_revert'] . '"',null,$info_time_visible);
+           } else  if (isset($_REQUEST['filter'])) {
+                $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $lang['button_cercar'] . '"',null,$info_time_visible);
+            } else {
+                $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+            } 
+         break;
+        case "latex":
+            if (isset($_REQUEST['latexpurge'])) {
+               $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $_REQUEST['latexpurge'] . '"',null,$info_time_visible);
+           } else  if (isset($_REQUEST['dotest'])) {
+                $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $_REQUEST['dotest'] . '"',null,$info_time_visible);
+            } else {
+                $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+            }
+         break;
+         default:
+                $response['info'] = $this->generateInfo("info","Emplenar a DokumodelAdapter->getAdminTask:"+ $_REQUEST['page']);
+         break;
         }
         return $response;
     }
