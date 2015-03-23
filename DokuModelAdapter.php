@@ -1039,7 +1039,8 @@ class DokuModelAdapter implements WikiIocModel {
         global $lang;
         global $ACT;
         $act_aux = $ACT;
-        $ret = array('docId' => \str_replace(":", "_", $this->params['id']));
+	    $ret = array('id' => \str_replace(":", "_", $this->params['id']));
+        //$ret = array('docId' => \str_replace(":", "_", $this->params['id']));
         $meta = array();
         $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
         if ($mEvt->advise_before()) {
@@ -1387,7 +1388,7 @@ public function getMediaMetaResponse() {
 
     echo '</div>' . NL;
         $meta = ob_get_clean();
-        $ret = array('docId' => $NS);
+        $ret = array('id' => $NS);
        // $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
        /* if ($mEvt->advise_before()) {
             $ACT = "show";
@@ -1407,7 +1408,7 @@ public function getMediaMetaResponse() {
         $sortOptions = array(0 => 'name', 'date');
         $nodeData = array();
         $children = array();
-        $tree;
+        //$tree;
 
         if ($currentnode == "_") {
             return array('id' => "", 'name' => "", 'type' => 'd');
