@@ -1467,7 +1467,7 @@ public function getMediaMetaResponse() {
     echo $lang['media_namespaces'];
     echo '</div>' . NL;
 
-    echo '<div class="panelContent" id="metamedia__tree">' . NL;
+    echo '<div class="panelContent" id="media__tree">' . NL;
     media_nstree($NS);
     echo '</div>' . NL;
     echo '</div>' . NL;
@@ -1508,7 +1508,7 @@ public function getMediaMetaResponse() {
         echo $lang['media_namespaces'];
         echo '</div>' . NL;
 
-        echo '<div class="panelContent dokuwiki" id="metamedia__tree">' . NL;
+        echo '<div class="panelContent dokuwiki" id="media__tree">' . NL;
         media_nstree($NS);
         echo '</div>' . NL;
         echo '</div>' . NL;
