@@ -146,7 +146,7 @@ class DokuModelAdapter implements WikiIocModel {
                     if (isset($_REQUEST['do'])){
                            $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
                   } else {
-                           
+
                            $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $lang['button_desa'] . '"',null,$info_time_visible);
                   }
                 }
@@ -162,7 +162,7 @@ class DokuModelAdapter implements WikiIocModel {
                         $fn = $_REQUEST['fn'];
                      if (is_array($fn[key($fn)])){
                           $fn = $fn[key($fn)];
-                     }   
+                     }
                      $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $fn[key($fn)] . '"',null,$info_time_visible);
                }
             break;
@@ -188,7 +188,7 @@ class DokuModelAdapter implements WikiIocModel {
             if (!isset($key)) {
                 // call from the admin tab
                 $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
-            } else {   
+            } else {
                 // call from the user plugin tab
                 if (is_array($fn)) {
                    $cmd = key($fn);
@@ -199,7 +199,7 @@ class DokuModelAdapter implements WikiIocModel {
                switch($cmd){
                    case "add":
                    case "delete":
-                   case "export" : 
+                   case "export" :
                    case "import" :
                    case "importfails":
                    case "modify":
@@ -207,7 +207,7 @@ class DokuModelAdapter implements WikiIocModel {
                    case "next":
                    case "last":
                    case "prev":
-                       $param =$fn[key($fn)]; 
+                       $param =$fn[key($fn)];
                  break;
                  case "edit"   : $param = $lang['button_edit_user']; break;
                  case "search" : $param = $lang['button_filter_user']; break;
@@ -223,7 +223,7 @@ class DokuModelAdapter implements WikiIocModel {
                 $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $lang['button_cercar'] . '"',null,$info_time_visible);
             } else {
                 $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
-            } 
+            }
          break;
         case "latex":
             if (isset($_REQUEST['latexpurge'])) {
@@ -969,10 +969,9 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
 
-    private function getAdminTaskListResponse() {
+    public function getAdminTaskListResponse() {
         $pageToSend = $this->getAdminTaskListHtml();
-        //TODO[JOSEP] Cal agafar l'ide del contenidor del mainCFG o similar
-        $containerId = "tb_admin";
+        $containerId = cfgIdConstants::ZONA_NAVEGACIO;
         return $this->getAdminTaskListPage($containerId, $pageToSend);
     }
 
@@ -1656,7 +1655,7 @@ public function getMediaMetaResponse() {
     public function getLatexSelectors(&$value) {
         $value["latexSelector"] = "div.level2 form:submit"; //form
         $value["latexpurge"] = "latexpurge"; // input name purge
-        $value["dotest"] = "dotest"; // input name test 
+        $value["dotest"] = "dotest"; // input name test
     }
 
 }
