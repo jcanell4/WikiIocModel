@@ -1396,11 +1396,6 @@ class DokuModelAdapter implements WikiIocModel {
             // tpl_media(); //crida antiga total del media manager
             //crida parcial: només a la llista de fitxers del directori
             $this->mediaManagerFileList();
-            if (isset($JUMPTO)) {
-                if ($JUMPTO == false) {
-                    throw new HttpErrorCodeException($error, "Bad request");
-                }
-            }
             $content .= ob_get_clean();
             // check permissions again - the action may have changed
             $ACT = act_permcheck($ACT);
@@ -1522,17 +1517,22 @@ public function getMediaMetaResponse() {
         return $tree_ret;
     }
     
-    public function getMediaTabFileOptions() {        
-        ob_start();        
-        /*echo '  <input type="radio" name="drink" id="radioOne" checked value="tea"/>
-                <label for="radioOne">Tea</label> <br />';*/
-        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="thumbs" value="thumbs" checked/>
+    public function getMediaTabFileOptions() { 
+        global $INPUT;
+
+        $checkThumbs = "checked";
+        $checkRows = "";
+        if($INPUT->str('list')){
+            if($INPUT->str('list')=="rows"){
+                $checkThumbs = "";
+                $checkRows = "checked";
+            }
+        }
+        ob_start();
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="thumbs" value="thumbs" '.$checkThumbs.'/>
                 <label for="radioOne">Thumbnails</label> <br />';
-        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="rows" value="rows"/>
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="rows" value="rows" '.$checkRows.'/>
                 <label for="radioTwo">Rows</label> <br />';
-        //echo '<div class="panelContent dokuwiki" id="metamedia__fileoptions">' . NL;
-        //media_tab_files_options();       
-        //echo '</div>' . NL;
         $strData = ob_get_clean();
         $tree_ret = array(
             'id' => 'metaMediafileoptions', 'title' => "Visualització",
@@ -1555,9 +1555,9 @@ public function getMediaMetaResponse() {
         ob_start();        
         /*echo '  <input type="radio" name="drink" id="radioOne" checked value="tea"/>
                 <label for="radioOne">Tea</label> <br />';*/
-        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="nom" value="nom" '.$checkedNom. '/>
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="nom" value="name" '.$checkedNom. '/>
                 <label for="nom">Nom</label> <br />';
-        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="data" value="data" '.$checkedData. '/>
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="data" value="date" '.$checkedData. '/>
                 <label for="data">Data</label> <br />';
         //echo '<div class="panelContent dokuwiki" id="metamedia__fileoptions">' . NL;
         //media_tab_files_options();       
@@ -1601,9 +1601,9 @@ public function getMediaMetaResponse() {
 
         if ($_FILES['qqfile']['error']) unset($_FILES['qqfile']);
 
-        if ($_FILES['qqfile']['tmp_name']) $res = media_upload($NS, $AUTH, $_FILES['qqfile']);
-        if ($INPUT->get->has('qqfile')) $res = media_upload_xhr($NS, $AUTH);
-
+       // if ($_FILES['qqfile']['tmp_name']) $res = media_upload($NS, $AUTH, $_FILES['qqfile']);
+       // if ($INPUT->get->has('qqfile')) $res = media_upload_xhr($NS, $AUTH);
+        media_upload($NS,$AUTH);
         if ($res) $result = array('success' => true,
             'link' => media_managerURL(array('ns' => $ns, 'image' => $NS.':'.$id), '&'),
             'id' => $NS.':'.$id, 'ns' => $NS);
@@ -1614,6 +1614,9 @@ public function getMediaMetaResponse() {
                 foreach($MSG as $msg) $error .= $msg['msg'];
             }
             $result = array('error' => $msg['msg'], 'ns' => $NS);
+            //$_FILES = array();
+            //unset($_FILES['upload']);
+            //$_FILES['upload']['error']="No s'ha pogut pujar el fitxer";
         }
         //$json = new JSON;
         //echo htmlspecialchars($json->encode($result), ENT_NOQUOTES);
