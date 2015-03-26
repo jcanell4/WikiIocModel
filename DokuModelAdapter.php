@@ -1214,8 +1214,8 @@ class DokuModelAdapter implements WikiIocModel {
 
         $INFO = pageinfo();
         //export minimal infos to JS, plugins can add more
-        $JSINFO['isadmin'] =  $info['isadmin'];
-        $JSINFO['ismanager'] =  $info['ismanager'];
+        $JSINFO['isadmin'] =  $INFO['isadmin'];
+        $JSINFO['ismanager'] =  $INFO['ismanager'];
 
         return $JSINFO;
     }
