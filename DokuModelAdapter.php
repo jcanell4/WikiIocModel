@@ -1428,7 +1428,14 @@ class DokuModelAdapter implements WikiIocModel {
    
     echo '<div class="panel filelist ui-resizable">' . NL;
     echo '<div class="panelContent">'.NL;
-    media_tab_files($NS, $AUTH, $JUMPTO);
+    $do = $AUTH;
+    $query = $_REQUEST['q'];
+    if (!$query) $query = '';
+    if ($do == 'searchlist' || $query) {
+        media_searchlist($query,$NS,$AUTH,true,$_REQUEST['sort']);
+    }else{
+        media_tab_files($NS, $AUTH, $JUMPTO); 
+    }
     echo '</div>' . NL;
     echo '</div>' . NL;
     echo '</div>' . NL;
@@ -1565,6 +1572,27 @@ public function getMediaMetaResponse() {
         $strData = ob_get_clean();
         $tree_ret = array(
             'id' => 'metaMediafilesort', 'title' => "Ordenació",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    public function getMediaTabSearch() {  
+        global $NS;
+        ob_start();  
+        echo '<div class="search">';
+        echo '<form accept-charset="utf-8" method="post"  id="dw__mediasearch">';
+        echo '<div class="no">';
+        echo '<p><label><span>Cerca pel nom de fitxer: </span>';
+        echo '<input type="text" id="mediaSearchq" title="Cerca en: '.$NS.'" class="edit" name="q">';
+        echo '</label>';
+        echo '<input type="submit" class="button" value="Cerca" id="mediaSearchs">';
+        echo '</p>';
+        echo '</div></form></div>';
+
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediaSearch', 'title' => "Cerca",
             'content' => $strData
         );
         return $tree_ret;
