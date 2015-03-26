@@ -47,7 +47,7 @@ if(!defined('DW_ACT_EXPORT_ADMIN'))
     define('DW_ACT_EXPORT_ADMIN', "admin");
 
 //    const DW_ACT_BACKLINK="backlink";
-//    const DW_ACT_REVISIONS="revisions";    
+//    const DW_ACT_REVISIONS="revisions";
 //    const DW_ACT_DIFF="diff";
 //    const DW_ACT_SUBSCRIBE="subscribe";
 //    const DW_ACT_UNSUBSCRIBE="unsubscribe";
@@ -130,21 +130,121 @@ class DokuModelAdapter implements WikiIocModel {
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
-    
+
     public function getAdminTask($ptask){
-        
-        $this->startAdminTaskProcess($ptask);        
-        $this->doAdminTaskPreProcess();        
-        $response = $this->getAdminTaskResponse();           
-        $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
+        global $lang;
+
+        $this->startAdminTaskProcess($ptask);
+        $this->doAdminTaskPreProcess();
+        $response = $this->getAdminTaskResponse();
+        // Informació a pantalla
+        $info_time_visible = 5;
+        switch ($_REQUEST['page']) {
+            case 'config':
+                if (!$response['needRefresh']) {
+                    if (isset($_REQUEST['do'])){
+                           $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+                  } else {
+
+                           $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $lang['button_desa'] . '"',null,$info_time_visible);
+                  }
+                }
+            break;
+            case 'plugin':
+                 switch (key($_REQUEST['fn'])) {
+                    case null:
+                        // call from the admin tab
+                        $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+                    break;
+                  default:
+                        // call from the user plugin tab
+                        $fn = $_REQUEST['fn'];
+                     if (is_array($fn[key($fn)])){
+                          $fn = $fn[key($fn)];
+                     }
+                     $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $fn[key($fn)] . '"',null,$info_time_visible);
+               }
+            break;
+            case 'acl':
+                switch ($_REQUEST['cmd']) {
+                    case null:
+                        $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded']);
+                    break;
+                    case 'del':
+                        $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_delete'],null,$info_time_visible);
+                    break;
+                    case 'save':
+                    case 'update':
+                        $response['info'] = $this->generateInfo("info", $lang['admin_task_perm_update'],null,$info_time_visible);
+                    break;
+                    default:
+                        $response['info'] = $this->generateInfo("info", $_REQUEST['cmd']);
+               }
+                 break;
+         case 'usermanager':
+             $fn = $_REQUEST['fn'];
+            $key = key($fn);
+            if (!isset($key)) {
+                // call from the admin tab
+                $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+            } else {
+                // call from the user plugin tab
+                if (is_array($fn)) {
+                   $cmd = key($fn);
+              } else {
+                   $cmd = $fn;
+              }
+
+               switch($cmd){
+                   case "add":
+                   case "delete":
+                   case "export" :
+                   case "import" :
+                   case "importfails":
+                   case "modify":
+                   case "start":
+                   case "next":
+                   case "last":
+                   case "prev":
+                       $param =$fn[key($fn)];
+                 break;
+                 case "edit"   : $param = $lang['button_edit_user']; break;
+                 case "search" : $param = $lang['button_filter_user']; break;
+              }
+                $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $param . '"',null,$info_time_visible);
+              $response['iframe'] = TRUE;
+            }
+          break;
+         case "revert":
+           if (isset($_REQUEST['revert'])) {
+               $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $lang['button_revert'] . '"',null,$info_time_visible);
+           } else  if (isset($_REQUEST['filter'])) {
+                $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $lang['button_cercar'] . '"',null,$info_time_visible);
+            } else {
+                $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+            }
+         break;
+        case "latex":
+            if (isset($_REQUEST['latexpurge'])) {
+               $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $_REQUEST['latexpurge'] . '"',null,$info_time_visible);
+           } else  if (isset($_REQUEST['dotest'])) {
+                $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $_REQUEST['dotest'] . '"',null,$info_time_visible);
+            } else {
+                $response['info'] = $this->generateInfo("info", $lang['admin_task_loaded'],null,$info_time_visible);
+            }
+         break;
+         default:
+                $response['info'] = $this->generateInfo("info","Emplenar a DokumodelAdapter->getAdminTask:"+ $_REQUEST['page']);
+         break;
+        }
         return $response;
     }
 
     public function getAdminTaskList(){
-        
-        $this->startAdminTaskProcess();        
-        $this->doAdminTaskListPreProcess();        
-        return $this->getAdminTaskListResponse();        
+
+        $this->startAdminTaskProcess();
+        $this->doAdminTaskListPreProcess();
+        return $this->getAdminTaskListResponse();
     }
 
     public function createPage($pid, $text = NULL) {
@@ -184,7 +284,7 @@ class DokuModelAdapter implements WikiIocModel {
 
     public function getCodePage($pid, $prev = NULL, $prange = NULL, $psum = NULL) {
         global $INFO;
-        global $lang;        
+        global $lang;
         $this->startPageProcess(DW_ACT_EDIT, $pid, $prev, $prange, $psum);
         if(!$INFO["exists"]){
             throw new PageNotFoundException($pid,$lang['pageNotFound']);
@@ -211,7 +311,7 @@ class DokuModelAdapter implements WikiIocModel {
              DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate,
              $ppre, $ptext, $psuf
         );
-        $code = $this->doSavePreProcess();  
+        $code = $this->doSavePreProcess();
         return $this->getSaveInfoResponse($code);
     }
 
@@ -387,7 +487,7 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     /**
-     * Crea el directori on ubicar el fitxer referenciat per $filePath després 
+     * Crea el directori on ubicar el fitxer referenciat per $filePath després
      * d'extreure'n el nom del fitxer. Aquesta funció no crea directoris recursivamnent.
      *
      * @param type $filePath
@@ -454,7 +554,7 @@ class DokuModelAdapter implements WikiIocModel {
      */
     private function _saveImage($nsTarget, $idTarget, $filePathSource, $overWrite
     , $copyFunction) {
-        global $conf;
+      global $conf;
         $res = NULL; //(0=OK, -1=UNAUTHORIZED, -2=OVER_WRITING_NOT_ALLOWED,
         //-3=OVER_WRITING_UNAUTHORIZED, -5=FAILS, -4=WRONG_PARAMS
         //-6=BAD_CONTENT, -7=SPAM_CONTENT, -8=XSS_CONTENT)
@@ -498,13 +598,20 @@ class DokuModelAdapter implements WikiIocModel {
         return $res;
     }
 
-            /**
-     * Inicia tractament per obtenir la llista de gestions d'administració
-     */
+   /**
+    * Inicia tractament per obtenir la llista de gestions d'administració
+    */
     private function startAdminTaskProcess($ptask=null) {
-        global $ACT;
-        global $_REQUEST;
-        
+       global $ACT;
+       global $_REQUEST;
+       global $ID;
+       global $conf;
+
+       // Agafem l'index de la configuració
+       if (!isset($ID)) {
+          $ID = $conf['start'];
+       }
+
         $ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
 
         $this->fillInfo();
@@ -534,7 +641,7 @@ class DokuModelAdapter implements WikiIocModel {
 
         $ACT = $this->params['do'] = $pdo;
         $ACT = act_clean($ACT);
-        
+
         if (!$pid) {
             $pid = DW_DEFAULT_PAGE;
         }
@@ -686,7 +793,7 @@ class DokuModelAdapter implements WikiIocModel {
                 $conf["lang"] !== "en" &&
             file_exists(DOKU_PLUGIN . "wikiiocmodel/lang/" . $conf["lang"] . "/lang.php")
         ) {
-            include DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php";            
+            include DOKU_PLUGIN."wikiiocmodel/lang/".$conf["lang"]."/lang.php";
         }
     }
 
@@ -700,7 +807,7 @@ class DokuModelAdapter implements WikiIocModel {
     private function doFormatedPagePreProcess() {
         $content = "";
         if ($this->runBeforePreprocess($content)) {
-            unlock($this->params['id']); //try to unlock   
+            unlock($this->params['id']); //try to unlock
         }
         $this->runAfterPreprocess($content);
         return $content;
@@ -752,6 +859,8 @@ class DokuModelAdapter implements WikiIocModel {
         global $ACT;
         global $INFO;
         global $conf;
+        global $ID;
+
 
         $content = "";
         if($this->runBeforePreprocess($content)) {
@@ -768,14 +877,25 @@ class DokuModelAdapter implements WikiIocModel {
                             unset($_REQUEST['page']);
                             msg('For admins only',-1);
                         }else{
+                            if(is_callable(array($plugin, "preventRefresh"))){
+                                $allowedRefresh= $plugin->preventRefresh();
+                            }
                             $plugin->handle();
+                         $this->dataTmp["needRefresh"]= is_callable(array($plugin, "isRefreshNeeded"));
+                         if ($this->dataTmp["needRefresh"]) {
+                                 $this->dataTmp["needRefresh"]= $plugin->isRefreshNeeded();
+                         }
                             $this->dataTmp["title"]= $plugin->getMenuText($conf['lang']);
+                            if(isset($allowedRefresh )
+                                    && is_callable(array($plugin, "setAllowedRefresh"))){
+                                $plugin->setAllowedRefresh($allowedRefresh);
+                            }
                         }
                     }
                 }
             }
             // check permissions again - the action may have changed
-            $ACT = act_permcheck($ACT);            
+            $ACT = act_permcheck($ACT);
         }
         $this->runAfterPreprocess($content);
         return $content;
@@ -807,7 +927,7 @@ class DokuModelAdapter implements WikiIocModel {
             $this->doEditPagePreProcess();
         } else {
             //S'han trobat conflictes i no s'ha pogut guardar
-            //TODO[Josep] de moment tornem a la versió original, però cal 
+            //TODO[Josep] de moment tornem a la versió original, però cal
             //cercar una solució més operativa com ara emmagatzemar un esborrany
             //per tal que l'usuari pugui comparar i acceptar canvis
             $ACT = $this->params['do'] = DW_ACT_SHOW;
@@ -832,34 +952,37 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     private function getAdminTaskResponse() {
-        $pageToSend = $this->getAdminTaskHtml();
-        $id = "admin_".$this->params["task"];
-        return $this->getAdminTaskPage($id, $this->params["task"], $pageToSend);
+        if(!$this->dataTmp["needRefresh"]){
+            $pageToSend = $this->getAdminTaskHtml();
+            $id = "admin_".$this->params["task"];
+            $ret = $this->getAdminTaskPage($id, $this->params["task"], $pageToSend);
+        }
+        $ret["needRefresh"]=$this->dataTmp["needRefresh"];
+        return $ret;
     }
-    
+
     private function getAdminTaskHtml(){
         global $INFO;
         global $conf;
-        
+
         ob_start();
         trigger_event('TPL_ACT_RENDER', $ACT, "tpl_admin");
-        
+
         $html_output = ob_get_clean() . "\n";
         return $html_output;
     }
 
-    
-    private function getAdminTaskListResponse() {
+
+    public function getAdminTaskListResponse() {
         $pageToSend = $this->getAdminTaskListHtml();
-        //TODO[JOSEP] Cal agafar l'ide del contenidor del mainCFG o similar
-        $containerId = "tb_admin";
+        $containerId = cfgIdConstants::ZONA_NAVEGACIO;
         return $this->getAdminTaskListPage($containerId, $pageToSend);
     }
-    
+
     private function getAdminTaskListHtml(){
         global $INFO;
         global $conf;
-        
+
         ob_start();
         trigger_event('TPL_ACT_RENDER', $ACT);
 
@@ -877,7 +1000,7 @@ class DokuModelAdapter implements WikiIocModel {
                     'sort' => $obj->getMenuSort()
                     );
         }
-    
+
         // Admin Tasks
         if(count($menu)){
             usort($menu, 'p_sort_modes');
@@ -892,8 +1015,8 @@ class DokuModelAdapter implements WikiIocModel {
                         .'</a></div></li>');
             }
             ptln('</ul>');
-        }       
-        
+        }
+
         $html_output = ob_get_clean() . "\n";
         return $html_output;
     }
@@ -964,8 +1087,8 @@ class DokuModelAdapter implements WikiIocModel {
         $response["content"] = $text;
         $response["info"] = [$info, $license];
         $metaId = str_replace(":", "_", $this->params['id']) . '_metaEditForm';
-        $response["meta"] = [$this->getCommonPage($metaId, 
-                                            $lang['metaEditForm'], 
+        $response["meta"] = [$this->getCommonPage($metaId,
+                                            $lang['metaEditForm'],
                                             $meta)];
 
         return $response;
@@ -1096,6 +1219,8 @@ class DokuModelAdapter implements WikiIocModel {
 
         $INFO = pageinfo();
         //export minimal infos to JS, plugins can add more
+        $JSINFO['isadmin'] =  $info['isadmin'];
+        $JSINFO['ismanager'] =  $info['ismanager'];
 
         return $JSINFO;
     }
@@ -1124,13 +1249,13 @@ class DokuModelAdapter implements WikiIocModel {
         global $lang;
         return $this->getCommonPage($id, $lang['btn_admin'], $toSend);
     }
-    
+
     private function getAdminTaskPage($id, $task, $toSend) {
         //TO DO [JOSEP] Pasar el títol correcte segons idiaoma. Cal extreure'l de
         //plugin(admin)->getMenuText($language);
         return $this->getCommonPage($id, $task, $toSend);
     }
-    
+
     private function getCommonPage($id, $title, $content){
         $contentData = array(
             'id' => $id,
@@ -1344,14 +1469,14 @@ function mediaManagerFileList() {
     echo $lang['media_namespaces'];
     echo '</div>' . NL;
 
-   
+
     echo '<div class="panel filelist">' . NL;
     tpl_mediaFileList();
     echo '</div>' . NL;
     echo '</div>' . NL;
     echo '</div>' . NL;
 }
-    
+
 public function getMediaMetaResponse() {
     global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
     $fullscreen = true;
@@ -1382,9 +1507,9 @@ public function getMediaMetaResponse() {
     media_nstree($NS);
     echo '</div>' . NL;
     echo '</div>' . NL;
-    echo '</div>' . NL;    
+    echo '</div>' . NL;
 
-    
+
 
     echo '</div>' . NL;
         $meta = ob_get_clean();
@@ -1402,7 +1527,7 @@ public function getMediaMetaResponse() {
         $ret['meta'] = $meta;
         return $ret;
     }
-    
+
     public function getNsMediaTree($currentnode, $sortBy, $onlyDirs = FALSE) {
         global $conf;
         $sortOptions = array(0 => 'name', 'date');
@@ -1454,10 +1579,10 @@ public function getMediaMetaResponse() {
     /**
      * FI Miguel Angel Lozano 12/12/2014
      */
-    
+
     public function getLoginName(){
         global $_SERVER;
-        
+
         $loginname = "";
         if (!empty($conf["useacl"])){
             if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
@@ -1520,6 +1645,78 @@ public function getMediaMetaResponse() {
         $temp = [];
         trigger_event('DOKUWIKI_DONE', $temp);
         return $ret;
+    }
+
+
+   /**
+   * Afegeix al paràmetre $value els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin ACL
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getAclSelectors(&$value) {
+        $value["saveSelector"] = "#acl__detail form:submit";
+        $value["updateSelector"] = "#acl_manager .level2 form:submit";
+    }
+
+   /**
+   * Afegeix al paràmetre $value els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin PLUGIN
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getPluginSelectors(&$value) {
+        $value["commonSelector"] = "div.common form:submit";
+        $value["pluginsSelector"] = "form.plugins:submit";
+    }
+
+   /**
+   * Afegeix al paràmetre $value els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin CONFIG
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getConfigSelectors(&$value) {
+        $value["configSelector"] = "#config__manager form:submit";
+    }
+
+   /**
+   * Afegeix al paràmetre $value els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin USERMANAGER
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getUserManagerSelectors(&$value) {
+        $value["formsSelector"] = "#user__manager form:submit";
+       $value["exportCsvName"] = "fn[export]";
+     }
+
+   /**
+   * Afegeix al paràmetre $value els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin REVERT
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getRevertSelectors(&$value) {
+        $value["revertSelector"] = "#admin_revert form:submit";
+    }
+
+   /**
+   * Afegeix al paràmetre $value els selectors css que es
+   * fan servir per seleccionar els forms al html del pluguin LATEX
+   *
+   * @param array $value - array de paràmetres
+   *
+   */
+    public function getLatexSelectors(&$value) {
+        $value["latexSelector"] = "div.level2 form:submit"; //form
+        $value["latexpurge"] = "latexpurge"; // input name purge
+        $value["dotest"] = "dotest"; // input name test
     }
 
 }
