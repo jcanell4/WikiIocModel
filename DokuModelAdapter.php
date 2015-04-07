@@ -131,6 +131,7 @@ class DokuModelAdapter implements WikiIocModel {
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
+    protected $infoLoaded=false;
 
     public function getAdminTask($ptask){
         global $lang;
@@ -314,6 +315,14 @@ class DokuModelAdapter implements WikiIocModel {
         );
         $code = $this->doSavePreProcess();
         return $this->getSaveInfoResponse($code);
+    }
+    
+    public function isAdminOrManager($checkIsmanager=true){
+        global $INFO;
+        if(!$this->infoLoaded){
+            $this->fillInfo();
+        }
+        return $INFO['isadmin'] || $checkIsmanager && $INFO['ismanager'];
     }
 
     public function isDenied() {
@@ -1225,6 +1234,7 @@ class DokuModelAdapter implements WikiIocModel {
         $JSINFO['isadmin'] =  $INFO['isadmin'];
         $JSINFO['ismanager'] =  $INFO['ismanager'];
 
+        $this->infoLoaded=true;
         return $JSINFO;
     }
 
