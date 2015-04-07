@@ -618,6 +618,8 @@ class DokuModelAdapter implements WikiIocModel {
             }
             $this->params['task'] = $ptask;
         }
+        
+        $this->triggerStartEvents();
     }
 
         /**
@@ -667,8 +669,8 @@ class DokuModelAdapter implements WikiIocModel {
         $this->fillInfo();
         $this->startUpLang();
 
-//        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
-//        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
+        $this->triggerStartEvents();
+
     }
 
     /**
@@ -765,9 +767,15 @@ class DokuModelAdapter implements WikiIocModel {
             $rev = $this->params['rev'] = (int) $INFO["lastmod"];
         }
 
-//        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
-//        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
+        $this->triggerStartEvents();
+        
         return $ret;
+    }
+    
+    private function triggerStartEvents(){
+        $tmp = array(); //NO DATA
+        trigger_event('DOKUWIKI_STARTED',  $tmp);
+        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
     }
 
     private function startUpLang() {
@@ -1407,8 +1415,8 @@ class DokuModelAdapter implements WikiIocModel {
             $rev = $this->params['rev'] = (int) $INFO["lastmod"];
         }
 
-//        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
-//        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
+        $this->triggerStartEvents();
+
         return $ret;
     }
 
