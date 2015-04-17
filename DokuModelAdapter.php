@@ -1601,7 +1601,7 @@ public function getMediaMetaResponse() {
 
         // START
         // Només definim les variables que es passen per paràmetre, la resta les ignorem
-        $ID = cleanText($id);
+
         $ACT = 'revisions';
 
         $tmp = [];
