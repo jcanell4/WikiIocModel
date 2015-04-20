@@ -130,6 +130,7 @@ class DokuModelAdapter implements WikiIocModel {
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
+    protected $infoLoaded=false;
 
     public function getAdminTask($ptask){
         global $lang;
@@ -313,6 +314,14 @@ class DokuModelAdapter implements WikiIocModel {
         );
         $code = $this->doSavePreProcess();
         return $this->getSaveInfoResponse($code);
+    }
+    
+    public function isAdminOrManager($checkIsmanager=true){
+        global $INFO;
+        if(!$this->infoLoaded){
+            $this->fillInfo();
+        }
+        return $INFO['isadmin'] || $checkIsmanager && $INFO['ismanager'];
     }
 
     /**
@@ -622,6 +631,8 @@ class DokuModelAdapter implements WikiIocModel {
             }
             $this->params['task'] = $ptask;
         }
+        
+        $this->triggerStartEvents();
     }
 
         /**
@@ -671,8 +682,8 @@ class DokuModelAdapter implements WikiIocModel {
         $this->fillInfo();
         $this->startUpLang();
 
-//        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
-//        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
+        $this->triggerStartEvents();
+
     }
 
     /**
@@ -769,9 +780,15 @@ class DokuModelAdapter implements WikiIocModel {
             $rev = $this->params['rev'] = (int) $INFO["lastmod"];
         }
 
-//        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
-//        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
+        $this->triggerStartEvents();
+        
         return $ret;
+    }
+    
+    private function triggerStartEvents(){
+        $tmp = array(); //NO DATA
+        trigger_event('DOKUWIKI_STARTED',  $tmp);
+        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
     }
 
     private function startUpLang() {
@@ -1219,9 +1236,10 @@ class DokuModelAdapter implements WikiIocModel {
 
         $INFO = pageinfo();
         //export minimal infos to JS, plugins can add more
-        $JSINFO['isadmin'] =  $info['isadmin'];
-        $JSINFO['ismanager'] =  $info['ismanager'];
+        $JSINFO['isadmin'] =  $INFO['isadmin'];
+        $JSINFO['ismanager'] =  $INFO['ismanager'];
 
+        $this->infoLoaded=true;
         return $JSINFO;
     }
 
@@ -1412,8 +1430,8 @@ class DokuModelAdapter implements WikiIocModel {
             $rev = $this->params['rev'] = (int) $INFO["lastmod"];
         }
 
-//        trigger_event('DOKUWIKI_STARTED',  $this->dataTmp);
-//        trigger_event('WIOC_AJAX_COMMAND_STARTED',  $this->dataTmp);
+        $this->triggerStartEvents();
+
         return $ret;
     }
 
