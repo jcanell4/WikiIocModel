@@ -265,6 +265,7 @@ class DokuModelAdapter implements WikiIocModel {
         if($INFO["exists"]){
             throw new PageAlreadyExistsException($pid,$lang['pageExists']);
         }
+        //
         $this->doSavePreProcess();
         return $this->getFormatedPageResponse();
     }
@@ -513,6 +514,16 @@ class DokuModelAdapter implements WikiIocModel {
             $ret = DOKU_INC . 'lib/tpl/' . $conf['template'] . '/';
         }
         return $ret;
+    }
+    
+    // configuration methods
+    /**
+     * tpl_getConf($id)
+     *
+     * use this function to access template configuration variables
+     */
+    public function tplConf($id){
+        return tpl_getConf($id);
     }
 
     /**
