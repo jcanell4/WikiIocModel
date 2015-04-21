@@ -18,6 +18,7 @@ require_once DOKU_INC . 'inc/io.php';
 require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/template.php';
 require_once DOKU_INC . 'inc/JSON.php';
+require_once DOKU_INC . 'inc/JpegMeta.php';
 
 if (!defined('DOKU_PLUGIN'))
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
@@ -46,6 +47,8 @@ if (!defined('DW_ACT_MEDIA_MANAGER'))
     define('DW_ACT_MEDIA_MANAGER', "media");
 if(!defined('DW_ACT_EXPORT_ADMIN'))
     define('DW_ACT_EXPORT_ADMIN', "admin");
+if (!defined('DW_ACT_MEDIA_DETAILS'))
+    define('DW_ACT_MEDIA_DETAILS', "mediadetails");
 
 //    const DW_ACT_BACKLINK="backlink";
 //    const DW_ACT_REVISIONS="revisions";
@@ -1797,5 +1800,130 @@ public function getMediaMetaResponse() {
         $value["latexpurge"] = "latexpurge"; // input name purge
         $value["dotest"] = "dotest"; // input name test
     }
+    
+    
+    /**
+     * Miguel Angel Lozano 21/04/2015
+     * MEDIA DETAILS: Obtenció dels detalls de un media
+     */
+    public function getMediaDetails($image) {
+        global $lang,$NS;
+
+        $error = $this->startMediaDetails(DW_ACT_MEDIA_DETAILS, $image);
+        if ($error == 401) {
+            throw new HttpErrorCodeException($error, "Access denied");
+        } else if ($error == 404) {
+            throw new HttpErrorCodeException($error, "Resource " . $image . " not found.");
+        }
+        $title = $lang['img_manager'];
+        $ret = array(
+            "content" => $this->doMediaDetailsPreProcess(),
+            "id" => $image,
+            "title" => $image,
+            "ns" => $NS,
+            "imageTitle" => $image,
+            "image" => $image
+        );
+        return $ret;
+    }
+    
+    /**
+     * Init per a l'obtenció del Media Details
+     * Nota: aquesta funció ha tingut com a base startMediaProcess, però la separem per les següents raons:
+     */
+    private function startMediaDetails($pdo, $pImage) {     
+        global $ID;
+        global $AUTH;
+        global $IMG;
+        global $ERROR;
+        global $SRC;
+        global $conf;
+        global $lang;
+        global $INFO;
+        global $REV;
+        $ret = $ERROR = 0;
+        $this->params['action'] = $pdo;
+
+        if ($pImage) {
+            $IMG = $this->params['image'] = $pImage;
+        }
+
+        // check image permissions
+        if ($pImage) {
+            $AUTH = auth_quickaclcheck($pImage);
+            if ($AUTH >= AUTH_READ) {
+                // check if image exists
+                $SRC = mediaFN($pImage);
+                if (!file_exists($SRC)) {
+                    $ret = $ERROR = 404;
+                }
+            } else {
+                // no auth
+                $ret = $ERROR = 401;
+            }
+        }
+
+        if ($ret != 0) {
+            return $ret;
+        }
+
+        $INFO = array_merge(pageinfo(), mediainfo());
+
+
+        $this->startUpLang();
+
+        //detect revision
+        $rev = $this->params['rev'] = (int) $INFO["rev"]; //$INFO comes from the DokuWiki core
+        if ($rev < 1) {
+            $rev = $this->params['rev'] = (int) $INFO["lastmod"];
+        }
+
+        $this->triggerStartEvents();
+
+        return $ret;
+    }
+    
+    private function doMediaDetailsPreProcess() {
+        global $ACT;
+        global $JUMPTO;
+
+        $content = "";
+        if ($this->runBeforePreprocess($content)) {
+            ob_start();
+            $this->mediaDetailsContent();
+            $content .= ob_get_clean();
+            // check permissions again - the action may have changed
+            $ACT = act_permcheck($ACT);
+        }
+        $this->runAfterPreprocess($content);
+        return $content;
+    }
+
+    /**
+    * Prints full-screen media details
+    */
+    
+    function mediaDetailsContent() {
+
+        global $NS, $IMG, $JUMPTO, $REV, $lang, $conf, $fullscreen, $INPUT,$AUTH;
+        $fullscreen = true;
+        require_once DOKU_INC . 'lib/exe/mediamanager.php';
+
+        $rev = '';
+        $image = cleanID($INPUT->str('image'));
+        if (isset($IMG))
+            $image = $IMG;
+        if (isset($JUMPTO))
+            $image = $JUMPTO;
+        if (isset($REV) && !$JUMPTO)
+            $rev = $REV;
+
+        echo '<div class="panelContent">'.NL;
+        $meta = new JpegMeta(mediaFN($image, $rev));
+        media_preview($image, $AUTH, $rev, $meta);
+        media_details($image, $auth, $rev, $meta);
+        echo '</div>'.NL;
+    }
+    
 
 }
