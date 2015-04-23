@@ -1545,13 +1545,22 @@ public function getMediaMetaResponse() {
 
     echo '</div>' . NL;
         $meta = ob_get_clean();
-        $ret = array('docId' => $NS);
+        $ret = array('id' => $NS);
+       // $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
+       /* if ($mEvt->advise_before()) {
+            $ACT = "show";
+            $toc = wrapper_tpl_toc();
+            $ACT = $act_aux;
+            $metaId = \str_replace(":", "_", $this->params['id']) . '_toc';
+            $meta[] = $this->getMetaPage($metaId, $lang['toc'], $toc);
+        }*/
+        //$mEvt->advise_after();
+        //unset($mEvt);
         $ret['meta'] = $meta;
         return $ret;
     }
 
     public function getNsMediaTree($currentnode, $sortBy, $onlyDirs = FALSE) {
-        
         global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
         $fullscreen = true;
         require_once DOKU_INC . 'lib/exe/mediamanager.php';
