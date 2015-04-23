@@ -76,8 +76,7 @@ if (!defined('DW_ACT_MEDIA_DETAILS'))
 
 /**
  * Mostra una pàgina de la DokuWiki.
- *
- * TODO[Xavi] no es crida en lloc i no es fa servir el argument per  res.
+ * TODO[Xavi] no es fa res amb l'argument
  *
  * @param string $data
  */
@@ -330,6 +329,11 @@ class DokuModelAdapter implements WikiIocModel {
         return $INFO['isadmin'] || $checkIsmanager && $INFO['ismanager'];
     }
 
+    /**
+     * Si el valor de la variable global $ACT es 'denied' retorna false, en cualsevol altre cas retorna true.
+     *
+     * @return bool
+     */
     public function isDenied() {
         global $ACT;
         $this->params['do'] = $ACT;
@@ -1190,7 +1194,8 @@ class DokuModelAdapter implements WikiIocModel {
         global $lang;
         global $ACT;
         $act_aux = $ACT;
-        $ret = array('docId' => \str_replace(":", "_", $this->params['id']));
+	    $ret = array('id' => \str_replace(":", "_", $this->params['id']));
+        //$ret = array('docId' => \str_replace(":", "_", $this->params['id']));
         $meta = array();
         $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
         if ($mEvt->advise_before()) {
@@ -1729,6 +1734,60 @@ public function getMediaMetaResponse() {
         }
         return  $loginname;
     }
+
+
+    public function getRevisions($id) {
+        global $ID;
+        global $ACT;
+
+        // START
+        // Només definim les variables que es passen per paràmetre, la resta les ignorem
+
+        $ACT = 'revisions';
+
+        $tmp = [];
+        trigger_event('DOKUWIKI_START', $tmp);
+        session_write_close();
+
+        $evt = new Doku_Event('ACTION_ACT_PREPROCESS',$ACT);
+        if ($evt->advise_before()) {
+            act_permcheck($ACT);
+            unlock($ID);
+        }
+        $evt->advise_after();
+        unset($evt);
+
+        $headers[] = 'Content-Type:application/json; charset=utf-8';
+
+        trigger_event('ACTION_HEADERS_SEND',$headers,'act_sendheaders');
+
+        $this->startUpLang();
+
+        trigger_event('TPL_ACT_RENDER',$ACT ,'tpl_content_core()');
+        // En aquest punt es on es generaria el codi HTML
+        $temp = [];
+        //trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln'); // Això afegeix un salt de línia a la sortida
+        trigger_event('TPL_CONTENT_DISPLAY', $temp);
+
+        // DO real
+
+        global $cache_revinfo; // aixó no cal, només el declaro per veure que efectivament es carrega el caché COMPTE! aquest no inclou el document actual
+
+        $revisions = getRevisions($ID, -1, 50);
+
+        $ret = [];
+
+        foreach ($revisions as $revision) {
+            $ret[$revision] = getRevisionInfo($ID, $revision);
+            $ret[$revision]['date'] = date("d-m-Y H:i:s", $ret[$revision]['date']);
+            //unset ($ret[$revision]['id']);
+        }
+
+        $temp = [];
+        trigger_event('DOKUWIKI_DONE', $temp);
+        return $ret;
+    }
+
 
    /**
    * Afegeix al paràmetre $value els selectors css que es
