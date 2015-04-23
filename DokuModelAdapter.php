@@ -1807,7 +1807,7 @@ public function getMediaMetaResponse() {
      * MEDIA DETAILS: Obtenció dels detalls de un media
      */
     public function getMediaDetails($image) {
-        global $lang,$NS;
+        global $lang,$NS,$JSINFO;
 
         $error = $this->startMediaDetails(DW_ACT_MEDIA_DETAILS, $image);
         if ($error == 401) {
@@ -1824,6 +1824,7 @@ public function getMediaMetaResponse() {
             "imageTitle" => $image,
             "image" => $image
         );
+        $JSINFO = array('id' => $image, 'namespace' => $NS);
         return $ret;
     }
     
@@ -1847,6 +1848,7 @@ public function getMediaMetaResponse() {
         if ($pImage) {
             $IMG = $this->params['image'] = $pImage;
         }
+        $ID = $pImage;
 
         // check image permissions
         if ($pImage) {
