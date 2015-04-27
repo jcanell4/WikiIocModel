@@ -17,6 +17,8 @@ require_once DOKU_INC . 'inc/confutils.php';
 require_once DOKU_INC . 'inc/io.php';
 require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/template.php';
+require_once DOKU_INC . 'inc/JSON.php';
+require_once DOKU_INC . 'inc/JpegMeta.php';
 
 if (!defined('DOKU_PLUGIN'))
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
@@ -45,6 +47,8 @@ if (!defined('DW_ACT_MEDIA_MANAGER'))
     define('DW_ACT_MEDIA_MANAGER', "media");
 if(!defined('DW_ACT_EXPORT_ADMIN'))
     define('DW_ACT_EXPORT_ADMIN', "admin");
+if (!defined('DW_ACT_MEDIA_DETAILS'))
+    define('DW_ACT_MEDIA_DETAILS', "mediadetails");
 
 //    const DW_ACT_BACKLINK="backlink";
 //    const DW_ACT_REVISIONS="revisions";
@@ -1317,7 +1321,9 @@ class DokuModelAdapter implements WikiIocModel {
      * - Obtenir el gestor de medis
      */
     public function getMediaManager($image = NULL, $fromPage = NULL, $prev = NULL) {
-        global $lang;
+        global $lang,$NS;
+     //   $NS = getNS($fromPage);
+        //$NS = $fromPage;
 
         $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
         if ($error == 401) {
@@ -1330,7 +1336,7 @@ class DokuModelAdapter implements WikiIocModel {
             "content" => $this->doMediaManagerPreProcess(),
             "id" => "media",
             "title" => "media",
-            "ns" => $fromPage,
+            "ns" => $NS,
             "imageTitle" => $title,
             "image" => $image,
             "fromId" => $fromPage,
@@ -1456,11 +1462,6 @@ class DokuModelAdapter implements WikiIocModel {
             // tpl_media(); //crida antiga total del media manager
             //crida parcial: només a la llista de fitxers del directori
             $this->mediaManagerFileList();
-            if (isset($JUMPTO)) {
-                if ($JUMPTO == false) {
-                    throw new HttpErrorCodeException($error, "Bad request");
-                }
-            }
             $content .= ob_get_clean();
             // check permissions again - the action may have changed
             $ACT = act_permcheck($ACT);
@@ -1474,8 +1475,9 @@ class DokuModelAdapter implements WikiIocModel {
  *
  * @author Kate Arzamastseva <pshns@ukr.net>
  */
-function mediaManagerFileList() {
-    global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
+    
+ function mediaManagerFileList() {
+    global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT,$AUTH;
     $fullscreen = true;
     require_once DOKU_INC . 'lib/exe/mediamanager.php';
 
@@ -1489,23 +1491,24 @@ function mediaManagerFileList() {
         $rev = $REV;
 
     echo '<div id="mediamanager__page">' . NL;
-    echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
-    html_msgarea();
-
-    echo '<div class="panel namespaces">' . NL;
-    echo '<h2>' . $lang['namespaces'] . '</h2>' . NL;
-    echo '<div class="panelHeader">';
-    echo $lang['media_namespaces'];
-    echo '</div>' . NL;
-
-
-    echo '<div class="panel filelist">' . NL;
-    tpl_mediaFileList();
+   
+    echo '<div class="panel filelist ui-resizable">' . NL;
+    echo '<div class="panelContent">'.NL;
+    $do = $AUTH;
+    $query = $_REQUEST['q'];
+    if (!$query) $query = '';
+    if ($do == 'searchlist' || $query) {
+        media_searchlist($query,$NS,$AUTH,true,$_REQUEST['sort']);
+    }else{
+        media_tab_files($NS, $AUTH, $JUMPTO); 
+    }
     echo '</div>' . NL;
     echo '</div>' . NL;
     echo '</div>' . NL;
 }
+    
 
+    
 public function getMediaMetaResponse() {
     global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
     $fullscreen = true;
@@ -1558,53 +1561,171 @@ public function getMediaMetaResponse() {
     }
 
     public function getNsMediaTree($currentnode, $sortBy, $onlyDirs = FALSE) {
-        global $conf;
-        $sortOptions = array(0 => 'name', 'date');
-        $nodeData = array();
-        $children = array();
-        //$tree;
+        global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
+        $fullscreen = true;
+        require_once DOKU_INC . 'lib/exe/mediamanager.php';
 
-        if ($currentnode == "_") {
-            return array('id' => "", 'name' => "", 'type' => 'd');
-        }
-        if ($currentnode) {
-            $node = $currentnode;
-            $aname = split(":", $currentnode);
-            $level = count($aname);
-            $name = $aname[$level - 1];
-        } else {
-            $node = '';
-            $name = '';
-            $level = 0;
-        }
-        $sort = $sortOptions[$sortBy];
-        $base = $conf['datadir'];
+        $rev = '';
+        $image = cleanID($INPUT->str('image'));
+        if (isset($IMG))
+            $image = $IMG;
+        if (isset($JUMPTO))
+            $image = $JUMPTO;
+        if (isset($REV) && !$JUMPTO)
+            $rev = $REV;
+        ob_start();
 
-        $opts = array('ns' => $node);
-        $dir = str_replace(':', '/', $node);
-        search(
-            $nodeData, $base, 'search_index',
-            $opts, $dir, 1
+        echo '<div id="mediamanager__meta">' . NL;
+        echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
+        html_msgarea();
+
+        echo '<div class="panel namespaces">' . NL;
+        echo '<h2>' . $lang['namespaces'] . '</h2>' . NL;
+        echo '<div class="panelHeader">';
+        echo $lang['media_namespaces'];
+        echo '</div>' . NL;
+
+        echo '<div class="panelContent dokuwiki" id="media__tree">' . NL;
+        media_nstree($NS);
+        echo '</div>' . NL;
+        echo '</div>' . NL;
+        echo '</div>' . NL;        
+        echo '</div>' . NL;
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMedia', 'title' => "Índex Media",
+            'content' => $strData
         );
-        foreach (array_keys($nodeData) as $item) {
-            if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
-                $children[$item]['id'] = $nodeData[$item]['id'];
-                $aname = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
-                $children[$item]['name'] = $aname[$level];
-                $children[$item]['type'] = $nodeData[$item]['type'];
+        return $tree_ret;
+    }
+    
+    public function getMediaTabFileOptions() { 
+        global $INPUT;
+
+        $checkThumbs = "checked";
+        $checkRows = "";
+        if($INPUT->str('list')){
+            if($INPUT->str('list')=="rows"){
+                $checkThumbs = "";
+                $checkRows = "checked";
             }
         }
-
-        /*$tree = array(
-            'id' => $node, 'name' => $node,
-            'type' => 'd', 'children' => $children
-        );*/
-        $tree = array(
-            'id' => 'metaMedia', 'title' => $node,
-            'content' => '<div>HOLA HOLA </div>'
+        ob_start();
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="thumbs" value="thumbs" '.$checkThumbs.'/>
+                <label for="radioOne">Thumbnails</label> <br />';
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="rows" value="rows" '.$checkRows.'/>
+                <label for="radioTwo">Rows</label> <br />';
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediafileoptions', 'title' => "Visualització",
+            'content' => $strData
         );
-        return $tree;
+        return $tree_ret;
     }
+    
+    public function getMediaTabFileSort() {  
+        global $INPUT;
+        $checkedNom = "checked";
+        $checkedData = "";
+        if($INPUT->str('sort')){
+            if($INPUT->str('sort')=="date"){
+                $checkedNom = "";
+                $checkedData = "checked";
+            }
+        }
+        
+        ob_start();        
+        /*echo '  <input type="radio" name="drink" id="radioOne" checked value="tea"/>
+                <label for="radioOne">Tea</label> <br />';*/
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="nom" value="name" '.$checkedNom. '/>
+                <label for="nom">Nom</label> <br />';
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="data" value="date" '.$checkedData. '/>
+                <label for="data">Data</label> <br />';
+        //echo '<div class="panelContent dokuwiki" id="metamedia__fileoptions">' . NL;
+        //media_tab_files_options();       
+        //echo '</div>' . NL;
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediafilesort', 'title' => "Ordenació",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    public function getMediaTabSearch() {  
+        global $NS;
+        ob_start();  
+        echo '<div class="search">';
+        echo '<form accept-charset="utf-8" method="post"  id="dw__mediasearch">';
+        echo '<div class="no">';
+        echo '<p><label><span>Cerca pel nom de fitxer: </span>';
+        echo '<input type="text" id="mediaSearchq" title="Cerca en: '.$NS.'" class="edit" name="q">';
+        echo '</label>';
+        echo '<input type="submit" class="button" value="Cerca" id="mediaSearchs">';
+        echo '</p>';
+        echo '</div></form></div>';
+
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediaSearch', 'title' => "Cerca",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    public function getMediaFileUpload() {  
+        global $NS,$AUTH,$JUMPTO;        
+        ob_start();        
+        media_tab_upload($NS, $AUTH, $JUMPTO);
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediafileupload', 'title' => "Càrrega de fitxers",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    function MediaUpload(){
+        global $NS, $MSG, $INPUT;
+
+        if ($_FILES['qqfile']['tmp_name']) {
+          $id = $INPUT->post->str('mediaid', $_FILES['qqfile']['name']);
+        } elseif ($INPUT->get->has('qqfile')) {
+           $id = $INPUT->get->str('qqfile');
+        }
+
+        $id = cleanID($id);
+
+        $NS = $INPUT->str('ns');
+        $ns = $NS.':'.getNS($id);
+
+        $AUTH = auth_quickaclcheck("$ns:*");
+        if($AUTH >= AUTH_UPLOAD) { io_createNamespace("$ns:xxx", 'media'); }
+
+        if ($_FILES['qqfile']['error']) unset($_FILES['qqfile']);
+
+       // if ($_FILES['qqfile']['tmp_name']) $res = media_upload($NS, $AUTH, $_FILES['qqfile']);
+       // if ($INPUT->get->has('qqfile')) $res = media_upload_xhr($NS, $AUTH);
+        media_upload($NS,$AUTH);
+        if ($res) $result = array('success' => true,
+            'link' => media_managerURL(array('ns' => $ns, 'image' => $NS.':'.$id), '&'),
+            'id' => $NS.':'.$id, 'ns' => $NS);
+
+        if (!$result) {
+            $error = '';
+            if (isset($MSG)) {
+                foreach($MSG as $msg) $error .= $msg['msg'];
+            }
+            $result = array('error' => $msg['msg'], 'ns' => $NS);
+            //$_FILES = array();
+            //unset($_FILES['upload']);
+            //$_FILES['upload']['error']="No s'ha pogut pujar el fitxer";
+        }
+        //$json = new JSON;
+        //echo htmlspecialchars($json->encode($result), ENT_NOQUOTES);
+    }
+    
+
     /**
      * FI Miguel Angel Lozano 12/12/2014
      */
@@ -1747,5 +1868,132 @@ public function getMediaMetaResponse() {
         $value["latexpurge"] = "latexpurge"; // input name purge
         $value["dotest"] = "dotest"; // input name test
     }
+    
+    
+    /**
+     * Miguel Angel Lozano 21/04/2015
+     * MEDIA DETAILS: Obtenció dels detalls de un media
+     */
+    public function getMediaDetails($image) {
+        global $lang,$NS,$JSINFO;
+
+        $error = $this->startMediaDetails(DW_ACT_MEDIA_DETAILS, $image);
+        if ($error == 401) {
+            throw new HttpErrorCodeException($error, "Access denied");
+        } else if ($error == 404) {
+            throw new HttpErrorCodeException($error, "Resource " . $image . " not found.");
+        }
+        $title = $lang['img_manager'];
+        $ret = array(
+            "content" => $this->doMediaDetailsPreProcess(),
+            "id" => $image,
+            "title" => $image,
+            "ns" => $NS,
+            "imageTitle" => $image,
+            "image" => $image
+        );
+        $JSINFO = array('id' => $image, 'namespace' => $NS);
+        return $ret;
+    }
+    
+    /**
+     * Init per a l'obtenció del Media Details
+     * Nota: aquesta funció ha tingut com a base startMediaProcess, però la separem per les següents raons:
+     */
+    private function startMediaDetails($pdo, $pImage) {     
+        global $ID;
+        global $AUTH;
+        global $IMG;
+        global $ERROR;
+        global $SRC;
+        global $conf;
+        global $lang;
+        global $INFO;
+        global $REV;
+        $ret = $ERROR = 0;
+        $this->params['action'] = $pdo;
+
+        if ($pImage) {
+            $IMG = $this->params['image'] = $pImage;
+        }
+        $ID = $pImage;
+
+        // check image permissions
+        if ($pImage) {
+            $AUTH = auth_quickaclcheck($pImage);
+            if ($AUTH >= AUTH_READ) {
+                // check if image exists
+                $SRC = mediaFN($pImage);
+                if (!file_exists($SRC)) {
+                    $ret = $ERROR = 404;
+                }
+            } else {
+                // no auth
+                $ret = $ERROR = 401;
+            }
+        }
+
+        if ($ret != 0) {
+            return $ret;
+        }
+
+        $INFO = array_merge(pageinfo(), mediainfo());
+
+
+        $this->startUpLang();
+
+        //detect revision
+        $rev = $this->params['rev'] = (int) $INFO["rev"]; //$INFO comes from the DokuWiki core
+        if ($rev < 1) {
+            $rev = $this->params['rev'] = (int) $INFO["lastmod"];
+        }
+
+        $this->triggerStartEvents();
+
+        return $ret;
+    }
+    
+    private function doMediaDetailsPreProcess() {
+        global $ACT;
+        global $JUMPTO;
+
+        $content = "";
+        if ($this->runBeforePreprocess($content)) {
+            ob_start();
+            $this->mediaDetailsContent();
+            $content .= ob_get_clean();
+            // check permissions again - the action may have changed
+            $ACT = act_permcheck($ACT);
+        }
+        $this->runAfterPreprocess($content);
+        return $content;
+    }
+
+    /**
+    * Prints full-screen media details
+    */
+    
+    function mediaDetailsContent() {
+
+        global $NS, $IMG, $JUMPTO, $REV, $lang, $conf, $fullscreen, $INPUT,$AUTH;
+        $fullscreen = true;
+        require_once DOKU_INC . 'lib/exe/mediamanager.php';
+
+        $rev = '';
+        $image = cleanID($INPUT->str('image'));
+        if (isset($IMG))
+            $image = $IMG;
+        if (isset($JUMPTO))
+            $image = $JUMPTO;
+        if (isset($REV) && !$JUMPTO)
+            $rev = $REV;
+
+        echo '<div class="panelContent">'.NL;
+        $meta = new JpegMeta(mediaFN($image, $rev));
+        media_preview($image, $AUTH, $rev, $meta);
+        media_details($image, $auth, $rev, $meta);
+        echo '</div>'.NL;
+    }
+    
 
 }
