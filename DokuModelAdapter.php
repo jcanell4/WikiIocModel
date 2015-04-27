@@ -273,6 +273,8 @@ class DokuModelAdapter implements WikiIocModel {
     public function getHtmlPage($pid, $prev = NULL) {
         global $INFO;
         global $lang;
+
+
         $this->startPageProcess(DW_ACT_SHOW, $pid, $prev);
         if(!$INFO["exists"]){
             throw new PageNotFoundException($pid,$lang['pageNotFound']);
@@ -280,6 +282,8 @@ class DokuModelAdapter implements WikiIocModel {
         $this->doFormatedPagePreProcess();
 
         $response = $this->getFormatedPageResponse();
+
+
         $response['info'] = $this->generateInfo("info", $lang['document_loaded']);
         return $response;
     }
@@ -316,7 +320,7 @@ class DokuModelAdapter implements WikiIocModel {
         $code = $this->doSavePreProcess();
         return $this->getSaveInfoResponse($code);
     }
-    
+
     public function isAdminOrManager($checkIsmanager=true){
         global $INFO;
         if(!$this->infoLoaded){
@@ -366,6 +370,7 @@ class DokuModelAdapter implements WikiIocModel {
         return $id;
     }
 
+	// TODO[Xavi] No es cridat en lloc
     public function getPageFileName($id, $rev = '') {
         return wikiFN($id, $rev);
     }
@@ -515,7 +520,7 @@ class DokuModelAdapter implements WikiIocModel {
         }
         return $ret;
     }
-    
+
     // configuration methods
     /**
      * tpl_getConf($id)
@@ -642,7 +647,7 @@ class DokuModelAdapter implements WikiIocModel {
             }
             $this->params['task'] = $ptask;
         }
-        
+
         $this->triggerStartEvents();
     }
 
@@ -792,10 +797,10 @@ class DokuModelAdapter implements WikiIocModel {
         }
 
         $this->triggerStartEvents();
-        
+
         return $ret;
     }
-    
+
     private function triggerStartEvents(){
         $tmp = array(); //NO DATA
         trigger_event('DOKUWIKI_STARTED',  $tmp);
@@ -1051,9 +1056,9 @@ class DokuModelAdapter implements WikiIocModel {
 
     private function getCodePageResponse() {
         $pageToSend = $this->cleanResponse($this->_getCodePage());
-        $resp = $this->getContentPage($pageToSend['content']);
-        $resp['meta'] = $pageToSend['meta'];
-        $resp["info"] = $this->generateInfo("info", $pageToSend['info']);
+        $resp = $this->getContentPage($pageToSend["content"]);
+        $resp["meta"] = $pageToSend["meta"];
+        $resp["info"] = $this->generateInfo("info", $pageToSend["info"]);
 
         return $resp;
     }
@@ -1255,12 +1260,14 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     private function getContentPage($pageToSend) {
+	    global $REV;
         $pageTitle = tpl_pagetitle($this->params['id'], TRUE);
         $contentData = array(
             'id' => \str_replace(":", "_", $this->params['id']),
             'ns' => $this->params['id'],
             'title' => $pageTitle,
-            'content' => $pageToSend
+            'content' => $pageToSend,
+	        'rev' => $REV
         );
         return $contentData;
     }
