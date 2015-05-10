@@ -629,7 +629,7 @@ class DokuModelAdapter implements WikiIocModel {
 
        // Agafem l'index de la configuració
        if (!isset($ID)) {
-          $ID = $conf['start'];
+           $ID = getID();
        }
 
         $ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
