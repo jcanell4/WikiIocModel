@@ -627,7 +627,7 @@ class DokuModelAdapter implements WikiIocModel {
        global $ID;
        global $conf;
 
-       // Agafem l'index de la configuració
+       // Agafem l'id
        if (!isset($ID)) {
            $ID = getID();
        }
