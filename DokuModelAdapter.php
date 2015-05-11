@@ -16,7 +16,6 @@ require_once DOKU_INC . 'inc/media.php';
 require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/confutils.php';
 require_once DOKU_INC . 'inc/io.php';
-require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/template.php';
 
 if ( ! defined( 'DOKU_PLUGIN' ) ) {
@@ -574,18 +573,28 @@ class DokuModelAdapter implements WikiIocModel {
          * @param bool $force : true : indica que s'ha d'establir el permís estricte
          *                      false: si existeix algún permís, no es modifica
         */
-        public function establir_permis($ns, $id_user, $acl_level, $force = false) {
+        public function establir_permis($page, $user, $acl_level, $force = false) {
             $ret = false;
-//            if (!$acl_class)
-                $acl_class = new admin_plugin_acl();
-//            else
-                $acl_class->handle();
+            $permis = false;
+            $sub_page = $page;
+            $acl_class = new admin_plugin_acl();
+            $acl_class->handle();
+            $acl_class->who = $user;
             
-            $text_alert = "\$ns={$acl_class->ns}\n\$acl={$acl_class->acl}\n\$current_item={$acl_class->current_item}\n\$who={$acl_class->who}";
-            echo "<script>alert('{$text_alert}')</script>";
-            $permis = $acl_class->_get_exact_perm();
+            if (!$force) {
+                while (!$permis) {
+                    $acl_class->ns = $sub_page;
+                    $permis = $acl_class->_get_exact_perm();
+                    $sub_page = substr($sub_page,0,strrpos($sub_page,':')-1);
+                }
+                if (!$permis) {
+                    $acl_class->ns = '*';
+                    $permis = $acl_class->_get_exact_perm();
+                }
+            }
+            
             if ($force || !$permis) {
-                $ret = $acl_class->_acl_add($ns, $id_user, $acl_level);
+                $ret = $acl_class->_acl_add($page, $user, $acl_level);
             }
             return $ret;
         }
