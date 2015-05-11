@@ -24,6 +24,7 @@ if ( ! defined( 'DOKU_PLUGIN' ) ) {
 }
 require_once( DOKU_PLUGIN . 'wikiiocmodel/WikiIocModel.php' );
 require_once( DOKU_PLUGIN . 'wikiiocmodel/WikiIocModelExceptions.php' );
+require_once( DOKU_PLUGIN . 'acl/admin.php' );
 
 if ( ! defined( 'DW_DEFAULT_PAGE' ) ) {
 	define( 'DW_DEFAULT_PAGE', "start" );
@@ -59,29 +60,31 @@ if ( ! defined( 'DW_ACT_EXPORT_ADMIN' ) ) {
 	define( 'DW_ACT_EXPORT_ADMIN', "admin" );
 }
 
-//    const DW_ACT_BACKLINK="backlink";
-//    const DW_ACT_REVISIONS="revisions";
-//    const DW_ACT_DIFF="diff";
-//    const DW_ACT_SUBSCRIBE="subscribe";
-//    const DW_ACT_UNSUBSCRIBE="unsubscribe";
-//    const DW_ACT_SUBSCRIBENS="subscribens";
-//    const DW_ACT_UNSUBSCRIBENS="unsubscribens";
-//    const DW_ACT_INDEX="index";
-//    const DW_ACT_RECENT="recent";
-//    const DW_ACT_SEARCH="search";
-//    const DW_ACT_EXPORT_RAW="export_raw";
-//    const DW_ACT_EXPORT_XHTML="export_xhtml";
-//    const DW_ACT_EXPORT_XHTMLBODY="export_xhtmlbody";
-//    const DW_ACT_CHECK="check";
-//    const DW_ACT_INDEX="register";
-//    const DW_ACT_LOGIN="login";
-//    const DW_ACT_LOGOUT="logout";
-//    const DW_ACT_EXPORT_PROFILE="profile";
-//    const DW_ACT_EXPORT_RESENDPWD="resendpwd";
-//    const DW_ACT_DRAFT="draft";
-//    const DW_ACT_WORDBLOCK="wordblock";
-//    const DW_ACT_CONFLICT="conflict";
-//    const DW_ACT_CANCEL="cancel";
+/*
+    const DW_ACT_BACKLINK="backlink";
+    const DW_ACT_REVISIONS="revisions";
+    const DW_ACT_DIFF="diff";
+    const DW_ACT_SUBSCRIBE="subscribe";
+    const DW_ACT_UNSUBSCRIBE="unsubscribe";
+    const DW_ACT_SUBSCRIBENS="subscribens";
+    const DW_ACT_UNSUBSCRIBENS="unsubscribens";
+    const DW_ACT_INDEX="index";
+    const DW_ACT_RECENT="recent";
+    const DW_ACT_SEARCH="search";
+    const DW_ACT_EXPORT_RAW="export_raw";
+    const DW_ACT_EXPORT_XHTML="export_xhtml";
+    const DW_ACT_EXPORT_XHTMLBODY="export_xhtmlbody";
+    const DW_ACT_CHECK="check";
+    const DW_ACT_INDEX="register";
+    const DW_ACT_LOGIN="login";
+    const DW_ACT_LOGOUT="logout";
+    const DW_ACT_EXPORT_PROFILE="profile";
+    const DW_ACT_EXPORT_RESENDPWD="resendpwd";
+    const DW_ACT_DRAFT="draft";
+    const DW_ACT_WORDBLOCK="wordblock";
+    const DW_ACT_CONFLICT="conflict";
+    const DW_ACT_CANCEL="cancel";
+*/
 
 /**
  * Mostra una pàgina de la DokuWiki.
@@ -566,6 +569,27 @@ class DokuModelAdapter implements WikiIocModel {
 		return tpl_getConf( $id );
 	}
 
+        /**
+         * administració de permisos
+         * @param bool $force : true : indica que s'ha d'establir el permís estricte
+         *                      false: si existeix algún permís, no es modifica
+        */
+        public function establir_permis($ns, $id_user, $acl_level, $force = false) {
+            $ret = false;
+//            if (!$acl_class)
+                $acl_class = new admin_plugin_acl();
+//            else
+                $acl_class->handle();
+            
+            $text_alert = "\$ns={$acl_class->ns}\n\$acl={$acl_class->acl}\n\$current_item={$acl_class->current_item}\n\$who={$acl_class->who}";
+            echo "<script>alert('{$text_alert}')</script>";
+            $permis = $acl_class->_get_exact_perm();
+            if ($force || !$permis) {
+                $ret = $acl_class->_acl_add($ns, $id_user, $acl_level);
+            }
+            return $ret;
+        }
+    
 	/**
 	 * Retorna si s'ha trobat la cadena que es cerca al principi de la cadena on es busca.
 	 *
