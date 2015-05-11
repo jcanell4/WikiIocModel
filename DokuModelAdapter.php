@@ -146,10 +146,10 @@ class DokuModelAdapter implements WikiIocModel {
 	protected $ppEvt;
 	protected $infoLoaded = FALSE;
 
-	public function getAdminTask( $ptask ) {
+	public function getAdminTask( $ptask, $pid=NULL ) {
 		global $lang;
 
-		$this->startAdminTaskProcess( $ptask );
+		$this->startAdminTaskProcess( $ptask, $pid );
 		$this->doAdminTaskPreProcess();
 		$response = $this->getAdminTaskResponse();
 		// Informació a pantalla
@@ -663,16 +663,18 @@ class DokuModelAdapter implements WikiIocModel {
 	/**
 	 * Inicia tractament per obtenir la llista de gestions d'administració
 	 */
-	private function startAdminTaskProcess( $ptask = NULL ) {
+	private function startAdminTaskProcess( $ptask = NULL, $pid=NULL ) {
 		global $ACT;
 		global $_REQUEST;
 		global $ID;
 		global $conf;
-
+                
 		// Agafem l'index de la configuració
-		if ( ! isset( $ID ) ) {
-			$ID = $conf['start'];
+		if ( ! isset( $pid) ) {
+			$pid = $conf['start'];
 		}
+
+                $ID = $this->params['id'] = $pid;
 
 		$ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
 
