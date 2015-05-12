@@ -5,8 +5,9 @@
  *
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
-if (!defined('DOKU_INC'))
+if ( ! defined( 'DOKU_INC' ) ) {
     die();
+}
 //require common
 require_once DOKU_INC . 'inc/actions.php';
 require_once DOKU_INC . 'inc/pageutils.php';
@@ -18,33 +19,45 @@ require_once DOKU_INC . 'inc/io.php';
 require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/template.php';
 
-if (!defined('DOKU_PLUGIN'))
+if ( ! defined( 'DOKU_PLUGIN' ) ) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+}
 require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocModel.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocModelExceptions.php');
 
-if (!defined('DW_DEFAULT_PAGE'))
+if ( ! defined( 'DW_DEFAULT_PAGE' ) ) {
     define('DW_DEFAULT_PAGE', "start");
-if (!defined('DW_ACT_SHOW'))
+}
+if ( ! defined( 'DW_ACT_SHOW' ) ) {
     define('DW_ACT_SHOW', "show");
-if (!defined('DW_ACT_DRAFTDEL'))
+}
+if ( ! defined( 'DW_ACT_DRAFTDEL' ) ) {
     define('DW_ACT_DRAFTDEL', "draftdel");
-if (!defined('DW_ACT_SAVE'))
+}
+if ( ! defined( 'DW_ACT_SAVE' ) ) {
     define('DW_ACT_SAVE', "save");
-if (!defined('DW_ACT_EDIT'))
+}
+if ( ! defined( 'DW_ACT_EDIT' ) ) {
     define('DW_ACT_EDIT', "edit");
-if (!defined('DW_ACT_PREVIEW'))
+}
+if ( ! defined( 'DW_ACT_PREVIEW' ) ) {
     define('DW_ACT_PREVIEW', "preview");
-if (!defined('DW_ACT_RECOVER'))
+}
+if ( ! defined( 'DW_ACT_RECOVER' ) ) {
     define('DW_ACT_RECOVER', "recover");
-if (!defined('DW_ACT_DENIED'))
+}
+if ( ! defined( 'DW_ACT_DENIED' ) ) {
     define('DW_ACT_DENIED', "denied");
-if (!defined('DW_ACT_MEDIA_DETAIL'))
+}
+if ( ! defined( 'DW_ACT_MEDIA_DETAIL' ) ) {
     define('DW_ACT_MEDIA_DETAIL', "media_detail");
-if (!defined('DW_ACT_MEDIA_MANAGER'))
+}
+if ( ! defined( 'DW_ACT_MEDIA_MANAGER' ) ) {
     define('DW_ACT_MEDIA_MANAGER', "media");
-if(!defined('DW_ACT_EXPORT_ADMIN'))
+}
+if ( ! defined( 'DW_ACT_EXPORT_ADMIN' ) ) {
     define('DW_ACT_EXPORT_ADMIN', "admin");
+}
 
 //    const DW_ACT_BACKLINK="backlink";
 //    const DW_ACT_REVISIONS="revisions";
@@ -132,10 +145,10 @@ class DokuModelAdapter implements WikiIocModel {
     protected $ppEvt;
     protected $infoLoaded=false;
 
-    public function getAdminTask($ptask){
+	public function getAdminTask( $ptask, $pid=NULL ) {
         global $lang;
 
-        $this->startAdminTaskProcess($ptask);
+		$this->startAdminTaskProcess( $ptask, $pid );
         $this->doAdminTaskPreProcess();
         $response = $this->getAdminTaskResponse();
         // Informació a pantalla
@@ -209,8 +222,12 @@ class DokuModelAdapter implements WikiIocModel {
                    case "prev":
                        $param =$fn[key($fn)];
                  break;
-                 case "edit"   : $param = $lang['button_edit_user']; break;
-                 case "search" : $param = $lang['button_filter_user']; break;
+						case "edit"   :
+							$param = $lang['button_edit_user'];
+							break;
+						case "search" :
+							$param = $lang['button_filter_user'];
+							break;
               }
                 $response['info'] = $this->generateInfo("info", $lang['button_clicked'] . '"' . $param . '"',null,$info_time_visible);
               $response['iframe'] = TRUE;
@@ -307,8 +324,10 @@ class DokuModelAdapter implements WikiIocModel {
         return $response;
     }
 
-    public function saveEdition($pid, $prev = NULL, $prange = NULL,
-        $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL) {
+	public function saveEdition(
+		$pid, $prev = NULL, $prange = NULL,
+		$pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL
+	) {
         $this->startPageProcess(
              DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate,
              $ppre, $ptext, $psuf
@@ -485,8 +504,10 @@ class DokuModelAdapter implements WikiIocModel {
         }
 
         $tree = array(
-            'id' => $node, 'name' => $node,
-            'type' => 'd', 'children' => $children
+			'id'       => $node,
+			'name'     => $node,
+			'type'     => 'd',
+			'children' => $children
         );
         return $tree;
     }
@@ -572,8 +593,10 @@ class DokuModelAdapter implements WikiIocModel {
      *      -7 = SPAM_CONTENT
      *      -8 = XSS_CONTENT
      */
-    private function _saveImage($nsTarget, $idTarget, $filePathSource, $overWrite
-    , $copyFunction) {
+	private function _saveImage(
+		$nsTarget, $idTarget, $filePathSource, $overWrite
+		, $copyFunction
+	) {
       global $conf;
         $res = NULL; //(0=OK, -1=UNAUTHORIZED, -2=OVER_WRITING_NOT_ALLOWED,
         //-3=OVER_WRITING_UNAUTHORIZED, -5=FAILS, -4=WRONG_PARAMS
@@ -621,16 +644,17 @@ class DokuModelAdapter implements WikiIocModel {
    /**
     * Inicia tractament per obtenir la llista de gestions d'administració
     */
-    private function startAdminTaskProcess($ptask=null) {
+	private function startAdminTaskProcess( $ptask = NULL, $pid=NULL ) {
        global $ACT;
        global $_REQUEST;
        global $ID;
        global $conf;
 
-       // Agafem l'id
-       if (!isset($ID)) {
-           $ID = getID();
+		// Agafem l'index de la configuració
+		if ( ! isset( $pid) ) {
+			$pid = $conf['start'];
        }
+                $ID = $this->params['id'] = $pid;
 
         $ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
 
@@ -649,8 +673,10 @@ class DokuModelAdapter implements WikiIocModel {
         /**
      * Inicia tractament d'una pàgina de la dokuwiki
      */
-    private function startPageProcess($pdo, $pid = NULL, $prev = NULL, $prange = NULL,
-         $psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL) {
+	private function startPageProcess(
+		$pdo, $pid = NULL, $prev = NULL, $prange = NULL,
+		$psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL
+	) {
         global $ID;
         global $ACT;
         global $REV;
@@ -1018,12 +1044,17 @@ class DokuModelAdapter implements WikiIocModel {
         $pluginlist = plugin_list('admin');
         $menu = array();
         foreach ($pluginlist as $p) {
-            if($obj =& plugin_load('admin',$p) === null) continue;
+			if ( $obj =& plugin_load( 'admin', $p ) === NULL ) {
+				continue;
+			}
 
             // check permissions
-            if($obj->forAdminOnly() && !$INFO['isadmin']) continue;
+			if ( $obj->forAdminOnly() && ! $INFO['isadmin'] ) {
+				continue;
+			}
 
-            $menu[$p] = array('plugin' => $p,
+			$menu[ $p ] = array(
+				'plugin' => $p,
                     'prompt' => $obj->getMenuText($conf['lang']),
                     'sort' => $obj->getMenuSort()
                     );
@@ -1037,7 +1068,9 @@ class DokuModelAdapter implements WikiIocModel {
             print p_locale_xhtml('adminplugins');
             ptln('<ul>');
             foreach ($menu as $item) {
-                if (!$item['prompt']) continue;
+				if ( ! $item['prompt'] ) {
+					continue;
+				}
                 ptln('  <li><div class="li"><a href="'.DOKU_BASE.DOKU_SCRIPT.'?'
                         .'do=admin&amp;page='.$item['plugin'].'">'.$item['prompt']
                         .'</a></div></li>');
@@ -1110,14 +1143,19 @@ class DokuModelAdapter implements WikiIocModel {
         $replace = "<input form=\"". $form . "\"";
         $meta = preg_replace($pattern, $replace, $meta);
 
-
+		// Netegem el valor
+		$pattern = "/value=\"string\"/";
+		$replace = "value=\"\"";
+		$meta    = preg_replace( $pattern, $replace, $meta );
 
         $response["content"] = $text;
         $response["info"] = [$info, $license];
         $metaId = str_replace(":", "_", $this->params['id']) . '_metaEditForm';
-        $response["meta"] = [$this->getCommonPage($metaId,
+		$response["meta"]    = [
+			$this->getCommonPage( $metaId,
                                             $lang['metaEditForm'],
-                                            $meta)];
+			                      $meta )
+		];
 
         return $response;
     }
@@ -1145,7 +1183,8 @@ class DokuModelAdapter implements WikiIocModel {
             "type" => $type,
             "message" => $message,
             "duration" => $duration,
-            "timestamp" => date("d-m-Y H:i:s"));
+			"timestamp" => date( "d-m-Y H:i:s" )
+		);
     }
 
     private function getSaveInfoResponse($code){
@@ -1255,12 +1294,14 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
     private function getContentPage($pageToSend) {
+		global $REV;
         $pageTitle = tpl_pagetitle($this->params['id'], TRUE);
         $contentData = array(
             'id' => \str_replace(":", "_", $this->params['id']),
             'ns' => $this->params['id'],
             'title' => $pageTitle,
-            'content' => $pageToSend
+			'content' => $pageToSend,
+			'rev'     => $REV
         );
         return $contentData;
     }
@@ -1481,12 +1522,15 @@ function mediaManagerFileList() {
 
     $rev = '';
     $image = cleanID($INPUT->str('image'));
-    if (isset($IMG))
+		if ( isset( $IMG ) ) {
         $image = $IMG;
-    if (isset($JUMPTO))
+		}
+		if ( isset( $JUMPTO ) ) {
         $image = $JUMPTO;
-    if (isset($REV) && !$JUMPTO)
+		}
+		if ( isset( $REV ) && ! $JUMPTO ) {
         $rev = $REV;
+		}
 
     echo '<div id="mediamanager__page">' . NL;
     echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
@@ -1513,12 +1557,15 @@ public function getMediaMetaResponse() {
 
     $rev = '';
     $image = cleanID($INPUT->str('image'));
-    if (isset($IMG))
+		if ( isset( $IMG ) ) {
         $image = $IMG;
-    if (isset($JUMPTO))
+		}
+		if ( isset( $JUMPTO ) ) {
         $image = $JUMPTO;
-    if (isset($REV) && !$JUMPTO)
+		}
+		if ( isset( $REV ) && ! $JUMPTO ) {
         $rev = $REV;
+		}
             ob_start();
 
 
@@ -1600,7 +1647,8 @@ public function getMediaMetaResponse() {
             'type' => 'd', 'children' => $children
         );*/
         $tree = array(
-            'id' => 'metaMedia', 'title' => $node,
+			'id'      => 'metaMedia',
+			'title'   => $node,
             'content' => '<div>HOLA HOLA </div>'
         );
         return $tree;
@@ -1615,7 +1663,8 @@ public function getMediaMetaResponse() {
         $loginname = "";
         if (!empty($conf["useacl"])){
             if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
-                $_SERVER["REMOTE_USER"] !== ""){
+			     $_SERVER["REMOTE_USER"] !== ""
+			) {
                 $loginname = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
                                                       //current IP differs from the one used to login)
             }
