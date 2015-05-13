@@ -281,15 +281,19 @@ class DokuModelAdapter implements WikiIocModel {
 		}
 
 		$this->startPageProcess(
-			DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL,
-			"", $text, ""
-		);
+			DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL, "", $text, ""
+                    );
 		if ( $INFO["exists"] ) {
 			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
 		}
-		//
-		$code = $this->doSavePreProcess();
 
+                // $code: 1003 'conflict'; 1004 'edit'; 1005 'denied'
+		$code = $this->doSavePreProcess();
+                if ($code === 1005) {
+                    $this->setPagePermission($pid, NULL, AUTH_DELETE, false);
+                }
+                //TODO mirar els codis de retorn 1003 i 1004
+                        
 		return $this->getFormatedPageResponse();
 	}
 
@@ -568,24 +572,36 @@ class DokuModelAdapter implements WikiIocModel {
 		return tpl_getConf( $id );
 	}
 
+        public function setPagePermission($page, $user, $acl_level, $force = false) {
+            global $conf;
+            $ret = false;
+            if ($conf['userpage_allowed'] === 1 && $page === $conf['userpage_ns']) {
+                $ret = $this->establir_permis($page, $user, $acl_level, $force);
+            }
+            return $ret;
+        }
+
         /**
          * administració de permisos
          * @param bool $force : true : indica que s'ha d'establir el permís estricte
          *                      false: si existeix algún permís, no es modifica
         */
-        public function establir_permis($page, $user, $acl_level, $force = false) {
+        private function establir_permis($page, $user, $acl_level, $force = false) {
             $ret = false;
             $permis = false;
             $sub_page = $page;
             $acl_class = new admin_plugin_acl();
             $acl_class->handle();
-            $acl_class->who = $user;
+            if (!$acl_level)
+                $acl_level = auth_quickaclcheck($page);
+            if ($user)
+                $acl_class->who = $user;
             
             if (!$force) {
-                while (!$permis) {
+                while (!$permis && $sub_page) {
                     $acl_class->ns = $sub_page;
                     $permis = $acl_class->_get_exact_perm();
-                    $sub_page = substr($sub_page,0,strrpos($sub_page,':')-1);
+                    $sub_page = substr($sub_page,0,strrpos($sub_page,':'));
                 }
                 if (!$permis) {
                     $acl_class->ns = '*';
