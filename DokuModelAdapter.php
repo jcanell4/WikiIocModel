@@ -1392,9 +1392,13 @@ class DokuModelAdapter implements WikiIocModel {
      * - Obtenir el gestor de medis
      */
     public function getMediaManager($image = NULL, $fromPage = NULL, $prev = NULL) {
-        global $lang,$NS;
+        global $lang,$NS,$INPUT;
+        /*if(!$NS){
+            $NS = $fromPage;
+        }
+        $INPUT->access['ns'] = $NS;*/
      //   $NS = getNS($fromPage);
-        //$NS = $fromPage;
+        //
 
         $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
         if ($error == 401) {
