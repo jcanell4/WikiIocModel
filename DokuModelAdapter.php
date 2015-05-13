@@ -288,7 +288,7 @@ class DokuModelAdapter implements WikiIocModel {
 			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
 		}
 		//
-		$this->doSavePreProcess();
+		$code = $this->doSavePreProcess();
 
 		return $this->getFormatedPageResponse();
 	}
@@ -1026,11 +1026,19 @@ class DokuModelAdapter implements WikiIocModel {
 		global $ACT;
 
 		$code = 0;
-		$ret  = act_save( $ACT );
-		if ( $ret === 'edit' ) {
+                $ACT = act_permcheck($ACT);
+                
+                if($ACT==$this->params['do']){                    
+                    $ret  = act_save( $ACT );
+                }else{
+                    $ret = $ACT;
+                }
+                if ( $ret === 'edit' ) {
 			$code = 1004;
 		} else if ( $ret === 'conflict' ) {
 			$code = 1003;
+		} else if ( $ret === 'denied' ) {
+			$code = 1005;
 		}
 		if ( $code == 0 ) {
 			$ACT = $this->params['do'] = DW_ACT_EDIT;
