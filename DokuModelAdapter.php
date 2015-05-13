@@ -572,20 +572,16 @@ class DokuModelAdapter implements WikiIocModel {
 		return tpl_getConf( $id );
 	}
 
-        public function setPagePermission($page, $user, $acl_level, $force = false) {
+        public function setUserPagePermission($page, $user, $acl_level, $force = false) {
             global $conf;
             $ret = false;
-            if ($conf['userpage_allowed'] === 1 && $page === $conf['userpage_ns']) {
+            $pageuser = $page . $user;
+            if ($conf['userpage_allowed'] === 1 && (
+                $pageuser === $conf['userpage_ns'].$user || 
+                $pageuser === $conf['userpage_discuss_ns'].$user)
+               ) 
+            {
                 $ret = $this->establir_permis($page, $user, $acl_level, $force);
-            }
-            return $ret;
-        }
-
-        public function deletePagePermission($page, $user) {
-            global $conf;
-            $ret = false;
-            if ($conf['userpage_allowed'] === 1 && $page === $conf['userpage_ns']) {
-                $ret = $this->eliminar_permis($page, $user);
             }
             return $ret;
         }
@@ -626,10 +622,11 @@ class DokuModelAdapter implements WikiIocModel {
     
         private function eliminar_permis($page, $user) {
             $acl_class = new admin_plugin_acl();
-            $acl_class->handle();
-            if ($user)
-                $acl_class->who = $user;
-            $ret = _acl_del($page, $acl_class->who);
+            //$acl_class->handle();
+            //if ($user)
+            //    $acl_class->who = $user;
+            if ($page && $user) 
+                $ret = $acl_class->_acl_del($page, $user);
             return $ret;
         }
             
