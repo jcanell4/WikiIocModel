@@ -581,6 +581,15 @@ class DokuModelAdapter implements WikiIocModel {
             return $ret;
         }
 
+        public function deletePagePermission($page, $user) {
+            global $conf;
+            $ret = false;
+            if ($conf['userpage_allowed'] === 1 && $page === $conf['userpage_ns']) {
+                $ret = $this->eliminar_permis($page, $user);
+            }
+            return $ret;
+        }
+
         /**
          * administració de permisos
          * @param bool $force : true : indica que s'ha d'establir el permís estricte
@@ -615,6 +624,15 @@ class DokuModelAdapter implements WikiIocModel {
             return $ret;
         }
     
+        private function eliminar_permis($page, $user) {
+            $acl_class = new admin_plugin_acl();
+            $acl_class->handle();
+            if ($user)
+                $acl_class->who = $user;
+            $ret = _acl_del($page, $acl_class->who);
+            return $ret;
+        }
+            
 	/**
 	 * Retorna si s'ha trobat la cadena que es cerca al principi de la cadena on es busca.
 	 *
