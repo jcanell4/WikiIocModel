@@ -483,7 +483,12 @@ class DokuModelAdapter implements WikiIocModel {
 	}
 
 	public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
-		global $conf;
+            global $conf;
+            $base = $conf['datadir'];
+            return $this->getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs);
+        }
+        
+	private function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		$sortOptions = array( 0 => 'name', 'date' );
 		$nodeData    = array();
 		$children    = array();
@@ -502,7 +507,6 @@ class DokuModelAdapter implements WikiIocModel {
 			$level = 0;
 		}
 		$sort = $sortOptions[ $sortBy ];
-		$base = $conf['datadir'];
 
 		$opts = array( 'ns' => $node );
 		$dir  = str_replace( ':', '/', $node );
@@ -1645,54 +1649,9 @@ class DokuModelAdapter implements WikiIocModel {
 	}
 
 	public function getNsMediaTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
-		global $conf;
-		$sortOptions = array( 0 => 'name', 'date' );
-		$nodeData    = array();
-		$children    = array();
-		//$tree;
-
-		if ( $currentnode == "_" ) {
-			return array( 'id' => "", 'name' => "", 'type' => 'd' );
-		}
-		if ( $currentnode ) {
-			$node  = $currentnode;
-			$aname = split( ":", $currentnode );
-			$level = count( $aname );
-			$name  = $aname[ $level - 1 ];
-		} else {
-			$node  = '';
-			$name  = '';
-			$level = 0;
-		}
-		$sort = $sortOptions[ $sortBy ];
-		$base = $conf['datadir'];
-
-		$opts = array( 'ns' => $node );
-		$dir  = str_replace( ':', '/', $node );
-		search(
-			$nodeData, $base, 'search_index',
-			$opts, $dir, 1
-		);
-		foreach ( array_keys( $nodeData ) as $item ) {
-			if ( $onlyDirs && $nodeData[ $item ]['type'] == 'd' || ! $onlyDirs ) {
-				$children[ $item ]['id']   = $nodeData[ $item ]['id'];
-				$aname                     = split( ":", $nodeData[ $item ]['id'] ); //TODO[Xavi] @deprecated substitur per explode()
-				$children[ $item ]['name'] = $aname[ $level ];
-				$children[ $item ]['type'] = $nodeData[ $item ]['type'];
-			}
-		}
-
-		/*$tree = array(
-			'id' => $node, 'name' => $node,
-			'type' => 'd', 'children' => $children
-		);*/
-		$tree = array(
-			'id'      => 'metaMedia',
-			'title'   => $node,
-			'content' => '<div>HOLA HOLA </div>'
-		);
-
-		return $tree;
+            global $conf;
+            $base = $conf['mediadir'];
+            return $this->getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs);
 	}
 
 	/**
