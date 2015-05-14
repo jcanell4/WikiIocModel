@@ -6,7 +6,7 @@
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
 if ( ! defined( 'DOKU_INC' ) ) {
-	die();
+    die();
 }
 //require common
 require_once DOKU_INC . 'inc/actions.php';
@@ -20,43 +20,43 @@ require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/template.php';
 
 if ( ! defined( 'DOKU_PLUGIN' ) ) {
-	define( 'DOKU_PLUGIN', DOKU_INC . 'lib/plugins/' );
+    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
-require_once( DOKU_PLUGIN . 'wikiiocmodel/WikiIocModel.php' );
-require_once( DOKU_PLUGIN . 'wikiiocmodel/WikiIocModelExceptions.php' );
+require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocModel.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocModelExceptions.php');
 
 if ( ! defined( 'DW_DEFAULT_PAGE' ) ) {
-	define( 'DW_DEFAULT_PAGE', "start" );
+    define('DW_DEFAULT_PAGE', "start");
 }
 if ( ! defined( 'DW_ACT_SHOW' ) ) {
-	define( 'DW_ACT_SHOW', "show" );
+    define('DW_ACT_SHOW', "show");
 }
 if ( ! defined( 'DW_ACT_DRAFTDEL' ) ) {
-	define( 'DW_ACT_DRAFTDEL', "draftdel" );
+    define('DW_ACT_DRAFTDEL', "draftdel");
 }
 if ( ! defined( 'DW_ACT_SAVE' ) ) {
-	define( 'DW_ACT_SAVE', "save" );
+    define('DW_ACT_SAVE', "save");
 }
 if ( ! defined( 'DW_ACT_EDIT' ) ) {
-	define( 'DW_ACT_EDIT', "edit" );
+    define('DW_ACT_EDIT', "edit");
 }
 if ( ! defined( 'DW_ACT_PREVIEW' ) ) {
-	define( 'DW_ACT_PREVIEW', "preview" );
+    define('DW_ACT_PREVIEW', "preview");
 }
 if ( ! defined( 'DW_ACT_RECOVER' ) ) {
-	define( 'DW_ACT_RECOVER', "recover" );
+    define('DW_ACT_RECOVER', "recover");
 }
 if ( ! defined( 'DW_ACT_DENIED' ) ) {
-	define( 'DW_ACT_DENIED', "denied" );
+    define('DW_ACT_DENIED', "denied");
 }
 if ( ! defined( 'DW_ACT_MEDIA_DETAIL' ) ) {
-	define( 'DW_ACT_MEDIA_DETAIL', "media_detail" );
+    define('DW_ACT_MEDIA_DETAIL', "media_detail");
 }
 if ( ! defined( 'DW_ACT_MEDIA_MANAGER' ) ) {
-	define( 'DW_ACT_MEDIA_MANAGER', "media" );
+    define('DW_ACT_MEDIA_MANAGER', "media");
 }
 if ( ! defined( 'DW_ACT_EXPORT_ADMIN' ) ) {
-	define( 'DW_ACT_EXPORT_ADMIN', "admin" );
+    define('DW_ACT_EXPORT_ADMIN', "admin");
 }
 
 //    const DW_ACT_BACKLINK="backlink";
@@ -146,10 +146,10 @@ class DokuModelAdapter implements WikiIocModel {
 	protected $ppEvt;
 	protected $infoLoaded = FALSE;
 
-	public function getAdminTask( $ptask ) {
+	public function getAdminTask( $ptask, $pid=NULL ) {
 		global $lang;
 
-		$this->startAdminTaskProcess( $ptask );
+		$this->startAdminTaskProcess( $ptask, $pid );
 		$this->doAdminTaskPreProcess();
 		$response = $this->getAdminTaskResponse();
 		// Informació a pantalla
@@ -286,7 +286,7 @@ class DokuModelAdapter implements WikiIocModel {
 			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
 		}
 		//
-		$this->doSavePreProcess();
+		$code = $this->doSavePreProcess();
 
 		return $this->getFormatedPageResponse();
 	}
@@ -483,7 +483,12 @@ class DokuModelAdapter implements WikiIocModel {
 	}
 
 	public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
-		global $conf;
+            global $conf;
+            $base = $conf['datadir'];
+            return $this->getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs);
+        }
+        
+	private function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		$sortOptions = array( 0 => 'name', 'date' );
 		$nodeData    = array();
 		$children    = array();
@@ -502,7 +507,6 @@ class DokuModelAdapter implements WikiIocModel {
 			$level = 0;
 		}
 		$sort = $sortOptions[ $sortBy ];
-		$base = $conf['datadir'];
 
 		$opts = array( 'ns' => $node );
 		$dir  = str_replace( ':', '/', $node );
@@ -663,16 +667,18 @@ class DokuModelAdapter implements WikiIocModel {
 	/**
 	 * Inicia tractament per obtenir la llista de gestions d'administració
 	 */
-	private function startAdminTaskProcess( $ptask = NULL ) {
+	private function startAdminTaskProcess( $ptask = NULL, $pid=NULL ) {
 		global $ACT;
 		global $_REQUEST;
 		global $ID;
 		global $conf;
-
+                
 		// Agafem l'index de la configuració
-		if ( ! isset( $ID ) ) {
-			$ID = $conf['start'];
+		if ( ! isset( $pid) ) {
+			$pid = $conf['start'];
 		}
+
+                $ID = $this->params['id'] = $pid;
 
 		$ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
 
@@ -991,11 +997,19 @@ class DokuModelAdapter implements WikiIocModel {
 		global $ACT;
 
 		$code = 0;
-		$ret  = act_save( $ACT );
-		if ( $ret === 'edit' ) {
+                $ACT = act_permcheck($ACT);
+                
+                if($ACT==$this->params['do']){                    
+                    $ret  = act_save( $ACT );
+                }else{
+                    $ret = $ACT;
+                }
+                if ( $ret === 'edit' ) {
 			$code = 1004;
 		} else if ( $ret === 'conflict' ) {
 			$code = 1003;
+		} else if ( $ret === 'denied' ) {
+			$code = 1005;
 		}
 		if ( $code == 0 ) {
 			$ACT = $this->params['do'] = DW_ACT_EDIT;
@@ -1635,54 +1649,9 @@ class DokuModelAdapter implements WikiIocModel {
 	}
 
 	public function getNsMediaTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
-		global $conf;
-		$sortOptions = array( 0 => 'name', 'date' );
-		$nodeData    = array();
-		$children    = array();
-		//$tree;
-
-		if ( $currentnode == "_" ) {
-			return array( 'id' => "", 'name' => "", 'type' => 'd' );
-		}
-		if ( $currentnode ) {
-			$node  = $currentnode;
-			$aname = split( ":", $currentnode );
-			$level = count( $aname );
-			$name  = $aname[ $level - 1 ];
-		} else {
-			$node  = '';
-			$name  = '';
-			$level = 0;
-		}
-		$sort = $sortOptions[ $sortBy ];
-		$base = $conf['datadir'];
-
-		$opts = array( 'ns' => $node );
-		$dir  = str_replace( ':', '/', $node );
-		search(
-			$nodeData, $base, 'search_index',
-			$opts, $dir, 1
-		);
-		foreach ( array_keys( $nodeData ) as $item ) {
-			if ( $onlyDirs && $nodeData[ $item ]['type'] == 'd' || ! $onlyDirs ) {
-				$children[ $item ]['id']   = $nodeData[ $item ]['id'];
-				$aname                     = split( ":", $nodeData[ $item ]['id'] ); //TODO[Xavi] @deprecated substitur per explode()
-				$children[ $item ]['name'] = $aname[ $level ];
-				$children[ $item ]['type'] = $nodeData[ $item ]['type'];
-			}
-		}
-
-		/*$tree = array(
-			'id' => $node, 'name' => $node,
-			'type' => 'd', 'children' => $children
-		);*/
-		$tree = array(
-			'id'      => 'metaMedia',
-			'title'   => $node,
-			'content' => '<div>HOLA HOLA </div>'
-		);
-
-		return $tree;
+            global $conf;
+            $base = $conf['mediadir'];
+            return $this->getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs);
 	}
 
 	/**
