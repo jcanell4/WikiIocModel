@@ -289,8 +289,8 @@ class DokuModelAdapter implements WikiIocModel {
 
                 // $code: 1003 'conflict'; 1004 'edit'; 1005 'denied'
 		$code = $this->doSavePreProcess();
-                if ($code === 1005) {
-                    $this->setPagePermission($pid, NULL, AUTH_DELETE, false);
+                if ($code === 1005 || true) {
+                    $this->setUserPagePermission($pid, NULL, AUTH_DELETE, false);
                 }
                 //TODO mirar els codis de retorn 1003 i 1004
                         
@@ -574,8 +574,11 @@ class DokuModelAdapter implements WikiIocModel {
 
         public function setUserPagePermission($page, $user, $acl_level, $force = false) {
             global $conf;
+            include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
             $ret = false;
-            $pageuser = $page . $user;
+            $pageuser = ":" . $page . $user;
+            if (strpos($page,'*')!==0 && !$user)
+                $user = substr($page, strrpos($page,':')+1);
             if ($conf['userpage_allowed'] === 1 && (
                 $pageuser === $conf['userpage_ns'].$user || 
                 $pageuser === $conf['userpage_discuss_ns'].$user)
