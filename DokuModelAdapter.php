@@ -1861,6 +1861,79 @@ public function getMediaMetaResponse() {
 		return $ret;
 	}
 
+	public function getDiffPage( $id, $rev1, $rev2 = NULL ) {
+		global $ID;
+		global $ACT;
+		global $REV;
+		global $lang;
+
+		$ID = $id;
+		$REV = $rev1;
+		$ACT = 'diff';
+
+		// START
+		// Només definim les variables que es passen per paràmetre, la resta les ignorem
+
+
+		$tmp = [ ];
+		trigger_event( 'DOKUWIKI_START', $tmp );
+		session_write_close();
+
+		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
+		if ( $evt->advise_before() ) {
+			act_permcheck( $ACT );
+			unlock( $ID );
+		}
+		$evt->advise_after();
+		unset( $evt );
+
+		$headers[] = 'Content-Type:application/json; charset=utf-8';
+
+		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );
+
+		$this->startUpLang();
+
+		trigger_event( 'TPL_ACT_RENDER', $ACT, 'tpl_content_core()' );
+		// En aquest punt es on es generaria el codi HTML
+		$temp = [ ];
+		//trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln'); // Això afegeix un salt de línia a la sortida
+		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
+
+		// DO real
+
+//		global $cache_revinfo; // aixó no cal, només el declaro per veure que efectivament es carrega el caché COMPTE! aquest no inclou el document actual
+//
+//		$revisions = getRevisions( $ID, - 1, 50 );
+//
+//		$ret = [ ];
+//
+//		foreach ( $revisions as $revision ) {
+//			$ret[ $revision ]         = getRevisionInfo( $ID, $revision );
+//			$ret[ $revision ]['date'] = date( "d-m-Y H:i:s", $ret[ $revision ]['date'] );
+//			//unset ($ret[$revision]['id']);
+//		}
+
+		ob_start();
+		html_diff();
+		$content = ob_get_clean();
+
+		$response = [
+			'id'      => $ID,
+			'ns'      => $ID,
+			"title"   => $ID,
+			"content" => $content,
+			"rev"     => $REV // Es necessari?
+
+		];
+
+		$response['info'] = $this->generateInfo( "info", $lang['document_loaded'] );
+
+		$temp = [ ];
+		trigger_event( 'DOKUWIKI_DONE', $temp );
+
+		return $response;
+	}
+
 	/**
 	 * Afegeix al paràmetre $value els selectors css que es
 	 * fan servir per seleccionar els forms al html del pluguin ACL
