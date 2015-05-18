@@ -6,7 +6,7 @@
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
 if ( ! defined( 'DOKU_INC' ) ) {
-	die();
+    die();
 }
 //require common
 require_once DOKU_INC . 'inc/actions.php';
@@ -22,43 +22,43 @@ require_once DOKU_INC . 'inc/JSON.php';
 require_once DOKU_INC . 'inc/JpegMeta.php';
 
 if ( ! defined( 'DOKU_PLUGIN' ) ) {
-	define( 'DOKU_PLUGIN', DOKU_INC . 'lib/plugins/' );
+    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
-require_once( DOKU_PLUGIN . 'wikiiocmodel/WikiIocModel.php' );
-require_once( DOKU_PLUGIN . 'wikiiocmodel/WikiIocModelExceptions.php' );
+require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocModel.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocModelExceptions.php');
 
 if ( ! defined( 'DW_DEFAULT_PAGE' ) ) {
-	define( 'DW_DEFAULT_PAGE', "start" );
+    define('DW_DEFAULT_PAGE', "start");
 }
 if ( ! defined( 'DW_ACT_SHOW' ) ) {
-	define( 'DW_ACT_SHOW', "show" );
+    define('DW_ACT_SHOW', "show");
 }
 if ( ! defined( 'DW_ACT_DRAFTDEL' ) ) {
-	define( 'DW_ACT_DRAFTDEL', "draftdel" );
+    define('DW_ACT_DRAFTDEL', "draftdel");
 }
 if ( ! defined( 'DW_ACT_SAVE' ) ) {
-	define( 'DW_ACT_SAVE', "save" );
+    define('DW_ACT_SAVE', "save");
 }
 if ( ! defined( 'DW_ACT_EDIT' ) ) {
-	define( 'DW_ACT_EDIT', "edit" );
+    define('DW_ACT_EDIT', "edit");
 }
 if ( ! defined( 'DW_ACT_PREVIEW' ) ) {
-	define( 'DW_ACT_PREVIEW', "preview" );
+    define('DW_ACT_PREVIEW', "preview");
 }
 if ( ! defined( 'DW_ACT_RECOVER' ) ) {
-	define( 'DW_ACT_RECOVER', "recover" );
+    define('DW_ACT_RECOVER', "recover");
 }
 if ( ! defined( 'DW_ACT_DENIED' ) ) {
-	define( 'DW_ACT_DENIED', "denied" );
+    define('DW_ACT_DENIED', "denied");
 }
 if ( ! defined( 'DW_ACT_MEDIA_DETAIL' ) ) {
-	define( 'DW_ACT_MEDIA_DETAIL', "media_detail" );
+    define('DW_ACT_MEDIA_DETAIL', "media_detail");
 }
 if ( ! defined( 'DW_ACT_MEDIA_MANAGER' ) ) {
-	define( 'DW_ACT_MEDIA_MANAGER', "media" );
+    define('DW_ACT_MEDIA_MANAGER', "media");
 }
 if ( ! defined( 'DW_ACT_EXPORT_ADMIN' ) ) {
-	define( 'DW_ACT_EXPORT_ADMIN', "admin" );
+    define('DW_ACT_EXPORT_ADMIN', "admin");
 }
 if ( ! defined('DW_ACT_MEDIA_DETAILS')){
     define('DW_ACT_MEDIA_DETAILS', "mediadetails");
@@ -151,10 +151,10 @@ class DokuModelAdapter implements WikiIocModel {
 	protected $ppEvt;
 	protected $infoLoaded = FALSE;
 
-	public function getAdminTask( $ptask ) {
+	public function getAdminTask( $ptask, $pid=NULL ) {
 		global $lang;
 
-		$this->startAdminTaskProcess( $ptask );
+		$this->startAdminTaskProcess( $ptask, $pid );
 		$this->doAdminTaskPreProcess();
 		$response = $this->getAdminTaskResponse();
 		// Informació a pantalla
@@ -291,7 +291,7 @@ class DokuModelAdapter implements WikiIocModel {
 			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
 		}
 		//
-		$this->doSavePreProcess();
+		$code = $this->doSavePreProcess();
 
 		return $this->getFormatedPageResponse();
 	}
@@ -488,7 +488,12 @@ class DokuModelAdapter implements WikiIocModel {
 	}
 
 	public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
-		global $conf;
+            global $conf;
+            $base = $conf['datadir'];
+            return $this->getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs);
+        }
+        
+	private function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		$sortOptions = array( 0 => 'name', 'date' );
 		$nodeData    = array();
 		$children    = array();
@@ -507,7 +512,6 @@ class DokuModelAdapter implements WikiIocModel {
 			$level = 0;
 		}
 		$sort = $sortOptions[ $sortBy ];
-		$base = $conf['datadir'];
 
 		$opts = array( 'ns' => $node );
 		$dir  = str_replace( ':', '/', $node );
@@ -668,16 +672,18 @@ class DokuModelAdapter implements WikiIocModel {
 	/**
 	 * Inicia tractament per obtenir la llista de gestions d'administració
 	 */
-	private function startAdminTaskProcess( $ptask = NULL ) {
+	private function startAdminTaskProcess( $ptask = NULL, $pid=NULL ) {
 		global $ACT;
 		global $_REQUEST;
 		global $ID;
 		global $conf;
-
+                
 		// Agafem l'index de la configuració
-		if ( ! isset( $ID ) ) {
-			$ID = $conf['start'];
+		if ( ! isset( $pid) ) {
+			$pid = $conf['start'];
 		}
+
+                $ID = $this->params['id'] = $pid;
 
 		$ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
 
@@ -996,11 +1002,19 @@ class DokuModelAdapter implements WikiIocModel {
 		global $ACT;
 
 		$code = 0;
-		$ret  = act_save( $ACT );
-		if ( $ret === 'edit' ) {
+                $ACT = act_permcheck($ACT);
+                
+                if($ACT==$this->params['do']){                    
+                    $ret  = act_save( $ACT );
+                }else{
+                    $ret = $ACT;
+                }
+                if ( $ret === 'edit' ) {
 			$code = 1004;
 		} else if ( $ret === 'conflict' ) {
 			$code = 1003;
+		} else if ( $ret === 'denied' ) {
+			$code = 1005;
 		}
 		if ( $code == 0 ) {
 			$ACT = $this->params['do'] = DW_ACT_EDIT;
@@ -1349,52 +1363,61 @@ class DokuModelAdapter implements WikiIocModel {
 //        return $contentData;
 //    }
 
-    private function getAdminTaskListPage($id, $toSend) {
-        global $lang;
-        return $this->getCommonPage($id, $lang['btn_admin'], $toSend);
-    }
+	private function getAdminTaskListPage( $id, $toSend ) {
+		global $lang;
 
-    private function getAdminTaskPage($id, $task, $toSend) {
-        //TO DO [JOSEP] Pasar el títol correcte segons idiaoma. Cal extreure'l de
-        //plugin(admin)->getMenuText($language);
-        return $this->getCommonPage($id, $task, $toSend);
-    }
+		return $this->getCommonPage( $id, $lang['btn_admin'], $toSend );
+	}
 
-    private function getCommonPage($id, $title, $content){
-        $contentData = array(
-            'id' => $id,
-            'title' => $title,
-            'content' => $content
-        );
-        return $contentData;
-    }
+	private function getAdminTaskPage( $id, $task, $toSend ) {
+		//TO DO [JOSEP] Pasar el títol correcte segons idiaoma. Cal extreure'l de
+		//plugin(admin)->getMenuText($language);
+		return $this->getCommonPage( $id, $task, $toSend );
+	}
 
-    private function getFormatedPage() {
-        global $ACT;
+	private function getCommonPage( $id, $title, $content ) {
+		$contentData = array(
+			'id'      => $id,
+			'title'   => $title,
+			'content' => $content
+		);
 
-        ob_start();
-        trigger_event('TPL_ACT_RENDER', $ACT, 'onFormatRender');
-        $html_output = ob_get_clean() . "\n";
-        return $html_output;
-    }
+		return $contentData;
+	}
 
-    private function _getCodePage() {
-        global $ACT;
+	private function getFormatedPage() {
+		global $ACT;
 
-        ob_start();
-        trigger_event('TPL_ACT_RENDER', $ACT, 'onCodeRender');
-        $html_output = ob_get_clean() . "\n";
-        return $html_output;
-    }
+		ob_start();
+		trigger_event( 'TPL_ACT_RENDER', $ACT, 'onFormatRender' );
+		$html_output = ob_get_clean() . "\n";
+
+		return $html_output;
+	}
+
+	private function _getCodePage() {
+		global $ACT;
+
+		ob_start();
+		trigger_event( 'TPL_ACT_RENDER', $ACT, 'onCodeRender' );
+		$html_output = ob_get_clean() . "\n";
+
+		return $html_output;
+	}
+
 
     /**
      * Miguel Angel Lozano 12/12/2014
      * - Obtenir el gestor de medis
      */
     public function getMediaManager($image = NULL, $fromPage = NULL, $prev = NULL) {
-        global $lang,$NS;
+        global $lang,$NS,$INPUT;
+        /*if(!$NS){
+            $NS = $fromPage;
+        }
+        $INPUT->access['ns'] = $NS;*/
      //   $NS = getNS($fromPage);
-        //$NS = $fromPage;
+        //
 
         $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
         if ($error == 401) {
@@ -1631,44 +1654,7 @@ public function getMediaMetaResponse() {
         return $ret;
     }
 
-    public function getNsMediaTree($currentnode, $sortBy, $onlyDirs = FALSE) {
-        global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
-        $fullscreen = true;
-        require_once DOKU_INC . 'lib/exe/mediamanager.php';
-
-        $rev = '';
-        $image = cleanID($INPUT->str('image'));
-        if (isset($IMG))
-            $image = $IMG;
-        if (isset($JUMPTO))
-            $image = $JUMPTO;
-        if (isset($REV) && !$JUMPTO)
-            $rev = $REV;
-        ob_start();
-
-        echo '<div id="mediamanager__meta">' . NL;
-        echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
-        html_msgarea();
-
-        echo '<div class="panel namespaces">' . NL;
-        echo '<h2>' . $lang['namespaces'] . '</h2>' . NL;
-        echo '<div class="panelHeader">';
-        echo $lang['media_namespaces'];
-        echo '</div>' . NL;
-
-        echo '<div class="panelContent dokuwiki" id="media__tree">' . NL;
-        media_nstree($NS);
-        echo '</div>' . NL;
-        echo '</div>' . NL;
-        echo '</div>' . NL;        
-        echo '</div>' . NL;
-        $strData = ob_get_clean();
-        $tree_ret = array(
-            'id' => 'metaMedia', 'title' => "Índex Media",
-            'content' => $strData
-        );
-        return $tree_ret;
-    }
+    
     
     public function getMediaTabFileOptions() { 
         global $INPUT;
@@ -1795,152 +1781,158 @@ public function getMediaMetaResponse() {
         //$json = new JSON;
         //echo htmlspecialchars($json->encode($result), ENT_NOQUOTES);
     }
-    
 
-    /**
-     * FI Miguel Angel Lozano 12/12/2014
-     */
+	public function getNsMediaTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
+            global $conf;
+            $base = $conf['mediadir'];
+            return $this->getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs);
+	}
 
-    public function getLoginName(){
-        global $_SERVER;
+	/**
+	 * FI Miguel Angel Lozano 12/12/2014
+	 */
 
-        $loginname = "";
-        if (!empty($conf["useacl"])){
-            if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
-                $_SERVER["REMOTE_USER"] !== ""){
-                $loginname = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
-                                                      //current IP differs from the one used to login)
-            }
-        }
-        return  $loginname;
-    }
+	public function getLoginName() {
+		global $_SERVER;
 
+		$loginname = "";
+		if ( ! empty( $conf["useacl"] ) ) {
+			if ( isset( $_SERVER["REMOTE_USER"] ) && //no empty() but isset(): "0" may be a valid username...
+			     $_SERVER["REMOTE_USER"] !== ""
+			) {
+				$loginname = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
+				//current IP differs from the one used to login)
+			}
+		}
 
-    public function getRevisions($id) {
-        global $ID;
-        global $ACT;
+		return $loginname;
+	}
 
-        // START
-        // Només definim les variables que es passen per paràmetre, la resta les ignorem
+	public function getRevisions( $id ) {
+		global $ID;
+		global $ACT;
 
-        $ACT = 'revisions';
+		// START
+		// Només definim les variables que es passen per paràmetre, la resta les ignorem
 
-        $tmp = [];
-        trigger_event('DOKUWIKI_START', $tmp);
-        session_write_close();
+		$ACT = 'revisions';
 
-        $evt = new Doku_Event('ACTION_ACT_PREPROCESS',$ACT);
-        if ($evt->advise_before()) {
-            act_permcheck($ACT);
-            unlock($ID);
-        }
-        $evt->advise_after();
-        unset($evt);
+		$tmp = [ ];
+		trigger_event( 'DOKUWIKI_START', $tmp );
+		session_write_close();
 
-        $headers[] = 'Content-Type:application/json; charset=utf-8';
+		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
+		if ( $evt->advise_before() ) {
+			act_permcheck( $ACT );
+			unlock( $ID );
+		}
+		$evt->advise_after();
+		unset( $evt );
 
-        trigger_event('ACTION_HEADERS_SEND',$headers,'act_sendheaders');
+		$headers[] = 'Content-Type:application/json; charset=utf-8';
 
-        $this->startUpLang();
+		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );
 
-        trigger_event('TPL_ACT_RENDER',$ACT ,'tpl_content_core()');
-        // En aquest punt es on es generaria el codi HTML
-        $temp = [];
-        //trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln'); // Això afegeix un salt de línia a la sortida
-        trigger_event('TPL_CONTENT_DISPLAY', $temp);
+		$this->startUpLang();
 
-        // DO real
+		trigger_event( 'TPL_ACT_RENDER', $ACT, 'tpl_content_core()' );
+		// En aquest punt es on es generaria el codi HTML
+		$temp = [ ];
+		//trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln'); // Això afegeix un salt de línia a la sortida
+		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
 
-        global $cache_revinfo; // aixó no cal, només el declaro per veure que efectivament es carrega el caché COMPTE! aquest no inclou el document actual
+		// DO real
 
-        $revisions = getRevisions($ID, -1, 50);
+		global $cache_revinfo; // aixó no cal, només el declaro per veure que efectivament es carrega el caché COMPTE! aquest no inclou el document actual
 
-        $ret = [];
+		$revisions = getRevisions( $ID, - 1, 50 );
 
-        foreach ($revisions as $revision) {
-            $ret[$revision] = getRevisionInfo($ID, $revision);
-            $ret[$revision]['date'] = date("d-m-Y H:i:s", $ret[$revision]['date']);
-            //unset ($ret[$revision]['id']);
-        }
+		$ret = [ ];
 
-        $temp = [];
-        trigger_event('DOKUWIKI_DONE', $temp);
-        return $ret;
-    }
+		foreach ( $revisions as $revision ) {
+			$ret[ $revision ]         = getRevisionInfo( $ID, $revision );
+			$ret[ $revision ]['date'] = date( "d-m-Y H:i:s", $ret[ $revision ]['date'] );
+			//unset ($ret[$revision]['id']);
+		}
 
+		$temp = [ ];
+		trigger_event( 'DOKUWIKI_DONE', $temp );
 
-   /**
-   * Afegeix al paràmetre $value els selectors css que es
-   * fan servir per seleccionar els forms al html del pluguin ACL
-   *
-   * @param array $value - array de paràmetres
-   *
-   */
-    public function getAclSelectors(&$value) {
-        $value["saveSelector"] = "#acl__detail form:submit";
-        $value["updateSelector"] = "#acl_manager .level2 form:submit";
-    }
+		return $ret;
+	}
 
-   /**
-   * Afegeix al paràmetre $value els selectors css que es
-   * fan servir per seleccionar els forms al html del pluguin PLUGIN
-   *
-   * @param array $value - array de paràmetres
-   *
-   */
-    public function getPluginSelectors(&$value) {
-        $value["commonSelector"] = "div.common form:submit";
-        $value["pluginsSelector"] = "form.plugins:submit";
-    }
+	/**
+	 * Afegeix al paràmetre $value els selectors css que es
+	 * fan servir per seleccionar els forms al html del pluguin ACL
+	 *
+	 * @param array $value - array de paràmetres
+	 *
+	 */
+	public function getAclSelectors( &$value ) {
+		$value["saveSelector"]   = "#acl__detail form:submit";
+		$value["updateSelector"] = "#acl_manager .level2 form:submit";
+	}
 
-   /**
-   * Afegeix al paràmetre $value els selectors css que es
-   * fan servir per seleccionar els forms al html del pluguin CONFIG
-   *
-   * @param array $value - array de paràmetres
-   *
-   */
-    public function getConfigSelectors(&$value) {
-        $value["configSelector"] = "#config__manager form:submit";
-    }
+	/**
+	 * Afegeix al paràmetre $value els selectors css que es
+	 * fan servir per seleccionar els forms al html del pluguin PLUGIN
+	 *
+	 * @param array $value - array de paràmetres
+	 *
+	 */
+	public function getPluginSelectors( &$value ) {
+		$value["commonSelector"]  = "div.common form:submit";
+		$value["pluginsSelector"] = "form.plugins:submit";
+	}
 
-   /**
-   * Afegeix al paràmetre $value els selectors css que es
-   * fan servir per seleccionar els forms al html del pluguin USERMANAGER
-   *
-   * @param array $value - array de paràmetres
-   *
-   */
-    public function getUserManagerSelectors(&$value) {
-        $value["formsSelector"] = "#user__manager form:submit";
-       $value["exportCsvName"] = "fn[export]";
-     }
+	/**
+	 * Afegeix al paràmetre $value els selectors css que es
+	 * fan servir per seleccionar els forms al html del pluguin CONFIG
+	 *
+	 * @param array $value - array de paràmetres
+	 *
+	 */
+	public function getConfigSelectors( &$value ) {
+		$value["configSelector"] = "#config__manager form:submit";
+	}
 
-   /**
-   * Afegeix al paràmetre $value els selectors css que es
-   * fan servir per seleccionar els forms al html del pluguin REVERT
-   *
-   * @param array $value - array de paràmetres
-   *
-   */
-    public function getRevertSelectors(&$value) {
-        $value["revertSelector"] = "#admin_revert form:submit";
-    }
+	/**
+	 * Afegeix al paràmetre $value els selectors css que es
+	 * fan servir per seleccionar els forms al html del pluguin USERMANAGER
+	 *
+	 * @param array $value - array de paràmetres
+	 *
+	 */
+	public function getUserManagerSelectors( &$value ) {
+		$value["formsSelector"] = "#user__manager form:submit";
+		$value["exportCsvName"] = "fn[export]";
+	}
 
-   /**
-   * Afegeix al paràmetre $value els selectors css que es
-   * fan servir per seleccionar els forms al html del pluguin LATEX
-   *
-   * @param array $value - array de paràmetres
-   *
-   */
-    public function getLatexSelectors(&$value) {
-        $value["latexSelector"] = "div.level2 form:submit"; //form
-        $value["latexpurge"] = "latexpurge"; // input name purge
-        $value["dotest"] = "dotest"; // input name test
-    }
-    
-    
+	/**
+	 * Afegeix al paràmetre $value els selectors css que es
+	 * fan servir per seleccionar els forms al html del pluguin REVERT
+	 *
+	 * @param array $value - array de paràmetres
+	 *
+	 */
+	public function getRevertSelectors( &$value ) {
+		$value["revertSelector"] = "#admin_revert form:submit";
+	}
+
+	/**
+	 * Afegeix al paràmetre $value els selectors css que es
+	 * fan servir per seleccionar els forms al html del pluguin LATEX
+	 *
+	 * @param array $value - array de paràmetres
+	 *
+	 */
+	public function getLatexSelectors( &$value ) {
+		$value["latexSelector"] = "div.level2 form:submit"; //form
+		$value["latexpurge"]    = "latexpurge"; // input name purge
+		$value["dotest"]        = "dotest"; // input name test
+	}
+        
+        
     /**
      * Miguel Angel Lozano 21/04/2015
      * MEDIA DETAILS: Obtenció dels detalls de un media
@@ -2065,6 +2057,5 @@ public function getMediaMetaResponse() {
         media_details($image, $auth, $rev, $meta);
         echo '</div>'.NL;
     }
-    
 
 }

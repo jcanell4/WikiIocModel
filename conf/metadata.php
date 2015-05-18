@@ -7,3 +7,6 @@
 
 
 //$meta['debugLvl']                 = array('multichoice', '_choices' => array(0,1,2,3));
+$meta['userpage_allowed']           = array('onoff');
+$meta['userpage_ns']                = array('string');
+$meta['userpage_discuss_ns']        = array('string');;
