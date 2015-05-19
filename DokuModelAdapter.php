@@ -151,7 +151,7 @@ class DokuModelAdapter implements WikiIocModel {
 	protected $ppEvt;
 	protected $infoLoaded = FALSE;
 
-	public static $LONG_FORMAT = 0;
+	public static $DEFAULT_FORMAT = 0;
 	public static $SHORT_FORMAT = 1;
 
 	public function getAdminTask( $ptask, $pid = NULL ) {
@@ -1353,9 +1353,8 @@ class DokuModelAdapter implements WikiIocModel {
 
 		$pageTitle = tpl_pagetitle( $this->params['id'], TRUE );
 
-		// TODO[Xavi] extreure això a un altre mètod que només modifiqui el content i el info
-		$pattern = '/^.*Aquesta és una revisió.*<hr \/>\\n\\n/mis';
-
+		// TODO[Xavi] extreure això a un altre mètode que només modifiqui el content i el info
+		$pattern    = '/^.*Aquesta és una revisió.*<hr \/>\\n\\n/mis';
 		$count      = 0;
 		$info       = NULL;
 		$pageToSend = preg_replace( $pattern, '', $pageToSend, - 1, $count );
@@ -1370,7 +1369,8 @@ class DokuModelAdapter implements WikiIocModel {
 			'title'   => $pageTitle,
 			'content' => $pageToSend,
 			'rev'     => $REV,
-			'info'    => $info
+			'info'    => $info,
+			"type"    => 'html'
 		);
 
 		return $contentData;
@@ -1894,7 +1894,7 @@ class DokuModelAdapter implements WikiIocModel {
 
 		foreach ( $revisions as $revision ) {
 			$ret[ $revision ]         = getRevisionInfo( $ID, $revision );
-			$ret[ $revision ]['date'] = $this->extractDateFromRevision( $ret[ $revision ]['date'] );
+			$ret[ $revision ]['date'] = $this->extractDateFromRevision( $ret[ $revision ]['date'], self::$DEFAULT_FORMAT );
 			//unset ($ret[$revision]['id']);
 		}
 
@@ -1908,13 +1908,12 @@ class DokuModelAdapter implements WikiIocModel {
 	 * Extreu la data a partir del nombre de revisió
 	 *
 	 * @param int $revision - nombre de la revisió
-	 * @param int $format   - format de la data, per defecte
-	 *                      SHORT_FORMAT - curt
+	 * @param int $mode     - format de la data
 	 *
 	 * @return string - Data formatada
+	 *
 	 */
 	public function extractDateFromRevision( $revision, $mode ) {
-		$format = '';
 
 		switch ( $mode ) {
 
@@ -1922,7 +1921,8 @@ class DokuModelAdapter implements WikiIocModel {
 				$format = "d-m-Y";
 				break;
 
-			case self::$LONG_FORMAT:
+			case self::$DEFAULT_FORMAT:
+
 			default:
 				$format = "d-m-Y H:i:s";
 
@@ -1970,28 +1970,31 @@ class DokuModelAdapter implements WikiIocModel {
 
 		// DO real
 
-//		global $cache_revinfo; // aixó no cal, només el declaro per veure que efectivament es carrega el caché COMPTE! aquest no inclou el document actual
-//
-//		$revisions = getRevisions( $ID, - 1, 50 );
-//
-//		$ret = [ ];
-//
-//		foreach ( $revisions as $revision ) {
-//			$ret[ $revision ]         = getRevisionInfo( $ID, $revision );
-//			$ret[ $revision ]['date'] = date( "d-m-Y H:i:s", $ret[ $revision ]['date'] );
-//			//unset ($ret[$revision]['id']);
-//		}
-
+		//side_by_side
 		ob_start();
-		html_diff();
-		$content = ob_get_clean(); // això es descarta, no fem res amb ell?
+//		html_diff();
+		html_diff( '', TRUE, $type = 'sidebyside' );
+		$content1 = ob_get_clean();
+
+
+		// inline
+		ob_start();
+		html_diff( '', TRUE, $type = 'inline' );
+		// html_diff();
+		$content2 = ob_get_clean();
 
 		$response = [
-			'id'      => $ID,
+			'id'      => \str_replace( ":", "_", $ID ),
+			//			'id'      => $ID,
 			'ns'      => $ID,
 			"title"   => $ID,
-			"content" => $content,
-			"rev"     => $REV
+			//			"content" => $content1,
+			//			"content2" => $content2, // TODO[Xavi] per provar
+
+			"content" => [ 'sidebyside' => $content1, 'inline' => $content2 ], // TODO[Xavu] Així es passarà
+
+			"rev"     => $REV,
+			"type"    => 'diff'
 		];
 
 		$response['info'] = $this->generateInfo( "info", $lang['document_loaded'] );
