@@ -17,6 +17,8 @@ require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/confutils.php';
 require_once DOKU_INC . 'inc/io.php';
 require_once DOKU_INC . 'inc/template.php';
+require_once DOKU_INC . 'inc/JSON.php';
+require_once DOKU_INC . 'inc/JpegMeta.php';
 
 if ( ! defined( 'DOKU_PLUGIN' ) ) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
@@ -57,6 +59,9 @@ if ( ! defined( 'DW_ACT_MEDIA_MANAGER' ) ) {
 }
 if ( ! defined( 'DW_ACT_EXPORT_ADMIN' ) ) {
     define('DW_ACT_EXPORT_ADMIN', "admin");
+}
+if ( ! defined('DW_ACT_MEDIA_DETAILS')){
+    define('DW_ACT_MEDIA_DETAILS', "mediadetails");
 }
 
 /*
@@ -489,7 +494,12 @@ class DokuModelAdapter implements WikiIocModel {
 	}
 
 	public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
-		global $conf;
+            global $conf;
+            $base = $conf['datadir'];
+            return $this->getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs);
+        }
+        
+	private function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		$sortOptions = array( 0 => 'name', 'date' );
 		$nodeData    = array();
 		$children    = array();
@@ -508,7 +518,6 @@ class DokuModelAdapter implements WikiIocModel {
 			$level = 0;
 		}
 		$sort = $sortOptions[ $sortBy ];
-		$base = $conf['datadir'];
 
 		$opts = array( 'ns' => $node );
 		$dir  = str_replace( ':', '/', $node );
@@ -1463,303 +1472,387 @@ class DokuModelAdapter implements WikiIocModel {
 		return $html_output;
 	}
 
-	/**
-	 * Miguel Angel Lozano 12/12/2014
-	 * - Obtenir el gestor de medis
-	 */
-	public function getMediaManager( $image = NULL, $fromPage = NULL, $prev = NULL ) {
-		global $lang;
 
-		$error = $this->startMediaManager( DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev );
-		if ( $error == 401 ) {
-			throw new HttpErrorCodeException( $error, "Access denied" );
-		} else if ( $error == 404 ) {
-			throw new HttpErrorCodeException( $error, "Resource " . $image . " not found." );
-		}
-		$title = $lang['img_manager'];
-		$ret   = array(
-			"content"          => $this->doMediaManagerPreProcess(),
-			"id"               => "media",
-			"title"            => "media",
-			"ns"               => $fromPage,
-			"imageTitle"       => $title,
-			"image"            => $image,
-			"fromId"           => $fromPage,
-			"modifyImageLabel" => $lang['img_manager'],
-			"closeDialogLabel" => $lang['img_backto']
-		);
+    /**
+     * Miguel Angel Lozano 12/12/2014
+     * - Obtenir el gestor de medis
+     */
+    public function getMediaManager($image = NULL, $fromPage = NULL, $prev = NULL) {
+        global $lang,$NS,$INPUT;
+        /*if(!$NS){
+            $NS = $fromPage;
+        }
+        $INPUT->access['ns'] = $NS;*/
+     //   $NS = getNS($fromPage);
+        //
 
-		return $ret;
-	}
+        $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
+        if ($error == 401) {
+            throw new HttpErrorCodeException($error, "Access denied");
+        } else if ($error == 404) {
+            throw new HttpErrorCodeException($error, "Resource " . $image . " not found.");
+        }
+        $title = $lang['img_manager'];
+        $ret = array(
+            "content" => $this->doMediaManagerPreProcess(),
+            "id" => "media",
+            "title" => "media",
+            "ns" => $NS,
+            "imageTitle" => $title,
+            "image" => $image,
+            "fromId" => $fromPage,
+            "modifyImageLabel" => $lang['img_manager'],
+            "closeDialogLabel" => $lang['img_backto']
+        );
+        return $ret;
+    }
 
-	/**
-	 * Init per a l'obtenció del MediaManager
-	 * Nota: aquesta funció ha tingut com a base startMediaProcess, però la separem per les següents raons:
-	 * - ha de considerar que és un altre $pdo
-	 * - ha de consdierar que l'Id de la imatge pot ser null
-	 * - en el futur volem partir la resposta de getMediaManager per ubicar cada component en l'àrea adient
-	 *   de la nostra pàgina principal de la dokuwiki_30
-	 */
-	private function startMediaManager( $pdo, $pImage = NULL, $pFromId = NULL, $prev = NULL ) {
-		global $ID;
-		global $AUTH;
-		//global $vector_action;
-		//global $vector_context;
-		//global $loginname;
-		global $IMG;
-		global $ERROR;
-		global $SRC;
-		global $conf;
-		global $lang;
-		global $INFO;
-		global $REV;
+    /**
+     * Init per a l'obtenció del MediaManager
+     * Nota: aquesta funció ha tingut com a base startMediaProcess, però la separem per les següents raons:
+     * - ha de considerar que és un altre $pdo
+     * - ha de consdierar que l'Id de la imatge pot ser null
+     * - en el futur volem partir la resposta de getMediaManager per ubicar cada component en l'àrea adient
+     *   de la nostra pàgina principal de la dokuwiki_30
+     */
+    private function startMediaManager($pdo, $pImage = NULL, $pFromId = NULL, $prev = NULL) {
+        global $ID;
+        global $AUTH;
+        //global $vector_action;
+        //global $vector_context;
+        //global $loginname;
+        global $IMG;
+        global $ERROR;
+        global $SRC;
+        global $conf;
+        global $lang;
+        global $INFO;
+        global $REV;
 
-		$ret = $ERROR = 0;
+        $ret = $ERROR = 0;
 
-		$this->params['action'] = $pdo;
+        $this->params['action'] = $pdo;
 
-		if ( $pdo === DW_ACT_MEDIA_MANAGER ) {
-			$vector_action = $GET["vecdo"] = $this->params['vector_action'] = "media";
-		}
+        if ($pdo === DW_ACT_MEDIA_MANAGER) {
+            $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "media";
+        }
 
-		if ( $pImage ) {
-			$IMG = $this->params['image'] = $pImage;
-		}
-		if ( $pFromId ) {
-			$ID = $this->params['id'] = $pFromId;
-		}
-		if ( $prev ) {
-			$REV = $this->params['rev'] = $prev;
-		}
-		// check image permissions
-		if ( $pImage ) {
-			$AUTH = auth_quickaclcheck( $pImage );
-			if ( $AUTH >= AUTH_READ ) {
-				// check if image exists
-				$SRC = mediaFN( $pImage );
-				if ( ! file_exists( $SRC ) ) {
-					$ret = $ERROR = 404;
-				}
-			} else {
-				// no auth
-				$ret = $ERROR = 401;
-			}
-		}
 
-		if ( $ret != 0 ) {
-			return $ret;
-		}
+        if ($pImage) {
+            $IMG = $this->params['image'] = $pImage;
+        }
+        if ($pFromId) {
+            $ID = $this->params['id'] = $pFromId;
+        }
+        if ($prev) {
+            $REV = $this->params['rev'] = $prev;
+        }
+        // check image permissions
+        if ($pImage) {
+            $AUTH = auth_quickaclcheck($pImage);
+            if ($AUTH >= AUTH_READ) {
+                // check if image exists
+                $SRC = mediaFN($pImage);
+                if (!file_exists($SRC)) {
+                    $ret = $ERROR = 404;
+                }
+            } else {
+                // no auth
+                $ret = $ERROR = 401;
+            }
+        }
 
-		$INFO = array_merge( pageinfo(), mediainfo() );
+        if ($ret != 0) {
+            return $ret;
+        }
 
-		/**
-		 * Stores the template wide context
-		 *
-		 * This template offers discussion pages via common articles, which should be
-		 * marked as "special". DokuWiki does not know any "special" articles, therefore
-		 * we have to take care about detecting if the current page is a discussion
-		 * page or not.
-		 *
-		 * @var string
-		 * @author Andreas Haerter <development@andreas-haerter.com>
-		 */
-		/* $vector_context = $this->params['vector_context'] = "article";
-		  if (preg_match("/^".tpl_getConf("ioc_template_discuss_ns")."?$|^".tpl_getConf("ioc_template_discuss_ns").".*?$/i", ":".getNS(getID()))){
-		  $vector_context = $this->params['vector_context'] = "discuss";
-		  } */
+        $INFO = array_merge(pageinfo(), mediainfo());
 
-		/**
-		 * Stores the name the current client used to login
-		 *
-		 * @var string
-		 * @author Andreas Haerter <development@andreas-haerter.com>
-		 */
-		/* $loginname = $this->params['loginName'] = "";
-		  if (!empty($conf["useacl"])) {
-		  if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
-		  $_SERVER["REMOTE_USER"] !== "") {
-		  $loginname = $this->params['loginName'] = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
-		  //current IP differs from the one used to login)
-		  }
-		  } */
+        /**
+         * Stores the template wide context
+         *
+         * This template offers discussion pages via common articles, which should be
+         * marked as "special". DokuWiki does not know any "special" articles, therefore
+         * we have to take care about detecting if the current page is a discussion
+         * page or not.
+         *
+         * @var string
+         * @author Andreas Haerter <development@andreas-haerter.com>
+         */
+        /* $vector_context = $this->params['vector_context'] = "article";
+          if (preg_match("/^".tpl_getConf("ioc_template_discuss_ns")."?$|^".tpl_getConf("ioc_template_discuss_ns").".*?$/i", ":".getNS(getID()))){
+          $vector_context = $this->params['vector_context'] = "discuss";
+          } */
 
-		$this->startUpLang();
+        /**
+         * Stores the name the current client used to login
+         *
+         * @var string
+         * @author Andreas Haerter <development@andreas-haerter.com>
+         */
+        /* $loginname = $this->params['loginName'] = "";
+          if (!empty($conf["useacl"])) {
+          if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
+          $_SERVER["REMOTE_USER"] !== "") {
+          $loginname = $this->params['loginName'] = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
+          //current IP differs from the one used to login)
+          }
+          } */
 
-		//detect revision
-		$rev = $this->params['rev'] = (int) $INFO["rev"]; //$INFO comes from the DokuWiki core
-		if ( $rev < 1 ) {
-			$rev = $this->params['rev'] = (int) $INFO["lastmod"];
-		}
+        $this->startUpLang();
 
-		$this->triggerStartEvents();
 
-		return $ret;
-	}
+        //detect revision
+        $rev = $this->params['rev'] = (int) $INFO["rev"]; //$INFO comes from the DokuWiki core
+        if ($rev < 1) {
+            $rev = $this->params['rev'] = (int) $INFO["lastmod"];
+        }
 
-	private function doMediaManagerPreProcess() {
-		global $ACT;
-		global $JUMPTO;
+        $this->triggerStartEvents();
 
-		$content = "";
-		if ( $this->runBeforePreprocess( $content ) ) {
-			ob_start();
-			// tpl_media(); //crida antiga total del media manager
-			//crida parcial: només a la llista de fitxers del directori
-			$this->mediaManagerFileList();
-			if ( isset( $JUMPTO ) ) {
-				if ( $JUMPTO == FALSE ) {
-					throw new HttpErrorCodeException( $error, "Bad request" );
-				}
-			}
-			$content .= ob_get_clean();
-			// check permissions again - the action may have changed
-			$ACT = act_permcheck( $ACT );
-		}
-		$this->runAfterPreprocess( $content );
+        return $ret;
+    }
 
-		return $content;
-	}
+    private function doMediaManagerPreProcess() {
+        global $ACT;
+        global $JUMPTO;
 
-	/**
-	 * Prints full-screen media manager
-	 *
-	 * @author Kate Arzamastseva <pshns@ukr.net>
-	 */
-	function mediaManagerFileList() {
-		global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
-		$fullscreen = TRUE;
-		require_once DOKU_INC . 'lib/exe/mediamanager.php';
+        $content = "";
+        if ($this->runBeforePreprocess($content)) {
+            ob_start();
+            // tpl_media(); //crida antiga total del media manager
+            //crida parcial: només a la llista de fitxers del directori
+            $this->mediaManagerFileList();
+            $content .= ob_get_clean();
+            // check permissions again - the action may have changed
+            $ACT = act_permcheck($ACT);
+        }
+        $this->runAfterPreprocess($content);
+        return $content;
+    }
 
-		$rev   = '';
-		$image = cleanID( $INPUT->str( 'image' ) );
-		if ( isset( $IMG ) ) {
-			$image = $IMG;
-		}
-		if ( isset( $JUMPTO ) ) {
-			$image = $JUMPTO;
-		}
-		if ( isset( $REV ) && ! $JUMPTO ) {
-			$rev = $REV;
-		}
+    /**
+ * Prints full-screen media manager
+ *
+ * @author Kate Arzamastseva <pshns@ukr.net>
+ */
+    
+ function mediaManagerFileList() {
+    global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT,$AUTH;
+    $fullscreen = true;
+    require_once DOKU_INC . 'lib/exe/mediamanager.php';
 
-		echo '<div id="mediamanager__page">' . NL;
-		echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
-		html_msgarea();
+    $rev = '';
+    $image = cleanID($INPUT->str('image'));
+    if (isset($IMG))
+        $image = $IMG;
+    if (isset($JUMPTO))
+        $image = $JUMPTO;
+    if (isset($REV) && !$JUMPTO)
+        $rev = $REV;
 
-		echo '<div class="panel namespaces">' . NL;
-		echo '<h2>' . $lang['namespaces'] . '</h2>' . NL;
-		echo '<div class="panelHeader">';
-		echo $lang['media_namespaces'];
-		echo '</div>' . NL;
+    echo '<div id="mediamanager__page">' . NL;
+   
+    echo '<div class="panel filelist ui-resizable">' . NL;
+    echo '<div class="panelContent">'.NL;
+    $do = $AUTH;
+    $query = $_REQUEST['q'];
+    if (!$query) $query = '';
+    if ($do == 'searchlist' || $query) {
+        media_searchlist($query,$NS,$AUTH,true,$_REQUEST['sort']);
+    }else{
+        media_tab_files($NS, $AUTH, $JUMPTO); 
+    }
+    echo '</div>' . NL;
+    echo '</div>' . NL;
+    echo '</div>' . NL;
+}
+    
 
-		echo '<div class="panel filelist">' . NL;
-		tpl_mediaFileList();
-		echo '</div>' . NL;
-		echo '</div>' . NL;
-		echo '</div>' . NL;
-	}
+    
+public function getMediaMetaResponse() {
+    global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
+    $fullscreen = true;
+    require_once DOKU_INC . 'lib/exe/mediamanager.php';
 
-	public function getMediaMetaResponse() {
-		global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT;
-		$fullscreen = TRUE;
-		require_once DOKU_INC . 'lib/exe/mediamanager.php';
+    $rev = '';
+    $image = cleanID($INPUT->str('image'));
+    if (isset($IMG))
+        $image = $IMG;
+    if (isset($JUMPTO))
+        $image = $JUMPTO;
+    if (isset($REV) && !$JUMPTO)
+        $rev = $REV;
+            ob_start();
 
-		$rev   = '';
-		$image = cleanID( $INPUT->str( 'image' ) );
-		if ( isset( $IMG ) ) {
-			$image = $IMG;
-		}
-		if ( isset( $JUMPTO ) ) {
-			$image = $JUMPTO;
-		}
-		if ( isset( $REV ) && ! $JUMPTO ) {
-			$rev = $REV;
-		}
-		ob_start();
 
-		echo '<div id="mediamanager__meta">' . NL;
-		echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
-		html_msgarea();
+    echo '<div id="mediamanager__meta">' . NL;
+    echo '<h1>' . $lang['btn_media'] . '</h1>' . NL;
+    html_msgarea();
 
-		echo '<div class="panel namespaces">' . NL;
-		echo '<h2>' . $lang['namespaces'] . '</h2>' . NL;
-		echo '<div class="panelHeader">';
-		echo $lang['media_namespaces'];
-		echo '</div>' . NL;
+    echo '<div class="panel namespaces">' . NL;
+    echo '<h2>' . $lang['namespaces'] . '</h2>' . NL;
+    echo '<div class="panelHeader">';
+    echo $lang['media_namespaces'];
+    echo '</div>' . NL;
 
-		echo '<div class="panelContent" id="media__tree">' . NL;
-		media_nstree( $NS );
-		echo '</div>' . NL;
-		echo '</div>' . NL;
-		echo '</div>' . NL;
+    echo '<div class="panelContent" id="media__tree">' . NL;
+    media_nstree($NS);
+    echo '</div>' . NL;
+    echo '</div>' . NL;
+    echo '</div>' . NL;
 
-		echo '</div>' . NL;
-		$meta = ob_get_clean();
-		$ret  = array( 'id' => $NS );
-		// $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
-		/* if ($mEvt->advise_before()) {
-				$ACT = "show";
-				$toc = wrapper_tpl_toc();
-				$ACT = $act_aux;
-				$metaId = \str_replace(":", "_", $this->params['id']) . '_toc';
-				$meta[] = $this->getMetaPage($metaId, $lang['toc'], $toc);
-			}*/
-		//$mEvt->advise_after();
-		//unset($mEvt);
-		$ret['meta'] = $meta;
 
-		return $ret;
-	}
+
+    echo '</div>' . NL;
+        $meta = ob_get_clean();
+        $ret = array('id' => $NS);
+       // $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
+       /* if ($mEvt->advise_before()) {
+            $ACT = "show";
+            $toc = wrapper_tpl_toc();
+            $ACT = $act_aux;
+            $metaId = \str_replace(":", "_", $this->params['id']) . '_toc';
+            $meta[] = $this->getMetaPage($metaId, $lang['toc'], $toc);
+        }*/
+        //$mEvt->advise_after();
+        //unset($mEvt);
+        $ret['meta'] = $meta;
+        return $ret;
+    }
+
+    
+    
+    public function getMediaTabFileOptions() { 
+        global $INPUT;
+
+        $checkThumbs = "checked";
+        $checkRows = "";
+        if($INPUT->str('list')){
+            if($INPUT->str('list')=="rows"){
+                $checkThumbs = "";
+                $checkRows = "checked";
+            }
+        }
+        ob_start();
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="thumbs" value="thumbs" '.$checkThumbs.'/>
+                <label for="radioOne">Thumbnails</label> <br />';
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="rows" value="rows" '.$checkRows.'/>
+                <label for="radioTwo">Rows</label> <br />';
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediafileoptions', 'title' => "Visualització",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    public function getMediaTabFileSort() {  
+        global $INPUT;
+        $checkedNom = "checked";
+        $checkedData = "";
+        if($INPUT->str('sort')){
+            if($INPUT->str('sort')=="date"){
+                $checkedNom = "";
+                $checkedData = "checked";
+            }
+        }
+        
+        ob_start();        
+        /*echo '  <input type="radio" name="drink" id="radioOne" checked value="tea"/>
+                <label for="radioOne">Tea</label> <br />';*/
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="nom" value="name" '.$checkedNom. '/>
+                <label for="nom">Nom</label> <br />';
+        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="data" value="date" '.$checkedData. '/>
+                <label for="data">Data</label> <br />';
+        //echo '<div class="panelContent dokuwiki" id="metamedia__fileoptions">' . NL;
+        //media_tab_files_options();       
+        //echo '</div>' . NL;
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediafilesort', 'title' => "Ordenació",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    public function getMediaTabSearch() {  
+        global $NS;
+        ob_start();  
+        echo '<div class="search">';
+        echo '<form accept-charset="utf-8" method="post"  id="dw__mediasearch">';
+        echo '<div class="no">';
+        echo '<p><label><span>Cerca pel nom de fitxer: </span>';
+        echo '<input type="text" id="mediaSearchq" title="Cerca en: '.$NS.'" class="edit" name="q">';
+        echo '</label>';
+        echo '<input type="submit" class="button" value="Cerca" id="mediaSearchs">';
+        echo '</p>';
+        echo '</div></form></div>';
+
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediaSearch', 'title' => "Cerca",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    public function getMediaFileUpload() {  
+        global $NS,$AUTH,$JUMPTO;        
+        ob_start();        
+        media_tab_upload($NS, $AUTH, $JUMPTO);
+        $strData = ob_get_clean();
+        $tree_ret = array(
+            'id' => 'metaMediafileupload', 'title' => "Càrrega de fitxers",
+            'content' => $strData
+        );
+        return $tree_ret;
+    }
+    
+    function MediaUpload(){
+        global $NS, $MSG, $INPUT;
+
+        if ($_FILES['qqfile']['tmp_name']) {
+          $id = $INPUT->post->str('mediaid', $_FILES['qqfile']['name']);
+        } elseif ($INPUT->get->has('qqfile')) {
+           $id = $INPUT->get->str('qqfile');
+        }
+
+        $id = cleanID($id);
+
+        $NS = $INPUT->str('ns');
+        $ns = $NS.':'.getNS($id);
+
+        $AUTH = auth_quickaclcheck("$ns:*");
+        if($AUTH >= AUTH_UPLOAD) { io_createNamespace("$ns:xxx", 'media'); }
+
+        if ($_FILES['qqfile']['error']) unset($_FILES['qqfile']);
+
+       // if ($_FILES['qqfile']['tmp_name']) $res = media_upload($NS, $AUTH, $_FILES['qqfile']);
+       // if ($INPUT->get->has('qqfile')) $res = media_upload_xhr($NS, $AUTH);
+        media_upload($NS,$AUTH);
+        if ($res) $result = array('success' => true,
+            'link' => media_managerURL(array('ns' => $ns, 'image' => $NS.':'.$id), '&'),
+            'id' => $NS.':'.$id, 'ns' => $NS);
+
+        if (!$result) {
+            $error = '';
+            if (isset($MSG)) {
+                foreach($MSG as $msg) $error .= $msg['msg'];
+            }
+            $result = array('error' => $msg['msg'], 'ns' => $NS);
+            //$_FILES = array();
+            //unset($_FILES['upload']);
+            //$_FILES['upload']['error']="No s'ha pogut pujar el fitxer";
+        }
+        //$json = new JSON;
+        //echo htmlspecialchars($json->encode($result), ENT_NOQUOTES);
+    }
 
 	public function getNsMediaTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
-		global $conf;
-		$sortOptions = array( 0 => 'name', 'date' );
-		$nodeData    = array();
-		$children    = array();
-		//$tree;
-
-		if ( $currentnode == "_" ) {
-			return array( 'id' => "", 'name' => "", 'type' => 'd' );
-		}
-		if ( $currentnode ) {
-			$node  = $currentnode;
-			$aname = split( ":", $currentnode );
-			$level = count( $aname );
-			$name  = $aname[ $level - 1 ];
-		} else {
-			$node  = '';
-			$name  = '';
-			$level = 0;
-		}
-		$sort = $sortOptions[ $sortBy ];
-		$base = $conf['datadir'];
-
-		$opts = array( 'ns' => $node );
-		$dir  = str_replace( ':', '/', $node );
-		search(
-			$nodeData, $base, 'search_index',
-			$opts, $dir, 1
-		);
-		foreach ( array_keys( $nodeData ) as $item ) {
-			if ( $onlyDirs && $nodeData[ $item ]['type'] == 'd' || ! $onlyDirs ) {
-				$children[ $item ]['id']   = $nodeData[ $item ]['id'];
-				$aname                     = split( ":", $nodeData[ $item ]['id'] ); //TODO[Xavi] @deprecated substitur per explode()
-				$children[ $item ]['name'] = $aname[ $level ];
-				$children[ $item ]['type'] = $nodeData[ $item ]['type'];
-			}
-		}
-
-		/*$tree = array(
-			'id' => $node, 'name' => $node,
-			'type' => 'd', 'children' => $children
-		);*/
-		$tree = array(
-			'id'      => 'metaMedia',
-			'title'   => $node,
-			'content' => '<div>HOLA HOLA </div>'
-		);
-
-		return $tree;
+            global $conf;
+            $base = $conf['mediadir'];
+            return $this->getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs);
 	}
 
 	/**
@@ -1835,6 +1928,79 @@ class DokuModelAdapter implements WikiIocModel {
 		return $ret;
 	}
 
+	public function getDiffPage( $id, $rev1, $rev2 = NULL ) {
+		global $ID;
+		global $ACT;
+		global $REV;
+		global $lang;
+
+		$ID = $id;
+		$REV = $rev1;
+		$ACT = 'diff';
+
+		// START
+		// Només definim les variables que es passen per paràmetre, la resta les ignorem
+
+
+		$tmp = [ ];
+		trigger_event( 'DOKUWIKI_START', $tmp );
+		session_write_close();
+
+		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
+		if ( $evt->advise_before() ) {
+			act_permcheck( $ACT );
+			unlock( $ID );
+		}
+		$evt->advise_after();
+		unset( $evt );
+
+		$headers[] = 'Content-Type:application/json; charset=utf-8';
+
+		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );
+
+		$this->startUpLang();
+
+		trigger_event( 'TPL_ACT_RENDER', $ACT, 'tpl_content_core()' );
+		// En aquest punt es on es generaria el codi HTML
+		$temp = [ ];
+		//trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln'); // Això afegeix un salt de línia a la sortida
+		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
+
+		// DO real
+
+//		global $cache_revinfo; // aixó no cal, només el declaro per veure que efectivament es carrega el caché COMPTE! aquest no inclou el document actual
+//
+//		$revisions = getRevisions( $ID, - 1, 50 );
+//
+//		$ret = [ ];
+//
+//		foreach ( $revisions as $revision ) {
+//			$ret[ $revision ]         = getRevisionInfo( $ID, $revision );
+//			$ret[ $revision ]['date'] = date( "d-m-Y H:i:s", $ret[ $revision ]['date'] );
+//			//unset ($ret[$revision]['id']);
+//		}
+
+		ob_start();
+		html_diff();
+		$content = ob_get_clean();
+
+		$response = [
+			'id'      => $ID,
+			'ns'      => $ID,
+			"title"   => $ID,
+			"content" => $content,
+			"rev"     => $REV // Es necessari?
+
+		];
+
+		$response['info'] = $this->generateInfo( "info", $lang['document_loaded'] );
+
+		$temp = [ ];
+		trigger_event( 'DOKUWIKI_DONE', $temp );
+
+		return $response;
+	}
+
 	/**
 	 * Afegeix al paràmetre $value els selectors css que es
 	 * fan servir per seleccionar els forms al html del pluguin ACL
@@ -1905,5 +2071,131 @@ class DokuModelAdapter implements WikiIocModel {
 		$value["latexpurge"]    = "latexpurge"; // input name purge
 		$value["dotest"]        = "dotest"; // input name test
 	}
+        
+        
+    /**
+     * Miguel Angel Lozano 21/04/2015
+     * MEDIA DETAILS: Obtenció dels detalls de un media
+     */
+    public function getMediaDetails($image) {
+        global $lang,$NS,$JSINFO;
+
+        $error = $this->startMediaDetails(DW_ACT_MEDIA_DETAILS, $image);
+        if ($error == 401) {
+            throw new HttpErrorCodeException($error, "Access denied");
+        } else if ($error == 404) {
+            throw new HttpErrorCodeException($error, "Resource " . $image . " not found.");
+        }
+        $title = $lang['img_manager'];
+        $ret = array(
+            "content" => $this->doMediaDetailsPreProcess(),
+            "id" => $image,
+            "title" => $image,
+            "ns" => $NS,
+            "imageTitle" => $image,
+            "image" => $image
+        );
+        $JSINFO = array('id' => $image, 'namespace' => $NS);
+        return $ret;
+    }
+    
+    /**
+     * Init per a l'obtenció del Media Details
+     * Nota: aquesta funció ha tingut com a base startMediaProcess, però la separem per les següents raons:
+     */
+    private function startMediaDetails($pdo, $pImage) {     
+        global $ID;
+        global $AUTH;
+        global $IMG;
+        global $ERROR;
+        global $SRC;
+        global $conf;
+        global $lang;
+        global $INFO;
+        global $REV;
+        $ret = $ERROR = 0;
+        $this->params['action'] = $pdo;
+
+        if ($pImage) {
+            $IMG = $this->params['image'] = $pImage;
+        }
+        $ID = $pImage;
+
+        // check image permissions
+        if ($pImage) {
+            $AUTH = auth_quickaclcheck($pImage);
+            if ($AUTH >= AUTH_READ) {
+                // check if image exists
+                $SRC = mediaFN($pImage);
+                if (!file_exists($SRC)) {
+                    $ret = $ERROR = 404;
+                }
+            } else {
+                // no auth
+                $ret = $ERROR = 401;
+            }
+        }
+
+        if ($ret != 0) {
+            return $ret;
+        }
+
+        $INFO = array_merge(pageinfo(), mediainfo());
+
+
+        $this->startUpLang();
+
+        //detect revision
+        $rev = $this->params['rev'] = (int) $INFO["rev"]; //$INFO comes from the DokuWiki core
+        if ($rev < 1) {
+            $rev = $this->params['rev'] = (int) $INFO["lastmod"];
+        }
+
+        $this->triggerStartEvents();
+
+        return $ret;
+    }
+    
+    private function doMediaDetailsPreProcess() {
+        global $ACT;
+        global $JUMPTO;
+
+        $content = "";
+        if ($this->runBeforePreprocess($content)) {
+            ob_start();
+            $this->mediaDetailsContent();
+            $content .= ob_get_clean();
+            // check permissions again - the action may have changed
+            $ACT = act_permcheck($ACT);
+        }
+        $this->runAfterPreprocess($content);
+        return $content;
+    }
+
+    /**
+    * Prints full-screen media details
+    */
+    
+    function mediaDetailsContent() {
+
+        global $NS, $IMG, $JUMPTO, $REV, $lang, $conf, $fullscreen, $INPUT,$AUTH;
+        $fullscreen = true;
+        require_once DOKU_INC . 'lib/exe/mediamanager.php';
+
+        $rev = '';
+        $image = cleanID($INPUT->str('image'));
+        if (isset($IMG))
+            $image = $IMG;
+        if (isset($JUMPTO))
+            $image = $JUMPTO;
+        if (isset($REV) && !$JUMPTO)
+            $rev = $REV;
+
+        echo '<div class="panelContent">'.NL;
+        $meta = new JpegMeta(mediaFN($image, $rev));
+        media_preview($image, $AUTH, $rev, $meta);
+        media_details($image, $auth, $rev, $meta);
+        echo '</div>'.NL;
+    }
 
 }
