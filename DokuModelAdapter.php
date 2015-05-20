@@ -292,10 +292,12 @@ class DokuModelAdapter implements WikiIocModel {
 			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
 		}
 
+                $permis_actual = $this->obtenir_permis($pid, $_SERVER['REMOTE_USER']);
+                
                 // $code: 1003 'conflict'; 1004 'edit'; 1005 'denied'
 		$code = $this->doSavePreProcess();
-                if ($code === 1005 || true) {
-                    $this->setUserPagePermission($pid, NULL, AUTH_DELETE, false);
+                if ($code === 1005) {
+                    $this->setUserPagePermission($pid, $INFO['client'], AUTH_DELETE, false);
                 }
                 //TODO mirar els codis de retorn 1003 i 1004
                         
@@ -582,16 +584,19 @@ class DokuModelAdapter implements WikiIocModel {
 	}
 
         public function setUserPagePermission($page, $user, $acl_level, $force = false) {
+            global $INFO;
             global $conf;
             include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
+            $pageuser = ":" . substr($page, 0, strrpos($page, ":"));
+            $userpage = substr($pageuser, strrpos($pageuser, ":")+1);
             $ret = false;
-            $pageuser = ":" . $page . $user;
-            if (strpos($page,'*')!==0 && !$user)
-                $user = substr($page, strrpos($page,':')+1);
-            if ($conf['userpage_allowed'] === 1 && (
-                $pageuser === $conf['userpage_ns'].$user || 
-                $pageuser === $conf['userpage_discuss_ns'].$user)
-               ) 
+            if ($INFO['isadmin'] || $INFO['ismanager'] || (
+                $INFO['namespace'] == substr($page, 0, strrpos($page, ":")) &&
+                $userpage == $user && 
+                $conf['userpage_allowed'] === 1 && (
+                $pageuser == $conf['userpage_ns'].$user || 
+                $pageuser == $conf['userpage_discuss_ns'].$user)
+               ) )
             {
                 $ret = $this->establir_permis($page, $user, $acl_level, $force);
             }
@@ -600,33 +605,37 @@ class DokuModelAdapter implements WikiIocModel {
 
         /**
          * administració de permisos
+         * @param $page y $user son obligatorios
+        */
+        private function obtenir_permis($page, $user) {
+            $acl_class = new admin_plugin_acl();
+            $acl_class->handle();
+            $acl_class->who = $user;
+            $permis = auth_quickaclcheck($page);
+            /* este bucle obtiene el mismo resultado que auth_quickaclcheck()
+            $permis = NULL;
+            $sub_page = $page;
+            while (!$permis && $sub_page) {
+                $acl_class->ns = $sub_page;
+                $permis = $acl_class->_get_exact_perm();
+                $sub_page = substr($sub_page,0,strrpos($sub_page,':'));
+            }
+            */
+            return $permis;
+        }
+        
+        /**
          * @param bool $force : true : indica que s'ha d'establir el permís estricte
          *                      false: si existeix algún permís, no es modifica
         */
         private function establir_permis($page, $user, $acl_level, $force = false) {
             $ret = false;
-            $permis = false;
-            $sub_page = $page;
             $acl_class = new admin_plugin_acl();
             $acl_class->handle();
-            if (!$acl_level)
-                $acl_level = auth_quickaclcheck($page);
-            if ($user)
-                $acl_class->who = $user;
+            $acl_class->who = $user;
+            $permis_actual = auth_quickaclcheck($page);
             
-            if (!$force) {
-                while (!$permis && $sub_page) {
-                    $acl_class->ns = $sub_page;
-                    $permis = $acl_class->_get_exact_perm();
-                    $sub_page = substr($sub_page,0,strrpos($sub_page,':'));
-                }
-                if (!$permis) {
-                    $acl_class->ns = '*';
-                    $permis = $acl_class->_get_exact_perm();
-                }
-            }
-            
-            if ($force || !$permis) {
+            if ($force || $acl_level > $permis_actual) {
                 $ret = $acl_class->_acl_add($page, $user, $acl_level);
             }
             return $ret;
@@ -635,8 +644,7 @@ class DokuModelAdapter implements WikiIocModel {
         private function eliminar_permis($page, $user) {
             $acl_class = new admin_plugin_acl();
             //$acl_class->handle();
-            //if ($user)
-            //    $acl_class->who = $user;
+            //$acl_class->who = $user;
             if ($page && $user) 
                 $ret = $acl_class->_acl_del($page, $user);
             return $ret;
