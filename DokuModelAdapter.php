@@ -293,15 +293,15 @@ class DokuModelAdapter implements WikiIocModel {
 		}
 
                 $permis_actual = $this->obtenir_permis($pid, $_SERVER['REMOTE_USER']);
-                
-                // $code: 1003 'conflict'; 1004 'edit'; 1005 'denied'
-		$code = $this->doSavePreProcess();
-                if ($code === 1005) {
-                    $this->setUserPagePermission($pid, $INFO['client'], AUTH_DELETE, false);
+                if ($permis_actual < AUTH_CREATE) {
+                    $permis = $this->setUserPagePermission($pid, $INFO['client'], AUTH_DELETE, false);
                 }
-                //TODO mirar els codis de retorn 1003 i 1004
+                if ($permis >= AUTH_CREATE) {
+                    $code = $this->doSavePreProcess();
+                }
+                //TODO mirar els codis de retorn: 1003 'conflict'; 1004 'edit'; 1005 'denied'
                         
-		return $this->getFormatedPageResponse();
+		return $this->getFormatedPageResponse($code);
 	}
 
 	public function getHtmlPage( $pid, $prev = NULL ) {
@@ -629,7 +629,6 @@ class DokuModelAdapter implements WikiIocModel {
          *                      false: si existeix algún permís, no es modifica
         */
         private function establir_permis($page, $user, $acl_level, $force = false) {
-            $ret = false;
             $acl_class = new admin_plugin_acl();
             $acl_class->handle();
             $acl_class->who = $user;
@@ -637,8 +636,11 @@ class DokuModelAdapter implements WikiIocModel {
             
             if ($force || $acl_level > $permis_actual) {
                 $ret = $acl_class->_acl_add($page, $user, $acl_level);
+                if($ret && strpos($page, '*') === false) {
+                    if($acl_level > AUTH_EDIT) $permis_actual = AUTH_EDIT;
+                }
             }
-            return $ret;
+            return $permis_actual;
         }
     
         private function eliminar_permis($page, $user) {
@@ -1113,7 +1115,7 @@ class DokuModelAdapter implements WikiIocModel {
 		$this->doFormatedPagePreProcess();
 	}
 
-	private function getFormatedPageResponse() {
+	private function getFormatedPageResponse($code) {
 		global $lang;
 		$pageToSend = $this->getFormatedPage();
 
