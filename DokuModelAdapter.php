@@ -294,12 +294,17 @@ class DokuModelAdapter implements WikiIocModel {
 
                 $permis_actual = $this->obtenir_permis($pid, $_SERVER['REMOTE_USER']);
                 if ($permis_actual < AUTH_CREATE) {
-                    $permis = $this->setUserPagePermission($pid, $INFO['client'], AUTH_DELETE, false);
+                    //se piden permisos para el directorio (no para la página)
+                    $permis_actual = $this->setUserPagePermission(getNS($pid).':*', $INFO['client'], AUTH_DELETE);
                 }
-                if ($permis >= AUTH_CREATE) {
+                if ($permis_actual >= AUTH_CREATE) {
                     $code = $this->doSavePreProcess();
                 }
+                else {
+                    $code = 1005; //TODO revisar codi de retorn
+                }
                 //TODO mirar els codis de retorn: 1003 'conflict'; 1004 'edit'; 1005 'denied'
+                //AUTH_* definidas en inc/auth.php
                         
 		return $this->getFormatedPageResponse($code);
 	}
@@ -583,7 +588,7 @@ class DokuModelAdapter implements WikiIocModel {
 		return tpl_getConf( $id );
 	}
 
-        public function setUserPagePermission($page, $user, $acl_level, $force = false) {
+        public function setUserPagePermission($page, $user, $acl_level) {
             global $INFO;
             global $conf;
             include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
@@ -598,7 +603,7 @@ class DokuModelAdapter implements WikiIocModel {
                 $pageuser == $conf['userpage_discuss_ns'].$user)
                ) )
             {
-                $ret = $this->establir_permis($page, $user, $acl_level, $force);
+                $ret = $this->establir_permis($page, $user, $acl_level, true);
             }
             return $ret;
         }
