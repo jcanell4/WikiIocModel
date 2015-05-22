@@ -285,9 +285,7 @@ class DokuModelAdapter implements WikiIocModel {
 			$text = $lang['createDefaultText'];
 		}
 
-		$this->startPageProcess(
-			DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL, "", $text, ""
-                    );
+		$this->startPageProcess(DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL, "", $text, "");
 		if ( $INFO["exists"] ) {
 			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
 		}
@@ -306,7 +304,7 @@ class DokuModelAdapter implements WikiIocModel {
                 //TODO mirar els codis de retorn: 1003 'conflict'; 1004 'edit'; 1005 'denied'
                 //AUTH_* definidas en inc/auth.php
                         
-		return $this->getFormatedPageResponse($code);
+		return $this->getFormatedPageResponse();
 	}
 
 	public function getHtmlPage( $pid, $prev = NULL ) {
@@ -1120,7 +1118,7 @@ class DokuModelAdapter implements WikiIocModel {
 		$this->doFormatedPagePreProcess();
 	}
 
-	private function getFormatedPageResponse($code) {
+	private function getFormatedPageResponse() {
 		global $lang;
 		$pageToSend = $this->getFormatedPage();
 
