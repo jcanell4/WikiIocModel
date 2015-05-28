@@ -1202,9 +1202,9 @@ class DokuModelAdapter implements WikiIocModel {
 		$response["info"]    = [ $info, $license ];
 		$metaId              = str_replace( ":", "_", $this->params['id'] ) . '_metaEditForm';
 		$response["meta"]    = [
-			$this->getCommonPage( $metaId,
+			($this->getCommonPage( $metaId,
 			                      $lang['metaEditForm'],
-			                      $meta )
+			                      $meta ) + ['type' => 'summary'])
 		];
 
 		return $response;
@@ -1275,6 +1275,11 @@ class DokuModelAdapter implements WikiIocModel {
 		return $ret;
 	}
 
+	/**
+	 * TODO[Xavi] només genera la meta pel TOC
+	 *
+	 * @return array
+	 */
 	public function getMetaResponse() {
 		global $lang;
 		global $ACT;
@@ -1288,7 +1293,7 @@ class DokuModelAdapter implements WikiIocModel {
 			$toc    = wrapper_tpl_toc();
 			$ACT    = $act_aux;
 			$metaId = \str_replace( ":", "_", $this->params['id'] ) . '_toc';
-			$meta[] = $this->getCommonPage( $metaId, $lang['toc'], $toc );
+			$meta[] = ( $this->getCommonPage( $metaId, $lang['toc'], $toc ) + [ 'type' => 'TOC' ] );
 		}
 		$mEvt->advise_after();
 		unset( $mEvt );
@@ -1976,7 +1981,6 @@ class DokuModelAdapter implements WikiIocModel {
 		html_diff( '', TRUE, $type = 'sidebyside' );
 		$content1 = ob_get_clean();
 
-
 		// inline
 		ob_start();
 		html_diff( '', TRUE, $type = 'inline' );
@@ -1997,7 +2001,8 @@ class DokuModelAdapter implements WikiIocModel {
 			"type"    => 'diff'
 		];
 
-		$response['info'] = $this->generateInfo( "info", $lang['document_loaded'] );
+		$response['info']   = $this->generateInfo( "info", $lang['document_loaded'] );
+		$response['action'] = 'diff';
 
 		$temp = [ ];
 		trigger_event( 'DOKUWIKI_DONE', $temp );
