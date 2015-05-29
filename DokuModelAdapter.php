@@ -1997,12 +1997,12 @@ class DokuModelAdapter implements WikiIocModel {
 
 			"content" => [ 'sidebyside' => $content1, 'inline' => $content2 ], // TODO[Xavu] Així es passarà
 
-			"rev"     => $REV,
+//			"rev"     => $REV,
 			"type"    => 'diff'
 		];
 
-		$response['info']   = $this->generateInfo( "info", $lang['document_loaded'] );
-		$response['action'] = 'diff';
+		$response['info']   = $this->generateInfo( "info", $lang['diff_loaded'] );
+//		$response['action'] = 'diff';
 
 		$temp = [ ];
 		trigger_event( 'DOKUWIKI_DONE', $temp );
