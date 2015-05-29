@@ -1202,9 +1202,9 @@ class DokuModelAdapter implements WikiIocModel {
 		$response["info"]    = [ $info, $license ];
 		$metaId              = str_replace( ":", "_", $this->params['id'] ) . '_metaEditForm';
 		$response["meta"]    = [
-			($this->getCommonPage( $metaId,
-			                      $lang['metaEditForm'],
-			                      $meta ) + ['type' => 'summary'])
+			( $this->getCommonPage( $metaId,
+			                        $lang['metaEditForm'],
+			                        $meta ) + [ 'type' => 'summary' ] )
 		];
 
 		return $response;
@@ -1885,13 +1885,11 @@ class DokuModelAdapter implements WikiIocModel {
 
 		trigger_event( 'TPL_ACT_RENDER', $ACT, 'tpl_content_core()' );
 		// En aquest punt es on es generaria el codi HTML
+
 		$temp = [ ];
-		//trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln'); // Això afegeix un salt de línia a la sortida
 		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
 
 		// DO real
-
-		global $cache_revinfo; // aixó no cal, només el declaro per veure que efectivament es carrega el caché COMPTE! aquest no inclou el document actual
 
 		$revisions = getRevisions( $ID, - 1, 50 );
 
@@ -1976,38 +1974,90 @@ class DokuModelAdapter implements WikiIocModel {
 		// DO real
 
 		//side_by_side
-		ob_start();
-//		html_diff();
-		html_diff( '', TRUE, $type = 'sidebyside' );
-		$content1 = ob_get_clean();
 
-		// inline
-		ob_start();
-		html_diff( '', TRUE, $type = 'inline' );
-		// html_diff();
-		$content2 = ob_get_clean();
+		if ( isset( $_REQUEST['difftype'] ) ) {
+			$difftype = $_REQUEST['difftype'];
+		} else {
+			$difftype = 'sidebyside';
+		}
+
+		if ( $difftype == 'sidebyside' ) {
+			ob_start();
+//		html_diff();
+			html_diff( '', TRUE, $type = 'sidebyside' );
+			$content = ob_get_clean();
+		} else {
+			// inline
+			ob_start();
+			html_diff( '', TRUE, $type = 'inline' );
+			// html_diff();
+			$content = ob_get_clean();
+		}
+
 
 		$response = [
 			'id'      => \str_replace( ":", "_", $ID ),
-			//			'id'      => $ID,
 			'ns'      => $ID,
 			"title"   => $ID,
-			//			"content" => $content1,
-			//			"content2" => $content2, // TODO[Xavi] per provar
-
-			"content" => [ 'sidebyside' => $content1, 'inline' => $content2 ], // TODO[Xavu] Així es passarà
-
-//			"rev"     => $REV,
+			"content" => $this->clearDiff( $content ),
 			"type"    => 'diff'
 		];
 
-		$response['info']   = $this->generateInfo( "info", $lang['diff_loaded'] );
-//		$response['action'] = 'diff';
+		$response['info'] = $this->generateInfo( "info", $lang['diff_loaded'] );
+
+		$meta = [
+			( $this->getCommonPage( $response['id'] . '_switch_diff_mode ',
+			                        $lang['switch_diff_mode'],
+			                        $this->extractMetaContentFromDiff( $content )
+				) + [ 'type' => 'switch_diff_mode' ] )
+		];
+
+		$response["meta"] = [ 'id' => $response['id'], 'meta' => $meta ];
 
 		$temp = [ ];
 		trigger_event( 'DOKUWIKI_DONE', $temp );
 
 		return $response;
+	}
+
+	/**
+	 * Extreu la informació que volem fer servir com a meta pels diff, en aquest cas només ens interessa el formulari.
+	 *
+	 * S'afegeix una id única pel formulari per poder seleccionar-lo al frontend.
+	 *
+	 * @param string $content - contingut del que volem extreure el formulari
+	 *
+	 * @return string - cadena amb el codi html per reconstruir el formulari.
+	 */
+	public function extractMetaContentFromDiff( $content ) {
+
+		$pattern = '/<form.*<\/form>/s';
+		preg_match( $pattern, $content, $matches );
+
+		$pattern = '/<form /s';
+		$replace = '<form id="switch_mode" ';
+
+		$metaContent = preg_replace( $pattern, $replace, $matches[0]);
+
+		return $metaContent;
+
+	}
+
+	public function clearDiff( $content ) {
+		// Neteja els continguts
+		// Remove headers
+
+//		foreach ( $contents as $key => $content ) {
+
+//			$pattern = '^.+?(?=<div class="diffoptions">)';
+
+		// Remove all up to table
+		$pattern = '/^.+?(?=<div class="table">)/s';
+
+//			$content[ $key ] = preg_replace( $pattern, '', $content );
+//		}
+
+		return preg_replace( $pattern, '', $content );
 	}
 
 	/**
