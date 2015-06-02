@@ -6,7 +6,7 @@
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
 interface WikiIocModel {
-    public function getHtmlPage($pid, $prev = NULL);
+    /*public function getHtmlPage($pid, $prev = NULL);
 
     public function getCodePage($pid, $prev = NULL, $prange = NULL);
 
@@ -14,9 +14,9 @@ interface WikiIocModel {
 
     public function saveEdition($pid, $prev = NULL, $prange = NULL,
         $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL);
-
+*/
     public function isDenied();
-    
+/*    
     public function getMediaFileName($id, $rev = '');
     
     public function getIdWithoutNs($id);
@@ -44,4 +44,5 @@ interface WikiIocModel {
     public function getImageDetail($idImage, $fromPage=NULL);
     
     public function getMediaManager($idImage, $fromPage=NULL);
+ */
 }
