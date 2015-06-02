@@ -296,6 +296,7 @@ class DokuModelAdapter implements WikiIocModel {
                     $permis_actual = $this->setUserPagePermission(getNS($pid).':*', $INFO['client'], AUTH_DELETE);
                 }
                 if ($permis_actual >= AUTH_CREATE) {
+                    $INFO['perm'] = $permis_actual;
                     $code = $this->doSavePreProcess();
                 }
                 else {
@@ -307,8 +308,9 @@ class DokuModelAdapter implements WikiIocModel {
                 if ($code !== 0) {
 			throw new AnotherErrorCodeException( $pid, $lang['other'], $code );
                 }
-                        
-		return $this->getFormatedPageResponse();
+
+                $ret = $this->getFormatedPageResponse();
+		return $ret;
 	}
 
 	public function getHtmlPage( $pid, $prev = NULL ) {
@@ -361,7 +363,6 @@ class DokuModelAdapter implements WikiIocModel {
 			$ppre, $ptext, $psuf
 		);
 		$code = $this->doSavePreProcess();
-
 		return $this->getSaveInfoResponse( $code );
 	}
 
