@@ -1614,6 +1614,12 @@ class DokuModelAdapter implements WikiIocModel {
 		}
 
 		echo '<div id="mediamanager__page">' . NL;
+                if($NS == ""){
+                    echo '<h1>Documents de l\'arrel de documents</h3>';
+                }else{
+                    echo '<h1>Documents de '.$NS.'</h3>';
+                }
+                
 
 		echo '<div class="panel filelist ui-resizable">' . NL;
 		echo '<div class="panelContent">' . NL;
@@ -1696,18 +1702,21 @@ class DokuModelAdapter implements WikiIocModel {
 			}
 		}
 		ob_start();
+                echo '<span style="font-weight: bold;">Visualització</span></br>';
+                echo '<div style="margin-left:10px;">';
 		echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="thumbs" value="thumbs" ' . $checkThumbs . '/>
                 <label for="radioOne">Thumbnails</label> <br />';
 		echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="rows" value="rows" ' . $checkRows . '/>
-                <label for="radioTwo">Rows</label> <br />';
+                <label for="radioTwo">Rows</label> <br/><br/></div>';
 		$strData  = ob_get_clean();
-		$tree_ret = array(
+		/*$tree_ret = array(
 			'id'      => 'metaMediafileoptions',
 			'title'   => "Visualització",
 			'content' => $strData
-		);
+		);*/
 
-		return $tree_ret;
+		//return $tree_ret;
+                return $strData;
 	}
 
 	public function getMediaTabFileSort() {
@@ -1724,44 +1733,51 @@ class DokuModelAdapter implements WikiIocModel {
 		ob_start();
 		/*echo '  <input type="radio" name="drink" id="radioOne" checked value="tea"/>
 				<label for="radioOne">Tea</label> <br />';*/
+                echo '<span style="font-weight: bold;">Ordenació</span></br>';
+                echo '<div style="margin-left:10px;">';                
 		echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="nom" value="name" ' . $checkedNom . '/>
                 <label for="nom">Nom</label> <br />';
 		echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="data" value="date" ' . $checkedData . '/>
-                <label for="data">Data</label> <br />';
+                <label for="data">Data</label> <br/><br/></div>';
 		//echo '<div class="panelContent dokuwiki" id="metamedia__fileoptions">' . NL;
 		//media_tab_files_options();
 		//echo '</div>' . NL;
 		$strData  = ob_get_clean();
-		$tree_ret = array(
+		/*$tree_ret = array(
 			'id'      => 'metaMediafilesort',
 			'title'   => "Ordenació",
 			'content' => $strData
-		);
+		);*/
 
-		return $tree_ret;
+		//return $tree_ret;
+                return $strData;
 	}
 
 	public function getMediaTabSearch() {
 		global $NS;
 		ob_start();
-		echo '<div class="search">';
+                echo '<span style="font-weight: bold;">Cerca</span></br>';
+		echo '<div class="search" style="margin-left:10px;">';
 		echo '<form accept-charset="utf-8" method="post"  id="dw__mediasearch">';
 		echo '<div class="no">';
-		echo '<p><label><span>Cerca pel nom de fitxer: </span>';
-		echo '<input type="text" id="mediaSearchq" title="Cerca en: ' . $NS . '" class="edit" name="q">';
+		//echo '<p><label><span>Cerca pel nom de fitxer: </span>';
+                echo '<p>';
+		echo '<input type="text" id="mediaSearchq" placeholder = "Nom de fitxer" title="Cerca en: ' . $NS . '" class="edit" name="q">';
 		echo '</label>';
-		echo '<input type="submit" class="button" value="Cerca" id="mediaSearchs">';
+		echo '<input type="submit" class="button" value="Filtrar" id="mediaSearchs">';
+                echo '<input style="display:none" type="submit" class="button" value="Desfer filtre" id="mediaSearchr">';
 		echo '</p>';
 		echo '</div></form></div>';
 
 		$strData  = ob_get_clean();
-		$tree_ret = array(
+		/*$tree_ret = array(
 			'id'      => 'metaMediaSearch',
 			'title'   => "Cerca",
 			'content' => $strData
-		);
+		);*/
 
-		return $tree_ret;
+		//return $tree_ret;
+                return $strData;
 	}
 
 	public function getMediaFileUpload() {
