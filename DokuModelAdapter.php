@@ -299,7 +299,6 @@ class DokuModelAdapter implements WikiIocModel {
                     $permis_actual = $this->setUserPagePermission(getNS($pid).':*', $INFO['client'], AUTH_DELETE);
                 }
                 if ($permis_actual >= AUTH_CREATE) {
-                    $INFO['perm'] = $permis_actual;
                     $code = $this->doSavePreProcess();
                 }
                 else {
