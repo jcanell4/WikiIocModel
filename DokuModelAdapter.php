@@ -612,7 +612,7 @@ class DokuModelAdapter implements WikiIocModel {
                 $pageuser == $conf['userpage_discuss_ns'].$user)
                ) )
             {
-                $ret = $this->establir_permis($page, $user, $acl_level, true);
+                $INFO['perm'] = $ret = $this->establir_permis($page, $user, $acl_level, true);
             }
             return $ret;
         }
