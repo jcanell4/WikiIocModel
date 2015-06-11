@@ -16,7 +16,6 @@ require_once DOKU_INC . 'inc/media.php';
 require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/confutils.php';
 require_once DOKU_INC . 'inc/io.php';
-require_once DOKU_INC . 'inc/auth.php';
 require_once DOKU_INC . 'inc/template.php';
 require_once DOKU_INC . 'inc/JSON.php';
 require_once DOKU_INC . 'inc/JpegMeta.php';
@@ -26,6 +25,7 @@ if ( ! defined( 'DOKU_PLUGIN' ) ) {
 }
 require_once( DOKU_PLUGIN . 'wikiiocmodel/WikiIocModel.php' );
 require_once( DOKU_PLUGIN . 'wikiiocmodel/WikiIocModelExceptions.php' );
+require_once( DOKU_PLUGIN . 'acl/admin.php' );
 
 if ( ! defined( 'DW_DEFAULT_PAGE' ) ) {
 	define( 'DW_DEFAULT_PAGE', "start" );
@@ -279,6 +279,7 @@ class DokuModelAdapter implements WikiIocModel {
 	public function createPage( $pid, $text = NULL ) {
 		global $INFO;
 		global $lang;
+                global $ACT;
 
 		$this->startUpLang();
 
@@ -293,10 +294,26 @@ class DokuModelAdapter implements WikiIocModel {
 		if ( $INFO["exists"] ) {
 			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
 		}
-		//
-		$code = $this->doSavePreProcess();
 
-		return $this->getFormatedPageResponse();
+                $permis_actual = $this->obtenir_permis($pid, $_SERVER['REMOTE_USER']);
+                if ($permis_actual < AUTH_CREATE) {
+                    //se pide el permiso para el directorio (no para la página)
+                    $permis_actual = $this->setUserPagePermission(getNS($pid).':*', $INFO['client'], AUTH_DELETE);
+                }
+                if ($permis_actual >= AUTH_CREATE) {
+                    $code = $this->doSavePreProcess();
+                }
+                else {
+                    throw new InsufficientPermissionToCreatePageException($pid); //TODO [Josep] cal internacionalitzar el missage per defecte
+                }
+
+                $response = $this->getFormatedPageResponse();
+		// Si no s'ha especificat cap altre missatge mostrem el de carrega
+		if ( ! $response['info'] ) {
+			$response['info'] = $this->generateInfo( "info", $lang['document_created'] );
+		}
+
+		return $response;                
 	}
 
 	public function getHtmlPage( $pid, $prev = NULL ) {
@@ -582,6 +599,80 @@ class DokuModelAdapter implements WikiIocModel {
 		return tpl_getConf( $id );
 	}
 
+        public function setUserPagePermission($page, $user, $acl_level) {
+            global $INFO;
+            global $conf;
+            include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
+            $pageuser = ":" . substr($page, 0, strrpos($page, ":"));
+            $userpage = substr($pageuser, strrpos($pageuser, ":")+1);
+            $ret = false;
+            if ($INFO['isadmin'] || $INFO['ismanager'] || (
+                $INFO['namespace'] == substr($page, 0, strrpos($page, ":")) &&
+                $userpage == $user && 
+                $conf['userpage_allowed'] === 1 && (
+                $pageuser == $conf['userpage_ns'].$user || 
+                $pageuser == $conf['userpage_discuss_ns'].$user)
+               ) )
+            {
+                $INFO['perm'] = $ret = $this->establir_permis($page, $user, $acl_level, true);
+            }
+            return $ret;
+        }
+
+        /**
+         * administració de permisos
+         * @param $page y $user son obligatorios
+        */
+        private function obtenir_permis($page, $user) {
+            $acl_class = new admin_plugin_acl();
+            $acl_class->handle();
+            $acl_class->who = $user;
+            $permis = auth_quickaclcheck($page);
+            /* este bucle obtiene el mismo resultado que auth_quickaclcheck()
+            $permis = NULL;
+            $sub_page = $page;
+            while (!$permis && $sub_page) {
+                $acl_class->ns = $sub_page;
+                $permis = $acl_class->_get_exact_perm();
+                $sub_page = substr($sub_page,0,strrpos($sub_page,':'));
+            }
+            */
+            return $permis;
+        }
+        
+        /**
+         * @param bool $force : true : indica que s'ha d'establir el permís estricte
+         *                      false: si existeix algún permís, no es modifica
+        */
+        private function establir_permis($page, $user, $acl_level, $force = false) {
+            $acl_class = new admin_plugin_acl();
+            $acl_class->handle();
+            $acl_class->who = $user;
+            $permis_actual = auth_quickaclcheck($page);
+            
+            if ($force || $acl_level > $permis_actual) {
+                $ret = $acl_class->_acl_add($page, $user, $acl_level);
+                if ($ret) {
+                    if (strpos($page, '*') === false) {
+                        if($acl_level > AUTH_EDIT) $permis_actual = AUTH_EDIT;
+                    }
+                    else {
+                        $permis_actual = $acl_level;
+                    }
+                }
+            }
+            return $permis_actual;
+        }
+    
+        private function eliminar_permis($page, $user) {
+            $acl_class = new admin_plugin_acl();
+            //$acl_class->handle();
+            //$acl_class->who = $user;
+            if ($page && $user) 
+                $ret = $acl_class->_acl_del($page, $user);
+            return $ret;
+        }
+            
 	/**
 	 * Retorna si s'ha trobat la cadena que es cerca al principi de la cadena on es busca.
 	 *
