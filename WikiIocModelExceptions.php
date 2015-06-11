@@ -29,15 +29,22 @@ class PageAlreadyExistsException extends WikiIocModelException {
 }
 
 class DateConflictSavingException extends WikiIocModelException {
-    public function __construct($page, $message="There are date conflicts saving teh page %s. Changes will be lost", 
+    public function __construct($page, $message="There are date conflicts saving the page %s. Changes will be lost", 
                                                 $code=1003, $previous=NULL) {
         parent::__construct(sprintf($message, $page), $code, $previous);
     }
 }
 
 class WordBlockedException extends WikiIocModelException {
-    public function __construct($page, $message="Your change was not saved because it contains blocked text (spam).", 
+    public function __construct($page, $message="Your change was not saved because it contains blocked text (spam). We connot save changes in page %s. Changes will be lost", 
                                                 $code=1004, $previous=NULL) {
+        parent::__construct(sprintf($message, $page), $code, $previous);
+    }
+}
+
+class InsufficientPermissionToCreatePageException extends WikiIocModelException {
+    public function __construct($page, $message="You don't have enough permission to create page %s.", 
+                                                $code=1005, $previous=NULL) {
         parent::__construct(sprintf($message, $page), $code, $previous);
     }
 }
