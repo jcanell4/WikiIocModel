@@ -64,31 +64,29 @@ if ( ! defined( 'DW_ACT_MEDIA_DETAILS' ) ) {
 	define( 'DW_ACT_MEDIA_DETAILS', "mediadetails" );
 }
 
-/*
-    const DW_ACT_BACKLINK="backlink";
-    const DW_ACT_REVISIONS="revisions";
-    const DW_ACT_DIFF="diff";
-    const DW_ACT_SUBSCRIBE="subscribe";
-    const DW_ACT_UNSUBSCRIBE="unsubscribe";
-    const DW_ACT_SUBSCRIBENS="subscribens";
-    const DW_ACT_UNSUBSCRIBENS="unsubscribens";
-    const DW_ACT_INDEX="index";
-    const DW_ACT_RECENT="recent";
-    const DW_ACT_SEARCH="search";
-    const DW_ACT_EXPORT_RAW="export_raw";
-    const DW_ACT_EXPORT_XHTML="export_xhtml";
-    const DW_ACT_EXPORT_XHTMLBODY="export_xhtmlbody";
-    const DW_ACT_CHECK="check";
-    const DW_ACT_INDEX="register";
-    const DW_ACT_LOGIN="login";
-    const DW_ACT_LOGOUT="logout";
-    const DW_ACT_EXPORT_PROFILE="profile";
-    const DW_ACT_EXPORT_RESENDPWD="resendpwd";
-    const DW_ACT_DRAFT="draft";
-    const DW_ACT_WORDBLOCK="wordblock";
-    const DW_ACT_CONFLICT="conflict";
-    const DW_ACT_CANCEL="cancel";
-*/
+//    const DW_ACT_BACKLINK="backlink";
+//    const DW_ACT_REVISIONS="revisions";
+//    const DW_ACT_DIFF="diff";
+//    const DW_ACT_SUBSCRIBE="subscribe";
+//    const DW_ACT_UNSUBSCRIBE="unsubscribe";
+//    const DW_ACT_SUBSCRIBENS="subscribens";
+//    const DW_ACT_UNSUBSCRIBENS="unsubscribens";
+//    const DW_ACT_INDEX="index";
+//    const DW_ACT_RECENT="recent";
+//    const DW_ACT_SEARCH="search";
+//    const DW_ACT_EXPORT_RAW="export_raw";
+//    const DW_ACT_EXPORT_XHTML="export_xhtml";
+//    const DW_ACT_EXPORT_XHTMLBODY="export_xhtmlbody";
+//    const DW_ACT_CHECK="check";
+//    const DW_ACT_INDEX="register";
+//    const DW_ACT_LOGIN="login";
+//    const DW_ACT_LOGOUT="logout";
+//    const DW_ACT_EXPORT_PROFILE="profile";
+//    const DW_ACT_EXPORT_RESENDPWD="resendpwd";
+//    const DW_ACT_DRAFT="draft";
+//    const DW_ACT_WORDBLOCK="wordblock";
+//    const DW_ACT_CONFLICT="conflict";
+//    const DW_ACT_CANCEL="cancel";
 
 /**
  * Mostra una pàgina de la DokuWiki.
@@ -289,7 +287,10 @@ class DokuModelAdapter implements WikiIocModel {
 			$text = $lang['createDefaultText'];
 		}
 
-		$this->startPageProcess(DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL, "", $text, "");
+		$this->startPageProcess(
+			DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL,
+			"", $text, ""
+		);
 		if ( $INFO["exists"] ) {
 			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
 		}
@@ -368,6 +369,7 @@ class DokuModelAdapter implements WikiIocModel {
 			$ppre, $ptext, $psuf
 		);
 		$code = $this->doSavePreProcess();
+                
 		return $this->getSaveInfoResponse( $code );
 	}
 

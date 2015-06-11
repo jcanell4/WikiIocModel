@@ -55,9 +55,3 @@ class HttpErrorCodeException extends WikiIocModelException {
     }
 }
 
-class AnotherErrorCodeException extends WikiIocModelException {
-    public function __construct($page, $message="AnotherErrorCodeException", $code=1007, $previous=NULL) {
-        parent::__construct(sprintf($message, $page), $code, $previous);
-    }
-}
-
