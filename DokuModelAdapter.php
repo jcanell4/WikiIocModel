@@ -281,6 +281,7 @@ class DokuModelAdapter implements WikiIocModel {
 	public function createPage( $pid, $text = NULL ) {
 		global $INFO;
 		global $lang;
+                global $ACT;
 
 		$this->startUpLang();
 
@@ -302,17 +303,16 @@ class DokuModelAdapter implements WikiIocModel {
                     $code = $this->doSavePreProcess();
                 }
                 else {
-                    $code = 1005; //TODO revisar codi de retorn
+                    throw new InsufficientPermissionToCreatePageException($pid); //TODO [Josep] cal internacionalitzar el missage per defecte
                 }
 
-                //TODO mirar els codis de retorn: 1003 'conflict'; 1004 'edit'; 1005 'denied'
-                //AUTH_* definidas en inc/auth.php
-                if ($code !== 0) {
-			throw new AnotherErrorCodeException( $pid, $lang['other'], $code );
-                }
+                $response = $this->getFormatedPageResponse();
+		// Si no s'ha especificat cap altre missatge mostrem el de carrega
+		if ( ! $response['info'] ) {
+			$response['info'] = $this->generateInfo( "info", $lang['document_created'] );
+		}
 
-                $ret = $this->getFormatedPageResponse();
-		return $ret;
+		return $response;                
 	}
 
 	public function getHtmlPage( $pid, $prev = NULL ) {
@@ -2024,17 +2024,18 @@ class DokuModelAdapter implements WikiIocModel {
 	}
 
 	public function getDiffPage( $id, $rev1, $rev2 = NULL ) {
+		// START
+		// Només definim les variables que es passen per paràmetre, la resta les ignorem
+
 		global $ID;
 		global $ACT;
 		global $REV;
 		global $lang;
+		global $INPUT;
 
 		$ID  = $id;
 		$REV = $rev1;
 		$ACT = 'diff';
-
-		// START
-		// Només definim les variables que es passen per paràmetre, la resta les ignorem
 
 		$tmp = [ ];
 		trigger_event( 'DOKUWIKI_START', $tmp );
@@ -2064,25 +2065,21 @@ class DokuModelAdapter implements WikiIocModel {
 
 		//side_by_side
 
-		if ( isset( $_REQUEST['difftype'] ) ) {
-			$difftype = $_REQUEST['difftype'];
+		if ( $INPUT->ref( 'difftype' ) ) {
+			$difftype = $INPUT->ref( 'difftype' );
 		} else {
 			$difftype = 'sidebyside';
 		}
 
 		if ( $difftype == 'sidebyside' ) {
 			ob_start();
-//		html_diff();
 			html_diff( '', TRUE, $type = 'sidebyside' );
 			$content = ob_get_clean();
 		} else {
-			// inline
 			ob_start();
 			html_diff( '', TRUE, $type = 'inline' );
-			// html_diff();
 			$content = ob_get_clean();
 		}
-
 
 		$response = [
 			'id'      => \str_replace( ":", "_", $ID ),
@@ -2119,32 +2116,21 @@ class DokuModelAdapter implements WikiIocModel {
 	 * @return string - cadena amb el codi html per reconstruir el formulari.
 	 */
 	public function extractMetaContentFromDiff( $content ) {
+		global $ID;
 
 		$pattern = '/<form.*<\/form>/s';
 		preg_match( $pattern, $content, $matches );
 
 		$pattern = '/<form /s';
-		$replace = '<form id="switch_mode" ';
+		$replace = '<form id="switch_mode_' . str_replace( ":", "_", $ID ) .'" ';
 
-		$metaContent = preg_replace( $pattern, $replace, $matches[0]);
+		$metaContent = preg_replace( $pattern, $replace, $matches[0] );
 
 		return $metaContent;
-
 	}
 
 	public function clearDiff( $content ) {
-		// Neteja els continguts
-		// Remove headers
-
-//		foreach ( $contents as $key => $content ) {
-
-//			$pattern = '^.+?(?=<div class="diffoptions">)';
-
-		// Remove all up to table
 		$pattern = '/^.+?(?=<div class="table">)/s';
-
-//			$content[ $key ] = preg_replace( $pattern, '', $content );
-//		}
 
 		return preg_replace( $pattern, '', $content );
 	}
