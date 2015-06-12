@@ -49,6 +49,20 @@ class InsufficientPermissionToCreatePageException extends WikiIocModelException 
     }
 }
 
+class InsufficientPermissionToViewPageException extends WikiIocModelException {
+    public function __construct($page, $message="You don't have enough permission to view page %s.", 
+                                                $code=1006, $previous=NULL) {
+        parent::__construct(sprintf($message, $page), $code, $previous);
+    }
+}
+
+class InsufficientPermissionToEditPageException extends WikiIocModelException {
+    public function __construct($page, $message="You don't have enough permission to edit page %s.", 
+                                                $code=1007, $previous=NULL) {
+        parent::__construct(sprintf($message, $page), $code, $previous);
+    }
+}
+
 class HttpErrorCodeException extends WikiIocModelException {
     public function __construct($code, $message="", $previous=NULL) {
         parent::__construct($message, $code, $previous);

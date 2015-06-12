@@ -324,6 +324,9 @@ class DokuModelAdapter implements WikiIocModel {
 		if ( ! $INFO["exists"] ) {
 			throw new PageNotFoundException( $pid, $lang['pageNotFound'] );
 		}
+		if ( ! $INFO["perm"] ) {
+			throw new InsufficientPermissionToViewPageException( $pid); //TODO [Josep] Internacionalització missatge per defecte!
+		}
 		$this->doFormatedPagePreProcess();
 
 		$response = $this->getFormatedPageResponse();
@@ -342,6 +345,9 @@ class DokuModelAdapter implements WikiIocModel {
 		$this->startPageProcess( DW_ACT_EDIT, $pid, $prev, $prange, $psum );
 		if ( ! $INFO["exists"] ) {
 			throw new PageNotFoundException( $pid, $lang['pageNotFound'] );
+		}
+		if ( ! $INFO["perm"] ) {
+			throw new InsufficientPermissionToEditPageException( $pid); //TODO [Josep] Internacionalització missatge per defecte!
 		}
 		$this->doEditPagePreProcess();
 
