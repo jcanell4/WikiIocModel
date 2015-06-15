@@ -960,6 +960,12 @@ class DokuModelAdapter implements WikiIocModel {
 		trigger_event( 'WIOC_AJAX_COMMAND_STARTED', $this->dataTmp );
 	}
 
+	private function triggerEndEvents() {
+		$tmp = array(); //NO DATA
+		trigger_event( 'DOKUWIKI_DONE', $tmp );
+		//trigger_event( 'WIOC_AJAX_COMMAND_DONE', $this->dataTmp );
+	}
+
 	private function startUpLang() {
 		global $conf;
 		global $lang;
@@ -1978,29 +1984,40 @@ class DokuModelAdapter implements WikiIocModel {
 
 		$ACT = 'revisions';
 
-		$tmp = [ ];
-		trigger_event( 'DOKUWIKI_START', $tmp );
+                $this->triggerStartEvents();
+//		$tmp = [ ];
+//		trigger_event( 'DOKUWIKI_START', $tmp );
 		session_write_close();
 
-		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
-		if ( $evt->advise_before() ) {
+//		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
+//		if ( $evt->advise_before() ) {
+                $content = "";
+                if($this->runBeforePreprocess($content)){
 			act_permcheck( $ACT );
 			unlock( $ID );
 		}
-		$evt->advise_after();
-		unset( $evt );
+//		$evt->advise_after();
+//		unset( $evt );
+                $this->runAfterPreprocess($content);
+                        
 
-		$headers[] = 'Content-Type:application/json; charset=utf-8';
-
-		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );
+                //desactivem aquesta crida perquè es tracta d'una crida AJAX i no es pot modificar la capçalera
+//		$headers[] = 'Content-Type:application/json; charset=utf-8';
+//
+//		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );
 
 		$this->startUpLang();
 
-		trigger_event( 'TPL_ACT_RENDER', $ACT, 'tpl_content_core()' );
+                //descativem aquesta crida perquè les revisions no es retornen 
+                //rederitzades sinó que es rendaritzen al client
+		//trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_content_core");
 		// En aquest punt es on es generaria el codi HTML
 
-		$temp = [ ];
-		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
+		//descativem aquesta crida perquè des del dokumodeladapter el 
+                //display ja està fet i no servidria de res tornar a llançar 
+                //aquest esdeveniment.
+//		$temp = [ ];
+//		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
 
 		// DO real
 
@@ -2014,8 +2031,9 @@ class DokuModelAdapter implements WikiIocModel {
 			//unset ($ret[$revision]['id']);
 		}
 
-		$temp = [ ];
-		trigger_event( 'DOKUWIKI_DONE', $temp );
+                $this->triggerEndEvents();
+//		$temp = [ ];
+//		trigger_event( 'DOKUWIKI_DONE', $temp );
 
 		return $ret;
 	}
@@ -2061,29 +2079,43 @@ class DokuModelAdapter implements WikiIocModel {
 		$REV = $rev1;
 		$ACT = 'diff';
 
-		$tmp = [ ];
-		trigger_event( 'DOKUWIKI_START', $tmp );
+                $this->triggerStartEvents();
+//		$tmp = [ ];
+//		trigger_event( 'DOKUWIKI_START', $tmp );
 		session_write_close();
 
-		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
-		if ( $evt->advise_before() ) {
+//		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
+//		if ( $evt->advise_before() ) {
+//			act_permcheck( $ACT );
+//			unlock( $ID );
+//		}
+//		$evt->advise_after();
+//		unset( $evt );
+                $content = "";
+                if($this->runBeforePreprocess($content)){
 			act_permcheck( $ACT );
 			unlock( $ID );
 		}
-		$evt->advise_after();
-		unset( $evt );
 
-		$headers[] = 'Content-Type:application/json; charset=utf-8';
 
-		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );
+		//desactivem aquesta crida perquè es tracta d'una crida AJAX i no es pot modificar la capçalera
+//		$headers[] = 'Content-Type:application/json; charset=utf-8';
+//
+//		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );		
+		
+                $this->startUpLang();
 
-		$this->startUpLang();
+		//descativem aquesta crida perquè les revisions no es retornen 
+                //rederitzades sinó que es rendaritzen al client
+		//trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_content_core");
 
-		trigger_event( 'TPL_ACT_RENDER', $ACT, 'tpl_content_core()' );
-		// En aquest punt es on es generaria el codi HTML
-		$temp = [ ];
-		//trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln'); // Això afegeix un salt de línia a la sortida
-		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
+                // En aquest punt es on es generaria el codi HTML
+                
+		//descativem aquesta crida perquè des del dokumodeladapter el 
+                //display ja està fet i no servidria de res tornar a llançar 
+                //aquest esdeveniment.
+//		$temp = [ ];
+//		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
 
 		// DO real
 
@@ -2124,8 +2156,9 @@ class DokuModelAdapter implements WikiIocModel {
 
 		$response["meta"] = [ 'id' => $response['id'], 'meta' => $meta ];
 
-		$temp = [ ];
-		trigger_event( 'DOKUWIKI_DONE', $temp );
+                $this->triggerEndEvents();
+//		$temp = [ ];
+//		trigger_event( 'DOKUWIKI_DONE', $temp );
 
 		return $response;
 	}
