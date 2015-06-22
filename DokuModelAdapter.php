@@ -2268,7 +2268,7 @@ class DokuModelAdapter implements WikiIocModel {
 	 * MEDIA DETAILS: Obtenció dels detalls de un media
 	 */
 	public function getMediaDetails( $image ) {
-		global $lang, $NS, $JSINFO, $MSG;
+		global $lang, $NS, $JSINFO, $MSG,$INPUT;
 
 		$error = $this->startMediaDetails( DW_ACT_MEDIA_DETAILS, $image );
 		if ( $error == 401 ) {
@@ -2285,6 +2285,10 @@ class DokuModelAdapter implements WikiIocModel {
 			"imageTitle"    => $image,
 			"image"         => $image
 		);
+                $do = $INPUT->str('mediado');
+                if ($do == 'diff'){
+                    $ret["mediado"]="diff";
+                }
                 if($MSG[0]){
                     if($MSG[0]['lvl']=='error'){
                         throw new HttpErrorCodeException( 404, $MSG[0]['msg'] );
@@ -2389,36 +2393,74 @@ class DokuModelAdapter implements WikiIocModel {
 		if ( isset( $REV ) && ! $JUMPTO ) {
 			$rev = $REV;
 		}
+                
+                $do = $INPUT->str('mediado');
+                if ($do == 'diff'){
+                    echo '<div class="panelContent">' . NL; 
+                    media_diff($image, $NS, $AUTH);
+                    echo '</div>' . NL;
+                }else{
+                    echo '<div class="panelContent">' . NL;                
+                    $meta = new JpegMeta( mediaFN( $image, $rev ) );
+                    $size = media_image_preview_size($image, $rev, $meta);
+                    if($size){
+                        echo '<div style="float:left;width:47%;margin-right:10px;">' . NL;
+                        media_preview( $image, $AUTH, $rev, $meta );
+                        echo '</div>' . NL;
+                    }
 
-		echo '<div class="panelContent">' . NL;                
-		$meta = new JpegMeta( mediaFN( $image, $rev ) );
-                $size = media_image_preview_size($image, $rev, $meta);
-                if($size){
-                    echo '<div style="float:left;width:40%;margin-right:10px;">' . NL;
-                    media_preview( $image, $AUTH, $rev, $meta );
+                    echo '<div style="float:left;width:20%;">' . NL;
+                    echo '<h1>Dades de '.$image.'</h1>';
+                    media_details( $image, $auth, $rev, $meta );
+                    echo '</div>' . NL;
+
+                    if($_REQUEST['tab_details']){
+                        if ( !$size ) {
+                            $tr = ob_get_clean();
+                            throw new HttpErrorCodeException( 1001, "No es poden editar les dades d'aquest element" );
+                        }else{
+                            if($_REQUEST['tab_details'] == 'edit'){
+                                //$this->params['id'] = "form_".$image;
+                                echo '<div style="float:right;margin-right:5px;width:29%;">' . NL;
+                                echo "<h1>Formulari d'edició de ".$image.'</h1>';
+                                media_metaform($image, $AUTH);
+                                echo '</div>' . NL;
+                            }
+                        }
+                    }
                     echo '</div>' . NL;
                 }
 
-                echo '<div style="float:left;width:25%;">' . NL;
-                echo '<h1>Dades de '.$image.'</h1>';
-		media_details( $image, $auth, $rev, $meta );
-                echo '</div>' . NL;
-
-                if($_REQUEST['tab_details']){
-                    if ( !$size ) {
-                        $tr = ob_get_clean();
-			throw new HttpErrorCodeException( 1001, "No es poden editar les dades d'aquest element" );
-                    }else{
-                        if($_REQUEST['tab_details'] == 'edit'){
-                            //$this->params['id'] = "form_".$image;
-                            echo '<div style="float:right;width:30%;">' . NL;
-                            echo "<h1>Formulari d'edició de ".$image.'</h1>';
-                            media_metaform($image, $AUTH);
-                            echo '</div>' . NL;
-                        }
-                    }
-                }
-		echo '</div>' . NL;
+		
 	}
 
+	/**
+	 * Per a històric de media details a la meta
+	 */
+
+	function mediaDetailsHistory() {
+		global $NS, $IMG, $JUMPTO, $REV, $lang, $conf, $fullscreen, $INPUT, $AUTH;
+		$fullscreen = TRUE;
+		require_once DOKU_INC . 'lib/exe/mediamanager.php';
+
+		$image = cleanID( $INPUT->str( 'image' ) );
+                $ns = $INPUT->str( 'ns' );
+
+                ob_start();
+                //media_tab_history($image, $ns, $AUTH);
+                $first = $INPUT->int('first');
+                html_revisions($first, $image);
+                $content = ob_get_clean();
+                /*
+                 * Substitució de l'id del form per fer-ho variable
+                 */
+                $patrones = array();
+                $patrones[0] = '/form id="page__revisions"/';
+                $sustituciones = array();
+                $sustituciones[0] = 'form id="page__revisions_'.$image.'"';
+                $content = preg_replace($patrones, $sustituciones, $content);                                
+                return $content;
+	}        
+        
+        
 }
