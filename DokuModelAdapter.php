@@ -2362,8 +2362,8 @@ class DokuModelAdapter implements WikiIocModel {
 		$content = "";
 		if ( $this->runBeforePreprocess( $content ) ) {
 			ob_start();
-			$this->mediaDetailsContent();
-			$content .= ob_get_clean();
+			$content = $this->mediaDetailsContent();
+			
 			// check permissions again - the action may have changed
 			$ACT = act_permcheck( $ACT );
 		}
@@ -2394,13 +2394,24 @@ class DokuModelAdapter implements WikiIocModel {
 			$rev = $REV;
 		}
                 
+                $content = "";
                 $do = $INPUT->str('mediado');
                 if ($do == 'diff'){
-                    echo '<div class="panelContent">' . NL; 
+                    echo '<div id="panelMedia_'.$image.'" class="panelContent">' . NL; 
                     media_diff($image, $NS, $AUTH);
                     echo '</div>' . NL;
+                    $content .= ob_get_clean();
+                    $patrones = array();
+                    $patrones[0] = '/<form id="mediamanager__btn_restore"/';
+                    $patrones[1] = '/<form id="mediamanager__btn_delete"/';
+                    $patrones[2] = '/<form id="mediamanager__btn_update"/';                    
+                    $sustituciones = array();
+                    $sustituciones[0] = '<form id="mediamanager__btn_restore_'.$image.'"';
+                    $sustituciones[1] = '<form id="mediamanager__btn_delete_'.$image.'"';
+                    $sustituciones[2] = '<form id="mediamanager__btn_update_'.$image.'"';                    
+                    $content = preg_replace($patrones, $sustituciones, $content);    
                 }else{
-                    echo '<div class="panelContent">' . NL;                
+                    echo '<div id="panelMedia_'.$image.'" class="panelContent">' . NL;                
                     $meta = new JpegMeta( mediaFN( $image, $rev ) );
                     $size = media_image_preview_size($image, $rev, $meta);
                     if($size){
@@ -2429,7 +2440,14 @@ class DokuModelAdapter implements WikiIocModel {
                         }
                     }
                     echo '</div>' . NL;
+                    $content .= ob_get_clean();
+                    $patrones = array();
+                    $patrones[0] = '/<form/';
+                    $sustituciones = array();
+                    $sustituciones[0] = '<form id="form_'.$image.'"';
+                    $content = preg_replace($patrones, $sustituciones, $content);    
                 }
+                return $content;
 
 		
 	}
