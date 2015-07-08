@@ -343,6 +343,8 @@ class DokuModelAdapter implements WikiIocModel {
 	public function getCodePage( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
 		global $INFO;
 		global $lang;
+
+
 		$this->startPageProcess( DW_ACT_EDIT, $pid, $prev, $prange, $psum );
 		if ( ! $INFO["exists"] ) {
 			throw new PageNotFoundException( $pid, $lang['pageNotFound'] );
@@ -352,7 +354,11 @@ class DokuModelAdapter implements WikiIocModel {
 		}
 		$this->doEditPagePreProcess();
 
-		return $this->getCodePageResponse();
+
+		$response = $this->getCodePageResponse();
+
+
+		return $response;
 	}
 
 	public function cancelEdition( $pid, $prev = NULL ) {
@@ -1239,27 +1245,38 @@ class DokuModelAdapter implements WikiIocModel {
 	}
 
 	private function getCodePageResponse() {
+		global $INFO, $lang;
+
 		$pageToSend   = $this->cleanResponse( $this->_getCodePage() );
 		$resp         = $this->getContentPage( $pageToSend["content"] );
 		$resp["meta"] = $pageToSend["meta"];
-		$resp["info"] = $this->generateInfo( "info", $pageToSend["info"] );
+
+
+		$infoType = "info";
+
+		if ($INFO['locked']) {
+			$infoType = "warning";
+
+		    $pageToSend["info"][] = $lang['lockedinfo']; // localitzar al $lang?
+//			$pageToSend["info"][] = "El fitxer està bloquejat."; // localitzar al $lang?
+		}
+
+		$resp["info"] = $this->generateInfo( $infoType, $pageToSend["info"] );
+		$resp['locked'] = $INFO['locked'];
 
 		return $resp;
 	}
 
-	private function cleanResponse( $text ) {
+
+	private function CleanResponse($text) {
 		global $lang;
-		$patternStart  = ".*(<p>\nEditeu la pàgina.*?"; // Fins la primera coincidencia de tancament
-		$patternCloseA = "<\/p>)";
-		$patternCloseB = "\\*!]]>\\*\/<\/script>)";
 
-		// Capturem la informació
-		$pattern = '/' . $patternStart . $patternCloseA . '/s';
+		$pattern = "/^(?:(?!<div class=\"editBox\").)*/s";// Captura tot el contingut abans del div que contindrá l'editor
+
 		preg_match( $pattern, $text, $match );
-		$info = $match[1];
+		$info = $match[0];
 
-		// Eliminem la informació i el script inicial del contingut
-		$pattern = '/' . $patternStart . $patternCloseB . '\\s*/s';
+
 		$text    = preg_replace( $pattern, "", $text );
 
 		// Eliminem les etiquetes no desitgades
@@ -1303,7 +1320,12 @@ class DokuModelAdapter implements WikiIocModel {
 		$meta    = preg_replace( $pattern, $replace, $meta );
 
 		$response["content"] = $text;
-		$response["info"]    = [ $info, $license ];
+		$response["info"]    = [ $info];
+
+		if ($license) {
+			$response["info"][] = $license;
+		}
+
 		$metaId              = str_replace( ":", "_", $this->params['id'] ) . '_metaEditForm';
 		$response["meta"]    = [
 			( $this->getCommonPage( $metaId,
@@ -1327,7 +1349,7 @@ class DokuModelAdapter implements WikiIocModel {
 	 *
 	 * @return array - array amb la configuració del item de informació
 	 */
-	private function generateInfo( $type, $message, $id = NULL, $duration = - 1 ) {
+	public function generateInfo( $type, $message, $id = NULL, $duration = - 1 ) {
 		if ( $id === NULL ) {
 			$id = str_replace( ":", "_", $this->params['id'] );
 		}
@@ -1479,7 +1501,7 @@ class DokuModelAdapter implements WikiIocModel {
 			'content' => $pageToSend,
 			'rev'     => $REV,
 			'info'    => $info,
-			"type"    => 'html'
+			'type'    => 'html'
 		);
 
 		return $contentData;
