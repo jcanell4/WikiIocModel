@@ -354,6 +354,7 @@ class DokuModelAdapter implements WikiIocModel {
 
 		$response = $this->getCodePageResponse();
 
+		// TODO[Xavi] Comprovar si aquí ja està establert el contingut i d'on prové
 		return $response;
 	}
 
@@ -1143,6 +1144,12 @@ class DokuModelAdapter implements WikiIocModel {
 		} else {
 			//S'han trobat conflictes i no s'ha pogut guardar
 			//TODO[Josep] de moment tornem a la versió original, però cal
+
+			//TODO[Xavi] aqui es on s'ha d'implementar el diff
+			// Necessitem access:
+			//      al draft (o contingut document que s'ha volgut guardar!)
+			//      el document guardat
+
 			//cercar una solució més operativa com ara emmagatzemar un esborrany
 			//per tal que l'usuari pugui comparar i acceptar canvis
 			$ACT = $this->params['do'] = DW_ACT_SHOW;
@@ -1152,7 +1159,7 @@ class DokuModelAdapter implements WikiIocModel {
 		return $code;
 	}
 
-	private function doCancelEditPreProcess($keep_draft) {
+	private function doCancelEditPreProcess( $keep_draft = FALSE ) {
 		global $ACT;
 
 		// TODO[Xavi] Si es passa keep_draft = true no s'esborra
@@ -1256,7 +1263,8 @@ class DokuModelAdapter implements WikiIocModel {
 	private function getCodePageResponse() {
 		global $INFO, $lang;
 
-		$pageToSend   = $this->cleanResponse( $this->_getCodePage() );
+		$pageToSend = $this->cleanResponse( $this->_getCodePage() ); // TODO[Xavi] Pot ser que aqui calgui fer la comprovació del draft?
+
 		$resp         = $this->getContentPage( $pageToSend["content"] );
 		$resp["meta"] = $pageToSend["meta"];
 
@@ -1506,12 +1514,36 @@ class DokuModelAdapter implements WikiIocModel {
 			'content' => $pageToSend,
 			'rev'     => $REV,
 			'info'    => $info,
-			'type'    => 'html'
-		);
+			'type'    => 'html',
+			'draft'   => $this->GetContentDraft()
+	);
 
 		return $contentData;
 	}
 
+	private function getContentDraft() {
+		GLOBAL $INFO;
+
+		$draft = null;
+
+		// Existeix el draft?
+		if ($INFO['draft']) {
+
+			// Carreguem el draft
+			$draft = unserialize(io_readFile($INFO['draft'],false));
+			$text  = $this->cleanDraft($draft['text']);
+		}
+
+		// Només ens interessa el text, la resta de informació no ens cal
+		return $text;
+	}
+
+	private function cleanDraft($text) {
+		$pattern = '/^^(wikitext\s*=\s*)|(date=[0-9]*)$/i';
+
+		return  preg_replace($pattern, '', $text);
+
+	}
 //    private function getMetaPage($metaId, $metaTitle, $metaToSend) {
 //        $contentData = array(
 //            'id' => $metaId,
@@ -1555,6 +1587,14 @@ class DokuModelAdapter implements WikiIocModel {
 
 	private function _getCodePage() {
 		global $ACT;
+
+		// TODO[Xavi] Pot ser que aqui calgui fer la comprovació del draft?
+
+//		if($act == 'draft' && !file_exists($INFO['draft'])) return 'edit';
+
+		global $INFO;
+		$existsDraft = file_exists( $INFO['draft'] );
+		$draft       = $INFO['draft'];
 
 		ob_start();
 		trigger_event( 'TPL_ACT_RENDER', $ACT, 'onCodeRender' );
