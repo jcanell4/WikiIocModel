@@ -339,7 +339,7 @@ class DokuModelAdapter implements WikiIocModel {
 		return $response;
 	}
 
-	public function getCodePage( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
+	public function getCodePage( $pid, $prev = NULL, $prange = NULL, $psum = NULL, $recover = NULL ) {
 		global $INFO;
 		global $lang;
 
@@ -354,8 +354,21 @@ class DokuModelAdapter implements WikiIocModel {
 
 		$response = $this->getCodePageResponse();
 
-		// TODO[Xavi] Comprovar si aquí ja està establert el contingut i d'on prové
+		if ( $recover != NULL ) {
+			$response['recover_draft'] = $recover;
+		}
+
 		return $response;
+	}
+
+	public function getDraftDialog( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
+
+		$response = $this->getCodePage( $pid, $prev, $prange, $psum, NULL );
+
+		$response['show_draft_dialog'] = TRUE;
+
+		return $response;
+
 	}
 
 	public function cancelEdition( $pid, $prev = NULL, $keep_draft = FALSE ) {
@@ -1159,12 +1172,21 @@ class DokuModelAdapter implements WikiIocModel {
 		return $code;
 	}
 
+	public function getDraftFilename() {
+		$id = str_replace( ':', '_', $this->params['id']);
+		$info = basicinfo( $id );
+		// draft
+		return getCacheName( $info['client'] . $id, '.draft' );
+	}
+
 	private function doCancelEditPreProcess( $keep_draft = FALSE ) {
 		global $ACT;
+		global $INFO;
 
 		// TODO[Xavi] Si es passa keep_draft = true no s'esborra
 
 		if ( ! $keep_draft ) {
+			$INFO['draft'] = $this->getDraftFilename();
 			$ACT = act_draftdel( $ACT );
 		}
 
@@ -1263,7 +1285,7 @@ class DokuModelAdapter implements WikiIocModel {
 	private function getCodePageResponse() {
 		global $INFO, $lang;
 
-		$pageToSend = $this->cleanResponse( $this->_getCodePage() ); // TODO[Xavi] Pot ser que aqui calgui fer la comprovació del draft?
+		$pageToSend = $this->cleanResponse( $this->_getCodePage() );
 
 		$resp         = $this->getContentPage( $pageToSend["content"] );
 		$resp["meta"] = $pageToSend["meta"];
@@ -1497,7 +1519,6 @@ class DokuModelAdapter implements WikiIocModel {
 
 		$pageTitle = tpl_pagetitle( $this->params['id'], TRUE );
 
-		// TODO[Xavi] extreure això a un altre mètode que només modifiqui el content i el info
 		$pattern    = '/^.*Aquesta és una revisió.*<hr \/>\\n\\n/mis';
 		$count      = 0;
 		$info       = NULL;
@@ -1508,7 +1529,7 @@ class DokuModelAdapter implements WikiIocModel {
 		}
 
 		$contentData = array(
-			'id'      => \str_replace( ":", "_", $this->params['id'] ),
+			'id'      => str_replace( ":", "_", $this->params['id'] ),
 			'ns'      => $this->params['id'],
 			'title'   => $pageTitle,
 			'content' => $pageToSend,
@@ -1516,7 +1537,7 @@ class DokuModelAdapter implements WikiIocModel {
 			'info'    => $info,
 			'type'    => 'html',
 			'draft'   => $this->GetContentDraft()
-	);
+		);
 
 		return $contentData;
 	}
@@ -1524,24 +1545,73 @@ class DokuModelAdapter implements WikiIocModel {
 	private function getContentDraft() {
 		GLOBAL $INFO;
 
-		$draft = null;
+		$id   = str_replace( ':', '_', $INFO['id'] );
+		$info = basicinfo( $id );
 
-		// Existeix el draft?
-		if ($INFO['draft']) {
+		// draft
+		$draftFile        = getCacheName( $info['client'] . $id, '.draft' );
+		$cleanedDraft = NULL;
 
-			// Carreguem el draft
-			$draft = unserialize(io_readFile($INFO['draft'],false));
-			$text  = $this->cleanDraft($draft['text']);
+		if ( @file_exists( $draftFile ) ) {
+			$draft        = unserialize( io_readFile( $draftFile, FALSE ) );
+			$cleanedDraft = $this->cleanDraft( $draft['text'] );
 		}
 
-		// Només ens interessa el text, la resta de informació no ens cal
-		return $text;
+		return $cleanedDraft;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//		$id = str_replace( ':', '_', $INFO['id']);
+////		$id = $INFO['id'];
+//
+//		$cleanDraft=null;
+//
+//		$draft = getCacheName( $INFO['client'] . $id, '.draft' );
+//
+//		if ( @file_exists( $draft ) ) {
+//			if ( @filemtime( $draft ) < @filemtime( wikiFN( $id ) ) ) {
+//				// remove stale draft
+//				@unlink( $draft );
+//			} else {
+//				$draft = unserialize(io_readFile($INFO['draft'],false));
+//				$cleanedDraft= $this->cleanDraft($draft['text']);
+//			}
+//		}
+//
+
+		// no sembla que funcioni quan el id es a una subcarpeta, ex: wiki:dokuwiki
+
+//
+//
+//
+//
+//
+//
+//		// Existeix el draft?
+//		if ($INFO['draft']) {
+//
+//			// Carreguem el draft
+//			$draft = unserialize(io_readFile($INFO['draft'],false));
+//			$cleanedDraft= $this->cleanDraft($draft['text']);
+//		}
+
+//		return $cleanedDraft;
 	}
 
-	private function cleanDraft($text) {
-		$pattern = '/^^(wikitext\s*=\s*)|(date=[0-9]*)$/i';
+	private function cleanDraft( $text ) {
+		$pattern = '/^(wikitext\s*=\s*)|(date=[0-9]*)$/i';
+		$content = preg_replace( $pattern, '', $text );
 
-		return  preg_replace($pattern, '', $text);
+		$pattern = '/date=[0-9]*$/i';
+		preg_match( $pattern, $text, $matches );
+
+		return [ 'content' => $content, 'date' => $matches[0] ];
 
 	}
 //    private function getMetaPage($metaId, $metaTitle, $metaToSend) {
