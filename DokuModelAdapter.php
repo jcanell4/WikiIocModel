@@ -357,24 +357,19 @@ class DokuModelAdapter implements WikiIocModel {
 		if ( $recover != NULL ) {
 			$response['recover_draft'] = $recover;
 
-			if ($recover == 'true') {
-				$response["info"] = $this->generateInfo( "warning", "S'està editant un esborrany, no el document actual." );
-			}
+			if ( $recover == 'true' ) {
+				$info =			$this->generateInfo( "warning", $lang['draft_editing'] );
 
+				if ( array_key_exists( 'info', $response) ) {
+					$info = $this->addInfoToInfo($response['info'], $info);
+				}
+
+				$response["info"] = $info;
+			}
 
 		}
 
 		return $response;
-	}
-
-	public function getDraftDialog( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
-
-		$response = $this->getCodePage( $pid, $prev, $prange, $psum, NULL );
-
-		$response['show_draft_dialog'] = TRUE;
-
-		return $response;
-
 	}
 
 	public function cancelEdition( $pid, $prev = NULL, $keep_draft = FALSE ) {
@@ -1163,8 +1158,7 @@ class DokuModelAdapter implements WikiIocModel {
 		} else {
 			//S'han trobat conflictes i no s'ha pogut guardar
 			//TODO[Josep] de moment tornem a la versió original, però cal
-
-			//TODO[Xavi] aqui es on s'ha d'implementar el diff
+			//TODO[Xavi] Això ja no es necessari perque no ha de passar mai, el frontend et tanca automàticament la edició
 			// Necessitem access:
 			//      al draft (o contingut document que s'ha volgut guardar!)
 			//      el document guardat
@@ -1176,14 +1170,6 @@ class DokuModelAdapter implements WikiIocModel {
 		}
 
 		return $code;
-	}
-
-	public function getDraftFilename() {
-		$id   = str_replace( ':', '_', $this->params['id'] );
-		$info = basicinfo( $id );
-
-		// draft
-		return getCacheName( $info['client'] . $id, '.draft' );
 	}
 
 	private function doCancelEditPreProcess( $keep_draft = FALSE ) {
@@ -1295,16 +1281,16 @@ class DokuModelAdapter implements WikiIocModel {
 		$pageToSend = $this->cleanResponse( $this->_getCodePage() );
 
 		$resp         = $this->getContentPage( $pageToSend["content"] );
-		$resp["meta"] = $pageToSend["meta"];
+		$resp['meta'] = $pageToSend['meta'];
 
-		$infoType = "info";
+		$infoType = 'info';
 
 		if ( $INFO['locked'] ) {
-			$infoType             = "warning";
-			$pageToSend["info"][] = $lang['lockedby'] . ' ' . $INFO['locked'];
+			$infoType           = 'warning';
+			$pageToSend['info'] = $lang['lockedby'] . ' ' . $INFO['locked'];
 		}
 
-		$resp["info"]   = $this->generateInfo( $infoType, $pageToSend["info"] );
+		$resp['info']   = $this->generateInfo( $infoType, $pageToSend['info'] );
 		$resp['locked'] = $INFO['locked'];
 
 		return $resp;
@@ -1395,13 +1381,66 @@ class DokuModelAdapter implements WikiIocModel {
 			$id = str_replace( ":", "_", $this->params['id'] );
 		}
 
-		return array(
+		return [
 			"id"        => $id,
 			"type"      => $type,
 			"message"   => $message,
 			"duration"  => $duration,
 			"timestamp" => date( "d-m-Y H:i:s" )
-		);
+		];
+	}
+
+	// En els casos en que hi hagi discrepancies i no hi haci cap preferencia es fa servir el valor de A
+	public function addInfoToInfo( $infoA, $infoB ) {
+		// Els tipus global de la info serà el de major gravetat: "debug" > "error" > "warning" > "info"
+		$info = [ ];
+
+		if ( $infoA['type'] == 'debug' || $infoB['type'] == 'debug' ) {
+			$info['type'] = 'debug';
+		} else if ( $infoA['type'] == 'error' || $infoB['type'] == 'error' ) {
+			$info['type'] = 'error';
+		} else if ( $infoA['type'] == 'warning' || $infoB['type'] == 'warning' ) {
+			$info['type'] = 'warning';
+		} else {
+			$info['type'] = $infoA['type'];
+		}
+
+		// Si algun dels dos te duració ilimitada, aquesta perdura
+		if ( $infoA['duration'] == - 1 || $infoB['duration'] == - 1 ) {
+			$info['duration'] = -1;
+		} else {
+			$info['duration'] = $infoA['duration'];
+		}
+
+		// El $id i el timestamp ha de ser el mateix per a tots dos
+		$info ['timestamp'] = $infoA['timestamp'];
+		$info ['id']        = $infoA['id'];
+
+		$messageStack = [ ];
+
+		if ( is_string( $infoA ['message'] ) ) {
+
+			$messageStack[] = $infoA['message'];
+
+		} else if ( is_array( $infoA['message'] ) ) {
+
+			$messageStack = $infoA['message'];
+
+		}
+
+		if ( is_string( $infoB ['message'] ) ) {
+
+			$messageStack[] = $infoB['message'];
+
+		} else if ( is_array( $infoB['message'] ) ) {
+
+			$messageStack = array_merge($messageStack, $infoB['message']);
+
+		}
+
+		$info['message'] = $messageStack;
+
+		return $info;
 	}
 
 	private function getSaveInfoResponse( $code ) {
@@ -1534,44 +1573,139 @@ class DokuModelAdapter implements WikiIocModel {
 			$info = $this->generateInfo( "warning", $lang['document_revision_loaded'] . ' <b>' . $this->extractDateFromRevision( $REV, self::$SHORT_FORMAT ) . '</b>' );
 		}
 
+		$id          = $this->params['id'];
 		$contentData = array(
-			'id'      => str_replace( ":", "_", $this->params['id'] ),
-			'ns'      => $this->params['id'],
+			'id'      => str_replace( ":", "_", $id ),
+			'ns'      => $id,
 			'title'   => $pageTitle,
 			'content' => $pageToSend,
 			'rev'     => $REV,
 			'info'    => $info,
 			'type'    => 'html',
-			'draft'   => $this->GetContentDraft()
+			'draft'   => $this->GetContentDraft( $id )
 		);
 
 		return $contentData;
 	}
 
-	private function getContentDraft() {
-		GLOBAL $INFO;
+	/**
+	 * Retorna una resposta amb les dades per mostrar un dialog de selecció esborrany-document.
+	 *
+	 * @param {string} $pid - id del document
+	 * @param {string} $prev - nombre de la revisió
+	 * @param  $prange
+	 * @param {string} $psum - nom del resúm
+	 *
+	 * @return array - resposta
+	 * @throws InsufficientPermissionToEditPageException
+	 * @throws PageNotFoundException
+	 */
+	public function getDraftDialog( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
 
-		$id   = str_replace( ':', '_', $INFO['id'] );
-		$info = basicinfo( $id );
+		$response                      = $this->getCodePage( $pid, $prev, $prange, $psum, NULL );
+		$response['show_draft_dialog'] = TRUE;
 
-		// draft
-		$draftFile    = getCacheName( $info['client'] . $id, '.draft' );
-		$cleanedDraft = NULL;
-
-		if ( @file_exists( $draftFile ) ) {
-			$draft        = unserialize( io_readFile( $draftFile, FALSE ) );
-			$cleanedDraft = $this->cleanDraft( $draft['text'] );
-		}
-
-		return [ 'content' => $cleanedDraft, 'date' => $this->extractDateFromRevision( @filemtime( $draftFile ) ) ];
+		return $response;
 	}
 
+	/**
+	 * Retorna el nom del fitxer de esborran corresponent al document i usuari actual
+	 *
+	 * @param string $id - id del document
+	 *
+	 * @return string
+	 */
+	public function getDraftFilename( $id = NULL ) {
+
+		$id   = $this->cleanIDForFiles( $id );
+		$info = basicinfo( $id );
+
+		return getCacheName( $info['client'] . $id, '.draft' );
+	}
+
+	/**
+	 * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
+	 * esborrat.
+	 *
+	 * @param $id - id del document
+	 *
+	 * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
+	 */
+	public function hasDraft( $id ) {
+		$id = $this->cleanIDForFiles( $id );
+
+		$draftFilename = $this->getDraftFilename( $id );
+
+		if ( @file_exists( $draftFilename ) ) {
+			if ( @filemtime( $draftFilename ) < @filemtime( wikiFN( $id ) ) ) {
+				@unlink( $draftFilename );
+			} else {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Neteja una id passada per argument per poder fer-la servir amb els fitxers i si no es passa l'argument
+	 * intenta obtenir-la dels paràmetres.
+	 *
+	 * @param string $id - id a netejar
+	 *
+	 * @return mixed
+	 */
+	private function cleanIDForFiles( $id ) {
+		if ( $id == NULL ) {
+			$id = $this->params['id'];
+		}
+
+		return str_replace( ':', '_', $id );
+	}
+
+	/**
+	 * Retorna el contingut del esborrany pel document passat com argument si existeix i es vàlid. En cas de trobar
+	 * un esborrany antic es esborrat automàticament.
+	 *
+	 * @param string $id - id del document
+	 *
+	 * @return array - Hash amb dos valors per el contingut i la data respectivament.
+	 */
+	private function getContentDraft( $id ) {
+
+		$draftFile    = $this->getDraftFilename();
+		$cleanedDraft = NULL;
+
+		// Si el draft es més antic que el document actual esborrem el draft
+		if ( @file_exists( $draftFile ) ) {
+			if ( @filemtime( $draftFile ) < @filemtime( wikiFN( $id ) ) ) {
+				@unlink( $draftFile );
+			} else {
+				$draft        = unserialize( io_readFile( $draftFile, FALSE ) );
+				$cleanedDraft = $this->cleanDraft( $draft['text'] );
+			}
+		}
+
+		$draftDate = $this->extractDateFromRevision( @filemtime( $draftFile ) );
+
+		return [ 'content' => $cleanedDraft, 'date' => $draftDate ];
+	}
+
+	/**
+	 * Neteja el contingut del esborrany per poder fer-lo servir directament.
+	 *
+	 * @param string $text - contingut original del fitxer de esborrany.
+	 *
+	 * @return mixed
+	 */
 	private function cleanDraft( $text ) {
+
 		$pattern = '/^(wikitext\s*=\s*)|(date=[0-9]*)$/i';
 		$content = preg_replace( $pattern, '', $text );
 
 		return $content;
 	}
+
 //    private function getMetaPage($metaId, $metaTitle, $metaToSend) {
 //        $contentData = array(
 //            'id' => $metaId,
@@ -1615,15 +1749,6 @@ class DokuModelAdapter implements WikiIocModel {
 
 	private function _getCodePage() {
 		global $ACT;
-
-		// TODO[Xavi] Pot ser que aqui calgui fer la comprovació del draft?
-
-//		if($act == 'draft' && !file_exists($INFO['draft'])) return 'edit';
-
-		global $INFO;
-		$existsDraft = file_exists( $INFO['draft'] );
-		$draft       = $INFO['draft'];
-
 		ob_start();
 		trigger_event( 'TPL_ACT_RENDER', $ACT, 'onCodeRender' );
 		$html_output = ob_get_clean() . "\n";
@@ -2107,7 +2232,7 @@ class DokuModelAdapter implements WikiIocModel {
 		//trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_content_core");
 		// En aquest punt es on es generaria el codi HTML
 
-		//descativem aquesta crida perquè des del dokumodeladapter el 
+		//descativem aquesta crida perquè des del dokumodeladapter el
 		//display ja està fet i no servidria de res tornar a llançar
 		//aquest esdeveniment.
 //		$temp = [ ];
@@ -2198,13 +2323,13 @@ class DokuModelAdapter implements WikiIocModel {
 
 		$this->startUpLang();
 
-		//descativem aquesta crida perquè les revisions no es retornen 
+		//descativem aquesta crida perquè les revisions no es retornen
 		//rederitzades sinó que es rendaritzen al client
 		//trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_content_core");
 
 		// En aquest punt es on es generaria el codi HTML
 
-		//descativem aquesta crida perquè des del dokumodeladapter el 
+		//descativem aquesta crida perquè des del dokumodeladapter el
 		//display ja està fet i no servidria de res tornar a llançar
 		//aquest esdeveniment.
 //		$temp = [ ];
