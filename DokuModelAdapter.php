@@ -108,18 +108,18 @@ function onCodeRender( $data ) {
 	global $TEXT;
 
 	switch ( $data ) {
-            case 'locked':
-            case 'edit':
-            case 'recover':
-                html_edit();
-                break;
-            case 'preview':
-                html_edit();
-                html_show( $TEXT );
-                break;
-            case 'denied':
-                print p_locale_xhtml( 'denied' );
-                break;
+		case 'locked':
+		case 'edit':
+		case 'recover':
+			html_edit();
+			break;
+		case 'preview':
+			html_edit();
+			html_show( $TEXT );
+			break;
+		case 'denied':
+			print p_locale_xhtml( 'denied' );
+			break;
 	}
 }
 
@@ -280,7 +280,7 @@ class DokuModelAdapter implements WikiIocModel {
 	public function createPage( $pid, $text = NULL ) {
 		global $INFO;
 		global $lang;
-                global $ACT;
+		global $ACT;
 
 		$this->startUpLang();
 
@@ -296,25 +296,24 @@ class DokuModelAdapter implements WikiIocModel {
 			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
 		}
 
-                $permis_actual = $this->obtenir_permis($pid, $_SERVER['REMOTE_USER']);
-                if ($permis_actual < AUTH_CREATE) {
-                    //se pide el permiso para el directorio (no para la página)
-                    $permis_actual = $this->setUserPagePermission(getNS($pid).':*', $INFO['client'], AUTH_DELETE);
-                }
-                if ($permis_actual >= AUTH_CREATE) {
-                    $code = $this->doSavePreProcess();
-                }
-                else {
-                    throw new InsufficientPermissionToCreatePageException($pid); //TODO [Josep] cal internacionalitzar el missage per defecte
-                }
+		$permis_actual = $this->obtenir_permis( $pid, $_SERVER['REMOTE_USER'] );
+		if ( $permis_actual < AUTH_CREATE ) {
+			//se pide el permiso para el directorio (no para la página)
+			$permis_actual = $this->setUserPagePermission( getNS( $pid ) . ':*', $INFO['client'], AUTH_DELETE );
+		}
+		if ( $permis_actual >= AUTH_CREATE ) {
+			$code = $this->doSavePreProcess();
+		} else {
+			throw new InsufficientPermissionToCreatePageException( $pid ); //TODO [Josep] cal internacionalitzar el missage per defecte
+		}
 
-                $response = $this->getFormatedPageResponse();
+		$response = $this->getFormatedPageResponse();
 		// Si no s'ha especificat cap altre missatge mostrem el de carrega
 		if ( ! $response['info'] ) {
 			$response['info'] = $this->generateInfo( "info", $lang['document_created'] );
 		}
 
-		return $response;                
+		return $response;
 	}
 
 	public function getHtmlPage( $pid, $prev = NULL ) {
@@ -326,7 +325,7 @@ class DokuModelAdapter implements WikiIocModel {
 			throw new PageNotFoundException( $pid, $lang['pageNotFound'] );
 		}
 		if ( ! $INFO["perm"] ) {
-			throw new InsufficientPermissionToViewPageException( $pid); //TODO [Josep] Internacionalització missatge per defecte!
+			throw new InsufficientPermissionToViewPageException( $pid ); //TODO [Josep] Internacionalització missatge per defecte!
 		}
 		$this->doFormatedPagePreProcess();
 
@@ -340,26 +339,44 @@ class DokuModelAdapter implements WikiIocModel {
 		return $response;
 	}
 
-	public function getCodePage( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
+	public function getCodePage( $pid, $prev = NULL, $prange = NULL, $psum = NULL, $recover = NULL ) {
 		global $INFO;
 		global $lang;
+
 		$this->startPageProcess( DW_ACT_EDIT, $pid, $prev, $prange, $psum );
 		if ( ! $INFO["exists"] ) {
 			throw new PageNotFoundException( $pid, $lang['pageNotFound'] );
 		}
 		if ( ! $INFO["perm"] ) {
-			throw new InsufficientPermissionToEditPageException( $pid); //TODO [Josep] Internacionalització missatge per defecte!
+			throw new InsufficientPermissionToEditPageException( $pid ); //TODO [Josep] Internacionalització missatge per defecte!
 		}
 		$this->doEditPagePreProcess();
 
-		return $this->getCodePageResponse();
+		$response = $this->getCodePageResponse();
+
+		if ( $recover != NULL ) {
+			$response['recover_draft'] = $recover;
+
+			if ( $recover == 'true' ) {
+				$info =			$this->generateInfo( "warning", $lang['draft_editing'] );
+
+				if ( array_key_exists( 'info', $response) ) {
+					$info = $this->addInfoToInfo($response['info'], $info);
+				}
+
+				$response["info"] = $info;
+			}
+
+		}
+
+		return $response;
 	}
 
-	public function cancelEdition( $pid, $prev = NULL ) {
+	public function cancelEdition( $pid, $prev = NULL, $keep_draft = FALSE ) {
 		global $lang;
 
 		$this->startPageProcess( DW_ACT_DRAFTDEL, $pid, $prev );
-		$this->doCancelEditPreprocess();
+		$this->doCancelEditPreprocess( $keep_draft );
 
 		$response          = $this->getFormatedPageResponse();
 		$response ['info'] = $this->generateInfo( "info", $lang['edition_cancelled'] );
@@ -376,7 +393,7 @@ class DokuModelAdapter implements WikiIocModel {
 			$ppre, $ptext, $psuf
 		);
 		$code = $this->doSavePreProcess();
-                
+
 		return $this->getSaveInfoResponse( $code );
 	}
 
@@ -606,80 +623,88 @@ class DokuModelAdapter implements WikiIocModel {
 		return tpl_getConf( $id );
 	}
 
-        public function setUserPagePermission($page, $user, $acl_level) {
-            global $INFO;
-            global $conf;
-            include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
-            $pageuser = ":" . substr($page, 0, strrpos($page, ":"));
-            $userpage = substr($pageuser, strrpos($pageuser, ":")+1);
-            $ret = false;
-            if ($INFO['isadmin'] || $INFO['ismanager'] || (
-                $INFO['namespace'] == substr($page, 0, strrpos($page, ":")) &&
-                $userpage == $user && 
-                $conf['userpage_allowed'] === 1 && (
-                $pageuser == $conf['userpage_ns'].$user || 
-                $pageuser == $conf['userpage_discuss_ns'].$user)
-               ) )
-            {
-                $INFO['perm'] = $ret = $this->establir_permis($page, $user, $acl_level, true);
-            }
-            return $ret;
-        }
+	public function setUserPagePermission( $page, $user, $acl_level ) {
+		global $INFO;
+		global $conf;
+		include_once( DOKU_PLUGIN . 'wikiiocmodel/conf/default.php' );
+		$pageuser = ":" . substr( $page, 0, strrpos( $page, ":" ) );
+		$userpage = substr( $pageuser, strrpos( $pageuser, ":" ) + 1 );
+		$ret      = FALSE;
+		if ( $INFO['isadmin'] || $INFO['ismanager'] || (
+				$INFO['namespace'] == substr( $page, 0, strrpos( $page, ":" ) ) &&
+				$userpage == $user &&
+				$conf['userpage_allowed'] === 1 && (
+					$pageuser == $conf['userpage_ns'] . $user ||
+					$pageuser == $conf['userpage_discuss_ns'] . $user )
+			)
+		) {
+			$INFO['perm'] = $ret = $this->establir_permis( $page, $user, $acl_level, TRUE );
+		}
 
-        /**
-         * administració de permisos
-         * @param $page y $user son obligatorios
-        */
-        private function obtenir_permis($page, $user) {
-            $acl_class = new admin_plugin_acl();
-            $acl_class->handle();
-            $acl_class->who = $user;
-            $permis = auth_quickaclcheck($page);
-            /* este bucle obtiene el mismo resultado que auth_quickaclcheck()
-            $permis = NULL;
-            $sub_page = $page;
-            while (!$permis && $sub_page) {
-                $acl_class->ns = $sub_page;
-                $permis = $acl_class->_get_exact_perm();
-                $sub_page = substr($sub_page,0,strrpos($sub_page,':'));
-            }
-            */
-            return $permis;
-        }
-        
-        /**
-         * @param bool $force : true : indica que s'ha d'establir el permís estricte
-         *                      false: si existeix algún permís, no es modifica
-        */
-        private function establir_permis($page, $user, $acl_level, $force = false) {
-            $acl_class = new admin_plugin_acl();
-            $acl_class->handle();
-            $acl_class->who = $user;
-            $permis_actual = auth_quickaclcheck($page);
-            
-            if ($force || $acl_level > $permis_actual) {
-                $ret = $acl_class->_acl_add($page, $user, $acl_level);
-                if ($ret) {
-                    if (strpos($page, '*') === false) {
-                        if($acl_level > AUTH_EDIT) $permis_actual = AUTH_EDIT;
-                    }
-                    else {
-                        $permis_actual = $acl_level;
-                    }
-                }
-            }
-            return $permis_actual;
-        }
-    
-        private function eliminar_permis($page, $user) {
-            $acl_class = new admin_plugin_acl();
-            //$acl_class->handle();
-            //$acl_class->who = $user;
-            if ($page && $user) 
-                $ret = $acl_class->_acl_del($page, $user);
-            return $ret;
-        }
-            
+		return $ret;
+	}
+
+	/**
+	 * administració de permisos
+	 *
+	 * @param $page y $user son obligatorios
+	 */
+	private function obtenir_permis( $page, $user ) {
+		$acl_class = new admin_plugin_acl();
+		$acl_class->handle();
+		$acl_class->who = $user;
+		$permis         = auth_quickaclcheck( $page );
+
+		/* este bucle obtiene el mismo resultado que auth_quickaclcheck()
+		$permis = NULL;
+		$sub_page = $page;
+		while (!$permis && $sub_page) {
+			$acl_class->ns = $sub_page;
+			$permis = $acl_class->_get_exact_perm();
+			$sub_page = substr($sub_page,0,strrpos($sub_page,':'));
+		}
+		*/
+
+		return $permis;
+	}
+
+	/**
+	 * @param bool $force   : true : indica que s'ha d'establir el permís estricte
+	 *                      false: si existeix algún permís, no es modifica
+	 */
+	private function establir_permis( $page, $user, $acl_level, $force = FALSE ) {
+		$acl_class = new admin_plugin_acl();
+		$acl_class->handle();
+		$acl_class->who = $user;
+		$permis_actual  = auth_quickaclcheck( $page );
+
+		if ( $force || $acl_level > $permis_actual ) {
+			$ret = $acl_class->_acl_add( $page, $user, $acl_level );
+			if ( $ret ) {
+				if ( strpos( $page, '*' ) === FALSE ) {
+					if ( $acl_level > AUTH_EDIT ) {
+						$permis_actual = AUTH_EDIT;
+					}
+				} else {
+					$permis_actual = $acl_level;
+				}
+			}
+		}
+
+		return $permis_actual;
+	}
+
+	private function eliminar_permis( $page, $user ) {
+		$acl_class = new admin_plugin_acl();
+		//$acl_class->handle();
+		//$acl_class->who = $user;
+		if ( $page && $user ) {
+			$ret = $acl_class->_acl_del( $page, $user );
+		}
+
+		return $ret;
+	}
+
 	/**
 	 * Retorna si s'ha trobat la cadena que es cerca al principi de la cadena on es busca.
 	 *
@@ -1133,6 +1158,11 @@ class DokuModelAdapter implements WikiIocModel {
 		} else {
 			//S'han trobat conflictes i no s'ha pogut guardar
 			//TODO[Josep] de moment tornem a la versió original, però cal
+			//TODO[Xavi] Això ja no es necessari perque no ha de passar mai, el frontend et tanca automàticament la edició
+			// Necessitem access:
+			//      al draft (o contingut document que s'ha volgut guardar!)
+			//      el document guardat
+
 			//cercar una solució més operativa com ara emmagatzemar un esborrany
 			//per tal que l'usuari pugui comparar i acceptar canvis
 			$ACT = $this->params['do'] = DW_ACT_SHOW;
@@ -1142,10 +1172,17 @@ class DokuModelAdapter implements WikiIocModel {
 		return $code;
 	}
 
-	private function doCancelEditPreProcess() {
+	private function doCancelEditPreProcess( $keep_draft = FALSE ) {
 		global $ACT;
+		global $INFO;
 
-		$ACT = act_draftdel( $ACT );
+		// TODO[Xavi] Si es passa keep_draft = true no s'esborra
+
+		if ( ! $keep_draft ) {
+			$INFO['draft'] = $this->getDraftFilename();
+			$ACT           = act_draftdel( $ACT );
+		}
+
 		$this->doFormatedPagePreProcess();
 	}
 
@@ -1239,28 +1276,35 @@ class DokuModelAdapter implements WikiIocModel {
 	}
 
 	private function getCodePageResponse() {
-		$pageToSend   = $this->cleanResponse( $this->_getCodePage() );
+		global $INFO, $lang;
+
+		$pageToSend = $this->cleanResponse( $this->_getCodePage() );
+
 		$resp         = $this->getContentPage( $pageToSend["content"] );
-		$resp["meta"] = $pageToSend["meta"];
-		$resp["info"] = $this->generateInfo( "info", $pageToSend["info"] );
+		$resp['meta'] = $pageToSend['meta'];
+
+		$infoType = 'info';
+
+		if ( $INFO['locked'] ) {
+			$infoType           = 'warning';
+			$pageToSend['info'] = $lang['lockedby'] . ' ' . $INFO['locked'];
+		}
+
+		$resp['info']   = $this->generateInfo( $infoType, $pageToSend['info'] );
+		$resp['locked'] = $INFO['locked'];
 
 		return $resp;
 	}
 
-	private function cleanResponse( $text ) {
+	private function CleanResponse( $text ) {
 		global $lang;
-		$patternStart  = ".*(<p>\nEditeu la pàgina.*?"; // Fins la primera coincidencia de tancament
-		$patternCloseA = "<\/p>)";
-		$patternCloseB = "\\*!]]>\\*\/<\/script>)";
 
-		// Capturem la informació
-		$pattern = '/' . $patternStart . $patternCloseA . '/s';
+		$pattern = "/^(?:(?!<div class=\"editBox\").)*/s";// Captura tot el contingut abans del div que contindrá l'editor
+
 		preg_match( $pattern, $text, $match );
-		$info = $match[1];
+		$info = $match[0];
 
-		// Eliminem la informació i el script inicial del contingut
-		$pattern = '/' . $patternStart . $patternCloseB . '\\s*/s';
-		$text    = preg_replace( $pattern, "", $text );
+		$text = preg_replace( $pattern, "", $text );
 
 		// Eliminem les etiquetes no desitgades
 		$pattern = "/<div id=\"size__ctl\".*?<\/div>\\s*/s";
@@ -1303,9 +1347,14 @@ class DokuModelAdapter implements WikiIocModel {
 		$meta    = preg_replace( $pattern, $replace, $meta );
 
 		$response["content"] = $text;
-		$response["info"]    = [ $info, $license ];
-		$metaId              = str_replace( ":", "_", $this->params['id'] ) . '_metaEditForm';
-		$response["meta"]    = [
+		$response["info"]    = [ $info ];
+
+		if ( $license ) {
+			$response["info"][] = $license;
+		}
+
+		$metaId           = str_replace( ":", "_", $this->params['id'] ) . '_metaEditForm';
+		$response["meta"] = [
 			( $this->getCommonPage( $metaId,
 			                        $lang['metaEditForm'],
 			                        $meta ) + [ 'type' => 'summary' ] )
@@ -1327,18 +1376,71 @@ class DokuModelAdapter implements WikiIocModel {
 	 *
 	 * @return array - array amb la configuració del item de informació
 	 */
-	private function generateInfo( $type, $message, $id = NULL, $duration = - 1 ) {
+	public function generateInfo( $type, $message, $id = NULL, $duration = - 1 ) {
 		if ( $id === NULL ) {
 			$id = str_replace( ":", "_", $this->params['id'] );
 		}
 
-		return array(
+		return [
 			"id"        => $id,
 			"type"      => $type,
 			"message"   => $message,
 			"duration"  => $duration,
 			"timestamp" => date( "d-m-Y H:i:s" )
-		);
+		];
+	}
+
+	// En els casos en que hi hagi discrepancies i no hi haci cap preferencia es fa servir el valor de A
+	public function addInfoToInfo( $infoA, $infoB ) {
+		// Els tipus global de la info serà el de major gravetat: "debug" > "error" > "warning" > "info"
+		$info = [ ];
+
+		if ( $infoA['type'] == 'debug' || $infoB['type'] == 'debug' ) {
+			$info['type'] = 'debug';
+		} else if ( $infoA['type'] == 'error' || $infoB['type'] == 'error' ) {
+			$info['type'] = 'error';
+		} else if ( $infoA['type'] == 'warning' || $infoB['type'] == 'warning' ) {
+			$info['type'] = 'warning';
+		} else {
+			$info['type'] = $infoA['type'];
+		}
+
+		// Si algun dels dos te duració ilimitada, aquesta perdura
+		if ( $infoA['duration'] == - 1 || $infoB['duration'] == - 1 ) {
+			$info['duration'] = -1;
+		} else {
+			$info['duration'] = $infoA['duration'];
+		}
+
+		// El $id i el timestamp ha de ser el mateix per a tots dos
+		$info ['timestamp'] = $infoA['timestamp'];
+		$info ['id']        = $infoA['id'];
+
+		$messageStack = [ ];
+
+		if ( is_string( $infoA ['message'] ) ) {
+
+			$messageStack[] = $infoA['message'];
+
+		} else if ( is_array( $infoA['message'] ) ) {
+
+			$messageStack = $infoA['message'];
+
+		}
+
+		if ( is_string( $infoB ['message'] ) ) {
+
+			$messageStack[] = $infoB['message'];
+
+		} else if ( is_array( $infoB['message'] ) ) {
+
+			$messageStack = array_merge($messageStack, $infoB['message']);
+
+		}
+
+		$info['message'] = $messageStack;
+
+		return $info;
 	}
 
 	private function getSaveInfoResponse( $code ) {
@@ -1462,7 +1564,6 @@ class DokuModelAdapter implements WikiIocModel {
 
 		$pageTitle = tpl_pagetitle( $this->params['id'], TRUE );
 
-		// TODO[Xavi] extreure això a un altre mètode que només modifiqui el content i el info
 		$pattern    = '/^.*Aquesta és una revisió.*<hr \/>\\n\\n/mis';
 		$count      = 0;
 		$info       = NULL;
@@ -1472,17 +1573,137 @@ class DokuModelAdapter implements WikiIocModel {
 			$info = $this->generateInfo( "warning", $lang['document_revision_loaded'] . ' <b>' . $this->extractDateFromRevision( $REV, self::$SHORT_FORMAT ) . '</b>' );
 		}
 
+		$id          = $this->params['id'];
 		$contentData = array(
-			'id'      => \str_replace( ":", "_", $this->params['id'] ),
-			'ns'      => $this->params['id'],
+			'id'      => str_replace( ":", "_", $id ),
+			'ns'      => $id,
 			'title'   => $pageTitle,
 			'content' => $pageToSend,
 			'rev'     => $REV,
 			'info'    => $info,
-			"type"    => 'html'
+			'type'    => 'html',
+			'draft'   => $this->GetContentDraft( $id )
 		);
 
 		return $contentData;
+	}
+
+	/**
+	 * Retorna una resposta amb les dades per mostrar un dialog de selecció esborrany-document.
+	 *
+	 * @param {string} $pid - id del document
+	 * @param {string} $prev - nombre de la revisió
+	 * @param  $prange
+	 * @param {string} $psum - nom del resúm
+	 *
+	 * @return array - resposta
+	 * @throws InsufficientPermissionToEditPageException
+	 * @throws PageNotFoundException
+	 */
+	public function getDraftDialog( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
+
+		$response                      = $this->getCodePage( $pid, $prev, $prange, $psum, NULL );
+		$response['show_draft_dialog'] = TRUE;
+
+		return $response;
+	}
+
+	/**
+	 * Retorna el nom del fitxer de esborran corresponent al document i usuari actual
+	 *
+	 * @param string $id - id del document
+	 *
+	 * @return string
+	 */
+	public function getDraftFilename( $id = NULL ) {
+
+		$id   = $this->cleanIDForFiles( $id );
+		$info = basicinfo( $id );
+
+		return getCacheName( $info['client'] . $id, '.draft' );
+	}
+
+	/**
+	 * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
+	 * esborrat.
+	 *
+	 * @param $id - id del document
+	 *
+	 * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
+	 */
+	public function hasDraft( $id ) {
+		$id = $this->cleanIDForFiles( $id );
+
+		$draftFilename = $this->getDraftFilename( $id );
+
+		if ( @file_exists( $draftFilename ) ) {
+			if ( @filemtime( $draftFilename ) < @filemtime( wikiFN( $id ) ) ) {
+				@unlink( $draftFilename );
+			} else {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Neteja una id passada per argument per poder fer-la servir amb els fitxers i si no es passa l'argument
+	 * intenta obtenir-la dels paràmetres.
+	 *
+	 * @param string $id - id a netejar
+	 *
+	 * @return mixed
+	 */
+	private function cleanIDForFiles( $id ) {
+		if ( $id == NULL ) {
+			$id = $this->params['id'];
+		}
+
+		return str_replace( ':', '_', $id );
+	}
+
+	/**
+	 * Retorna el contingut del esborrany pel document passat com argument si existeix i es vàlid. En cas de trobar
+	 * un esborrany antic es esborrat automàticament.
+	 *
+	 * @param string $id - id del document
+	 *
+	 * @return array - Hash amb dos valors per el contingut i la data respectivament.
+	 */
+	private function getContentDraft( $id ) {
+
+		$draftFile    = $this->getDraftFilename();
+		$cleanedDraft = NULL;
+
+		// Si el draft es més antic que el document actual esborrem el draft
+		if ( @file_exists( $draftFile ) ) {
+			if ( @filemtime( $draftFile ) < @filemtime( wikiFN( $id ) ) ) {
+				@unlink( $draftFile );
+			} else {
+				$draft        = unserialize( io_readFile( $draftFile, FALSE ) );
+				$cleanedDraft = $this->cleanDraft( $draft['text'] );
+			}
+		}
+
+		$draftDate = $this->extractDateFromRevision( @filemtime( $draftFile ) );
+
+		return [ 'content' => $cleanedDraft, 'date' => $draftDate ];
+	}
+
+	/**
+	 * Neteja el contingut del esborrany per poder fer-lo servir directament.
+	 *
+	 * @param string $text - contingut original del fitxer de esborrany.
+	 *
+	 * @return mixed
+	 */
+	private function cleanDraft( $text ) {
+
+		$pattern = '/^(wikitext\s*=\s*)|(date=[0-9]*)$/i';
+		$content = preg_replace( $pattern, '', $text );
+
+		return $content;
 	}
 
 //    private function getMetaPage($metaId, $metaTitle, $metaToSend) {
@@ -1528,7 +1749,6 @@ class DokuModelAdapter implements WikiIocModel {
 
 	private function _getCodePage() {
 		global $ACT;
-
 		ob_start();
 		trigger_event( 'TPL_ACT_RENDER', $ACT, 'onCodeRender' );
 		$html_output = ob_get_clean() . "\n";
@@ -1806,13 +2026,13 @@ class DokuModelAdapter implements WikiIocModel {
 			}
 		}
 		ob_start();
-                echo '<span style="font-weight: bold;">Visualització</span></br>';
-                echo '<div style="margin-left:10px;">';
+		echo '<span style="font-weight: bold;">Visualització</span></br>';
+		echo '<div style="margin-left:10px;">';
 		echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="thumbs" value="thumbs" ' . $checkThumbs . '/>
                 <label for="radioOne">Thumbnails</label> <br />';
 		echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="rows" value="rows" ' . $checkRows . '/>
                 <label for="radioTwo">Rows</label> <br/><br/></div>';
-		$strData  = ob_get_clean();
+		$strData = ob_get_clean();
 		/*$tree_ret = array(
 			'id'      => 'metaMediafileoptions',
 			'title'   => "Visualització",
@@ -1820,7 +2040,7 @@ class DokuModelAdapter implements WikiIocModel {
 		);*/
 
 		//return $tree_ret;
-                return $strData;
+		return $strData;
 	}
 
 	public function getMediaTabFileSort() {
@@ -1837,8 +2057,8 @@ class DokuModelAdapter implements WikiIocModel {
 		ob_start();
 		/*echo '  <input type="radio" name="drink" id="radioOne" checked value="tea"/>
 				<label for="radioOne">Tea</label> <br />';*/
-                echo '<span style="font-weight: bold;">Ordenació</span></br>';
-                echo '<div style="margin-left:10px;">';                
+		echo '<span style="font-weight: bold;">Ordenació</span></br>';
+		echo '<div style="margin-left:10px;">';
 		echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="nom" value="name" ' . $checkedNom . '/>
                 <label for="nom">Nom</label> <br />';
 		echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="data" value="date" ' . $checkedData . '/>
@@ -1846,7 +2066,7 @@ class DokuModelAdapter implements WikiIocModel {
 		//echo '<div class="panelContent dokuwiki" id="metamedia__fileoptions">' . NL;
 		//media_tab_files_options();
 		//echo '</div>' . NL;
-		$strData  = ob_get_clean();
+		$strData = ob_get_clean();
 		/*$tree_ret = array(
 			'id'      => 'metaMediafilesort',
 			'title'   => "Ordenació",
@@ -1854,26 +2074,26 @@ class DokuModelAdapter implements WikiIocModel {
 		);*/
 
 		//return $tree_ret;
-                return $strData;
+		return $strData;
 	}
 
 	public function getMediaTabSearch() {
 		global $NS;
 		ob_start();
-                echo '<span style="font-weight: bold;">Cerca</span></br>';
+		echo '<span style="font-weight: bold;">Cerca</span></br>';
 		echo '<div class="search" style="margin-left:10px;">';
 		echo '<form accept-charset="utf-8" method="post"  id="dw__mediasearch">';
 		echo '<div class="no">';
 		//echo '<p><label><span>Cerca pel nom de fitxer: </span>';
-                echo '<p>';
+		echo '<p>';
 		echo '<input type="text" id="mediaSearchq" placeholder = "Nom de fitxer" title="Cerca en: ' . $NS . '" class="edit" name="q">';
 		echo '</label>';
 		echo '<input type="submit" class="button" value="Filtrar" id="mediaSearchs">';
-                echo '<input style="display:none" type="submit" class="button" value="Desfer filtre" id="mediaSearchr">';
+		echo '<input style="display:none" type="submit" class="button" value="Desfer filtre" id="mediaSearchr">';
 		echo '</p>';
 		echo '</div></form></div>';
 
-		$strData  = ob_get_clean();
+		$strData = ob_get_clean();
 		/*$tree_ret = array(
 			'id'      => 'metaMediaSearch',
 			'title'   => "Cerca",
@@ -1881,7 +2101,7 @@ class DokuModelAdapter implements WikiIocModel {
 		);*/
 
 		//return $tree_ret;
-                return $strData;
+		return $strData;
 	}
 
 	public function getMediaFileUpload() {
@@ -1985,38 +2205,37 @@ class DokuModelAdapter implements WikiIocModel {
 
 		$ACT = 'revisions';
 
-                $this->triggerStartEvents();
+		$this->triggerStartEvents();
 //		$tmp = [ ];
 //		trigger_event( 'DOKUWIKI_START', $tmp );
 		session_write_close();
 
 //		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
 //		if ( $evt->advise_before() ) {
-                $content = "";
-                if($this->runBeforePreprocess($content)){
+		$content = "";
+		if ( $this->runBeforePreprocess( $content ) ) {
 			act_permcheck( $ACT );
 			unlock( $ID );
 		}
 //		$evt->advise_after();
 //		unset( $evt );
-                $this->runAfterPreprocess($content);
-                        
+		$this->runAfterPreprocess( $content );
 
-                //desactivem aquesta crida perquè es tracta d'una crida AJAX i no es pot modificar la capçalera
+		//desactivem aquesta crida perquè es tracta d'una crida AJAX i no es pot modificar la capçalera
 //		$headers[] = 'Content-Type:application/json; charset=utf-8';
 //
 //		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );
 
 		$this->startUpLang();
 
-                //descativem aquesta crida perquè les revisions no es retornen 
-                //rederitzades sinó que es rendaritzen al client
+		//descativem aquesta crida perquè les revisions no es retornen
+		//rederitzades sinó que es rendaritzen al client
 		//trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_content_core");
 		// En aquest punt es on es generaria el codi HTML
 
-		//descativem aquesta crida perquè des del dokumodeladapter el 
-                //display ja està fet i no servidria de res tornar a llançar 
-                //aquest esdeveniment.
+		//descativem aquesta crida perquè des del dokumodeladapter el
+		//display ja està fet i no servidria de res tornar a llançar
+		//aquest esdeveniment.
 //		$temp = [ ];
 //		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
 
@@ -2032,7 +2251,7 @@ class DokuModelAdapter implements WikiIocModel {
 			//unset ($ret[$revision]['id']);
 		}
 
-                $this->triggerEndEvents();
+		$this->triggerEndEvents();
 //		$temp = [ ];
 //		trigger_event( 'DOKUWIKI_DONE', $temp );
 
@@ -2048,7 +2267,7 @@ class DokuModelAdapter implements WikiIocModel {
 	 * @return string - Data formatada
 	 *
 	 */
-	public function extractDateFromRevision( $revision, $mode ) {
+	public function extractDateFromRevision( $revision, $mode = NULL ) {
 
 		switch ( $mode ) {
 
@@ -2080,7 +2299,7 @@ class DokuModelAdapter implements WikiIocModel {
 		$REV = $rev1;
 		$ACT = 'diff';
 
-                $this->triggerStartEvents();
+		$this->triggerStartEvents();
 //		$tmp = [ ];
 //		trigger_event( 'DOKUWIKI_START', $tmp );
 		session_write_close();
@@ -2092,29 +2311,28 @@ class DokuModelAdapter implements WikiIocModel {
 //		}
 //		$evt->advise_after();
 //		unset( $evt );
-                $content = "";
-                if($this->runBeforePreprocess($content)){
+		$content = "";
+		if ( $this->runBeforePreprocess( $content ) ) {
 			act_permcheck( $ACT );
 			unlock( $ID );
 		}
-
 
 		//desactivem aquesta crida perquè es tracta d'una crida AJAX i no es pot modificar la capçalera
 //		$headers[] = 'Content-Type:application/json; charset=utf-8';
 //
 //		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );		
-		
-                $this->startUpLang();
 
-		//descativem aquesta crida perquè les revisions no es retornen 
-                //rederitzades sinó que es rendaritzen al client
+		$this->startUpLang();
+
+		//descativem aquesta crida perquè les revisions no es retornen
+		//rederitzades sinó que es rendaritzen al client
 		//trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_content_core");
 
-                // En aquest punt es on es generaria el codi HTML
-                
-		//descativem aquesta crida perquè des del dokumodeladapter el 
-                //display ja està fet i no servidria de res tornar a llançar 
-                //aquest esdeveniment.
+		// En aquest punt es on es generaria el codi HTML
+
+		//descativem aquesta crida perquè des del dokumodeladapter el
+		//display ja està fet i no servidria de res tornar a llançar
+		//aquest esdeveniment.
 //		$temp = [ ];
 //		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
 
@@ -2157,7 +2375,7 @@ class DokuModelAdapter implements WikiIocModel {
 
 		$response["meta"] = [ 'id' => $response['id'], 'meta' => $meta ];
 
-                $this->triggerEndEvents();
+		$this->triggerEndEvents();
 //		$temp = [ ];
 //		trigger_event( 'DOKUWIKI_DONE', $temp );
 
@@ -2180,7 +2398,7 @@ class DokuModelAdapter implements WikiIocModel {
 		preg_match( $pattern, $content, $matches );
 
 		$pattern = '/<form /s';
-		$replace = '<form id="switch_mode_' . str_replace( ":", "_", $ID ) .'" ';
+		$replace = '<form id="switch_mode_' . str_replace( ":", "_", $ID ) . '" ';
 
 		$metaContent = preg_replace( $pattern, $replace, $matches[0] );
 
