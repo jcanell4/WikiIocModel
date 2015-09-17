@@ -2250,6 +2250,9 @@ class DokuModelAdapter implements WikiIocModel {
 			$ret[ $revision ]['date'] = $this->extractDateFromRevision( $ret[ $revision ]['date'], self::$DEFAULT_FORMAT );
 			//unset ($ret[$revision]['id']);
 		}
+		$ret['current'] = @filemtime(wikiFN($ID));
+//		$ret['docId'] = str_replace( ":", "_", $ID);
+		$ret['docId'] = $ID;
 
 		$this->triggerEndEvents();
 //		$temp = [ ];
