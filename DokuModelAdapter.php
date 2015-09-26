@@ -1761,7 +1761,7 @@ class DokuModelAdapter implements WikiIocModel {
 	 * - Obtenir el gestor de medis
 	 */
 	public function getMediaManager( $image = NULL, $fromPage = NULL, $prev = NULL ) {
-		global $lang, $NS, $INPUT;
+		global $lang, $NS, $INPUT, $JSINFO;
 		/*if(!$NS){
 			$NS = $fromPage;
 		}
@@ -1776,6 +1776,7 @@ class DokuModelAdapter implements WikiIocModel {
 			throw new HttpErrorCodeException( $error, "Resource " . $image . " not found." );
 		}
 		$title = $lang['img_manager'];
+                $nou = trigger_event( 'IOC_WF_INTER', $ACT);
 		$ret   = array(
 			"content"          => $this->doMediaManagerPreProcess(),
 			"id"               => "media",
@@ -1787,7 +1788,7 @@ class DokuModelAdapter implements WikiIocModel {
 			"modifyImageLabel" => $lang['img_manager'],
 			"closeDialogLabel" => $lang['img_backto']
 		);
-
+		$JSINFO = array( 'id' => "media", 'namespace' => $NS );
 		return $ret;
 	}
 
@@ -2597,6 +2598,7 @@ class DokuModelAdapter implements WikiIocModel {
 
 	function mediaDetailsContent() {
 
+            
 		global $NS, $IMG, $JUMPTO, $REV, $lang, $conf, $fullscreen, $INPUT, $AUTH;
 		$fullscreen = TRUE;
 		require_once DOKU_INC . 'lib/exe/mediamanager.php';
@@ -2662,8 +2664,10 @@ class DokuModelAdapter implements WikiIocModel {
                     $content .= ob_get_clean();
                     $patrones = array();
                     $patrones[0] = '/<form/';
+                    $patrones[1] = '/style="max-width:+\s+\d+px;"/';
                     $sustituciones = array();
                     $sustituciones[0] = '<form id="form_'.$image.'"';
+                    $sustituciones[1] = '<img style="width: 60%;"';
                     $content = preg_replace($patrones, $sustituciones, $content);    
                 }
                 return $content;
