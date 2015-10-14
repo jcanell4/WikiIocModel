@@ -1682,7 +1682,8 @@ class DokuModelAdapter implements WikiIocModel {
 				@unlink( $draftFile );
 			} else {
 				$draft        = unserialize( io_readFile( $draftFile, FALSE ) );
-				$cleanedDraft = $this->cleanDraft( $draft['text'] );
+//				$cleanedDraft = $this->cleanDraft( $draft['text'] );
+				$cleanedDraft = $this->cleanDraft( con($draft['prefix'],$draft['text'],$draft['suffix']));
 			}
 		}
 
