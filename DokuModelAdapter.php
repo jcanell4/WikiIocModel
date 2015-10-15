@@ -352,7 +352,7 @@ class DokuModelAdapter implements WikiIocModel
             $response['info'] = $this->generateInfo("info", $lang['document_loaded']);
         }
 
-        $structured = $this->getStructuredDocument();
+        $response['structured'] = $this->getStructuredDocument();
 
         return $response;
     }
@@ -2842,16 +2842,8 @@ class DokuModelAdapter implements WikiIocModel
         global $HIGH;
 
         ob_start();
-        html_show();
+        onFormatRender(); // Només crida a html_show()
         $html = ob_get_clean();
-
-        // TODO[Xavi] així es podria fer un processament específic
-        $secedit = $REV != null; // Evita que s'afegeixin els botons d'edició parcial a les revisions
-        if ($REV) print p_locale_xhtml('showrev'); // Mostra el missatge de 'això es una revisió'
-        $html = p_wiki_xhtml($ID, $REV, true);
-        $html = html_secedit($html, $secedit); // Afegeix els botons parcials de la wiki
-//        if ($INFO['prependTOC']) $html = tpl_toc(true) . $html;
-        $html = html_hilight($html, $HIGH);
 
         return $html;
     }
@@ -2871,34 +2863,26 @@ class DokuModelAdapter implements WikiIocModel
         $wikitext = io_readWikiPage($file, $ID, $REV);
         $html = $this->getHtmlForCurrentDocument();
 
-        $document['draft'] = $this->getDraft();
 
         $instructions = $this->getInstructionsForCurrentDocument();
-        $sections = $this->getSectionRanges($instructions);
+        $chunks = $this->getSectionRanges($instructions);
 
         $document['html'] = $html;
+        $document['text'] = $wikitext;
 
         // Dividiem en seccions el $html
-        $pattern = "/(<h\d class=\"sectionedit\d+\".+?<!-- EDIT\d+ SECTION .+?-->)/s"; // aquest patró només funciona si no s'aplica el scedit
+        $pattern = '/(?:<h\d class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si no s'aplica el scedit
         preg_match_all($pattern, $html, $match);
-        $sectionHtml = $match[1]; // Conté l'array amb els blocks de html complets corresponents a cada secció.
+        $headerIds= $match[1]; // Conté l'array amb els ids trobats per cada secció
 
-        for ($i = 0; $i < count($sections); $i++) {
-            $sections[$i]['html'] = $sectionHtml[$i];
-            $sections[$i]['txt'] = substr($wikitext, $sections[$i]['start'] - 1, $sections[$i]['end'] - $sections[$i]['start']);
+        for ($i = 0; $i < count($chunks); $i++) {
+            $chunks[$i]['header_id'] = $headerIds[$i];
         }
 
         // TODO: Afegir el text plà fent servir els range i retallant el wikiText
 
-        $document['sections'] = $sections;
+        $document['chunks'] = $chunks;
 
-
-        $pattern = '/(^.*)(?:<h\d class=\"sectionedit1\")/s';
-        preg_match($pattern, $html, $match);
-        $document['presection']['html'] = count($match) > 1 ? $match[1] : '';
-        $document['presection']['text'] = substr($wikitext, 0, $sections[0] ? $sections[0]['start'] : strlen($wikitext));
-        $document['presection']['start'] = 0;
-        $document['presection']['end'] = substr($wikitext, 0, $sections[0] ? $sections[0]['start'] : strlen($wikitext));
 
 
         return $document;
@@ -2910,6 +2894,7 @@ class DokuModelAdapter implements WikiIocModel
         $currentSection = [];
 
         for ($i = 0; $i < count($instructions); $i++) {
+            $currentSection['type'] = 'section';
 
             if ($instructions[$i][0] === 'header') {
                 $currentSection['title'] = $instructions[$i][1][0];
@@ -2917,7 +2902,7 @@ class DokuModelAdapter implements WikiIocModel
 
             if ($instructions[$i][0] === 'section_open') {
                 $currentSection['start'] = $instructions[$i][2];
-                $currentSection['level'] = $instructions[$i][1]; // TODO[Xavi] El nivell es passa com un array, ho deixò igual per si hi ha casos en que es passi més d'una secció
+                $currentSection['params']['level'] = $instructions[$i][1][0];
             }
 
             if ($instructions[$i][0] === 'section_close') {
@@ -2931,6 +2916,7 @@ class DokuModelAdapter implements WikiIocModel
         return $sections;
     }
 
+    // TODO[Xavi] afegida per mi, no es fa servir perquè he eliminat el codi que la feia servir però potser la necessitem més endavant
     private function getDraft()
     {
         global $ID;
