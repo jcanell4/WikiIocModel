@@ -2842,7 +2842,7 @@ class DokuModelAdapter implements WikiIocModel
         global $HIGH;
 
         ob_start();
-        onFormatRender(); // Només crida a html_show()
+        onFormatRender(null); // Només crida a html_show()
         $html = ob_get_clean();
 
         return $html;
