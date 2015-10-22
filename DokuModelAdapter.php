@@ -2870,22 +2870,24 @@ class DokuModelAdapter implements WikiIocModel
         $chunks = $this->getSectionRanges($instructions);
 
         $document['html'] = $html;
-        $document['text'] = $wikitext;
+        $document['text'] = $wikitext; // TODO[Xavi] no serveix, no ho podem dividir correctament
 
         // Dividiem en seccions el $html
         $pattern = '/(?:<h\d class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si no s'aplica el scedit
         preg_match_all($pattern, $html, $match);
-        $headerIds= $match[1]; // Conté l'array amb els ids trobats per cada secció
+        $headerIds = $match[1]; // Conté l'array amb els ids trobats per cada secció
 
         for ($i = 0; $i < count($chunks); $i++) {
             $chunks[$i]['header_id'] = $headerIds[$i];
+            // Afegim el text només al seleccionat
+            if ($headerIds[$i] === $selected) {
+                $chunks[$i]['text'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[1];
+            }
         }
 
         // TODO: Afegir el text plà fent servir els range i retallant el wikiText
 
         $document['chunks'] = $chunks;
-
-
 
 
         return $document;
@@ -2910,7 +2912,10 @@ class DokuModelAdapter implements WikiIocModel
 
             if ($instructions[$i][0] === 'section_close') {
                 $currentSection['end'] = $instructions[$i][2];
-                $sections[] = $currentSection;
+                // Només son editables parcialment les seccions de nivell 1, 2 i 3
+                if ($currentSection['params']['level'] < 4) {
+                    $sections[] = $currentSection;
+                }
                 $currentSection = [];
             }
 
