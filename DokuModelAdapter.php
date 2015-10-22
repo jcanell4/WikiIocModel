@@ -2848,15 +2848,17 @@ class DokuModelAdapter implements WikiIocModel
         return $html;
     }
 
-    function getStructuredDocument()
+    function getStructuredDocument($selected)
     {
         global $ID;
         global $REV;
 
 
         $document = [];
-        $document['id'] = $ID;
+        $document['ns'] = $ID;
+        $document['id'] = str_replace(":", "_", $ID);
         $document['rev'] = $REV;
+        $document['selected'] = $selected;
 
         $file = wikiFN($ID, $REV);
 
@@ -2882,6 +2884,7 @@ class DokuModelAdapter implements WikiIocModel
         // TODO: Afegir el text plà fent servir els range i retallant el wikiText
 
         $document['chunks'] = $chunks;
+
 
 
 
