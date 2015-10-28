@@ -420,6 +420,20 @@ class DokuModelAdapter implements WikiIocModel
         return $response;
     }
 
+    public function savePartialEdition(
+        $pid, $prev = NULL, $prange = NULL,
+        $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL, $selected, $editing_chunks = NULL
+    ) {
+
+        $response = $this->saveEdition($pid, $prev, $prange, $pdate, $ppre, $ptext, $psuf, $psum);
+        $response['structure'] = $this->getStructuredDocument($selected, $editing_chunks);
+
+
+
+        return $response;
+    }
+
+
     public function isAdminOrManager($checkIsmanager = TRUE)
     {
         global $INFO;
@@ -2848,12 +2862,16 @@ class DokuModelAdapter implements WikiIocModel
         return $html;
     }
 
-    function getStructuredDocument($selected)
+    // TODO[Xavi] Deixar només un paràmetre, el selected serà sempre el primer element del array?
+    function getStructuredDocument($selected, $editing = null)
     {
         global $ID;
         global $REV;
         global $DATE;
 
+        if (!$editing) {
+            $editing = [$selected];
+        }
 
         $document = [];
         $document['ns'] = $ID;
@@ -2882,8 +2900,9 @@ class DokuModelAdapter implements WikiIocModel
 
         for ($i = 0; $i < count($chunks); $i++) {
             $chunks[$i]['header_id'] = $headerIds[$i];
-            // Afegim el text només al seleccionat
-            if ($headerIds[$i] === $selected) {
+            // Afegim el text només al seleccionat i els textos en edició
+            if (in_array($headerIds[$i], $editing)) {
+//            if ($headerIds[$i] === $selected) {
                 $chunks[$i]['text'] = [];
                 $chunks[$i]['text']['pre'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[0];
                 $chunks[$i]['text']['editing'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[1];
