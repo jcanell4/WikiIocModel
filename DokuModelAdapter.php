@@ -2852,6 +2852,7 @@ class DokuModelAdapter implements WikiIocModel
     {
         global $ID;
         global $REV;
+        global $DATE;
 
 
         $document = [];
@@ -2872,6 +2873,8 @@ class DokuModelAdapter implements WikiIocModel
         $document['html'] = $html;
         $document['text'] = $wikitext; // TODO[Xavi] no serveix, no ho podem dividir correctament
 
+        $document['date'] = $DATE;
+
         // Dividiem en seccions el $html
         $pattern = '/(?:<h\d class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si no s'aplica el scedit
         preg_match_all($pattern, $html, $match);
@@ -2881,7 +2884,11 @@ class DokuModelAdapter implements WikiIocModel
             $chunks[$i]['header_id'] = $headerIds[$i];
             // Afegim el text només al seleccionat
             if ($headerIds[$i] === $selected) {
-                $chunks[$i]['text'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[1];
+                $chunks[$i]['text'] = [];
+                $chunks[$i]['text']['pre'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[0];
+                $chunks[$i]['text']['editing'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[1];
+                $chunks[$i]['text']['suf'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[2];
+                $chunks[$i]['text']['changecheck'] = md5($chunks[$i]['text']['editing']);
             }
         }
 
