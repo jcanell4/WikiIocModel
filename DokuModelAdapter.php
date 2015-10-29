@@ -420,6 +420,40 @@ class DokuModelAdapter implements WikiIocModel
         return $response;
     }
 
+
+
+    public function cancelPartialEdition($pid, $psum = NULL, $date = NULL, $selected, $editing_chunks = NULL){
+        global $ID;
+        global $REV;
+        global $DATE;
+        global $INFO;
+
+        // TODO[Xavi] Fer el processe d'inicialització de globals de la wiki correctament
+        if (!$INFO) {
+            $INFO = [];
+        }
+
+        $INFO['writable'] = true;
+        $ID = $pid;
+        $DATE = $date;
+
+
+
+        $response = [];
+
+        $response['id'] = str_replace(':', '_', $pid);
+        $response['ns'] = $pid;
+        $response['title'] = str_replace(['[',']'], '', $psum);
+        $response['structure'] = $this->getStructuredDocument(null, $editing_chunks);
+//        $response['structure']['date'] = $date;
+        $response['structure']['cancel'] = [$selected];
+        $response['structure']['id'] = $response['id'];
+        $response['structure']['ns'] = $response['ns'] ;
+
+
+        return $response;
+    }
+
     public function savePartialEdition(
         $pid, $prev = NULL, $prange = NULL,
         $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL, $selected, $editing_chunks = NULL
@@ -2879,9 +2913,9 @@ class DokuModelAdapter implements WikiIocModel
         $document['rev'] = $REV;
         $document['selected'] = $selected;
 
-        $file = wikiFN($ID, $REV);
+//        $file = wikiFN($ID, $REV);
 
-        $wikitext = io_readWikiPage($file, $ID, $REV);
+//        $wikitext = io_readWikiPage($file, $ID, $REV);
         $html = $this->getHtmlForCurrentDocument();
 
 
@@ -2889,9 +2923,9 @@ class DokuModelAdapter implements WikiIocModel
         $chunks = $this->getSectionRanges($instructions);
 
         $document['html'] = $html;
-        $document['text'] = $wikitext; // TODO[Xavi] no serveix, no ho podem dividir correctament
+//        $document['text'] = $wikitext; // TODO[Xavi] no serveix, no ho podem dividir correctament
 
-        $document['date'] = $DATE;
+        $document['date'] = $DATE+1;
 
         // Dividiem en seccions el $html
         $pattern = '/(?:<h\d class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si no s'aplica el scedit
