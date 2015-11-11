@@ -89,56 +89,6 @@ if ( ! defined( 'DW_ACT_MEDIA_DETAILS' ) ) {
 //    const DW_ACT_CANCEL="cancel";
 
 /**
- * Mostra una pàgina de la DokuWiki.
- * TODO[Xavi] no es fa res amb l'argument
- *
- * @param string $data
- */
-function onFormatRender( $data ) {
-	html_show();
-}
-
-/**
- * Segons el valor de $data activa la edició del document('edit' i 'recover'), la previsualització ('preview') o mostra
- * el missatge de denegat ('denied').
- *
- * @param string $data els valors admessos son 'edit', 'recover', 'preview' i 'denied'
- */
-function onCodeRender( $data ) {
-	global $TEXT;
-
-	switch ( $data ) {
-		case 'locked':
-		case 'edit':
-		case 'recover':
-			html_edit();
-			break;
-		case 'preview':
-			html_edit();
-			html_show( $TEXT );
-			break;
-		case 'denied':
-			print p_locale_xhtml( 'denied' );
-			break;
-	}
-}
-
-/**
- * Retorna la taula de continguts modificada amb la nostra cadena.
- *
- * @return string taula de continguts
- */
-function wrapper_tpl_toc() {
-	$toc = tpl_toc( TRUE );
-	$toc = preg_replace(
-		'/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i',
-		'$1<div class="dokuwiki">$2$4</div>$6', $toc
-	);
-
-	return $toc;
-}
-
-/**
  * Class DokuModelAdapter
  * Adaptador per passar les nostres comandes a la Dokuwiki.
  *
@@ -1496,7 +1446,7 @@ class DokuModelAdapter implements WikiIocModel {
 		$mEvt = new Doku_Event( 'WIOC_ADD_META', $meta );
 		if ( $mEvt->advise_before() ) {
 			$ACT    = "show";
-			$toc    = wrapper_tpl_toc();
+			$toc    = $this->wrapper_tpl_toc();
 			$ACT    = $act_aux;
 			$metaId = \str_replace( ":", "_", $this->params['id'] ) . '_toc';
 			$meta[] = ( $this->getCommonPage( $metaId, $lang['toc'], $toc ) + [ 'type' => 'TOC' ] );
@@ -1741,7 +1691,7 @@ class DokuModelAdapter implements WikiIocModel {
 		global $ACT;
 
 		ob_start();
-		trigger_event( 'TPL_ACT_RENDER', $ACT, 'onFormatRender' );
+		trigger_event( 'TPL_ACT_RENDER', $ACT, array($this,'onFormatRender'));
 		$html_output = ob_get_clean() . "\n";
 
 		return $html_output;
@@ -1750,7 +1700,7 @@ class DokuModelAdapter implements WikiIocModel {
 	private function _getCodePage() {
 		global $ACT;
 		ob_start();
-		trigger_event( 'TPL_ACT_RENDER', $ACT, 'onCodeRender' );
+		trigger_event( 'TPL_ACT_RENDER', $ACT, array($this, 'onCodeRender') );
 		$html_output = ob_get_clean() . "\n";
 
 		return $html_output;
@@ -2003,7 +1953,7 @@ class DokuModelAdapter implements WikiIocModel {
 		// $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
 		/* if ($mEvt->advise_before()) {
 				$ACT = "show";
-				$toc = wrapper_tpl_toc();
+				$toc = $this->wrapper_tpl_toc();
 				$ACT = $act_aux;
 				$metaId = \str_replace(":", "_", $this->params['id']) . '_toc';
 				$meta[] = $this->getMetaPage($metaId, $lang['toc'], $toc);
@@ -2707,4 +2657,110 @@ class DokuModelAdapter implements WikiIocModel {
 	}        
         
         
+        /**
+        * Mostra una pàgina de la DokuWiki.
+        * TODO[Xavi] no es fa res amb l'argument
+        * 
+         * Based on "html_show" function written by Andreas Gohr
+        * 
+        * @param string $data
+        */
+       function onFormatRender( $data ) {
+           if($this->params['rev']){
+                $secedit = false;
+            }else{
+                $secedit = true;
+            }
+           
+       //	html_show();
+           //if ($REV) print p_locale_xhtml('showrev');
+           $html = p_wiki_xhtml($this->params['id'], 
+                                $this->params['rev'],
+                                true);
+           $html = html_secedit($html,$secedit);
+           //if($INFO['prependTOC']) $html = tpl_toc(true).$html;
+           $html = html_hilight($html,$HIGH);
+           echo $html;
+       }
+
+    /**
+    * Returns the parsed Wikitext in XHTML for the given id and revision.
+    *
+    * If $excuse is true an explanation is returned if the file
+    * wasn't found
+    *
+    * @author Andreas Gohr <andi@splitbrain.org>
+    */
+   function p_wiki_xhtml($id, $rev='', $excuse=true){
+       $file = wikiFN($id,$rev);
+       $ret  = '';
+
+       //ensure $id is in global $ID (needed for parsing)
+       global $ID;
+       $keep = $ID;
+       $ID   = $id;
+
+       if($rev){
+           if(@file_exists($file)){
+               $ret = p_render('xhtml',p_get_instructions(io_readWikiPage($file,$id,$rev)),$info); //no caching on old revisions
+           }elseif($excuse){
+               $ret = p_locale_xhtml('norev');
+           }
+       }else{
+           if(@file_exists($file)){
+               $ret = p_cached_output($file,'xhtml',$id);
+           }elseif($excuse){
+               $ret = p_locale_xhtml('newpage');
+           }
+       }
+
+       //restore ID (just in case)
+       $ID = $keep;
+
+       return $ret;
+   }
+
+
+
+    /**
+     * Segons el valor de $data activa la edició del document('edit' i 'recover'), la previsualització ('preview') o mostra
+     * el missatge de denegat ('denied').
+     *
+     * @param string $data els valors admessos son 'edit', 'recover', 'preview' i 'denied'
+     */
+    function onCodeRender( $data ) {
+            global $TEXT;
+
+            switch ( $data ) {
+                    case 'locked':
+                    case 'edit':
+                    case 'recover':
+                            html_edit();
+                            break;
+                    case 'preview':
+                            html_edit();
+                            html_show( $TEXT );
+                            break;
+                    case 'denied':
+                            print p_locale_xhtml( 'denied' );
+                            break;
+            }
+    }
+
+        
+    /**
+     * Retorna la taula de continguts modificada amb la nostra cadena.
+     *
+     * @return string taula de continguts
+     */
+    function wrapper_tpl_toc() {
+        $toc = tpl_toc( TRUE );
+        $toc = preg_replace(
+                '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i',
+                '$1<div class="dokuwiki">$2$4</div>$6', $toc
+        );
+
+        return $toc;
+    }
+
 }
