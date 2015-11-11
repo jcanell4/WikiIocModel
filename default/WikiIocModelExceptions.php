@@ -10,7 +10,11 @@
  *
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
-class WikiIocModelException extends Exception {
+if (!defined('DOKU_INC')) die();
+
+require_once DOKU_INC . 'lib/plugins/wikiiocmodel/AbstractWikiIocModelExceptions.php';
+
+class WikiIocModelException extends AbstractWikiIocModelException {
     public function __construct($message, $code, $previous=NULL) {
         parent::__construct($message, $code, $previous);
     }
@@ -65,6 +69,12 @@ class InsufficientPermissionToEditPageException extends WikiIocModelException {
 
 class HttpErrorCodeException extends WikiIocModelException {
     public function __construct($code, $message="", $previous=NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+}
+
+class AuthorizationCommandNotFound extends WikiIocModelException {
+    public function __construct($code=1008, $message="Authorization command not found", $previous=NULL) {
         parent::__construct($message, $code, $previous);
     }
 }

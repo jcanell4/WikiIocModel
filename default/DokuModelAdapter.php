@@ -5,26 +5,26 @@
  *
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
-if ( ! defined( 'DOKU_INC' ) ) {
-	die();
-}
+if (! defined('DOKU_INC')) die();
+
 //require common
-require_once DOKU_INC . 'inc/actions.php';
-require_once DOKU_INC . 'inc/pageutils.php';
-require_once DOKU_INC . 'inc/common.php';
-require_once DOKU_INC . 'inc/media.php';
-require_once DOKU_INC . 'inc/auth.php';
-require_once DOKU_INC . 'inc/confutils.php';
-require_once DOKU_INC . 'inc/io.php';
-require_once DOKU_INC . 'inc/template.php';
-require_once DOKU_INC . 'inc/JSON.php';
-require_once DOKU_INC . 'inc/JpegMeta.php';
+require_once (DOKU_INC . 'inc/actions.php');
+require_once (DOKU_INC . 'inc/pageutils.php');
+require_once (DOKU_INC . 'inc/common.php');
+require_once (DOKU_INC . 'inc/media.php');
+require_once (DOKU_INC . 'inc/auth.php');
+require_once (DOKU_INC . 'inc/confutils.php');
+require_once (DOKU_INC . 'inc/io.php');
+require_once (DOKU_INC . 'inc/template.php');
+require_once (DOKU_INC . 'inc/JSON.php');
+require_once (DOKU_INC . 'inc/JpegMeta.php');
 
 if ( ! defined( 'DOKU_PLUGIN' ) ) {
 	define( 'DOKU_PLUGIN', DOKU_INC . 'lib/plugins/' );
 }
-require_once( DOKU_PLUGIN . 'wikiiocmodel/WikiIocModel.php' );
-require_once( DOKU_PLUGIN . 'wikiiocmodel/WikiIocModelExceptions.php' );
+require_once (DOKU_PLUGIN . 'wikiiocmodel/AbstractDokuModelAdapter.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/AbstractWikiIocModelExceptions.php');
+
 require_once( DOKU_PLUGIN . 'acl/admin.php' );
 
 if ( ! defined( 'DW_DEFAULT_PAGE' ) ) {
@@ -94,7 +94,7 @@ if ( ! defined( 'DW_ACT_MEDIA_DETAILS' ) ) {
  *
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
-class DokuModelAdapter implements WikiIocModel {
+class DokuModelAdapter extends AbstractDokuModelAdapter {
 	const ADMIN_PERMISSION = "admin";
 
 	protected $params;
@@ -2764,3 +2764,4 @@ class DokuModelAdapter implements WikiIocModel {
     }
 
 }
+
