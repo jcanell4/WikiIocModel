@@ -2856,8 +2856,8 @@ class DokuModelAdapter implements WikiIocModel
      * @param $rev
      * @return array
      */
-    // TODO[Xavi] PER REFACTORITZAR QUANT TINGUEM EL PLUGIN DEL RENDER
-    function getStructuredDocument($selected, $id, $rev = null, $editing = null)
+    // TODO[Xavi] PER REFACTORITZAR QUANT TINGUEM EL PLUGIN DEL RENDER. Fer privada?
+    public function getStructuredDocument($selected, $id, $rev = null, $editing = null)
     {
         global $INFO;
 
@@ -2879,7 +2879,7 @@ class DokuModelAdapter implements WikiIocModel
 
         $document['html'] = $html;
 
-        $document['date'] = $INFO['meta']['date']['modified']+ 1;
+        $document['date'] = $INFO['meta']['date']['modified'] + 1;
 //        $document['date'] = $DATE + 1;
 
         // Dividiem en seccions el $html
@@ -2889,6 +2889,7 @@ class DokuModelAdapter implements WikiIocModel
         preg_match_all($pattern, $html, $match);
         $headerIds = $match[1]; // Conté l'array amb els ids trobats per cada secció
 
+        $editingChunks = [];
 
         for ($i = 0; $i < count($chunks); $i++) {
             $chunks[$i]['header_id'] = $headerIds[$i];
@@ -2898,9 +2899,9 @@ class DokuModelAdapter implements WikiIocModel
                 $chunks[$i]['text'] = [];
                 //TODO[Xavi] compte! s'ha d'agafar sempre el editing per montar els nostres pre i suf!
                 // Calcular les posicions dels bytes de inici i final, guardar-les per fer-les servir de referencia al següent
-                $chunks[$i]['text']['pre'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[0];
+//                $chunks[$i]['text']['pre'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[0];
                 $chunks[$i]['text']['editing'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[1];
-                $chunks[$i]['text']['suf'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[2];
+//                $chunks[$i]['text']['suf'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[2];
                 $chunks[$i]['text']['changecheck'] = md5($chunks[$i]['text']['editing']);
 
                 // TODO: El pre ha de ser el 'editing' des de:
@@ -2908,9 +2909,21 @@ class DokuModelAdapter implements WikiIocModel
                 // El valor de 'end' del chunk anterior
                 // Fins al  'start' d'aquest document
 
-                // TODO: Aquí s'agafa el suf, si aquest es l'últim chunk el seu suf es el que s'aplicarà
+                $editingChunks[] = &$chunks[$i];
+
+
+
+
             }
         }
+
+        // Afegim el suf
+        $lastSuf = count($editingChunks)-1;
+        $document['suf'] = rawWikiSlices($editingChunks[$lastSuf]['start'] . "-" . $editingChunks[$lastSuf]['end'], $id)[2];
+
+
+        // TODO: no es passen per referència?
+        $this->addPreToChunks($editingChunks, $id);
 
 
         $document['chunks'] = $chunks;
@@ -2920,8 +2933,24 @@ class DokuModelAdapter implements WikiIocModel
     }
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
+    private function addPreToChunks(&$chunks, $id)
+    {
+        $lastPos = 0;
+
+        for ($i=0;$i<count($chunks);$i++) {
+            // El pre de cada chunk va de $lastPos fins al seu start
+            $chunks[$i]['text']['pre'] =  rawWikiSlices($lastPos . "-" . $chunks[$i]['start'], $id)[1];
+
+            // el text no forma part del 'pre'
+            $lastPos = $chunks[$i]['end'];
+        }
+
+    }
+
+
+    // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     // Només son editables parcialment les seccions de nivell 1, 2 i 3
-    function getSectionRanges($instructions)
+    private function getSectionRanges($instructions)
     {
         $sections = [];
         $currentSection = [];
@@ -3019,11 +3048,11 @@ class DokuModelAdapter implements WikiIocModel
         return $response;
     }
 
-    public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected)
+    public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks)
     {
 
         $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, NULL, $psum);
-        $response['structure'] = $this->getStructuredDocument($selected, $pid);
+        $response['structure'] = $this->getStructuredDocument($selected, $pid, null, $editing_chunks);
 
         // TODO: afegir el 'info' que correspongui
 
