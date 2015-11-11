@@ -2857,9 +2857,9 @@ class DokuModelAdapter implements WikiIocModel
      * @return array
      */
     // TODO[Xavi] PER REFACTORITZAR QUANT TINGUEM EL PLUGIN DEL RENDER
-    function getStructuredDocument($selected, $id, $rev, $editing = null)
+    function getStructuredDocument($selected, $id, $rev = null, $editing = null)
     {
-        global $DATE;
+        global $INFO;
 
         if (!$editing) {
             $editing = [$selected];
@@ -2879,7 +2879,8 @@ class DokuModelAdapter implements WikiIocModel
 
         $document['html'] = $html;
 
-        $document['date'] = $DATE + 1;
+        $document['date'] = $INFO['meta']['date']['modified']+ 1;
+//        $document['date'] = $DATE + 1;
 
         // Dividiem en seccions el $html
         // TODO: No funciona correctament amb subseccions
@@ -2969,22 +2970,17 @@ class DokuModelAdapter implements WikiIocModel
 
     public function getPartialPage($pid, $prev = NULL, $prange, $psum, $psection)
     {
-        global $INFO;
 
-        $this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange, $psum
-        );
+        $this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange, $psum);
 
         $structure = $this->getStructuredDocument($psection, $pid, NULL);
 
-
-        // La global $DATE no es inicialitzada, així que el valor que retorna es incorrecte, ho afegim manualment
-        $structure['date'] = $INFO['meta']['date']['modified'];
         $response['structure'] = $structure;
 
 
         // TODO: afegir el 'info' que correspongui
 
-        //TODO: afegir el 'meta' que correspongui
+        // TODO: afegir el 'meta' que correspongui
 
 
         return $response;
@@ -2993,17 +2989,15 @@ class DokuModelAdapter implements WikiIocModel
 
     public function cancelPartialEdition($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks = NULL)
     {
-//        global $DATE;
-
         $this->startPageProcess(DW_ACT_SHOW, $pid, null, NULL, $psum);
 
-        $response = [];
-
-        $response['structure'] = $this->getStructuredDocument(null, $pid,
-            NULL, $editing_chunks);
-//        $response['structure']['date'] = $DATE;
+        $response['structure'] = $this->getStructuredDocument(null, $pid, NULL, $editing_chunks);
         $response['structure']['cancel'] = [$selected];
 
+
+        // TODO: afegir el 'info' que correspongui
+
+        // TODO: afegir el 'meta' que correspongui
 
         return $response;
     }
@@ -3018,16 +3012,22 @@ class DokuModelAdapter implements WikiIocModel
 
         $response['structure'] = $this->getStructuredDocument($selected, $pid, $prev, $editing_chunks);
 
+        // TODO: afegir el 'info' que correspongui
+
+        // TODO: afegir el 'meta' que correspongui
+
         return $response;
     }
 
     public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected)
     {
-        global $DATE;
 
         $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, NULL, $psum);
         $response['structure'] = $this->getStructuredDocument($selected, $pid);
 
+        // TODO: afegir el 'info' que correspongui
+
+        // TODO: afegir el 'meta' que correspongui
         return $response;
     }
 
