@@ -13,5 +13,5 @@ abstract class AbstractAuthorizationManager {
 
    public function __construct() {}
 
-   abstract protected function CanRun($param);
+   abstract protected function canRun();
 }
