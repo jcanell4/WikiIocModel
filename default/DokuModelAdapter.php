@@ -23,7 +23,7 @@ if ( ! defined( 'DOKU_PLUGIN' ) ) {
 	define( 'DOKU_PLUGIN', DOKU_INC . 'lib/plugins/' );
 }
 require_once (DOKU_PLUGIN . 'wikiiocmodel/AbstractDokuModelAdapter.php');
-require_once (DOKU_PLUGIN . 'wikiiocmodel/AbstractWikiIocModelExceptions.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/default/DokuModelExceptions.php');
 
 require_once( DOKU_PLUGIN . 'acl/admin.php' );
 

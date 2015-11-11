@@ -1,4 +1,6 @@
 <?php
+namespace ioc_dokuwiki;
+
 /**
  * WikiIocModelManager: proporciona autorizaciones y ModelWrapper
  *
@@ -8,7 +10,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_IOCMODEL')) define('DOKU_IOCMODEL', DOKU_INC . "lib/plugins/wikiiocmodel/default/");
 
 require_once(DOKU_IOCMODEL . 'DokuModelAdapter.php');
-require_once(DOKU_IOCMODEL . 'WikiIocModelExceptions.php');
+require_once(DOKU_IOCMODEL . 'DokuModelExceptions.php');
 require_once(DOKU_IOCMODEL . 'authorization/FactoryAuthorization.php');
 
 class WikiIocModelManager {
@@ -24,12 +26,12 @@ class WikiIocModelManager {
     }
 
     public function getAuthorizationManager($str_command, $params) {
-        $factory = FactoryAuthorization::Instance();
+        $factory = \FactoryAuthorization::Instance();
         return $factory->CreateAuthorizationManager($str_command, $params);
     }
 
     public function getModelWrapperManager() {
-        return new DokuModelAdapter();
+        return new \DokuModelAdapter();
     }
 
 }
