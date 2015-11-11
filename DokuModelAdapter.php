@@ -352,7 +352,7 @@ class DokuModelAdapter implements WikiIocModel
             $response['info'] = $this->generateInfo("info", $lang['document_loaded']);
         }
 
-        $response['structured'] = $this->getStructuredDocument();
+        $response['structured'] = $this->getStructuredDocument(null, $pid, $prev);
 
         return $response;
     }
@@ -417,52 +417,6 @@ class DokuModelAdapter implements WikiIocModel
 
 
         $response = $this->getSaveInfoResponse($code);
-        return $response;
-    }
-
-
-    public function cancelPartialEdition($pid, $psum = NULL, $date = NULL, $selected, $editing_chunks = NULL)
-    {
-        global $ID;
-        global $REV;
-        global $DATE;
-        global $INFO;
-
-        // TODO[Xavi] Fer el processe d'inicialització de globals de la wiki correctament
-        if (!$INFO) {
-            $INFO = [];
-        }
-
-        $INFO['writable'] = true;
-        $ID = $pid;
-        $DATE = $date;
-
-
-        $response = [];
-
-        $response['id'] = str_replace(':', '_', $pid);
-        $response['ns'] = $pid;
-        $response['title'] = str_replace(['[', ']'], '', $psum);
-        $response['structure'] = $this->getStructuredDocument(null, $editing_chunks);
-//        $response['structure']['date'] = $date;
-        $response['structure']['cancel'] = [$selected];
-        $response['structure']['id'] = $response['id'];
-        $response['structure']['ns'] = $response['ns'];
-
-
-        return $response;
-    }
-
-    public function savePartialEdition(
-        $pid, $prev = NULL, $prange = NULL,
-        $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL, $selected, $editing_chunks = NULL
-    )
-    {
-
-        $response = $this->saveEdition($pid, $prev, $prange, $pdate, $ppre, $ptext, $psuf, $psum);
-        $response['structure'] = $this->getStructuredDocument($selected, $editing_chunks);
-
-
         return $response;
     }
 
@@ -2896,15 +2850,15 @@ class DokuModelAdapter implements WikiIocModel
     /**
      * Hi ha un casos en que no hi ha selected, per exemple quan es cancela un document.
      *
+     * @param $selected
      * @param {string|null} $selected - Chunk seleccionat
-     * @param {string[]|null} $editing - Array amb les ids dels chunks en edició
+     * @param $id
+     * @param $rev
      * @return array
      */
     // TODO[Xavi] PER REFACTORITZAR QUANT TINGUEM EL PLUGIN DEL RENDER
-    function getStructuredDocument($selected, $editing = null)
+    function getStructuredDocument($selected, $id, $rev, $editing = null)
     {
-        global $ID;
-        global $REV;
         global $DATE;
 
         if (!$editing) {
@@ -2912,9 +2866,10 @@ class DokuModelAdapter implements WikiIocModel
         }
 
         $document = [];
-        $document['ns'] = $ID;
-        $document['id'] = str_replace(":", "_", $ID);
-        $document['rev'] = $REV;
+        $document['title'] = tpl_pagetitle($id, TRUE);
+        $document['ns'] = $id;
+        $document['id'] = str_replace(":", "_", $id);
+        $document['rev'] = $rev;
         $document['selected'] = $selected;
 
         $html = $this->getHtmlForCurrentDocument();
@@ -2942,9 +2897,9 @@ class DokuModelAdapter implements WikiIocModel
                 $chunks[$i]['text'] = [];
                 //TODO[Xavi] compte! s'ha d'agafar sempre el editing per montar els nostres pre i suf!
                 // Calcular les posicions dels bytes de inici i final, guardar-les per fer-les servir de referencia al següent
-                $chunks[$i]['text']['pre'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[0];
-                $chunks[$i]['text']['editing'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[1];
-                $chunks[$i]['text']['suf'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[2];
+                $chunks[$i]['text']['pre'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[0];
+                $chunks[$i]['text']['editing'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[1];
+                $chunks[$i]['text']['suf'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[2];
                 $chunks[$i]['text']['changecheck'] = md5($chunks[$i]['text']['editing']);
 
                 // TODO: El pre ha de ser el 'editing' des de:
@@ -3011,5 +2966,69 @@ class DokuModelAdapter implements WikiIocModel
         return $sections;
     }
 
+
+    public function getPartialPage($pid, $prev = NULL, $prange, $psum, $psection)
+    {
+        global $INFO;
+
+        $this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange, $psum
+        );
+
+        $structure = $this->getStructuredDocument($psection, $pid, NULL);
+
+
+        // La global $DATE no es inicialitzada, així que el valor que retorna es incorrecte, ho afegim manualment
+        $structure['date'] = $INFO['meta']['date']['modified'];
+        $response['structure'] = $structure;
+
+
+        // TODO: afegir el 'info' que correspongui
+
+        //TODO: afegir el 'meta' que correspongui
+
+
+        return $response;
+    }
+
+
+    public function cancelPartialEdition($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks = NULL)
+    {
+//        global $DATE;
+
+        $this->startPageProcess(DW_ACT_SHOW, $pid, null, NULL, $psum);
+
+        $response = [];
+
+        $response['structure'] = $this->getStructuredDocument(null, $pid,
+            NULL, $editing_chunks);
+//        $response['structure']['date'] = $DATE;
+        $response['structure']['cancel'] = [$selected];
+
+
+        return $response;
+    }
+
+    public function savePartialEdition(
+        $pid, $prev = NULL, $prange = NULL,
+        $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL, $selected, $editing_chunks = NULL
+    )
+    {
+
+        $response = $this->saveEdition($pid, NULL, $prange, $pdate, $ppre, $ptext, $psuf, $psum);
+
+        $response['structure'] = $this->getStructuredDocument($selected, $pid, $prev, $editing_chunks);
+
+        return $response;
+    }
+
+    public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected)
+    {
+        global $DATE;
+
+        $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, NULL, $psum);
+        $response['structure'] = $this->getStructuredDocument($selected, $pid);
+
+        return $response;
+    }
 
 }
