@@ -1,22 +1,22 @@
 <?php
 /**
- * FactoryAuthorizationManager crea los objetos de autorización de los comandos
+ * FactoryAuthorization crea los objetos de autorización de los comandos
  *
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_IOCMODELAUTH'))
     define('DOKU_IOCMODELAUTH', DOKU_INC . 'lib/plugins/wikiiocmodel/default/authorization/');
-require_once(DOKU_IOCMODELAUTH . 'AuthorizationManager.php');
+require_once(DOKU_IOCMODELAUTH . 'CommandAuthorization.php');
 
-class FactoryAuthorizationManager {
+class FactoryAuthorization {
     /* SINGLETON CLASS */
     private function __construct() {}
 
     public static function Instance(){
         static $inst = null;
         if ($inst === null) {
-            $inst = new FactoryAuthorizationManager();
+            $inst = new FactoryAuthorization();
         }
         return $inst;
     }

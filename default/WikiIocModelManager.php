@@ -9,7 +9,7 @@ if (!defined('DOKU_IOCMODEL')) define('DOKU_IOCMODEL', DOKU_INC . "lib/plugins/w
 
 require_once(DOKU_IOCMODEL . 'DokuModelAdapter.php');
 require_once(DOKU_IOCMODEL . 'WikiIocModelExceptions.php');
-require_once(DOKU_IOCMODEL . 'authorization/FactoryAuthorizationManager.php');
+require_once(DOKU_IOCMODEL . 'authorization/FactoryAuthorization.php');
 
 class WikiIocModelManager {
     
@@ -24,7 +24,7 @@ class WikiIocModelManager {
     }
 
     public function getAuthorizationManager($str_command, $params) {
-        $factory = FactoryAuthorizationManager::Instance();
+        $factory = FactoryAuthorization::Instance();
         return $factory->CreateAuthorizationManager($str_command, $params);
     }
 
