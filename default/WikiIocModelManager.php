@@ -13,12 +13,14 @@ require_once(DOKU_IOCMODEL . 'authorization/FactoryAuthorizationManager.php');
 
 class WikiIocModelManager {
     
-    public function __construct() {
-        static $inst = NULL;
-        if($inst === NULL) {
-            $inst = 'a';
+    public function __construct() {}
+
+    public static function Instance(){
+        static $inst = null;
+        if ($inst === null) {
             $inst = new WikiIocModelManager();
         }
+        return $inst;
     }
 
     public function getAuthorizationManager($str_command, $params) {
