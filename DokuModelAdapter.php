@@ -421,8 +421,8 @@ class DokuModelAdapter implements WikiIocModel
     }
 
 
-
-    public function cancelPartialEdition($pid, $psum = NULL, $date = NULL, $selected, $editing_chunks = NULL){
+    public function cancelPartialEdition($pid, $psum = NULL, $date = NULL, $selected, $editing_chunks = NULL)
+    {
         global $ID;
         global $REV;
         global $DATE;
@@ -438,17 +438,16 @@ class DokuModelAdapter implements WikiIocModel
         $DATE = $date;
 
 
-
         $response = [];
 
         $response['id'] = str_replace(':', '_', $pid);
         $response['ns'] = $pid;
-        $response['title'] = str_replace(['[',']'], '', $psum);
+        $response['title'] = str_replace(['[', ']'], '', $psum);
         $response['structure'] = $this->getStructuredDocument(null, $editing_chunks);
 //        $response['structure']['date'] = $date;
         $response['structure']['cancel'] = [$selected];
         $response['structure']['id'] = $response['id'];
-        $response['structure']['ns'] = $response['ns'] ;
+        $response['structure']['ns'] = $response['ns'];
 
 
         return $response;
@@ -457,11 +456,11 @@ class DokuModelAdapter implements WikiIocModel
     public function savePartialEdition(
         $pid, $prev = NULL, $prange = NULL,
         $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL, $selected, $editing_chunks = NULL
-    ) {
+    )
+    {
 
         $response = $this->saveEdition($pid, $prev, $prange, $pdate, $ppre, $ptext, $psuf, $psum);
         $response['structure'] = $this->getStructuredDocument($selected, $editing_chunks);
-
 
 
         return $response;
@@ -2872,6 +2871,7 @@ class DokuModelAdapter implements WikiIocModel
     }
 
 
+    // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private function getInstructionsForCurrentDocument()
     {
         global $ID;
@@ -2882,13 +2882,9 @@ class DokuModelAdapter implements WikiIocModel
         return $instructions;
     }
 
+    // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private function getHtmlForCurrentDocument()
     {
-        global $ID;
-        global $REV;
-        global $INFO;
-        global $HIGH;
-
         ob_start();
         onFormatRender(null); // Només crida a html_show()
         $html = ob_get_clean();
@@ -2896,7 +2892,15 @@ class DokuModelAdapter implements WikiIocModel
         return $html;
     }
 
-    // TODO[Xavi] Deixar només un paràmetre, el selected serà sempre el primer element del array?
+
+    /**
+     * Hi ha un casos en que no hi ha selected, per exemple quan es cancela un document.
+     *
+     * @param {string|null} $selected - Chunk seleccionat
+     * @param {string[]|null} $editing - Array amb les ids dels chunks en edició
+     * @return array
+     */
+    // TODO[Xavi] PER REFACTORITZAR QUANT TINGUEM EL PLUGIN DEL RENDER
     function getStructuredDocument($selected, $editing = null)
     {
         global $ID;
@@ -2913,24 +2917,22 @@ class DokuModelAdapter implements WikiIocModel
         $document['rev'] = $REV;
         $document['selected'] = $selected;
 
-//        $file = wikiFN($ID, $REV);
-
-//        $wikitext = io_readWikiPage($file, $ID, $REV);
         $html = $this->getHtmlForCurrentDocument();
-
 
         $instructions = $this->getInstructionsForCurrentDocument();
         $chunks = $this->getSectionRanges($instructions);
 
         $document['html'] = $html;
-//        $document['text'] = $wikitext; // TODO[Xavi] no serveix, no ho podem dividir correctament
 
-        $document['date'] = $DATE+1;
+        $document['date'] = $DATE + 1;
 
         // Dividiem en seccions el $html
-        $pattern = '/(?:<h\d class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si no s'aplica el scedit
+        // TODO: No funciona correctament amb subseccions
+
+        $pattern = '/(?:<h[123] class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si s'aplica el scedit
         preg_match_all($pattern, $html, $match);
         $headerIds = $match[1]; // Conté l'array amb els ids trobats per cada secció
+
 
         for ($i = 0; $i < count($chunks); $i++) {
             $chunks[$i]['header_id'] = $headerIds[$i];
@@ -2938,14 +2940,22 @@ class DokuModelAdapter implements WikiIocModel
             if (in_array($headerIds[$i], $editing)) {
 //            if ($headerIds[$i] === $selected) {
                 $chunks[$i]['text'] = [];
+                //TODO[Xavi] compte! s'ha d'agafar sempre el editing per montar els nostres pre i suf!
+                // Calcular les posicions dels bytes de inici i final, guardar-les per fer-les servir de referencia al següent
                 $chunks[$i]['text']['pre'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[0];
                 $chunks[$i]['text']['editing'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[1];
                 $chunks[$i]['text']['suf'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $ID)[2];
                 $chunks[$i]['text']['changecheck'] = md5($chunks[$i]['text']['editing']);
+
+                // TODO: El pre ha de ser el 'editing' des de:
+                // 0 si no hi ha cap anterior
+                // El valor de 'end' del chunk anterior
+                // Fins al  'start' d'aquest document
+
+                // TODO: Aquí s'agafa el suf, si aquest es l'últim chunk el seu suf es el que s'aplicarà
             }
         }
 
-        // TODO: Afegir el text plà fent servir els range i retallant el wikiText
 
         $document['chunks'] = $chunks;
 
@@ -2953,51 +2963,53 @@ class DokuModelAdapter implements WikiIocModel
         return $document;
     }
 
+    // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
+    // Només son editables parcialment les seccions de nivell 1, 2 i 3
     function getSectionRanges($instructions)
     {
         $sections = [];
         $currentSection = [];
+        $lastClosePosition = 0;
+        $lastHeaderRead = '';
+        $firstSection = true;
+
 
         for ($i = 0; $i < count($instructions); $i++) {
             $currentSection['type'] = 'section';
 
             if ($instructions[$i][0] === 'header') {
-                $currentSection['title'] = $instructions[$i][1][0];
+                $lastHeaderRead = $instructions[$i][1][0];
             }
 
-            if ($instructions[$i][0] === 'section_open') {
+            if ($instructions[$i][0] === 'section_open' && $instructions[$i][1][0] < 4) {
+                // Tanquem la secció anterior
+                if ($firstSection) {
+                    // Ho descartem, el primer element no conté informació
+                    $firstSection = false;
+                } else {
+                    $currentSection['end'] = $instructions[$i][2];
+                    $sections[] = $currentSection;
+                }
+
+                // Obrim la nova secció
+                $currentSection = [];
+                $currentSection['title'] = $lastHeaderRead;
                 $currentSection['start'] = $instructions[$i][2];
                 $currentSection['params']['level'] = $instructions[$i][1][0];
             }
 
+            // Si trobem un tancament de secció actualitzem la ultima posició de tancament
             if ($instructions[$i][0] === 'section_close') {
-                $currentSection['end'] = $instructions[$i][2];
-                // Només son editables parcialment les seccions de nivell 1, 2 i 3
-                if ($currentSection['params']['level'] < 4) {
-                    $sections[] = $currentSection;
-                }
-                $currentSection = [];
+                $lastClosePosition = $instructions[$i][2];
             }
 
         }
+        // La última secció es tanca amb la posició final del document
+        $currentSection['end'] = $lastClosePosition;
+        $sections[] = $currentSection;
 
         return $sections;
     }
 
-    // TODO[Xavi] afegida per mi, no es fa servir perquè he eliminat el codi que la feia servir però potser la necessitem més endavant
-    private function getDraft()
-    {
-        global $ID;
-
-        $draftFile = $this->getDraftFilename($ID);
-        $draft = unserialize(io_readFile($draftFile, false));
-
-        if ($draft) {
-            $draft = cleanText(con($draft['prefix'], $draft['text'], $draft['suffix'], true));
-        }
-
-        return $draft;
-
-    }
 
 }
