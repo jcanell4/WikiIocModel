@@ -4,7 +4,7 @@
  *
  * @author Rafael Claver
  */
-abstract class AbstractWikiIocModelException extends Exception {
+abstract class WikiIocModelException extends Exception {
     public function __construct($message, $code, $previous=NULL) {
         parent::__construct($message, $code, $previous);
     }

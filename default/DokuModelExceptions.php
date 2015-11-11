@@ -1,5 +1,4 @@
 <?php
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -12,13 +11,8 @@
  */
 if (!defined('DOKU_INC')) die();
 
-require_once DOKU_INC . 'lib/plugins/wikiiocmodel/AbstractWikiIocModelExceptions.php';
+require_once DOKU_INC . 'lib/plugins/wikiiocmodel/WikiIocModelExceptions.php';
 
-class WikiIocModelException extends AbstractWikiIocModelException {
-    public function __construct($message, $code, $previous=NULL) {
-        parent::__construct($message, $code, $previous);
-    }
-}
 class PageNotFoundException extends WikiIocModelException {
     public function __construct($page, $message="Page %s not found", 
                                                 $code=1001, $previous=NULL) {
