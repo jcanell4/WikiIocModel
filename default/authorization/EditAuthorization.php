@@ -6,7 +6,7 @@
  */
 if (!defined('DOKU_INC') ) die();
 
-class EditAuthorization extends AuthorizationManager {
+class EditAuthorization extends CommandAuthorization {
     
     public function CanRun($dokuModel) {
         $ret = NULL;
