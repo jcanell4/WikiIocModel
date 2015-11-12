@@ -8,19 +8,19 @@ if (!defined('DOKU_INC') ) die();
 require_once (DOKU_INC . 'lib/plugins/wikiiocmodel/AbstractAuthorizationManager.php');
 
 class CommandAuthorization extends AbstractAuthorizationManager {
-    private $params = array();
-    private $permissionFor = array();
-    private $authenticatedUsersOnly = TRUE;
-    private $permission = array();
-    private $authorization = array();
+    private $params;                //array()
+    private $permissionFor;         //array()
+    private $authenticatedUsersOnly; //boolean
+    private $permission;            //array()
+    private $authorization;         //array()
     
     public function __construct($aParams) {
         parent::__construct();
-//        $this->authenticatedUsersOnly = $aParams->authenticatedUsersOnly;
-//        $this->params = $aParams->params;
-//        $this->permission = $aParams->permission;
-//        $this->permissionFor = $aParams->permissionFor;
-//        $this->authorization = $aParams->authorization;
+        $this->authenticatedUsersOnly = $aParams['authenticatedUsersOnly'];
+        $this->params = $aParams['params'];
+        $this->permission = $aParams['permission'];
+        $this->permissionFor = $aParams['permissionFor'];
+        $this->authorization = $aParams['authorization'];
     }
 
     public function canRun() {
