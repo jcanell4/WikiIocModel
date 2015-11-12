@@ -336,23 +336,30 @@ class DokuModelAdapter implements WikiIocModel
         global $INFO;
         global $lang;
 
-        $this->startPageProcess(DW_ACT_SHOW, $pid, $prev);
-        if (!$INFO["exists"]) {
-            throw new PageNotFoundException($pid, $lang['pageNotFound']);
-        }
-        if (!$INFO["perm"]) {
-            throw new InsufficientPermissionToViewPageException($pid); //TODO [Josep] Internacionalització missatge per defecte!
-        }
-        $this->doFormatedPagePreProcess();
 
-        $response = $this->getFormatedPageResponse();
+        // TODO[Xavi] Falten per afegir les infos que s'afegien al fer
+        // TODO[Xavi] S'estan ignorant les comprovacions del $INFO
+        // TODO[Xvi] No s'està fent el doPagePreProcess()
 
-        // Si no s'ha especificat cap altre missatge mostrem el de carrega
-        if (!$response['info']) {
-            $response['info'] = $this->generateInfo("info", $lang['document_loaded']);
-        }
-
-        $response['structured'] = $this->getStructuredDocument(null, $pid, $prev);
+        return $this->getPartialPage($pid, $prev, null, null);
+//
+//        $this->startPageProcess(DW_ACT_SHOW, $pid, $prev);
+//        if (!$INFO["exists"]) {
+//            throw new PageNotFoundException($pid, $lang['pageNotFound']);
+//        }
+//        if (!$INFO["perm"]) {
+//            throw new InsufficientPermissionToViewPageException($pid); //TODO [Josep] Internacionalització missatge per defecte!
+//        }
+//        $this->doFormatedPagePreProcess();
+//
+//        $response = $this->getFormatedPageResponse();
+//
+//        // Si no s'ha especificat cap altre missatge mostrem el de carrega
+//        if (!$response['info']) {
+//            $response['info'] = $this->generateInfo("info", $lang['document_loaded']);
+//        }
+//
+//        $response['structured'] = $this->getStructuredDocument(null, $pid, $prev);
 
         return $response;
     }
@@ -1557,12 +1564,12 @@ class DokuModelAdapter implements WikiIocModel
      *
      * @return array
      */
-    public function getMetaResponse()
+    public function getMetaResponse($id)
     {
         global $lang;
         global $ACT;
         $act_aux = $ACT;
-        $ret = array('id' => \str_replace(":", "_", $this->params['id']));
+        $ret = array('id' => \str_replace(":", "_", $id));
         //$ret = array('docId' => \str_replace(":", "_", $this->params['id']));
         $meta = array();
         $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
@@ -2999,18 +3006,24 @@ class DokuModelAdapter implements WikiIocModel
 
     public function getPartialPage($pid, $prev = NULL, $prange, $psum, $psection)
     {
+        global $lang;
 
         $this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange, $psum);
 
-        $structure = $this->getStructuredDocument($psection, $pid, NULL);
-
-        $response['structure'] = $structure;
-
+        $response['structure'] = $this->getStructuredDocument($psection, $pid, NULL);
 
         // TODO: afegir el 'info' que correspongui
 
-        // TODO: afegir el 'meta' que correspongui
+        // Si no s'ha especificat cap altre missatge mostrem el de carrega
+        if (!$response['info']) {
+            $response['info'] = $this->generateInfo("info", $lang['document_loaded']);
+        }
 
+        // TODO: afegir el 'meta' que correspongui
+		$response['meta'] = $this->getMetaResponse( $pid );
+
+        // TODO: afegir les revisions
+        $response['revs'] = $this->getRevisions($pid);
 
         return $response;
     }
@@ -3027,6 +3040,11 @@ class DokuModelAdapter implements WikiIocModel
         // TODO: afegir el 'info' que correspongui
 
         // TODO: afegir el 'meta' que correspongui
+//        $response['meta'] = $this->getMetaResponse( $pid ); // No cal, ja ha de ser actualitzat
+
+        // TODO: Sí s'afegeix la meta, s'ha d'afegir també els 'revs' perquè s'esborren!
+//        $response['revs'] = $this->getRevisions($pid); // No cal, ja ha de ser actualitzat
+
 
         return $response;
     }
@@ -3036,14 +3054,23 @@ class DokuModelAdapter implements WikiIocModel
         $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL, $selected, $editing_chunks = NULL
     )
     {
+        global $lang;
 
         $response = $this->saveEdition($pid, NULL, $prange, $pdate, $ppre, $ptext, $psuf, $psum);
 
         $response['structure'] = $this->getStructuredDocument($selected, $pid, $prev, $editing_chunks);
 
         // TODO: afegir el 'info' que correspongui
+        if (!$response['info']) {
+//            $response['info'] = $this->generateInfo("info", $lang['document_saved']); // TODO[Xavi] Aquesta info s'afegeix en algún lloc, s'ha de moure aquí i fe la localització
+        }
 
         // TODO: afegir el 'meta' que correspongui
+        $response['meta'] = $this->getMetaResponse( $pid );
+
+
+        // TODO: afegir les 'revs' que correspongui
+        $response['revs'] = $this->getRevisions($pid);
 
         return $response;
     }
@@ -3057,6 +3084,10 @@ class DokuModelAdapter implements WikiIocModel
         // TODO: afegir el 'info' que correspongui
 
         // TODO: afegir el 'meta' que correspongui
+
+        // TODO: Sí s'afegeix la meta, s'ha d'afegir també els 'revs' perquè s'esborren!
+
+
         return $response;
     }
 
