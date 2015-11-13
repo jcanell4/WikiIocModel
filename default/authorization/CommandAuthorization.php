@@ -16,11 +16,9 @@ class CommandAuthorization extends AbstractAuthorizationManager {
     
     public function __construct($aParams) {
         parent::__construct();
-        $this->authenticatedUsersOnly = $aParams['authenticatedUsersOnly'];
-        $this->params = $aParams['params'];
-        $this->permission = $aParams['permission'];
-        $this->permissionFor = $aParams['permissionFor'];
-        $this->authorization = $aParams['authorization'];
+        $this->params = $aParams->getParams();
+        $this->authenticatedUsersOnly = $aParams->getAuthenticatedUsersOnly();
+        $this->permissionFor = $aParams->getPermissionFor();
     }
 
     public function canRun() {
