@@ -333,33 +333,34 @@ class DokuModelAdapter implements WikiIocModel
      */
     public function getHtmlPage($pid, $prev = NULL)
     {
-        global $INFO;
-        global $lang;
-
 
         // TODO[Xavi] Falten per afegir les infos que s'afegien al fer
         // TODO[Xavi] S'estan ignorant les comprovacions del $INFO
-        // TODO[Xvi] No s'està fent el doPagePreProcess()
 
-        return $this->getPartialPage($pid, $prev, null, null);
-//
-//        $this->startPageProcess(DW_ACT_SHOW, $pid, $prev);
-//        if (!$INFO["exists"]) {
-//            throw new PageNotFoundException($pid, $lang['pageNotFound']);
-//        }
-//        if (!$INFO["perm"]) {
-//            throw new InsufficientPermissionToViewPageException($pid); //TODO [Josep] Internacionalització missatge per defecte!
-//        }
-//        $this->doFormatedPagePreProcess();
-//
-//        $response = $this->getFormatedPageResponse();
-//
-//        // Si no s'ha especificat cap altre missatge mostrem el de carrega
-//        if (!$response['info']) {
-//            $response['info'] = $this->generateInfo("info", $lang['document_loaded']);
-//        }
-//
-//        $response['structured'] = $this->getStructuredDocument(null, $pid, $prev);
+
+        if (!$prev) {
+            return $this->getPartialPage($pid, $prev, null, null);
+        }
+
+        $this->startPageProcess(DW_ACT_SHOW, $pid, $prev, null, null);
+
+        $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
+
+        $revisionInfo = p_locale_xhtml('showrev');
+
+        $response['structure']['html'] = str_replace($revisionInfo, '', $response['structure']['html']);
+
+
+        // Si no s'ha especificat cap altre missatge mostrem el de carrega
+        if (!$response['info']) {
+            $response['info'] = $this->generateInfo("warning", strip_tags($revisionInfo));
+        } else {
+            $this->addInfoToInfo($response['warning'], $this->generateInfo("info", strip_tags($revisionInfo)));
+        }
+
+
+
+
 
         return $response;
     }
@@ -2858,15 +2859,26 @@ class DokuModelAdapter implements WikiIocModel
      * Hi ha un casos en que no hi ha selected, per exemple quan es cancela un document.
      *
      * @param $selected
-     * @param {string|null} $selected - Chunk seleccionat
      * @param $id
      * @param $rev
+     * @param null $editing
      * @return array
+     * @throws InsufficientPermissionToViewPageException
+     * @throws PageNotFoundException
+     * @internal param $ {string|null} $selected - Chunk seleccionat $selected - Chunk seleccionat
      */
     // TODO[Xavi] PER REFACTORITZAR QUANT TINGUEM EL PLUGIN DEL RENDER. Fer privada?
     public function getStructuredDocument($selected, $id, $rev = null, $editing = null)
     {
         global $INFO;
+        global $lang;
+
+        if (!$INFO["exists"]) {
+            throw new PageNotFoundException($id, $lang['pageNotFound']);
+        }
+        if (!$INFO["perm"]) {
+            throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
+        }
 
         if (!$editing) {
             $editing = [$selected];
@@ -3004,6 +3016,7 @@ class DokuModelAdapter implements WikiIocModel
     }
 
 
+    // Només la pàgina actual pot ser editada parcialment
     public function getPartialPage($pid, $prev = NULL, $prange, $psum, $psection)
     {
         global $lang;
