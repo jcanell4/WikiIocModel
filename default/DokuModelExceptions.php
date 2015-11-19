@@ -1,4 +1,6 @@
 <?php
+//namespace ioc_dokuwiki; //[TO DO Josep] Adaptar la classe a  l'espai de noms
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
