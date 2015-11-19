@@ -407,7 +407,12 @@ class DokuModelAdapter implements WikiIocModel
         $this->doCancelEditPreprocess($keep_draft);
 
         $response = $this->getFormatedPageResponse();
-        $response ['info'] = $this->generateInfo("info", $lang['edition_cancelled']);
+
+        $response ['info'] = $this->generateInfo("warning", $lang['edition_cancelled']);
+
+        $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
+        $response['meta'] = $this->getMetaResponse( $pid );
+        $response['revs'] = $this->getRevisions($pid);
 
         return $response;
     }
