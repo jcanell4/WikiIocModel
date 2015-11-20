@@ -7,6 +7,10 @@
 if (!defined('DOKU_INC') ) die();
 
 class EditAuthorization extends CommandAuthorization {
+    //[Josep] He afegit això per tal que funcioni!
+    public function __construct($aParams) {
+        parent::__construct($aParams);
+    }
     
 //    public function CanRun($dokuModel) {
 //        $ret = NULL;

@@ -25,7 +25,7 @@ class FactoryAuthorization {
         
         $str_authorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization');
         if ($str_authorization !== NULL) {
-            $authorization = new $str_authorization();
+            $authorization = new $str_authorization($aParams); //[Josep] He canviat això per poder executar
         }else {
             $authorization = new CommandAuthorization($aParams);
             //throw new AuthorizationCommandNotFound();
