@@ -25,9 +25,9 @@ class WikiIocModelManager {
         return $inst;
     }
 
-    public function getAuthorizationManager($str_command, $params) {
+    public function getAuthorizationManager($str_command, $aParams) {
         $factory = \FactoryAuthorization::Instance();
-        return $factory->CreateAuthorizationManager($str_command, $params);
+        return $factory->createAuthorizationManager($str_command, $aParams);
     }
 
     public function getModelWrapperManager() {

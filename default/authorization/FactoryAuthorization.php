@@ -21,27 +21,27 @@ class FactoryAuthorization {
         return $inst;
     }
 
-    public function CreateAuthorizationManager($str_command) {
+    public function createAuthorizationManager($str_cmd, $aParams) {
         
-        $str_authorization = $this->readFileIn2CaseFormat($str_command, 'authorization');
+        $str_authorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization');
         if ($str_authorization !== NULL) {
             $authorization = new $str_authorization();
         }else {
-            $authorization = NULL;
+            $authorization = new CommandAuthorization($aParams);
             //throw new AuthorizationCommandNotFound();
         }
         return $authorization;
     }
     
-    private function readFileIn2CaseFormat($str_command, $part2) {
+    private function readFileIn2CaseFormat($str_cmd, $part2) {
         /* Carga el archivo correspondiente al comando.
          * buscando por el nombre en formato convencional y en formato CamelCase
          */
-        $name = $this->NameCaseFormat($str_command, $part2,'');
+        $name = $this->nameCaseFormat($str_cmd, $part2,'');
         $ret = NULL;
         $authFile = DOKU_IOCMODELAUTH . $name . '.php';
         if (!file_exists($authFile)) {
-            $name = $this->NameCaseFormat($str_command, $part2,'camel');
+            $name = $this->nameCaseFormat($str_cmd, $part2,'camel');
             $authFile = DOKU_IOCMODELAUTH . $name . '.php';
         }
         if (file_exists($authFile)) {
@@ -51,7 +51,7 @@ class FactoryAuthorization {
         return $ret;
     }
     
-    private function NameCaseFormat($part1, $part2, $case) {
+    private function nameCaseFormat($part1, $part2, $case) {
         /* Devuelve un nombre compuesto en el formato solicitado:
          * 'guion_bajo' o CamelCase
          */
