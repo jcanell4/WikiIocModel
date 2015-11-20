@@ -5,7 +5,7 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKIIOCMODEL')) define('WIKIIOCMODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
 
 class WikiIocModelManager {
 
@@ -17,7 +17,7 @@ class WikiIocModelManager {
     }
     
     private static function createDefaultModelManager(){
-        require_once(WIKIIOCMODEL . 'default/WikiIocModelManager.php');        
+        require_once(WIKI_IOC_MODEL . 'default/WikiIocModelManager.php');        
         return new \ioc_dokuwiki\WikiIocModelManager();
     }
 }

@@ -5,46 +5,64 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC') ) die();
-require_once (DOKU_INC . 'lib/plugins/wikiiocmodel/AbstractAuthorizationManager.php');
+if(!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+require_once (WIKI_IOC_MODEL . 'AbstractAuthorizationManager.php');
+require_once (WIKI_IOC_MODEL . 'default/authorization/Permission.php');
 
 class CommandAuthorization extends AbstractAuthorizationManager {
-    private $params;                //array()
-    private $permissionFor;         //array()
-    private $authenticatedUsersOnly; //boolean
-    private $permission;            //array()
-    private $authorization;         //array()
-    
-    public function __construct($aParams) {
+    private $command;    //command_class object
+    private $modelWrapper;
+    private $permission;
+
+
+    public function __construct($params) {
         parent::__construct();
-        $this->params = $aParams->getParams();
-        $this->authenticatedUsersOnly = $aParams->getAuthenticatedUsersOnly();
-        $this->permissionFor = $aParams->getPermissionFor();
+        $this->command = $params;
+        $this->modelWrapper = $this->command->getModelWrapper();
     }
 
-    public function canRun() {
-        $ret = NULL;
-        if(!$this->authenticatedUsersOnly
-            || $dokuModel->isSecurityTokenVerified()
-            && $dokuModel->isUserAuthenticated()
-            && $dokuModel->isAuthorized()
-        ) {
-            $ret = $dokuModel->getResponse();
-
-            if($dokuModel->modelWrapper->isDenied()) {
-                $dokuModel->error        = 403;
-                $dokuModel->errorMessage = "permission denied";
-            }
-        } else {
-            //TODO[xavi] Per poder fer proves deshabilitem la comprovació
-            $dokuModel->error        = 403;
-            $dokuModel->errorMessage = "permission denied";
-
+    public function canRun($permission = NULL) {
+        if ($permission === NULL) {
+            $permission = $this->getPermission();
         }
-        if($dokuModel->error && $dokuModel->throwsException) {
-            throw new Exception($dokuModel->errorMessage);
-        }
+        $ret = ( ! $permission->getAuthenticatedUsersOnly()
+                || $permission->getIsSecurityTokenVerified()
+                && $permission->getIsUserAuthenticated()
+                && $permission->getIsAuthorized() );
         return $ret;
     }
+    
+    public function getPermission() {
+        $this->createPermission();
+        return $this->permission;
+    }
 
+    private function createPermission() {
+        $permission = new Permission($this->modelWrapper);
+        // Comprovar el pas per referència 
+        $this->permission = &$permission;
+        
+        $this->permission->setAuthenticatedUsersOnly($this->command->getAuthenticatedUsersOnly());
+        $this->permission->setIsSecurityTokenVerified($this->modelWrapper->isSecurityTokenVerified());
+        $this->permission->setIsUserAuthenticated($this->isUserAuthenticated());
+        $this->permission->setIsAuthorized($this->isAuthorized());
+    }
+
+    /* pendent de convertir a private quan no l'utilitzi ajax.php(duplicat) ni login_command */
+    public function isUserAuthenticated() {
+        global $_SERVER;
+        return $_SERVER['REMOTE_USER'] ? TRUE : FALSE;
+    }
+
+    /* pendent de convertir a private quan no l'utilitzi abstract_command_class */
+    public function isAuthorized() {
+        $permissionFor = $this->command->getPermissionFor();
+        $grup = $this->modelWrapper->getUserGroup();
+        $found = sizeof($permissionFor) == 0 || !is_array($grup);
+        for($i = 0; !$found && $i < sizeof($grup); $i++) {
+            $found = in_array($grup[$i], $permissionFor);
+        }
+        return $found;
+    }
 }
 

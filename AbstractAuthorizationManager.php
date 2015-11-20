@@ -12,6 +12,5 @@ abstract class AbstractAuthorizationManager {
    const IOC_AUTH_FORBIDEN_ACCESS = FALSE;
 
    public function __construct() {}
-
-   abstract protected function canRun();
+   public abstract function canRun($permission = NULL);
 }
