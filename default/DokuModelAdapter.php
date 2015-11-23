@@ -375,174 +375,6 @@ class DokuModelAdapter extends AbstractDokuModelAdapter {
 		return $this->params['do'] == DW_ACT_DENIED;
 	}
         
-        public function getDiffPage( $id, $rev1, $rev2 = NULL ) {
-                //[TODO Josep] Normalitzar: start do get...
-		// START
-		// Només definim les variables que es passen per paràmetre, la resta les ignorem
-
-		global $ID;
-		global $ACT;
-		global $REV;
-		global $lang;
-		global $INPUT;
-
-		$ID  = $id;
-		$REV = $rev1;
-		$ACT = 'diff';
-
-		$this->triggerStartEvents();
-//		$tmp = [ ];
-//		trigger_event( 'DOKUWIKI_START', $tmp );
-		session_write_close();
-
-//		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
-//		if ( $evt->advise_before() ) {
-//			act_permcheck( $ACT );
-//			unlock( $ID );
-//		}
-//		$evt->advise_after();
-//		unset( $evt );
-		$content = "";
-		if ( $this->runBeforePreprocess( $content ) ) {
-			act_permcheck( $ACT );
-			unlock( $ID );
-		}
-
-		//desactivem aquesta crida perquè es tracta d'una crida AJAX i no es pot modificar la capçalera
-//		$headers[] = 'Content-Type:application/json; charset=utf-8';
-//
-//		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );		
-
-		$this->startUpLang();
-
-		//descativem aquesta crida perquè les revisions no es retornen
-		//rederitzades sinó que es rendaritzen al client
-		//trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_content_core");
-
-		// En aquest punt es on es generaria el codi HTML
-
-		//descativem aquesta crida perquè des del dokumodeladapter el
-		//display ja està fet i no servidria de res tornar a llançar
-		//aquest esdeveniment.
-//		$temp = [ ];
-//		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
-
-		// DO real
-
-		//side_by_side
-
-		if ( $INPUT->ref( 'difftype' ) ) {
-			$difftype = $INPUT->ref( 'difftype' );
-		} else {
-			$difftype = 'sidebyside';
-		}
-
-		if ( $difftype == 'sidebyside' ) {
-			ob_start();
-			html_diff( '', TRUE, $type = 'sidebyside' );
-			$content = ob_get_clean();
-		} else {
-			ob_start();
-			html_diff( '', TRUE, $type = 'inline' );
-			$content = ob_get_clean();
-		}
-
-		$response = [
-			'id'      => \str_replace( ":", "_", $ID ),
-			'ns'      => $ID,
-			"title"   => $ID,
-			"content" => $this->clearDiff( $content ),
-			"type"    => 'diff'
-		];
-
-		$response['info'] = $this->generateInfo( "info", $lang['diff_loaded'] );
-
-		$meta = [
-			( $this->getCommonPage( $response['id'] . '_switch_diff_mode ',
-			                        $lang['switch_diff_mode'],
-			                        $this->extractMetaContentFromDiff( $content )
-				) + [ 'type' => 'switch_diff_mode' ] )
-		];
-
-		$response["meta"] = [ 'id' => $response['id'], 'meta' => $meta ];
-
-		$this->triggerEndEvents();
-//		$temp = [ ];
-//		trigger_event( 'DOKUWIKI_DONE', $temp );
-
-		return $response;
-	}
-
-	/**
-	 * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
-	 * esborrat.
-	 *
-	 * @param $id - id del document
-	 *
-	 * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
-	 */
-	public function hasDraft( $id ) {
-		$id = $this->cleanIDForFiles( $id );
-
-		$draftFilename = $this->getDraftFilename( $id );
-
-		if ( @file_exists( $draftFilename ) ) {
-			if ( @filemtime( $draftFilename ) < @filemtime( wikiFN( $id ) ) ) {
-				@unlink( $draftFilename );
-			} else {
-				return TRUE;
-			}
-		}
-
-		return FALSE;
-	}
-
-	/**
-	 * Retorna una resposta amb les dades per mostrar un dialog de selecció esborrany-document.
-	 *
-	 * @param {string} $pid - id del document
-	 * @param {string} $prev - nombre de la revisió
-	 * @param  $prange
-	 * @param {string} $psum - nom del resúm
-	 *
-	 * @return array - resposta
-	 * @throws InsufficientPermissionToEditPageException
-	 * @throws PageNotFoundException
-	 */
-	public function getDraftDialog( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
-
-		$response                      = $this->getCodePage( $pid, $prev, $prange, $psum, NULL );
-		$response['show_draft_dialog'] = TRUE;
-
-		return $response;
-	}
-        
-        
-        public function getImageDetail( $imageId, $fromPage = NULL ) {
-		global $lang;
-
-                //[TODO Josep] Normalitzar: start do get ...
-                
-		$error = $this->startMediaProcess( DW_ACT_MEDIA_DETAIL, $imageId, $fromPage );
-		if ( $error == 401 ) {
-			throw new HttpErrorCodeException( $error, "Access denied" );
-		} else if ( $error == 404 ) {
-			throw new HttpErrorCodeException( $error, "Resource " . $imageId . " not found." );
-		}
-		$title = $lang['img_detail_title'] . $imageId;
-		$ret   = array(
-			"content"          => $this->_getImageDetail(),
-			"imageTitle"       => $title,
-			"imageId"          => $imageId,
-			"fromId"           => $fromPage,
-			"modifyImageLabel" => $lang['img_manager'],
-			"closeDialogLabel" => $lang['img_backto']
-		);
-
-		return $ret;
-	}
-
-
 	public function getMediaFileName( $id, $rev = '' ) {
 		return mediaFN( $id, $rev );
 	}
@@ -635,6 +467,30 @@ class DokuModelAdapter extends AbstractDokuModelAdapter {
 			$nsTarget, $idTarget, $filePathSource
 			, $overWrite, "copy"
 		);
+	}
+
+        public function getImageDetail( $imageId, $fromPage = NULL ) {
+		global $lang;
+
+                //[TODO Josep] Normalitzar: start do get ...
+                
+		$error = $this->startMediaProcess( DW_ACT_MEDIA_DETAIL, $imageId, $fromPage );
+		if ( $error == 401 ) {
+			throw new HttpErrorCodeException( $error, "Access denied" );
+		} else if ( $error == 404 ) {
+			throw new HttpErrorCodeException( $error, "Resource " . $imageId . " not found." );
+		}
+		$title = $lang['img_detail_title'] . $imageId;
+		$ret   = array(
+			"content"          => $this->_getImageDetail(),
+			"imageTitle"       => $title,
+			"imageId"          => $imageId,
+			"fromId"           => $fromPage,
+			"modifyImageLabel" => $lang['img_manager'],
+			"closeDialogLabel" => $lang['img_backto']
+		);
+
+		return $ret;
 	}
 
 	public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
@@ -1702,6 +1558,28 @@ class DokuModelAdapter extends AbstractDokuModelAdapter {
 		return $contentData;
 	}
 
+        /**
+	 * Retorna una resposta amb les dades per mostrar un dialog de selecció esborrany-document.
+	 *
+	 * @param {string} $pid - id del document
+	 * @param {string} $prev - nombre de la revisió
+	 * @param  $prange
+	 * @param {string} $psum - nom del resúm
+	 *
+	 * @return array - resposta
+	 * @throws InsufficientPermissionToEditPageException
+	 * @throws PageNotFoundException
+	 */
+	public function getDraftDialog( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
+            //[TODO Josep] Normalitzar:...
+
+		$response                      = $this->getCodePage( $pid, $prev, $prange, $psum, NULL );
+		$response['show_draft_dialog'] = TRUE;
+
+		return $response;
+	}
+        
+        
 	/**
 	 * Retorna el nom del fitxer de esborran corresponent al document i usuari actual
 	 *
@@ -1715,6 +1593,30 @@ class DokuModelAdapter extends AbstractDokuModelAdapter {
 		$info = basicinfo( $id );
 
 		return getCacheName( $info['client'] . $id, '.draft' );
+	}
+
+	/**
+	 * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
+	 * esborrat.
+	 *
+	 * @param $id - id del document
+	 *
+	 * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
+	 */
+	public function hasDraft( $id ) {
+		$id = $this->cleanIDForFiles( $id );
+
+		$draftFilename = $this->getDraftFilename( $id );
+
+		if ( @file_exists( $draftFilename ) ) {
+			if ( @filemtime( $draftFilename ) < @filemtime( wikiFN( $id ) ) ) {
+				@unlink( $draftFilename );
+			} else {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
 	}
 
 	/**
@@ -2367,7 +2269,105 @@ class DokuModelAdapter extends AbstractDokuModelAdapter {
 		return date( $format, $revision );
 	}
 
-	/**
+	public function getDiffPage( $id, $rev1, $rev2 = NULL ) {
+                //[TODO Josep] Normalitzar: start do get...
+		// START
+		// Només definim les variables que es passen per paràmetre, la resta les ignorem
+
+		global $ID;
+		global $ACT;
+		global $REV;
+		global $lang;
+		global $INPUT;
+
+		$ID  = $id;
+		$REV = $rev1;
+		$ACT = 'diff';
+
+		$this->triggerStartEvents();
+//		$tmp = [ ];
+//		trigger_event( 'DOKUWIKI_START', $tmp );
+		session_write_close();
+
+//		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
+//		if ( $evt->advise_before() ) {
+//			act_permcheck( $ACT );
+//			unlock( $ID );
+//		}
+//		$evt->advise_after();
+//		unset( $evt );
+		$content = "";
+		if ( $this->runBeforePreprocess( $content ) ) {
+			act_permcheck( $ACT );
+			unlock( $ID );
+		}
+
+		//desactivem aquesta crida perquè es tracta d'una crida AJAX i no es pot modificar la capçalera
+//		$headers[] = 'Content-Type:application/json; charset=utf-8';
+//
+//		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );		
+
+		$this->startUpLang();
+
+		//descativem aquesta crida perquè les revisions no es retornen
+		//rederitzades sinó que es rendaritzen al client
+		//trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_content_core");
+
+		// En aquest punt es on es generaria el codi HTML
+
+		//descativem aquesta crida perquè des del dokumodeladapter el
+		//display ja està fet i no servidria de res tornar a llançar
+		//aquest esdeveniment.
+//		$temp = [ ];
+//		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
+
+		// DO real
+
+		//side_by_side
+
+		if ( $INPUT->ref( 'difftype' ) ) {
+			$difftype = $INPUT->ref( 'difftype' );
+		} else {
+			$difftype = 'sidebyside';
+		}
+
+		if ( $difftype == 'sidebyside' ) {
+			ob_start();
+			html_diff( '', TRUE, $type = 'sidebyside' );
+			$content = ob_get_clean();
+		} else {
+			ob_start();
+			html_diff( '', TRUE, $type = 'inline' );
+			$content = ob_get_clean();
+		}
+
+		$response = [
+			'id'      => \str_replace( ":", "_", $ID ),
+			'ns'      => $ID,
+			"title"   => $ID,
+			"content" => $this->clearDiff( $content ),
+			"type"    => 'diff'
+		];
+
+		$response['info'] = $this->generateInfo( "info", $lang['diff_loaded'] );
+
+		$meta = [
+			( $this->getCommonPage( $response['id'] . '_switch_diff_mode ',
+			                        $lang['switch_diff_mode'],
+			                        $this->extractMetaContentFromDiff( $content )
+				) + [ 'type' => 'switch_diff_mode' ] )
+		];
+
+		$response["meta"] = [ 'id' => $response['id'], 'meta' => $meta ];
+
+		$this->triggerEndEvents();
+//		$temp = [ ];
+//		trigger_event( 'DOKUWIKI_DONE', $temp );
+
+		return $response;
+	}
+
+        /**
 	 * Extreu la informació que volem fer servir com a meta pels diff, en aquest cas només ens interessa el formulari.
 	 *
 	 * S'afegeix una id única pel formulari per poder seleccionar-lo al frontend.
