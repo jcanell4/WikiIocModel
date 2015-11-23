@@ -32,7 +32,9 @@ class CommandAuthorization extends AbstractAuthorizationManager {
     }
     
     public function getPermission() {
-        $this->createPermission();
+        if ($this->permission === NULL) {
+            $this->createPermission();
+        }
         return $this->permission;
     }
 
