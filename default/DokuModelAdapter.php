@@ -23,7 +23,7 @@ require_once (DOKU_INC . 'inc/JpegMeta.php');
 if ( ! defined( 'DOKU_PLUGIN' ) ) {
 	define( 'DOKU_PLUGIN', DOKU_INC . 'lib/plugins/' );
 }
-require_once (DOKU_PLUGIN . 'wikiiocmodel/AbstractDokuModelAdapter.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/AbstractModelAdapter.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/default/DokuModelExceptions.php');
 
 require_once( DOKU_PLUGIN . 'acl/admin.php' );
@@ -95,7 +95,7 @@ if ( ! defined( 'DW_ACT_MEDIA_DETAILS' ) ) {
  *
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
-class DokuModelAdapter extends AbstractDokuModelAdapter {
+class DokuModelAdapter extends AbstractModelAdapter {
 	const ADMIN_PERMISSION = "admin";
 
 	protected $params;

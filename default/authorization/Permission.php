@@ -14,7 +14,6 @@ class Permission {
     private $isSecurityTokenVerified;
     private $isUserAuthenticated;
     private $isAuthorized;
-    private $isDenied;
     
     public function __construct($modelWrapper) {
         $this->modelWrapper = $modelWrapper;

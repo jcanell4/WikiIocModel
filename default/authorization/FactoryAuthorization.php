@@ -27,7 +27,7 @@ class FactoryAuthorization {
         if ($str_authorization === NULL) {
             $authorization = new CommandAuthorization($params);
         }else {
-            $authorization = new $str_authorization();
+            $authorization = new $str_authorization($params);
         }
         return $authorization;
     }
