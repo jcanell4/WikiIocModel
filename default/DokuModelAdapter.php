@@ -113,8 +113,9 @@ class DokuModelAdapter extends AbstractDokuModelAdapter {
                 
                 //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
 		$this->startAdminTaskProcess( $ptask, $pid );
-                //
+                //Preprocess (ACTION_ACT_PREPROCESS)
 		$this->doAdminTaskPreProcess();
+                //Process and return response
 		$response = $this->getAdminTaskResponse();
 		// Informació a pantalla
 		$info_time_visible = 5;
@@ -225,47 +226,45 @@ class DokuModelAdapter extends AbstractDokuModelAdapter {
 	}
 
 	public function getAdminTaskList() {
-
+ 
+                //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
 		$this->startAdminTaskProcess();
+                //Preprocess (ACTION_ACT_PREPROCESS)
 		$this->doAdminTaskListPreProcess();
-
+                //Process and return response
 		return $this->getAdminTaskListResponse();
+		// Informació a pantalla
+                //[TODO Josep] FALTA INFO
 	}
 
 	public function createPage( $pid, $text = NULL ) {
 		global $INFO;
 		global $lang;
 		global $ACT;
+                global $TEXT;
                 
                 //[TODO JOSEP] Normalitzar: start do get...
 
-		$this->startUpLang();
-
-		if ( ! $text ) {
-			$text = $lang['createDefaultText'];
-		}
-
-		$this->startPageProcess(
+                //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
+                $this->startPageProcess(
 			DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL,
 			"", $text, ""
 		);
-		if ( $INFO["exists"] ) {
-			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
+		if ( ! $text ) {
+			$text = $lang['createDefaultText'];
 		}
+                
+                $TEXT = $text;
 
-		$permis_actual = $this->obtenir_permis( $pid, $_SERVER['REMOTE_USER'] );
-		if ( $permis_actual < AUTH_CREATE ) {
-			//se pide el permiso para el directorio (no para la página)
-			$permis_actual = $this->setUserPagePermission( getNS( $pid ) . ':*', $INFO['client'], AUTH_DELETE );
-		}
-		if ( $permis_actual >= AUTH_CREATE ) {
-			$code = $this->doSavePreProcess();
-		} else {
-			throw new InsufficientPermissionToCreatePageException( $pid ); //TODO [Josep] cal internacionalitzar el missage per defecte
-		}
+                //Preprocess (ACTION_ACT_PREPROCESS)
+                $this->doCreatePreProcess();
 
+                
+                //Process and return response
 		$response = $this->getFormatedPageResponse();
-		// Si no s'ha especificat cap altre missatge mostrem el de carrega
+                
+                // Informació a pantalla
+                // Si no s'ha especificat cap altre missatge mostrem el de carrega
 		if ( ! $response['info'] ) {
 			$response['info'] = $this->generateInfo( "info", $lang['document_created'] );
 		}
@@ -1098,6 +1097,25 @@ class DokuModelAdapter extends AbstractDokuModelAdapter {
 		return $content;
 	}
 
+	private function doCreatePreProcess() {
+            global $INFO;
+            
+            if ( $INFO["exists"] ) {
+                    throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
+            }
+
+            $permis_actual = $this->obtenir_permis( $pid, $_SERVER['REMOTE_USER'] );
+            if ( $permis_actual < AUTH_CREATE ) {
+                    //se pide el permiso para el directorio (no para la página)
+                    $permis_actual = $this->setUserPagePermission( getNS( $pid ) . ':*', $INFO['client'], AUTH_DELETE );
+            }
+            if ( $permis_actual >= AUTH_CREATE ) {
+                    $code = $this->doSavePreProcess();
+            } else {
+                    throw new InsufficientPermissionToCreatePageException( $pid ); //TODO [Josep] cal internacionalitzar el missage per defecte
+            }            
+        }
+        
 	private function doSavePreProcess() {
 		global $ACT;
 
