@@ -228,7 +228,31 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $this->getAdminTaskListResponse();
 	}
 
-	public function createPage( $pid, $text = NULL ) {
+        public function getInfoLoaded() {
+            return $this->infoLoaded;
+        }
+    
+        /**
+         * @return string[] hash amb els grups de l'usuari
+        */
+        public function getUserGroup() {
+            global $INFO;
+        
+            if (!$this->infoLoaded) {
+                $this->fillInfo();
+            }
+            return $INFO['userinfo']['grps'];
+        }
+
+        /**
+         * Comproba si el token de seguretat està verificat o no fent servir una funció de la DokuWiki.
+         * @return bool
+        */
+        public function isSecurityTokenVerified() {
+            return checkSecurityToken();
+        }
+    
+        public function createPage( $pid, $text = NULL ) {
 		global $INFO;
 		global $lang;
 		global $ACT;
@@ -1495,7 +1519,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		unset( $this->ppEvt );
 	}
 
-	private function fillInfo() {
+	public function fillInfo() {
 		global $JSINFO;
 		global $INFO;
 

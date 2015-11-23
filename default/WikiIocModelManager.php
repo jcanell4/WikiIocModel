@@ -7,11 +7,11 @@ namespace ioc_dokuwiki;
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_IOCMODEL')) define('DOKU_IOCMODEL', DOKU_INC . "lib/plugins/wikiiocmodel/default/");
+if (!defined('DOKU_IOC_MODEL')) define('DOKU_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/default/");
 
-require_once(DOKU_IOCMODEL . 'DokuModelAdapter.php');
-require_once(DOKU_IOCMODEL . 'DokuModelExceptions.php');
-require_once(DOKU_IOCMODEL . 'authorization/FactoryAuthorization.php');
+require_once(DOKU_IOC_MODEL . 'DokuModelAdapter.php');
+require_once(DOKU_IOC_MODEL . 'DokuModelExceptions.php');
+require_once(DOKU_IOC_MODEL . 'authorization/FactoryAuthorization.php');
 
 class WikiIocModelManager {
     
@@ -25,9 +25,9 @@ class WikiIocModelManager {
         return $inst;
     }
 
-    public function getAuthorizationManager($str_command, $aParams) {
+    public function getAuthorizationManager($str_command, $params) {
         $factory = \FactoryAuthorization::Instance();
-        return $factory->createAuthorizationManager($str_command, $aParams);
+        return $factory->createAuthorizationManager($str_command, $params);
     }
 
     public function getModelWrapperManager() {
