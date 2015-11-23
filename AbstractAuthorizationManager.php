@@ -6,6 +6,7 @@
  */
 if (!defined('DOKU_INC') ) die();
 
+//[TO DO josep]: Reanomenar a AbstractAuthorization
 abstract class AbstractAuthorizationManager {
     
    const IOC_AUTH_OK = TRUE;

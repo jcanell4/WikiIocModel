@@ -1,4 +1,5 @@
 <?php
+//namespace ioc_dokuwiki; //[TO DO Josep] Adaptar la classe a  l'espai de noms
 
 /**
  * Description of DokuModelAdapter
