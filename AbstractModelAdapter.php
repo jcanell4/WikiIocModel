@@ -1,12 +1,12 @@
 <?php
 /**
- * Description of AbstractDokuModelAdapter
+ * Description of AbstractModelAdapter
  *
  * @author Rafael Claver
  */
 
 //[TO DO josep]: Reanomenar a AbstractModelAdapter
-abstract class AbstractDokuModelAdapter {
+abstract class AbstractModelAdapter {
 
     public function __construct() {}
     

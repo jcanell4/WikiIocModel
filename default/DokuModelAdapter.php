@@ -23,7 +23,7 @@ require_once (DOKU_INC . 'inc/JpegMeta.php');
 if ( ! defined( 'DOKU_PLUGIN' ) ) {
 	define( 'DOKU_PLUGIN', DOKU_INC . 'lib/plugins/' );
 }
-require_once (DOKU_PLUGIN . 'wikiiocmodel/AbstractDokuModelAdapter.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/AbstractModelAdapter.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/default/DokuModelExceptions.php');
 
 require_once( DOKU_PLUGIN . 'acl/admin.php' );
@@ -96,7 +96,7 @@ if ( ! defined( 'DW_ACT_MEDIA_DETAILS' ) ) {
  * @author Josep Cañellas <jcanell4@ioc.cat>
  * @author Xavier Garcia Rodríguez<jcanell4@ioc.cat>
  */
-class DokuModelAdapter extends AbstractDokuModelAdapter {
+class DokuModelAdapter extends AbstractModelAdapter {
 	const ADMIN_PERMISSION = "admin";
 
 	protected $params;
@@ -237,7 +237,31 @@ class DokuModelAdapter extends AbstractDokuModelAdapter {
                 //[TODO Josep] FALTA INFO
 	}
 
-	public function createPage( $pid, $text = NULL ) {
+        public function getInfoLoaded() {
+            return $this->infoLoaded;
+        }
+    
+        /**
+         * @return string[] hash amb els grups de l'usuari
+        */
+        public function getUserGroup() {
+            global $INFO;
+        
+            if (!$this->infoLoaded) {
+                $this->fillInfo();
+            }
+            return $INFO['userinfo']['grps'];
+        }
+
+        /**
+         * Comproba si el token de seguretat està verificat o no fent servir una funció de la DokuWiki.
+         * @return bool
+        */
+        public function isSecurityTokenVerified() {
+            return checkSecurityToken();
+        }
+    
+        public function createPage( $pid, $text = NULL ) {
 		global $INFO;
 		global $lang;
 		global $ACT;
@@ -1532,7 +1556,7 @@ class DokuModelAdapter extends AbstractDokuModelAdapter {
 		unset( $this->ppEvt );
 	}
 
-	private function fillInfo() {
+	public function fillInfo() {
 		global $JSINFO;
 		global $INFO;
 

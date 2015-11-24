@@ -5,9 +5,9 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_IOCMODELAUTH'))
-    define('DOKU_IOCMODELAUTH', DOKU_INC . 'lib/plugins/wikiiocmodel/default/authorization/');
-require_once(DOKU_IOCMODELAUTH . 'CommandAuthorization.php');
+if (!defined('DOKU_IOC_MODEL_AUTH'))
+    define('DOKU_IOC_MODEL_AUTH', DOKU_INC . 'lib/plugins/wikiiocmodel/default/authorization/');
+require_once(DOKU_IOC_MODEL_AUTH . 'CommandAuthorization.php');
 
 class FactoryAuthorization {
     /* SINGLETON CLASS */
@@ -21,14 +21,13 @@ class FactoryAuthorization {
         return $inst;
     }
 
-    public function createAuthorizationManager($str_cmd, $aParams) {
+    public function createAuthorizationManager($str_cmd, $params) {
         
         $str_authorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization');
-        if ($str_authorization !== NULL) {
-            $authorization = new $str_authorization($aParams); //[Josep] He canviat això per poder executar
+        if ($str_authorization === NULL) {
+            $authorization = new CommandAuthorization($params);
         }else {
-            $authorization = new CommandAuthorization($aParams);
-            //throw new AuthorizationCommandNotFound();
+            $authorization = new $str_authorization($params);
         }
         return $authorization;
     }
@@ -39,10 +38,10 @@ class FactoryAuthorization {
          */
         $name = $this->nameCaseFormat($str_cmd, $part2,'');
         $ret = NULL;
-        $authFile = DOKU_IOCMODELAUTH . $name . '.php';
+        $authFile = DOKU_IOC_MODEL_AUTH . $name . '.php';
         if (!file_exists($authFile)) {
             $name = $this->nameCaseFormat($str_cmd, $part2,'camel');
-            $authFile = DOKU_IOCMODELAUTH . $name . '.php';
+            $authFile = DOKU_IOC_MODEL_AUTH . $name . '.php';
         }
         if (file_exists($authFile)) {
             require_once($authFile);
