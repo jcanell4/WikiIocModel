@@ -108,6 +108,13 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	public static $DEFAULT_FORMAT = 0;
 	public static $SHORT_FORMAT = 1;
 
+        /**
+         * Crida principal de la comanda admin_task. 
+         * @global type $lang
+         * @param type $ptask és la tasca adminitrativa a executar
+         * @param type $pid
+         * @return type
+         */
 	public function getAdminTask( $ptask, $pid = NULL ) {
 		global $lang;
                 
@@ -270,15 +277,10 @@ class DokuModelAdapter extends AbstractModelAdapter {
                 //[TODO JOSEP] Normalitzar: start do get...
 
                 //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
-                $this->startPageProcess(
+                $this->startCreateProcess(
 			DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL,
 			"", $text, ""
 		);
-		if ( ! $text ) {
-			$text = $lang['createDefaultText'];
-		}
-                
-                $TEXT = $text;
 
                 //Preprocess (ACTION_ACT_PREPROCESS)
                 $this->doCreatePreProcess();
@@ -811,6 +813,20 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		$this->triggerStartEvents();
 	}
 
+	/**
+	 * Inicia tractament d'una pàgina de la dokuwiki
+	 */
+	private function startCreateProcess(
+		$pdo, $pid = NULL, $prev = NULL, $prange = NULL,
+		$psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, 
+                $psuf = NULL 
+	) {
+            global $lang;
+            $this->startPageProcess($pdo, $pid, $prev, $prange, $psum, $pdate, $ppre, $ptext, $psuf);
+            if(!$ptext){
+                $TEXT = $this->params['text'] = cleanText( $lang['createDefaultText']);
+            }
+        }
 	/**
 	 * Inicia tractament d'una pàgina de la dokuwiki
 	 */
