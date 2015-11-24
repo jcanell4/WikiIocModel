@@ -4,20 +4,26 @@
  *
  * @author Rafael Claver
  */
-if (!defined('DOKU_INC') ) die();
-if(!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+if (!defined('DOKU_INC')) die();
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+if (!defined('DW_ACT_DENIED')) 	define('DW_ACT_DENIED', "denied" );
+
+require_once (DOKU_INC . 'inc/common.php');
 require_once (WIKI_IOC_MODEL . 'AbstractAuthorizationManager.php');
+require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 require_once (WIKI_IOC_MODEL . 'default/authorization/Permission.php');
 
 class CommandAuthorization extends AbstractAuthorizationManager {
     private $command;    //command_class object
     private $modelWrapper;
     private $permission;
+    //private $wikiIocInfo;
 
     public function __construct($params) {
         parent::__construct();
         $this->command = $params;
         $this->modelWrapper = $this->command->getModelWrapper();
+        WikiIocInfoManager::Instance();
     }
 
     public function canRun($permission = NULL) {
@@ -39,12 +45,12 @@ class CommandAuthorization extends AbstractAuthorizationManager {
     }
 
     private function createPermission() {
-        $permission = new Permission($this->modelWrapper);
+        $permission = new Permission($this);
         // Comprovar el pas per referència 
         $this->permission = &$permission;
         
         $this->permission->setAuthenticatedUsersOnly($this->command->getAuthenticatedUsersOnly());
-        $this->permission->setIsSecurityTokenVerified($this->modelWrapper->isSecurityTokenVerified());
+        $this->permission->setIsSecurityTokenVerified($this->isSecurityTokenVerified());
         $this->permission->setIsUserAuthenticated($this->isUserAuthenticated());
         $this->permission->setIsAuthorized($this->isAuthorized());
     }
@@ -58,12 +64,43 @@ class CommandAuthorization extends AbstractAuthorizationManager {
     /* pendent de convertir a private quan no l'utilitzi abstract_command_class */
     public function isAuthorized() {
         $permissionFor = $this->command->getPermissionFor();
-        $grup = $this->modelWrapper->getUserGroup();
+        $grup = $this->getUserGroup();
         $found = sizeof($permissionFor) == 0 || !is_array($grup);
         for($i = 0; !$found && $i < sizeof($grup); $i++) {
             $found = in_array($grup[$i], $permissionFor);
         }
         return $found;
+    }
+
+    /**
+     * @return string[] hash amb els grups de l'usuari
+    */
+    private function getUserGroup() {
+        global $INFO;
+        return $INFO['userinfo']['grps'];
+    }
+    
+    /**
+     * Comproba si el token de seguretat està verificat o no fent servir una funció de la DokuWiki.
+     * @return bool
+    */
+    public function isSecurityTokenVerified() {
+        return checkSecurityToken();
+    }
+
+    /**
+     * Si el valor de la variable global $ACT es 'denied' retorna false, en cualsevol altre cas retorna true.
+     * @return bool
+     */
+    public function isDenied() {
+	global $ACT;
+	$this->modelWrapper->setParams('do', $ACT);
+	return $ACT == DW_ACT_DENIED;
+    }
+
+    public function isAdminOrManager( $checkIsmanager = TRUE ) {
+	global $INFO;
+	return $INFO['isadmin'] || $checkIsmanager && $INFO['ismanager'];
     }
 }
 

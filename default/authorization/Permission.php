@@ -9,14 +9,14 @@ if (!defined('DOKU_INC') ) die();
 
 class Permission {
     
-    private $modelWrapper;
+    private $cmdAuthorization;
     private $authenticatedUsersOnly;    //bool (de command_class)
     private $isSecurityTokenVerified;
     private $isUserAuthenticated;
     private $isAuthorized;
     
-    public function __construct($modelWrapper) {
-        $this->modelWrapper = $modelWrapper;
+    public function __construct($cmdAuthorization) {
+        $this->cmdAuthorization = $cmdAuthorization;
     }
     
     public function getAuthenticatedUsersOnly() {
@@ -36,7 +36,7 @@ class Permission {
     }
   
     public function isDenied() {
-        return $this->modelWrapper->isDenied();
+        return $this->cmdAuthorization->isDenied();
     }
     
     public function setAuthenticatedUsersOnly($authenticatedUsersOnly) {

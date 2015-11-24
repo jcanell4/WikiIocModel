@@ -24,6 +24,7 @@ if ( ! defined( 'DOKU_PLUGIN' ) ) {
 	define( 'DOKU_PLUGIN', DOKU_INC . 'lib/plugins/' );
 }
 require_once (DOKU_PLUGIN . 'wikiiocmodel/AbstractModelAdapter.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/WikiIocInfoManager.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/default/DokuModelExceptions.php');
 
 require_once( DOKU_PLUGIN . 'acl/admin.php' );
@@ -101,12 +102,18 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	protected $params;
 	protected $dataTmp;
 	protected $ppEvt;
-	protected $infoLoaded = FALSE;
+        // ver WikiIocInfoManager
+	//protected $infoLoaded = FALSE;
+        //protected $wikiIocInfo;
 
 	public static $DEFAULT_FORMAT = 0;
 	public static $SHORT_FORMAT = 1;
 
-	public function getAdminTask( $ptask, $pid = NULL ) {
+        public function __construct() {
+            WikiIocInfoManager::Instance();
+        }
+        
+        public function getAdminTask( $ptask, $pid = NULL ) {
 		global $lang;
 
 		$this->startAdminTaskProcess( $ptask, $pid );
@@ -228,30 +235,36 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $this->getAdminTaskListResponse();
 	}
 
-        public function getInfoLoaded() {
-            return $this->infoLoaded;
-        }
+        // ver WikiIocInfoManager
+//        public function getInfoLoaded() {
+//            return $this->infoLoaded;
+//        }
     
+        // ver CommandAuthorization
         /**
          * @return string[] hash amb els grups de l'usuari
         */
-        public function getUserGroup() {
-            global $INFO;
-        
-            if (!$this->infoLoaded) {
-                $this->fillInfo();
-            }
-            return $INFO['userinfo']['grps'];
-        }
+//        public function getUserGroup() {
+//            global $INFO;
+//            if (!$this->infoLoaded) {
+//                $this->fillInfo();
+//            }
+//            return $INFO['userinfo']['grps'];
+//        }
 
+        // ver CommandAuthorization
         /**
          * Comproba si el token de seguretat està verificat o no fent servir una funció de la DokuWiki.
          * @return bool
         */
-        public function isSecurityTokenVerified() {
-            return checkSecurityToken();
-        }
+//        public function isSecurityTokenVerified() {
+//            return checkSecurityToken();
+//        }
     
+        public function setParams($element, $value) {
+            $this->params[$element] = $value;
+        }
+        
         public function createPage( $pid, $text = NULL ) {
 		global $INFO;
 		global $lang;
@@ -372,26 +385,27 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $this->getSaveInfoResponse( $code );
 	}
 
-	public function isAdminOrManager( $checkIsmanager = TRUE ) {
-		global $INFO;
-		if ( ! $this->infoLoaded ) {
-			$this->fillInfo();
-		}
+        // ver CommandAuthorization
+//	public function isAdminOrManager( $checkIsmanager = TRUE ) {
+//		global $INFO;
+//		if ( ! $this->infoLoaded ) {
+//			$this->fillInfo();
+//		}
+////		return $INFO['isadmin'] || $checkIsmanager && $INFO['ismanager'];
+//	}
 
-		return $INFO['isadmin'] || $checkIsmanager && $INFO['ismanager'];
-	}
-
+        // ver CommandAuthorization
 	/**
 	 * Si el valor de la variable global $ACT es 'denied' retorna false, en cualsevol altre cas retorna true.
 	 *
 	 * @return bool
 	 */
-	public function isDenied() {
-		global $ACT;
-		$this->params['do'] = $ACT;
-
-		return $this->params['do'] == DW_ACT_DENIED;
-	}
+//	public function isDenied() {
+//		global $ACT;
+//		$this->params['do'] = $ACT;
+//
+//		return $this->params['do'] == DW_ACT_DENIED;
+//	}
 
 	public function getMediaFileName( $id, $rev = '' ) {
 		return mediaFN( $id, $rev );
@@ -792,7 +806,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 		$ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
 
-		$this->fillInfo();
+                // fillInfo s'executa en el constructor amb WikiIocInfoManager::Instance();
+		//$this->wikiIocInfo->fillInfo();
 		$this->startUpLang();
 		if ( $ptask ) {
 			if ( ! $_REQUEST['page'] || $_REQUEST['page'] != $ptask ) {
@@ -850,7 +865,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 			$SUM = $this->params['sum'] = $psum;
 		}
 
-		$this->fillInfo();
+                // fillInfo s'executa en el constructor amb WikiIocInfoManager::Instance();
+		//$this->wikiIocInfo->fillInfo();
 		$this->startUpLang();
 
 		$this->triggerStartEvents();
@@ -1485,8 +1501,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 	public function getJsInfo() {
 		global $JSINFO;
-		$this->fillInfo();
-
+                // fillInfo s'executa en el constructor amb WikiIocInfoManager::Instance();
+		//$this->wikiIocInfo->fillInfo();
 		return $JSINFO;
 	}
 
@@ -1519,19 +1535,20 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		unset( $this->ppEvt );
 	}
 
-	public function fillInfo() {
-		global $JSINFO;
-		global $INFO;
-
-		$INFO = pageinfo();
-		//export minimal infos to JS, plugins can add more
-		$JSINFO['isadmin']   = $INFO['isadmin'];
-		$JSINFO['ismanager'] = $INFO['ismanager'];
-
-		$this->infoLoaded = TRUE;
-
-		return $JSINFO;
-	}
+        // ver WikiIocInfo
+//	public function fillInfo() {
+//		global $JSINFO;
+//		global $INFO;
+//
+//		$INFO = pageinfo();
+//		//export minimal infos to JS, plugins can add more
+//		$JSINFO['isadmin']   = $INFO['isadmin'];
+//		$JSINFO['ismanager'] = $INFO['ismanager'];
+//
+//		$this->infoLoaded = TRUE;
+//
+//		return $JSINFO;
+//	}
 
 	private function getContentPage( $pageToSend ) {
 		global $REV;

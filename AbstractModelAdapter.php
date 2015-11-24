@@ -10,6 +10,6 @@ abstract class AbstractModelAdapter {
 
     public function __construct() {}
     
-    abstract public function isDenied();
+    //abstract public function isDenied();
 
 }
