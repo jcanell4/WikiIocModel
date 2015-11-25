@@ -96,7 +96,7 @@ if (!defined('DW_ACT_MEDIA_DETAILS')) {
  */
 function onFormatRender($data)
 {
-    html_show();
+    html_show($data);
 }
 
 
@@ -2852,9 +2852,14 @@ class DokuModelAdapter implements WikiIocModel
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private function getHtmlForCurrentDocument()
     {
-        ob_start();
-        onFormatRender(null); // Només crida a html_show()
-        $html = ob_get_clean();
+        global $ID, $REV;
+
+        $html = p_wiki_xhtml($ID,$REV,true); // TODO[Xavi] hem de cercar altre forma de fer-ho, això es una part del que es fa al html.php i ens estem saltant altes accions
+
+
+//        ob_start();
+//        onFormatRender(); // Només crida a html_show(), TODO[Xavi] afegit paràmetre perquè no es mostri el boto editar
+//        $html = ob_get_clean();
 
         return $html;
     }
