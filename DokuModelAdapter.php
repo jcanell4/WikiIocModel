@@ -2858,7 +2858,7 @@ class DokuModelAdapter implements WikiIocModel
 
 
 //        ob_start();
-//        onFormatRender(); // Només crida a html_show(), TODO[Xavi] afegit paràmetre perquè no es mostri el boto editar
+//        onFormatRender(); // Només crida a html_show()
 //        $html = ob_get_clean();
 
         return $html;
@@ -3112,6 +3112,27 @@ class DokuModelAdapter implements WikiIocModel
 
 
         return $response;
+    }
+
+
+    public function lock($pid) {
+        global $conf;
+
+        $locker = checklock($pid) ;
+
+        if ($locker === false) {
+            lock($pid);
+
+            $info = $this->generateInfo('info', "S'ha refrescat el bloqueig");
+
+
+            return ['id' => $pid, 'timeout' => $conf['locktime'], 'info' => $info]; // TODO[Xavi] Localitzar el missatge
+
+        } else {
+
+            return ['id' => $pid, 'timeout' => -1, 'info'=> $this->generateInfo('error', "El document es trobat bloquejat per " . $locker)];
+        }
+
     }
 
 }
