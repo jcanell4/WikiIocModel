@@ -4,7 +4,10 @@
 /**
  * Description of DokuModelAdapter
  *
- * @author Josep Cañellas <jcanell4@ioc.cat>
+ * @author Josep Cañellas Bornas<jcanell4@ioc.cat>
+ * @author Rafael Claver<rclaver@xtec.cat>
+ * @author Xavier Gracía Rodríguez <xaviergarodev@gmail.com>
+ * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
  */
 if (! defined('DOKU_INC')) die();
 
@@ -115,6 +118,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @param type $pid
          * @return type
          */
+        //[ALERTA Josep] Es queda aquí.
 	public function getAdminTask( $ptask, $pid = NULL ) {
 		global $lang;
                 
@@ -232,6 +236,11 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
+        /**
+         * Crida principal de la comanda admin_tab i crida del LoginResponseHandler
+         * @return type
+         */
+        //[ALERTA Josep] Es queda aquí.
 	public function getAdminTaskList() {
  
                 //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
@@ -244,6 +253,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
                 //[TODO Josep] FALTA INFO
 	}
 
+        //[ALERTA Josep] Cal passar-ho a WikiIocInfo
         public function getInfoLoaded() {
             return $this->infoLoaded;
         }
@@ -251,7 +261,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
         /**
          * @return string[] hash amb els grups de l'usuari
         */
-        public function getUserGroup() {
+        //[ALERTA Josep] Es queda aquí.
+	public function getUserGroup() {
             global $INFO;
         
             if (!$this->infoLoaded) {
@@ -264,11 +275,23 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * Comproba si el token de seguretat està verificat o no fent servir una funció de la DokuWiki.
          * @return bool
         */
-        public function isSecurityTokenVerified() {
+        //[ALERTA Josep] Cla passar-lo a CommandAuthorization.
+	public function isSecurityTokenVerified() {
             return checkSecurityToken();
         }
-    
-        public function createPage( $pid, $text = NULL ) {
+
+        /**
+         * Crida principal de la comanda new_page.
+         * @global type $INFO
+         * @global type $lang
+         * @global type $ACT
+         * @global type $TEXT
+         * @param type $pid
+         * @param type $text
+         * @return type
+         */
+        //[ALERTA Josep] Es queda aquí.
+	public function createPage( $pid, $text = NULL ) {
 		global $INFO;
 		global $lang;
 		global $ACT;
@@ -298,6 +321,17 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
+        /**
+         * Crida principal de la comanda page
+         * @global type $INFO
+         * @global type $lang
+         * @param type $pid
+         * @param type $prev
+         * @return type
+         * @throws PageNotFoundException
+         * @throws InsufficientPermissionToViewPageException
+         */
+	//[ALERTA Josep] Es queda aquí.
 	public function getHtmlPage( $pid, $prev = NULL ) {
 		global $INFO;
 		global $lang;
@@ -321,6 +355,20 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
+	/**
+         * Crida principal de la comanda edit i de la comanda raw_code
+         * @global type $INFO
+         * @global type $lang
+         * @param type $pid
+         * @param type $prev
+         * @param type $prange
+         * @param type $psum
+         * @param type $recover
+         * @return type
+         * @throws PageNotFoundException
+         * @throws InsufficientPermissionToEditPageException
+         */
+        //[ALERTA Josep] Es queda aquí.
 	public function getCodePage( $pid, $prev = NULL, $prange = NULL, $psum = NULL, $recover = NULL ) {
 		global $INFO;
 		global $lang;
@@ -354,7 +402,16 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
-	public function cancelEdition( $pid, $prev = NULL, $keep_draft = FALSE ) {
+        /**
+         * Crida principal de la comanda cancel
+         * @global type $lang
+         * @param type $pid
+         * @param type $prev
+         * @param type $keep_draft
+         * @return type
+         */
+        //[ALERTA Josep] Es queda aquí.
+        public function cancelEdition( $pid, $prev = NULL, $keep_draft = FALSE ) {
 		global $lang;
 
 		$this->startPageProcess( DW_ACT_DRAFTDEL, $pid, $prev );
@@ -366,6 +423,19 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
+        /**
+         * Crida principal de la comanda save
+         * @param type $pid
+         * @param type $prev
+         * @param type $prange
+         * @param type $pdate
+         * @param type $ppre
+         * @param type $ptext
+         * @param type $psuf
+         * @param type $psum
+         * @return type
+         */
+        //[ALERTA Josep] Es queda aquí.
 	public function saveEdition(
 		$pid, $prev = NULL, $prange = NULL,
 		$pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL
@@ -379,7 +449,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $this->getSaveInfoResponse( $code );
 	}
 
-	public function isAdminOrManager( $checkIsmanager = TRUE ) {
+        //[ALERTA Josep] Es trasllada a permission
+        public function isAdminOrManager( $checkIsmanager = TRUE ) {
 		global $INFO;
 		if ( ! $this->infoLoaded ) {
 			$this->fillInfo();
@@ -393,6 +464,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 *
 	 * @return bool
 	 */
+        //[ALERTA Josep] Es traslladarà a permission
 	public function isDenied() {
 		global $ACT;
 		$this->params['do'] = $ACT;
@@ -400,14 +472,36 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $this->params['do'] == DW_ACT_DENIED;
 	}
         
+        /**
+         * Obté el nom de la ruta del fitxer identificat per id en el 
+         * repositori media
+         * @param type $id
+         * @param type $rev
+         * @return type
+         */
+        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a DokuPageModel
 	public function getMediaFileName( $id, $rev = '' ) {
 		return mediaFN( $id, $rev );
 	}
-
+        /**
+         * Obté l'identificador de la pàgina sense el seu espai de noms
+         * @param type $id
+         * @return type
+         */
+        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a DokuPageModel
 	public function getIdWithoutNs( $id ) {
 		return noNS( $id );
 	}
-
+        
+        /**
+         * Obté la llista de medias que estan en una espai de noms
+         * @param type $ns
+         * @return array
+         */
+        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a DokuPageModel
 	public function getMediaList( $ns ) {
 		$dir      = $this->getMediaFileName( $ns );
 		$arrayDir = scandir( $dir );
@@ -422,6 +516,15 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $arrayDir;
 	}
 
+        /**
+         * Obté l'identificador qualificat (amb NS inclós) d'una pàgina a partir 
+         * de la seva ruta relativa o absoluta.
+         * @global type $conf
+         * @param type $path
+         * @return type
+         */
+        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a DokuPageModel
 	public function imagePathToId( $path ) {
 		global $conf;
 		if ( $this->starsWith( $path, "/" ) ) { //absolute path
@@ -432,18 +535,28 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $id;
 	}
 
-	// TODO[Xavi] No es cridat en lloc
+	/**
+         * 
+         * @param type $id
+         * @param type $rev
+         * @return type
+         */
+        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a DokuPageModel
 	public function getPageFileName( $id, $rev = '' ) {
 		return wikiFN( $id, $rev );
 	}
 
 	/**
+         * Obté un link al media identificat per $image, $rev
 	 * @param string $image //abans era $id. $id no s'utilitzava
 	 * @param bool   $rev
 	 * @param bool   $meta
 	 *
 	 * @return string
 	 */
+        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a DokuPageModel
 	public function getMediaUrl( $image, $rev = FALSE, $meta = FALSE ) {
 		$size = media_image_preview_size( $image, $rev, $meta );
 		if ( $size ) {
@@ -465,6 +578,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	}
 
 	/**
+         * És la crida pincipal de la comanda save_unlinked_image. 
+         * Guarda un fitxer de tipus media pujat des del client
 	 * @param string $nsTarget
 	 * @param string $idTarget
 	 * @param string $filePathSource
@@ -472,6 +587,10 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 *
 	 * @return int
 	 */
+        //[ALERTA Josep] Es trasllada a DokuPersistenceManager        
+        //[TODO Josep] Aquí cal crear una crida normalitzada que en processar 
+        //l'acció cridi a aquesta funció traslladada a la classe encarregada 
+        //de la persistencia.
 	public function uploadImage( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
 		return $this->_saveImage(
 			$nsTarget, $idTarget, $filePathSource
@@ -480,6 +599,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	}
 
 	/**
+         * És la crida principal de la comanda copy_image_to_project
 	 * @param string $nsTarget
 	 * @param string $idTarget
 	 * @param string $filePathSource
@@ -487,6 +607,10 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 *
 	 * @return int
 	 */
+        //[ALERTA Josep] Es trasllada a DokuPersistenceManager        
+        //[TODO Josep] Aquí cal crear una crida normalitzada que en processar 
+        //l'acció cridi a aquesta funció traslladada a la classe encarregada 
+        //de la persistencia.
 	public function saveImage( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
 		return $this->_saveImage(
 			$nsTarget, $idTarget, $filePathSource
@@ -494,6 +618,19 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		);
 	}
 
+        /**
+         * És la crida principal de la comanda get_image_detail. Obté un html 
+         * amb el detall d'una imatge.
+         * @global type $lang
+         * @param type $imageId
+         * @param type $fromPage
+         * @return string
+         * @throws HttpErrorCodeException
+         */
+        //[TODO Josep] Cal normalitzar i reestructura la funció per tal que 
+        //segueixi el patró MVC. La part de construcció html hauria d'estar al
+        //seu responseHandler i hauria d'obtenir les dades des del model 
+        //de metadades que a la seva vegada consultaria la persistencia.
         public function getImageDetail( $imageId, $fromPage = NULL ) {
 		global $lang;
 
@@ -518,13 +655,35 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $ret;
 	}
 
-	public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
+        /**
+         * És la crida principal de la comanda ns_tree_rest
+         * @global type $conf
+         * @param type $currentnode
+         * @param type $sortBy
+         * @param type $onlyDirs
+         * @return type
+         */
+	//[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a DokuPageModel
+        //[ALERTA JOSEP] Crec que no és necessari normalitzar aquesta crida ja 
+        //que no és tracta d'una acció sinó de la obtenció de l'arbre de directoris
+        public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		global $conf;
 		$base = $conf['datadir'];
 
 		return $this->getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs );
 	}
 
+        /**
+         * Mètode privat que obté l'arbre de directoris a partir d'un espai de noms
+         * i el sistema de dades concret d'on obtenir-lo (media, data, meta, etc)
+         * @param type $base
+         * @param type $currentnode
+         * @param type $sortBy
+         * @param type $onlyDirs
+         * @return string
+         */
+	//[ALERTA Josep] Es trasllada a DokuPageModel
 	private function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		$sortOptions = array( 0 => 'name', 'date' );
 		$nodeData    = array();
@@ -570,6 +729,13 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $tree;
 	}
 
+        /**
+         * Obté el missatge traduit a l'idioma actual. 
+         * @global type $lang
+         * @param type $id
+         * @return type
+         */
+	//[ALERTA Josep] Es trasllada a DokuViewManager
 	public function getGlobalMessage( $id ) {
 		global $lang;
 
