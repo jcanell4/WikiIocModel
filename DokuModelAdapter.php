@@ -359,9 +359,6 @@ class DokuModelAdapter implements WikiIocModel
         }
 
 
-
-
-
         return $response;
     }
 
@@ -411,7 +408,7 @@ class DokuModelAdapter implements WikiIocModel
         $response ['info'] = $this->generateInfo("warning", $lang['edition_cancelled']);
 
         $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
-        $response['meta'] = $this->getMetaResponse( $pid );
+        $response['meta'] = $this->getMetaResponse($pid);
         $response['revs'] = $this->getRevisions($pid);
 
         return $response;
@@ -2854,7 +2851,7 @@ class DokuModelAdapter implements WikiIocModel
     {
         global $ID, $REV;
 
-        $html = p_wiki_xhtml($ID,$REV,true); // TODO[Xavi] hem de cercar altre forma de fer-ho, això es una part del que es fa al html.php i ens estem saltant altes accions
+        $html = p_wiki_xhtml($ID, $REV, true); // TODO[Xavi] hem de cercar altre forma de fer-ho, això es una part del que es fa al html.php i ens estem saltant altes accions
 
 
 //        ob_start();
@@ -2890,11 +2887,14 @@ class DokuModelAdapter implements WikiIocModel
             throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
         }
 
+
         if (!$editing) {
             $editing = [$selected];
         }
 
         $document = [];
+        $document['locked'] = $INFO['locked']; // True si el documen està bloquejat
+
         $document['title'] = tpl_pagetitle($id, TRUE);
         $document['ns'] = $id;
         $document['id'] = str_replace(":", "_", $id);
@@ -2941,13 +2941,11 @@ class DokuModelAdapter implements WikiIocModel
                 $editingChunks[] = &$chunks[$i];
 
 
-
-
             }
         }
 
         // Afegim el suf
-        $lastSuf = count($editingChunks)-1;
+        $lastSuf = count($editingChunks) - 1;
         $document['suf'] = rawWikiSlices($editingChunks[$lastSuf]['start'] . "-" . $editingChunks[$lastSuf]['end'], $id)[2];
 
 
@@ -2966,9 +2964,9 @@ class DokuModelAdapter implements WikiIocModel
     {
         $lastPos = 0;
 
-        for ($i=0;$i<count($chunks);$i++) {
+        for ($i = 0; $i < count($chunks); $i++) {
             // El pre de cada chunk va de $lastPos fins al seu start
-            $chunks[$i]['text']['pre'] =  rawWikiSlices($lastPos . "-" . $chunks[$i]['start'], $id)[1];
+            $chunks[$i]['text']['pre'] = rawWikiSlices($lastPos . "-" . $chunks[$i]['start'], $id)[1];
 
             // el text no forma part del 'pre'
             $lastPos = $chunks[$i]['end'];
@@ -3043,7 +3041,7 @@ class DokuModelAdapter implements WikiIocModel
         }
 
         // TODO: afegir el 'meta' que correspongui
-		$response['meta'] = $this->getMetaResponse( $pid );
+        $response['meta'] = $this->getMetaResponse($pid);
 
         // TODO: afegir les revisions
         $response['revs'] = $this->getRevisions($pid);
@@ -3089,7 +3087,7 @@ class DokuModelAdapter implements WikiIocModel
         }
 
         // TODO: afegir el 'meta' que correspongui
-        $response['meta'] = $this->getMetaResponse( $pid );
+        $response['meta'] = $this->getMetaResponse($pid);
 
 
         // TODO: afegir les 'revs' que correspongui
@@ -3100,11 +3098,21 @@ class DokuModelAdapter implements WikiIocModel
 
     public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks)
     {
+        global $INFO,
+               $lang;
 
         $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, NULL, $psum);
         $response['structure'] = $this->getStructuredDocument($selected, $pid, null, $editing_chunks);
 
+
         // TODO: afegir el 'info' que correspongui
+        $locked = $this->lock($pid);
+
+        if ($locked['timeout']<0) {
+            $response['info'] = $locked['info'];
+        } else {
+            $response['info'] = $this->generateInfo('success', 'Editant ' . $pid . ':' . $selected); //TODO[Xavi] localitzar el missatge
+        }
 
         // TODO: afegir el 'meta' que correspongui
 
@@ -3115,24 +3123,34 @@ class DokuModelAdapter implements WikiIocModel
     }
 
 
-    public function lock($pid) {
-        global $conf;
+    public function lock($pid)
+    {
+        global $conf,
+               $lang;
 
-        $locker = checklock($pid) ;
+        $locker = checklock($pid);
 
         if ($locker === false) {
             lock($pid);
 
-            $info = $this->generateInfo('info', "S'ha refrescat el bloqueig");
+            $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
 
-
-            return ['id' => $pid, 'timeout' => $conf['locktime'], 'info' => $info]; // TODO[Xavi] Localitzar el missatge
+            return ['id' => $pid, 'timeout' => $conf['locktime'], 'info' => $info];
 
         } else {
 
-            return ['id' => $pid, 'timeout' => -1, 'info'=> $this->generateInfo('error', "El document es trobat bloquejat per " . $locker)];
+            return ['id' => $pid, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
         }
 
+    }
+
+    public function unlock($pid)
+    {
+
+        unlock($pid);
+        $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
+
+        return ['info' => $info]; // TODO[Xavi] Localitzar el missatge
     }
 
 }
