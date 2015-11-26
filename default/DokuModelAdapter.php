@@ -109,10 +109,6 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	public static $DEFAULT_FORMAT = 0;
 	public static $SHORT_FORMAT = 1;
 
-        public function __construct() {
-            WikiIocInfoManager::Instance();
-        }
-        
         public function getAdminTask( $ptask, $pid = NULL ) {
 		global $lang;
 
@@ -235,7 +231,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $this->getAdminTaskListResponse();
 	}
 
-        // ver WikiIocInfoManager
+        // primero se ha enviado a WikiIocInfoManager y después se ha suprimido definitivamente
 //        public function getInfoLoaded() {
 //            return $this->infoLoaded;
 //        }
@@ -803,11 +799,9 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		}
 
 		$ID = $this->params['id'] = $pid;
-
 		$ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
 
-                // fillInfo s'executa en el constructor amb WikiIocInfoManager::Instance();
-		//$this->wikiIocInfo->fillInfo();
+		WikiIocInfoManager::loadInfo();
 		$this->startUpLang();
 		if ( $ptask ) {
 			if ( ! $_REQUEST['page'] || $_REQUEST['page'] != $ptask ) {
@@ -865,12 +859,9 @@ class DokuModelAdapter extends AbstractModelAdapter {
 			$SUM = $this->params['sum'] = $psum;
 		}
 
-                // fillInfo s'executa en el constructor amb WikiIocInfoManager::Instance();
-		//$this->wikiIocInfo->fillInfo();
+		WikiIocInfoManager::loadInfo();
 		$this->startUpLang();
-
 		$this->triggerStartEvents();
-
 	}
 
 	/**
@@ -919,7 +910,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 			return $ret;
 		}
 
-		$INFO = array_merge( pageinfo(), mediainfo() );
+		//$INFO = array_merge( pageinfo(), mediainfo() );
+		WikiIocInfoManager::loadMediaInfo();
 
 		/**
 		 * Stores the template wide context
@@ -1501,8 +1493,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 	public function getJsInfo() {
 		global $JSINFO;
-                // fillInfo s'executa en el constructor amb WikiIocInfoManager::Instance();
-		//$this->wikiIocInfo->fillInfo();
+		WikiIocInfoManager::loadInfo();
 		return $JSINFO;
 	}
 
@@ -1842,7 +1833,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 			return $ret;
 		}
 
-		$INFO = array_merge( pageinfo(), mediainfo() );
+		//$INFO = array_merge( pageinfo(), mediainfo() );
+		WikiIocInfoManager::loadMediaInfo();
 
 		/**
 		 * Stores the template wide context
@@ -2555,8 +2547,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 			return $ret;
 		}
 
-		$INFO = array_merge( pageinfo(), mediainfo() );
-
+		//$INFO = array_merge( pageinfo(), mediainfo() );
+		WikiIocInfoManager::loadMediaInfo();
 		$this->startUpLang();
 
 		//detect revision

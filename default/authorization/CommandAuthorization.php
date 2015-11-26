@@ -14,18 +14,21 @@ require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 require_once (WIKI_IOC_MODEL . 'default/authorization/Permission.php');
 
 class CommandAuthorization extends AbstractAuthorizationManager {
-    private $command;    //command_class object
-    private $modelWrapper;
-    private $permission;
-    //private $wikiIocInfo;
+    protected $command;    //command_class object
+    protected $modelWrapper;    //está pendiente separar completamente el DokuModelAdapter de la Autorización
+    protected $permission;
 
     public function __construct($params) {
         parent::__construct();
         $this->command = $params;
         $this->modelWrapper = $this->command->getModelWrapper();
-        WikiIocInfoManager::Instance();
+        
     }
 
+    /* 
+     * Responde a la pregunta: ¿los permisos permiten la ejecución del comando?
+     * @return bool. Indica si se han obtenido, o no, los permisos generales
+     */
     public function canRun($permission = NULL) {
         if ($permission === NULL) {
             $permission = $this->getPermission();
@@ -37,7 +40,8 @@ class CommandAuthorization extends AbstractAuthorizationManager {
         return $ret;
     }
     
-    public function getPermission() {
+    public function getPermission($params=array()) {
+        WikiIocInfoManager::loadInfo();
         if ($this->permission === NULL) {
             $this->createPermission();
         }
@@ -46,8 +50,7 @@ class CommandAuthorization extends AbstractAuthorizationManager {
 
     private function createPermission() {
         $permission = new Permission($this);
-        // Comprovar el pas per referència 
-        $this->permission = &$permission;
+        $this->permission = &$permission;  //Comprovar el pas per referència
         
         $this->permission->setAuthenticatedUsersOnly($this->command->getAuthenticatedUsersOnly());
         $this->permission->setIsSecurityTokenVerified($this->isSecurityTokenVerified());
@@ -96,11 +99,6 @@ class CommandAuthorization extends AbstractAuthorizationManager {
 	global $ACT;
 	$this->modelWrapper->setParams('do', $ACT);
 	return $ACT == DW_ACT_DENIED;
-    }
-
-    public function isAdminOrManager( $checkIsmanager = TRUE ) {
-	global $INFO;
-	return $INFO['isadmin'] || $checkIsmanager && $INFO['ismanager'];
     }
 }
 

@@ -7,27 +7,21 @@ require_once (DOKU_INC . 'inc/common.php');
 
 class WikiIocInfoManager {
 
-    protected $infoLoaded = FALSE;
+    private static $infoLoaded = FALSE;
     
-    private function __construct() {
-        if (!$this->infoLoaded) {
-            $this->fillInfo();
+    public static function loadInfo() {
+        if (!self::$infoLoaded) {
+            self::fillInfo();
         }
     }
 
-    public static function Instance(){
-        static $inst = NULL;
-        if ($inst === NULL) {
-            $inst = new WikiIocInfoManager();
-        }
-        return $inst;
-    }
-        
-    public function getInfoLoaded() {
-        return $this->infoLoaded;
+    public static function loadMediaInfo() {
+	global $INFO;
+        self::loadInfo();
+    	$INFO = array_merge( $INFO, mediainfo() );
     }
 
-    private function fillInfo() {
+    protected static function fillInfo() {
 	global $JSINFO;
 	global $INFO;
 
@@ -36,9 +30,7 @@ class WikiIocInfoManager {
 	$JSINFO['isadmin']   = $INFO['isadmin'];
 	$JSINFO['ismanager'] = $INFO['ismanager'];
 
-	$this->infoLoaded = TRUE;
-
-	return $JSINFO;
+	self::$infoLoaded = TRUE;
     }
 
 }

@@ -6,7 +6,6 @@
  */
 if (!defined('DOKU_INC') ) die();
 
-//[TO DO josep]: Reanomenar a AbstractAuthorization
 abstract class AbstractAuthorizationManager {
     
    const IOC_AUTH_OK = TRUE;
@@ -14,4 +13,5 @@ abstract class AbstractAuthorizationManager {
 
    public function __construct() {}
    public abstract function canRun($permission = NULL);
+   public abstract function getPermission($params=array());
 }

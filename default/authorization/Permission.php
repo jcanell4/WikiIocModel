@@ -5,54 +5,32 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC') ) die();
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+require_once (WIKI_IOC_MODEL . 'AbstractPermission.php');
 
-
-class Permission {
+class Permission extends AbstractPermission {
     
-    private $cmdAuthorization;
-    private $authenticatedUsersOnly;    //bool (de command_class)
-    private $isSecurityTokenVerified;
-    private $isUserAuthenticated;
-    private $isAuthorized;
+    private $info_perm;
+    private $info_writable;
     
-    public function __construct($cmdAuthorization) {
-        $this->cmdAuthorization = $cmdAuthorization;
+    public function getInfoPerm() {
+        return $this->info_perm;
     }
-    
-    public function getAuthenticatedUsersOnly() {
-        return $this->authenticatedUsersOnly;
+  
+    public function setInfoPerm($info_perm) {
+        $this->info_perm = $info_perm;
     }
-
-    public function getIsSecurityTokenVerified() {
-        return $this->isSecurityTokenVerified;
+  
+    public function getInfoWritable() {
+        return $this->info_writable;
     }
-
-    public function getIsUserAuthenticated() {
-        return $this->isUserAuthenticated;
-    }
-
-    public function getIsAuthorized() {
-        return $this->isAuthorized;
+  
+    public function setInfoWritable($info_writable) {
+        $this->info_writable = $info_writable;
     }
   
     public function isDenied() {
         return $this->cmdAuthorization->isDenied();
     }
     
-    public function setAuthenticatedUsersOnly($authenticatedUsersOnly) {
-        $this->authenticatedUsersOnly = $authenticatedUsersOnly;
-    }
-
-    public function setIsSecurityTokenVerified($isSecurityTokenVerified) {
-        $this->isSecurityTokenVerified = $isSecurityTokenVerified;
-    }
-
-    public function setIsUserAuthenticated($isUserAuthenticated) {
-        $this->isUserAuthenticated = $isUserAuthenticated;
-    }
-
-    public function setIsAuthorized($isAuthorized) {
-        $this->isAuthorized = $isAuthorized;
-    }
-  
 }
