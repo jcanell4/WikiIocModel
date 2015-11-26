@@ -3061,6 +3061,7 @@ class DokuModelAdapter implements WikiIocModel
         $response['structure'] = $this->getStructuredDocument(null, $pid, NULL, $editing_chunks);
         $response['structure']['cancel'] = [$selected];
 
+        $this->removeChunkFromDraftStructured($selected, $pid);
 
         // TODO: afegir el 'info' que correspongui
 
@@ -3097,6 +3098,9 @@ class DokuModelAdapter implements WikiIocModel
         // TODO: afegir les 'revs' que correspongui
         $response['revs'] = $this->getRevisions($pid);
 
+        // TODO[Xavi] Reactivar per comprovar que funciona correctament
+        $this->removeChunkFromDraftStructured($selected, $pid);
+
         $this->lock($pid);
 
         return $response;
@@ -3114,7 +3118,7 @@ class DokuModelAdapter implements WikiIocModel
         // TODO: afegir el 'info' que correspongui
         $locked = $this->lock($pid);
 
-        if ($locked['timeout']<0) {
+        if ($locked['timeout'] < 0) {
             $response['info'] = $locked['info'];
         } else {
             $response['info'] = $this->generateInfo('success', 'Editant ' . $pid . ':' . $selected); //TODO[Xavi] localitzar el missatge
@@ -3142,4 +3146,130 @@ class DokuModelAdapter implements WikiIocModel
 
     }
 
+    public function saveDraft($draft)
+    {
+
+        $type = $draft['type'];
+
+        switch ($type) {
+            case 'structured':
+                $this->generateStructuredDraft($draft['content'], $draft['id']);
+                break;
+
+            //case 'simple'
+            // break
+            default:
+                // error o no draft
+
+                $i = 0;
+                break;
+        }
+    }
+
+    private function generateStructuredDraft($draft, $id)
+    {
+        $time = time();
+        $newDraft = [];
+
+        $draftFile = $this->getDraftStructuredFilename($id);
+
+        if (@file_exists($draftFile)) {
+            // Obrim el draft actual si existeix
+            $oldDraft = $this->getStructuredDraft($draftFile);
+        } else {
+            $oldDraft = [];
+        }
+
+        // Recorrem la llista de headers de old drafts
+
+        foreach ($oldDraft as $header => $chunk) {
+            if (array_key_exists($header, $draft) && $chunk['content'] != $draft[$header]['content']) {
+
+                $check = $chunk['content'] != $draft[$header]['content'];
+                // Comprovar si es troba aquest chunk entre els passats
+                // Si es troba es posa el nou i es canvia la data
+                // L'eleiminem de la llista de draft
+                $chunk['date'] = $time;
+                $chunk['content'] = $draft[$chunk[$header]];
+                $newDraft[$header] = ['content' => $draft[$header], 'date' => $time];
+                unset($draft[$header]);
+            } else {
+                $newDraft[$header] = $chunk;
+            }
+
+
+        }
+
+        foreach ($draft as $header => $content) {
+            $newDraft[$header] = ['content' => $content, 'date' => $time];
+        }
+        // Rercorrem la llista de draft dels que quedin
+        // Els afegim amb la nova data
+
+        // Guardem el draft si hi ha cap chunk
+        if (count($newDraft) > 0) {
+            io_saveFile($draftFile, serialize($newDraft));
+
+        } else {
+            // No hi ha res, l'esborrem
+            @unlink($draftFile);
+        }
+
+    }
+
+    private function getStructuredDraft($draftFile)
+    {
+
+
+        $draft = [];
+
+
+        if (@file_exists($draftFile)) {
+            // No s'esborra per data, perqué la data depén de cada capçalera
+//            if (@filemtime($draftFile) < @filemtime(wikiFN($id))) {
+//                @unlink($draftFile);
+//            } else {
+            $draft = unserialize(io_readFile($draftFile, FALSE));
+//				$cleanedDraft = $this->cleanDraft( $draft['text'] );
+
+            //TODO[xavi] Per determinar com cal o si cal fer això del cleanDraft
+//            $cleanedDraft = $this->cleanDraft(con($draft['prefix'], $draft['text'], $draft['suffix']));
+//            }
+        }
+
+//        $draftDate = $this->extractDateFromRevision(@filemtime($draftFile));
+        // El resultat final ha de ser un array associatiu de header_ids que continguit el content de cada header.
+
+
+        return $draft;
+    }
+
+    public function getDraftStructuredFilename($id = NULL)
+    {
+        $id = $this->cleanIDForFiles($id);
+        $info = basicinfo($id);
+
+        return getCacheName($info['client'] . $id, '.draft.structured');
+    }
+
+    public function removeChunkFromDraftStructured($header_id, $id){
+        $draftFile = $this->getDraftStructuredFilename($id);
+
+        if (@file_exists($draftFile)) {
+            $oldDraft = $this->getStructuredDraft($draftFile);
+
+            if (array_key_exists($header_id, $oldDraft)) {
+                unset($oldDraft[$header_id]);
+            }
+
+            if (count($oldDraft) > 0) {
+                io_saveFile($draftFile, serialize($oldDraft));
+
+            } else {
+                // No hi ha res, l'esborrem
+                @unlink($draftFile);
+            }
+        }
+
+    }
 }
