@@ -454,7 +454,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $this->getSaveInfoResponse( $code );
 	}
 
-        //[ALERTA Josep] Es trasllada a Permission
+        //[ALERTA Josep] Es trasllada a AbstractPermission
         public function isAdminOrManager( $checkIsmanager = TRUE ) {
 		global $INFO;
 		if ( ! $this->infoLoaded ) {
@@ -470,7 +470,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 *
 	 * @return bool
 	 */
-        //[ALERTA Josep] Es traslladarà a permission
+        //[ALERTA Josep] Es traslladarà a Permission
 	public function isDenied() {
 		global $ACT;
 		$this->params['do'] = $ACT;
@@ -486,7 +486,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return type
          */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a WikiPageModel
+        //a WikiPageSystem
 	public function getMediaFileName( $id, $rev = '' ) {
 		return mediaFN( $id, $rev );
 	}
@@ -497,7 +497,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return type
          */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a WikiPageModel
+        //a WikiPageSystem
 	public function getIdWithoutNs( $id ) {
 		return noNS( $id );
 	}
@@ -508,7 +508,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return array
          */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a WikiPageModel
+        //a WikiPageSystem
 	public function getMediaList( $ns ) {
 		$dir      = $this->getMediaFileName( $ns );
 		$arrayDir = scandir( $dir );
@@ -523,15 +523,17 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $arrayDir;
 	}
 
+        
+        
         /**
-         * Obté l'identificador qualificat (amb NS inclós) d'una pàgina a partir 
+         * Obté l'identificador qualificat (amb NS inclós) d'una media a partir 
          * de la seva ruta relativa o absoluta.
          * @global type $conf
          * @param type $path
          * @return type
          */
-        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a WikiPageModel
+        /*[TODO Josep] NO ES FA SERVIR. Valorar si cal eliminar o si es passa 
+         * al componentde persistència WikiPageSystem
 	public function imagePathToId( $path ) {
 		global $conf;
 		if ( $this->starsWith( $path, "/" ) ) { //absolute path
@@ -541,6 +543,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 		return $id;
 	}
+         */
 
 	/**
          * 
@@ -549,7 +552,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return type
          */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a WikiPageModel
+        //a WikiPageSystem
 	public function getPageFileName( $id, $rev = '' ) {
 		return wikiFN( $id, $rev );
 	}
@@ -563,7 +566,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 * @return string
 	 */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a WikiPageModel
+        //a WikiPageSystem
 	public function getMediaUrl( $image, $rev = FALSE, $meta = FALSE ) {
 		$size = media_image_preview_size( $image, $rev, $meta );
 		if ( $size ) {
@@ -594,12 +597,12 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 *
 	 * @return int
 	 */
-        //[ALERTA Josep] Es trasllada a DokuPersistenceManager        
+        //[ALERTA Josep] Es trasllada a BasicPersistenceManager        
         //[TODO Josep] Aquí cal crear una crida normalitzada que en processar 
         //l'acció cridi a aquesta funció traslladada a la classe encarregada 
         //de la persistencia.
 	public function uploadImage( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
-		return $this->_saveImage(
+                return $this->_saveImage(
 			$nsTarget, $idTarget, $filePathSource
 			, $overWrite, "move_uploaded_file"
 		);
@@ -634,10 +637,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return string
          * @throws HttpErrorCodeException
          */
-        //[TODO Josep] Cal normalitzar i reestructura la funció per tal que 
-        //segueixi el patró MVC. La part de construcció html hauria d'estar al
-        //seu responseHandler i hauria d'obtenir les dades des del model 
-        //de metadades que a la seva vegada consultaria la persistencia.
+        //[TODO Josep] Cal normalitzar
         public function getImageDetail( $imageId, $fromPage = NULL ) {
 		global $lang;
 
@@ -671,9 +671,12 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return type
          */
 	//[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a WikiPageModel
+        //a WikiPageSystem
         //[ALERTA JOSEP] Crec que no és necessari normalitzar aquesta crida ja 
         //que no és tracta d'una acció sinó de la obtenció de l'arbre de directoris
+        //Pensar si caldria renombrar a getNsNode, ja que només retorna un node 
+        //cada cop. Aixó pot ser adequat si es necessita una latra funció que 
+        //retorni tot l'arbre d'un cop
         public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		global $conf;
 		$base = $conf['datadir'];
@@ -690,7 +693,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @param type $onlyDirs
          * @return string
          */
-	//[ALERTA Josep] Es trasllada a WikiPageModel
+	//[ALERTA Josep] Es trasllada a WikiPageSystem
 	private function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		$sortOptions = array( 0 => 'name', 'date' );
 		$nodeData    = array();
@@ -742,7 +745,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @param type $id
          * @return type
          */
-	//[ALERTA Josep] Es trasllada a DokuViewManager
+	//[ALERTA Josep] Es trasllada a wikiIocMessages i funcionarà de forma 
+        //semblant a WikiIocInfo
 	public function getGlobalMessage( $id ) {
 		global $lang;
 
@@ -755,6 +759,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 *
 	 * @param type $filePath
 	 */
+	//[ALERTA Josep] Es trasllada a WikiPageSystem
 	public function makeFileDir( $filePath ) {
 		io_makeFileDir( $filePath );
 	}
