@@ -5,7 +5,7 @@
  * Description of DokuModelAdapter
  *
  * @author Josep Cañellas Bornas<jcanell4@ioc.cat>
- * @author Rafael Claver<rclaver@xtec.cat>
+ * @author Rafael Claver Oñate<rclaver@xtec.cat>
  * @author Xavier Gracía Rodríguez <xaviergarodev@gmail.com>
  * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
  */
@@ -95,9 +95,6 @@ if ( ! defined( 'DW_ACT_MEDIA_DETAILS' ) ) {
 /**
  * Class DokuModelAdapter
  * Adaptador per passar les nostres comandes a la Dokuwiki.
- *
- * @author Josep Cañellas <jcanell4@ioc.cat>
- * @author Xavier Garcia Rodríguez<jcanell4@ioc.cat>
  */
 class DokuModelAdapter extends AbstractModelAdapter {
 	const ADMIN_PERMISSION = "admin";
@@ -253,7 +250,12 @@ class DokuModelAdapter extends AbstractModelAdapter {
                 //[TODO Josep] FALTA INFO
 	}
 
-        //[ALERTA Josep] Cal passar-ho a WikiIocInfo
+        //[ALERTA Josep] Cal passar-ho al component que gestiona l'estat de 
+        //cada petició i que a la dokuwiki classica estaria representada per 
+        //$INFO. Aquesta informació cal que estigui compartida per almenys el 
+        //ModelWrapper i el component d'autorització. Aquest mètode en passar-lo 
+        //al component de gestió de l'estat es farà private i no serà accessible
+        //des de fora.
         public function getInfoLoaded() {
             return $this->infoLoaded;
         }
@@ -261,7 +263,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
         /**
          * @return string[] hash amb els grups de l'usuari
         */
-        //[ALERTA Josep] Es queda aquí.
+        //[ALERTA Josep] Es queda aquí, peró cal referenciar la informació 
+        //al component de gestió de l'estat.
 	public function getUserGroup() {
             global $INFO;
         
@@ -275,7 +278,9 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * Comproba si el token de seguretat està verificat o no fent servir una funció de la DokuWiki.
          * @return bool
         */
-        //[ALERTA Josep] Cla passar-lo a CommandAuthorization.
+        //[ALERTA Josep] Cla passar-lo a la classe més superior del 
+        //component d'autorització ja que qualsevol projecte necessitarà 
+        //aquesta funcionalitat
 	public function isSecurityTokenVerified() {
             return checkSecurityToken();
         }
@@ -449,7 +454,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $this->getSaveInfoResponse( $code );
 	}
 
-        //[ALERTA Josep] Es trasllada a permission
+        //[ALERTA Josep] Es trasllada a Permission
         public function isAdminOrManager( $checkIsmanager = TRUE ) {
 		global $INFO;
 		if ( ! $this->infoLoaded ) {
@@ -460,7 +465,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	}
 
 	/**
-	 * Si el valor de la variable global $ACT es 'denied' retorna false, en cualsevol altre cas retorna true.
+	 * Si el valor de la variable global $ACT es 'denied' retorna 
+         * false, en qualsevol altre cas retorna true.
 	 *
 	 * @return bool
 	 */
@@ -480,17 +486,18 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return type
          */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a DokuPageModel
+        //a WikiPageModel
 	public function getMediaFileName( $id, $rev = '' ) {
 		return mediaFN( $id, $rev );
 	}
+        
         /**
          * Obté l'identificador de la pàgina sense el seu espai de noms
          * @param type $id
          * @return type
          */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a DokuPageModel
+        //a WikiPageModel
 	public function getIdWithoutNs( $id ) {
 		return noNS( $id );
 	}
@@ -501,7 +508,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return array
          */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a DokuPageModel
+        //a WikiPageModel
 	public function getMediaList( $ns ) {
 		$dir      = $this->getMediaFileName( $ns );
 		$arrayDir = scandir( $dir );
@@ -524,7 +531,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return type
          */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a DokuPageModel
+        //a WikiPageModel
 	public function imagePathToId( $path ) {
 		global $conf;
 		if ( $this->starsWith( $path, "/" ) ) { //absolute path
@@ -542,7 +549,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return type
          */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a DokuPageModel
+        //a WikiPageModel
 	public function getPageFileName( $id, $rev = '' ) {
 		return wikiFN( $id, $rev );
 	}
@@ -556,7 +563,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 * @return string
 	 */
         //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a DokuPageModel
+        //a WikiPageModel
 	public function getMediaUrl( $image, $rev = FALSE, $meta = FALSE ) {
 		$size = media_image_preview_size( $image, $rev, $meta );
 		if ( $size ) {
@@ -664,7 +671,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return type
          */
 	//[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-        //a DokuPageModel
+        //a WikiPageModel
         //[ALERTA JOSEP] Crec que no és necessari normalitzar aquesta crida ja 
         //que no és tracta d'una acció sinó de la obtenció de l'arbre de directoris
         public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
@@ -683,7 +690,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @param type $onlyDirs
          * @return string
          */
-	//[ALERTA Josep] Es trasllada a DokuPageModel
+	//[ALERTA Josep] Es trasllada a WikiPageModel
 	private function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		$sortOptions = array( 0 => 'name', 'date' );
 		$nodeData    = array();
