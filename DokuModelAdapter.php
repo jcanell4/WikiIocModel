@@ -20,6 +20,10 @@ require_once DOKU_INC . 'inc/template.php';
 require_once DOKU_INC . 'inc/JSON.php';
 require_once DOKU_INC . 'inc/JpegMeta.php';
 
+// TODO[Xavi] Afegit per mi per extreure la funcionalitat dels locks a una altra classe
+require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
+require_once('LockManager.php');
+
 if (!defined('DOKU_PLUGIN')) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
@@ -3093,6 +3097,8 @@ class DokuModelAdapter implements WikiIocModel
         // TODO: afegir les 'revs' que correspongui
         $response['revs'] = $this->getRevisions($pid);
 
+        $this->lock($pid);
+
         return $response;
     }
 
@@ -3125,32 +3131,15 @@ class DokuModelAdapter implements WikiIocModel
 
     public function lock($pid)
     {
-        global $conf,
-               $lang;
-
-        $locker = checklock($pid);
-
-        if ($locker === false) {
-            lock($pid);
-
-            $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-
-            return ['id' => $pid, 'timeout' => $conf['locktime'], 'info' => $info];
-
-        } else {
-
-            return ['id' => $pid, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
-        }
-
+        $lockManager = new LockManager($this);
+        return $lockManager->lock($pid);
     }
 
     public function unlock($pid)
     {
+        $lockManager = new LockManager($this);
+        return $lockManager->unlock($pid);
 
-        unlock($pid);
-        $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
-
-        return ['info' => $info]; // TODO[Xavi] Localitzar el missatge
     }
 
 }
