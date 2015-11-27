@@ -9,53 +9,17 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins
 if (!defined('DW_ACT_DENIED')) 	define('DW_ACT_DENIED', "denied" );
 
 require_once (DOKU_INC . 'inc/common.php');
-require_once (WIKI_IOC_MODEL . 'AbstractAuthorizationManager.php');
-require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
-require_once (WIKI_IOC_MODEL . 'default/authorization/Permission.php');
+require_once (WIKI_IOC_MODEL . 'AbstractCommandAuthorization.php');
 
-class CommandAuthorization extends AbstractAuthorizationManager {
-    protected $command;    //command_class object
+class CommandAuthorization extends AbstractCommandAuthorization {
+
     protected $modelWrapper;    //está pendiente separar completamente el DokuModelAdapter de la Autorización
-    protected $permission;
 
     public function __construct($params) {
         parent::__construct();
         $this->command = $params;
         $this->modelWrapper = $this->command->getModelWrapper();
         
-    }
-
-    /* 
-     * Responde a la pregunta: ¿los permisos permiten la ejecución del comando?
-     * @return bool. Indica si se han obtenido, o no, los permisos generales
-     */
-    public function canRun($permission = NULL) {
-        if ($permission === NULL) {
-            $permission = $this->getPermission();
-        }
-        $ret = ( ! $permission->getAuthenticatedUsersOnly()
-                || $permission->getIsSecurityTokenVerified()
-                && $permission->getIsUserAuthenticated()
-                && $permission->getIsAuthorized() );
-        return $ret;
-    }
-    
-    public function getPermission($params=array()) {
-        WikiIocInfoManager::loadInfo();
-        if ($this->permission === NULL) {
-            $this->createPermission();
-        }
-        return $this->permission;
-    }
-
-    private function createPermission() {
-        $permission = new Permission($this);
-        $this->permission = &$permission;  //Comprovar el pas per referència
-        
-        $this->permission->setAuthenticatedUsersOnly($this->command->getAuthenticatedUsersOnly());
-        $this->permission->setIsSecurityTokenVerified($this->isSecurityTokenVerified());
-        $this->permission->setIsUserAuthenticated($this->isUserAuthenticated());
-        $this->permission->setIsAuthorized($this->isAuthorized());
     }
 
     /* pendent de convertir a private quan no l'utilitzi ajax.php(duplicat) ni login_command */
@@ -65,7 +29,7 @@ class CommandAuthorization extends AbstractAuthorizationManager {
     }
 
     /* pendent de convertir a private quan no l'utilitzi abstract_command_class */
-    public function isAuthorized() {
+    public function isCommandAllowed() {
         $permissionFor = $this->command->getPermissionFor();
         $grup = $this->getUserGroup();
         $found = sizeof($permissionFor) == 0 || !is_array($grup);

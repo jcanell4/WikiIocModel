@@ -1,6 +1,6 @@
 <?php
 /**
- * Permission: define la clase de permisos
+ * AbstractPermission: define la clase abstracta de permisos
  *
  * @author Rafael Claver
  */
@@ -12,7 +12,7 @@ abstract class AbstractPermission {
     protected $authenticatedUsersOnly;  //bool (de command_class)
     protected $isSecurityTokenVerified;
     protected $isUserAuthenticated;
-    protected $isAuthorized;
+    protected $isCommandAllowed;
     
     public function __construct($cmdAuthorization) {
         $this->cmdAuthorization = $cmdAuthorization;
@@ -30,8 +30,8 @@ abstract class AbstractPermission {
         return $this->isUserAuthenticated;
     }
 
-    public function getIsAuthorized() {
-        return $this->isAuthorized;
+    public function getIsCommandAllowed() {
+        return $this->isCommandAllowed;
     }
   
     abstract function isDenied();
@@ -48,8 +48,8 @@ abstract class AbstractPermission {
         $this->isUserAuthenticated = $isUserAuthenticated;
     }
 
-    public function setIsAuthorized($isAuthorized) {
-        $this->isAuthorized = $isAuthorized;
+    public function setIsCommandAllowed($isCommandAllowed) {
+        $this->isCommandAllowed = $isCommandAllowed;
     }
   
 }
