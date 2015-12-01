@@ -15,46 +15,42 @@ abstract class AbstractCommandAuthorization {
     const IOC_AUTH_OK = TRUE;
     const IOC_AUTH_FORBIDEN_ACCESS = FALSE;
 
-    protected $command;    //command_class object
+    //protected $command;   //command_class object
+                            // ya no se guarda, se envia directamente a getPermission
     protected $permission;
     
     public function __construct() {}
-//    public abstract function canRun($permission = NULL);
-//    public abstract function getPermission($params=array());
     
     /* 
      * Responde a la pregunta: ¿los permisos permiten la ejecución del comando?
      * @return bool. Indica si se han obtenido, o no, los permisos generales
      */
-    public function canRun($permis = NULL) {
-        if ($permis === NULL) {
-            $permis = $this->getPermission();
-        }
+    public function canRun($permis) {
         $ret = ( ! $permis->getAuthenticatedUsersOnly()
-                || $permis->getIsSecurityTokenVerified()
-                && $permis->getIsUserAuthenticated()
-                && $permis->getIsCommandAllowed() );
+                || $permis->getSecurityTokenVerified()
+                && $permis->getUserAuthenticated()
+                && $permis->getPermissionFor() );
         return $ret;
     }
     
-    public function getPermission($params=array()) {
+    public function getPermission($command) {
         WikiIocInfoManager::loadInfo();
         if ($this->permission === NULL) {
-            $this->createPermission();
+            $this->createPermission($command);
         }
         return $this->permission;
     }
 
-    private function createPermission() {
+    private function createPermission($command) {
         global $INFO;
         
         $permis = new Permission($this);
         $this->permission = &$permis;  //Comprovar el pas per referència
         
-        $this->permission->setAuthenticatedUsersOnly($this->command->getAuthenticatedUsersOnly());
-        $this->permission->setIsSecurityTokenVerified($this->isSecurityTokenVerified());
-        $this->permission->setIsUserAuthenticated($this->isUserAuthenticated());
-        $this->permission->setIsCommandAllowed($this->isCommandAllowed());
+        $this->permission->setPermissionFor($command->getPermissionFor());
+        $this->permission->setAuthenticatedUsersOnly($command->getAuthenticatedUsersOnly());
+        $this->permission->setSecurityTokenVerified($this->isSecurityTokenVerified());
+        $this->permission->setUserAuthenticated($this->isUserAuthenticated());
         $this->permission->setInfoWritable($INFO['writable']);
         $this->permission->setInfoIsadmin($INFO['isadmin']);
         $this->permission->setInfoIsmanager($INFO['ismanager']);

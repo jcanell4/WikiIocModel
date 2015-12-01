@@ -17,8 +17,8 @@ class CommandAuthorization extends AbstractCommandAuthorization {
 
     public function __construct($params) {
         parent::__construct();
-        $this->command = $params;
-        $this->modelWrapper = $this->command->getModelWrapper();
+        //$this->command = $params; ya no se usa
+         $this->modelWrapper = $params->getModelWrapper();
         
     }
 
@@ -27,10 +27,17 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         global $_SERVER;
         return $_SERVER['REMOTE_USER'] ? TRUE : FALSE;
     }
+    
+    public function getPermission($command) {
+        global $INFO;
+        parent::getPermission($command);
+        $this->permission->setInfoPerm($INFO['perm']);
+    }
+
 
     /* pendent de convertir a private quan no l'utilitzi abstract_command_class */
     public function isCommandAllowed() {
-        $permissionFor = $this->command->getPermissionFor();
+        $permissionFor = $this->permission->getPermissionFor();
         $grup = $this->getUserGroup();
         $found = sizeof($permissionFor) == 0 || !is_array($grup);
         for($i = 0; !$found && $i < sizeof($grup); $i++) {
