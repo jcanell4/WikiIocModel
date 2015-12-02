@@ -3127,7 +3127,6 @@ class DokuModelAdapter implements WikiIocModel
 
         // TODO: Sí s'afegeix la meta, s'ha d'afegir també els 'revs' perquè s'esborren!
 
-
         return $response;
     }
 
@@ -3142,9 +3141,7 @@ class DokuModelAdapter implements WikiIocModel
     {
         $lockManager = new LockManager($this);
         return $lockManager->unlock($pid);
-
     }
-
 
     public function saveDraft($draft)
     {

@@ -22,6 +22,8 @@ class LockManager
         }
     }
 
+    // TODO[Xavi] això ha de retornar només les dades
+    // dokumodel adapter genera la informació
     public function lock($pid)
     {
         global $conf,
