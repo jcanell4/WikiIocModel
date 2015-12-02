@@ -3056,6 +3056,8 @@ class DokuModelAdapter implements WikiIocModel
 
     public function cancelPartialEdition($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks = NULL)
     {
+        global $lang;
+
         $this->startPageProcess(DW_ACT_SHOW, $pid, null, NULL, $psum);
 
         $response['structure'] = $this->getStructuredDocument(null, $pid, NULL, $editing_chunks);
@@ -3064,6 +3066,9 @@ class DokuModelAdapter implements WikiIocModel
         $this->removeStructuredDraft($pid, $selected);
 
         // TODO: afegir el 'info' que correspongui
+        if (!$response['info']) {
+            $response['info'] = $this->generateInfo("info", $lang['chunk_closed']);
+        }
 
         // TODO: afegir el 'meta' que correspongui
 //        $response['meta'] = $this->getMetaResponse( $pid ); // No cal, ja ha de ser actualitzat
@@ -3107,8 +3112,7 @@ class DokuModelAdapter implements WikiIocModel
 
     public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks)
     {
-        global $INFO,
-               $lang;
+        global $lang;
 
         $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, NULL, $psum);
         $response['structure'] = $this->getStructuredDocument($selected, $pid, null, $editing_chunks);
@@ -3120,7 +3124,7 @@ class DokuModelAdapter implements WikiIocModel
         if ($locked['timeout'] < 0) {
             $response['info'] = $locked['info'];
         } else {
-            $response['info'] = $this->generateInfo('success', 'Editant ' . $pid . ':' . $selected); //TODO[Xavi] localitzar el missatge
+            $response['info'] = $this->generateInfo('success', $lang['chunk_editing'] . $pid . ':' . $selected);
         }
 
         // TODO: afegir el 'meta' que correspongui
