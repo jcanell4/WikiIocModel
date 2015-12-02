@@ -29,12 +29,12 @@ abstract class AbstractCommandAuthorization {
         $ret = ( ! $permis->getAuthenticatedUsersOnly()
                 || $permis->getSecurityTokenVerified()
                 && $permis->getUserAuthenticated()
-                && $permis->getPermissionFor() );
+                && $this->isCommandAllowed()  );
         return $ret;
     }
     
     public function getPermission($command) {
-        WikiIocInfoManager::loadInfo();
+        WikiIocInfoManager::setParams($command->getParams());
         if ($this->permission === NULL) {
             $this->createPermission($command);
         }
@@ -51,9 +51,9 @@ abstract class AbstractCommandAuthorization {
         $this->permission->setAuthenticatedUsersOnly($command->getAuthenticatedUsersOnly());
         $this->permission->setSecurityTokenVerified($this->isSecurityTokenVerified());
         $this->permission->setUserAuthenticated($this->isUserAuthenticated());
-        $this->permission->setInfoWritable($INFO['writable']);
-        $this->permission->setInfoIsadmin($INFO['isadmin']);
-        $this->permission->setInfoIsmanager($INFO['ismanager']);
+        $this->permission->setInfoWritable(WikiIocInfoManager::getInfo('writable'));
+        $this->permission->setInfoIsadmin(WikiIocInfoManager::getInfo('isadmin'));
+        $this->permission->setInfoIsmanager(WikiIocInfoManager::getInfo('ismanager'));
     }
 
 }

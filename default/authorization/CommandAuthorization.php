@@ -32,6 +32,7 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         global $INFO;
         parent::getPermission($command);
         $this->permission->setInfoPerm($INFO['perm']);
+        return $this->permission;
     }
 
 
