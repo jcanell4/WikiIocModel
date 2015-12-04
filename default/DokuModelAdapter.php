@@ -381,28 +381,6 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $this->getSaveInfoResponse( $code );
 	}
 
-        // ver CommandAuthorization
-//	public function isAdminOrManager( $checkIsmanager = TRUE ) {
-//		global $INFO;
-//		if ( ! $this->infoLoaded ) {
-//			$this->fillInfo();
-//		}
-////		return $INFO['isadmin'] || $checkIsmanager && $INFO['ismanager'];
-//	}
-
-        // ver CommandAuthorization
-	/**
-	 * Si el valor de la variable global $ACT es 'denied' retorna false, en cualsevol altre cas retorna true.
-	 *
-	 * @return bool
-	 */
-//	public function isDenied() {
-//		global $ACT;
-//		$this->params['do'] = $ACT;
-//
-//		return $this->params['do'] == DW_ACT_DENIED;
-//	}
-
 	public function getMediaFileName( $id, $rev = '' ) {
 		return mediaFN( $id, $rev );
 	}

@@ -17,6 +17,7 @@ abstract class AbstractPermission {
     protected $info_isadmin;
     protected $info_ismanager;
     protected $permissionLoaded = FALSE;
+    protected $userGroups;
     
     public function __construct($cmdAuthorization) {
         $this->cmdAuthorization = $cmdAuthorization;
@@ -86,6 +87,18 @@ abstract class AbstractPermission {
         $this->info_ismanager = $info_ismanager;
     }
   
+    public function isAdminOrManager( $checkIsmanager = TRUE ) {
+	return $this->getInfoIsadmin() || $checkIsmanager && $this->getInfoIsmanager();
+    }
+
+    public function setUserGroups($userGroups) {
+        $this->userGroups = $userGroups;
+    }
+
+    public function getUserGroups() {
+        return $this->userGroups;
+    }
+
     public function isDenied() {
         return FALSE;   //valor per defecte per aquells que no el necessiten
     }

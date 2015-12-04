@@ -9,6 +9,7 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins
 if (!defined('DW_ACT_DENIED')) 	define('DW_ACT_DENIED', "denied" );
 
 require_once (DOKU_INC . 'inc/common.php');
+require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 require_once (WIKI_IOC_MODEL . 'AbstractCommandAuthorization.php');
 
 class CommandAuthorization extends AbstractCommandAuthorization {
@@ -29,32 +30,12 @@ class CommandAuthorization extends AbstractCommandAuthorization {
     }
     
     public function getPermission($command) {
-        global $INFO;
         parent::getPermission($command);
-        $this->permission->setInfoPerm($INFO['perm']);
+        $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
+        $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
         return $this->permission;
     }
 
-
-    /* pendent de convertir a private quan no l'utilitzi abstract_command_class */
-    public function isCommandAllowed() {
-        $permissionFor = $this->permission->getPermissionFor();
-        $grup = $this->getUserGroup();
-        $found = sizeof($permissionFor) == 0 || !is_array($grup);
-        for($i = 0; !$found && $i < sizeof($grup); $i++) {
-            $found = in_array($grup[$i], $permissionFor);
-        }
-        return $found;
-    }
-
-    /**
-     * @return string[] hash amb els grups de l'usuari
-    */
-    private function getUserGroup() {
-        global $INFO;
-        return $INFO['userinfo']['grps'];
-    }
-    
     /**
      * Comproba si el token de seguretat està verificat o no fent servir una funció de la DokuWiki.
      * @return bool

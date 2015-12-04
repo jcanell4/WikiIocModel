@@ -15,8 +15,6 @@ abstract class AbstractCommandAuthorization {
     const IOC_AUTH_OK = TRUE;
     const IOC_AUTH_FORBIDEN_ACCESS = FALSE;
 
-    //protected $command;   //command_class object
-                            // ya no se guarda, se envia directamente a getPermission
     protected $permission;
     
     public function __construct() {}
@@ -29,7 +27,7 @@ abstract class AbstractCommandAuthorization {
         $ret = ( ! $permis->getAuthenticatedUsersOnly()
                 || $permis->getSecurityTokenVerified()
                 && $permis->getUserAuthenticated()
-                && $this->isCommandAllowed()  );
+                && $this->isCommandAllowed() );
         return $ret;
     }
     
@@ -42,8 +40,6 @@ abstract class AbstractCommandAuthorization {
     }
 
     private function createPermission($command) {
-        global $INFO;
-        
         $permis = new Permission($this);
         $this->permission = &$permis;  //Comprovar el pas per referència
         
@@ -54,6 +50,16 @@ abstract class AbstractCommandAuthorization {
         $this->permission->setInfoWritable(WikiIocInfoManager::getInfo('writable'));
         $this->permission->setInfoIsadmin(WikiIocInfoManager::getInfo('isadmin'));
         $this->permission->setInfoIsmanager(WikiIocInfoManager::getInfo('ismanager'));
+        $this->permission->setUserGroups(array());
     }
 
+    private function isCommandAllowed() {
+        $permissionFor = $this->permission->getPermissionFor();
+        $grup = $this->permission->getUserGroups();
+        $found = sizeof($permissionFor) == 0 || !is_array($grup);
+        for($i = 0; !$found && $i < sizeof($grup); $i++) {
+            $found = in_array($grup[$i], $permissionFor);
+        }
+        return $found;
+    }
 }

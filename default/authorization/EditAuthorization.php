@@ -1,6 +1,6 @@
 <?php
 /* 
- * PageAuthorization: Extensión clase Autorización para el comando 'page'
+ * EditAuthorization: Extensión clase Autorización para el comando 'edit'
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
@@ -9,7 +9,7 @@ require_once (DOKU_INC . 'inc/auth.php');
 require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 require_once (WIKI_IOC_MODEL . 'default/authorization/CommandAuthorization.php');
 
-class PageAuthorization extends CommandAuthorization {
+class EditAuthorization extends CommandAuthorization {
 
     public function canRun($permission = NULL) {
         $ret = parent::canRun($permission);
