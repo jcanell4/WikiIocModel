@@ -22,34 +22,19 @@ class LockManager
         }
     }
 
-    // TODO[Xavi] això ha de retornar només les dades
-    // dokumodel adapter genera la informació
-    public function lock($pid)
-    {
-        global $conf,
-               $lang;
+    public function lock($pid) {
 
         $locker = checklock($pid);
 
         if ($locker === false) {
             lock($pid);
-
-            $info = $this->modelWrapper->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-
-            return ['id' => $pid, 'timeout' => $conf['locktime'], 'info' => $info];
-
-        } else {
-
-            return ['id' => $pid, 'timeout' => -1, 'info' => $this->modelWrapper->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
         }
 
-
+        return $locker;
     }
 
     public function unlock($pid)
     {
         unlock($pid);
-        $info = $this->modelWrapper->generateInfo('success', "S'ha alliberat el bloqueig");
-        return ['info' => $info]; // TODO[Xavi] Localitzar el missatge
     }
 }

@@ -60,6 +60,10 @@ class DraftManager
         // Recorrem la llista de headers de old drafts
 
         foreach ($oldDraft as $header => $chunk) {
+            $content1= $draft[$header]['content'];
+                $content2 = $chunk['content'];
+            $iguals = $content1==$content2;
+
             if (array_key_exists($header, $draft) && $chunk['content'] != $draft[$header]['content']) {
                 $chunk['date'] = $time;
                 $chunk['content'] = $draft[$chunk[$header]];
@@ -92,6 +96,7 @@ class DraftManager
 
         if (@file_exists($draftFile)) {
             $draft = unserialize(io_readFile($draftFile, FALSE));
+            // TODO[Xavi] comprovar la data del draft amb la del document, si el document(save complet) es més nou, es descarta aquest draft (removeStructuredDraft($id, $header_id)
         }
 
         return $draft;
@@ -124,6 +129,11 @@ class DraftManager
             }
         }
 
+    }
+
+    public function removeStructuredDraftAll($id) {
+        $draftFile = $this->getStructuredDraftFilename($id);
+        @unlink($draftFile);
     }
 
 }

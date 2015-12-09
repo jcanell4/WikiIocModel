@@ -431,6 +431,10 @@ class DokuModelAdapter implements WikiIocModel
 
 
         $response = $this->getSaveInfoResponse($code);
+
+        // Remove partialDraft
+        $this->clearPartialDraft($pid);
+
         return $response;
     }
 
@@ -2879,7 +2883,7 @@ class DokuModelAdapter implements WikiIocModel
      * @internal param $ {string|null} $selected - Chunk seleccionat $selected - Chunk seleccionat
      */
     // TODO[Xavi] PER REFACTORITZAR QUANT TINGUEM EL PLUGIN DEL RENDER. Fer privada?
-    public function getStructuredDocument($selected, $id, $rev = null, $editing = null)
+    public function getStructuredDocument($selected, $id, $rev = null, $editing = null, $recoverDraft = false)
     {
         global $INFO;
         global $lang;
@@ -2892,8 +2896,10 @@ class DokuModelAdapter implements WikiIocModel
         }
 
 
-        if (!$editing) {
+        if (!$editing && $selected) {
             $editing = [$selected];
+        } else if (!$editing) {
+            $editing = [];
         }
 
         $document = [];
@@ -2928,22 +2934,12 @@ class DokuModelAdapter implements WikiIocModel
             $chunks[$i]['header_id'] = $headerIds[$i];
             // Afegim el text només al seleccionat i els textos en edició
             if (in_array($headerIds[$i], $editing)) {
-//            if ($headerIds[$i] === $selected) {
                 $chunks[$i]['text'] = [];
                 //TODO[Xavi] compte! s'ha d'agafar sempre el editing per montar els nostres pre i suf!
-                // Calcular les posicions dels bytes de inici i final, guardar-les per fer-les servir de referencia al següent
-//                $chunks[$i]['text']['pre'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[0];
                 $chunks[$i]['text']['editing'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[1];
-//                $chunks[$i]['text']['suf'] = rawWikiSlices($chunks[$i]['start'] . "-" . $chunks[$i]['end'], $id)[2];
                 $chunks[$i]['text']['changecheck'] = md5($chunks[$i]['text']['editing']);
 
-                // TODO: El pre ha de ser el 'editing' des de:
-                // 0 si no hi ha cap anterior
-                // El valor de 'end' del chunk anterior
-                // Fins al  'start' d'aquest document
-
                 $editingChunks[] = &$chunks[$i];
-
 
             }
         }
@@ -2953,15 +2949,44 @@ class DokuModelAdapter implements WikiIocModel
         $document['suf'] = rawWikiSlices($editingChunks[$lastSuf]['start'] . "-" . $editingChunks[$lastSuf]['end'], $id)[2];
 
 
-        // TODO: no es passen per referència?
-        $this->addPreToChunks($editingChunks, $id);
 
+        $this->addPreToChunks($editingChunks, $id);
 
         $document['chunks'] = $chunks;
 
 
+//        $this->addDraftToStructuredDocument($id, $document, $editing);
+
         return $document;
     }
+
+    // Hi ha draft pel chunk a editar?
+    private function thereIsStructuredDraftFor($id, $document, $selected = null)
+    {
+        if (!$selected) {
+            return false;
+        }
+
+        $draft = $this->getStructuredDraft($id);
+
+        for ($i = 0; $i < count($document['chunks']); $i++) {
+            if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
+                && $document['chunks'][$i]['header_id']==$selected) {
+
+                // Si el contingut del draft i el propi es igual, l'eliminem
+                if ($document['chunks'][$i]['text'].['editing'] == $draft[$selected]['content']) {
+                    $this->removeStructuredDraft($id, $selected);
+                } else {
+                    return true;
+                }
+
+            }
+
+        }
+
+        return false;
+    }
+
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private function addPreToChunks(&$chunks, $id)
@@ -3110,21 +3135,65 @@ class DokuModelAdapter implements WikiIocModel
         return $response;
     }
 
-    public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks)
+    public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks, $recoverDraft = false)
     {
         global $lang;
 
         $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, NULL, $psum);
-        $response['structure'] = $this->getStructuredDocument($selected, $pid, null, $editing_chunks);
+        $response['structure'] = $this->getStructuredDocument($selected, $pid, null, $editing_chunks, $recoverDraft);
 
+        $existsDraft = $this->existsFullDraft($pid);
 
-        // TODO: afegir el 'info' que correspongui
-        $locked = $this->lock($pid);
+        // TODO[Xavi] si es troba una draft per la edició, no es retornarà la resposta edit_html
+        // TODO[Xavi] aquí s'haura d'afegir la comprovació de que no s'ha passat el paràmetre recover draft
 
-        if ($locked['timeout'] < 0) {
-            $response['info'] = $locked['info'];
+        if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && !$recoverDraft) {
+            $response['show_draft_dialog'] = true;
+
+            // TODO[Xavi] duplicat a continuació
+            $response['original_call'] = [];
+
+            $response['original_call']['section_id'] = $selected;
+            $response['original_call']['editing_chunks'] = implode(',', $editing_chunks); // TODO[Xavi] s'ha de convertir en string
+            $response['original_call']['rev'] = $prev;
+            $response['original_call']['range'] = '-'; // TODO[Xavi] Això sembla que no es necessari
+            $response['original_call']['target'] = 'section';
+            $response['original_call']['id'] = $this->cleanIDForFiles($pid);
+            $response['original_call']['ns'] = $pid;
+            $response['original_call']['summary'] = $psum; // TODO[Xavi] Comprovar si es correcte, ha de ser un array
+
+            $response['info'] = $this->generateInfo('warning', $lang['draft_found']);
+        }
+
+        // Si existeix el draft no es continua amb la edició, s'enviarà el process que mostra el dialog
+        if ($existsDraft) {
+
+            $response['original_call'] = [];
+
+            $response['original_call']['section_id'] = $selected;
+            $response['original_call']['editing_chunks'] = implode(',', $editing_chunks); // TODO[Xavi] s'ha de convertir en string
+            $response['original_call']['rev'] = $prev;
+            $response['original_call']['range'] = '-'; // TODO[Xavi] Això sembla que no es necessari
+            $response['original_call']['target'] = 'section';
+            $response['original_call']['id'] = $this->cleanIDForFiles($pid);
+            $response['original_call']['ns'] = $pid;
+            $response['original_call']['summary'] = $psum; // TODO[Xavi] Comprovar si es correcte, ha de ser un array
+
+            $response['id'] = $pid;
+
+            $response['full_draft'] = true;
+            $response['info'] = $this->generateInfo('warning', $lang['draft_found']);
+
         } else {
-            $response['info'] = $this->generateInfo('success', $lang['chunk_editing'] . $pid . ':' . $selected);
+
+            $locked = $this->lock($pid);
+
+            if ($locked['timeout'] < 0) {
+                $response['info'] = $locked['info'];
+            } else {
+                $response['info'] = $this->generateInfo('success', $lang['chunk_editing'] . $pid . ':' . $selected);
+            }
+
         }
 
         // TODO: afegir el 'meta' que correspongui
@@ -3137,14 +3206,34 @@ class DokuModelAdapter implements WikiIocModel
 
     public function lock($pid)
     {
+        global $lang,
+               $conf;
+
         $lockManager = new LockManager($this);
-        return $lockManager->lock($pid);
+        $locker = $lockManager->lock($pid);
+
+        if ($locker === false) {
+
+            $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
+            $response = ['id' => $pid, 'timeout' => $conf['locktime'], 'info' => $info];
+
+        } else {
+
+            $response = ['id' => $pid, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
+        }
+
+        return $response;
     }
 
     public function unlock($pid)
     {
         $lockManager = new LockManager($this);
-        return $lockManager->unlock($pid);
+        $lockManager->unlock($pid);
+
+        $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
+        $response['info'] = $info; // TODO[Xavi] Localitzar el missatge
+
+        return $response;
     }
 
     public function saveDraft($draft)
@@ -3159,9 +3248,48 @@ class DokuModelAdapter implements WikiIocModel
         return $draftManager->getStructuredDraft($id);
     }
 
-    public function removeStructuredDraft($id, $header_id) {
+    public function removeStructuredDraft($id, $header_id)
+    {
         $draftManager = new DraftManager($this);
-        $draftManager->removeStructuredDraft( $id, $header_id);
+        $draftManager->removeStructuredDraft($id, $header_id);
+    }
+
+    /**
+     * Retorna cert si existeix un draft o fals en cas contrari. Si es troba un draft però es més antic que el document
+     * corresponent aquest draft s'esborra.
+     *
+     * @param {string} $id id del document a comprovar
+     * @return bool
+     */
+    public function existsFullDraft($id)
+    {
+        $draftFile = $this->getDraftFilename($id);
+        $exists = false;
+
+        // Si el draft es més antic que el document actual esborrem el draft
+        if (@file_exists($draftFile)) {
+            if (@filemtime($draftFile) < @filemtime(wikiFN($id))) {
+                @unlink($draftFile);
+                $exists = false;
+            } else {
+                $exists = true;
+            }
+        }
+        return $exists;
+    }
+
+    public function clearFullDraft($id)
+    {
+        $draftFile = $this->getDraftFilename($id);
+        if (@file_exists($draftFile)) {
+            @unlink($draftFile);
+        }
+    }
+
+    public function clearPartialDraft($id)
+    {
+        $draftManager = new DraftManager($this);
+        $draftManager->removeStructuredDraftAll($id);
     }
 
 }
