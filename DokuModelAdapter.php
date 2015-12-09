@@ -2949,7 +2949,6 @@ class DokuModelAdapter implements WikiIocModel
         $document['suf'] = rawWikiSlices($editingChunks[$lastSuf]['start'] . "-" . $editingChunks[$lastSuf]['end'], $id)[2];
 
 
-
         $this->addPreToChunks($editingChunks, $id);
 
         $document['chunks'] = $chunks;
@@ -2971,10 +2970,11 @@ class DokuModelAdapter implements WikiIocModel
 
         for ($i = 0; $i < count($document['chunks']); $i++) {
             if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
-                && $document['chunks'][$i]['header_id']==$selected) {
+                && $document['chunks'][$i]['header_id'] == $selected
+            ) {
 
                 // Si el contingut del draft i el propi es igual, l'eliminem
-                if ($document['chunks'][$i]['text'].['editing'] == $draft[$selected]['content']) {
+                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]['content']) {
                     $this->removeStructuredDraft($id, $selected);
                 } else {
                     return true;
@@ -3135,7 +3135,7 @@ class DokuModelAdapter implements WikiIocModel
         return $response;
     }
 
-    public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks, $recoverDraft = false)
+    public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks, $recoverDraft = null)
     {
         global $lang;
 
@@ -3147,9 +3147,11 @@ class DokuModelAdapter implements WikiIocModel
         // TODO[Xavi] si es troba una draft per la edició, no es retornarà la resposta edit_html
         // TODO[Xavi] aquí s'haura d'afegir la comprovació de que no s'ha passat el paràmetre recover draft
 
-        if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && !$recoverDraft) {
+        // TODO[Xavi] La diferencia en aquest if es que aquest primer bloc es pel draft parcial
+        if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && $recoverDraft===null) {
             $response['show_draft_dialog'] = true;
-
+            $response['draft'] = $this->getStructuredDraftForHeader($pid, $selected);
+            $response['content'] = $this->getChunkFromStructureById($response['structure'], $selected);
             // TODO[Xavi] duplicat a continuació
             $response['original_call'] = [];
 
@@ -3165,7 +3167,7 @@ class DokuModelAdapter implements WikiIocModel
             $response['info'] = $this->generateInfo('warning', $lang['draft_found']);
         }
 
-        // Si existeix el draft no es continua amb la edició, s'enviarà el process que mostra el dialog
+        // TODO[Xavi] això es refereix al draft complet Si existeix el draft no es continua amb la edició, s'enviarà el process que mostra el dialog
         if ($existsDraft) {
 
             $response['original_call'] = [];
@@ -3184,7 +3186,16 @@ class DokuModelAdapter implements WikiIocModel
             $response['full_draft'] = true;
             $response['info'] = $this->generateInfo('warning', $lang['draft_found']);
 
+        } else if ($recoverDraft === true) {
+            // TODO[Xavi] Aquests dialog (i el del edit normal) fan servir el seu propi timer, no estan bloqjeant el document
+            $draftContent = $this->getStructuredDraftForHeader($pid, $selected);
+            $response['structure'] = $this->setContentForChunkByHeader($response['structure'], $selected, $draftContent);
+
+            $response['info'] = $this->generateInfo('warning', $lang['draft_editing']);
+
+
         } else {
+
 
             $locked = $this->lock($pid);
 
@@ -3196,11 +3207,35 @@ class DokuModelAdapter implements WikiIocModel
 
         }
 
+
         // TODO: afegir el 'meta' que correspongui
 
         // TODO: Sí s'afegeix la meta, s'ha d'afegir també els 'revs' perquè s'esborren!
 
         return $response;
+    }
+
+    private function setContentForChunkByHeader($structure, $selected, $content)
+    {
+        for ($i = 0; $i < count($structure['chunks']); $i++) {
+            if ($structure['chunks'][$i]['header_id'] == $selected) {
+                $structure['chunks'][$i]['text']['editing'] = $content['content'];
+                break;
+            }
+        }
+        return $structure;
+    }
+
+
+    private function getChunkFromStructureById($structure, $selected)
+    {
+        $chunks = $structure['chunks'];
+        foreach ($chunks as $chunk) {
+            if ($chunk['header_id'] == $selected) {
+                return $chunk['text'];
+            }
+        }
+        return null;
     }
 
 
@@ -3292,4 +3327,9 @@ class DokuModelAdapter implements WikiIocModel
         $draftManager->removeStructuredDraftAll($id);
     }
 
+    public function getStructuredDraftForHeader($id, $header)
+    {
+        $draftManager = new DraftManager($this);
+        return $draftManager->getStructuredDraftForHeader($id, $header);
+    }
 }

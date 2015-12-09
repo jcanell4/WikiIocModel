@@ -89,6 +89,21 @@ class DraftManager
 
     }
 
+    public function getStructuredDraftForHeader($id, $header) {
+        $draftFile = $this->getStructuredDraftFilename($id);
+
+        if (@file_exists($draftFile)) {
+            $draft = unserialize(io_readFile($draftFile, FALSE));
+
+            if ($draft[$header]) {
+                return $draft[$header];
+            }
+
+        }
+
+        return null;
+    }
+
     public function getStructuredDraft($id)
     {
         $draftFile = $this->getStructuredDraftFilename($id);
@@ -96,7 +111,6 @@ class DraftManager
 
         if (@file_exists($draftFile)) {
             $draft = unserialize(io_readFile($draftFile, FALSE));
-            // TODO[Xavi] comprovar la data del draft amb la del document, si el document(save complet) es més nou, es descarta aquest draft (removeStructuredDraft($id, $header_id)
         }
 
         return $draft;
