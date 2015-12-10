@@ -20,6 +20,7 @@ class DraftManager
         } else {
             $this->modelWrapper = new DokuModelAdapter();
         }
+
     }
 
     public function saveDraft($draft)
@@ -32,8 +33,9 @@ class DraftManager
                 $this->generateStructuredDraft($draft['content'], $draft['id']);
                 break;
 
-            //case 'simple': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
-            // break
+            case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
+                $this->saveFullDraft($draft['content'], $draft['id']);
+                break;
 
             default:
                 // error o no draft
@@ -133,10 +135,7 @@ class DraftManager
 
     public function getStructuredDraftFilename($id)
     {
-        $id = str_replace(':', '_', $id);;
-        $info = basicinfo($id);
-
-        return getCacheName($info['client'] . $id, '.draft.structured');
+        return $this->getDraftFilename($id).'.structured';
     }
 
     public function removeStructuredDraft($id, $header_id)
@@ -164,7 +163,10 @@ class DraftManager
     public function removeStructuredDraftAll($id)
     {
         $draftFile = $this->getStructuredDraftFilename($id);
-        @unlink($draftFile);
+        if (@file_exists($draftFile)) {
+            @unlink($draftFile);
+        }
+
     }
 
     public function existsPartialDraft($id)
@@ -213,7 +215,6 @@ class DraftManager
      */
     public function getDraftFilename($id)
     {
-
         $id = $this->modelWrapper->cleanIDForFiles($id);
         $info = basicinfo($id);
         return getCacheName($info['client'] . $id, '.draft');
@@ -280,6 +281,8 @@ class DraftManager
         $structuredDraft = $this->getStructuredDraft($id);
         $chunks = $this->modelWrapper->getAllChunksWithText($id)['chunks'];
 
+        $draftContent .= $structuredDraft['pre'] . "\n";
+
         for ($i = 0; $i < count($chunks); $i++) {
             if (array_key_exists($chunks[$i]['header_id'], $structuredDraft)) {
                 $draftContent .= $structuredDraft[$chunks[$i]['header_id']]['content'];
@@ -325,27 +328,30 @@ class DraftManager
         return FALSE;
     }
 
-    public function saveFullDraft($id)
+    /**
+     * Guarda l'esborrany complet del document i s'eliminen els esborranys parcials
+     * @param $draft
+     * @param $id
+     */
+    public function saveFullDraft($draft, $id)
     {
-        // TODO[Xavi] Encara no es fa servir, copiat de actions.php#act_draftsave($act)
-        // TODO[Xavi] mirar saveDraft(), te un switch per guardar també aquest tipus de save
-        global $INFO;
-        global $ID;
-        global $INPUT;
-        global $conf;
-        if ($conf['usedraft'] && $INPUT->post->has('wikitext')) {
-            $draft = array('id' => $ID,
-                'prefix' => substr($INPUT->post->str('prefix'), 0, -1),
-                'text' => $INPUT->post->str('wikitext'),
-                'suffix' => $INPUT->post->str('suffix'),
-                'date' => $INPUT->post->int('date'),
-                'client' => $INFO['client'],
-            );
-            $cname = getCacheName($draft['client'] . $ID, '.draft');
-            if (io_saveFile($cname, serialize($draft))) {
-                $INFO['draft'] = $cname;
-            }
+        $info = basicinfo($id);
+
+        $aux = ['id' => $id,
+                'prefix' => '',
+                'text' => $draft,
+                'suffix' => '',
+                'date' => time(), // TODO[Xavi] Posar la data
+                'client' => $info['client']
+            ];
+
+        $filename = $this->getDraftFilename($id);
+
+        if (io_saveFile($filename, serialize($aux))) {
+            $INFO['draft'] = $filename;
         }
-        return $act;
+
+        $this->removeStructuredDraftAll($id);
+
     }
 }
