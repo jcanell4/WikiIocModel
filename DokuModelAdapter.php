@@ -2931,6 +2931,8 @@ class DokuModelAdapter implements WikiIocModel
 
         $editingChunks = [];
 
+        $dictionary = [];
+
         for ($i = 0; $i < count($chunks); $i++) {
             $chunks[$i]['header_id'] = $headerIds[$i];
             // Afegim el text només al seleccionat i els textos en edició
@@ -2943,6 +2945,7 @@ class DokuModelAdapter implements WikiIocModel
                 $editingChunks[] = &$chunks[$i];
 
             }
+            $dictionary[$headerIds[$i]] = $i;
         }
 
         // Afegim el suf
@@ -2953,7 +2956,7 @@ class DokuModelAdapter implements WikiIocModel
         $this->addPreToChunks($editingChunks, $id);
 
         $document['chunks'] = $chunks;
-
+        $document['dictionary'] =$dictionary;
 
 //        $this->addDraftToStructuredDocument($id, $document, $editing);
 
