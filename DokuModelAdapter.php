@@ -1679,7 +1679,7 @@ class DokuModelAdapter implements WikiIocModel
             'rev' => $REV,
             'info' => $info,
             'type' => 'html',
-            'draft' => $this->GetContentDraft($id)
+            'draft' => $this->generateFullDraft($id)
         );
 
         return $contentData;
@@ -1713,13 +1713,10 @@ class DokuModelAdapter implements WikiIocModel
      *
      * @return string
      */
-    public function getDraftFilename($id = NULL)
+    public function getDraftFilename($id)
     {
-
-        $id = $this->cleanIDForFiles($id);
-        $info = basicinfo($id);
-
-        return getCacheName($info['client'] . $id, '.draft');
+        $draftManager = new DraftManager($this);
+        return $draftManager->getDraftFilename($id);
     }
 
     /**
@@ -1732,19 +1729,8 @@ class DokuModelAdapter implements WikiIocModel
      */
     public function hasDraft($id)
     {
-        $id = $this->cleanIDForFiles($id);
-
-        $draftFilename = $this->getDraftFilename($id);
-
-        if (@file_exists($draftFilename)) {
-            if (@filemtime($draftFilename) < @filemtime(wikiFN($id))) {
-                @unlink($draftFilename);
-            } else {
-                return TRUE;
-            }
-        }
-
-        return FALSE;
+        $draftManager = new DraftManager($this);
+        return $draftManager->hasDraft($id);
     }
 
     /**
@@ -1755,7 +1741,7 @@ class DokuModelAdapter implements WikiIocModel
      *
      * @return mixed
      */
-    private function cleanIDForFiles($id)
+    public function cleanIDForFiles($id)
     {
         if ($id == NULL) {
             $id = $this->params['id'];
@@ -1764,60 +1750,7 @@ class DokuModelAdapter implements WikiIocModel
         return str_replace(':', '_', $id);
     }
 
-    /**
-     * Retorna el contingut del esborrany pel document passat com argument si existeix i es vàlid. En cas de trobar
-     * un esborrany antic es esborrat automàticament.
-     *
-     * @param string $id - id del document
-     *
-     * @return array - Hash amb dos valors per el contingut i la data respectivament.
-     */
-    private function getContentDraft($id)
-    {
 
-        $draftFile = $this->getDraftFilename();
-        $cleanedDraft = NULL;
-
-        // Si el draft es més antic que el document actual esborrem el draft
-        if (@file_exists($draftFile)) {
-            if (@filemtime($draftFile) < @filemtime(wikiFN($id))) {
-                @unlink($draftFile);
-            } else {
-                $draft = unserialize(io_readFile($draftFile, FALSE));
-//				$cleanedDraft = $this->cleanDraft( $draft['text'] );
-                $cleanedDraft = $this->cleanDraft(con($draft['prefix'], $draft['text'], $draft['suffix']));
-            }
-        }
-
-        $draftDate = $this->extractDateFromRevision(@filemtime($draftFile));
-
-        return ['content' => $cleanedDraft, 'date' => $draftDate];
-    }
-
-    /**
-     * Neteja el contingut del esborrany per poder fer-lo servir directament.
-     *
-     * @param string $text - contingut original del fitxer de esborrany.
-     *
-     * @return mixed
-     */
-    private function cleanDraft($text)
-    {
-
-        $pattern = '/^(wikitext\s*=\s*)|(date=[0-9]*)$/i';
-        $content = preg_replace($pattern, '', $text);
-
-        return $content;
-    }
-
-//    private function getMetaPage($metaId, $metaTitle, $metaToSend) {
-//        $contentData = array(
-//            'id' => $metaId,
-//            'title' => $metaTitle,
-//            'content' => $metaToSend
-//        );
-//        return $contentData;
-//    }
 
     private function getAdminTaskListPage($id, $toSend)
     {
@@ -2845,27 +2778,18 @@ class DokuModelAdapter implements WikiIocModel
 
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
-    private function getInstructionsForCurrentDocument()
+    private function getInstructionsForDocument($id, $rev=null)
     {
-        global $ID;
-        global $REV;
-        $file = wikiFN($ID, $REV);
-        $cache = new cache_instructions($ID, $file);
+        $file = wikiFN($id, $rev);
+        $cache = new cache_instructions($id, $file); // TODO[Xavi] Això fa falta?
         $instructions = unserialize(io_readFile($cache->cache));
         return $instructions;
     }
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
-    private function getHtmlForCurrentDocument()
+    private function getHtmlForDocument($id, $rev = null)
     {
-        global $ID, $REV;
-
-        $html = p_wiki_xhtml($ID, $REV, true); // TODO[Xavi] hem de cercar altre forma de fer-ho, això es una part del que es fa al html.php i ens estem saltant altes accions
-
-
-//        ob_start();
-//        onFormatRender(); // Només crida a html_show()
-//        $html = ob_get_clean();
+        $html = p_wiki_xhtml($id, $rev, true);
 
         return $html;
     }
@@ -2911,27 +2835,42 @@ class DokuModelAdapter implements WikiIocModel
         $document['id'] = str_replace(":", "_", $id);
         $document['rev'] = $rev;
         $document['selected'] = $selected;
+        $document['date'] = $INFO['meta']['date']['modified'] + 1;
 
-        $html = $this->getHtmlForCurrentDocument();
-
-        $instructions = $this->getInstructionsForCurrentDocument();
-        $chunks = $this->getSectionRanges($instructions);
-
+        $html = $this->getHtmlForDocument($id, $rev);
         $document['html'] = $html;
 
-        $document['date'] = $INFO['meta']['date']['modified'] + 1;
-//        $document['date'] = $DATE + 1;
+        $headerIds = $this->getHeadersFromHtml($html);
 
-        // Dividiem en seccions el $html
-        // TODO: No funciona correctament amb subseccions
+        $instructions = $this->getInstructionsForDocument($id, $rev);
 
-        $pattern = '/(?:<h[123] class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si s'aplica el scedit
-        preg_match_all($pattern, $html, $match);
-        $headerIds = $match[1]; // Conté l'array amb els ids trobats per cada secció
+        $chunks = $this->getChunks($instructions);
 
         $editingChunks = [];
-
         $dictionary = [];
+
+        $this->getEditingChunks($editingChunks, $dictionary, $chunks, $id, $headerIds, $editing);
+
+        // Afegim el suf
+        $lastSuf = count($editingChunks) - 1;
+        $document['suf'] = rawWikiSlices($editingChunks[$lastSuf]['start'] . "-" . $editingChunks[$lastSuf]['end'], $id)[2];
+
+
+        $this->addPreToChunks($editingChunks, $id);
+
+        $document['chunks'] = $chunks;
+        $document['dictionary'] =$dictionary;
+
+        return $document;
+    }
+
+    private function getHeadersFromHtml($html) {
+        $pattern = '/(?:<h[123] class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si s'aplica el scedit
+        preg_match_all($pattern, $html, $match);
+        return $match[1]; // Conté l'array amb els ids trobats per cada secció
+    }
+
+    private function getEditingChunks(&$editingChunks, &$dictionary =[], &$chunks, $id, $headerIds, $editing) {
 
         for ($i = 0; $i < count($chunks); $i++) {
             $chunks[$i]['header_id'] = $headerIds[$i];
@@ -2947,20 +2886,21 @@ class DokuModelAdapter implements WikiIocModel
             }
             $dictionary[$headerIds[$i]] = $i;
         }
+    }
 
-        // Afegim el suf
-        $lastSuf = count($editingChunks) - 1;
-        $document['suf'] = rawWikiSlices($editingChunks[$lastSuf]['start'] . "-" . $editingChunks[$lastSuf]['end'], $id)[2];
+    public function getAllChunksWithText($id) {
+        $html = $this->getHtmlForDocument($id);
+        $headerIds = $this->getHeadersFromHtml($html);
+        $instructions = $this->getInstructionsForDocument($id);
+        $chunks = $this->getChunks($instructions);
+        $editing = $headerIds;
+        $editingChunks = [];
+        $dictionary = [];
 
+        $this->getEditingChunks($editingChunks, $dictionary, $chunks, $id, $headerIds, $editing);
 
-        $this->addPreToChunks($editingChunks, $id);
+        return ['chunks'=>$editingChunks, 'dictionary' =>$dictionary];
 
-        $document['chunks'] = $chunks;
-        $document['dictionary'] =$dictionary;
-
-//        $this->addDraftToStructuredDocument($id, $document, $editing);
-
-        return $document;
     }
 
     // Hi ha draft pel chunk a editar?
@@ -3010,7 +2950,7 @@ class DokuModelAdapter implements WikiIocModel
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     // Només son editables parcialment les seccions de nivell 1, 2 i 3
-    private function getSectionRanges($instructions)
+    private function getChunks($instructions)
     {
         $sections = [];
         $currentSection = [];
@@ -3301,19 +3241,13 @@ class DokuModelAdapter implements WikiIocModel
      */
     public function existsFullDraft($id)
     {
-        $draftFile = $this->getDraftFilename($id);
-        $exists = false;
+        $draftManager = new DraftManager($this);
+        return $draftManager->existsFullDraft($id);
+    }
 
-        // Si el draft es més antic que el document actual esborrem el draft
-        if (@file_exists($draftFile)) {
-            if (@filemtime($draftFile) < @filemtime(wikiFN($id))) {
-                @unlink($draftFile);
-                $exists = false;
-            } else {
-                $exists = true;
-            }
-        }
-        return $exists;
+    public function existsPartialDraft($id) {
+        $draftManager = new DraftManager($this);
+        return $draftManager->existsPartialDraft($id);
     }
 
     public function clearFullDraft($id)
@@ -3338,4 +3272,19 @@ class DokuModelAdapter implements WikiIocModel
         $draftManager = new DraftManager($this);
         return $draftManager->getStructuredDraftForHeader($id, $header);
     }
+
+    /**
+     * Retorna el contingut del esborrany pel document passat com argument si existeix i es vàlid. En cas de trobar
+     * un esborrany antic es esborrat automàticament.
+     *
+     * @param string $id - id del document
+     *
+     * @return array - Hash amb dos valors per el contingut i la data respectivament.
+     */
+    public function generateFullDraft($id) {
+        $draftManager = new DraftManager($this);
+        return $draftManager->generateFullDraft($id);
+    }
+
+
 }

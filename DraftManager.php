@@ -65,11 +65,14 @@ class DraftManager
             $content2 = $chunk['content'];
             $iguals = $content1 == $content2;
 
-            if (!$draft[$header]['content']) {
 
-                continue;
+//            if (!$draft[$header]['content']) {
+            //TODO[Xavi] Encara que no es passi una secció en particular no vol dir que s'hagi d'esborrar, si no solament es guarda el chunk seleccionat
+            //
+//                continue;
 
-            } else if (array_key_exists($header, $draft)
+//            } else
+            if (array_key_exists($header, $draft)
 
                 && $chunk['content'] != $draft[$header]['content']
 
@@ -164,4 +167,185 @@ class DraftManager
         @unlink($draftFile);
     }
 
+    public function existsPartialDraft($id)
+    {
+        $draftFile = $this->getStructuredDraftFilename($id);
+        return $this->existsDraft($draftFile, $id);
+
+    }
+
+    public function existsFullDraft($id)
+    {
+        $draftFile = $this->getDraftFilename($id);
+        return $this->existsDraft($draftFile, $id);
+    }
+
+    /**
+     * Retorna cert si existeix un draft o fals en cas contrari. Si es troba un draft però es més antic que el document
+     * corresponent aquest draft s'esborra.
+     *
+     * @param {string} $id id del document a comprovar
+     * @return bool
+     */
+    private function existsDraft($draftFile, $id)
+    {
+
+        $exists = false;
+
+        // Si el draft es més antic que el document actual esborrem el draft
+        if (@file_exists($draftFile)) {
+            if (@filemtime($draftFile) < @filemtime(wikiFN($id))) {
+                @unlink($draftFile);
+                $exists = false;
+            } else {
+                $exists = true;
+            }
+        }
+        return $exists;
+    }
+
+    /**
+     * Retorna el nom del fitxer de esborran corresponent al document i usuari actual
+     *
+     * @param string $id - id del document
+     *
+     * @return string
+     */
+    public function getDraftFilename($id)
+    {
+
+        $id = $this->modelWrapper->cleanIDForFiles($id);
+        $info = basicinfo($id);
+        return getCacheName($info['client'] . $id, '.draft');
+    }
+
+    private function getFullDraft($id)
+    {
+
+        $draftFile = $this->getDraftFilename($id);
+        $cleanedDraft = NULL;
+
+        // Si el draft es més antic que el document actual esborrem el draft
+        if (@file_exists($draftFile)) {
+            if (@filemtime($draftFile) < @filemtime(wikiFN($id))) {
+                @unlink($draftFile);
+            } else {
+                $draft = unserialize(io_readFile($draftFile, FALSE));
+                $cleanedDraft = $this->cleanDraft(con($draft['prefix'], $draft['text'], $draft['suffix']));
+            }
+        }
+
+        $draftDate = $this->modelWrapper->extractDateFromRevision(@filemtime($draftFile));
+
+        return ['content' => $cleanedDraft, 'date' => $draftDate];
+    }
+
+    public function generateFullDraft($id)
+    {
+        $draft = null;
+
+        // Existe el draft completo?
+        if ($this->existsFullDraft($id)) {
+            // Retornamos el draft completo
+            $draft = $this->getFullDraft($id);
+
+            // Si no, Existe el draft parcial?
+        } else if ($this->existsPartialDraft($id)) {
+            // Construimos el draft
+            $draft = $this->getFullDraftFromPartials($id);
+        }
+
+
+        return $draft;
+    }
+
+    /**
+     * Neteja el contingut del esborrany per poder fer-lo servir directament.
+     *
+     * @param string $text - contingut original del fitxer de esborrany.
+     *
+     * @return mixed
+     */
+    private function cleanDraft($text)
+    {
+        $pattern = '/^(wikitext\s*=\s*)|(date=[0-9]*)$/i';
+        $content = preg_replace($pattern, '', $text);
+        return $content;
+    }
+
+    private function getFullDraftFromPartials($id)
+    {
+        $draftContent = '';
+
+        $structuredDraft = $this->getStructuredDraft($id);
+        $chunks = $this->modelWrapper->getAllChunksWithText($id)['chunks'];
+
+        for ($i = 0; $i < count($chunks); $i++) {
+            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft)) {
+                $draftContent .= $structuredDraft[$chunks[$i]['header_id']]['content'];
+            } else {
+                $draftContent .= $chunks[$i]['text']['editing'];
+            }
+            $draftContent .= "\n";
+        }
+
+        $draft['content'] = $draftContent;
+        $draft['date'] = $this->modelWrapper->extractDateFromRevision(@filemtime($this->getStructuredDraftFilename($id)));
+
+        return $draft;
+    }
+
+    /**
+     * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
+     * esborrat.
+     *
+     * @param $id - id del document
+     *
+     * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
+     */
+    public function hasDraft($id)
+    {
+        $id = $this->modelWrapper->cleanIDForFiles($id);
+
+        $draftFilename = $this->getDraftFilename($id);
+
+        if (@file_exists($draftFilename)) {
+            if (@filemtime($draftFilename) < @filemtime(wikiFN($id))) {
+                @unlink($draftFilename);
+            } else {
+                return TRUE;
+            }
+        }
+
+        // Comprovem si existeix un draft parcial
+        if ($this->existsPartialDraft($id)) {
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
+    public function saveFullDraft($id)
+    {
+        // TODO[Xavi] Encara no es fa servir, copiat de actions.php#act_draftsave($act)
+        // TODO[Xavi] mirar saveDraft(), te un switch per guardar també aquest tipus de save
+        global $INFO;
+        global $ID;
+        global $INPUT;
+        global $conf;
+        if ($conf['usedraft'] && $INPUT->post->has('wikitext')) {
+            $draft = array('id' => $ID,
+                'prefix' => substr($INPUT->post->str('prefix'), 0, -1),
+                'text' => $INPUT->post->str('wikitext'),
+                'suffix' => $INPUT->post->str('suffix'),
+                'date' => $INPUT->post->int('date'),
+                'client' => $INFO['client'],
+            );
+            $cname = getCacheName($draft['client'] . $ID, '.draft');
+            if (io_saveFile($cname, serialize($draft))) {
+                $INFO['draft'] = $cname;
+            }
+        }
+        return $act;
+    }
 }
