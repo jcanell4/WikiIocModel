@@ -3142,7 +3142,6 @@ class DokuModelAdapter implements WikiIocModel
         $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, NULL, $psum);
         $response['structure'] = $this->getStructuredDocument($selected, $pid, null, $editing_chunks, $recoverDraft);
 
-        $existsDraft = $this->existsFullDraft($pid);
 
         // TODO[Xavi] si es troba una draft per la edició, no es retornarà la resposta edit_html
         // TODO[Xavi] aquí s'haura d'afegir la comprovació de que no s'ha passat el paràmetre recover draft
@@ -3152,45 +3151,24 @@ class DokuModelAdapter implements WikiIocModel
             $response['show_draft_dialog'] = true;
             $response['draft'] = $this->getStructuredDraftForHeader($pid, $selected);
             $response['content'] = $this->getChunkFromStructureById($response['structure'], $selected);
-            // TODO[Xavi] duplicat a continuació
-            $response['original_call'] = [];
-
-            $response['original_call']['section_id'] = $selected;
-            $response['original_call']['editing_chunks'] = implode(',', $editing_chunks); // TODO[Xavi] s'ha de convertir en string
-            $response['original_call']['rev'] = $prev;
-            $response['original_call']['range'] = '-'; // TODO[Xavi] Això sembla que no es necessari
-            $response['original_call']['target'] = 'section';
-            $response['original_call']['id'] = $this->cleanIDForFiles($pid);
-            $response['original_call']['ns'] = $pid;
-            $response['original_call']['summary'] = $psum; // TODO[Xavi] Comprovar si es correcte, ha de ser un array
-
-            $response['info'] = $this->generateInfo('warning', $lang['draft_found']);
+            $response['original_call'] = $this->generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum);
+            $response['info'] = $this->generateInfo('warning', $lang['partial_draft_found']);
         }
 
-        // TODO[Xavi] això es refereix al draft complet Si existeix el draft no es continua amb la edició, s'enviarà el process que mostra el dialog
-        if ($existsDraft) {
+        // Trobat draft de document complet
+        if ($this->existsFullDraft($pid)) {
 
-            $response['original_call'] = [];
-
-            $response['original_call']['section_id'] = $selected;
-            $response['original_call']['editing_chunks'] = implode(',', $editing_chunks); // TODO[Xavi] s'ha de convertir en string
-            $response['original_call']['rev'] = $prev;
-            $response['original_call']['range'] = '-'; // TODO[Xavi] Això sembla que no es necessari
-            $response['original_call']['target'] = 'section';
-            $response['original_call']['id'] = $this->cleanIDForFiles($pid);
-            $response['original_call']['ns'] = $pid;
-            $response['original_call']['summary'] = $psum; // TODO[Xavi] Comprovar si es correcte, ha de ser un array
-
+            $response['original_call'] = $this->generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum);
             $response['id'] = $pid;
-
             $response['full_draft'] = true;
             $response['info'] = $this->generateInfo('warning', $lang['draft_found']);
 
+            // Es recupera l'esborrany
         } else if ($recoverDraft === true) {
-            // TODO[Xavi] Aquests dialog (i el del edit normal) fan servir el seu propi timer, no estan bloqjeant el document
-            $draftContent = $this->getStructuredDraftForHeader($pid, $selected);
-            $response['structure'] = $this->setContentForChunkByHeader($response['structure'], $selected, $draftContent);
 
+            $draftContent = $this->getStructuredDraftForHeader($pid, $selected);
+//            $response['structure'] = $this->setContentForChunkByHeader($response['structure'], $selected, $draftContent);
+            $this->setContentForChunkByHeader($response['structure'], $selected, $draftContent);
             $response['info'] = $this->generateInfo('warning', $lang['draft_editing']);
 
 
@@ -3215,7 +3193,22 @@ class DokuModelAdapter implements WikiIocModel
         return $response;
     }
 
-    private function setContentForChunkByHeader($structure, $selected, $content)
+    private function generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum) {
+        $originalCall = [];
+
+        $originalCall['section_id'] = $selected;
+        $originalCall['editing_chunks'] = implode(',', $editing_chunks); // TODO[Xavi] s'ha de convertir en string
+        $originalCall['rev'] = $prev;
+        $originalCall['range'] = '-'; // TODO[Xavi] Això sembla que no es necessari
+        $originalCall['target'] = 'section';
+        $originalCall['id'] = $this->cleanIDForFiles($pid);
+        $originalCall['ns'] = $pid;
+        $originalCall['summary'] = $psum; // TODO[Xavi] Comprovar si es correcte, ha de ser un array
+
+        return $originalCall;
+    }
+
+    private function setContentForChunkByHeader(&$structure, $selected, $content)
     {
         for ($i = 0; $i < count($structure['chunks']); $i++) {
             if ($structure['chunks'][$i]['header_id'] == $selected) {

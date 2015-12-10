@@ -38,13 +38,14 @@ class DraftManager
             default:
                 // error o no draft
 
-                $i = 0;
+
                 break;
         }
     }
 
     private function generateStructuredDraft($draft, $id)
     {
+
         $time = time();
         $newDraft = [];
 
@@ -60,15 +61,25 @@ class DraftManager
         // Recorrem la llista de headers de old drafts
 
         foreach ($oldDraft as $header => $chunk) {
-            $content1= $draft[$header]['content'];
-                $content2 = $chunk['content'];
-            $iguals = $content1==$content2;
+            $content1 = $draft[$header]['content'];
+            $content2 = $chunk['content'];
+            $iguals = $content1 == $content2;
 
-            if (array_key_exists($header, $draft) && $chunk['content'] != $draft[$header]['content']) {
+            if (!$draft[$header]['content']) {
+
+                continue;
+
+            } else if (array_key_exists($header, $draft)
+
+                && $chunk['content'] != $draft[$header]['content']
+
+            ) {
+
                 $chunk['date'] = $time;
                 $chunk['content'] = $draft[$chunk[$header]];
                 $newDraft[$header] = ['content' => $draft[$header], 'date' => $time];
                 unset($draft[$header]);
+
             } else {
                 $newDraft[$header] = $chunk;
             }
@@ -89,7 +100,8 @@ class DraftManager
 
     }
 
-    public function getStructuredDraftForHeader($id, $header) {
+    public function getStructuredDraftForHeader($id, $header)
+    {
         $draftFile = $this->getStructuredDraftFilename($id);
 
         if (@file_exists($draftFile)) {
@@ -124,7 +136,8 @@ class DraftManager
         return getCacheName($info['client'] . $id, '.draft.structured');
     }
 
-    public function removeStructuredDraft($id, $header_id){
+    public function removeStructuredDraft($id, $header_id)
+    {
         $draftFile = $this->getStructuredDraftFilename($id);
 
         if (@file_exists($draftFile)) {
@@ -145,7 +158,8 @@ class DraftManager
 
     }
 
-    public function removeStructuredDraftAll($id) {
+    public function removeStructuredDraftAll($id)
+    {
         $draftFile = $this->getStructuredDraftFilename($id);
         @unlink($draftFile);
     }
