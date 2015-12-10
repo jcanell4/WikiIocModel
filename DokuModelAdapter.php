@@ -405,7 +405,7 @@ class DokuModelAdapter implements WikiIocModel
         global $lang;
 
         $this->startPageProcess(DW_ACT_DRAFTDEL, $pid, $prev);
-        $this->doCancelEditPreprocess($keep_draft);
+        $this->doCancelEditPreprocess($pid, $keep_draft);
 
         $response = $this->getFormatedPageResponse();
 
@@ -1250,16 +1250,17 @@ class DokuModelAdapter implements WikiIocModel
         return $code;
     }
 
-    private function doCancelEditPreProcess($keep_draft = FALSE)
+    private function doCancelEditPreProcess($id, $keep_draft = FALSE)
     {
-        global $ACT;
-        global $INFO;
+//        global $ACT;
+//        global $INFO;
 
-        // TODO[Xavi] Si es passa keep_draft = true no s'esborra
-
+        // Si es passa keep_draft = true no s'esborra
         if (!$keep_draft) {
-            $INFO['draft'] = $this->getDraftFilename();
-            $ACT = act_draftdel($ACT);
+//            $INFO['draft'] = $this->getDraftFilename();
+//            $ACT = act_draftdel($ACT);
+            $this->clearFullDraft($id);
+            $this->clearPartialDraft($id);
         }
 
         $this->doFormatedPagePreProcess();
@@ -3079,7 +3080,7 @@ class DokuModelAdapter implements WikiIocModel
     }
 
 
-    public function cancelPartialEdition($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks = NULL)
+    public function cancelPartialEdition($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks = NULL, $keep_draft = false)
     {
         global $lang;
 
@@ -3088,7 +3089,10 @@ class DokuModelAdapter implements WikiIocModel
         $response['structure'] = $this->getStructuredDocument(null, $pid, NULL, $editing_chunks);
         $response['structure']['cancel'] = [$selected];
 
-        $this->removeStructuredDraft($pid, $selected);
+        if (!$keep_draft) {
+            $this->removeStructuredDraft($pid, $selected);
+        }
+
 
         // TODO: afegir el 'info' que correspongui
         if (!$response['info']) {
@@ -3147,7 +3151,8 @@ class DokuModelAdapter implements WikiIocModel
         // TODO[Xavi] aquí s'haura d'afegir la comprovació de que no s'ha passat el paràmetre recover draft
 
         // TODO[Xavi] La diferencia en aquest if es que aquest primer bloc es pel draft parcial
-        if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && $recoverDraft===null) {
+        $test = $this->thereIsStructuredDraftFor($pid, $response['structure'], $selected);
+        if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && $recoverDraft === null) {
             $response['show_draft_dialog'] = true;
             $response['draft'] = $this->getStructuredDraftForHeader($pid, $selected);
             $response['content'] = $this->getChunkFromStructureById($response['structure'], $selected);
@@ -3155,6 +3160,7 @@ class DokuModelAdapter implements WikiIocModel
             $response['info'] = $this->generateInfo('warning', $lang['partial_draft_found']);
         }
 
+        $test = $this->existsFullDraft($pid);
         // Trobat draft de document complet
         if ($this->existsFullDraft($pid)) {
 
@@ -3193,7 +3199,8 @@ class DokuModelAdapter implements WikiIocModel
         return $response;
     }
 
-    private function generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum) {
+    private function generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum)
+    {
         $originalCall = [];
 
         $originalCall['section_id'] = $selected;
@@ -3308,10 +3315,13 @@ class DokuModelAdapter implements WikiIocModel
 
     public function clearFullDraft($id)
     {
-        $draftFile = $this->getDraftFilename($id);
-        if (@file_exists($draftFile)) {
-            @unlink($draftFile);
-        }
+        global $ACT, $INFO, $ID;
+
+        $ID = $id;
+
+        $INFO['draft'] = $this->getDraftFilename($id);
+        $ACT = act_draftdel($ACT);
+
     }
 
     public function clearPartialDraft($id)
