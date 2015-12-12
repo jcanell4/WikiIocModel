@@ -109,6 +109,7 @@ class DraftManager
     {
         $draftFile = $this->getStructuredDraftFilename($id);
 
+
         if (@file_exists($draftFile)) {
             $draft = unserialize(io_readFile($draftFile, FALSE));
 

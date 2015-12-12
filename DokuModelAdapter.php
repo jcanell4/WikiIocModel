@@ -3097,8 +3097,15 @@ class DokuModelAdapter implements WikiIocModel
         $test = $this->thereIsStructuredDraftFor($pid, $response['structure'], $selected);
         if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && $recoverDraft === null) {
             $response['show_draft_dialog'] = true;
-            $response['draft'] = $this->getStructuredDraftForHeader($pid, $selected);
             $response['content'] = $this->getChunkFromStructureById($response['structure'], $selected);
+            $response['draft'] = $this->getStructuredDraftForHeader($pid, $selected);
+            if ($response['draft']['content']===$response['content']['editing']) {
+                $this->removeStructuredDraft($pid, $selected);
+                unset($response['draft']);
+                $response['show_draft_dialog'] = false;
+            }
+
+
             $response['original_call'] = $this->generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum);
             $response['info'] = $this->generateInfo('warning', $lang['partial_draft_found']);
         }
