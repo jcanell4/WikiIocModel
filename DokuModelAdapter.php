@@ -363,6 +363,13 @@ class DokuModelAdapter implements WikiIocModel
         }
 
 
+        // TODO: afegir el 'meta' que correspongui
+        $response['meta'] = $this->getMetaResponse($pid);
+
+        // TODO: afegir les revisions
+        $response['revs'] = $this->getRevisions($pid);
+
+
         return $response;
     }
 
@@ -1372,7 +1379,7 @@ class DokuModelAdapter implements WikiIocModel
         $infoType = 'info';
 
         if ($INFO['locked']) {
-            $infoType = 'warning';
+            $infoType = 'error';
             $pageToSend['info'] = $lang['lockedby'] . ' ' . $INFO['locked'];
         }
 
@@ -1700,8 +1707,17 @@ class DokuModelAdapter implements WikiIocModel
     public function getDraftDialog($pid, $prev = NULL, $prange = NULL, $psum = NULL)
     {
 
+        global $INFO,
+               $lang;
+
         $response = $this->getCodePage($pid, $prev, $prange, $psum, NULL);
-        $response['show_draft_dialog'] = TRUE;
+
+        if ($INFO['locked']) {
+            $response['info'] = $this->generateInfo('error', $lang['lockedby'] . ' ' . $INFO['locked']);
+        } else {
+            $response['show_draft_dialog'] = TRUE;
+        }
+
 
         return $response;
     }
@@ -1749,7 +1765,6 @@ class DokuModelAdapter implements WikiIocModel
 
         return str_replace(':', '_', $id);
     }
-
 
 
     private function getAdminTaskListPage($id, $toSend)
@@ -2778,7 +2793,7 @@ class DokuModelAdapter implements WikiIocModel
 
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
-    private function getInstructionsForDocument($id, $rev=null)
+    private function getInstructionsForDocument($id, $rev = null)
     {
         $file = wikiFN($id, $rev);
         $cache = new cache_instructions($id, $file); // TODO[Xavi] Això fa falta?
@@ -2828,7 +2843,7 @@ class DokuModelAdapter implements WikiIocModel
         }
 
         $document = [];
-        $document['locked'] = $INFO['locked']; // True si el documen està bloquejat
+
 
         $document['title'] = tpl_pagetitle($id, TRUE);
         $document['ns'] = $id;
@@ -2859,18 +2874,21 @@ class DokuModelAdapter implements WikiIocModel
         $this->addPreToChunks($editingChunks, $id);
 
         $document['chunks'] = $chunks;
-        $document['dictionary'] =$dictionary;
+        $document['dictionary'] = $dictionary;
+        $document['locked'] = $this->checklock($id); // Nom del usuari que el te bloquejat o false es lliure
 
         return $document;
     }
 
-    private function getHeadersFromHtml($html) {
+    private function getHeadersFromHtml($html)
+    {
         $pattern = '/(?:<h[123] class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si s'aplica el scedit
         preg_match_all($pattern, $html, $match);
         return $match[1]; // Conté l'array amb els ids trobats per cada secció
     }
 
-    private function getEditingChunks(&$editingChunks, &$dictionary =[], &$chunks, $id, $headerIds, $editing) {
+    private function getEditingChunks(&$editingChunks, &$dictionary = [], &$chunks, $id, $headerIds, $editing)
+    {
 
         for ($i = 0; $i < count($chunks); $i++) {
             $chunks[$i]['header_id'] = $headerIds[$i];
@@ -2888,7 +2906,8 @@ class DokuModelAdapter implements WikiIocModel
         }
     }
 
-    public function getAllChunksWithText($id) {
+    public function getAllChunksWithText($id)
+    {
         $html = $this->getHtmlForDocument($id);
         $headerIds = $this->getHeadersFromHtml($html);
         $instructions = $this->getInstructionsForDocument($id);
@@ -2899,7 +2918,7 @@ class DokuModelAdapter implements WikiIocModel
 
         $this->getEditingChunks($editingChunks, $dictionary, $chunks, $id, $headerIds, $editing);
 
-        return ['chunks'=>$editingChunks, 'dictionary' =>$dictionary];
+        return ['chunks' => $editingChunks, 'dictionary' => $dictionary];
 
     }
 
@@ -3094,12 +3113,12 @@ class DokuModelAdapter implements WikiIocModel
         // TODO[Xavi] aquí s'haura d'afegir la comprovació de que no s'ha passat el paràmetre recover draft
 
         // TODO[Xavi] La diferencia en aquest if es que aquest primer bloc es pel draft parcial
-        $test = $this->thereIsStructuredDraftFor($pid, $response['structure'], $selected);
+
         if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && $recoverDraft === null) {
             $response['show_draft_dialog'] = true;
             $response['content'] = $this->getChunkFromStructureById($response['structure'], $selected);
             $response['draft'] = $this->getStructuredDraftForHeader($pid, $selected);
-            if ($response['draft']['content']===$response['content']['editing']) {
+            if ($response['draft']['content'] === $response['content']['editing']) {
                 $this->removeStructuredDraft($pid, $selected);
                 unset($response['draft']);
                 $response['show_draft_dialog'] = false;
@@ -3110,10 +3129,9 @@ class DokuModelAdapter implements WikiIocModel
             $response['info'] = $this->generateInfo('warning', $lang['partial_draft_found']);
         }
 
-        $test = $this->existsFullDraft($pid);
+
         // Trobat draft de document complet
         if ($this->existsFullDraft($pid)) {
-
             $response['original_call'] = $this->generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum);
             $response['id'] = $pid;
             $response['full_draft'] = true;
@@ -3194,6 +3212,7 @@ class DokuModelAdapter implements WikiIocModel
         global $lang,
                $conf;
 
+        $pid = $this->cleanIDForFiles($pid);
         $lockManager = new LockManager($this);
         $locker = $lockManager->lock($pid);
 
@@ -3213,12 +3232,17 @@ class DokuModelAdapter implements WikiIocModel
     public function unlock($pid)
     {
         $lockManager = new LockManager($this);
-        $lockManager->unlock($pid);
+        $lockManager->unlock($this->cleanIDForFiles($pid));
 
         $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
         $response['info'] = $info; // TODO[Xavi] Localitzar el missatge
 
         return $response;
+    }
+
+    public function checklock($pid)
+    {
+        return checklock($this->cleanIDForFiles($pid));
     }
 
     public function saveDraft($draft)
@@ -3252,7 +3276,8 @@ class DokuModelAdapter implements WikiIocModel
         return $draftManager->existsFullDraft($id);
     }
 
-    public function existsPartialDraft($id) {
+    public function existsPartialDraft($id)
+    {
         $draftManager = new DraftManager($this);
         return $draftManager->existsPartialDraft($id);
     }
@@ -3288,7 +3313,8 @@ class DokuModelAdapter implements WikiIocModel
      *
      * @return array - Hash amb dos valors per el contingut i la data respectivament.
      */
-    public function generateFullDraft($id) {
+    public function generateFullDraft($id)
+    {
         $draftManager = new DraftManager($this);
         return $draftManager->generateFullDraft($id);
     }
