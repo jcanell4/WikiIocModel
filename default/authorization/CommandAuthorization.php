@@ -18,7 +18,6 @@ class CommandAuthorization extends AbstractCommandAuthorization {
 
     public function __construct($params) {
         parent::__construct();
-        //$this->command = $params; ya no se usa
          $this->modelWrapper = $params->getModelWrapper();
         
     }
