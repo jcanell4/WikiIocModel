@@ -4,7 +4,10 @@
 /**
  * Description of DokuModelAdapter
  *
- * @author Josep Cañellas <jcanell4@ioc.cat>
+ * @author Josep Cañellas Bornas<jcanell4@ioc.cat>
+ * @author Rafael Claver Oñate<rclaver@xtec.cat>
+ * @author Xavier Gracía Rodríguez <xaviergarodev@gmail.com>
+ * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
  */
 if (! defined('DOKU_INC')) die();
 
@@ -16,7 +19,7 @@ require_once (DOKU_INC . 'inc/media.php');
 require_once (DOKU_INC . 'inc/auth.php');
 require_once (DOKU_INC . 'inc/confutils.php');
 require_once (DOKU_INC . 'inc/io.php');
-require_once (DOKU_INC . 'inc/template.php');
+//require_once (DOKU_INC . 'inc/template.php');
 require_once (DOKU_INC . 'inc/JSON.php');
 require_once (DOKU_INC . 'inc/JpegMeta.php');
 
@@ -93,8 +96,6 @@ if ( ! defined( 'DW_ACT_MEDIA_DETAILS' ) ) {
 /**
  * Class DokuModelAdapter
  * Adaptador per passar les nostres comandes a la Dokuwiki.
- *
- * @author Josep Cañellas <jcanell4@ioc.cat>
  */
 class DokuModelAdapter extends AbstractModelAdapter {
 	const ADMIN_PERMISSION = "admin";
@@ -109,11 +110,22 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	public static $DEFAULT_FORMAT = 0;
 	public static $SHORT_FORMAT = 1;
 
-        public function getAdminTask( $ptask, $pid = NULL ) {
+        /**
+         * Crida principal de la comanda admin_task. 
+         * @global type $lang
+         * @param type $ptask és la tasca adminitrativa a executar
+         * @param type $pid
+         * @return type
+         */
+        //[ALERTA Josep] Es queda aquí.
+	public function getAdminTask( $ptask, $pid = NULL ) {
 		global $lang;
-
+                
+                //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
 		$this->startAdminTaskProcess( $ptask, $pid );
+                //Preprocess (ACTION_ACT_PREPROCESS)
 		$this->doAdminTaskPreProcess();
+                //Process and return response
 		$response = $this->getAdminTaskResponse();
 		// Informació a pantalla
 		$info_time_visible = 5;
@@ -223,12 +235,21 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
+        /**
+         * Crida principal de la comanda admin_tab i crida del LoginResponseHandler
+         * @return type
+         */
+        //[ALERTA Josep] Es queda aquí.
 	public function getAdminTaskList() {
-
+ 
+                //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
 		$this->startAdminTaskProcess();
+                //Preprocess (ACTION_ACT_PREPROCESS)
 		$this->doAdminTaskListPreProcess();
-
+                //Process and return response
 		return $this->getAdminTaskListResponse();
+		// Informació a pantalla
+                //[TODO Josep] FALTA INFO
 	}
 
         // primero se ha enviado a WikiIocInfoManager y después se ha suprimido definitivamente
@@ -265,34 +286,25 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		global $INFO;
 		global $lang;
 		global $ACT;
+                global $TEXT;
+                
+                //[TODO JOSEP] Normalitzar: start do get...
 
-		$this->startUpLang();
-
-		if ( ! $text ) {
-			$text = $lang['createDefaultText'];
-		}
-
-		$this->startPageProcess(
+                //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
+                $this->startCreateProcess(
 			DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL,
 			"", $text, ""
 		);
-		if ( $INFO["exists"] ) {
-			throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
-		}
 
-		$permis_actual = $this->obtenir_permis( $pid, $_SERVER['REMOTE_USER'] );
-		if ( $permis_actual < AUTH_CREATE ) {
-			//se pide el permiso para el directorio (no para la página)
-			$permis_actual = $this->setUserPagePermission( getNS( $pid ) . ':*', $INFO['client'], AUTH_DELETE );
-		}
-		if ( $permis_actual >= AUTH_CREATE ) {
-			$code = $this->doSavePreProcess();
-		} else {
-			throw new InsufficientPermissionToCreatePageException( $pid ); //TODO [Josep] cal internacionalitzar el missage per defecte
-		}
+                //Preprocess (ACTION_ACT_PREPROCESS)
+                $this->doCreatePreProcess();
 
+                
+                //Process and return response
 		$response = $this->getFormatedPageResponse();
-		// Si no s'ha especificat cap altre missatge mostrem el de carrega
+                
+                // Informació a pantalla
+                // Si no s'ha especificat cap altre missatge mostrem el de carrega
 		if ( ! $response['info'] ) {
 			$response['info'] = $this->generateInfo( "info", $lang['document_created'] );
 		}
@@ -300,6 +312,17 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
+        /**
+         * Crida principal de la comanda page
+         * @global type $INFO
+         * @global type $lang
+         * @param type $pid
+         * @param type $prev
+         * @return type
+         * @throws PageNotFoundException
+         * @throws InsufficientPermissionToViewPageException
+         */
+	//[ALERTA Josep] Es queda aquí.
 	public function getHtmlPage( $pid, $prev = NULL ) {
 		global $INFO;
 		global $lang;
@@ -323,6 +346,20 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
+	/**
+         * Crida principal de la comanda edit i de la comanda raw_code
+         * @global type $INFO
+         * @global type $lang
+         * @param type $pid
+         * @param type $prev
+         * @param type $prange
+         * @param type $psum
+         * @param type $recover
+         * @return type
+         * @throws PageNotFoundException
+         * @throws InsufficientPermissionToEditPageException
+         */
+        //[ALERTA Josep] Es queda aquí.
 	public function getCodePage( $pid, $prev = NULL, $prange = NULL, $psum = NULL, $recover = NULL ) {
 		global $INFO;
 		global $lang;
@@ -356,7 +393,16 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
-	public function cancelEdition( $pid, $prev = NULL, $keep_draft = FALSE ) {
+        /**
+         * Crida principal de la comanda cancel
+         * @global type $lang
+         * @param type $pid
+         * @param type $prev
+         * @param type $keep_draft
+         * @return type
+         */
+        //[ALERTA Josep] Es queda aquí.
+        public function cancelEdition( $pid, $prev = NULL, $keep_draft = FALSE ) {
 		global $lang;
 
 		$this->startPageProcess( DW_ACT_DRAFTDEL, $pid, $prev );
@@ -368,6 +414,19 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
+        /**
+         * Crida principal de la comanda save
+         * @param type $pid
+         * @param type $prev
+         * @param type $prange
+         * @param type $pdate
+         * @param type $ppre
+         * @param type $ptext
+         * @param type $psuf
+         * @param type $psum
+         * @return type
+         */
+        //[ALERTA Josep] Es queda aquí.
 	public function saveEdition(
 		$pid, $prev = NULL, $prange = NULL,
 		$pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL
@@ -384,11 +443,25 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	public function getMediaFileName( $id, $rev = '' ) {
 		return mediaFN( $id, $rev );
 	}
-
+        
+        /**
+         * Obté l'identificador de la pàgina sense el seu espai de noms
+         * @param type $id
+         * @return type
+         */
+        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a WikiPageSystem
 	public function getIdWithoutNs( $id ) {
 		return noNS( $id );
 	}
-
+        
+        /**
+         * Obté la llista de medias que estan en una espai de noms
+         * @param type $ns
+         * @return array
+         */
+        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a WikiPageSystem
 	public function getMediaList( $ns ) {
 		$dir      = $this->getMediaFileName( $ns );
 		$arrayDir = scandir( $dir );
@@ -403,6 +476,17 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $arrayDir;
 	}
 
+        
+        
+        /**
+         * Obté l'identificador qualificat (amb NS inclós) d'una media a partir 
+         * de la seva ruta relativa o absoluta.
+         * @global type $conf
+         * @param type $path
+         * @return type
+         */
+        /*[TODO Josep] NO ES FA SERVIR. Valorar si cal eliminar o si es passa 
+         * al componentde persistència WikiPageSystem
 	public function imagePathToId( $path ) {
 		global $conf;
 		if ( $this->starsWith( $path, "/" ) ) { //absolute path
@@ -412,19 +496,30 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 		return $id;
 	}
+         */
 
-	// TODO[Xavi] No es cridat en lloc
+	/**
+         * 
+         * @param type $id
+         * @param type $rev
+         * @return type
+         */
+        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a WikiPageSystem
 	public function getPageFileName( $id, $rev = '' ) {
 		return wikiFN( $id, $rev );
 	}
 
 	/**
+         * Obté un link al media identificat per $image, $rev
 	 * @param string $image //abans era $id. $id no s'utilitzava
 	 * @param bool   $rev
 	 * @param bool   $meta
 	 *
 	 * @return string
 	 */
+        //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a WikiPageSystem
 	public function getMediaUrl( $image, $rev = FALSE, $meta = FALSE ) {
 		$size = media_image_preview_size( $image, $rev, $meta );
 		if ( $size ) {
@@ -446,6 +541,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	}
 
 	/**
+         * És la crida pincipal de la comanda save_unlinked_image. 
+         * Guarda un fitxer de tipus media pujat des del client
 	 * @param string $nsTarget
 	 * @param string $idTarget
 	 * @param string $filePathSource
@@ -453,14 +550,19 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 *
 	 * @return int
 	 */
+        //[ALERTA Josep] Es trasllada a BasicPersistenceManager        
+        //[TODO Josep] Aquí cal crear una crida normalitzada que en processar 
+        //l'acció cridi a aquesta funció traslladada a la classe encarregada 
+        //de la persistencia.
 	public function uploadImage( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
-		return $this->_saveImage(
+                return $this->_saveImage(
 			$nsTarget, $idTarget, $filePathSource
 			, $overWrite, "move_uploaded_file"
 		);
 	}
 
 	/**
+         * És la crida principal de la comanda copy_image_to_project
 	 * @param string $nsTarget
 	 * @param string $idTarget
 	 * @param string $filePathSource
@@ -468,6 +570,10 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 *
 	 * @return int
 	 */
+        //[ALERTA Josep] Es trasllada a DokuPersistenceManager        
+        //[TODO Josep] Aquí cal crear una crida normalitzada que en processar 
+        //l'acció cridi a aquesta funció traslladada a la classe encarregada 
+        //de la persistencia.
 	public function saveImage( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
 		return $this->_saveImage(
 			$nsTarget, $idTarget, $filePathSource
@@ -475,9 +581,21 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		);
 	}
 
-	public function getImageDetail( $imageId, $fromPage = NULL ) {
+        /**
+         * És la crida principal de la comanda get_image_detail. Obté un html 
+         * amb el detall d'una imatge.
+         * @global type $lang
+         * @param type $imageId
+         * @param type $fromPage
+         * @return string
+         * @throws HttpErrorCodeException
+         */
+        //[TODO Josep] Cal normalitzar
+        public function getImageDetail( $imageId, $fromPage = NULL ) {
 		global $lang;
 
+                //[TODO Josep] Normalitzar: start do get ...
+                
 		$error = $this->startMediaProcess( DW_ACT_MEDIA_DETAIL, $imageId, $fromPage );
 		if ( $error == 401 ) {
 			throw new HttpErrorCodeException( $error, "Access denied" );
@@ -497,13 +615,38 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $ret;
 	}
 
-	public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
+        /**
+         * És la crida principal de la comanda ns_tree_rest
+         * @global type $conf
+         * @param type $currentnode
+         * @param type $sortBy
+         * @param type $onlyDirs
+         * @return type
+         */
+	//[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
+        //a WikiPageSystem
+        //[ALERTA JOSEP] Crec que no és necessari normalitzar aquesta crida ja 
+        //que no és tracta d'una acció sinó de la obtenció de l'arbre de directoris
+        //Pensar si caldria renombrar a getNsNode, ja que només retorna un node 
+        //cada cop. Aixó pot ser adequat si es necessita una latra funció que 
+        //retorni tot l'arbre d'un cop
+        public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		global $conf;
 		$base = $conf['datadir'];
 
 		return $this->getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs );
 	}
 
+        /**
+         * Mètode privat que obté l'arbre de directoris a partir d'un espai de noms
+         * i el sistema de dades concret d'on obtenir-lo (media, data, meta, etc)
+         * @param type $base
+         * @param type $currentnode
+         * @param type $sortBy
+         * @param type $onlyDirs
+         * @return string
+         */
+	//[ALERTA Josep] Es trasllada a WikiPageSystem
 	private function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs = FALSE ) {
 		$sortOptions = array( 0 => 'name', 'date' );
 		$nodeData    = array();
@@ -549,6 +692,14 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $tree;
 	}
 
+        /**
+         * Obté el missatge traduit a l'idioma actual. 
+         * @global type $lang
+         * @param type $id
+         * @return type
+         */
+	//[ALERTA Josep] Es trasllada a wikiIocMessages i funcionarà de forma 
+        //semblant a WikiIocInfo
 	public function getGlobalMessage( $id ) {
 		global $lang;
 
@@ -561,6 +712,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 *
 	 * @param type $filePath
 	 */
+	//[ALERTA Josep] Es trasllada a WikiPageSystem
 	public function makeFileDir( $filePath ) {
 		io_makeFileDir( $filePath );
 	}
@@ -794,6 +946,20 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	/**
 	 * Inicia tractament d'una pàgina de la dokuwiki
 	 */
+	private function startCreateProcess(
+		$pdo, $pid = NULL, $prev = NULL, $prange = NULL,
+		$psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, 
+                $psuf = NULL 
+	) {
+            global $lang;
+            $this->startPageProcess($pdo, $pid, $prev, $prange, $psum, $pdate, $ppre, $ptext, $psuf);
+            if(!$ptext){
+                $TEXT = $this->params['text'] = cleanText( $lang['createDefaultText']);
+            }
+        }
+	/**
+	 * Inicia tractament d'una pàgina de la dokuwiki
+	 */
 	private function startPageProcess(
 		$pdo, $pid = NULL, $prev = NULL, $prange = NULL,
 		$psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL
@@ -943,19 +1109,23 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 	private function triggerStartEvents() {
 		$tmp = array(); //NO DATA
-		trigger_event( 'DOKUWIKI_STARTED', $tmp );
+//		trigger_event( 'DOKUWIKI_STARTED', $tmp );
 		trigger_event( 'WIOC_AJAX_COMMAND_STARTED', $this->dataTmp );
 	}
 
 	private function triggerEndEvents() {
 		$tmp = array(); //NO DATA
-		trigger_event( 'DOKUWIKI_DONE', $tmp );
-		//trigger_event( 'WIOC_AJAX_COMMAND_DONE', $this->dataTmp );
+//		trigger_event( 'DOKUWIKI_DONE', $tmp );
+		trigger_event( 'WIOC_AJAX_COMMAND_DONE', $tmp );
 	}
 
 	private function startUpLang() {
 		global $conf;
 		global $lang;
+                
+                if($this->langStartedUp){
+                    return;
+                }
 
 		//get needed language array
 		include $this->tplIncDir() . "lang/en/lang.php";
@@ -974,6 +1144,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		) {
 			include DOKU_PLUGIN . "wikiiocmodel/lang/" . $conf["lang"] . "/lang.php";
 		}
+                $this->langStartedUp=true;
 	}
 
 	/**
@@ -1095,6 +1266,25 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $content;
 	}
 
+	private function doCreatePreProcess() {
+            global $INFO;
+            
+            if ( $INFO["exists"] ) {
+                    throw new PageAlreadyExistsException( $pid, $lang['pageExists'] );
+            }
+
+            $permis_actual = $this->obtenir_permis( $pid, $_SERVER['REMOTE_USER'] );
+            if ( $permis_actual < AUTH_CREATE ) {
+                    //se pide el permiso para el directorio (no para la página)
+                    $permis_actual = $this->setUserPagePermission( getNS( $pid ) . ':*', $INFO['client'], AUTH_DELETE );
+            }
+            if ( $permis_actual >= AUTH_CREATE ) {
+                    $code = $this->doSavePreProcess();
+            } else {
+                    throw new InsufficientPermissionToCreatePageException( $pid ); //TODO [Josep] cal internacionalitzar el missage per defecte
+            }            
+        }
+        
 	private function doSavePreProcess() {
 		global $ACT;
 
@@ -1173,8 +1363,10 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 		ob_start();
 		trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_admin" );
-
-		$html_output = ob_get_clean() . "\n";
+                $html_output = ob_get_clean();
+                ob_start();
+		trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
+                $html_output = ob_get_clean();
 
 		return $html_output;
 	}
@@ -1231,7 +1423,11 @@ class DokuModelAdapter extends AbstractModelAdapter {
 			ptln( '</ul>' );
 		}
 
-		$html_output = ob_get_clean() . "\n";
+                $html_output = ob_get_clean();
+                ob_start();
+		trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
+                $html_output = ob_get_clean();
+
 
 		return $html_output;
 	}
@@ -1549,7 +1745,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $contentData;
 	}
 
-	/**
+        /**
 	 * Retorna una resposta amb les dades per mostrar un dialog de selecció esborrany-document.
 	 *
 	 * @param {string} $pid - id del document
@@ -1562,13 +1758,15 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 * @throws PageNotFoundException
 	 */
 	public function getDraftDialog( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
+            //[TODO Josep] Normalitzar:...
 
 		$response                      = $this->getCodePage( $pid, $prev, $prange, $psum, NULL );
 		$response['show_draft_dialog'] = TRUE;
 
 		return $response;
 	}
-
+        
+        
 	/**
 	 * Retorna el nom del fitxer de esborran corresponent al document i usuari actual
 	 *
@@ -1703,7 +1901,10 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 		ob_start();
 		trigger_event( 'TPL_ACT_RENDER', $ACT, array($this,'onFormatRender'));
-		$html_output = ob_get_clean() . "\n";
+		$html_output = ob_get_clean();
+                ob_start();
+		trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
+                $html_output = ob_get_clean();
 
 		return $html_output;
 	}
@@ -1712,7 +1913,10 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		global $ACT;
 		ob_start();
 		trigger_event( 'TPL_ACT_RENDER', $ACT, array($this, 'onCodeRender') );
-		$html_output = ob_get_clean() . "\n";
+		$html_output = ob_get_clean();
+                ob_start();
+		trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
+                $html_output = ob_get_clean();
 
 		return $html_output;
 	}
@@ -1722,6 +1926,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 * - Obtenir el gestor de medis
 	 */
 	public function getMediaManager( $image = NULL, $fromPage = NULL, $prev = NULL ) {
+                //[TODO Josep] Normalitzar: start do get ...
 		global $lang, $NS, $INPUT, $JSINFO;
 		/*if(!$NS){
 			$NS = $fromPage;
@@ -2160,6 +2365,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	}
 
 	public function getRevisions( $id ) {
+                //[TODO Josep] Normalitzar: start do get ...
 		global $ID;
 		global $ACT;
 
@@ -2252,6 +2458,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	}
 
 	public function getDiffPage( $id, $rev1, $rev2 = NULL ) {
+                //[TODO Josep] Normalitzar: start do get...
 		// START
 		// Només definim les variables que es passen per paràmetre, la resta les ignorem
 
@@ -2348,7 +2555,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $response;
 	}
 
-	/**
+        /**
 	 * Extreu la informació que volem fer servir com a meta pels diff, en aquest cas només ens interessa el formulari.
 	 *
 	 * S'afegeix una id única pel formulari per poder seleccionar-lo al frontend.
@@ -2453,6 +2660,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 * MEDIA DETAILS: Obtenció dels detalls de un media
 	 */
 	public function getMediaDetails( $image ) {
+                //[TODO Josep] Normalitzar: start do get ...
 		global $lang, $NS, $JSINFO, $MSG,$INPUT;
 
 		$error = $this->startMediaDetails( DW_ACT_MEDIA_DETAILS, $image );
