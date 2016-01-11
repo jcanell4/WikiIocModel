@@ -338,7 +338,6 @@ class DokuModelAdapter implements WikiIocModel
     public function getHtmlPage($pid, $prev = NULL)
     {
 
-        // TODO[Xavi] Falten per afegir les infos que s'afegien al fer
         // TODO[Xavi] S'estan ignorant les comprovacions del $INFO
 
 
@@ -2277,38 +2276,16 @@ class DokuModelAdapter implements WikiIocModel
         $ACT = 'revisions';
 
         $this->triggerStartEvents();
-//		$tmp = [ ];
-//		trigger_event( 'DOKUWIKI_START', $tmp );
         session_write_close();
 
-//		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
-//		if ( $evt->advise_before() ) {
         $content = "";
         if ($this->runBeforePreprocess($content)) {
             act_permcheck($ACT);
-            unlock($ID);
         }
-//		$evt->advise_after();
-//		unset( $evt );
+
         $this->runAfterPreprocess($content);
 
-        //desactivem aquesta crida perquè es tracta d'una crida AJAX i no es pot modificar la capçalera
-//		$headers[] = 'Content-Type:application/json; charset=utf-8';
-//
-//		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );
-
         $this->startUpLang();
-
-        //descativem aquesta crida perquè les revisions no es retornen
-        //rederitzades sinó que es rendaritzen al client
-        //trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_content_core");
-        // En aquest punt es on es generaria el codi HTML
-
-        //descativem aquesta crida perquè des del dokumodeladapter el
-        //display ja està fet i no servidria de res tornar a llançar
-        //aquest esdeveniment.
-//		$temp = [ ];
-//		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
 
         // DO real
 
@@ -2322,12 +2299,9 @@ class DokuModelAdapter implements WikiIocModel
             //unset ($ret[$revision]['id']);
         }
         $ret['current'] = @filemtime(wikiFN($ID));
-//		$ret['docId'] = str_replace( ":", "_", $ID);
         $ret['docId'] = $ID;
 
         $this->triggerEndEvents();
-//		$temp = [ ];
-//		trigger_event( 'DOKUWIKI_DONE', $temp );
 
         return $ret;
     }
@@ -3054,7 +3028,6 @@ class DokuModelAdapter implements WikiIocModel
         if (!$keep_draft) {
             $this->removeStructuredDraft($pid, $selected);
         }
-
 
         // TODO: afegir el 'info' que correspongui
         if (!$response['info']) {
