@@ -2,7 +2,7 @@
 
 /**
  * Component: Project / MetaData
- * Status: @@Development
+ * Status: @@Tested
  * Purposes:
  * - Abstract class that must inherit all entities
  * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
@@ -141,6 +141,9 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         $encoder = new JSON();                
         //$arraymd = $encoder->decode($this->MetaDataValue);
         $arraymd = json_decode($this->MetaDataValue,true); //true to force json_decode to return an array and not an object
+        $hola = "hola hola hola";
+        var_dump($hola);
+        print_r($arraymd);
         //$arrayfi = $encoder->decode($filter);
         $arrayfi = json_decode($filter,true);
         if (json_last_error() != JSON_ERROR_NONE) {
