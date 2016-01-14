@@ -1068,15 +1068,15 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		 * @var string
 		 * @author Andreas Haerter <development@andreas-haerter.com>
 		 */
-		$vector_context = $this->params['vector_context'] = "article";
+		/*$vector_context = $this->params['vector_context'] = "article";
 		if ( $pFromId && preg_match(
-				"/^" . tpl_getConf( "vector_discuss_ns" ) . "?$|^"
-				. tpl_getConf( "vector_discuss_ns" ) . ".*?$/i", ":"
-				                                                 . getNS( getID() )
+				"/^" . tpl_getConf( "ioc_template_discuss_ns" ) . "?$|^"
+				. tpl_getConf( "ioc_template_discuss_ns" ) . ".*?$/i", 
+                                ":" . getNS( $pFromId )
 			)
 		) {
 			$vector_context = $this->params['vector_context'] = "discuss";
-		}
+		}*/
 
 		/**
 		 * Stores the name the current client used to login
