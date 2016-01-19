@@ -1015,7 +1015,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		global $ID;
 		global $AUTH;
 		global $vector_action;
-		global $vector_context;
+		//global $vector_context;
 		global $loginname;
 		global $IMG;
 		global $ERROR;
@@ -1969,7 +1969,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	private function startMediaManager( $pdo, $pImage = NULL, $pFromId = NULL, $prev = NULL ) {
 		global $ID;
 		global $AUTH;
-		//global $vector_action;
+		global $vector_action;
 		//global $vector_context;
 		//global $loginname;
 		global $IMG;

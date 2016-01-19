@@ -9,6 +9,7 @@ require_once (DOKU_INC . 'inc/actions.php');
 class WikiIocInfoManager {
 
     private static $infoLoaded = FALSE;
+    private static $mediaInfoLoaded = FALSE;
     
     public static function loadInfo() {
         if (!self::$infoLoaded) {
@@ -19,7 +20,10 @@ class WikiIocInfoManager {
     public static function loadMediaInfo() {
 	global $INFO;
         self::loadInfo();
-    	$INFO = array_merge( $INFO, mediainfo() );
+        if (!self::$mediaInfoLoaded) {
+            $INFO = array_merge( $INFO, mediainfo() );
+            self::$mediaInfoLoaded = TRUE;
+        }
     }
 
     protected static function fillInfo() {

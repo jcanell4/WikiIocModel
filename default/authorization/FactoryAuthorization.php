@@ -23,11 +23,11 @@ class FactoryAuthorization {
 
     public function createAuthorizationManager($str_cmd, $params) {
         
-        $str_authorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization');
-        if ($str_authorization === NULL) {
+        $fileAuthorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization');
+        if ($fileAuthorization === NULL) {
             $authorization = new CommandAuthorization($params);
         }else {
-            $authorization = new $str_authorization($params);
+            $authorization = new $fileAuthorization($params);
         }
         return $authorization;
     }
