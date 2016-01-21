@@ -9,6 +9,7 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins
 if (!defined('DW_ACT_DENIED')) 	define('DW_ACT_DENIED', "denied" );
 
 require_once (DOKU_INC . 'inc/common.php');
+require_once (DOKU_INC . 'inc/auth.php');
 require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 require_once (WIKI_IOC_MODEL . 'AbstractCommandAuthorization.php');
 

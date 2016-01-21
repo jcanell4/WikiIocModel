@@ -46,6 +46,10 @@ class WikiIocInfoManager {
 	//export minimal infos to JS, plugins can add more
 	$JSINFO['isadmin']   = $INFO['isadmin'];
 	$JSINFO['ismanager'] = $INFO['ismanager'];
+        if ($INFO['isadmin'])
+            $INFO['userinfo']['grps'][] = 'admin';
+        if ($INFO['ismanager'])
+            $INFO['userinfo']['grps'][] = 'manager';
 
 	self::$infoLoaded = TRUE;
     }
