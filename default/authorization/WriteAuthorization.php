@@ -1,6 +1,8 @@
 <?php
-/* 
- * CancelAuthorization: Extensión clase Autorización para el comando 'cancel'
+/**
+ * WriteAuthorization: Extensión clase Autorización para los comandos 
+ * que precisan una autorización mínima de AUTH_EDIT
+ * 
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
@@ -8,7 +10,7 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins
 require_once (DOKU_INC . 'inc/auth.php');
 require_once (WIKI_IOC_MODEL . 'default/authorization/CommandAuthorization.php');
 
-class CancelAuthorization extends CommandAuthorization {
+class WriteAuthorization extends CommandAuthorization {
 
     public function canRun($permission = NULL) {
         $ret = parent::canRun($permission);
