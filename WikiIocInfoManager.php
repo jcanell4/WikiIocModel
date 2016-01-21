@@ -11,10 +11,22 @@ class WikiIocInfoManager {
     private static $infoLoaded = FALSE;
     private static $mediaInfoLoaded = FALSE;
     
+    public static function getInfo($key){
+        global $INFO;
+        self::loadInfo();
+        return $INFO[$key];
+    }
+    
     public static function loadInfo() {
         if (!self::$infoLoaded) {
             self::fillInfo();
         }
+    }
+    
+    public static function getMediaInfo($key){
+        global $INFO;
+        self::loadMediaInfo();
+        return $INFO[$key];
     }
 
     public static function loadMediaInfo() {
@@ -76,13 +88,8 @@ class WikiIocInfoManager {
         if ( $params['sum']  ) {
                 $SUM = $params['sum'];
         }
-        self::$infoLoaded=FALSE;
-    }
-    
-    public static function getInfo($key){
-        global $INFO;
-        self::loadInfo();
-        return $INFO[$key];
+        self::$infoLoaded = FALSE;
+        self::$mediaInfoLoaded = FALSE;
     }
 
 }

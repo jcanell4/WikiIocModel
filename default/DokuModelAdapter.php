@@ -172,8 +172,9 @@ class DokuModelAdapter extends AbstractModelAdapter {
 				}
 				break;
 			case 'usermanager':
-				$fn  = $_REQUEST['fn'];
-				$key = key( $fn );
+				$fn = $_REQUEST['fn'];
+    				if ( $fn ) 
+                                    $key = key( $fn );
 				if ( ! isset( $key ) ) {
 					// call from the admin tab
 					$response['info'] = $this->generateInfo( "info", $lang['admin_task_loaded'], NULL, $info_time_visible );
