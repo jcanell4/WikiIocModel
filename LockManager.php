@@ -1,8 +1,5 @@
 <?php
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
-require_once(DOKU_PLUGIN . 'wikiiocmodel/DokuModelAdapter.php');
 
 /**
  * Class LockManager
@@ -11,16 +8,16 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/DokuModelAdapter.php');
  *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
-class LockManager
-{
-    public function __construct(WikiIocModel $modelWrapper = NULL)
-    {
-        if ($modelWrapper) {
-            $this->modelWrapper = $modelWrapper;
-        } else {
-            $this->modelWrapper = new DokuModelAdapter();
-        }
-    }
+class LockManager{
+    
+//    public function __construct(WikiIocModel $modelWrapper = NULL)
+//    {
+//        if ($modelWrapper) {
+//            $this->modelWrapper = $modelWrapper;
+//        } else {
+//            $this->modelWrapper = new DokuModelAdapter();
+//        }
+//    }
 
     public function lock($pid) {
 

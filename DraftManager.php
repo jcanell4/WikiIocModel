@@ -1,8 +1,7 @@
 <?php
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
-require_once(DOKU_PLUGIN . 'wikiiocmodel/DokuModelAdapter.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
 
 /**
  * Class DraftManager
@@ -11,30 +10,18 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/DokuModelAdapter.php');
  *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
-class DraftManager
-{
-    public function __construct(WikiIocModel $modelWrapper = NULL)
-    {
-        if ($modelWrapper) {
-            $this->modelWrapper = $modelWrapper;
-        } else {
-            $this->modelWrapper = new DokuModelAdapter();
-        }
-
-    }
-
-    public function saveDraft($draft)
-    {
+class DraftManager{
+    public static function saveDraft($draft){
 
         $type = $draft['type'];
 
         switch ($type) {
             case 'structured':
-                $this->generateStructuredDraft($draft['content'], $draft['id']);
+                self::generateStructuredDraft($draft['content'], $draft['id']);
                 break;
 
             case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
-                $this->saveFullDraft($draft['content'], $draft['id']);
+                self::saveFullDraft($draft['content'], $draft['id']);
                 break;
 
             default:
@@ -45,17 +32,16 @@ class DraftManager
         }
     }
 
-    private function generateStructuredDraft($draft, $id)
-    {
+    private static function generateStructuredDraft($draft, $id){
 
         $time = time();
         $newDraft = [];
 
-        $draftFile = $this->getStructuredDraftFilename($id);
+        $draftFile = self::getStructuredDraftFilename($id);
 
         if (@file_exists($draftFile)) {
             // Obrim el draft actual si existeix
-            $oldDraft = $this->getStructuredDraft($id);
+            $oldDraft = self::getStructuredDraft($id);
         } else {
             $oldDraft = [];
         }
@@ -105,9 +91,8 @@ class DraftManager
 
     }
 
-    public function getStructuredDraftForHeader($id, $header)
-    {
-        $draftFile = $this->getStructuredDraftFilename($id);
+    public static function getStructuredDraftForHeader($id, $header){
+        $draftFile = self::getStructuredDraftFilename($id);
 
 
         if (@file_exists($draftFile)) {
@@ -122,9 +107,9 @@ class DraftManager
         return null;
     }
 
-    public function getStructuredDraft($id)
+    public static function getStructuredDraft($id)
     {
-        $draftFile = $this->getStructuredDraftFilename($id);
+        $draftFile = self::getStructuredDraftFilename($id);
         $draft = [];
 
         if (@file_exists($draftFile)) {
@@ -134,17 +119,17 @@ class DraftManager
         return $draft;
     }
 
-    public function getStructuredDraftFilename($id)
+    public static function getStructuredDraftFilename($id)
     {
-        return $this->getDraftFilename($id).'.structured';
+        return self::getDraftFilename($id).'.structured';
     }
 
-    public function removeStructuredDraft($id, $header_id)
+    public static function removeStructuredDraft($id, $header_id)
     {
-        $draftFile = $this->getStructuredDraftFilename($id);
+        $draftFile = self::getStructuredDraftFilename($id);
 
         if (@file_exists($draftFile)) {
-            $oldDraft = $this->getStructuredDraft($id);
+            $oldDraft = self::getStructuredDraft($id);
 
             if (array_key_exists($header_id, $oldDraft)) {
                 unset($oldDraft[$header_id]);
@@ -161,26 +146,26 @@ class DraftManager
 
     }
 
-    public function removeStructuredDraftAll($id)
+    public static function removeStructuredDraftAll($id)
     {
-        $draftFile = $this->getStructuredDraftFilename($id);
+        $draftFile = self::getStructuredDraftFilename($id);
         if (@file_exists($draftFile)) {
             @unlink($draftFile);
         }
 
     }
 
-    public function existsPartialDraft($id)
+    public static function existsPartialDraft($id)
     {
-        $draftFile = $this->getStructuredDraftFilename($id);
-        return $this->existsDraft($draftFile, $id);
+        $draftFile = self::getStructuredDraftFilename($id);
+        return self::existsDraft($draftFile, $id);
 
     }
 
-    public function existsFullDraft($id)
+    public static function existsFullDraft($id)
     {
-        $draftFile = $this->getDraftFilename($id);
-        return $this->existsDraft($draftFile, $id);
+        $draftFile = self::getDraftFilename($id);
+        return self::existsDraft($draftFile, $id);
     }
 
     /**
@@ -190,7 +175,7 @@ class DraftManager
      * @param {string} $id id del document a comprovar
      * @return bool
      */
-    private function existsDraft($draftFile, $id)
+    private static function existsDraft($draftFile, $id)
     {
 
         $exists = false;
@@ -214,17 +199,16 @@ class DraftManager
      *
      * @return string
      */
-    public function getDraftFilename($id)
+    public static function getDraftFilename($id)
     {
-        $id = $this->modelWrapper->cleanIDForFiles($id);
-        $info = basicinfo($id);
-        return getCacheName($info['client'] . $id, '.draft');
+        $id = WikiPageSystemManager::cleanIDForFiles($id);
+        return getCacheName(WikiIocInfoManager::getInfo("client") . $id, '.draft');
     }
 
-    private function getFullDraft($id)
+    private static function getFullDraft($id)
     {
 
-        $draftFile = $this->getDraftFilename($id);
+        $draftFile = self::getDraftFilename($id);
         $cleanedDraft = NULL;
 
         // Si el draft es més antic que el document actual esborrem el draft
@@ -233,28 +217,28 @@ class DraftManager
                 @unlink($draftFile);
             } else {
                 $draft = unserialize(io_readFile($draftFile, FALSE));
-                $cleanedDraft = $this->cleanDraft(con($draft['prefix'], $draft['text'], $draft['suffix']));
+                $cleanedDraft = self::cleanDraft(con($draft['prefix'], $draft['text'], $draft['suffix']));
             }
         }
 
-        $draftDate = $this->modelWrapper->extractDateFromRevision(@filemtime($draftFile));
+        $draftDate = WikiPageSystemManager::extractDateFromRevision(@filemtime($draftFile));
 
         return ['content' => $cleanedDraft, 'date' => $draftDate];
     }
 
-    public function generateFullDraft($id)
+    public static function generateFullDraft($id)
     {
         $draft = null;
 
         // Existe el draft completo?
-        if ($this->existsFullDraft($id)) {
+        if (self::existsFullDraft($id)) {
             // Retornamos el draft completo
-            $draft = $this->getFullDraft($id);
+            $draft = self::getFullDraft($id);
 
             // Si no, Existe el draft parcial?
-        } else if ($this->existsPartialDraft($id)) {
+        } else if (self::existsPartialDraft($id)) {
             // Construimos el draft
-            $draft = $this->getFullDraftFromPartials($id);
+            $draft = self::getFullDraftFromPartials($id);
         }
 
 
@@ -268,18 +252,18 @@ class DraftManager
      *
      * @return mixed
      */
-    private function cleanDraft($text)
+    private static function cleanDraft($text)
     {
         $pattern = '/^(wikitext\s*=\s*)|(date=[0-9]*)$/i';
         $content = preg_replace($pattern, '', $text);
         return $content;
     }
 
-    private function getFullDraftFromPartials($id)
+    private static  function getFullDraftFromPartials($id)
     {
         $draftContent = '';
 
-        $structuredDraft = $this->getStructuredDraft($id);
+        $structuredDraft = self::getStructuredDraft($id);
         $chunks = $this->modelWrapper->getAllChunksWithText($id)['chunks'];
 
         $draftContent .= $structuredDraft['pre'] . "\n";
@@ -307,11 +291,11 @@ class DraftManager
      *
      * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
      */
-    public function hasDraft($id)
+    public static function hasDraft($id)
     {
-        $id = $this->modelWrapper->cleanIDForFiles($id);
+        $id = WikiPageSystemManager::cleanIDForFiles($id);
 
-        $draftFilename = $this->getDraftFilename($id);
+        $draftFilename = self::getDraftFilename($id);
 
         if (@file_exists($draftFilename)) {
             if (@filemtime($draftFilename) < @filemtime(wikiFN($id))) {
@@ -322,7 +306,7 @@ class DraftManager
         }
 
         // Comprovem si existeix un draft parcial
-        if ($this->existsPartialDraft($id)) {
+        if (self::existsPartialDraft($id)) {
             return TRUE;
         }
 
@@ -334,7 +318,7 @@ class DraftManager
      * @param $draft
      * @param $id
      */
-    public function saveFullDraft($draft, $id)
+    public static function saveFullDraft($draft, $id)
     {
         $info = basicinfo($id);
 
@@ -346,13 +330,13 @@ class DraftManager
                 'client' => $info['client']
             ];
 
-        $filename = $this->getDraftFilename($id);
+        $filename = self::getDraftFilename($id);
 
         if (io_saveFile($filename, serialize($aux))) {
             $INFO['draft'] = $filename;
         }
 
-        $this->removeStructuredDraftAll($id);
+        self::removeStructuredDraftAll($id);
 
     }
 }
