@@ -2,7 +2,7 @@
 
 /**
  * Component: Project / MetaData
- * Status: @@Development + @@pending: could act as cache
+ * Status: @@Tested + @@pending: could act as cache
  * Purposes:
  * - Class giving config utils
  * - Config utils are obtained from Persistence Component
@@ -61,11 +61,10 @@ class MetaDataDaoConfig {
      * - Call PERSISTENCE component to obtain ns classes Repository, DAO, Entity i Render
      * @param String projectType, String metaDataSubset
      * Restrictions:
-     * - Persitence returns wellformed JSON
+     * - Persistence returns wellformed JSON
      * - mandatory $projectType, $MetaDataSubSet
      * @return JSON with {class:ns, ..., class:ns}
      */
-
     function getMetaDataConfig($projectType, $metaDataSubset) {
         $exists = false;
         if (array_key_exists($projectType, self::$ClassesNameSpaces)) {
@@ -84,11 +83,11 @@ class MetaDataDaoConfig {
              * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
              */
             $encoder = new JSON();
+            $arrayConfigPre = $encoder->decode($jSONArray);
             if (json_last_error() != JSON_ERROR_NONE) {
                 throw new MalFormedJSON();
             }
 
-            $arrayConfigPre = $encoder->decode($jSONArray);
             $arrayConfig = array();
             foreach ($arrayConfigPre as $obj1 => $value1) {
                 foreach ($value1 as $obj => $value) {
@@ -100,25 +99,31 @@ class MetaDataDaoConfig {
         return self::$ClassesNameSpaces[$projectType][$metaDataSubset];
     }
 
-
     /**
      * Purpose:
      * - Call PERSISTENCE component to obtain ns containing project metadata and his projectType (starting from a nsRoot given)
      * @param String ns
      * Restrictions:
-     * - Persitence returns wellformed JSON
+     * - Persistence returns wellformed JSON
      * - mandatory $nsRoot
      * @return {ns:projectType,...,ns:projectType}
      */
-
     function getMetaDataElementsKey($nsRoot) {
         //Call PERSISTENCE method
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
          *      crida efectiva al mètode concret de la persistència
          */
-        return PersistenceSimul::getMetaDataElementsKey($nsRoot);
-        
+        $jSONArray = PersistenceSimul::getMetaDataElementsKey($nsRoot);
+        /*
+         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
+         */
+        $encoder = new JSON();
+        $arrayConfigPre = $encoder->decode($jSONArray);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            throw new MalFormedJSON();
+        }
+        return $jSONArray;
     }
 
 }

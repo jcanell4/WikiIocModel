@@ -28,4 +28,35 @@ class NotAllEntityMandatoryProperties extends WikiIocModelException {
 
 }
 
+class MetaDataNotFound extends WikiIocModelException {
 
+    public function __construct($code = 5070, $message = "No s'han trobat les metadata del projecte", $previous = NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+
+}
+
+
+class WrongParams extends WikiIocModelException {
+
+    public function __construct($code = 5130, $message = "Paràmetres incorrectes", $previous = NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+
+}
+
+class MetaDataNotUpdated extends WikiIocModelException {
+
+    public function __construct($code = 5090, $message = "La persistència no ha pogut actualitzar les metadata", $previous = NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+
+}
+
+class PersistenceNsNotFound extends WikiIocModelException {
+
+    public function __construct($code = 5120, $message = "No existeix el namespace", $previous = NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+
+}
