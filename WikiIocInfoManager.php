@@ -9,17 +9,33 @@ require_once (DOKU_INC . 'inc/actions.php');
 class WikiIocInfoManager {
 
     private static $infoLoaded = FALSE;
+    private static $mediaInfoLoaded = FALSE;
+    
+    public static function getInfo($key){
+        global $INFO;
+        self::loadInfo();
+        return $INFO[$key];
+    }
     
     public static function loadInfo() {
         if (!self::$infoLoaded) {
             self::fillInfo();
         }
     }
+    
+    public static function getMediaInfo($key){
+        global $INFO;
+        self::loadMediaInfo();
+        return $INFO[$key];
+    }
 
     public static function loadMediaInfo() {
 	global $INFO;
         self::loadInfo();
-    	$INFO = array_merge( $INFO, mediainfo() );
+        if (!self::$mediaInfoLoaded) {
+            $INFO = array_merge( $INFO, mediainfo() );
+            self::$mediaInfoLoaded = TRUE;
+        }
     }
 
     protected static function fillInfo() {
@@ -30,6 +46,10 @@ class WikiIocInfoManager {
 	//export minimal infos to JS, plugins can add more
 	$JSINFO['isadmin']   = $INFO['isadmin'];
 	$JSINFO['ismanager'] = $INFO['ismanager'];
+        if ($INFO['isadmin'])
+            $INFO['userinfo']['grps'][] = 'admin';
+        if ($INFO['ismanager'])
+            $INFO['userinfo']['grps'][] = 'manager';
 
 	self::$infoLoaded = TRUE;
     }
@@ -72,13 +92,8 @@ class WikiIocInfoManager {
         if ( $params['sum']  ) {
                 $SUM = $params['sum'];
         }
-        self::$infoLoaded=FALSE;
-    }
-    
-    public static function getInfo($key){
-        global $INFO;
-        self::loadInfo();
-        return $INFO[$key];
+        self::$infoLoaded = FALSE;
+        self::$mediaInfoLoaded = FALSE;
     }
 
 }
