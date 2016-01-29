@@ -3,16 +3,22 @@
 if (! defined('DOKU_INC')) die();
 
 require_once (DOKU_INC . 'inc/pageutils.php');
-require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataRequest.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
 
 
 /**
- * Description of MetaDataRequest
+ * Description of MetaDataQuery
  *
  * @author josep
  */
-class MetaDataRequest extends DataRequest {
-    public function getFileName($id, $ext, $specparams=NULL) {
+class MetaDataQuery extends DataQuery {
+    public function getFileName($id, $sppar) {
+        if($sppar && isset($sppar["ext"])){
+            $ext = $sppar["ext"];
+        }else{
+            $ext ="";
+        }
+
         return metaFN($id, $ext);
     }
     

@@ -7,13 +7,13 @@ require_once (DOKU_INC . 'inc/io.php');
 
 
 /**
- * Description of DataRequest
+ * Description of DataQuery
  *
  * @author josep
  */
 
 
-abstract class DataRequest {
+abstract class DataQuery {
     /**
      * Retorna l'espai de noms que conté el fitxer identificat per $id
      * @param string $id és l'identificador del fitxer d'on extreu l'espai de noms
@@ -33,7 +33,7 @@ abstract class DataRequest {
         return noNS($id);
     }
     
-    public abstract function getFileName($id, $rev="", $especParams=NULL);
+    public abstract function getFileName($id, $especParams=NULL);
     public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE);
 
 

@@ -2,26 +2,44 @@
 
 if (! defined('DOKU_INC')) die();
 
+require_once (DOKU_INC . 'inc/auth.php');
 require_once (DOKU_INC . 'inc/pageutils.php');
-require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataRequest.php');
-
+require_once (DOKU_INC . 'inc/io.php');
+require_once (DOKU_INC . 'inc/confutils.php');
+require_once (DOKU_INC . 'inc/media.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
+require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
+require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
+require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 
 
 /**
- * Description of MediaDataRequest
+ * Description of MediaDataQuery
  *
  * @author josep
  */
-class MediaDataRequest extends DataRequest{
-    public function getFileName($id, $rev = "", $sppar=NULL) {
+class MediaDataQuery extends DataQuery{
+    public function getFileName($id, $sppar=NULL) {
+        if(is_array($sppar)){
+            $rev = $sppar["rev"];
+        }else{
+            $rev = $sppar;
+        }
         return mediaFN( $id, $rev );
     }
 
     public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE) {
-        global $conf;
-        $base = $conf['mediadir'];
+        $base = WikiGlobalConfig::getConf('mediadir');
 
         return $this->getNsTreeFromBase( $base, $currentNode, $sortBy, $onlyDirs );        
+    }
+    
+    public function save($id, $filePathSource, $overWrite = TRUE ) {
+        $ns = $this->getNs($id);
+        $imageId = $this->getIdWithoutNs($id);
+        return $this->_saveImage(
+                    $ns, $imageId, $filePathSource, $overWrite, "move_uploaded_file"
+            );        
     }
     
         /**
@@ -38,7 +56,7 @@ class MediaDataRequest extends DataRequest{
     //[TODO Josep] Aquí cal crear una crida normalitzada que en processar 
     //l'acció cridi a aquesta funció traslladada a la classe encarregada 
     //de la persistencia.
-    public function uploadImage( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
+    public function upload( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
             return $this->_saveImage(
                     $nsTarget, $idTarget, $filePathSource
                     , $overWrite, "move_uploaded_file"
@@ -54,7 +72,7 @@ class MediaDataRequest extends DataRequest{
      *
      * @return int
      */
-    public function copyImage( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
+    public function copy( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
             return $this->_saveImage(
                     $nsTarget, $idTarget, $filePathSource
                     , $overWrite, "copy"
@@ -93,7 +111,7 @@ class MediaDataRequest extends DataRequest{
             $auth = auth_quickaclcheck( getNS( $idTarget ) . ":*" );
 
             if ( $auth >= AUTH_UPLOAD ) {
-                    io_createNamespace( "$nsTarget:xxx", 'media' );
+                    io_createNamespace( "$nsTarget:xxx", 'media' ); //TODO [Josep] Canviar el literal media pel valor de la configuració (mediadir?)
                     list( $ext, $mime, $dl ) = mimetype( $idTarget );
                     $res_media = media_save(
                             array(

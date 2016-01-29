@@ -14,7 +14,7 @@ if (! defined('DOKU_INC')) die();
 //require common
 require_once (DOKU_INC . 'inc/actions.php');
 require_once (DOKU_INC . 'inc/pageutils.php');
-require_once (DOKU_INC . 'inc/parserutils.php');//Eliminar quan es canvïi p_cached_instructions a PageDataRequest
+require_once (DOKU_INC . 'inc/parserutils.php');//Eliminar quan es canvïi p_cached_instructions a PageDataQuery
 require_once (DOKU_INC . 'inc/common.php');
 require_once (DOKU_INC . 'inc/media.php');
 require_once (DOKU_INC . 'inc/auth.php');
@@ -36,6 +36,11 @@ require_once( DOKU_PLUGIN . 'acl/admin.php' );
 // TODO[Xavi] Afegit per mi per extreure la funcionalitat dels locks a una altra classe
 require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
+
+require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/AdminTaskAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/AdminTaskListAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/RawPageAction.php');
+
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
 
@@ -126,175 +131,26 @@ class DokuModelAdapter extends AbstractModelAdapter {
             $this->persistenceEngine = $persistenceEngine;
             return $this;
         }
-
+        
         /**
          * Crida principal de la comanda admin_task. 
-         * @global type $lang
-         * @param type $ptask és la tasca adminitrativa a executar
-         * @param type $pid
-         * @return type
+         * @param type $params de la comanda
+         * @return Array
          */
-        //[ALERTA Josep] Es queda aquí.
-	public function getAdminTask( $ptask, $pid = NULL ) {
-		global $lang;
-                
-                //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
-		$this->startAdminTaskProcess( $ptask, $pid );
-                //Preprocess (ACTION_ACT_PREPROCESS)
-		$this->doAdminTaskPreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-                //Process and return response
-		$response = $this->getAdminTaskResponse();
-		// Informació a pantalla
-		$info_time_visible = 5;
-		switch ( $_REQUEST['page'] ) {
-			case 'config':
-				if ( ! $response['needRefresh'] ) {
-					if ( isset( $_REQUEST['do'] ) ) {
-						$response['info'] = $this->generateInfo( "info", $lang['admin_task_loaded'], NULL, $info_time_visible );
-					} else {
-
-						$response['info'] = $this->generateInfo( "info", $lang['button_clicked'] . '"' . $lang['button_desa'] . '"', NULL, $info_time_visible );
-					}
-				}
-				break;
-			case 'plugin':
-				switch ( key( $_REQUEST['fn'] ) ) {
-					case NULL:
-						// call from the admin tab
-						$response['info'] = $this->generateInfo( "info", $lang['admin_task_loaded'], NULL, $info_time_visible );
-						break;
-					default:
-						// call from the user plugin tab
-						$fn = $_REQUEST['fn'];
-						if ( is_array( $fn[ key( $fn ) ] ) ) {
-							$fn = $fn[ key( $fn ) ];
-						}
-						$response['info'] = $this->generateInfo( "info", $lang['button_clicked'] . '"' . $fn[ key( $fn ) ] . '"', NULL, $info_time_visible );
-				}
-				break;
-			case 'acl':
-				switch ( $_REQUEST['cmd'] ) {
-					case NULL:
-						$response['info'] = $this->generateInfo( "info", $lang['admin_task_loaded'] );
-						break;
-					case 'del':
-						$response['info'] = $this->generateInfo( "info", $lang['admin_task_perm_delete'], NULL, $info_time_visible );
-						break;
-					case 'save':
-					case 'update':
-						$response['info'] = $this->generateInfo( "info", $lang['admin_task_perm_update'], NULL, $info_time_visible );
-						break;
-					default:
-						$response['info'] = $this->generateInfo( "info", $_REQUEST['cmd'] );
-				}
-				break;
-			case 'usermanager':
-				$fn  = $_REQUEST['fn'];
-				$key = key( $fn );
-				if ( ! isset( $key ) ) {
-					// call from the admin tab
-					$response['info'] = $this->generateInfo( "info", $lang['admin_task_loaded'], NULL, $info_time_visible );
-				} else {
-					// call from the user plugin tab
-					if ( is_array( $fn ) ) {
-						$cmd = key( $fn );
-					} else {
-						$cmd = $fn;
-					}
-
-					switch ( $cmd ) {
-						case "add":
-						case "delete":
-						case "export" :
-						case "import" :
-						case "importfails":
-						case "modify":
-						case "start":
-						case "next":
-						case "last":
-						case "prev":
-							$param = $fn[ key( $fn ) ];
-							break;
-						case "edit"   :
-							$param = $lang['button_edit_user'];
-							break;
-						case "search" :
-							$param = $lang['button_filter_user'];
-							break;
-					}
-					$response['info']   = $this->generateInfo( "info", $lang['button_clicked'] . '"' . $param . '"', NULL, $info_time_visible );
-					$response['iframe'] = TRUE;
-				}
-				break;
-			case "revert":
-				if ( isset( $_REQUEST['revert'] ) ) {
-					$response['info'] = $this->generateInfo( "info", $lang['button_clicked'] . '"' . $lang['button_revert'] . '"', NULL, $info_time_visible );
-				} else if ( isset( $_REQUEST['filter'] ) ) {
-					$response['info'] = $this->generateInfo( "info", $lang['button_clicked'] . '"' . $lang['button_cercar'] . '"', NULL, $info_time_visible );
-				} else {
-					$response['info'] = $this->generateInfo( "info", $lang['admin_task_loaded'], NULL, $info_time_visible );
-				}
-				break;
-			case "latex":
-				if ( isset( $_REQUEST['latexpurge'] ) ) {
-					$response['info'] = $this->generateInfo( "info", $lang['button_clicked'] . '"' . $_REQUEST['latexpurge'] . '"', NULL, $info_time_visible );
-				} else if ( isset( $_REQUEST['dotest'] ) ) {
-					$response['info'] = $this->generateInfo( "info", $lang['button_clicked'] . '"' . $_REQUEST['dotest'] . '"', NULL, $info_time_visible );
-				} else {
-					$response['info'] = $this->generateInfo( "info", $lang['admin_task_loaded'], NULL, $info_time_visible );
-				}
-				break;
-			default:
-				$response['info'] = $this->generateInfo( "info", "Emplenar a DokumodelAdapter->getAdminTask:" + $_REQUEST['page'] );
-				break;
-		}
-
-		return $response;
-	}
+      public function getAdminTask($params){
+            $action = new AdminTaskAction();
+            return $action->get($params);
+        }
 
         /**
          * Crida principal de la comanda admin_tab i crida del LoginResponseHandler
          * @return type
          */
-        //[ALERTA Josep] Es queda aquí.
-	public function getAdminTaskList() {
- 
-                //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
-		$this->startAdminTaskProcess();
-                //Preprocess (ACTION_ACT_PREPROCESS)
-		$this->doAdminTaskListPreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-                //Process and return response
-		return $this->getAdminTaskListResponse();
-		// Informació a pantalla
-                //[TODO Josep] FALTA INFO
-	}
+    public function getAdminTaskList() {
+            $action = new AdminTaskListAction();
+            return $action->get($params);        
+    }
 
-        // primero se ha enviado a WikiIocInfoManager y después se ha suprimido definitivamente
-//        public function getInfoLoaded() {
-//            return $this->infoLoaded;
-//        }
-    
-        // ver CommandAuthorization
-        /**
-         * @return string[] hash amb els grups de l'usuari
-        */
-//        public function getUserGroup() {
-//            global $INFO;
-//            if (!$this->infoLoaded) {
-//                $this->fillInfo();
-//            }
-//            return $INFO['userinfo']['grps'];
-//        }
-
-        // ver CommandAuthorization
-        /**
-         * Comproba si el token de seguretat està verificat o no fent servir una funció de la DokuWiki.
-         * @return bool
-        */
-//        public function isSecurityTokenVerified() {
-//            return checkSecurityToken();
-//        }
-    
     public function setParams($element, $value) {
         $this->params[$element] = $value;
     }
@@ -348,7 +204,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 
         if (!$prev) {
-            return $this->getPartialPage($pid, $prev, null, null);
+            return $this->getPartialPage($pid, $prev, null, null, null);
         }
 
         $this->startPageProcess(DW_ACT_SHOW, $pid, $prev, null, null);
@@ -399,37 +255,9 @@ class DokuModelAdapter extends AbstractModelAdapter {
      * @throws PageNotFoundException
      * @throws InsufficientPermissionToEditPageException
      */
-    //[ALERTA Josep] Es queda aquí.
-    public function getCodePage( $pid, $prev = NULL, $prange = NULL, $psum = NULL, $recover = NULL ) {
-        global $lang;
-
-        $this->startPageProcess(DW_ACT_EDIT, $pid, $prev, $prange, $psum);
-        if (!WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($pid, $lang['pageNotFound']);
-        }
-        if (!WikiIocInfoManager::getInfo("perm")) {
-            throw new InsufficientPermissionToEditPageException($pid); //TODO [Josep] Internacionalització missatge per defecte!
-        }
-        $this->doEditPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-
-        $response = $this->getCodePageResponse();
-
-        if ($recover != NULL) {
-            $response['recover_draft'] = $recover;
-
-            if ($recover == 'true') {
-                $info = $this->generateInfo("warning", $lang['draft_editing']);
-
-                if (array_key_exists('info', $response)) {
-                    $info = $this->addInfoToInfo($response['info'], $info);
-                }
-
-                $response["info"] = $info;
-            }
-
-        }
-
-        return $response;
+    public function getCodePage( $params) {
+        $action = new RawPageAction($this->persistenceEngine);
+        return $action->get($params);
     }
 
         /**
@@ -491,8 +319,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
     }
 
     public function getMediaFileName( $id, $rev = '' ) {
-        $dataRequest = $this->persistenceEngine->createMediaDataRequest();
-        return $dataRequest->getFileName( $id, $rev);
+        $dataQuery = $this->persistenceEngine->createMediaDataQuery();
+        return $dataQuery->getFileName( $id, array("rev" => $rev));
     }
         
     /**
@@ -501,8 +329,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
      * @return type
      */
     public function getIdWithoutNs( $id ) {
-        $dataRequest = $this->persistenceEngine->createPageDataRequest();
-        return $dataRequest->getIdWithoutNs($id);
+        $dataQuery = $this->persistenceEngine->createPageDataQuery();
+        return $dataQuery->getIdWithoutNs($id);
     }
 
     /**
@@ -511,8 +339,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
      * @return array
      */
     public function getMediaList( $ns ) {
-        $dataRequest = $this->persistenceEngine->createMediaDataRequest();
-        return $dataRequest->getFileList($ns);
+        $dataQuery = $this->persistenceEngine->createMediaDataQuery();
+        return $dataQuery->getFileList($ns);
     }
 
     /**
@@ -522,8 +350,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
      * @return type
      */
     public function getPageFileName( $id, $rev = '' ) {
-        $dataRequest = $this->persistenceEngine->createPageDataRequest();
-        return $dataRequest->getFileName( $id, $rev);
+        $dataQuery = $this->persistenceEngine->createPageDataQuery();
+        return $dataQuery->getFileName( $id, array("rev" => $rev));
     }
 
     /**
@@ -567,8 +395,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
      * @return int
      */
     public function uploadImage( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
-        $dataRequest = $this->persistenceEngine->createMediaDataRequest();
-        return $dataRequest->uploadImage($nsTarget, $idTarget, $filePathSource, $overWrite);
+        $dataQuery = $this->persistenceEngine->createMediaDataQuery();
+        return $dataQuery->upload($nsTarget, $idTarget, $filePathSource, $overWrite);
     }
 
     /**
@@ -581,8 +409,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
      * @return int
      */
     public function saveImage( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
-        $dataRequest = $this->persistenceEngine->createMediaDataRequest();
-        return $dataRequest->copyImage($nsTarget, $idTarget, $filePathSource, $overWrite);
+        $dataQuery = $this->persistenceEngine->createMediaDataQuery();
+        return $dataQuery->copyImage($nsTarget, $idTarget, $filePathSource, $overWrite);
     }
 
     /**
@@ -628,8 +456,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
          * @return type
          */
         public function getNsTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
-            $dataRequest = $this->persistenceEngine->createPageDataRequest();
-            return $dataRequest->getNsTree( $currentnode, $sortBy, $onlyDirs);
+            $dataQuery = $this->persistenceEngine->createPageDataQuery();
+            return $dataQuery->getNsTree( $currentnode, $sortBy, $onlyDirs);
 	}
 
         /**
@@ -789,35 +617,36 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	private function endsWith( $haystack, $needle ) {
 		return $needle === "" || substr( $haystack, - strlen( $needle ) ) === $needle;
 	}
-
-	/**
-	 * Inicia tractament per obtenir la llista de gestions d'administració
-	 */
-	private function startAdminTaskProcess( $ptask = NULL, $pid = NULL ) {
-		global $ACT;
-		global $_REQUEST;
-		global $ID;
-		global $conf;
-
-		// Agafem l'index de la configuració
-		if ( ! isset( $pid ) ) {
-			$pid = $conf['start'];
-		}
-
-		$ID = $this->params['id'] = $pid;
-		$ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
-
-		WikiIocInfoManager::loadInfo();
-		$this->startUpLang();
-		if ( $ptask ) {
-			if ( ! $_REQUEST['page'] || $_REQUEST['page'] != $ptask ) {
-				$_REQUEST['page'] = $ptask;
-			}
-			$this->params['task'] = $ptask;
-		}
-
-		$this->triggerStartEvents();
-	}
+        
+//
+//	/**
+//	 * Inicia tractament per obtenir la llista de gestions d'administració
+//	 */
+//	private function startAdminTaskProcess( $ptask = NULL, $pid = NULL ) {
+//		global $ACT;
+//		global $_REQUEST;
+//		global $ID;
+//		global $conf;
+//
+//		// Agafem l'index de la configuració
+//		if ( ! isset( $pid ) ) {
+//			$pid = $conf['start'];
+//		}
+//
+//		$ID = $this->params['id'] = $pid;
+//		$ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
+//
+//		WikiIocInfoManager::loadInfo();
+//		$this->startUpLang();
+//		if ( $ptask ) {
+//			if ( ! $_REQUEST['page'] || $_REQUEST['page'] != $ptask ) {
+//				$_REQUEST['page'] = $ptask;
+//			}
+//			$this->params['task'] = $ptask;
+//		}
+//
+//		$this->triggerStartEvents();
+//	}
 
 	/**
 	 * Inicia tractament d'una pàgina de la dokuwiki
@@ -1086,77 +915,77 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $content;
 	}
 
-	private function doEditPagePreProcess() {
-		global $ACT;
+//	private function doEditPagePreProcess() {
+//		global $ACT;
+//
+//		$content = "";
+//		if ( $this->runBeforePreprocess( $content ) ) {
+//			$ACT = act_edit( $ACT );
+//			$ACT = act_permcheck( $ACT );
+//		}
+//		$this->runAfterPreprocess( $content );
+//
+//		return $content;
+//	}
 
-		$content = "";
-		if ( $this->runBeforePreprocess( $content ) ) {
-			$ACT = act_edit( $ACT );
-			$ACT = act_permcheck( $ACT );
-		}
-		$this->runAfterPreprocess( $content );
+//	private function doAdminTaskPreProcess() {
+//		global $ACT;
+//		global $conf;
+//		global $ID;
+//
+//		$content = "";
+//		if ( $this->runBeforePreprocess( $content ) ) {
+//			$ACT = act_permcheck( $ACT );
+//			//handle admin tasks
+//			// retrieve admin plugin name from $_REQUEST['page']
+//			if ( ! empty( $_REQUEST['page'] ) ) {
+//				$pluginlist = plugin_list( 'admin' );
+//				if ( in_array( $_REQUEST['page'], $pluginlist ) ) {
+//					// attempt to load the plugin
+//					if ( $plugin =& plugin_load( 'admin', $_REQUEST['page'] ) !== NULL ) {
+//						if ( $plugin->forAdminOnly() 
+//                                                            && !WikiIocInfoManager::getInfo('isadmin') ) {
+//							// a manager tried to load a plugin that's for admins only
+//							unset( $_REQUEST['page'] );
+//							msg( 'For admins only', - 1 );
+//						} else {
+//							if ( is_callable( array( $plugin, "preventRefresh" ) ) ) {
+//								$allowedRefresh = $plugin->preventRefresh();
+//							}
+//							$plugin->handle();
+//							$this->dataTmp["needRefresh"] = is_callable( array( $plugin, "isRefreshNeeded" ) );
+//							if ( $this->dataTmp["needRefresh"] ) {
+//								$this->dataTmp["needRefresh"] = $plugin->isRefreshNeeded();
+//							}
+//							$this->dataTmp["title"] = $plugin->getMenuText( $conf['lang'] );
+//							if ( isset( $allowedRefresh )
+//							     && is_callable( array( $plugin, "setAllowedRefresh" ) )
+//							) {
+//								$plugin->setAllowedRefresh( $allowedRefresh );
+//							}
+//						}
+//					}
+//				}
+//			}
+//			// check permissions again - the action may have changed
+//			$ACT = act_permcheck( $ACT );
+//		}
+//		$this->runAfterPreprocess( $content );
+//
+//		return $content;
+//	}
 
-		return $content;
-	}
-
-	private function doAdminTaskPreProcess() {
-		global $ACT;
-		global $conf;
-		global $ID;
-
-		$content = "";
-		if ( $this->runBeforePreprocess( $content ) ) {
-			$ACT = act_permcheck( $ACT );
-			//handle admin tasks
-			// retrieve admin plugin name from $_REQUEST['page']
-			if ( ! empty( $_REQUEST['page'] ) ) {
-				$pluginlist = plugin_list( 'admin' );
-				if ( in_array( $_REQUEST['page'], $pluginlist ) ) {
-					// attempt to load the plugin
-					if ( $plugin =& plugin_load( 'admin', $_REQUEST['page'] ) !== NULL ) {
-						if ( $plugin->forAdminOnly() 
-                                                            && !WikiIocInfoManager::getInfo('isadmin') ) {
-							// a manager tried to load a plugin that's for admins only
-							unset( $_REQUEST['page'] );
-							msg( 'For admins only', - 1 );
-						} else {
-							if ( is_callable( array( $plugin, "preventRefresh" ) ) ) {
-								$allowedRefresh = $plugin->preventRefresh();
-							}
-							$plugin->handle();
-							$this->dataTmp["needRefresh"] = is_callable( array( $plugin, "isRefreshNeeded" ) );
-							if ( $this->dataTmp["needRefresh"] ) {
-								$this->dataTmp["needRefresh"] = $plugin->isRefreshNeeded();
-							}
-							$this->dataTmp["title"] = $plugin->getMenuText( $conf['lang'] );
-							if ( isset( $allowedRefresh )
-							     && is_callable( array( $plugin, "setAllowedRefresh" ) )
-							) {
-								$plugin->setAllowedRefresh( $allowedRefresh );
-							}
-						}
-					}
-				}
-			}
-			// check permissions again - the action may have changed
-			$ACT = act_permcheck( $ACT );
-		}
-		$this->runAfterPreprocess( $content );
-
-		return $content;
-	}
-
-	private function doAdminTaskListPreProcess() {
-		global $ACT;
-
-		$content = "";
-		if ( $this->runBeforePreprocess( $content ) ) {
-			$ACT = act_permcheck( $ACT );
-		}
-		$this->runAfterPreprocess( $content );
-
-		return $content;
-	}
+//	private function doAdminTaskListPreProcess() {
+//		global $ACT;
+//
+//		$content = "";
+//		if ( $this->runBeforePreprocess( $content ) ) {
+//			$ACT = act_permcheck( $ACT );
+//		}
+//		$this->runAfterPreprocess( $content );
+//
+//		return $content;
+//	}
 
 	private function doCreatePreProcess() {
             if ( WikiIocInfoManager::getInfo("exists") ) {
@@ -1258,154 +1087,154 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $html_output;
 	}
 
-	public function getAdminTaskListResponse() {
-		$pageToSend  = $this->getAdminTaskListHtml();
-		$containerId = cfgIdConstants::ZONA_NAVEGACIO;
+//	public function getAdminTaskListResponse() {
+//		$pageToSend  = $this->getAdminTaskListHtml();
+//		$containerId = cfgIdConstants::ZONA_NAVEGACIO;
+//
+//		return $this->getAdminTaskListPage( $containerId, $pageToSend );
+//	}
+//
+//	private function getAdminTaskListHtml() {
+//		global $conf;
+//
+//		ob_start();
+//		trigger_event( 'TPL_ACT_RENDER', $ACT );
+//
+//		// build menu of admin functions from the plugins that handle them
+//		$pluginlist = plugin_list( 'admin' );
+//		$menu       = array();
+//		foreach ( $pluginlist as $p ) {
+//			if ( $obj =& plugin_load( 'admin', $p ) === NULL ) {
+//				continue;
+//			}
+//
+//			// check permissions
+//			if ( $obj->forAdminOnly() && !WikiIocInfoManager::getInfo('isadmin')) {
+//				continue;
+//			}
+//
+//			$menu[ $p ] = array(
+//				'plugin' => $p,
+//				'prompt' => $obj->getMenuText( $conf['lang'] ),
+//				'sort'   => $obj->getMenuSort()
+//			);
+//		}
+//
+//		// Admin Tasks
+//		if ( count( $menu ) ) {
+//			usort( $menu, 'p_sort_modes' );
+//			// output the menu
+//			ptln( '<div class="clearer"></div>' );
+//			print p_locale_xhtml( 'adminplugins' );
+//			ptln( '<ul>' );
+//			foreach ( $menu as $item ) {
+//				if ( ! $item['prompt'] ) {
+//					continue;
+//				}
+//				ptln( '  <li><div class="li"><a href="' . DOKU_BASE . DOKU_SCRIPT . '?'
+//				      . 'do=admin&amp;page=' . $item['plugin'] . '">' . $item['prompt']
+//				      . '</a></div></li>' );
+//			}
+//			ptln( '</ul>' );
+//		}
+//
+//                $html_output = ob_get_clean();
+//                ob_start();
+//		trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
+//                $html_output = ob_get_clean();
+//
+//
+//		return $html_output;
+//	}
 
-		return $this->getAdminTaskListPage( $containerId, $pageToSend );
-	}
+//	private function getCodePageResponse() {
+//		global $lang;
+//
+//		$pageToSend = $this->cleanResponse( $this->_getCodePage() );
+//
+//		$resp         = $this->getContentPage( $pageToSend["content"] );
+//		$resp['meta'] = $pageToSend['meta'];
+//
+//		$infoType = 'info';
+//
+//		if ( WikiIocInfoManager::getInfo('locked')) {
+//			$infoType           = 'error';
+//			$pageToSend['info'] = $lang['lockedby'] . ' ' 
+//                                        . WikiIocInfoManager::getInfo('locked');
+//		}
+//
+//		$resp['info']   = $this->generateInfo( $infoType, $pageToSend['info'] );
+//		$resp['locked'] = WikiIocInfoManager::getInfo('locked');
+//
+//		return $resp;
+//	}
 
-	private function getAdminTaskListHtml() {
-		global $conf;
-
-		ob_start();
-		trigger_event( 'TPL_ACT_RENDER', $ACT );
-
-		// build menu of admin functions from the plugins that handle them
-		$pluginlist = plugin_list( 'admin' );
-		$menu       = array();
-		foreach ( $pluginlist as $p ) {
-			if ( $obj =& plugin_load( 'admin', $p ) === NULL ) {
-				continue;
-			}
-
-			// check permissions
-			if ( $obj->forAdminOnly() && !WikiIocInfoManager::getInfo('isadmin')) {
-				continue;
-			}
-
-			$menu[ $p ] = array(
-				'plugin' => $p,
-				'prompt' => $obj->getMenuText( $conf['lang'] ),
-				'sort'   => $obj->getMenuSort()
-			);
-		}
-
-		// Admin Tasks
-		if ( count( $menu ) ) {
-			usort( $menu, 'p_sort_modes' );
-			// output the menu
-			ptln( '<div class="clearer"></div>' );
-			print p_locale_xhtml( 'adminplugins' );
-			ptln( '<ul>' );
-			foreach ( $menu as $item ) {
-				if ( ! $item['prompt'] ) {
-					continue;
-				}
-				ptln( '  <li><div class="li"><a href="' . DOKU_BASE . DOKU_SCRIPT . '?'
-				      . 'do=admin&amp;page=' . $item['plugin'] . '">' . $item['prompt']
-				      . '</a></div></li>' );
-			}
-			ptln( '</ul>' );
-		}
-
-                $html_output = ob_get_clean();
-                ob_start();
-		trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
-                $html_output = ob_get_clean();
-
-
-		return $html_output;
-	}
-
-	private function getCodePageResponse() {
-		global $lang;
-
-		$pageToSend = $this->cleanResponse( $this->_getCodePage() );
-
-		$resp         = $this->getContentPage( $pageToSend["content"] );
-		$resp['meta'] = $pageToSend['meta'];
-
-		$infoType = 'info';
-
-		if ( WikiIocInfoManager::getInfo('locked')) {
-			$infoType           = 'error';
-			$pageToSend['info'] = $lang['lockedby'] . ' ' 
-                                        . WikiIocInfoManager::getInfo('locked');
-		}
-
-		$resp['info']   = $this->generateInfo( $infoType, $pageToSend['info'] );
-		$resp['locked'] = WikiIocInfoManager::getInfo('locked');
-
-		return $resp;
-	}
-
-	private function cleanResponse( $text ) {
-		global $lang;
-
-		$pattern = "/^(?:(?!<div class=\"editBox\").)*/s";// Captura tot el contingut abans del div que contindrá l'editor
-
-		preg_match( $pattern, $text, $match );
-		$info = $match[0];
-
-		$text = preg_replace( $pattern, "", $text );
-
-		// Eliminem les etiquetes no desitgades
-		$pattern = "/<div id=\"size__ctl\".*?<\/div>\\s*/s";
-		$text    = preg_replace( $pattern, "", $text );
-
-		// Eliminem les etiquetes no desitgades
-		$pattern = "/<div class=\"editButtons\".*?<\/div>\\s*/s";
-		$text    = preg_replace( $pattern, "", $text );
-
-		// Copiem el license
-		$pattern = "/<div class=\"license\".*?<\/div>\\s*/s";
-		preg_match( $pattern, $text, $match );
-		$license = $match[0];
-
-		// Eliminem la etiqueta
-		$text = preg_replace( $pattern, "", $text );
-
-		// Copiem el wiki__editbar
-		$pattern = "/<div id=\"wiki__editbar\".*?<\/div>\\s*<\/div>\\s*/s";
-		preg_match( $pattern, $text, $match );
-		$meta = $match[0];
-
-		// Eliminem la etiqueta
-		$text = preg_replace( $pattern, "", $text );
-
-		// Capturem el id del formulari
-		$pattern = "/<form id=\"(.*?)\"/";
-		//$form = "dw__editform";
-		preg_match( $pattern, $text, $match );
-		$form = $match[1];
-
-		// Afegim el id del formulari als inputs
-		$pattern = "/<input/";
-		$replace = "<input form=\"" . $form . "\"";
-		$meta    = preg_replace( $pattern, $replace, $meta );
-
-		// Netegem el valor
-		$pattern = "/value=\"string\"/";
-		$replace = "value=\"\"";
-		$meta    = preg_replace( $pattern, $replace, $meta );
-
-		$response["content"] = $text;
-		$response["info"]    = [ $info ];
-
-		if ( $license ) {
-			$response["info"][] = $license;
-		}
-
-		$metaId           = str_replace( ":", "_", $this->params['id'] ) . '_metaEditForm';
-		$response["meta"] = [
-			( $this->getCommonPage( $metaId,
-			                        $lang['metaEditForm'],
-			                        $meta ) + [ 'type' => 'summary' ] )
-		];
-
-		return $response;
-	}
+//	private function cleanResponse( $text ) {
+//		global $lang;
+//
+//		$pattern = "/^(?:(?!<div class=\"editBox\").)*/s";// Captura tot el contingut abans del div que contindrá l'editor
+//
+//		preg_match( $pattern, $text, $match );
+//		$info = $match[0];
+//
+//		$text = preg_replace( $pattern, "", $text );
+//
+//		// Eliminem les etiquetes no desitgades
+//		$pattern = "/<div id=\"size__ctl\".*?<\/div>\\s*/s";
+//		$text    = preg_replace( $pattern, "", $text );
+//
+//		// Eliminem les etiquetes no desitgades
+//		$pattern = "/<div class=\"editButtons\".*?<\/div>\\s*/s";
+//		$text    = preg_replace( $pattern, "", $text );
+//
+//		// Copiem el license
+//		$pattern = "/<div class=\"license\".*?<\/div>\\s*/s";
+//		preg_match( $pattern, $text, $match );
+//		$license = $match[0];
+//
+//		// Eliminem la etiqueta
+//		$text = preg_replace( $pattern, "", $text );
+//
+//		// Copiem el wiki__editbar
+//		$pattern = "/<div id=\"wiki__editbar\".*?<\/div>\\s*<\/div>\\s*/s";
+//		preg_match( $pattern, $text, $match );
+//		$meta = $match[0];
+//
+//		// Eliminem la etiqueta
+//		$text = preg_replace( $pattern, "", $text );
+//
+//		// Capturem el id del formulari
+//		$pattern = "/<form id=\"(.*?)\"/";
+//		//$form = "dw__editform";
+//		preg_match( $pattern, $text, $match );
+//		$form = $match[1];
+//
+//		// Afegim el id del formulari als inputs
+//		$pattern = "/<input/";
+//		$replace = "<input form=\"" . $form . "\"";
+//		$meta    = preg_replace( $pattern, $replace, $meta );
+//
+//		// Netegem el valor
+//		$pattern = "/value=\"string\"/";
+//		$replace = "value=\"\"";
+//		$meta    = preg_replace( $pattern, $replace, $meta );
+//
+//		$response["content"] = $text;
+//		$response["info"]    = [ $info ];
+//
+//		if ( $license ) {
+//			$response["info"][] = $license;
+//		}
+//
+//		$metaId           = str_replace( ":", "_", $this->params['id'] ) . '_metaEditForm';
+//		$response["meta"] = [
+//			( $this->getCommonPage( $metaId,
+//			                        $lang['metaEditForm'],
+//			                        $meta ) + [ 'type' => 'summary' ] )
+//		];
+//
+//		return $response;
+//	}
 
 	/**
 	 * Genera un element amb la informació correctament formatada i afegeix el timestamp. Si no s'especifica el id
@@ -1695,17 +1524,17 @@ class DokuModelAdapter extends AbstractModelAdapter {
     }
 
 
-    private function getAdminTaskListPage($id, $toSend){
-        global $lang;
+//    private function getAdminTaskListPage($id, $toSend){
+//        global $lang;
+//
+//        return $this->getCommonPage($id, $lang['btn_admin'], $toSend);
+//    }
 
-        return $this->getCommonPage($id, $lang['btn_admin'], $toSend);
-    }
-
-	private function getAdminTaskPage( $id, $task, $toSend ) {
-		//TO DO [JOSEP] Pasar el títol correcte segons idiaoma. Cal extreure'l de
-		//plugin(admin)->getMenuText($language);
-		return $this->getCommonPage( $id, $task, $toSend );
-	}
+//	private function getAdminTaskPage( $id, $task, $toSend ) {
+//		//TO DO [JOSEP] Pasar el títol correcte segons idiaoma. Cal extreure'l de
+//		//plugin(admin)->getMenuText($language);
+//		return $this->getCommonPage( $id, $task, $toSend );
+//	}
 
 	private function getCommonPage( $id, $title, $content ) {
 		$contentData = array(
@@ -1730,17 +1559,17 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $html_output;
 	}
 
-	private function _getCodePage() {
-		global $ACT;
-		ob_start();
-		trigger_event( 'TPL_ACT_RENDER', $ACT, array($this, 'onCodeRender') );
-		$html_output = ob_get_clean();
-                ob_start();
-		trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
-                $html_output = ob_get_clean();
-
-		return $html_output;
-	}
+//	private function _getCodePage() {
+//		global $ACT;
+//		ob_start();
+//		trigger_event( 'TPL_ACT_RENDER', $ACT, array($this, 'onCodeRender') );
+//		$html_output = ob_get_clean();
+//                ob_start();
+//		trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
+//                $html_output = ob_get_clean();
+//
+//		return $html_output;
+//	}
 
 	/**
 	 * Miguel Angel Lozano 12/12/2014
@@ -2159,8 +1988,8 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
         //És la crida principal de la comanda ns_mediatree_rest
 	public function getNsMediaTree( $currentnode, $sortBy, $onlyDirs = FALSE ) {
-            $dataRequest = $this->persistenceEngine->createMediaDataRequest();
-            return $dataRequest->getNsTree($currentnode, $sortBy, $onlyDirs );
+            $dataQuery = $this->persistenceEngine->createMediaDataQuery();
+            return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs );
 	}
 
 	/**
@@ -2234,9 +2063,9 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 *
 	 */
 	public function extractDateFromRevision( $revision, $mode = NULL ) {
-            if(!$mode){
-                $mode = WikiPageSystemManager::$DEFAULT_FORMAT;
-            }
+//            if(!$mode){
+//                $mode = WikiPageSystemManager::$DEFAULT_FORMAT;
+//            }
             return WikiPageSystemManager::extractDateFromRevision($revision, $mode);
 	}
 
@@ -2662,7 +2491,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private function getInstructionsForDocument($id, $rev = null){
         $file = wikiFN($id, $rev);
-        //[ALERTA JOSEP] CAL FER SERVIR p_cached_instructions. A més caldria traslladar aquesta funció a PageDataRequest i cridar el mètode adient de PagedataRequest des d'aquí. 
+        //[ALERTA JOSEP] CAL FER SERVIR p_cached_instructions. A més caldria traslladar aquesta funció a PageDataQuery i cridar el mètode adient de PagedataQuery des d'aquí. 
 //        $cache = new cache_instructions($id, $file); // TODO[Xavi] Això fa falta?
 //        $instructions = unserialize(io_readFile($cache->cache));
         $instructions = p_cached_instructions($file, FALSE, $id);
@@ -2703,7 +2532,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 
         $document['title'] = tpl_pagetitle($id, TRUE);
-        $document['ns'] = $id;  //[ALERTA JOSEP] $id no és un espai de noms. Potser caldria cridar a PageDataRequest::getNs
+        $document['ns'] = $id;  
         $document['id'] = str_replace(":", "_", $id);
         $document['rev'] = $rev;
         $document['selected'] = $selected;
@@ -2714,6 +2543,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
         $headerIds = $this->getHeadersFromHtml($html);
 
+        //S'han unificat les dues instruccions següents a PageDataQuery sota el nom únic de getChunks
         $instructions = $this->getInstructionsForDocument($id, $rev);
 
         $chunks = $this->getChunks($instructions);
@@ -2725,7 +2555,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
         // Afegim el suf
         $lastSuf = count($editingChunks) - 1;
-        //[ALERTA JOSEP] Cal passar rawWikiSlices a PageDataRequest i fer la crida des d'allà
+        //[ALERTA JOSEP] Cal passar rawWikiSlices a PageDataQuery i fer la crida des d'allà
         $document['suf'] = rawWikiSlices($editingChunks[$lastSuf]['start'] . "-" . $editingChunks[$lastSuf]['end'], $id)[2];
 
 
@@ -2747,7 +2577,6 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
     private function getEditingChunks(&$editingChunks, &$dictionary = [], &$chunks, $id, $headerIds, $editing)
     {
-        //[ALERTA JOSEP] Cal passar rawWikiSlices a PageDataRequest i fer la crida des d'allà
         for ($i = 0; $i < count($chunks); $i++) {
             $chunks[$i]['header_id'] = $headerIds[$i];
             // Afegim el text només al seleccionat i els textos en edició
@@ -2811,7 +2640,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private function addPreToChunks(&$chunks, $id)    {
-        //[ALERTA JOSEP] Cal passar rawWikiSlices a PageDataRequest i fer la crida des d'allà
+        //[ALERTA JOSEP] Cal passar rawWikiSlices a PageDataQuery i fer la crida des d'allà
         $lastPos = 0;
 
         for ($i = 0; $i < count($chunks); $i++) {
@@ -3100,7 +2929,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
     }
 
     public function checklock($pid){
-        //[ALERTA JOSEP] Cal passar checklock a LockDataRequest i fer la crida des d'allà
+        //[ALERTA JOSEP] Cal passar checklock a LockDataQuery i fer la crida des d'allà
         return checklock($this->cleanIDForFiles($pid));
     }
 
@@ -3200,7 +3029,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
     * @author Andreas Gohr <andi@splitbrain.org>
     */
        
-    //[ALERTA Josep] CAL revisar per fer servir el PageDataRequest!
+    //[ALERTA Josep] CAL revisar per fer servir el PageDataQuery!
    function p_wiki_xhtml($id, $rev='', $excuse=true){
        $file = wikiFN($id,$rev);
        $ret  = '';
@@ -3232,30 +3061,30 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 
 
-    /**
-     * Segons el valor de $data activa la edició del document('edit' i 'recover'), la previsualització ('preview') o mostra
-     * el missatge de denegat ('denied').
-     *
-     * @param string $data els valors admessos son 'edit', 'recover', 'preview' i 'denied'
-     */
-    function onCodeRender( $data ) {
-            global $TEXT;
-
-            switch ( $data ) {
-                    case 'locked':
-                    case 'edit':
-                    case 'recover':
-                            html_edit();
-                            break;
-                    case 'preview':
-                            html_edit();
-                            html_show( $TEXT );
-                            break;
-                    case 'denied':
-                            print p_locale_xhtml( 'denied' );
-                            break;
-            }
-    }
+//    /**
+//     * Segons el valor de $data activa la edició del document('edit' i 'recover'), la previsualització ('preview') o mostra
+//     * el missatge de denegat ('denied').
+//     *
+//     * @param string $data els valors admessos son 'edit', 'recover', 'preview' i 'denied'
+//     */
+//    function onCodeRender( $data ) {
+//            global $TEXT;
+//
+//            switch ( $data ) {
+//                    case 'locked':
+//                    case 'edit':
+//                    case 'recover':
+//                            html_edit();
+//                            break;
+//                    case 'preview':
+//                            html_edit();
+//                            html_show( $TEXT );
+//                            break;
+//                    case 'denied':
+//                            print p_locale_xhtml( 'denied' );
+//                            break;
+//            }
+//    }
 
         
     /**
@@ -3264,7 +3093,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
      * @return string taula de continguts
      */
     function wrapper_tpl_toc() {
-        //[ALERTA JOSEP] analitzar si cal passar tpl_toc a PageDataRequest
+        //[ALERTA JOSEP] analitzar si cal passar tpl_toc a PageDataQuery
         $toc = tpl_toc( TRUE );
         $toc = preg_replace(
                 '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i',

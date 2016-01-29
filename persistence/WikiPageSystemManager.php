@@ -32,21 +32,24 @@ class WikiPageSystemManager {
      *
      */
     public static function extractDateFromRevision( $revision, $mode = NULL ) {
+         if(!$mode){
+            $mode = self::$DEFAULT_FORMAT;
+        }
 
-            switch ( $mode ) {
+        switch ( $mode ) {
 
-                    case self::$SHORT_FORMAT:
-                            $format = "d-m-Y";
-                            break;
+                case self::$SHORT_FORMAT:
+                        $format = "d-m-Y";
+                        break;
 
-                    case self::$DEFAULT_FORMAT:
+                case self::$DEFAULT_FORMAT:
 
-                    default:
-                            $format = "d-m-Y H:i:s";
+                default:
+                        $format = "d-m-Y H:i:s";
 
-            }
+        }
 
-            return date( $format, $revision );
+        return date( $format, $revision );
     }
 
 }

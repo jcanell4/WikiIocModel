@@ -5,21 +5,25 @@ if (!defined('DOKU_PLUGIN')) {
 }
 
 require_once (DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
-require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataRequest.php');
-
+require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
 
 /**
- * Description of DraftDataRequest
+ * Description of DraftDataQuery
  *
  * @author josep
  */
-class DraftDataRequest extends DataRequest{
-    public function getFileName($id) {
+class DraftDataQuery extends DataQuery{
+    public function getFileName($id, $extra=NULL) {
         $id = WikiPageSystemManager::cleanIDForFiles($id);
         return getCacheName(WikiIocInfoManager::getInfo("client") . $id, '.draft');        
     }
 
     public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE) {
-        throw new UnavailableMethodExecutionException("DraftDataRequest#getNsTree");
+        throw new UnavailableMethodExecutionException("DraftDataQuery#getNsTree");
     }    
+    
+    public function generateFull($id){
+         DraftManager::generateFullDraft($id);
+    }
 }

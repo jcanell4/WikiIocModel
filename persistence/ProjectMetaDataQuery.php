@@ -7,10 +7,10 @@
  */
 
 /**
- * Description of ProjectMetaDataRequest
+ * Description of ProjectMetaDataQuery
  *
  * @author josep
  */
-class ProjectMetaDataRequest {
+class ProjectMetaDataQuery {
     //put your code here
 }

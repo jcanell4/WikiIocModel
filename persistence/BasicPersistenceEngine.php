@@ -13,47 +13,47 @@ if (!defined('DOKU_PLUGIN')) {
 class BasicPersistenceEngine {
     /**
      * 
-     * @return \PageDataRequest
+     * @return \PageDataQuery
      */
-    public function createPageDataRequest(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/PageDataRequest.php');
-        return new PageDataRequest();
+    public function createPageDataQuery(){
+        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/PageDataQuery.php');
+        return new PageDataQuery();
         
     }
 
     /**
      * 
-     * @return \MediaDataRequest
+     * @return \MediaDataQuery
      */
-    public function createMediaDataRequest(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/MediaDataRequest.php');
-        return new MediaDataRequest();
+    public function createMediaDataQuery(){
+        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/MediaDataQuery.php');
+        return new MediaDataQuery();
     }
 
     /**
      * 
-     * @return \MediaMetaDataRequest
+     * @return \MediaMetaDataQuery
      */
-    public function createMediaMetaDataRequest(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/MediaMetaDataRequest.php');
-        return new MediaMetaDataRequest();
+    public function createMediaMetaDataQuery(){
+        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/MediaMetaDataQuery.php');
+        return new MediaMetaDataQuery();
     }
 
     /**
      * 
-     * @return \MetaDataRequest
+     * @return \MetaDataQuery
      */
-    public function createMetaDataRequest(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/MetaDataRequest.php');
-        return new MetaDataRequest();
+    public function createMetaDataQuery(){
+        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/MetaDataQuery.php');
+        return new MetaDataQuery();
     }
 
     /**
      * 
-     * @return \DraftDataRequest
+     * @return \DraftDataQuery
      */
-    public function createDraftDataRequest(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DraftDataRequest.php');
-        return new DraftDataRequest();
+    public function createDraftDataQuery(){
+        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DraftDataQuery.php');
+        return new DraftDataQuery();
     }
 }
