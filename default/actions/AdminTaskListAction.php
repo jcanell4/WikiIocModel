@@ -4,7 +4,7 @@ if (!defined("DOKU_INC")) {
     die();
 }
 if (!defined('DOKU_PLUGIN')) {
-    define('', DOKU_INC . 'lib/plugins/');
+    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
 
 require_once (DOKU_INC . 'inc/pluginutils.php');
