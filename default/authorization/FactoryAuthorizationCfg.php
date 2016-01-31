@@ -7,7 +7,7 @@
 
 $_AuthorizationCfg = 
     array(
-	'_command'		=> 'read'
+        '_command'              => 'command'      /*Default case*/
 	,'admin_task'		=> 'admin'
 	,'cancel'		=> 'write'
 	,'edit'			=> 'read'
