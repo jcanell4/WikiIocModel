@@ -14,6 +14,10 @@ abstract class AbstractCommandAuthorization {
     
     const IOC_AUTH_OK = TRUE;
     const IOC_AUTH_FORBIDEN_ACCESS = FALSE;
+    const AUTH_OK = 0;
+    const NOT_AUTH_TOKEN_VERIFIED = 1;
+    const NOT_AUTH_USER_AUTHENTICATED = 2;
+    const NOT_AUTH_COMMAND_ALLOWED = 4;
 
     protected $permission;
     
@@ -24,10 +28,25 @@ abstract class AbstractCommandAuthorization {
      * @return bool. Indica si se han obtenido, o no, los permisos generales
      */
     public function canRun($permis) {
+        /*
         $ret = ( ! $permis->getAuthenticatedUsersOnly()
                 || $permis->getSecurityTokenVerified()
                 && $permis->getUserAuthenticated()
                 && $this->isCommandAllowed() );
+        */
+        if ($permis->getAuthenticatedUsersOnly()) {
+            $ret = $permis->getSecurityTokenVerified() ? AUTH_OK : NOT_AUTH_TOKEN_VERIFIED;
+            if ($ret == AUTH_OK) {
+                $ret = $permis->getUserAuthenticated() ? AUTH_OK : NOT_AUTH_USER_AUTHENTICATED;
+            }
+            if ($ret == AUTH_OK) {
+                $ret = $permis->isCommandAllowed() ? AUTH_OK : NOT_AUTH_COMMAND_ALLOWED;
+            }
+        }
+        else {
+            $ret = AUTH_OK;
+        }
+            
         return $ret;
     }
     

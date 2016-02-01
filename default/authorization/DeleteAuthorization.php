@@ -12,10 +12,19 @@ require_once (WIKI_IOC_MODEL . 'default/authorization/CommandAuthorization.php')
 
 class DeleteAuthorization extends CommandAuthorization {
 
+//    public function canRun($permission = NULL) {
+//        $ret = parent::canRun($permission);
+//        $ret = $ret && $this->permission->getInfoPerm() >= AUTH_DELETE;
+//        return $ret;
+//    }
+
+    const NOT_AUTH_DELETE = 256 * AUTH_DELETE;
+
     public function canRun($permission = NULL) {
         $ret = parent::canRun($permission);
-        $ret = $ret && $this->permission->getInfoPerm() >= AUTH_DELETE;
+        if ( $this->permission->getInfoPerm() < AUTH_DELETE) {
+            $ret += NOT_AUTH_DELETE;
+        }
         return $ret;
     }
-
 }

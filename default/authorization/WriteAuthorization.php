@@ -12,10 +12,13 @@ require_once (WIKI_IOC_MODEL . 'default/authorization/CommandAuthorization.php')
 
 class WriteAuthorization extends CommandAuthorization {
 
+    const NOT_AUTH_WRITE = 256 * AUTH_EDIT;
+
     public function canRun($permission = NULL) {
         $ret = parent::canRun($permission);
-        $ret = $ret && $this->permission->getInfoPerm() >= AUTH_EDIT;
+        if ( $this->permission->getInfoPerm() < AUTH_EDIT) {
+            $ret += NOT_AUTH_WRITE;
+        }
         return $ret;
     }
-
 }

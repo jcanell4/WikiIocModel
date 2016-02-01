@@ -11,7 +11,7 @@ abstract class AbstractPermission {
     protected $cmdAuthorization;        //objecte command
     protected $authenticatedUsersOnly;  //bool (de command_class)
     protected $isSecurityTokenVerified;
-    protected $isUserAuthenticated;
+    protected $isUserAuthenticated;     // bool
     protected $hasPermissionFor;
     protected $info_writable;
     protected $info_isadmin;

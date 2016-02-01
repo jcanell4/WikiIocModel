@@ -12,10 +12,19 @@ require_once (WIKI_IOC_MODEL . 'default/authorization/CommandAuthorization.php')
 
 class UploadAuthorization extends CommandAuthorization {
 
+//    public function canRun($permission = NULL) {
+//        $ret = parent::canRun($permission);
+//        $ret = $ret && $this->permission->getInfoPerm() >= AUTH_UPLOAD;
+//        return $ret;
+//    }
+
+    const NOT_AUTH_UPLOAD = 256 * AUTH_UPLOAD;
+
     public function canRun($permission = NULL) {
         $ret = parent::canRun($permission);
-        $ret = $ret && $this->permission->getInfoPerm() >= AUTH_UPLOAD;
+        if ( $this->permission->getInfoPerm() < AUTH_UPLOAD) {
+            $ret += NOT_AUTH_UPLOAD;
+        }
         return $ret;
     }
-
 }

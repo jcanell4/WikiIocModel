@@ -12,10 +12,19 @@ require_once (WIKI_IOC_MODEL . 'default/authorization/CommandAuthorization.php')
 
 class ReadAuthorization extends CommandAuthorization {
 
+//    public function canRun($permission = NULL) {
+//        $ret = parent::canRun($permission);
+//        $ret = $ret && $this->permission->getInfoPerm() >= AUTH_READ;
+//        return $ret;
+//    }
+
+    const NOT_AUTH_READ = 256 * AUTH_READ;
+
     public function canRun($permission = NULL) {
         $ret = parent::canRun($permission);
-        $ret = $ret && $this->permission->getInfoPerm() >= AUTH_READ;
+        if ( $this->permission->getInfoPerm() < AUTH_READ) {
+            $ret += NOT_AUTH_READ;
+        }
         return $ret;
     }
-
 }
