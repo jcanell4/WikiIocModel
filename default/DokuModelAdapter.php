@@ -1263,7 +1263,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		];
 	}
 
-	// En els casos en que hi hagi discrepancies i no hi haci cap preferencia es fa servir el valor de A
+	// En els casos en que hi hagi discrepancies i no hi hagi cap preferencia es fa servir el valor de A
 	public function addInfoToInfo( $infoA, $infoB ) {
 		// Els tipus global de la info serà el de major gravetat: "debug" > "error" > "warning" > "info"
 		$info = [ ];
@@ -1459,12 +1459,14 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 * @throws PageNotFoundException
 	 */
         //[Alerta Josep] Es crida des de la comanda edit
-	public function getDraftDialog( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
+//	public function getDraftDialog( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
+	public function getDraftDialog( $params) {
             //[TODO Josep] Normalitzar:...
 
         global $lang;
 
-        $response = $this->getCodePage($pid, $prev, $prange, $psum, NULL);
+//        $response = $this->getCodePage($pid, $prev, $prange, $psum, NULL);
+        $response = $this->getCodePage($params); // TODO[Xavi] això s'ha de passar per argument (que haurà de ser un array)
 
         if (WikiIocInfoManager::getInfo('locked')) {
             $response['info'] = $this->generateInfo('error', $lang['lockedby'] . ' ' 
