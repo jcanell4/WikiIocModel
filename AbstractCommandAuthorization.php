@@ -20,6 +20,10 @@ abstract class AbstractCommandAuthorization {
     const NOT_AUTH_COMMAND_ALLOWED = 4;
 
     protected $permission;
+    protected $errorAuth = array(
+                              'error' => self::AUTH_OK
+                             ,'exception' => ''
+                           );
     
     public function __construct() {}
     
@@ -35,16 +39,22 @@ abstract class AbstractCommandAuthorization {
                 && $this->isCommandAllowed() );
         */
         if ($permis->getAuthenticatedUsersOnly()) {
-            $ret = $permis->getSecurityTokenVerified() ? AUTH_OK : NOT_AUTH_TOKEN_VERIFIED;
-            if ($ret == AUTH_OK) {
-                $ret = $permis->getUserAuthenticated() ? AUTH_OK : NOT_AUTH_USER_AUTHENTICATED;
+            $ret = $this->errorAuth['error'] = $permis->getSecurityTokenVerified() ? self::AUTH_OK : self::NOT_AUTH_TOKEN_VERIFIED;
+            $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
+            if ($ret == self::AUTH_OK) {
+                $ret = $this->errorAuth['error'] = $permis->getUserAuthenticated() ? self::AUTH_OK : self::NOT_AUTH_USER_AUTHENTICATED;
+                $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
             }
-            if ($ret == AUTH_OK) {
-                $ret = $permis->isCommandAllowed() ? AUTH_OK : NOT_AUTH_COMMAND_ALLOWED;
+            if ($ret == self::AUTH_OK) {
+                $ret = $this->errorAuth['error'] = $permis->isCommandAllowed() ? self::AUTH_OK : self::NOT_AUTH_COMMAND_ALLOWED;
+                $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
+            }
+            if ($ret == self::AUTH_OK) {
+                $this->errorAuth['exception'] = '';
             }
         }
         else {
-            $ret = AUTH_OK;
+            $ret = $this->errorAuth['error'] = self::AUTH_OK;
         }
             
         return $ret;
@@ -58,6 +68,10 @@ abstract class AbstractCommandAuthorization {
         return $this->permission;
     }
 
+    public function getAuthorizationError($key) {
+        return $this->errorAuth[$key];
+    }
+    
     private function createPermission($command) {
         $permis = new Permission($this);
         $this->permission = &$permis;  //Comprovar el pas per referència
