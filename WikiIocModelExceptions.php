@@ -45,7 +45,7 @@ class AuthorizationNotTokenVerified extends WikiIocModelException {
 }
 
 class AuthorizationNotUserAuthenticated extends WikiIocModelException {
-    public function __construct($code=1020, $codeMessage='auth_UserNotAuthenticated', $previous=NULL) {
+    public function __construct($code=1021, $codeMessage='auth_UserNotAuthenticated', $previous=NULL) {
         //$message="User not authenticated";
         $message = WikiIocLangManager::getLang($codeMessage);
         if ($message == NULL) {
