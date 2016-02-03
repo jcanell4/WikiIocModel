@@ -24,6 +24,7 @@ abstract class AbstractCommandAuthorization {
     protected $errorAuth = array(
                               'error' => self::AUTH_OK
                              ,'exception' => ''
+                             ,'extra_param' => ''
                            );
     
     public function __construct() {}
@@ -52,6 +53,7 @@ abstract class AbstractCommandAuthorization {
             }
             if ($ret == self::AUTH_OK) {
                 $this->errorAuth['exception'] = '';
+                $this->errorAuth['extra_param'] = '';
             }
         }
         else {

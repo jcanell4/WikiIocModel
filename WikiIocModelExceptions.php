@@ -15,17 +15,6 @@ abstract class WikiIocModelException extends Exception {
     }
 }
 
-class getException {
-    
-    public function __construct($exception=NULL) {
-        $instance = NULL;
-        if ($exception) {
-            $instance = new $exception();
-        }
-        return $instance;
-    }
-}
-
 class UnavailableMethodExecutionException extends Exception {
     public function __construct($method, $message="Unavailable method %s", 
                                                 $code=9001, $previous=NULL) {
