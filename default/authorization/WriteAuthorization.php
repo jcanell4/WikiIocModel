@@ -8,6 +8,7 @@
 if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
 require_once (DOKU_INC . 'inc/auth.php');
+require_once (WIKI_IOC_MODEL . 'default/DokuModelExceptions.php');
 require_once (WIKI_IOC_MODEL . 'default/authorization/CommandAuthorization.php');
 
 class WriteAuthorization extends CommandAuthorization {
@@ -15,10 +16,13 @@ class WriteAuthorization extends CommandAuthorization {
     const NOT_AUTH_WRITE = 256 * AUTH_EDIT;
 
     public function canRun($permission = NULL) {
-        $ret = parent::canRun($permission);
+        parent::canRun($permission);
         if ( $this->permission->getInfoPerm() < AUTH_EDIT) {
-            $ret += NOT_AUTH_WRITE;
+            $this->permission->error = 1009;
+            $this->errorAuth['error'] += self::NOT_AUTH_WRITE;
+            $this->errorAuth['exception'] = 'InsufficientPermissionToWritePageException';
+            $this->errorAuth['extra_param'] = $this->permission->getIdPage();
         }
-        return $ret;
+        return $this->errorAuth['error'];
     }
 }

@@ -41,26 +41,26 @@ abstract class AbstractCommandAuthorization {
                 && $this->isCommandAllowed() );
         */
         if ($permis->getAuthenticatedUsersOnly()) {
-            $ret = $this->errorAuth['error'] = $permis->getSecurityTokenVerified() ? self::AUTH_OK : self::NOT_AUTH_TOKEN_VERIFIED;
+            $this->errorAuth['error'] = $permis->getSecurityTokenVerified() ? self::AUTH_OK : self::NOT_AUTH_TOKEN_VERIFIED;
             $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
-            if ($ret == self::AUTH_OK) {
-                $ret = $this->errorAuth['error'] = $permis->getUserAuthenticated() ? self::AUTH_OK : self::NOT_AUTH_USER_AUTHENTICATED;
+            if ($this->errorAuth['error'] == self::AUTH_OK) {
+                $this->errorAuth['error'] = $permis->getUserAuthenticated() ? self::AUTH_OK : self::NOT_AUTH_USER_AUTHENTICATED;
                 $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
             }
-            if ($ret == self::AUTH_OK) {
-                $ret = $this->errorAuth['error'] = $this->isCommandAllowed() ? self::AUTH_OK : self::NOT_AUTH_COMMAND_ALLOWED;
+            if ($this->errorAuth['error'] == self::AUTH_OK) {
+                $this->errorAuth['error'] = $this->isCommandAllowed() ? self::AUTH_OK : self::NOT_AUTH_COMMAND_ALLOWED;
                 $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
             }
-            if ($ret == self::AUTH_OK) {
+            if ($this->errorAuth['error'] == self::AUTH_OK) {
                 $this->errorAuth['exception'] = '';
                 $this->errorAuth['extra_param'] = '';
             }
         }
         else {
-            $ret = $this->errorAuth['error'] = self::AUTH_OK;
+            $this->errorAuth['error'] = self::AUTH_OK;
         }
             
-        return $ret;
+        return $this->errorAuth['error'];
     }
     
     public function getPermission($command) {

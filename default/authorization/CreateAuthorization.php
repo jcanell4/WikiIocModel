@@ -8,7 +8,6 @@
 if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
 require_once (DOKU_INC . 'inc/auth.php');
-// És obligatori carregar les excepcions específiques que genera l'autorització d'aquesta comanda
 require_once (WIKI_IOC_MODEL . 'default/DokuModelExceptions.php');
 require_once (WIKI_IOC_MODEL . 'default/authorization/CommandAuthorization.php');
 
@@ -24,11 +23,13 @@ class CreateAuthorization extends CommandAuthorization {
     const NOT_AUTH_CREATE = 256 * AUTH_CREATE;
 
     public function canRun($permission = NULL) {
-        $ret = parent::canRun($permission);
+        parent::canRun($permission);
         if ( $this->permission->getInfoPerm() < AUTH_CREATE) {
             $this->permission->error = 1005;
-            $ret += NOT_AUTH_CREATE;
+            $this->errorAuth['error'] += self::NOT_AUTH_CREATE;
+            $this->errorAuth['exception'] = 'InsufficientPermissionToCreatePageException';
+            $this->errorAuth['extra_param'] = $this->permission->getIdPage();
         }
-        return $ret;
+        return $this->errorAuth['error'];
     }
 }

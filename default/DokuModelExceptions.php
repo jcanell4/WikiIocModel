@@ -77,6 +77,16 @@ class InsufficientPermissionToEditPageException extends WikiIocModelException {
     }
 }
 
+class InsufficientPermissionToWritePageException extends WikiIocModelException {
+    public function __construct($page, $codeMessage='auth_WritePage', $code=1009, $previous=NULL) {
+        $message = WikiIocLangManager::getLang($codeMessage);
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
+        parent::__construct(sprintf($message, $page), $code, $previous);
+    }
+}
+
 class HttpErrorCodeException extends WikiIocModelException {
     public function __construct($code, $message="", $previous=NULL) {
         parent::__construct($message, $code, $previous);
