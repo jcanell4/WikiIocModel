@@ -9,6 +9,7 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins
 
 require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 require_once (WIKI_IOC_MODEL . 'default/authorization/Permission.php');
+require_once (WIKI_IOC_MODEL . 'default/DokuModelExceptions.php');
 
 abstract class AbstractCommandAuthorization {
     
@@ -46,7 +47,7 @@ abstract class AbstractCommandAuthorization {
                 $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
             }
             if ($ret == self::AUTH_OK) {
-                $ret = $this->errorAuth['error'] = $permis->isCommandAllowed() ? self::AUTH_OK : self::NOT_AUTH_COMMAND_ALLOWED;
+                $ret = $this->errorAuth['error'] = $this->isCommandAllowed() ? self::AUTH_OK : self::NOT_AUTH_COMMAND_ALLOWED;
                 $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
             }
             if ($ret == self::AUTH_OK) {
