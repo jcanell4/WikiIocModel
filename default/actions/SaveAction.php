@@ -78,12 +78,7 @@ class SaveAction extends RawPageAction
 
         if ($this->code == 0) {
             $ACT = $this->params['do'] = DW_ACT_EDIT;
-//            $noEsFaServir = $this->doEditPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-            $noEsFaServir = parent::runProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-            // [TODO: Xavi] el codi HTML que conté? es feia servir abans? ara no retornarà res perquè es un runProcess()
-
-            // [TODO: Xavi] que fem amb això? com que ja estem en edició no cal fer cap acció extra, i el runProcess() no retorna res, hauriem de crear una nova acció i cridar al get(), però no tinc clar amb quin objectiu
-
+            parent::runProcess();
             $this->draftQuery->removePartialDraft($this->params['id']);
 
         } else {
