@@ -915,18 +915,18 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $content;
 	}
 
-//	private function doEditPagePreProcess() {
-//		global $ACT;
-//
-//		$content = "";
-//		if ( $this->runBeforePreprocess( $content ) ) {
-//			$ACT = act_edit( $ACT );
-//			$ACT = act_permcheck( $ACT );
-//		}
-//		$this->runAfterPreprocess( $content );
-//
-//		return $content;
-//	}
+	private function doEditPagePreProcess() {
+		global $ACT;
+
+		$content = "";
+		if ( $this->runBeforePreprocess( $content ) ) {
+			$ACT = act_edit( $ACT );
+			$ACT = act_permcheck( $ACT );
+		}
+		$this->runAfterPreprocess( $content );
+
+		return $content;
+	}
 
 //	private function doAdminTaskPreProcess() {
 //		global $ACT;
@@ -1459,12 +1459,12 @@ class DokuModelAdapter extends AbstractModelAdapter {
 	 * @throws PageNotFoundException
 	 */
         //[Alerta Josep] Es crida des de la comanda edit
-	public function getDraftDialog( $pid, $prev = NULL, $prange = NULL, $psum = NULL ) {
+	public function getDraftDialog($params){/*$pid, $prev = NULL, $prange = NULL, $psum = NULL ) {*/
             //[TODO Josep] Normalitzar:...
 
         global $lang;
 
-        $response = $this->getCodePage($pid, $prev, $prange, $psum, NULL);
+        $response = $this->getCodePage($params);
 
         if (WikiIocInfoManager::getInfo('locked')) {
             $response['info'] = $this->generateInfo('error', $lang['lockedby'] . ' ' 

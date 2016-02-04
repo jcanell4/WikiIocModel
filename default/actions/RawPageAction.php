@@ -52,7 +52,7 @@ class RawPageAction extends DokuAction{
 		global $SUF;
 		global $SUM;
 
-		$ACT = $this->params['do'];
+		$ACT = $this->params['do']=DW_ACT_EDIT;
 		$ACT = act_clean( $ACT );
 
 		if ( ! $this->params['id'] ) {
