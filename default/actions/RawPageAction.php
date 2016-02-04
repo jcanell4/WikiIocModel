@@ -90,12 +90,13 @@ class RawPageAction extends DokuAction{
      */
     protected function runProcess(){
         global $ACT;
+        global $ID;
         
         if (!WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($pid, WikiIocLangManager::getLang('pageNotFound'));
+            throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
         }
         if (!WikiIocInfoManager::getInfo("perm")) {
-            throw new InsufficientPermissionToEditPageException($pid); //TODO [Josep] Internacionalització missatge per defecte!
+            throw new InsufficientPermissionToEditPageException($ID); //TODO [Josep] Internacionalització missatge per defecte!
         }
         $ACT = act_edit( $ACT );
         $ACT = act_permcheck( $ACT );
@@ -142,7 +143,7 @@ class RawPageAction extends DokuAction{
         return $resp;
     }
     
-    private function getContentPage( $pageToSend ) {
+    protected function getContentPage( $pageToSend ) {
             global $REV;
             global $lang;
 
