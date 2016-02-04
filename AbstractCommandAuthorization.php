@@ -12,17 +12,17 @@ require_once (WIKI_IOC_MODEL . 'default/authorization/Permission.php');
 require_once (WIKI_IOC_MODEL . 'default/DokuModelExceptions.php');
 
 abstract class AbstractCommandAuthorization {
-    
-    const IOC_AUTH_OK = TRUE;
-    const IOC_AUTH_FORBIDEN_ACCESS = FALSE;
-    const AUTH_OK = 0;
-    const NOT_AUTH_TOKEN_VERIFIED = 1;
-    const NOT_AUTH_USER_AUTHENTICATED = 2;
-    const NOT_AUTH_COMMAND_ALLOWED = 4;
+    //ALERTA [Josep] Ara ja no cal això, només necessitem si hi ha error i el nom de l'excepció
+//    const IOC_AUTH_OK = TRUE;
+//    const IOC_AUTH_FORBIDEN_ACCESS = FALSE;
+//    const AUTH_OK = 0;
+//    const NOT_AUTH_TOKEN_VERIFIED = 1;
+//    const NOT_AUTH_USER_AUTHENTICATED = 2;
+//    const NOT_AUTH_COMMAND_ALLOWED = 4;
 
     protected $permission;
     protected $errorAuth = array(
-                              'error' => self::AUTH_OK
+                              'error' => TRUE
                              ,'exception' => ''
                              ,'extra_param' => ''
                            );
@@ -40,27 +40,43 @@ abstract class AbstractCommandAuthorization {
                 && $permis->getUserAuthenticated()
                 && $this->isCommandAllowed() );
         */
+//        if ($permis->getAuthenticatedUsersOnly()) {
+//            $this->errorAuth['error'] = $permis->getSecurityTokenVerified() ? self::AUTH_OK : self::NOT_AUTH_TOKEN_VERIFIED;
+//            $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
+//            if ($this->errorAuth['error'] == self::AUTH_OK) {
+//                $this->errorAuth['error'] = $permis->getUserAuthenticated() ? self::AUTH_OK : self::NOT_AUTH_USER_AUTHENTICATED;
+//                $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
+//            }
+//            if ($this->errorAuth['error'] == self::AUTH_OK) {
+//                $this->errorAuth['error'] = $this->isCommandAllowed() ? self::AUTH_OK : self::NOT_AUTH_COMMAND_ALLOWED;
+//                $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
+//            }
+//            if ($this->errorAuth['error'] == self::AUTH_OK) {
+//                $this->errorAuth['exception'] = '';
+//                $this->errorAuth['extra_param'] = '';
+//            }
+//        }
+        
+        $this->errorAuth = array(
+                              'error' => FALSE
+                             ,'exception' => ''
+                             ,'extra_param' => ''
+                           );
+        
         if ($permis->getAuthenticatedUsersOnly()) {
-            $this->errorAuth['error'] = $permis->getSecurityTokenVerified() ? self::AUTH_OK : self::NOT_AUTH_TOKEN_VERIFIED;
-            $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
-            if ($this->errorAuth['error'] == self::AUTH_OK) {
-                $this->errorAuth['error'] = $permis->getUserAuthenticated() ? self::AUTH_OK : self::NOT_AUTH_USER_AUTHENTICATED;
-                $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
-            }
-            if ($this->errorAuth['error'] == self::AUTH_OK) {
-                $this->errorAuth['error'] = $this->isCommandAllowed() ? self::AUTH_OK : self::NOT_AUTH_COMMAND_ALLOWED;
-                $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
-            }
-            if ($this->errorAuth['error'] == self::AUTH_OK) {
-                $this->errorAuth['exception'] = '';
-                $this->errorAuth['extra_param'] = '';
+            if($this->errorAuth['error'] = !$permis->getSecurityTokenVerified()){
+                $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
+            }else{// getSecurityTokenVerified = OK!
+                if ($this->errorAuth['error'] = !$permis->getUserAuthenticated()) {
+                    $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
+                }else{
+                    if($this->errorAuth['error'] = !$this->isCommandAllowed()){
+                        $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
+                    }
+                }
             }
         }
-        else {
-            $this->errorAuth['error'] = self::AUTH_OK;
-        }
-            
-        return $this->errorAuth['error'];
+        return !$this->errorAuth['error'];
     }
     
     public function getPermission($command) {

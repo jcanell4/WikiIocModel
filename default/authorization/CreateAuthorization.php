@@ -20,16 +20,23 @@ class CreateAuthorization extends CommandAuthorization {
     }
     */
 
-    const NOT_AUTH_CREATE = 256 * AUTH_CREATE;
+    //ALERTA [Josep] Ara ja no cal això, només necessitem si hi ha error i el nom de l'excepció
+    //const NOT_AUTH_CREATE = 256 * AUTH_CREATE;
 
     public function canRun($permission = NULL) {
-        parent::canRun($permission);
-        if ( $this->permission->getInfoPerm() < AUTH_CREATE) {
-            $this->permission->error = 1005;
-            $this->errorAuth['error'] += self::NOT_AUTH_CREATE;
+//          parent::canRun($permission)
+//        if ($this->permission->getInfoPerm() < AUTH_CREATE) {
+//            $this->permission->error = 1005; //per què serveix ??
+//            $this->errorAuth['error'] += self::NOT_AUTH_CREATE;
+//            $this->errorAuth['exception'] = 'InsufficientPermissionToCreatePageException';
+//            $this->errorAuth['extra_param'] = $this->permission->getIdPage();
+//        }
+        if ( parent::canRun($permission) && $this->permission->getInfoPerm() < AUTH_CREATE) {
+            //$this->permission->error = 1005; //per què serveix ??
+            $this->errorAuth['error'] = TRUE;
             $this->errorAuth['exception'] = 'InsufficientPermissionToCreatePageException';
             $this->errorAuth['extra_param'] = $this->permission->getIdPage();
         }
-        return $this->errorAuth['error'];
+        return !$this->errorAuth['error'];
     }
 }

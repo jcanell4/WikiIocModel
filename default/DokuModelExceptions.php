@@ -99,3 +99,25 @@ class AuthorizationCommandNotFound extends WikiIocModelException {
     }
 }
 
+class InsufficientPermissionToDeletePageException extends WikiIocModelException {
+//    public function __construct($page, $message="You don't have enough permission to create page %s.", $code=1005, $previous=NULL) {
+    public function __construct($page, $codeMessage='auth_DeletePage', $code=1010, $previous=NULL) {
+        $message = WikiIocLangManager::getLang($codeMessage);
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
+        parent::__construct(sprintf($message, $page), $code, $previous);
+    }
+}
+
+class InsufficientPermissionToUploadMediaException extends WikiIocModelException {
+//    public function __construct($page, $message="You don't have enough permission to create page %s.", $code=1005, $previous=NULL) {
+    public function __construct($codeMessage='auth_UploadMedia', $code=1011, $previous=NULL) {
+        $message = WikiIocLangManager::getLang($codeMessage);
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
+        parent::__construct($message, $code, $previous);
+    }
+}
+
