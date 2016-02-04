@@ -11,12 +11,6 @@ class WikiIocInfoManager {
     private static $infoLoaded = FALSE;
     private static $mediaInfoLoaded = FALSE;
 
-    public static function setInfo($key, $value){
-        global $INFO;
-        self::loadInfo();
-        $INFO[$key] = $value;
-    }
-
     public static function getInfo($key){
         global $INFO;
         self::loadInfo();
