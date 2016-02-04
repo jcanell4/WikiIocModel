@@ -7,9 +7,8 @@
 
 $_AuthorizationCfg = 
     array(
-        '_command'              => 'command'      /*Default case*/
-	,'admin_task'		=> 'admin'
-	,'cancel'		=> 'write'
+        '_command'              => 'admin'      /*Default case*/
+	,'cancel'		=> 'read'
 	,'edit'			=> 'read'
 	,'diff'			=> 'read'
 	,'new_page'		=> 'create'
@@ -26,4 +25,8 @@ $_AuthorizationCfg =
 	,'mediadetails_delete'	=> 'delete'
 	,'mediadetails_edit'	=> 'write'
 	,'mediadetails_upload'	=> 'upload'
+	,'login'                => 'command'
+	,'lock'                 => 'read'
+	,'unlock'               => 'read'
+        ,"_none"                => "command"
     );

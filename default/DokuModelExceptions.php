@@ -12,8 +12,10 @@
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
 if (!defined('DOKU_INC')) die();
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
 
-require_once DOKU_INC . 'lib/plugins/wikiiocmodel/WikiIocModelExceptions.php';
+require_once (WIKI_IOC_MODEL . 'WikiIocModelExceptions.php');
+require_once (WIKI_IOC_MODEL . 'WikiIocLangManager.php');
 
 class PageNotFoundException extends WikiIocModelException {
     public function __construct($page, $message="Page %s not found", 
@@ -43,22 +45,44 @@ class WordBlockedException extends WikiIocModelException {
 }
 
 class InsufficientPermissionToCreatePageException extends WikiIocModelException {
-    public function __construct($page, $message="You don't have enough permission to create page %s.", 
-                                                $code=1005, $previous=NULL) {
+//    public function __construct($page, $message="You don't have enough permission to create page %s.", $code=1005, $previous=NULL) {
+    public function __construct($page, $codeMessage='auth_CreatePage', $code=1005, $previous=NULL) {
+        $message = WikiIocLangManager::getLang($codeMessage);
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
         parent::__construct(sprintf($message, $page), $code, $previous);
     }
 }
 
 class InsufficientPermissionToViewPageException extends WikiIocModelException {
-    public function __construct($page, $message="You don't have enough permission to view page %s.", 
-                                                $code=1006, $previous=NULL) {
+//    public function __construct($page, $message="You don't have enough permission to view page %s.", $code=1006, $previous=NULL) {
+    public function __construct($page, $codeMessage='auth_ViewPage', $code=1006, $previous=NULL) {
+        $message = WikiIocLangManager::getLang($codeMessage);
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
         parent::__construct(sprintf($message, $page), $code, $previous);
     }
 }
 
 class InsufficientPermissionToEditPageException extends WikiIocModelException {
-    public function __construct($page, $message="You don't have enough permission to edit page %s.", 
-                                                $code=1007, $previous=NULL) {
+//    public function __construct($page, $message="You don't have enough permission to edit page %s.", $code=1007, $previous=NULL) {
+    public function __construct($page, $codeMessage='auth_EditPage', $code=1007, $previous=NULL) {
+        $message = WikiIocLangManager::getLang($codeMessage);
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
+        parent::__construct(sprintf($message, $page), $code, $previous);
+    }
+}
+
+class InsufficientPermissionToWritePageException extends WikiIocModelException {
+    public function __construct($page, $codeMessage='auth_WritePage', $code=1009, $previous=NULL) {
+        $message = WikiIocLangManager::getLang($codeMessage);
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
         parent::__construct(sprintf($message, $page), $code, $previous);
     }
 }
@@ -71,6 +95,28 @@ class HttpErrorCodeException extends WikiIocModelException {
 
 class AuthorizationCommandNotFound extends WikiIocModelException {
     public function __construct($code=1008, $message="Authorization command not found", $previous=NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+}
+
+class InsufficientPermissionToDeletePageException extends WikiIocModelException {
+//    public function __construct($page, $message="You don't have enough permission to create page %s.", $code=1005, $previous=NULL) {
+    public function __construct($page, $codeMessage='auth_DeletePage', $code=1010, $previous=NULL) {
+        $message = WikiIocLangManager::getLang($codeMessage);
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
+        parent::__construct(sprintf($message, $page), $code, $previous);
+    }
+}
+
+class InsufficientPermissionToUploadMediaException extends WikiIocModelException {
+//    public function __construct($page, $message="You don't have enough permission to create page %s.", $code=1005, $previous=NULL) {
+    public function __construct($codeMessage='auth_UploadMedia', $code=1011, $previous=NULL) {
+        $message = WikiIocLangManager::getLang($codeMessage);
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
         parent::__construct($message, $code, $previous);
     }
 }

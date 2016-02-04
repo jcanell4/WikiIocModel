@@ -11,7 +11,8 @@ abstract class AbstractPermission {
     protected $cmdAuthorization;        //objecte command
     protected $authenticatedUsersOnly;  //bool (de command_class)
     protected $isSecurityTokenVerified;
-    protected $isUserAuthenticated;
+    protected $isUserAuthenticated;     // bool
+    protected $idPage;
     protected $hasPermissionFor;
     protected $info_writable;
     protected $info_isadmin;
@@ -57,6 +58,14 @@ abstract class AbstractPermission {
 
     public function setUserAuthenticated($isUserAuthenticated) {
         $this->isUserAuthenticated = $isUserAuthenticated;
+    }
+
+    public function setIdPage($idPage) {
+        $this->idPage = $idPage;
+    }
+
+    public function getIdPage() {
+        return $this->idPage;
     }
 
     public function setPermissionFor($permissionFor) {
