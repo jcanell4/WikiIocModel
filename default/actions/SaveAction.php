@@ -75,6 +75,7 @@ class SaveAction extends RawPageAction
         } else if ($ret === 'denied') {
             $this->code = 1005;
         }
+
         if ($this->code == 0) {
             $ACT = $this->params['do'] = DW_ACT_EDIT;
 //            $noEsFaServir = $this->doEditPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
@@ -99,7 +100,7 @@ class SaveAction extends RawPageAction
             // TODO[Xavi] Aaixò no ha de passar mai, amb el codi actual no pot funcionar, si estigues bloquejada surt un info avisant
 //            $this->doFormatedPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
 
-
+            //llençar excepcio
 
         }
 
