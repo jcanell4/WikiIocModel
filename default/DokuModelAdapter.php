@@ -915,18 +915,19 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $content;
 	}
 
-//	private function doEditPagePreProcess() {
-//		global $ACT;
-//
-//		$content = "";
-//		if ( $this->runBeforePreprocess( $content ) ) {
-//			$ACT = act_edit( $ACT );
-//			$ACT = act_permcheck( $ACT );
-//		}
-//		$this->runAfterPreprocess( $content );
-//
-//		return $content;
-//	}
+	// TODO[Xavi] Reactivada perquè es continua cridant (Al fer un save es crida aquesta)
+	private function doEditPagePreProcess() {
+		global $ACT;
+
+		$content = "";
+		if ( $this->runBeforePreprocess( $content ) ) {
+			$ACT = act_edit( $ACT );
+			$ACT = act_permcheck( $ACT );
+		}
+		$this->runAfterPreprocess( $content );
+
+		return $content;
+	}
 
 //	private function doAdminTaskPreProcess() {
 //		global $ACT;
@@ -1560,6 +1561,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 		return $html_output;
 	}
+
 
 //	private function _getCodePage() {
 //		global $ACT;
