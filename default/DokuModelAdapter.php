@@ -915,6 +915,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		return $content;
 	}
 
+	// TODO[Xavi] Reactivada perquè es continua cridant (Al fer un save es crida aquesta)
 	private function doEditPagePreProcess() {
 		global $ACT;
 
@@ -1263,7 +1264,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 		];
 	}
 
-	// En els casos en que hi hagi discrepancies i no hi haci cap preferencia es fa servir el valor de A
+	// En els casos en que hi hagi discrepancies i no hi hagi cap preferencia es fa servir el valor de A
 	public function addInfoToInfo( $infoA, $infoB ) {
 		// Els tipus global de la info serà el de major gravetat: "debug" > "error" > "warning" > "info"
 		$info = [ ];
@@ -1558,6 +1559,7 @@ class DokuModelAdapter extends AbstractModelAdapter {
 
 		return $html_output;
 	}
+
 
 //	private function _getCodePage() {
 //		global $ACT;

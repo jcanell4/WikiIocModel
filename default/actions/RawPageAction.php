@@ -156,7 +156,7 @@ class RawPageAction extends DokuAction{
             if ( $count > 0 ) {
                     $info = self::generateInfo( "warning", 
                                 $lang['document_revision_loaded'] . ' <b>' . WikiPageSystemManager::extractDateFromRevision( $REV, self::$SHORT_FORMAT ) . '</b>' 
-                                , $this->params[id]);
+                                , $this->params['id']);
             }
 
             $id          = $this->params['id'];
