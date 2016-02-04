@@ -31,7 +31,7 @@ if (!defined('DW_DEFAULT_PAGE')) {
  * @author josep
  */
 class RawPageAction extends DokuAction{
-    private $draftQuery;
+    protected $draftQuery;
     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         $this->draftQuery = $engine->createDraftDataQuery();

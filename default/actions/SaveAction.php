@@ -7,11 +7,14 @@ if (!defined('DOKU_PLUGIN')) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
 
-require_once(DOKU_INC . 'inc/pluginutils.php');
-require_once(DOKU_INC . 'inc/actions.php');
-require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
+require_once (DOKU_INC . 'inc/common.php');
+require_once (DOKU_INC . 'inc/actions.php');
+require_once (DOKU_INC . 'inc/template.php');
+require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
+require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/default/DokuAction.php";
+require_once DOKU_PLUGIN."wikiiocmodel/default/DokuAction.php";
+require_once DOKU_PLUGIN."wikiiocmodel/default/DokuModelExceptions.php";
 
 
 if (!defined('DW_ACT_SAVE')) {
@@ -80,7 +83,7 @@ class SaveAction extends RawPageAction
 
             // [TODO: Xavi] que fem amb això? com que ja estem en edició no cal fer cap acció extra, i el runProcess() no retorna res, hauriem de crear una nova acció i cridar al get(), però no tinc clar amb quin objectiu
 
-
+            $this->draftQuery->removePartialDraft($this->params['id']);
 
         } else {
             //S'han trobat conflictes i no s'ha pogut guardar
