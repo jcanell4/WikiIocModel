@@ -10,6 +10,7 @@ if (!defined('DOKU_PLUGIN')) {
 require_once(DOKU_INC . 'inc/pluginutils.php');
 require_once(DOKU_INC . 'inc/actions.php');
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
+require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/default/DokuAction.php";
 
 
@@ -75,7 +76,12 @@ class SaveAction extends RawPageAction
             $ACT = $this->params['do'] = DW_ACT_EDIT;
 //            $noEsFaServir = $this->doEditPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
             $noEsFaServir = parent::runProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-            // [TODO: Xavi] el codiHTML que conté? es feia servir abans?
+            // [TODO: Xavi] el codi HTML que conté? es feia servir abans? ara no retornarà res perquè es un runProcess()
+
+            // [TODO: Xavi] que fem amb això? com que ja estem en edició no cal fer cap acció extra, i el runProcess() no retorna res, hauriem de crear una nova acció i cridar al get(), però no tinc clar amb quin objectiu
+
+
+
         } else {
             //S'han trobat conflictes i no s'ha pogut guardar
             //TODO[Josep] de moment tornem a la versió original, però cal
@@ -87,7 +93,7 @@ class SaveAction extends RawPageAction
             //cercar una solució més operativa com ara emmagatzemar un esborrany
             //per tal que l'usuari pugui comparar i acceptar canvis
 //            $ACT = $this->params['do'] = DW_ACT_SHOW;
-            // TODO[Xavi] Aaixò no ha de passar mai, i amb el codi actual no pot funcionar
+            // TODO[Xavi] Aaixò no ha de passar mai, amb el codi actual no pot funcionar, si estigues bloquejada surt un info avisant
 //            $this->doFormatedPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
 
 
@@ -104,7 +110,6 @@ class SaveAction extends RawPageAction
      */
     protected function responseProcess()
     {
-        global $lang; // TODO[xavi] cridar al mètode que retorna el lang
         global $TEXT;
         global $ID;
 
@@ -113,16 +118,16 @@ class SaveAction extends RawPageAction
 
         if ($this->code == 1004) {
             $response["code"] = $this->code;
-            $response["info"] = $lang['wordblock'];
+            $response["info"] = WikiIocLangManager::getLang('wordblock');
             $response["page"] = $this->getFormatedPageResponse();
             $type = "error";
         } elseif ($this->code == 1003) {
             $response["code"] = $this->code;
-            $response["info"] = $lang['conflictsSaving']; //conflict
+            $response["info"] = WikiIocLangManager::getLang('conflictsSaving'); //conflict
             $response["page"] = $this->getFormatedPageResponse();
             $type = "error";
         } else {
-            $response = ["code" => $this->code, "info" => $lang["saved"]];
+            $response = ["code" => $this->code, "info" => WikiIocLangManager::getLang('saved')];
             //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg
             $response["formId"] = "dw__editform";
             $response["inputs"] = [
@@ -130,9 +135,8 @@ class SaveAction extends RawPageAction
                 "changecheck" => md5($TEXT)
             ];
             $type = 'success';
-            $duration = 10;         // TODO[Xavi] PROVES, En cas d'exit el missatge només ha de durar 10s
+            $duration = 10;
         }
-
 
         $response["info"] = $this->generateInfo($type, $response["info"], NULL, $duration);
 

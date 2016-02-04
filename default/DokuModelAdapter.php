@@ -310,13 +310,12 @@ class DokuModelAdapter extends AbstractModelAdapter
     public function saveEdition($params)
     {
 
-
         $action = new SaveAction($this->persistenceEngine);
         // Remove partialDraft
 
-        $response = $action->get($params);
-        $this->clearPartialDraft($params['id']); // TODO[Xavi] Aquí o al SaveAction? importa si es abans del $response?
-        return $response;
+//        $this->clearPartialDraft($params['id']); // TODO[Xavi] Aquí o al SaveAction? importa si es abans del $response?
+
+        return $action->get($params);
 
 //		$this->startPageProcess(
 //			DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate,
