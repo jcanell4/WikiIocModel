@@ -76,7 +76,7 @@ class SaveAction extends RawPageAction
 
         switch ($ret) {
             case 'edit':
-                throw new WordBlockedException($ID);;
+                throw new WordBlockedException($ID);
 
             case 'conflict':
                 throw new DateConflictSavingException($ID);
@@ -101,18 +101,19 @@ class SaveAction extends RawPageAction
         global $TEXT;
         global $ID;
 
-        $response = ["code" => $this->code, "info" => WikiIocLangManager::getLang('saved')];
+        $response = ['code' => $this->code, 'info' => WikiIocLangManager::getLang('saved')];
 
-        //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg
-        $response["formId"] = "dw__editform";
-        $response["inputs"] = [
-            "date" => @filemtime(wikiFN($ID)),
-            "changecheck" => md5($TEXT)
+        //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg <-- [Xavi] el nom del formulari ara es dinamic, canvia per cada document
+
+        $response['formId'] = 'form_' . $ID;
+        $response['inputs'] = [
+            'date' => @filemtime(wikiFN($ID)),
+            'changecheck' => md5($TEXT)
         ];
         $type = 'success';
         $duration = 10;
 
-        $response["info"] = $this->generateInfo($type, $response["info"], NULL, $duration);
+        $response['info'] = $this->generateInfo($type, $response['info'], NULL, $duration);
 
 
         return $response;

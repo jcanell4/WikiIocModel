@@ -2578,7 +2578,7 @@ class DokuModelAdapter extends AbstractModelAdapter
 
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
-    private function getInstructionsForDocument($id, $rev = null)
+    private static function getInstructionsForDocument($id, $rev = null)
     {
         $file = wikiFN($id, $rev);
         //[ALERTA JOSEP] CAL FER SERVIR p_cached_instructions. A més caldria traslladar aquesta funció a PageDataQuery i cridar el mètode adient de PagedataQuery des d'aquí. 
@@ -2589,9 +2589,9 @@ class DokuModelAdapter extends AbstractModelAdapter
     }
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
-    private function getHtmlForDocument($id, $rev = null)
+    private static function getHtmlForDocument($id, $rev = null)
     {
-        $html = $this->p_wiki_xhtml($id, $rev, true);
+        $html = self::p_wiki_xhtml($id, $rev, true);
 
         return $html;
     }
@@ -2629,15 +2629,15 @@ class DokuModelAdapter extends AbstractModelAdapter
         $document['selected'] = $selected;
         $document['date'] = WikiIocInfoManager::getInfo('meta')['date']['modified'] + 1;
 
-        $html = $this->getHtmlForDocument($id, $rev);
+        $html = self::getHtmlForDocument($id, $rev);
         $document['html'] = $html;
 
         $headerIds = $this->getHeadersFromHtml($html);
 
         //S'han unificat les dues instruccions següents a PageDataQuery sota el nom únic de getChunks
-        $instructions = $this->getInstructionsForDocument($id, $rev);
+        $instructions = self::getInstructionsForDocument($id, $rev);
 
-        $chunks = $this->getChunks($instructions);
+        $chunks = self::getChunks($instructions);
 
         $editingChunks = [];
         $dictionary = [];
@@ -2659,14 +2659,14 @@ class DokuModelAdapter extends AbstractModelAdapter
         return $document;
     }
 
-    private function getHeadersFromHtml($html)
+    private static function getHeadersFromHtml($html)
     {
         $pattern = '/(?:<h[123] class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si s'aplica el scedit
         preg_match_all($pattern, $html, $match);
         return $match[1]; // Conté l'array amb els ids trobats per cada secció
     }
 
-    private function getEditingChunks(&$editingChunks, &$dictionary = [], &$chunks, $id, $headerIds, $editing)
+    private static function getEditingChunks(&$editingChunks, &$dictionary = [], &$chunks, $id, $headerIds, $editing)
     {
         for ($i = 0; $i < count($chunks); $i++) {
             $chunks[$i]['header_id'] = $headerIds[$i];
@@ -2684,17 +2684,17 @@ class DokuModelAdapter extends AbstractModelAdapter
         }
     }
 
-    public function getAllChunksWithText($id)
+    public static function getAllChunksWithText($id)
     {
-        $html = $this->getHtmlForDocument($id);
-        $headerIds = $this->getHeadersFromHtml($html);
-        $instructions = $this->getInstructionsForDocument($id);
-        $chunks = $this->getChunks($instructions);
+        $html = self::getHtmlForDocument($id);
+        $headerIds = self::getHeadersFromHtml($html);
+        $instructions = self::getInstructionsForDocument($id);
+        $chunks = self::getChunks($instructions);
         $editing = $headerIds;
         $editingChunks = [];
         $dictionary = [];
 
-        $this->getEditingChunks($editingChunks, $dictionary, $chunks, $id, $headerIds, $editing);
+        self::getEditingChunks($editingChunks, $dictionary, $chunks, $id, $headerIds, $editing);
 
         return ['chunks' => $editingChunks, 'dictionary' => $dictionary];
 
@@ -2748,7 +2748,7 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     // Només son editables parcialment les seccions de nivell 1, 2 i 3
-    private function getChunks($instructions)
+    private static function getChunks($instructions)
     {
         $sections = [];
         $currentSection = [];
@@ -3133,7 +3133,8 @@ class DokuModelAdapter extends AbstractModelAdapter
      */
 
     //[ALERTA Josep] CAL revisar per fer servir el PageDataQuery!
-    function p_wiki_xhtml($id, $rev = '', $excuse = true)
+    // TODO[Xavi] Convertida en static (temporalment?) necessaria per reconstruir els drafts a partir de parcials
+    static function p_wiki_xhtml($id, $rev = '', $excuse = true)
     {
         $file = wikiFN($id, $rev);
         $ret = '';

@@ -2,7 +2,7 @@
 if (!defined('DOKU_INC')) die();
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
-
+require_once(DOKU_PLUGIN . 'wikiiocmodel/default/DokuModelAdapter.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
 /**
  * Class DraftManager
  *
@@ -10,8 +10,10 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php')
  *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
-class DraftManager{
-    public static function saveDraft($draft){
+class DraftManager
+{
+    public static function saveDraft($draft)
+    {
 
         $type = $draft['type'];
 
@@ -32,7 +34,8 @@ class DraftManager{
         }
     }
 
-    private static function generateStructuredDraft($draft, $id){
+    private static function generateStructuredDraft($draft, $id)
+    {
 
         $time = time();
         $newDraft = [];
@@ -91,7 +94,8 @@ class DraftManager{
 
     }
 
-    public static function getStructuredDraftForHeader($id, $header){
+    public static function getStructuredDraftForHeader($id, $header)
+    {
         $draftFile = self::getStructuredDraftFilename($id);
 
 
@@ -121,7 +125,7 @@ class DraftManager{
 
     public static function getStructuredDraftFilename($id)
     {
-        return self::getDraftFilename($id).'.structured';
+        return self::getDraftFilename($id) . '.structured';
     }
 
     public static function removeStructuredDraft($id, $header_id)
@@ -259,12 +263,13 @@ class DraftManager{
         return $content;
     }
 
-    private static  function getFullDraftFromPartials($id)
+    private static function getFullDraftFromPartials($id)
     {
         $draftContent = '';
 
         $structuredDraft = self::getStructuredDraft($id);
-        $chunks = $this->modelWrapper->getAllChunksWithText($id)['chunks'];
+        $chunks = DokuModelAdapter::getAllChunksWithText($id)['chunks']; //TODO[Xavi] Això es força complicat de refactoritzar perquè crida una pila de mètodes al dokumodel
+//        $chunks = [];
 
         $draftContent .= $structuredDraft['pre'] . "\n";
 
@@ -278,7 +283,8 @@ class DraftManager{
         }
 
         $draft['content'] = $draftContent;
-        $draft['date'] = $this->modelWrapper->extractDateFromRevision(@filemtime($this->getStructuredDraftFilename($id)));
+
+        $draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime(self::getStructuredDraftFilename($id)));
 
         return $draft;
     }
@@ -323,12 +329,12 @@ class DraftManager{
         $info = basicinfo($id);
 
         $aux = ['id' => $id,
-                'prefix' => '',
-                'text' => $draft,
-                'suffix' => '',
-                'date' => time(), // TODO[Xavi] Posar la data
-                'client' => $info['client']
-            ];
+            'prefix' => '',
+            'text' => $draft,
+            'suffix' => '',
+            'date' => time(), // TODO[Xavi] Posar la data
+            'client' => $info['client']
+        ];
 
         $filename = self::getDraftFilename($id);
 
