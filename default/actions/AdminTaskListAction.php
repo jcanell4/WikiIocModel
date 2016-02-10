@@ -42,9 +42,8 @@ class AdminTaskListAction extends AdminTaskAction {
      * DokuAction#response.
      */
     protected function responseProcess(){ 
-        $containerId = cfgIdConstants::ZONA_NAVEGACIO;
-
-        return $this->getCommonPage($id, WikiIocLangManager::getLang('btn_admin'), $this->pageToSend);
+        $ret = $this->getCommonPage($id, WikiIocLangManager::getLang('btn_admin'), $this->pageToSend);
+        return $ret;
     }
     
     private function getAdminTaskListHtml() {
