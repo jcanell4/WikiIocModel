@@ -17,6 +17,22 @@ class PersistenceSimul {
             "MetaDataRender": "default"
             }
         }';
+    private static $retornNsConfigPt1 = '{"metaDataClassesNameSpaces":
+            {
+            "MetaDataRepository": "pt1", 
+            "MetaDataDAO": "pt1",
+            "MetaDataEntity": "pt1",
+            "MetaDataRender": "pt1"
+            }
+        }';
+    private static $retornNsConfigPt2 = '{"metaDataClassesNameSpaces":
+            {
+            "MetaDataRepository": "pt1", 
+            "MetaDataDAO": null,
+            "MetaDataEntity": null,
+            "MetaDataRender": null
+            }
+        }';
     private static $retornNsConfigM = "{'Organización': 'Equipo de documentación PHP'}";
     private static $retornNsProject = '{"fp:dam:m03":"materials","fp:daw:m07":"materials"}';
     private static $retornNsProjectM = '{"fp:dam:m03":"materials","fp:daw:m07materials"]';
@@ -26,10 +42,18 @@ class PersistenceSimul {
     private static $retornSetMetaDataGen = '{"error":"5090"}';
 
     public static function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
-        if ($projectType == "a") {
+        if ($projectType == "a" || $projectType == "fp" || $projectType == "Materials") {
             return self::$retornNsConfig;
         } else {
-            return self::$retornNsConfigM;
+            if ($projectType == "pt1") {
+                return self::$retornNsConfigPt1;
+            } else {
+                if ($projectType == "pt2") {
+                    return self::$retornNsConfigPt2;
+                } else {
+                    return self::$retornNsConfigM;
+                }
+            }
         }
     }
 

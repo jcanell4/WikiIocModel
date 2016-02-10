@@ -60,3 +60,34 @@ class PersistenceNsNotFound extends WikiIocModelException {
     }
 
 }
+
+class ClassDaoNotFound extends WikiIocModelException {
+
+    public function __construct($code = 5060, $message = "No s'ha trobat cap classe DAO", $previous = NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+
+}
+class ClassEntityNotFound extends WikiIocModelException {
+
+    public function __construct($code = 5080, $message = "No s'ha trobat cap classe Entity", $previous = NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+
+}
+
+class ClassRenderNotFound extends WikiIocModelException {
+
+    public function __construct($code = 5030, $message = "No s'ha trobat cap classe Render", $previous = NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+
+}
+
+class ClassProjectsNotFound extends WikiIocModelException {
+
+    public function __construct($code = 5050, $message = "NCap projecte compleix els criteris de cerca", $previous = NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+
+}

@@ -20,18 +20,18 @@ require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataExceptions.php');
 abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
 
     protected $projectType;
-    protected $MetaDataSubSet;
+    protected $metaDataSubSet;
     protected $nsRoot;
     protected $MetaDataValue;  //JSON array containing metadata
-    protected static $MANDATORIES = array("projectType", "MetaDataSubSet", "nsRoot");
+    protected static $MANDATORIES = array("projectType", "metaDataSubSet", "nsRoot");
     protected static $JSONTYPES = array("MetaDataValue");
 
     function getProjectType() {
         return $this->projectType;
     }
 
-    function getMetaDataSubSet() {
-        return $this->MetaDataSubSet;
+    function getmetaDataSubSet() {
+        return $this->metaDataSubSet;
     }
 
     function getNsRoot() {
@@ -46,8 +46,8 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         $this->projectType = $projectType;
     }
 
-    function setMetaDataSubSet($MetaDataSubSet) {
-        $this->MetaDataSubSet = $MetaDataSubSet;
+    function setmetaDataSubSet($metaDataSubSet) {
+        $this->metaDataSubSet = $metaDataSubSet;
     }
 
     function setNsRoot($nsRoot) {
@@ -86,7 +86,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * Restrictions:
      * - $arrayEntry wellformed JSON
      * - keys must be entity properties (but this is within the next restriction, mandatory)
-     * - mandatory $projectType, $MetaDataSubSet, $nsRoot;
+     * - mandatory $projectType, $metaDataSubSet, $nsRoot;
      * @return true || exception
      */
     public function setModelFromArray($arrayEntry) {

@@ -152,7 +152,6 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
         if($returnType == "boolean" && $jSONArray == true){
             return $jSONArray;
         }else{
-            print("CDE CDE CDE CDE CDE CDE CDE");
             //Persistence returns wellformed JSON
             $encoder = new JSON();
             $arrayConfigPre = $encoder->decode($jSONArray);
