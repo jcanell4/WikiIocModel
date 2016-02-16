@@ -24,6 +24,11 @@ class DraftDataQuery extends DataQuery{
     }    
     
     public function generateFull($id){
-         DraftManager::generateFullDraft($id);
+         return DraftManager::generateFullDraft($id);
     }
+
+    public function removePartialDraft($id) {
+        DraftManager::removeStructuredDraftAll($id);
+    }
+
 }

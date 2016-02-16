@@ -5,7 +5,7 @@ if (!defined("DOKU_INC")) {
     die();
 }
 if (!defined('DOKU_PLUGIN')) {
-    define('', DOKU_INC . 'lib/plugins/');
+    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
 
 require_once (DOKU_INC . 'inc/common.php');
@@ -31,7 +31,7 @@ if (!defined('DW_DEFAULT_PAGE')) {
  * @author josep
  */
 class RawPageAction extends DokuAction{
-    private $draftQuery;
+    protected $draftQuery;
     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         $this->draftQuery = $engine->createDraftDataQuery();
@@ -52,7 +52,7 @@ class RawPageAction extends DokuAction{
 		global $SUF;
 		global $SUM;
 
-		$ACT = $this->params['do'];
+		$ACT = $this->params['do']=DW_ACT_EDIT;
 		$ACT = act_clean( $ACT );
 
 		if ( ! $this->params['id'] ) {
@@ -90,12 +90,13 @@ class RawPageAction extends DokuAction{
      */
     protected function runProcess(){
         global $ACT;
+        global $ID;
         
         if (!WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($pid, WikiIocLangManager::getLang('pageNotFound'));
+            throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
         }
         if (!WikiIocInfoManager::getInfo("perm")) {
-            throw new InsufficientPermissionToEditPageException($pid); //TODO [Josep] Internacionalització missatge per defecte!
+            throw new InsufficientPermissionToEditPageException($ID); //TODO [Josep] Internacionalització missatge per defecte!
         }
         $ACT = act_edit( $ACT );
         $ACT = act_permcheck( $ACT );
@@ -142,7 +143,7 @@ class RawPageAction extends DokuAction{
         return $resp;
     }
     
-    private function getContentPage( $pageToSend ) {
+    protected function getContentPage( $pageToSend ) {
             global $REV;
             global $lang;
 
@@ -156,7 +157,7 @@ class RawPageAction extends DokuAction{
             if ( $count > 0 ) {
                     $info = self::generateInfo( "warning", 
                                 $lang['document_revision_loaded'] . ' <b>' . WikiPageSystemManager::extractDateFromRevision( $REV, self::$SHORT_FORMAT ) . '</b>' 
-                                , $this->params[id]);
+                                , $this->params['id']);
             }
 
             $id          = $this->params['id'];
