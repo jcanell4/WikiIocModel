@@ -34,7 +34,7 @@ class PersistenceSimul {
             }
         }';
     private static $retornNsConfigM = "{'Organización': 'Equipo de documentación PHP'}";
-    private static $retornNsProject = '{"fp:dam:m03":"materials","fp:daw:m07":"materials"}';
+    private static $retornNsProject = '{"fp:dam:m03":"materials","fp:daw:m07":"materials","fp:daw:m09":"adocs"}';
     private static $retornNsProjectM = '{"fp:dam:m03":"materials","fp:daw:m07materials"]';
     private static $retornGetMetaData = '{"keymd1":"valormd1","keymdx":"valormdx"}';
     private static $retornGetMetaDataM = '{"keymd1":"valormd1","keymdxvalormdx"]';

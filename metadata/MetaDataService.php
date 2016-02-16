@@ -19,7 +19,7 @@ require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/metadataconfig/MetaDataReposi
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRepository.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderFactory.php');
 
-abstract class MetaDataService {
+class MetaDataService {
 
     protected $metaDataRepositoryConfig;
     protected $metaDataRepository;
@@ -114,27 +114,25 @@ abstract class MetaDataService {
                 $encoder = new JSON();
                 $this->setMetaDataElements($encoder->encode($toEncode));
             }
-        } catch (Exception $ex) {
-            throw $ex;
-        }
 
-        //'{"fp:dam:m03":"materials","fp:daw:m07":"materials"}'
-        $encoder = new JSON();
-        $arrayElements = $encoder->decode($this->getMetaDataElements());
-        asort($arrayElements);
-        $this->render = null;
-        $this->metaDataEntityWrapper = array();
-        $indexWrapper = 0;
-        $indexResponse = 0;
-        $projectTypeActual = null;
-        $metaDataResponseGet = null;
-        try {
+
+            //'{"fp:dam:m03":"materials","fp:daw:m07":"materials"}'
+            $encoder = new JSON();
+            $arrayElements = $encoder->decode($this->getMetaDataElements());
+            asort($arrayElements);
+            $this->render = null;
+            $this->metaDataEntityWrapper = array();
+            $indexWrapper = 0;
+            $indexResponse = 0;
+            $projectTypeActual = null;
+            $metaDataResponseGet = null;
+
             foreach ($arrayElements as $idResource => $projectType) {
 
                 //ojo que s'ha de cridar al render
                 if ($projectType != $projectTypeActual) {
                     if ($projectTypeActual != null) {
-                        $metaDataResponseGet[$indexResponse]=$this->render->render($this->metaDataEntityWrapper);
+                        $metaDataResponseGet[$indexResponse] = $this->render->render($this->metaDataEntityWrapper);
                         $indexResponse++;
                     }
                     $projectTypeActual = $projectType;
@@ -155,10 +153,10 @@ abstract class MetaDataService {
                     $indexWrapper++;
                 }
             }
-            $metaDataResponseGet[$indexResponse]=$this->render->render($this->metaDataEntityWrapper);
-            if($metaDataResponseGet == null){
+            $metaDataResponseGet = $this->render->render($this->metaDataEntityWrapper);
+            if ($metaDataResponseGet == null) {
                 throw new ClassProjectsNotFound();
-            }else{
+            } else {
                 return $metaDataResponseGet;
             }
         } catch (Exception $ex) {
