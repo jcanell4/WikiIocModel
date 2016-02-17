@@ -29,12 +29,13 @@ class WikiIocModelLocalizedException extends WikiIocModelException
     }
 }
 
-class PageNotFoundException extends WikiIocModelException
+class PageNotFoundException extends WikiIocModelLocalizedException
 {
-    public function __construct($page, $message = "Page %s not found",
+    public function __construct($page, $codeMessage = "pageNotFound",
                                 $code = 1001, $previous = NULL)
     {
-        parent::__construct(sprintf($message, $page), $code, $previous);
+        //parent::__construct(sprintf($message, $page), $code, $previous);
+        parent::__construct($page, $codeMessage, $code, $previous);
     }
 }
 
