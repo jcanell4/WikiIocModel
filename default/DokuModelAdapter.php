@@ -2800,7 +2800,17 @@ class DokuModelAdapter extends AbstractModelAdapter
     {
         global $lang;
 
-        $this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange, $psum);
+        //$this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange, $psum); EDIT?
+        $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, $prange, $psum);
+        
+         if (!WikiIocInfoManager::getInfo("exists")) {
+            throw new PageNotFoundException($id, $lang['pageNotFound']);
+        }
+        if (!WikiIocInfoManager::getInfo("perm")) {
+            throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
+        }
+
+        $this->doFormatedPartialPagePreProcess();   
 
         $response['structure'] = $this->getStructuredDocument($psection, $pid, NULL);
 
