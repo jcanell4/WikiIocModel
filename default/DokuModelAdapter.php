@@ -125,8 +125,7 @@ class DokuModelAdapter extends AbstractModelAdapter
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
-    
-    //ver WikiIocInfoManager
+    // ver WikiIocInfoManager
     //protected $infoLoaded = FALSE;
     //protected $wikiIocInfo;
 
@@ -172,11 +171,13 @@ class DokuModelAdapter extends AbstractModelAdapter
 
         //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
         $this->startCreateProcess(
-            DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL, "", $text, ""
+            DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL,
+            "", $text, ""
         );
 
         //Preprocess (ACTION_ACT_PREPROCESS)
         $this->doCreatePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
+
 
         //Process and return response
         $response = $this->getFormatedPageResponse();
@@ -190,6 +191,7 @@ class DokuModelAdapter extends AbstractModelAdapter
         $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
         $response['meta'] = $this->getMetaResponse($pid);
         $response['revs'] = $this->getRevisions($pid);
+
 
         return $response;
     }
@@ -208,21 +210,19 @@ class DokuModelAdapter extends AbstractModelAdapter
     {
         global $lang;
 
-        if (!WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($id, $lang['pageNotFound']);
-        }
-        //[Atenció Rafa]
-        //   getInfo("perm") retorna un valor numéric definit a les constants AUTH_???
-        //   $id no està definit
-        if (!WikiIocInfoManager::getInfo("perm")) {
-            throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
-        }
-        
+
         if (!$prev) {
             return $this->getPartialPage($pid, $prev, null, null, null);
         }
 
         $this->startPageProcess(DW_ACT_SHOW, $pid, $prev, null, null);
+
+        if (!WikiIocInfoManager::getInfo("exists")) {
+            throw new PageNotFoundException($id, $lang['pageNotFound']);
+        }
+        if (!WikiIocInfoManager::getInfo("perm")) {
+            throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
+        }
 
         $this->doFormatedPartialPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
 
@@ -232,6 +232,7 @@ class DokuModelAdapter extends AbstractModelAdapter
 
         $response['structure']['html'] = str_replace($revisionInfo, '', $response['structure']['html']);
 
+
         // Si no s'ha especificat cap altre missatge mostrem el de carrega
         if (!$response['info']) {
             $response['info'] = $this->generateInfo("warning", strip_tags($revisionInfo));
@@ -239,11 +240,13 @@ class DokuModelAdapter extends AbstractModelAdapter
             $this->addInfoToInfo($response['warning'], $this->generateInfo("info", strip_tags($revisionInfo)));
         }
 
+
         // TODO: afegir el 'meta' que correspongui
         $response['meta'] = $this->getMetaResponse($pid);
 
         // TODO: afegir les revisions
         $response['revs'] = $this->getRevisions($pid);
+
 
         return $response;
     }
@@ -532,21 +535,17 @@ class DokuModelAdapter extends AbstractModelAdapter
     {
         global $conf;
         include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
-        // ejemplo de $page -> "wiki:user:nom_usuari:index"
-        // $namespace es la ruta indicada en $page quitando la parte final "nombre_de_archivo"
-        $namespace = substr($page, 0, strrpos($page, ":"));
-        // $userpage_ns es la ruta indicada en $page quitando la parte final "nombre_de_archivo"
-        $userpage_ns = ":" . $namespace;
-        // $name_user es el nombre de usuario que se extrae de la parte final de la ruta indicada en $userpage_ns
-        $name_user = substr($userpage_ns, strrpos($userpage_ns, ":") + 1);
+        $pageuser = ":" . substr($page, 0, strrpos($page, ":"));
+        $userpage = substr($pageuser, strrpos($pageuser, ":") + 1);
         $ret = FALSE;
         if (WikiIocInfoManager::getInfo('isadmin')
             || WikiIocInfoManager::getInfo('ismanager')
-            || (WikiIocInfoManager::getInfo('namespace') == $namespace
-                && $name_user == $user
+            || (WikiIocInfoManager::getInfo('namespace')
+                == substr($page, 0, strrpos($page, ":"))
+                && $userpage == $user
                 && $conf['userpage_allowed'] === 1
-                && ($userpage_ns == $conf['userpage_ns'] . $user ||
-                    $userpage_ns == $conf['userpage_discuss_ns'] . $user)
+                && ($pageuser == $conf['userpage_ns'] . $user ||
+                    $pageuser == $conf['userpage_discuss_ns'] . $user)
             )
         ) {
             $ret = $this->establir_permis($page, $user, $acl_level, TRUE);
@@ -2797,11 +2796,21 @@ class DokuModelAdapter extends AbstractModelAdapter
 
 
     // Només la pàgina actual pot ser editada parcialment
-    public function getPartialPage($pid, $prev=NULL, $prange=NULL, $psum=NULL, $psection=NULL)
+    public function getPartialPage($pid, $prev = NULL, $prange, $psum, $psection)
     {
         global $lang;
 
-        $this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange = NULL, $psum = NULL);
+        //$this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange, $psum); EDIT?
+        $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, $prange, $psum);
+        
+         if (!WikiIocInfoManager::getInfo("exists")) {
+            throw new PageNotFoundException($id, $lang['pageNotFound']);
+        }
+        if (!WikiIocInfoManager::getInfo("perm")) {
+            throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
+        }
+
+        $this->doFormatedPartialPagePreProcess();   
 
         $response['structure'] = $this->getStructuredDocument($psection, $pid, NULL);
 
@@ -2822,7 +2831,7 @@ class DokuModelAdapter extends AbstractModelAdapter
     }
 
 
-    public function cancelPartialEdition($pid, $prev=NULL, $psum=NULL, $selected=NULL, $editing_chunks=NULL, $keep_draft=false)
+    public function cancelPartialEdition($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks = NULL, $keep_draft = false)
     {
         global $lang;
 

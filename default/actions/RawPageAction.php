@@ -14,11 +14,15 @@ require_once (DOKU_INC . 'inc/template.php');
 require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/default/DokuAction.php";
+require_once DOKU_PLUGIN."wikiiocmodel/default/actions/PageAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/default/DokuModelExceptions.php";
 
 if (!defined('DW_ACT_EDIT')) {
     define('DW_ACT_EDIT', "edit");
+}
+
+if (!defined('DW_ACT_DENIED')) {
+    define('DW_ACT_DENIED', "denied");
 }
 
 if (!defined('DW_DEFAULT_PAGE')) {
@@ -30,58 +34,13 @@ if (!defined('DW_DEFAULT_PAGE')) {
  *
  * @author josep
  */
-class RawPageAction extends DokuAction{
+class RawPageAction extends PageAction{
     protected $draftQuery;
     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         $this->draftQuery = $engine->createDraftDataQuery();
+        $this->defaultDo = DW_ACT_EDIT;
     }
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la 
-     * sobrescriptura permet fer assignacions a les variables globals de la 
-     * wiki a partir dels valors de DokuAction#params.
-     */
-    protected function startProcess(){        
-		global $ID;
-		global $ACT;
-		global $REV;
-		global $RANGE;
-		global $DATE;
-		global $PRE;
-		global $TEXT;
-		global $SUF;
-		global $SUM;
-
-		$ACT = $this->params['do']=DW_ACT_EDIT;
-		$ACT = act_clean( $ACT );
-
-		if ( ! $this->params['id'] ) {
-			$this->params['id'] = WikiGlobalConfig::getConf(DW_DEFAULT_PAGE);
-		}
-		$ID = $this->params['id'];
-		if ( $this->params['rev'] ) {
-			$REV = $this->params['rev'];
-		}
-		if ($this->params['range']) {
-			$RANGE = $this->params['range'];
-		}
-		if ( $this->params['date'] ) {
-			$DATE = $this->params['date'];
-		}
-		if ( $this->params['pre'] ) {
-			$PRE = $this->params['pre'] = cleanText( substr( $this->params['pre'], 0, - 1 ) );
-		}
-		if ( $this->params['text'] ) {
-			$TEXT = $this->params['text'] = cleanText( $this->params['text']  );
-		}
-		if ( $this->params['suf'] ) {
-			$SUF = $this->params['suf'] = cleanText( $this->params['suf']  );
-		}
-		if ( $this->params['sum'] ) {
-			$SUM = $this->params['sum'] = $this->params['sum'] ;
-		}                
-    }
-    
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la 
      * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles 
@@ -96,10 +55,15 @@ class RawPageAction extends DokuAction{
             throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
         }
         if (!WikiIocInfoManager::getInfo("perm")) {
-            throw new InsufficientPermissionToEditPageException($ID); //TODO [Josep] Internacionalització missatge per defecte!
+            throw new InsufficientPermissionToEditPageException($ID); 
         }
+        
         $ACT = act_edit( $ACT );
         $ACT = act_permcheck( $ACT );
+        
+        if($ACT == DW_ACT_DENIED){
+            throw new InsufficientPermissionToEditPageException($ID); 
+        }
     }
     
     /**

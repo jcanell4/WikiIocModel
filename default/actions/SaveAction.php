@@ -28,6 +28,11 @@ if (!defined('DW_ACT_SAVE')) {
  */
 class SaveAction extends RawPageAction
 {
+    public function __construct(/*BasicPersistenceEngine*/ $engine) {
+        parent::__construct($engine);
+        $this->defaultDo = DW_ACT_SAVE;
+    }
+
 
     private $code = 0;
 
@@ -45,9 +50,6 @@ class SaveAction extends RawPageAction
         }
 
         parent::startProcess();
-
-        $ACT = $this->params['do'] = DW_ACT_SAVE;
-        $ACT = act_clean($ACT);
     }
 
     /**
