@@ -29,7 +29,7 @@ if (!defined('DOKU_PLUGIN')) {
 }
 require_once(DOKU_PLUGIN . 'wikiiocmodel/AbstractModelAdapter.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocInfoManager.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/DokuModelExceptions.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/DokuModelExceptions.php');
 
 require_once(DOKU_PLUGIN . 'acl/admin.php');
 
@@ -37,10 +37,10 @@ require_once(DOKU_PLUGIN . 'acl/admin.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
 
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/AdminTaskAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/AdminTaskListAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/RawPageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/SaveAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/AdminTaskAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/AdminTaskListAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/RawPageAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/SaveAction.php');
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
@@ -2800,7 +2800,17 @@ class DokuModelAdapter extends AbstractModelAdapter
     {
         global $lang;
 
-        $this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange, $psum);
+        //$this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange, $psum); EDIT?
+        $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, $prange, $psum);
+        
+         if (!WikiIocInfoManager::getInfo("exists")) {
+            throw new PageNotFoundException($id, $lang['pageNotFound']);
+        }
+        if (!WikiIocInfoManager::getInfo("perm")) {
+            throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
+        }
+
+        $this->doFormatedPartialPagePreProcess();   
 
         $response['structure'] = $this->getStructuredDocument($psection, $pid, NULL);
 

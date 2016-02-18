@@ -11,7 +11,7 @@ require_once (DOKU_INC . 'inc/pluginutils.php');
 require_once (DOKU_INC . 'inc/actions.php');
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/default/DokuAction.php";
+require_once DOKU_PLUGIN."wikiiocmodel/projects/default/DokuAction.php";
 
 
 if (!defined('DW_ACT_EXPORT_ADMIN')) {
@@ -25,6 +25,10 @@ if (!defined('DW_ACT_EXPORT_ADMIN')) {
  */
 class AdminTaskAction extends DokuAction{
     private $dataTmp;
+    
+    public function __construct() {
+        $this->defaultDo = DW_ACT_EXPORT_ADMIN;
+    }
     
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la 

@@ -16,7 +16,8 @@ require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
  *
  * @author josep
  */
-class DokuAction extends AbstractWikiAction{
+abstract class DokuAction extends AbstractWikiAction{
+    protected $defaultDo;
     protected $params;
     private $preResponseTmp = array(); //EL format d'aquestes dades és un hashArray on la clau indica el tipus i el valor el contingut. La clau 
                                        //pot ser qualsevol de les que es processaràn després com a resposta en el responseHandler. Per exemple 
@@ -125,8 +126,7 @@ class DokuAction extends AbstractWikiAction{
      * sobrescriptura permet fer assignacions a les variables globals de la 
      * wiki a partir dels valors de DokuAction#params.
      */
-    protected function startProcess(){        
-    }
+    protected abstract function startProcess();
     
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la 
@@ -134,8 +134,7 @@ class DokuAction extends AbstractWikiAction{
      * dades  intermèdies que siguin necessàries per generar la resposta final:
      * DokuAction#responseProcess.
      */
-    protected function runProcess(){
-    }
+    protected abstract function runProcess();
     
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la 
@@ -143,8 +142,7 @@ class DokuAction extends AbstractWikiAction{
      * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut 
      * DokuAction#response.
      */
-    protected function responseProcess(){        
-    }
+    protected abstract function responseProcess();
     
     private function start($paramsArr){        
         $this->params = $paramsArr;

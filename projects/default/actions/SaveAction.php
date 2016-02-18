@@ -13,8 +13,8 @@ require_once(DOKU_INC . 'inc/template.php');
 require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/default/DokuAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/default/DokuModelExceptions.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/default/DokuAction.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/default/DokuModelExceptions.php";
 
 
 if (!defined('DW_ACT_SAVE')) {
@@ -28,6 +28,11 @@ if (!defined('DW_ACT_SAVE')) {
  */
 class SaveAction extends RawPageAction
 {
+    public function __construct(/*BasicPersistenceEngine*/ $engine) {
+        parent::__construct($engine);
+        $this->defaultDo = DW_ACT_SAVE;
+    }
+
 
     private $code = 0;
 
@@ -45,9 +50,6 @@ class SaveAction extends RawPageAction
         }
 
         parent::startProcess();
-
-        $ACT = $this->params['do'] = DW_ACT_SAVE;
-        $ACT = act_clean($ACT);
     }
 
     /**
