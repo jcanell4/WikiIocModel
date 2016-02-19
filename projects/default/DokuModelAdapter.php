@@ -29,7 +29,7 @@ if (!defined('DOKU_PLUGIN')) {
 }
 require_once(DOKU_PLUGIN . 'wikiiocmodel/AbstractModelAdapter.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocInfoManager.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/DokuModelExceptions.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/DokuModelExceptions.php');
 
 require_once(DOKU_PLUGIN . 'acl/admin.php');
 
@@ -37,10 +37,10 @@ require_once(DOKU_PLUGIN . 'acl/admin.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
 
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/AdminTaskAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/AdminTaskListAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/RawPageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/actions/SaveAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/AdminTaskAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/AdminTaskListAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/RawPageAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/SaveAction.php');
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');

@@ -11,7 +11,7 @@ require_once (DOKU_INC . 'inc/pluginutils.php');
 require_once (DOKU_INC . 'inc/actions.php');
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/default/DokuAction.php";
+require_once DOKU_PLUGIN."wikiiocmodel/projects/default/DokuAction.php";
 
 
 if (!defined('DW_ACT_EXPORT_ADMIN')) {
