@@ -35,15 +35,15 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      * @param Array $MetaDataRequestMessage
      * Restrictions:
      * - Persistence returns wellformed JSON
-     * - mandatory ns,projectType,metaDataSubSet in param array $MetaDataRequestMessage
+     * - mandatory idResource,projectType,metaDataSubSet in param array $MetaDataRequestMessage
      * - if doesn't exist metadata, then WikiIocModelException -> MetaDataNotFound
      * @return JSON {keymd1:valormd1,...,keymdx:valormdx}
      */
     public function getMeta($MetaDataRequestMessage) {
         //Check parameters mandatories
         $checkParameters = false;
-        if (isset($MetaDataRequestMessage['ns'])) {
-            if ($MetaDataRequestMessage['ns'] != '') {
+        if (isset($MetaDataRequestMessage['idResource'])) {
+            if ($MetaDataRequestMessage['idResource'] != '') {
                 if (isset($MetaDataRequestMessage['projectType'])) {
                     if ($MetaDataRequestMessage['projectType'] != '') {
                         if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
@@ -63,7 +63,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
          *      crida efectiva al mètode concret de la persistència
          */
-        $jSONArray = PersistenceSimul::getMeta($MetaDataRequestMessage['ns'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
+        $jSONArray = PersistenceSimul::getMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
@@ -88,7 +88,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      * - Call PERSISTENCE component to updtate metadata (only one element)
      * @param Array $MetaDataRequestMessage
      * Restrictions:     
-     * - mandatory ns,projectType,metaDataSubSet in param array $MetaDataRequestMessage
+     * - mandatory idResource,projectType,metaDataSubSet in param array $MetaDataRequestMessage
      * - mandatory: MetaDataEntity->MetaDataValue
      * - MetaDataEntity->MetaDataValue wellformed JSON --> this restriction is managed by MetaDataEntityAbstract
      * - if persistence return not true, then wellformed JSON
@@ -100,17 +100,17 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
 
         /*
          * Per a la persistència
-         *  Crida → [PERSISTENCE].setMeta(ns,projectType,metaDataSubSet,metaDataValue) 
+         *  Crida → [PERSISTENCE].setMeta(idResource,projectType,metaDataSubSet,metaDataValue) 
           //paràmetres String i metaDataValue és JSON {keymd1:valormd1,...,keymdx:valormdx}
           Restriccions →
-          Si ns no existeix, llavors el component de Persistència haurà de retornar {"error":"5120"}
+          Si idResource no existeix, llavors el component de Persistència haurà de retornar {"error":"5120"}
           Qualsevol error, la persistència retornarà {"error":"5090"}
          */
 
         //Check parameters mandatories
         $checkParameters = false;
-        if (isset($MetaDataRequestMessage['ns'])) {
-            if ($MetaDataRequestMessage['ns'] != '') {
+        if (isset($MetaDataRequestMessage['idResource'])) {
+            if ($MetaDataRequestMessage['idResource'] != '') {
                 if (isset($MetaDataRequestMessage['projectType'])) {
                     if ($MetaDataRequestMessage['projectType'] != '') {
                         if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
@@ -143,7 +143,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
          *      crida efectiva al mètode concret de la persistència
          */
 
-        $jSONArray = PersistenceSimul::setMeta($MetaDataRequestMessage['ns'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataEntity->getMetaDataValue());
+        $jSONArray = PersistenceSimul::setMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataEntity->getMetaDataValue());
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */

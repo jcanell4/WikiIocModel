@@ -32,14 +32,15 @@ class MetaDataRenderFactory {
 
         $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubset);
         $encoder = new JSON();
-        $arrayConfigPre = $encoder->decode($jSONArray,true);
+        $arrayConfigPre = $encoder->decode($jSONArray, true);
         if (!isset($arrayConfigPre->MetaDataRender) || $arrayConfigPre->MetaDataRender == '' || $arrayConfigPre->MetaDataRender == null) {
             throw new ClassRenderNotFound();
         }
         require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/classes/' . $arrayConfigPre->MetaDataRender . '/MetaDataRender.php');
-        return new MetaDataRender();
+        $fully_qualified_name = "ns" . $arrayConfigPre->MetaDataRender . '\\' . "MetaDataRender";
 
+        return new $fully_qualified_name();
+        //return new MetaDataRender();
     }
-
 
 }

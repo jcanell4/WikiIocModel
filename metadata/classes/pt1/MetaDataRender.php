@@ -12,8 +12,10 @@
  *
  * @author professor
  */
+namespace nspt1;
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderAbstract.php');
-class MetaDataRender extends MetaDataRenderAbstract{
+
+class MetaDataRender extends \MetaDataRenderAbstract{
 
 
 }

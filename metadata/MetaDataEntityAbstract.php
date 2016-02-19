@@ -21,9 +21,9 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
 
     protected $projectType;
     protected $metaDataSubSet;
-    protected $nsRoot;
+    protected $idResource;
     protected $MetaDataValue;  //JSON array containing metadata
-    protected static $MANDATORIES = array("projectType", "metaDataSubSet", "nsRoot");
+    protected static $MANDATORIES = array("projectType", "metaDataSubSet", "idResource");
     protected static $JSONTYPES = array("MetaDataValue");
 
     function getProjectType() {
@@ -35,7 +35,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
     }
 
     function getNsRoot() {
-        return $this->nsRoot;
+        return $this->idResource;
     }
 
     function getMetaDataValue() {
@@ -50,8 +50,8 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         $this->metaDataSubSet = $metaDataSubSet;
     }
 
-    function setNsRoot($nsRoot) {
-        $this->nsRoot = $nsRoot;
+    function setNsRoot($idResource) {
+        $this->idResource = $idResource;
     }
 
     function setMetaDataValue($MetaDataValue) {
@@ -86,7 +86,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * Restrictions:
      * - $arrayEntry wellformed JSON
      * - keys must be entity properties (but this is within the next restriction, mandatory)
-     * - mandatory $projectType, $metaDataSubSet, $nsRoot;
+     * - mandatory $projectType, $metaDataSubSet, $idResource;
      * @return true || exception
      */
     public function setModelFromArray($arrayEntry) {

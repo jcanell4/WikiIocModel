@@ -26,15 +26,15 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
      * - Call Dao to obtain metadata (only one element) and build an Entity that returns
      * @param Array $MetaDataRequestMessage
      * Restrictions:
-     * - mandatory ns,projectType,metaDataSubSet in param array $MetaDataRequestMessage
+     * - mandatory idResource,projectType,metaDataSubSet in param array $MetaDataRequestMessage
      * - other exceptions are delegate
      * @return a MetaDataEntity object
      */
     public function getMeta($MetaDataRequestMessage) {
         //Check parameters mandatories
         $checkParameters = false;
-        if (isset($MetaDataRequestMessage['ns'])) {
-            if ($MetaDataRequestMessage['ns'] != '') {
+        if (isset($MetaDataRequestMessage['idResource'])) {
+            if ($MetaDataRequestMessage['idResource'] != '') {
                 if (isset($MetaDataRequestMessage['projectType'])) {
                     if ($MetaDataRequestMessage['projectType'] != '') {
                         if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
@@ -54,6 +54,9 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
             $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
             $jSONArray = $metaDataDao->getMeta($MetaDataRequestMessage);
             $metaDataEntity = MetaDataEntityFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
+            $metaDataEntity->setProjectType($MetaDataRequestMessage['projectType']);
+            $metaDataEntity->setmetaDataSubSet($MetaDataRequestMessage['metaDataSubSet']);
+            $metaDataEntity->setNsRoot($MetaDataRequestMessage['idResource']);
             $metaDataEntity->setMetaDataValue($jSONArray);
             return $metaDataEntity;
         } catch (Exception $ex) {
@@ -66,7 +69,7 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
      * - Call DAO to updtate metadata (only one element)
      * @param Array $MetaDataRequestMessage
      * Restrictions:     
-     * - mandatory ns,projectType,metaDataSubSet in param array $MetaDataRequestMessage
+     * - mandatory idResource,projectType,metaDataSubSet in param array $MetaDataRequestMessage
      * - mandatory: MetaDataEntity->MetaDataValue
      * - other exceptions are delegate
      * @return success:true
@@ -75,8 +78,8 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
 
         //Check parameters mandatories
         $checkParameters = false;
-        if (isset($MetaDataRequestMessage['ns'])) {
-            if ($MetaDataRequestMessage['ns'] != '') {
+        if (isset($MetaDataRequestMessage['idResource'])) {
+            if ($MetaDataRequestMessage['idResource'] != '') {
                 if (isset($MetaDataRequestMessage['projectType'])) {
                     if ($MetaDataRequestMessage['projectType'] != '') {
                         if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
@@ -98,9 +101,9 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
         }
 
         try {
-            print_r("\nRA setMeta projectType: ".$MetaDataRequestMessage['projectType']."\n");
-            print_r("\nRA setMeta metaDataSubSet: ".$MetaDataRequestMessage['metaDataSubSet']."\n");
-            print_r("\nRA setMeta MetaDataEntity: ".$MetaDataEntity->getMetaDataValue()."\n");
+            //print_r("\nRA setMeta projectType: ".$MetaDataRequestMessage['projectType']."\n");
+            //print_r("\nRA setMeta metaDataSubSet: ".$MetaDataRequestMessage['metaDataSubSet']."\n");
+            //print_r("\nRA setMeta MetaDataEntity: ".$MetaDataEntity->getMetaDataValue()."\n");
             $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
             $jSONArray = $metaDataDao->setMeta($MetaDataEntity, $MetaDataRequestMessage);
             return $jSONArray;

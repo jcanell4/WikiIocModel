@@ -40,12 +40,15 @@ class PersistenceSimul {
     private static $retornGetMetaDataM = '{"keymd1":"valormd1","keymdxvalormdx"]';
     private static $retornSetMetaDataNs = '{"error":"5120"}';
     private static $retornSetMetaDataGen = '{"error":"5090"}';
+    private static $retornGetMetaDataMaterialsM03 = '{"keymd1":"valorf","keymd3x":"valormd3x"}';
+    private static $retornGetMetaDataMaterialsM07 = '{"keymd7":"valormd7","keymd7x":"valormd7x"}';
+    private static $retornGetMetaDataAdocsM09 = '{"keymd1":"valorf","keymd9x":"valormd9x"}';
 
     public static function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
-        if ($projectType == "a" || $projectType == "fp" || $projectType == "Materials") {
+        if ($projectType == "a" || $projectType == "fp" || $projectType == "Materials" || $projectType == "materials") {
             return self::$retornNsConfig;
         } else {
-            if ($projectType == "pt1") {
+            if ($projectType == "pt1" || $projectType == "adocs") {
                 return self::$retornNsConfigPt1;
             } else {
                 if ($projectType == "pt2") {
@@ -66,11 +69,20 @@ class PersistenceSimul {
         }
     }
 
-    public static function getMeta($ns, $projectType, $metaDataSubSet) {
-        if ($ns === "fp") {
+    public static function getMeta($idResource, $projectType, $metaDataSubSet) {
+        if($idResource==="fp:dam:m03"){
+            return self::$retornGetMetaDataMaterialsM03;
+        }
+        if($idResource==="fp:daw:m07"){
+            return self::$retornGetMetaDataMaterialsM07;
+        }
+        if($idResource==="fp:daw:m09"){
+            return self::$retornGetMetaDataAdocsM09;
+        }
+        if ($idResource === "fp") {
             return self::$retornGetMetaData;
         } else {
-            if ($ns === "bl") {
+            if ($idResource === "bl") {
                 return "";
             } else {
                 return self::$retornGetMetaDataM;
@@ -78,15 +90,15 @@ class PersistenceSimul {
         }
     }
 
-    public static function setMeta($ns, $projectType, $metaDataSubSet, $metaDataValue) {
-        if ($ns === "fp") {
+    public static function setMeta($idResource, $projectType, $metaDataSubSet, $metaDataValue) {
+        if ($idResource === "fp") {
             return true;
         } else {
-            if ($ns === "nt") {
+            if ($idResource === "nt") {
                 print("ABC ABC ABC ABC");
                 return "abc";
             } else {
-                if ($ns === "ns") {
+                if ($idResource === "idResource") {
                     return self::$retornSetMetaDataNs;
                 } else {
                     return self::$retornSetMetaDataGen;

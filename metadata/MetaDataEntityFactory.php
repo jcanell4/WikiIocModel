@@ -32,14 +32,15 @@ class MetaDataEntityFactory {
 
         $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubset);
         $encoder = new JSON();
-        $arrayConfigPre = $encoder->decode($jSONArray,true);
+        $arrayConfigPre = $encoder->decode($jSONArray, true);
         if (!isset($arrayConfigPre->MetaDataEntity) || $arrayConfigPre->MetaDataEntity == '' || $arrayConfigPre->MetaDataEntity == null) {
             throw new ClassEntityNotFound();
         }
         require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/classes/' . $arrayConfigPre->MetaDataEntity . '/MetaDataEntity.php');
-        return new MetaDataEntity();
+        $fully_qualified_name = "ns" . $arrayConfigPre->MetaDataEntity . '\\' . "MetaDataEntity";
 
+        return new $fully_qualified_name();
+        //return new MetaDataEntity();
     }
-
 
 }

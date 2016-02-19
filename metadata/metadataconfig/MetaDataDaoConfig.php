@@ -82,7 +82,8 @@ class MetaDataDaoConfig {
             /*
              * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
              */
-            print_r("getMetaDataConfig -> jSONArray: ".$jSONArray);
+            //print_r("getMetaDataConfig -> projectType: ".$projectType);
+            //print_r("getMetaDataConfig -> jSONArray: ".$jSONArray);
             
             $encoder = new JSON();
             $arrayConfigPre = $encoder->decode($jSONArray);

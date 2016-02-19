@@ -12,8 +12,9 @@
  *
  * @author professor
  */
+namespace nspt1;
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataEntityAbstract.php');
-class MetaDataEntity extends MetaDataEntityAbstract{
+class MetaDataEntity extends \MetaDataEntityAbstract{
 
 
 }

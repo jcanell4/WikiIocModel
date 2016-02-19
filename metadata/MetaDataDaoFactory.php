@@ -37,7 +37,10 @@ class MetaDataDaoFactory {
             throw new ClassDaoNotFound();
         }
         require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/classes/' . $arrayConfigPre->MetaDataDAO . '/MetaDataDao.php');
-        return new MetaDataDao();
+        $fully_qualified_name = "ns" . $arrayConfigPre->MetaDataDAO . '\\' . "MetaDataDao";
+
+        return new $fully_qualified_name();
+        //return new MetaDataDao();
 
     }
 
