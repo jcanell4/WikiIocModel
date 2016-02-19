@@ -3032,7 +3032,7 @@ class DokuModelAdapter extends AbstractModelAdapter
         $lockManager->unlock($this->cleanIDForFiles($pid));
 
         $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
-        $response['info'] = $info; // TODO[Xavi] Localitzar el missatge
+        $response = ['id' => $pid, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
 
         return $response;
     }
