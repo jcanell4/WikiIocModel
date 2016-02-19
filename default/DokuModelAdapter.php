@@ -271,14 +271,15 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     /**
      * Crida principal de la comanda cancel
-     * @global type $lang
      * @param type $pid
      * @param type $prev
-     * @param type $keep_draft
+     * @param bool|type $keep_draft
+     * @param bool $discard_changes si es cert es descartaran els canvis sense preguntar
      * @return type
+     * @global type $lang
      */
     //[ALERTA Josep] Es queda aquí.
-    public function cancelEdition($pid, $prev = NULL, $keep_draft = FALSE)
+    public function cancelEdition($pid, $prev = NULL, $keep_draft = FALSE, $discard_changes = FALSE)
     {
         global $lang;
 
@@ -290,8 +291,11 @@ class DokuModelAdapter extends AbstractModelAdapter
         $response ['info'] = $this->generateInfo("warning", $lang['edition_cancelled']);
 
         $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
+        $response['structure']['discard_changes'] = $discard_changes; // Alerta [Xavi] si el valor es cert es força el descartar els canvis
+
         $response['meta'] = $this->getMetaResponse($pid);
         $response['revs'] = $this->getRevisions($pid);
+
 
         return $response;
     }
