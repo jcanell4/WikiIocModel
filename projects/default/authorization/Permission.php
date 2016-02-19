@@ -11,6 +11,7 @@ require_once (WIKI_IOC_MODEL . 'AbstractPermission.php');
 class Permission extends AbstractPermission {
     
     private $info_perm;
+    private $readonly=FALSE;
     
     public function getInfoPerm() {
         return $this->info_perm;
@@ -22,6 +23,14 @@ class Permission extends AbstractPermission {
   
     public function isDenied() {
         return $this->cmdAuthorization->isDenied();
+    }
+    
+    public function isReadOnly(){
+        return $this->readonly;
+    }
+    
+    public function setReadOnly($readonly){
+        $this->readonly = $readonly;
     }
     
 }

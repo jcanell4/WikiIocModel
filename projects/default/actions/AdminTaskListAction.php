@@ -12,7 +12,7 @@ require_once (DOKU_INC . 'inc/actions.php');
 require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/default/actions/AdminTaskAction.php";
+require_once DOKU_PLUGIN."wikiiocmodel/projects/default/actions/AdminTaskAction.php";
 require_once WikiGlobalConfig::tplIncDir()."conf/cfgIdConstants.php";
 
 
@@ -42,9 +42,8 @@ class AdminTaskListAction extends AdminTaskAction {
      * DokuAction#response.
      */
     protected function responseProcess(){ 
-        $containerId = cfgIdConstants::ZONA_NAVEGACIO;
-
-        return $this->getCommonPage($id, WikiIocLangManager::getLang('btn_admin'), $this->pageToSend);
+        $ret = $this->getCommonPage($id, WikiIocLangManager::getLang('btn_admin'), $this->pageToSend);
+        return $ret;
     }
     
     private function getAdminTaskListHtml() {

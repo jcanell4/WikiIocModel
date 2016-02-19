@@ -7,7 +7,7 @@ if (!defined('DOKU_PLUGIN')) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
 
-require_once DOKU_PLUGIN."wikiiocmodel/default/DokuAction.php";
+require_once DOKU_PLUGIN."wikiiocmodel/projects/default/DokuAction.php";
 
 /**
  * Description of PageAction
