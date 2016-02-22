@@ -91,7 +91,7 @@ class PersistenceSimul {
     }
 
     public static function setMeta($idResource, $projectType, $metaDataSubSet, $metaDataValue) {
-        if ($idResource === "fp") {
+        if ($idResource === "fp"|| $projectType == "adocs" || $projectType == "materials") {
             return true;
         } else {
             if ($idResource === "nt") {

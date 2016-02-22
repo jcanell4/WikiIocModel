@@ -237,7 +237,7 @@ class MetaDataService {
                 if ($projectTypeParameter == null || $projectTypeParameter == $projectType) {
                     if ($projectType != $projectTypeActual) {
                         if ($projectTypeActual != null) {
-                            $metaDataResponseSet[$indexResponse] = toAddResponse();
+                            $metaDataResponseSet[$indexResponse] = $this->toAddResponse();
                             $indexResponse++;
                         }
                         $projectTypeActual = $projectType;
@@ -268,11 +268,13 @@ class MetaDataService {
                     }
                 }
             }
-            $metaDataResponseSet[$indexResponse] = toAddResponse();
+            $metaDataResponseSet[$indexResponse] = $this->toAddResponse();
             if ($metaDataResponseSet == null) {
                 throw new ClassProjectsNotFound();
             } else {
-                return $metaDataResponseGet;
+                print_r("\nREEEEEEEEEEEEEEEEEEEEEEESPONSE TOOOOOOOOOTAL\n");
+                print_r($metaDataResponseSet);
+                return $metaDataResponseSet;
             }
         } catch (Exception $ex) {
             throw $ex;
