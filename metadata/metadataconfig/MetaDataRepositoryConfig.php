@@ -28,10 +28,10 @@ class MetaDataRepositoryConfig {
      * - mandatory $nsRoot
      * @return {ns:projectType,...,ns:projectType}
      */
-    function getMetaDataElementsKey($nsRoot) {
+    function getMetaDataElementsKey($nsRoot,$persistence) {
         try {
             $mdDaoConfig = new MetaDataDaoConfig();
-            $jSONArray = $mdDaoConfig->getMetaDataElementsKey($nsRoot);
+            $jSONArray = $mdDaoConfig->getMetaDataElementsKey($nsRoot,$persistence);
         } catch (Exception $ex) {
             throw $ex;
         }

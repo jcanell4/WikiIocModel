@@ -28,9 +28,9 @@ class MetaDataRenderFactory {
      * - DaoConfig returns null, Exception ClassRenderNotFound 5080
      * @return MetaDataRender object (from ns returned by MetaDataDaoConfig)
      */
-    public static function getObject($projectType, $metaDataSubSet) {
+    public static function getObject($projectType, $metaDataSubSet,$persistence) {
 
-        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubset);
+        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubset,$persistence);
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray, true);
         if (!isset($arrayConfigPre->MetaDataRender) || $arrayConfigPre->MetaDataRender == '' || $arrayConfigPre->MetaDataRender == null) {

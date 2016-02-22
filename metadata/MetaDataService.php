@@ -80,11 +80,13 @@ class MetaDataService {
     public function getMeta($MetaDataRequestMessage) {
         //Check parameters mandatories
         $checkParameters = false;
-        if (isset($MetaDataRequestMessage['idResource'])) {
-            if ($MetaDataRequestMessage['idResource'] != '') {
-                if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
-                    if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
-                        $checkParameters = true;
+        if (isset($MetaDataRequestMessage['persistence'])) {
+            if (isset($MetaDataRequestMessage['idResource'])) {
+                if ($MetaDataRequestMessage['idResource'] != '') {
+                    if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
+                        if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
+                            $checkParameters = true;
+                        }
                     }
                 }
             }
@@ -106,7 +108,7 @@ class MetaDataService {
 
         //Init metaDataElements property (elements set to get metadata)
         try {
-            $this->setMetaDataElements($this->getMetaDataRepositoryConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource']));
+            $this->setMetaDataElements($this->getMetaDataRepositoryConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'],$MetaDataRequestMessage['persistence']));
             $encoder = new JSON();
             $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));
             print_r("--------------TO GETDATAELELEMENTS PRE ASORT");
@@ -139,7 +141,7 @@ class MetaDataService {
                         $projectTypeActual = $projectType;
                         $this->metaDataEntityWrapper = array();
                         $indexWrapper = 0;
-                        $this->render = MetaDataRenderFactory::getObject($projectType, $MetaDataRequestMessage['metaDataSubSet']);
+                        $this->render = MetaDataRenderFactory::getObject($projectType, $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['persistence']);
                         $rc = new ReflectionClass(get_class($this->render));
                         print_r(basename(dirname($rc->getFileName())));
                     }
@@ -188,13 +190,15 @@ class MetaDataService {
     public function setMeta($MetaDataRequestMessage) {
         //Check parameters mandatories
         $checkParameters = false;
-        if (isset($MetaDataRequestMessage['idResource'])) {
-            if ($MetaDataRequestMessage['idResource'] != '') {
-                if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
-                    if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
-                        if (isset($MetaDataRequestMessage['metaDataValue'])) {
-                            if ($MetaDataRequestMessage['metaDataValue'] != '') {
-                                $checkParameters = true;
+        if (isset($MetaDataRequestMessage['persistence'])) {
+            if (isset($MetaDataRequestMessage['idResource'])) {
+                if ($MetaDataRequestMessage['idResource'] != '') {
+                    if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
+                        if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
+                            if (isset($MetaDataRequestMessage['metaDataValue'])) {
+                                if ($MetaDataRequestMessage['metaDataValue'] != '') {
+                                    $checkParameters = true;
+                                }
                             }
                         }
                     }
@@ -217,7 +221,7 @@ class MetaDataService {
 
         //Init metaDataElements property (elements set to get metadata)
         try {
-            $this->setMetaDataElements($this->getMetaDataRepositoryConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource']));
+            $this->setMetaDataElements($this->getMetaDataRepositoryConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'],$MetaDataRequestMessage['persistence']));
             //'{"fp:dam:m03":"materials","fp:daw:m07":"materials"}'
             $encoder = new JSON();
             $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));

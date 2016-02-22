@@ -42,13 +42,15 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
     public function getMeta($MetaDataRequestMessage) {
         //Check parameters mandatories
         $checkParameters = false;
-        if (isset($MetaDataRequestMessage['idResource'])) {
-            if ($MetaDataRequestMessage['idResource'] != '') {
-                if (isset($MetaDataRequestMessage['projectType'])) {
-                    if ($MetaDataRequestMessage['projectType'] != '') {
-                        if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
-                            if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
-                                $checkParameters = true;
+        if (isset($MetaDataRequestMessage['persistence'])) {
+            if (isset($MetaDataRequestMessage['idResource'])) {
+                if ($MetaDataRequestMessage['idResource'] != '') {
+                    if (isset($MetaDataRequestMessage['projectType'])) {
+                        if ($MetaDataRequestMessage['projectType'] != '') {
+                            if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
+                                if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
+                                    $checkParameters = true;
+                                }
                             }
                         }
                     }
@@ -63,7 +65,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
          *      crida efectiva al mètode concret de la persistència
          */
-        $jSONArray = PersistenceSimul::getMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
+        $jSONArray = $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->getMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
@@ -109,16 +111,18 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
 
         //Check parameters mandatories
         $checkParameters = false;
-        if (isset($MetaDataRequestMessage['idResource'])) {
-            if ($MetaDataRequestMessage['idResource'] != '') {
-                if (isset($MetaDataRequestMessage['projectType'])) {
-                    if ($MetaDataRequestMessage['projectType'] != '') {
-                        if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
-                            if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
-                                if (isset($MetaDataEntity)) {
-                                    $metaDataValue = $MetaDataEntity->getMetaDataValue();
-                                    if (isset($metaDataValue)) {
-                                        $checkParameters = true;
+        if (isset($MetaDataRequestMessage['persistence'])) {
+            if (isset($MetaDataRequestMessage['idResource'])) {
+                if ($MetaDataRequestMessage['idResource'] != '') {
+                    if (isset($MetaDataRequestMessage['projectType'])) {
+                        if ($MetaDataRequestMessage['projectType'] != '') {
+                            if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
+                                if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
+                                    if (isset($MetaDataEntity)) {
+                                        $metaDataValue = $MetaDataEntity->getMetaDataValue();
+                                        if (isset($metaDataValue)) {
+                                            $checkParameters = true;
+                                        }
                                     }
                                 }
                             }
@@ -131,11 +135,11 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
             throw new WrongParams();
         }
         //MetaDataEntity->MetaDataValue wellformed JSON --> this restriction is managed by MetaDataEntityAbstract
-        /*$encoder = new JSON();
-        $arrayConfigPre = $encoder->decode($MetaDataEntity->getMetaDataValue());
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new MalFormedJSON();
-        }*/
+        /* $encoder = new JSON();
+          $arrayConfigPre = $encoder->decode($MetaDataEntity->getMetaDataValue());
+          if (json_last_error() != JSON_ERROR_NONE) {
+          throw new MalFormedJSON();
+          } */
 
         //Call PERSISTENCE method
         /*
@@ -143,19 +147,19 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
          *      crida efectiva al mètode concret de la persistència
          */
 
-        $jSONArray = PersistenceSimul::setMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataEntity->getMetaDataValue());
+        $jSONArray = $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->setMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataEntity->getMetaDataValue());
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
-        
-        $returnType = gettype ($jSONArray);
-        if($returnType == "boolean" && $jSONArray == true){
+
+        $returnType = gettype($jSONArray);
+        if ($returnType == "boolean" && $jSONArray == true) {
             return $jSONArray;
-        }else{
+        } else {
             //Persistence returns wellformed JSON
             $encoder = new JSON();
             $arrayConfigPre = $encoder->decode($jSONArray);
-            if (json_last_error() != JSON_ERROR_NONE ) {
+            if (json_last_error() != JSON_ERROR_NONE) {
                 throw new MalFormedJSON();
             }
             //if persistence returns {"error","5120"}, then WikiIocModelException->PersistenceNsNotFound
@@ -174,8 +178,6 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
                 }
             }
         }
-
-        
     }
 
 }

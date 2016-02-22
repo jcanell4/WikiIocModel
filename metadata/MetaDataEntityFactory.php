@@ -28,9 +28,9 @@ class MetaDataEntityFactory {
      * - DaoConfig returns null, Exception ClassEntityNotFound 5080
      * @return MetaDataEntity object (from ns returned by MetaDataDaoConfig)
      */
-    public static function getObject($projectType, $metaDataSubSet) {
+    public static function getObject($projectType, $metaDataSubSet,$persistence) {
 
-        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubset);
+        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubset,$persistence);
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray, true);
         if (!isset($arrayConfigPre->MetaDataEntity) || $arrayConfigPre->MetaDataEntity == '' || $arrayConfigPre->MetaDataEntity == null) {

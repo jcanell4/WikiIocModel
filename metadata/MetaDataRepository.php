@@ -33,13 +33,15 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
     public function getMeta($MetaDataRequestMessage) {
         //Check parameters mandatories
         $checkParameters = false;
-        if (isset($MetaDataRequestMessage['idResource'])) {
-            if ($MetaDataRequestMessage['idResource'] != '') {
-                if (isset($MetaDataRequestMessage['projectType'])) {
-                    if ($MetaDataRequestMessage['projectType'] != '') {
-                        if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
-                            if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
-                                $checkParameters = true;
+        if (isset($MetaDataRequestMessage['persistence'])) {
+            if (isset($MetaDataRequestMessage['idResource'])) {
+                if ($MetaDataRequestMessage['idResource'] != '') {
+                    if (isset($MetaDataRequestMessage['projectType'])) {
+                        if ($MetaDataRequestMessage['projectType'] != '') {
+                            if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
+                                if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
+                                    $checkParameters = true;
+                                }
                             }
                         }
                     }
@@ -51,9 +53,9 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
         }
 
         try {
-            $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
+            $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['persistence']);
             $jSONArray = $metaDataDao->getMeta($MetaDataRequestMessage);
-            $metaDataEntity = MetaDataEntityFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
+            $metaDataEntity = MetaDataEntityFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['persistence']);
             $metaDataEntity->setProjectType($MetaDataRequestMessage['projectType']);
             $metaDataEntity->setmetaDataSubSet($MetaDataRequestMessage['metaDataSubSet']);
             $metaDataEntity->setNsRoot($MetaDataRequestMessage['idResource']);
@@ -78,16 +80,18 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
 
         //Check parameters mandatories
         $checkParameters = false;
-        if (isset($MetaDataRequestMessage['idResource'])) {
-            if ($MetaDataRequestMessage['idResource'] != '') {
-                if (isset($MetaDataRequestMessage['projectType'])) {
-                    if ($MetaDataRequestMessage['projectType'] != '') {
-                        if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
-                            if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
-                                if (isset($MetaDataEntity)) {
-                                    $metaDataValue = $MetaDataEntity->getMetaDataValue();
-                                    if (isset($metaDataValue)) {
-                                        $checkParameters = true;
+        if (isset($MetaDataRequestMessage['persistence'])) {
+            if (isset($MetaDataRequestMessage['idResource'])) {
+                if ($MetaDataRequestMessage['idResource'] != '') {
+                    if (isset($MetaDataRequestMessage['projectType'])) {
+                        if ($MetaDataRequestMessage['projectType'] != '') {
+                            if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
+                                if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
+                                    if (isset($MetaDataEntity)) {
+                                        $metaDataValue = $MetaDataEntity->getMetaDataValue();
+                                        if (isset($metaDataValue)) {
+                                            $checkParameters = true;
+                                        }
                                     }
                                 }
                             }
@@ -104,7 +108,7 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
             //print_r("\nRA setMeta projectType: ".$MetaDataRequestMessage['projectType']."\n");
             //print_r("\nRA setMeta metaDataSubSet: ".$MetaDataRequestMessage['metaDataSubSet']."\n");
             //print_r("\nRA setMeta MetaDataEntity: ".$MetaDataEntity->getMetaDataValue()."\n");
-            $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
+            $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['persistence']);
             $jSONArray = $metaDataDao->setMeta($MetaDataEntity, $MetaDataRequestMessage);
             return $jSONArray;
         } catch (Exception $ex) {

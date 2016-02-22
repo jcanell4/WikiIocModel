@@ -65,7 +65,7 @@ class MetaDataDaoConfig {
      * - mandatory $projectType, $metaDataSubSet
      * @return JSON with {class:ns, ..., class:ns}
      */
-    public static function getMetaDataConfig($projectType, $metaDataSubset) {
+    public static function getMetaDataConfig($projectType, $metaDataSubset, $persistence) {
         $exists = false;
         if (array_key_exists($projectType, self::$ClassesNameSpaces)) {
             if (array_key_exists($metaDataSubset, self::$ClassesNameSpaces[$projectType])) {
@@ -78,13 +78,13 @@ class MetaDataDaoConfig {
              * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
              *      crida efectiva al mètode concret de la persistència
              */
-            $jSONArray = PersistenceSimul::getMetaDataConfig($projectType, $metaDataSubset, self::$CONFIGUSUBSET);
+            $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, self::$CONFIGUSUBSET);
             /*
              * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
              */
             //print_r("getMetaDataConfig -> projectType: ".$projectType);
             //print_r("getMetaDataConfig -> jSONArray: ".$jSONArray);
-            
+
             $encoder = new JSON();
             $arrayConfigPre = $encoder->decode($jSONArray);
             if (json_last_error() != JSON_ERROR_NONE) {
@@ -111,13 +111,13 @@ class MetaDataDaoConfig {
      * - mandatory $nsRoot
      * @return {ns:projectType,...,ns:projectType}
      */
-    public static function getMetaDataElementsKey($nsRoot) {
+    public static function getMetaDataElementsKey($nsRoot, $persistence) {
         //Call PERSISTENCE method
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
          *      crida efectiva al mètode concret de la persistència
          */
-        $jSONArray = PersistenceSimul::getMetaDataElementsKey($nsRoot);
+        $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataElementsKey($nsRoot);
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
