@@ -5,7 +5,7 @@ if (!defined("DOKU_INC")) {
 if (!defined('DOKU_PLUGIN')) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
-require_once DOKU_PLUGIN."wikiiocmodel/projects/default/DokuDataModel.php";
+require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuDataModel.php";
 
 /**
  * Description of DokuPageModel
