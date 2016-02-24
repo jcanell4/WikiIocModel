@@ -35,11 +35,12 @@ abstract class AbstractCommandAuthorization {
      */
     public function canRun($permis) {
         /*
-        $ret = ( ! $permis->getAuthenticatedUsersOnly()
-                || $permis->getSecurityTokenVerified()
-                && $permis->getUserAuthenticated()
-                && $this->isCommandAllowed() );
-        */
+         *antigua versión 
+//        $ret = ( ! $permis->getAuthenticatedUsersOnly()
+//                || $permis->getSecurityTokenVerified()
+//                && $permis->getUserAuthenticated()
+//                && $this->isCommandAllowed() );
+         *siguiente versión (utilizaba las constantes, actualmente desechadas, declaradas arriba)
 //        if ($permis->getAuthenticatedUsersOnly()) {
 //            $this->errorAuth['error'] = $permis->getSecurityTokenVerified() ? self::AUTH_OK : self::NOT_AUTH_TOKEN_VERIFIED;
 //            $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
@@ -56,22 +57,25 @@ abstract class AbstractCommandAuthorization {
 //                $this->errorAuth['extra_param'] = '';
 //            }
 //        }
-        
+         */
+
         $this->errorAuth = array(
                               'error' => FALSE
                              ,'exception' => ''
                              ,'extra_param' => ''
                            );
         
-        if ($permis->getAuthenticatedUsersOnly()) {
-            if($this->errorAuth['error'] = !$permis->getSecurityTokenVerified()){
-                $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
-            }else{// getSecurityTokenVerified = OK!
-                if ($this->errorAuth['error'] = !$permis->getUserAuthenticated()) {
-                    $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
-                }else{
-                    if($this->errorAuth['error'] = !$this->isCommandAllowed()){
-                        $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
+        if (!$permis->getIsMyOwnNs()) { //not is my own page?
+            if ($permis->getAuthenticatedUsersOnly()) {
+                if($this->errorAuth['error'] = !$permis->getSecurityTokenVerified()){
+                    $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
+                }else{// getSecurityTokenVerified = OK!
+                    if ($this->errorAuth['error'] = !$permis->getUserAuthenticated()) {
+                        $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
+                    }else{
+                        if($this->errorAuth['error'] = !$this->isCommandAllowed()){
+                            $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
+                        }
                     }
                 }
             }

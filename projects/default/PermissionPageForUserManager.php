@@ -5,18 +5,17 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC') ) die();
+require_once(DOKU_INC . 'lib/plugins/wikiiocmodel/AbstractPermissionPageForUserManager.php');
 
-class PermissionManager extends AbstractPermissionManager{
+class PermissionPageForUserManager extends AbstractPermissionPageForUserManager {
     
     /**
      * @param $page y $user son obligatorios
      */
-    public function getPermission( $page, $user ) {
-	$acl_class = new admin_plugin_acl();
-	$acl_class->handle();
-	$acl_class->who = $user;
-	$permis         = auth_quickaclcheck( $page );
-
+    public static function getPermissionPageForUser( $page, $user ) {
+//	$acl_class = new admin_plugin_acl();
+//	$acl_class->handle();
+	$permis = auth_quickaclcheck( $page );  //hace referencia al usuario de la sesión actual
 	/* este bucle obtiene el mismo resultado que auth_quickaclcheck()
 	$permis = NULL;
 	$sub_page = $page;
@@ -32,7 +31,7 @@ class PermissionManager extends AbstractPermissionManager{
     /**
      * @param bool $force : true indica que s'ha d'establir estrictament el permís 
      */
-    public function setPermission( $page, $user, $permis, $force = FALSE ) {
+    public static function setPermissionPageForUser( $page, $user, $permis, $force = FALSE ) {
 	$acl_class = new admin_plugin_acl();
 	$acl_class->handle();
 	$acl_class->who = $user;
@@ -54,7 +53,7 @@ class PermissionManager extends AbstractPermissionManager{
 	return $permis_actual;
     }
 
-    public function deletePermission( $page, $user ) {
+    public static function deletePermissionPageForUser( $page, $user ) {
 	$acl_class = new admin_plugin_acl();
 	//$acl_class->handle();
 	//$acl_class->who = $user;

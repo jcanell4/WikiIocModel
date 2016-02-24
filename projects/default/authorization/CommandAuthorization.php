@@ -20,7 +20,6 @@ class CommandAuthorization extends AbstractCommandAuthorization {
     public function __construct($params) {
         parent::__construct();
          $this->modelWrapper = $params->getModelWrapper();
-        
     }
 
     /* pendent de convertir a private quan no l'utilitzi ajax.php(duplicat) ni login_command */
@@ -54,5 +53,5 @@ class CommandAuthorization extends AbstractCommandAuthorization {
 	$this->modelWrapper->setParams('do', $ACT);
 	return $ACT == DW_ACT_DENIED;
     }
-}
 
+}

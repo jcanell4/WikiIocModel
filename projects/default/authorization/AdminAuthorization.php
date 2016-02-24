@@ -14,16 +14,12 @@ require_once (WIKI_IOC_MODEL . 'projects/default/authorization/CommandAuthorizat
 class AdminAuthorization extends CommandAuthorization {
 
     public function canRun($permission = NULL) {
-//        $ret = parent::canRun($permission);
-//        $ret = $ret && $this->permission->getInfoPerm() >= AUTH_ADMIN;
-//        return $ret;
         if ( parent::canRun($permission) && $this->permission->getInfoPerm() < AUTH_ADMIN) {
             $this->errorAuth['error'] = TRUE;
             $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
             $this->errorAuth['extra_param'] = $this->permission->getIdPage();
         }
         return !$this->errorAuth['error'];
-        
     }
 
 }

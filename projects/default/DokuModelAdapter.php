@@ -29,6 +29,7 @@ if (!defined('DOKU_PLUGIN')) {
 }
 require_once(DOKU_PLUGIN . 'wikiiocmodel/AbstractModelAdapter.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocInfoManager.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/PermissionPageForUserManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/DokuModelExceptions.php');
 
 require_once(DOKU_PLUGIN . 'acl/admin.php');
@@ -171,13 +172,11 @@ class DokuModelAdapter extends AbstractModelAdapter
 
         //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
         $this->startCreateProcess(
-            DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL,
-            "", $text, ""
+            DW_ACT_SAVE, $pid, NULL, NULL, $lang['created'], NULL, "", $text, ""
         );
 
         //Preprocess (ACTION_ACT_PREPROCESS)
         $this->doCreatePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-
 
         //Process and return response
         $response = $this->getFormatedPageResponse();
@@ -191,7 +190,6 @@ class DokuModelAdapter extends AbstractModelAdapter
         $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
         $response['meta'] = $this->getMetaResponse($pid);
         $response['revs'] = $this->getRevisions($pid);
-
 
         return $response;
     }
@@ -535,20 +533,21 @@ class DokuModelAdapter extends AbstractModelAdapter
     {
         global $conf;
         include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
-        $pageuser = ":" . substr($page, 0, strrpos($page, ":"));
-        $userpage = substr($pageuser, strrpos($pageuser, ":") + 1);
+        $namespace = substr($page, 0, strrpos($page, ":"));
+        $userpage_ns = ":" . $namespace;
+        $user_name = substr($userpage_ns, strrpos($userpage_ns, ":") + 1);
         $ret = FALSE;
         if (WikiIocInfoManager::getInfo('isadmin')
             || WikiIocInfoManager::getInfo('ismanager')
-            || (WikiIocInfoManager::getInfo('namespace')
-                == substr($page, 0, strrpos($page, ":"))
-                && $userpage == $user
+            || (WikiIocInfoManager::getInfo('namespace') == $namespace
+                && $user_name == $user
                 && $conf['userpage_allowed'] === 1
-                && ($pageuser == $conf['userpage_ns'] . $user ||
-                    $pageuser == $conf['userpage_discuss_ns'] . $user)
+                && ($userpage_ns == $conf['userpage_ns'] . $user ||
+                    $userpage_ns == $conf['userpage_discuss_ns'] . $user)
             )
         ) {
-            $ret = $this->establir_permis($page, $user, $acl_level, TRUE);
+//            $ret = $this->establir_permis($page, $user, $acl_level, TRUE);
+            $ret = PermissionPageForUserManager::setPermissionPageForUser($page, $user, $acl_level, TRUE);
             WikiIocInfoManager::setInfo('perm', $ret);
         }
         return $ret;
@@ -560,53 +559,39 @@ class DokuModelAdapter extends AbstractModelAdapter
      * @param $page y $user son obligatorios
      */
     //[Alerta Josep] Es trasllada a PermissionManager
-    private function obtenir_permis($page, $user)
-    {
-//		$acl_class = new admin_plugin_acl();
-//		$acl_class->handle();
-//		$acl_class->who = $user;
-        $permis = auth_quickaclcheck($page);
-
-        /* este bucle obtiene el mismo resultado que auth_quickaclcheck()
-		$permis = NULL;
-		$sub_page = $page;
-		while (!$permis && $sub_page) {
-			$acl_class->ns = $sub_page;
-			$permis = $acl_class->_get_exact_perm();
-			$sub_page = substr($sub_page,0,strrpos($sub_page,':'));
-		}
-		*/
-
-        return $permis;
-    }
+//    private function obtenir_permis($page, $user)
+//    {
+//        $permis = auth_quickaclcheck($page);
+//        return $permis;
+//    }
 
     /**
      * @param bool $force : true : indica que s'ha d'establir el permís estricte
      *                      false: si existeix algún permís, no es modifica
      */
     //[Alerta Josep] Es trasllada a PermissionManager
-    private function establir_permis($page, $user, $acl_level, $force = FALSE)
-    {
-        $acl_class = new admin_plugin_acl();
-        $acl_class->handle();
-        $acl_class->who = $user;
-        $permis_actual = auth_quickaclcheck($page);
-
-        if ($force || $acl_level > $permis_actual) {
-            $ret = $acl_class->_acl_add($page, $user, $acl_level);
-            if ($ret) {
-                if (strpos($page, '*') === FALSE) {
-                    if ($acl_level > AUTH_EDIT) {
-                        $permis_actual = AUTH_EDIT;
-                    }
-                } else {
-                    $permis_actual = $acl_level;
-                }
-            }
-        }
-
-        return $permis_actual;
-    }
+//    private function establir_permis($page, $user, $acl_level, $force = FALSE)
+//    {
+//        $acl_class = new admin_plugin_acl();
+//        $acl_class->handle();
+//        $acl_class->who = $user;
+//        $permis_actual = auth_quickaclcheck($page);
+//
+//        if ($force || $acl_level > $permis_actual) {
+//            $ret = $acl_class->_acl_add($page, $user, $acl_level);
+//            if ($ret) {
+//                if (strpos($page, '*') === FALSE) {
+//                    if ($acl_level > AUTH_EDIT) {
+//                        $permis_actual = AUTH_EDIT;
+//                    }
+//                } else {
+//                    $permis_actual = $acl_level;
+//                }
+//            }
+//        }
+//
+//        return $permis_actual;
+//    }
 
     //[Alerta Josep] Es trasllada a PermissionManager
     private function eliminar_permis($page, $user)
@@ -1036,7 +1021,9 @@ class DokuModelAdapter extends AbstractModelAdapter
             throw new PageAlreadyExistsException($pid, $lang['pageExists']);
         }
 
-        $permis_actual = $this->obtenir_permis($pid, $_SERVER['REMOTE_USER']);
+//        $permis_actual = $this->obtenir_permis($pid, $_SERVER['REMOTE_USER']);
+        $permis_actual = PermissionPageForUserManager::getPermissionPageForUser($pid, $_SERVER['REMOTE_USER']);
+        
         if ($permis_actual < AUTH_CREATE) {
             //se pide el permiso para el directorio (no para la página)
             $permis_actual = $this->setUserPagePermission(getNS($pid) . ':*'

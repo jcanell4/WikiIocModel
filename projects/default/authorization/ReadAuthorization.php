@@ -9,9 +9,9 @@ if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
 require_once (DOKU_INC . 'inc/auth.php');
 require_once (WIKI_IOC_MODEL . 'projects/default/DokuModelExceptions.php');
-require_once (WIKI_IOC_MODEL . 'projects/default/authorization/CommandAuthorization.php');
+require_once (WIKI_IOC_MODEL . 'projects/default/authorization/PageCommandAuthorization.php');
 
-class ReadAuthorization extends CommandAuthorization {
+class ReadAuthorization extends PageCommandAuthorization {
     /*
     public function canRun($permission = NULL) {
         $ret = parent::canRun($permission);
@@ -31,7 +31,10 @@ class ReadAuthorization extends CommandAuthorization {
 //            $this->errorAuth['extra_param'] = $this->permission->getIdPage();
 //        }
         
-        if ( parent::canRun($permission) && $this->permission->getInfoPerm() < AUTH_READ) {
+        if ( parent::canRun($permission) && 
+             $this->permission->getPageExist() &&
+             $this->permission->getInfoPerm() < AUTH_READ ) 
+        {
             $this->errorAuth['error'] = TRUE;
             $this->errorAuth['exception'] = 'InsufficientPermissionToViewPageException';
             $this->errorAuth['extra_param'] = $this->permission->getIdPage();

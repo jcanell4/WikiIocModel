@@ -12,6 +12,8 @@ class Permission extends AbstractPermission {
     
     private $info_perm;
     private $readonly=FALSE;
+    private $pageExist;
+    private $isMyOwnNs;
     
     public function getInfoPerm() {
         return $this->info_perm;
@@ -33,4 +35,19 @@ class Permission extends AbstractPermission {
         $this->readonly = $readonly;
     }
     
+    public function getPageExist() {
+        return $this->pageExist;
+    }
+  
+    public function setPageExist($pageExist) {
+        $this->pageExist = $pageExist;
+    }
+
+    public function getIsMyOwnNs() {
+        return $this->isMyOwnNs;
+    }
+
+    public function setIsMyOwnNs($isMyOwnNs) {
+        $this->isMyOwnNs = $isMyOwnNs;
+    }
 }

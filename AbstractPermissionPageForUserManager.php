@@ -6,20 +6,20 @@
  */
 if (!defined('DOKU_INC') ) die();
 
-abstract class AbstractPermissionManager {
+abstract class AbstractPermissionPageForUserManager {
     
     protected $efectivePermission;
     
     /**
      * @param $page y $user son obligatorios
      */
-    abstract function getPermission( $page, $user );
+    abstract static function getPermissionPageForUser( $page, $user );
 
     /**
      * @param bool $force : true indica que s'ha d'establir estrictament el permís 
      */
-    abstract function setPermission( $page, $user, $permis, $force = FALSE );
+    abstract static function setPermissionPageForUser( $page, $user, $permis, $force = FALSE );
 
-    abstract function deletePermission( $page, $user );
+    abstract static function deletePermissionPageForUser( $page, $user );
 
 }
