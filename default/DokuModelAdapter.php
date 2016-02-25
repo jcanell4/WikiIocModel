@@ -3009,6 +3009,7 @@ class DokuModelAdapter extends AbstractModelAdapter
         global $lang,
                $conf;
 
+        $ns = $pid;
         $pid = $this->cleanIDForFiles($pid);
         $lockManager = new LockManager($this);
         $locker = $lockManager->lock($pid);
@@ -3016,11 +3017,11 @@ class DokuModelAdapter extends AbstractModelAdapter
         if ($locker === false) {
 
             $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-            $response = ['id' => $pid, 'timeout' => $conf['locktime'], 'info' => $info];
+            $response = ['id' => $pid, 'ns' => $ns, 'timeout' => $conf['locktime'], 'info' => $info];
 
         } else {
 
-            $response = ['id' => $pid, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
+            $response = ['id' => $pid, 'ns' => $ns, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
         }
 
         return $response;
@@ -3029,10 +3030,14 @@ class DokuModelAdapter extends AbstractModelAdapter
     public function unlock($pid)
     {
         $lockManager = new LockManager($this);
-        $lockManager->unlock($this->cleanIDForFiles($pid));
+
+        $ns = $pid;
+        $pid = $this->cleanIDForFiles($pid);
+
+        $lockManager->unlock($pid);
 
         $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
-        $response = ['id' => $pid, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
+        $response = ['id' => $pid, 'ns' => $ns, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
 
         return $response;
     }
