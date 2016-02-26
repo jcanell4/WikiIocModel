@@ -2933,7 +2933,10 @@ class DokuModelAdapter extends AbstractModelAdapter
             $response['full_draft'] = true;
             $response['info'] = $this->generateInfo('warning', $lang['draft_found']);
 
-            // Es recupera l'esborrany
+            // Es recupera l'esborrany i afegim la informació del timeout per si cal mostrar el dialog
+            $locked = $this->lock($pid); // TODO[Xavi] Comprovar on es pot posar el bloqueig per evitar repetir-lo per tot arreu!
+            $response['original_call']['timeout']= $locked['timeout'];
+
         } else if ($recoverDraft === true) {
 
             $draftContent = $this->getStructuredDraftForHeader($pid, $selected);
@@ -2945,7 +2948,7 @@ class DokuModelAdapter extends AbstractModelAdapter
         } else {
 
 
-            $locked = $this->lock($pid);
+            $locked = $this->lock($pid); // TODO[Xavi] Comprovar on es pot posar el bloqueig per evitar repetir-lo per tot arreu!
 
             if ($locked['timeout'] < 0) {
                 $response['info'] = $locked['info'];
