@@ -35,10 +35,11 @@ if (!defined('DW_DEFAULT_PAGE')) {
  * @author josep
  */
 class RawPageAction extends PageAction{
-    protected $draftQuery;
+    //protected $draftQuery;
     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
-        $this->draftQuery = $engine->createDraftDataQuery();
+        parent::__construct($engine);
+        //$this->draftQuery = $engine->createDraftDataQuery();
         $this->defaultDo = DW_ACT_EDIT;
     }
     /**
@@ -54,10 +55,7 @@ class RawPageAction extends PageAction{
         if (!WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
         }
-        if (!WikiIocInfoManager::getInfo("perm")) {
-            throw new InsufficientPermissionToEditPageException($ID); 
-        }
-        
+
         $ACT = act_edit( $ACT );
         $ACT = act_permcheck( $ACT );
         
@@ -133,7 +131,7 @@ class RawPageAction extends PageAction{
                     'rev'     => $REV,
                     'info'    => $info,
                     'type'    => 'html',
-                    'draft'   => $this->draftQuery->generateFull($id)
+                    'draft'   => $this->getModel()->generateFullDratf()
             );
 
             return $contentData;
@@ -178,10 +176,14 @@ class RawPageAction extends PageAction{
             //$form = "dw__editform";
             preg_match( $pattern, $text, $match );
             $form = $match[1];
+            
+            $pattern = "/<form id=\"".$form."\"/";
+            $replace = "/<form id=\"form_".$this->params['id']."\"/";
+            $text = preg_replace($pattern, $replace, $text);
 
             // Afegim el id del formulari als inputs
             $pattern = "/<input/";
-            $replace = "<input form=\"" . $form . "\"";
+            $replace = "<input form=\"form_".$this->params['id']. "\"";
             $meta    = preg_replace( $pattern, $replace, $meta );
 
             // Netegem el valor

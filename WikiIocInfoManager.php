@@ -21,6 +21,7 @@ class WikiIocInfoManager {
         global $INFO;
         self::loadInfo();
         $INFO[$key]=$value;
+        self::updateJsInfo();
     }
     
     public static function loadInfo() {
@@ -45,19 +46,24 @@ class WikiIocInfoManager {
     }
 
     protected static function fillInfo() {
-	global $JSINFO;
 	global $INFO;
 
 	$INFO = pageinfo();
-	//export minimal infos to JS, plugins can add more
-	$JSINFO['isadmin']   = $INFO['isadmin'];
-	$JSINFO['ismanager'] = $INFO['ismanager'];
+        self::updateJsInfo();
         if ($INFO['isadmin'])
             $INFO['userinfo']['grps'][] = 'admin';
         if ($INFO['ismanager'])
             $INFO['userinfo']['grps'][] = 'manager';
-
+        
 	self::$infoLoaded = TRUE;
+    }
+    
+    private static function updateJsInfo(){
+	global $JSINFO;
+	global $INFO;
+        
+	$JSINFO['isadmin']   = $INFO['isadmin'];
+	$JSINFO['ismanager'] = $INFO['ismanager'];
     }
     
     public static function setParams($params){

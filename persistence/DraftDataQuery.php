@@ -30,5 +30,9 @@ class DraftDataQuery extends DataQuery{
     public function removePartialDraft($id) {
         DraftManager::removeStructuredDraftAll($id);
     }
+    
+    public function removeChunkDraft($id, $chunkId){
+        DraftManager::removeStructuredDraft($id, $chunkId);
+    }
 
 }
