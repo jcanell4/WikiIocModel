@@ -8,7 +8,7 @@ if (!defined('DOKU_INC') ) die();
 
 abstract class AbstractPermission {
     
-    protected $cmdAuthorization;        //objecte command
+//    protected $cmdAuthorization;        //objecte command ([RAFA] Potser ja no és necessari)
     protected $authenticatedUsersOnly;  //bool (de command_class)
     protected $isSecurityTokenVerified;
     protected $isUserAuthenticated;     // bool
@@ -20,9 +20,10 @@ abstract class AbstractPermission {
     protected $permissionLoaded = FALSE;
     protected $userGroups;
     
-    public function __construct($cmdAuthorization) {
-        $this->cmdAuthorization = $cmdAuthorization;
-    }
+    // [RAFA] Potser ja no és necessari aquest constructor
+//    public function __construct($cmdAuthorization) {
+//        $this->cmdAuthorization = $cmdAuthorization;
+//    }
     
     public function getPermissionLoaded() {
         return $this->permissionLoaded;

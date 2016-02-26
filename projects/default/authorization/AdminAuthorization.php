@@ -6,10 +6,10 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+if (!defined('DOKU_IOC_MODEL')) define('DOKU_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/projects/default/");
+
 require_once (DOKU_INC . 'inc/auth.php');
-require_once (WIKI_IOC_MODEL . 'projects/default/DokuModelExceptions.php');
-require_once (WIKI_IOC_MODEL . 'projects/default/authorization/CommandAuthorization.php');
+require_once (DOKU_IOC_MODEL . 'authorization/CommandAuthorization.php');
 
 class AdminAuthorization extends CommandAuthorization {
 

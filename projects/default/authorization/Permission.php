@@ -6,10 +6,12 @@
  */
 if (!defined('DOKU_INC') ) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+
 require_once (WIKI_IOC_MODEL . 'AbstractPermission.php');
 
 class Permission extends AbstractPermission {
     
+    private $isDenied;
     private $info_perm;
     private $readonly=FALSE;
     private $pageExist;
@@ -23,10 +25,18 @@ class Permission extends AbstractPermission {
         $this->info_perm = $info_perm;
     }
   
+//    public function isDenied() {
+//        return $this->cmdAuthorization->isDenied();
+//    }
+    
     public function isDenied() {
-        return $this->cmdAuthorization->isDenied();
+        return $this->isDenied;
     }
     
+    public function setIsDenied($isDenied) {
+        $this->isDenied = $isDenied;
+    }
+  
     public function isReadOnly(){
         return $this->readonly;
     }

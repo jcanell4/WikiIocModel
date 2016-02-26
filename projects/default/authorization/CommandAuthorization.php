@@ -33,6 +33,7 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         $this->permission->setIdPage($command->getParams('id'));
         $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
+        $this->permission->setIsDenied($this->isDenied());
         return $this->permission;
     }
 

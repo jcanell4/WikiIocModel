@@ -24,64 +24,40 @@ require_once(DOKU_INC . 'inc/io.php');
 require_once(DOKU_INC . 'inc/JSON.php');
 require_once(DOKU_INC . 'inc/JpegMeta.php');
 
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
-require_once(DOKU_PLUGIN . 'wikiiocmodel/AbstractModelAdapter.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocInfoManager.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/PermissionPageForUserManager.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/DokuModelExceptions.php');
+if (!defined('DOKU_PLUGIN'))    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
+
+require_once(WIKI_IOC_MODEL . 'AbstractModelAdapter.php');
+require_once(WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
+require_once(WIKI_IOC_MODEL . 'projects/default/PermissionPageForUserManager.php');
+require_once(WIKI_IOC_MODEL . 'projects/default/DokuModelExceptions.php');
 
 require_once(DOKU_PLUGIN . 'acl/admin.php');
 
 // TODO[Xavi] Afegit per mi per extreure la funcionalitat dels locks a una altra classe
-require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
+require_once(WIKI_IOC_MODEL . 'LockManager.php');
+require_once(WIKI_IOC_MODEL . 'DraftManager.php');
 
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/AdminTaskAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/AdminTaskListAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/RawPageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/actions/SaveAction.php');
+require_once(WIKI_IOC_MODEL . 'projects/default/actions/AdminTaskAction.php');
+require_once(WIKI_IOC_MODEL . 'projects/default/actions/AdminTaskListAction.php');
+require_once(WIKI_IOC_MODEL . 'projects/default/actions/RawPageAction.php');
+require_once(WIKI_IOC_MODEL . 'projects/default/actions/SaveAction.php');
 
-require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
+require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
+require_once(WIKI_IOC_MODEL . 'persistence/WikiPageSystemManager.php');
 
-if (!defined('DW_DEFAULT_PAGE')) {
-    define('DW_DEFAULT_PAGE', "start");
-}
-if (!defined('DW_ACT_SHOW')) {
-    define('DW_ACT_SHOW', "show");
-}
-if (!defined('DW_ACT_DRAFTDEL')) {
-    define('DW_ACT_DRAFTDEL', "draftdel");
-}
-if (!defined('DW_ACT_SAVE')) {
-    define('DW_ACT_SAVE', "save");
-}
-if (!defined('DW_ACT_EDIT')) {
-    define('DW_ACT_EDIT', "edit");
-}
-if (!defined('DW_ACT_PREVIEW')) {
-    define('DW_ACT_PREVIEW', "preview");
-}
-if (!defined('DW_ACT_RECOVER')) {
-    define('DW_ACT_RECOVER', "recover");
-}
-if (!defined('DW_ACT_DENIED')) {
-    define('DW_ACT_DENIED', "denied");
-}
-if (!defined('DW_ACT_MEDIA_DETAIL')) {
-    define('DW_ACT_MEDIA_DETAIL', "media_detail");
-}
-if (!defined('DW_ACT_MEDIA_MANAGER')) {
-    define('DW_ACT_MEDIA_MANAGER', "media");
-}
-if (!defined('DW_ACT_EXPORT_ADMIN')) {
-    define('DW_ACT_EXPORT_ADMIN', "admin");
-}
-if (!defined('DW_ACT_MEDIA_DETAILS')) {
-    define('DW_ACT_MEDIA_DETAILS', "mediadetails");
-}
+if (!defined('DW_DEFAULT_PAGE'))      define('DW_DEFAULT_PAGE', "start");
+if (!defined('DW_ACT_SHOW'))          define('DW_ACT_SHOW', "show");
+if (!defined('DW_ACT_DRAFTDEL'))      define('DW_ACT_DRAFTDEL', "draftdel");
+if (!defined('DW_ACT_SAVE'))          define('DW_ACT_SAVE', "save");
+if (!defined('DW_ACT_EDIT'))          define('DW_ACT_EDIT', "edit");
+if (!defined('DW_ACT_PREVIEW'))       define('DW_ACT_PREVIEW', "preview");
+if (!defined('DW_ACT_RECOVER'))       define('DW_ACT_RECOVER', "recover");
+if (!defined('DW_ACT_DENIED'))        define('DW_ACT_DENIED', "denied");
+if (!defined('DW_ACT_MEDIA_DETAIL'))  define('DW_ACT_MEDIA_DETAIL', "media_detail");
+if (!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
+if (!defined('DW_ACT_EXPORT_ADMIN'))  define('DW_ACT_EXPORT_ADMIN', "admin");
+if (!defined('DW_ACT_MEDIA_DETAILS')) define('DW_ACT_MEDIA_DETAILS', "mediadetails");
 
 //    const DW_ACT_BACKLINK="backlink";
 //    const DW_ACT_REVISIONS="revisions";
@@ -115,10 +91,7 @@ class DokuModelAdapter extends AbstractModelAdapter
 {
     const ADMIN_PERMISSION = "admin";
 
-    private $draftManager;
-    private $lockManager;
     /**
-     *
      * @var BasicPersistenceEngine
      */
     private $persistenceEngine;
@@ -126,9 +99,6 @@ class DokuModelAdapter extends AbstractModelAdapter
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
-    // ver WikiIocInfoManager
-    //protected $infoLoaded = FALSE;
-    //protected $wikiIocInfo;
 
     public function init($persistenceEngine)
     {
@@ -167,7 +137,6 @@ class DokuModelAdapter extends AbstractModelAdapter
     {
         global $lang;
         global $ACT;
-
         //[TODO JOSEP] Normalitzar: start do get...
 
         //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
@@ -176,7 +145,7 @@ class DokuModelAdapter extends AbstractModelAdapter
         );
 
         //Preprocess (ACTION_ACT_PREPROCESS)
-        $this->doCreatePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
+        $this->doCreatePreProcess($pid);    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
 
         //Process and return response
         $response = $this->getFormatedPageResponse();
@@ -208,7 +177,6 @@ class DokuModelAdapter extends AbstractModelAdapter
     {
         global $lang;
 
-
         if (!$prev) {
             return $this->getPartialPage($pid, $prev, null, null, null);
         }
@@ -225,11 +193,8 @@ class DokuModelAdapter extends AbstractModelAdapter
         $this->doFormatedPartialPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
 
         $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
-
         $revisionInfo = p_locale_xhtml('showrev'); //[ALERTA Josep] Cal crear una classe WikiMessageManager (similar a WikiInfoManager) que es pugui fer servir en comptes de la variable global $lang
-
         $response['structure']['html'] = str_replace($revisionInfo, '', $response['structure']['html']);
-
 
         // Si no s'ha especificat cap altre missatge mostrem el de carrega
         if (!$response['info']) {
@@ -238,13 +203,11 @@ class DokuModelAdapter extends AbstractModelAdapter
             $this->addInfoToInfo($response['warning'], $this->generateInfo("info", strip_tags($revisionInfo)));
         }
 
-
         // TODO: afegir el 'meta' que correspongui
         $response['meta'] = $this->getMetaResponse($pid);
 
         // TODO: afegir les revisions
         $response['revs'] = $this->getRevisions($pid);
-
 
         return $response;
     }
@@ -307,25 +270,18 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     public function saveEdition($params)
     {
-
         $action = new SaveAction($this->persistenceEngine);
         // Remove partialDraft
-
 //        $this->clearPartialDraft($params['id']); // TODO[Xavi] Aquí o al SaveAction? importa si es abans del $response?
 
         return $action->get($params);
 
-//		$this->startPageProcess(
-//			DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate,
-//			$ppre, $ptext, $psuf
-//		);
-//		$code = $this->doSavePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-
-
-//        $response = $this->getSaveInfoResponse($code);
-
-
-//        return $response;
+//	$this->startPageProcess(
+//		DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate, $ppre, $ptext, $psuf
+//	);
+//	$code = $this->doSavePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
+//      $response = $this->getSaveInfoResponse($code);
+//      return $response;
     }
 
     public function getMediaFileName($id, $rev = '')
@@ -490,7 +446,6 @@ class DokuModelAdapter extends AbstractModelAdapter
     public function getGlobalMessage($id)
     {
         global $lang;
-
         return $lang[$id];
     }
 
@@ -546,7 +501,6 @@ class DokuModelAdapter extends AbstractModelAdapter
                     $userpage_ns == $conf['userpage_discuss_ns'] . $user)
             )
         ) {
-//            $ret = $this->establir_permis($page, $user, $acl_level, TRUE);
             $ret = PermissionPageForUserManager::setPermissionPageForUser($page, $user, $acl_level, TRUE);
             WikiIocInfoManager::setInfo('perm', $ret);
         }
@@ -594,17 +548,17 @@ class DokuModelAdapter extends AbstractModelAdapter
 //    }
 
     //[Alerta Josep] Es trasllada a PermissionManager
-    private function eliminar_permis($page, $user)
-    {
-        $acl_class = new admin_plugin_acl();
-        //$acl_class->handle();
-        //$acl_class->who = $user;
-        if ($page && $user) {
-            $ret = $acl_class->_acl_del($page, $user);
-        }
-
-        return $ret;
-    }
+//    private function eliminar_permis($page, $user)
+//    {
+//        $acl_class = new admin_plugin_acl();
+//        //$acl_class->handle();
+//        //$acl_class->who = $user;
+//        if ($page && $user) {
+//            $ret = $acl_class->_acl_del($page, $user);
+//        }
+//
+//        return $ret;
+//    }
 
     /**
      * Retorna si s'ha trobat la cadena que es cerca al principi de la cadena on es busca.
@@ -740,7 +694,6 @@ class DokuModelAdapter extends AbstractModelAdapter
         global $ID;
         global $AUTH;
         global $vector_action;
-        //global $vector_context;
         global $loginname;
         global $IMG;
         global $ERROR;
@@ -832,8 +785,8 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     private function triggerStartEvents()
     {
-        $tmp = array(); //NO DATA
-//		trigger_event( 'DOKUWIKI_STARTED', $tmp );
+//      $tmp = array(); //NO DATA
+//	trigger_event( 'DOKUWIKI_STARTED', $tmp );
         trigger_event('WIOC_AJAX_COMMAND_STARTED', $this->dataTmp);
     }
 
@@ -1015,13 +968,12 @@ class DokuModelAdapter extends AbstractModelAdapter
 //		return $content;
 //	}
 
-    private function doCreatePreProcess()
+    private function doCreatePreProcess($pid)
     {
         if (WikiIocInfoManager::getInfo("exists")) {
             throw new PageAlreadyExistsException($pid, $lang['pageExists']);
         }
 
-//        $permis_actual = $this->obtenir_permis($pid, $_SERVER['REMOTE_USER']);
         $permis_actual = PermissionPageForUserManager::getPermissionPageForUser($pid, $_SERVER['REMOTE_USER']);
         
         if ($permis_actual < AUTH_CREATE) {
@@ -1088,9 +1040,8 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     private function getFormatedPageResponse()
     {
-        global $lang;
+//        global $lang;
         $pageToSend = $this->getFormatedPage();
-
         $response = $this->getContentPage($pageToSend);
 
         return $response;

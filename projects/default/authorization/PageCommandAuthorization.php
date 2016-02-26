@@ -11,16 +11,30 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins
 require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 require_once (WIKI_IOC_MODEL . 'projects/default/authorization/CommandAuthorization.php');
 
-class PageCommandAuthorization extends CommandAuthorization {
+abstract class PageCommandAuthorization extends CommandAuthorization {
 
     public function __construct($params) {
         parent::__construct($params);
     }
 
+    public function canRun($permission = NULL) {
+        if ( parent::canRun($permission) ) { 
+            if (!$permission->getIsMyOwnNs()) {
+                $exception = $this->getPermissionException($permission);
+                if ($exception) {
+                    $this->errorAuth['error'] = TRUE;
+                    $this->errorAuth['exception'] = $exception;
+                    $this->errorAuth['extra_param'] = $this->permission->getIdPage();
+                }
+            }
+        }
+        return !$this->errorAuth['error'];
+    }
+    
     public function getPermission($command) {
         parent::getPermission($command);
         $this->permission->setPageExist(WikiIocInfoManager::getInfo('exists'));
-        $this->permission->setIsMyOwnNs($this->isMyOwnNs($this->permission->getIdPage(), WikiIocInfoManager::getInfo('user')));
+        $this->permission->setIsMyOwnNs($this->isMyOwnNs($this->permission->getIdPage(), WikiIocInfoManager::getInfo('client')));
         return $this->permission;
     }
 
@@ -40,4 +54,5 @@ class PageCommandAuthorization extends CommandAuthorization {
         return $ret;
     }
     
+    protected abstract function getPermissionException($permission);
 }

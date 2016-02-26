@@ -6,20 +6,27 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+if (!defined('DOKU_IOC_MODEL')) define('DOKU_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/projects/default/");
+
 require_once (DOKU_INC . 'inc/auth.php');
-require_once (WIKI_IOC_MODEL . 'projects/default/DokuModelExceptions.php');
-require_once (WIKI_IOC_MODEL . 'projects/default/authorization/PageCommandAuthorization.php');
+require_once (DOKU_IOC_MODEL . 'authorization/PageCommandAuthorization.php');
 
 class EditAuthorization extends PageCommandAuthorization {
     
-    public function canRun($permission = NULL) {
-        if ( parent::canRun($permission) && $this->permission->getInfoPerm() < AUTH_READ) {
-            $this->errorAuth['error'] = TRUE;
-            $this->errorAuth['exception'] = 'InsufficientPermissionToViewPageException';
-            $this->errorAuth['extra_param'] = $this->permission->getIdPage();
+//    public function canRun($permission = NULL) {
+//        if ( parent::canRun($permission) && $this->permission->getInfoPerm() < AUTH_READ) {
+//            $this->errorAuth['error'] = TRUE;
+//            $this->errorAuth['exception'] = 'InsufficientPermissionToEditPageException';
+//            $this->errorAuth['extra_param'] = $this->permission->getIdPage();
+//        }
+//        return !$this->errorAuth['error'];
+//    }
+
+    public function getPermissionException($permission) {
+        if ($permission->getPageExist() && $permission->getInfoPerm() < AUTH_READ) {
+            $exception = 'InsufficientPermissionToEditPageException';
         }
-        return !$this->errorAuth['error'];
+        return $exception;
     }
     
     public function getPermission($command) {
