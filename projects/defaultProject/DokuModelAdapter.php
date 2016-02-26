@@ -271,14 +271,15 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     /**
      * Crida principal de la comanda cancel
-     * @global type $lang
      * @param type $pid
      * @param type $prev
-     * @param type $keep_draft
+     * @param bool|type $keep_draft
+     * @param bool $discard_changes si es cert es descartaran els canvis sense preguntar
      * @return type
+     * @global type $lang
      */
     //[ALERTA Josep] Es queda aquí.
-    public function cancelEdition($pid, $prev = NULL, $keep_draft = FALSE)
+    public function cancelEdition($pid, $prev = NULL, $keep_draft = FALSE, $discard_changes = FALSE)
     {
         global $lang;
 
@@ -290,8 +291,11 @@ class DokuModelAdapter extends AbstractModelAdapter
         $response ['info'] = $this->generateInfo("warning", $lang['edition_cancelled']);
 
         $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
+        $response['structure']['discard_changes'] = $discard_changes; // Alerta [Xavi] si el valor es cert es força el descartar els canvis
+
         $response['meta'] = $this->getMetaResponse($pid);
         $response['revs'] = $this->getRevisions($pid);
+
 
         return $response;
     }
@@ -3005,6 +3009,7 @@ class DokuModelAdapter extends AbstractModelAdapter
         global $lang,
                $conf;
 
+        $ns = $pid;
         $pid = $this->cleanIDForFiles($pid);
         $lockManager = new LockManager($this);
         $locker = $lockManager->lock($pid);
@@ -3012,11 +3017,11 @@ class DokuModelAdapter extends AbstractModelAdapter
         if ($locker === false) {
 
             $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-            $response = ['id' => $pid, 'timeout' => $conf['locktime'], 'info' => $info];
+            $response = ['id' => $pid, 'ns' => $ns, 'timeout' => $conf['locktime'], 'info' => $info];
 
         } else {
 
-            $response = ['id' => $pid, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
+            $response = ['id' => $pid, 'ns' => $ns, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
         }
 
         return $response;
@@ -3025,10 +3030,14 @@ class DokuModelAdapter extends AbstractModelAdapter
     public function unlock($pid)
     {
         $lockManager = new LockManager($this);
-        $lockManager->unlock($this->cleanIDForFiles($pid));
+
+        $ns = $pid;
+        $pid = $this->cleanIDForFiles($pid);
+
+        $lockManager->unlock($pid);
 
         $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
-        $response['info'] = $info; // TODO[Xavi] Localitzar el missatge
+        $response = ['id' => $pid, 'ns' => $ns, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
 
         return $response;
     }
@@ -3041,7 +3050,7 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     public function saveDraft($draft)
     {
-        DraftManager::saveDraft($draft);
+        return DraftManager::saveDraft($draft);
     }
 
     public function getStructuredDraft($id)
