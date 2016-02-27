@@ -2907,7 +2907,6 @@ class DokuModelAdapter extends AbstractModelAdapter
 
         // TODO[Xavi] si es troba una draft per la edició, no es retornarà la resposta edit_html
         // TODO[Xavi] aquí s'haura d'afegir la comprovació de que no s'ha passat el paràmetre recover draft
-
         // TODO[Xavi] La diferencia en aquest if es que aquest primer bloc es pel draft parcial
 
         if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && $recoverDraft === null) {
