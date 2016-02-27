@@ -2,7 +2,7 @@
 if (!defined('DOKU_INC')) die();
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
-require_once(DOKU_PLUGIN . 'wikiiocmodel/default/DokuModelAdapter.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelAdapter.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
 /**
  * Class DraftManager
  *

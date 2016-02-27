@@ -9,12 +9,14 @@ $_AuthorizationCfg =
     array(
         '_command'              => 'admin'      /*Default case*/
 	,'cancel'		=> 'read'
-	,'edit'			=> 'read'
+	,'cancel_partial'	=> 'read'
+	,'edit_partial'		=> 'edit'
 	,'diff'			=> 'read'
 	,'new_page'		=> 'create'
 	,'page'			=> 'read'
 	,'revision'		=> 'write'
 	,'save'			=> 'write'
+	,'save_partial'		=> 'write'
 	,'copy_image_to_project'=> 'upload'
 	,'get_image_detail'	=> 'read'
 	,'media'		=> 'read'
