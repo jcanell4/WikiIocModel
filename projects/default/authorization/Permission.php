@@ -11,7 +11,7 @@ require_once (WIKI_IOC_MODEL . 'AbstractPermission.php');
 
 class Permission extends AbstractPermission {
     
-    private $isDenied;
+//    private $isDenied; Gestionat per DokuAction
     private $info_perm;
     private $readonly=FALSE;
     private $pageExist;
@@ -25,17 +25,19 @@ class Permission extends AbstractPermission {
         $this->info_perm = $info_perm;
     }
   
+//  versió molt antiga. Les seves succesores estan Gestionades per DokuAction
 //    public function isDenied() {
 //        return $this->cmdAuthorization->isDenied();
 //    }
     
-    public function isDenied() {
-        return $this->isDenied;
-    }
-    
-    public function setIsDenied($isDenied) {
-        $this->isDenied = $isDenied;
-    }
+//  Gestionat per DokuAction
+//    public function isDenied() {
+//        return $this->isDenied;
+//    }
+//    
+//    public function setIsDenied($isDenied) {
+//        $this->isDenied = $isDenied;
+//    }
   
     public function isReadOnly(){
         return $this->readonly;

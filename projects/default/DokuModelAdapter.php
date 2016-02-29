@@ -227,7 +227,8 @@ class DokuModelAdapter extends AbstractModelAdapter
     public function getCodePage($params)
     {
         $action = new RawPageAction($this->persistenceEngine);
-        return $action->get($params);
+        $contentData = $action->get($params);
+        return $contentData;
     }
 
     /**

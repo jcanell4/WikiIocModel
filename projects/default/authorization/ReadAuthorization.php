@@ -26,7 +26,7 @@ class ReadAuthorization extends PageCommandAuthorization {
 //        return !$this->errorAuth['error'];
 //    }
     
-    public function getPermissionException($permission) {
+    public function getPermissionException($permission) { // el parámetro $permission contiene lo mismo que $this->permission
         if ($permission->getPageExist() && $permission->getInfoPerm() < AUTH_READ) {
             $exception = 'InsufficientPermissionToViewPageException';
         }

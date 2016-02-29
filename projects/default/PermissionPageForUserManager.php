@@ -17,6 +17,8 @@ class PermissionPageForUserManager extends AbstractPermissionPageForUserManager 
 //	$acl_class->handle();
 	$permis = auth_quickaclcheck( $page );  //hace referencia al usuario de la sesión actual
 	/* este bucle obtiene el mismo resultado que auth_quickaclcheck()
+	$acl_class = new admin_plugin_acl();
+	$acl_class->handle();
 	$permis = NULL;
 	$sub_page = $page;
 	while (!$permis && $sub_page) {

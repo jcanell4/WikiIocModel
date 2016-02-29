@@ -128,14 +128,6 @@ class InsufficientPermissionToWritePageException extends WikiIocModelException
     }
 }
 
-class HttpErrorCodeException extends WikiIocModelException
-{
-    public function __construct($code, $message = "", $previous = NULL)
-    {
-        parent::__construct($message, $code, $previous);
-    }
-}
-
 class AuthorizationCommandNotFound extends WikiIocModelException
 {
     public function __construct($code = 1008, $message = "Authorization command not found", $previous = NULL)

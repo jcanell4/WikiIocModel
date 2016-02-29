@@ -17,7 +17,7 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
         parent::__construct($params);
     }
 
-    public function canRun($permission = NULL) {
+    public function canRun($permission = NULL) {  // el parámetro $permission contiene lo mismo que $this->permission
         if ( parent::canRun($permission) ) { 
             if (!$permission->getIsMyOwnNs()) {
                 $exception = $this->getPermissionException($permission);

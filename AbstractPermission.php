@@ -109,7 +109,8 @@ abstract class AbstractPermission {
         return $this->userGroups;
     }
 
-    public function isDenied() {
-        return FALSE;   //valor per defecte per aquells que no el necessiten
-    }
+//  Gestionat per DokuAction
+//    public function isDenied() {
+//        return FALSE;   //valor per defecte per aquells que no el necessiten
+//    }
 }

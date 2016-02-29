@@ -33,7 +33,7 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         $this->permission->setIdPage($command->getParams('id'));
         $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
-        $this->permission->setIsDenied($this->isDenied());
+//        $this->permission->setIsDenied($this->isDenied());  Gestionat per DokuAction
         return $this->permission;
     }
 
@@ -45,14 +45,11 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         return checkSecurityToken();
     }
 
-    /**
-     * Si el valor de la variable global $ACT es 'denied' retorna false, en cualsevol altre cas retorna true.
-     * @return bool
-     */
-    public function isDenied() {
-	global $ACT;
-	$this->modelWrapper->setParams('do', $ACT);
-	return $ACT == DW_ACT_DENIED;
-    }
+//  Gestionat per DokuAction
+//    public function isDenied() {
+//	global $ACT;
+//	$this->modelWrapper->setParams('do', $ACT);
+//	return $ACT == DW_ACT_DENIED;
+//    }
 
 }

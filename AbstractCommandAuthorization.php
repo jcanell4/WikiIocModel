@@ -26,8 +26,8 @@ abstract class AbstractCommandAuthorization {
      * Responde a la pregunta: ¿los permisos permiten la ejecución del comando?
      * @return bool. Indica si se han obtenido, o no, los permisos generales
      */
-    public function canRun($permis) {
-
+    public function canRun($permis) {   // el parámetro $permis contiene lo mismo que $this->permission
+                                        // por tanto, no es necesario
         $this->errorAuth = array(
                               'error' => FALSE
                              ,'exception' => ''
