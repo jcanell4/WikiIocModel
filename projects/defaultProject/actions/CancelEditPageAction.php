@@ -39,10 +39,11 @@ class CancelEditPageAction extends PageAction {
   }
 
   protected function responseProcess() {
-    $response = array();
+//    $response = array();
 
 
-    $response['structure']  = $this->getModel()->getData();
+//    $response['structure']  = $this->getModel()->getData();
+    $response = $this->getModel()->getData();
 
 
     $response ['info'] = $this->generateInfo("warning", WikiIocLangManager::getLang('edition_cancelled'));
@@ -61,6 +62,9 @@ class CancelEditPageAction extends PageAction {
         $this->clearPartialDraft();
     }
     unlock($this->params['id']);
+    if(!WikiIocInfoManager::getInfo("exists")){
+        throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
+    }
   }
 
   private function clearFullDraft(){

@@ -64,15 +64,18 @@ class HtmlPageAction extends PageAction{
      * DokuAction#response.
      */
     protected function responseProcess(){  
-        $response = array();
+//        $response = array();
         
-        $response['structure'] = $this->getModel()->getData();
+//        $response['structure'] = $this->getModel()->getData();
+        $response = $this->getModel()->getData();
 
         // TODO: afegir el 'info' que correspongui
 
         // Si no s'ha especificat cap altre missatge mostrem el de carrega
         if (!$response['info']) {
             $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded'));
+        }else {
+            $this->addInfoToInfo($response['info'], $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded')));
         }
 
         // TODO: afegir el 'meta' que correspongui

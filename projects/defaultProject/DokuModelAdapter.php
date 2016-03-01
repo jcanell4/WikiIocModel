@@ -41,7 +41,9 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskListAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPageAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPartialPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/HtmlPageAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/HtmlRevisionPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePartialPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CreatePageAction.php');
@@ -185,58 +187,55 @@ class DokuModelAdapter extends AbstractModelAdapter
      * @throws InsufficientPermissionToViewPageException
      * @throws PageNotFoundException
      */
-    public function getHtmlPage($par, $prev = NULL)
+    public function getHtmlPage($pars)
     {
         global $lang;
-
-        if(is_array($par)) {
-            $pid = $par['id'];
-            $prev = $par['rev'];
-        }else{
-            $pid =$par;
-            $par = array('id' => $pid, 'rev' => $prev);
-        }
 
         if (!$prev) {
 //            return $this->getPartialPage($pid, $prev, null, null, null);
             $action = new HtmlPageAction($this->persistenceEngine);
-            return $action->get($par);
+            $response = $action->get($pars);
+        }else{
+            $action = new HtmlRevisionPageAction($this->persistenceEngine);
+            $response = $action->get($pars);
         }
-
-        $this->startPageProcess(DW_ACT_SHOW, $pid, $prev, null, null);
-
-        if (!WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($id, $lang['pageNotFound']);
-        }
-        if (!WikiIocInfoManager::getInfo("perm")) {
-            throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
-        }
-
-        $this->doFormatedPartialPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-
-        $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
-
-        $revisionInfo = p_locale_xhtml('showrev'); //[ALERTA Josep] Cal crear una classe WikiMessageManager (similar a WikiInfoManager) que es pugui fer servir en comptes de la variable global $lang
-
-        $response['structure']['html'] = str_replace($revisionInfo, '', $response['structure']['html']);
-
-
-        // Si no s'ha especificat cap altre missatge mostrem el de carrega
-        if (!$response['info']) {
-            $response['info'] = $this->generateInfo("warning", strip_tags($revisionInfo));
-        } else {
-            $this->addInfoToInfo($response['warning'], $this->generateInfo("info", strip_tags($revisionInfo)));
-        }
-
-
-        // TODO: afegir el 'meta' que correspongui
-        $response['meta'] = $this->getMetaResponse($pid);
-
-        // TODO: afegir les revisions
-        $response['revs'] = $this->getRevisions($pid);
-
-
+        
         return $response;
+
+//        $this->startPageProcess(DW_ACT_SHOW, $pid, $prev, null, null);
+//
+//        if (!WikiIocInfoManager::getInfo("exists")) {
+//            throw new PageNotFoundException($id, $lang['pageNotFound']);
+//        }
+//        if (!WikiIocInfoManager::getInfo("perm")) {
+//            throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
+//        }
+//
+//        $this->doFormatedPartialPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
+//
+//        $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
+//
+//        $revisionInfo = p_locale_xhtml('showrev'); //[ALERTA Josep] Cal crear una classe WikiMessageManager (similar a WikiInfoManager) que es pugui fer servir en comptes de la variable global $lang
+//
+//        $response['structure']['html'] = str_replace($revisionInfo, '', $response['structure']['html']);
+//
+//
+//        // Si no s'ha especificat cap altre missatge mostrem el de carrega
+//        if (!$response['info']) {
+//            $response['info'] = $this->generateInfo("warning", strip_tags($revisionInfo));
+//        } else {
+//            $this->addInfoToInfo($response['warning'], $this->generateInfo("info", strip_tags($revisionInfo)));
+//        }
+//
+//
+//        // TODO: afegir el 'meta' que correspongui
+//        $response['meta'] = $this->getMetaResponse($pid);
+//
+//        // TODO: afegir les revisions
+//        $response['revs'] = $this->getRevisions($pid);
+//
+//
+//        return $response;
     }
 
     /**
@@ -517,96 +516,96 @@ class DokuModelAdapter extends AbstractModelAdapter
 //        return tpl_getConf($id);
 //    }
 
-    //[Alerta Josep] Es trasllada a PermissionManager
-    private function setUserPagePermission($page, $user, $acl_level)
-    {
-        global $conf;
-        include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
-        $pageuser = ":" . substr($page, 0, strrpos($page, ":"));
-        $userpage = substr($pageuser, strrpos($pageuser, ":") + 1);
-        $ret = FALSE;
-        if (WikiIocInfoManager::getInfo('isadmin')
-            || WikiIocInfoManager::getInfo('ismanager')
-            || (WikiIocInfoManager::getInfo('namespace')
-                == substr($page, 0, strrpos($page, ":"))
-                && $userpage == $user
-                && $conf['userpage_allowed'] === 1
-                && ($pageuser == $conf['userpage_ns'] . $user ||
-                    $pageuser == $conf['userpage_discuss_ns'] . $user)
-            )
-        ) {
-            $ret = $this->establir_permis($page, $user, $acl_level, TRUE);
-            WikiIocInfoManager::setInfo('perm', $ret);
-        }
-        return $ret;
-    }
-
-    /**
-     * administració de permisos
-     *
-     * @param $page y $user son obligatorios
-     */
-    //[Alerta Josep] Es trasllada a PermissionManager
-    private function obtenir_permis($page, $user)
-    {
-//		$acl_class = new admin_plugin_acl();
-//		$acl_class->handle();
-//		$acl_class->who = $user;
-        $permis = auth_quickaclcheck($page);
-
-        /* este bucle obtiene el mismo resultado que auth_quickaclcheck()
-		$permis = NULL;
-		$sub_page = $page;
-		while (!$permis && $sub_page) {
-			$acl_class->ns = $sub_page;
-			$permis = $acl_class->_get_exact_perm();
-			$sub_page = substr($sub_page,0,strrpos($sub_page,':'));
-		}
-		*/
-
-        return $permis;
-    }
-
-    /**
-     * @param bool $force : true : indica que s'ha d'establir el permís estricte
-     *                      false: si existeix algún permís, no es modifica
-     */
-    //[Alerta Josep] Es trasllada a PermissionManager
-    private function establir_permis($page, $user, $acl_level, $force = FALSE)
-    {
-        $acl_class = new admin_plugin_acl();
-        $acl_class->handle();
-        $acl_class->who = $user;
-        $permis_actual = auth_quickaclcheck($page);
-
-        if ($force || $acl_level > $permis_actual) {
-            $ret = $acl_class->_acl_add($page, $user, $acl_level);
-            if ($ret) {
-                if (strpos($page, '*') === FALSE) {
-                    if ($acl_level > AUTH_EDIT) {
-                        $permis_actual = AUTH_EDIT;
-                    }
-                } else {
-                    $permis_actual = $acl_level;
-                }
-            }
-        }
-
-        return $permis_actual;
-    }
-
-    //[Alerta Josep] Es trasllada a PermissionManager
-    private function eliminar_permis($page, $user)
-    {
-        $acl_class = new admin_plugin_acl();
-        //$acl_class->handle();
-        //$acl_class->who = $user;
-        if ($page && $user) {
-            $ret = $acl_class->_acl_del($page, $user);
-        }
-
-        return $ret;
-    }
+//    //[Alerta Josep] Es trasllada a PermissionManager
+//    private function setUserPagePermission($page, $user, $acl_level)
+//    {
+//        global $conf;
+//        include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
+//        $pageuser = ":" . substr($page, 0, strrpos($page, ":"));
+//        $userpage = substr($pageuser, strrpos($pageuser, ":") + 1);
+//        $ret = FALSE;
+//        if (WikiIocInfoManager::getInfo('isadmin')
+//            || WikiIocInfoManager::getInfo('ismanager')
+//            || (WikiIocInfoManager::getInfo('namespace')
+//                == substr($page, 0, strrpos($page, ":"))
+//                && $userpage == $user
+//                && $conf['userpage_allowed'] === 1
+//                && ($pageuser == $conf['userpage_ns'] . $user ||
+//                    $pageuser == $conf['userpage_discuss_ns'] . $user)
+//            )
+//        ) {
+//            $ret = $this->establir_permis($page, $user, $acl_level, TRUE);
+//            WikiIocInfoManager::setInfo('perm', $ret);
+//        }
+//        return $ret;
+//    }
+//
+//    /**
+//     * administració de permisos
+//     *
+//     * @param $page y $user son obligatorios
+//     */
+//    //[Alerta Josep] Es trasllada a PermissionManager
+//    private function obtenir_permis($page, $user)
+//    {
+////		$acl_class = new admin_plugin_acl();
+////		$acl_class->handle();
+////		$acl_class->who = $user;
+//        $permis = auth_quickaclcheck($page);
+//
+//        /* este bucle obtiene el mismo resultado que auth_quickaclcheck()
+//		$permis = NULL;
+//		$sub_page = $page;
+//		while (!$permis && $sub_page) {
+//			$acl_class->ns = $sub_page;
+//			$permis = $acl_class->_get_exact_perm();
+//			$sub_page = substr($sub_page,0,strrpos($sub_page,':'));
+//		}
+//		*/
+//
+//        return $permis;
+//    }
+//
+//    /**
+//     * @param bool $force : true : indica que s'ha d'establir el permís estricte
+//     *                      false: si existeix algún permís, no es modifica
+//     */
+//    //[Alerta Josep] Es trasllada a PermissionManager
+//    private function establir_permis($page, $user, $acl_level, $force = FALSE)
+//    {
+//        $acl_class = new admin_plugin_acl();
+//        $acl_class->handle();
+//        $acl_class->who = $user;
+//        $permis_actual = auth_quickaclcheck($page);
+//
+//        if ($force || $acl_level > $permis_actual) {
+//            $ret = $acl_class->_acl_add($page, $user, $acl_level);
+//            if ($ret) {
+//                if (strpos($page, '*') === FALSE) {
+//                    if ($acl_level > AUTH_EDIT) {
+//                        $permis_actual = AUTH_EDIT;
+//                    }
+//                } else {
+//                    $permis_actual = $acl_level;
+//                }
+//            }
+//        }
+//
+//        return $permis_actual;
+//    }
+//
+//    //[Alerta Josep] Es trasllada a PermissionManager
+//    private function eliminar_permis($page, $user)
+//    {
+//        $acl_class = new admin_plugin_acl();
+//        //$acl_class->handle();
+//        //$acl_class->who = $user;
+//        if ($page && $user) {
+//            $ret = $acl_class->_acl_del($page, $user);
+//        }
+//
+//        return $ret;
+//    }
 
 //    /**
 //     * Retorna si s'ha trobat la cadena que es cerca al principi de la cadena on es busca.
@@ -2887,70 +2886,72 @@ class DokuModelAdapter extends AbstractModelAdapter
 //        return $response;
     }
 
-    public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks, $recoverDraft = null)
-    {
-        global $lang;
-
-        $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, NULL, $psum);
-        $response['structure'] = $this->getStructuredDocument($selected, $pid, null, $editing_chunks, $recoverDraft);
-
-
-        // TODO[Xavi] si es troba una draft per la edició, no es retornarà la resposta edit_html
-        // TODO[Xavi] aquí s'haura d'afegir la comprovació de que no s'ha passat el paràmetre recover draft
-
-        // TODO[Xavi] La diferencia en aquest if es que aquest primer bloc es pel draft parcial
-
-        if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && $recoverDraft === null) {
-            $response['show_draft_dialog'] = true;
-            $response['content'] = $this->getChunkFromStructureById($response['structure'], $selected);
-            $response['draft'] = $this->getStructuredDraftForHeader($pid, $selected);
-            if ($response['draft']['content'] === $response['content']['editing']) {
-                $this->removeStructuredDraft($pid, $selected);
-                unset($response['draft']);
-                $response['show_draft_dialog'] = false;
-            }
-
-
-            $response['original_call'] = $this->generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum);
-            $response['info'] = $this->generateInfo('warning', $lang['partial_draft_found']);
-        }
-
-
-        // Trobat draft de document complet
-        if ($this->existsFullDraft($pid)) {
-            $response['original_call'] = $this->generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum);
-            $response['id'] = $pid;
-            $response['full_draft'] = true;
-            $response['info'] = $this->generateInfo('warning', $lang['draft_found']);
-
-            // Es recupera l'esborrany
-        } else if ($recoverDraft === true) {
-
-            $draftContent = $this->getStructuredDraftForHeader($pid, $selected);
-//            $response['structure'] = $this->setContentForChunkByHeader($response['structure'], $selected, $draftContent);
-            $this->setContentForChunkByHeader($response['structure'], $selected, $draftContent);
-            $response['info'] = $this->generateInfo('warning', $lang['draft_editing']);
-
-
-        } else {
-
-
-            $locked = $this->lock($pid);
-
-            if ($locked['timeout'] < 0) {
-                $response['info'] = $locked['info'];
-            } else {
-                $response['info'] = $this->generateInfo('success', $lang['chunk_editing'] . $pid . ':' . $selected);
-            }
-
-        }
-
-
-        // TODO: afegir el 'meta' que correspongui
-
-        // TODO: Sí s'afegeix la meta, s'ha d'afegir també els 'revs' perquè s'esborren!
-
-        return $response;
+//    public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks, $recoverDraft = null){
+    public function getPartialEdit($paramsArr){
+        $action = new RawPartialPageAction($this->persistenceEngine);
+        return $action->get($paramsArr);
+//        global $lang;
+//
+//        $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, NULL, $psum);
+//        $response['structure'] = $this->getStructuredDocument($selected, $pid, null, $editing_chunks, $recoverDraft);
+//
+//
+//        // TODO[Xavi] si es troba una draft per la edició, no es retornarà la resposta edit_html
+//        // TODO[Xavi] aquí s'haura d'afegir la comprovació de que no s'ha passat el paràmetre recover draft
+//
+//        // TODO[Xavi] La diferencia en aquest if es que aquest primer bloc es pel draft parcial
+//
+//        if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && $recoverDraft === null) {
+//            $response['show_draft_dialog'] = true;
+//            $response['content'] = $this->getChunkFromStructureById($response['structure'], $selected);
+//            $response['draft'] = $this->getStructuredDraftForHeader($pid, $selected);
+//            if ($response['draft']['content'] === $response['content']['editing']) {
+//                $this->removeStructuredDraft($pid, $selected);
+//                unset($response['draft']);
+//                $response['show_draft_dialog'] = false;
+//            }
+//
+//
+//            $response['original_call'] = $this->generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum);
+//            $response['info'] = $this->generateInfo('warning', $lang['partial_draft_found']);
+//        }
+//
+//
+//        // Trobat draft de document complet
+//        if ($this->existsFullDraft($pid)) {
+//            $response['original_call'] = $this->generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum);
+//            $response['id'] = $pid;
+//            $response['full_draft'] = true;
+//            $response['info'] = $this->generateInfo('warning', $lang['draft_found']);
+//
+//            // Es recupera l'esborrany
+//        } else if ($recoverDraft === true) {
+//
+//            $draftContent = $this->getStructuredDraftForHeader($pid, $selected);
+////            $response['structure'] = $this->setContentForChunkByHeader($response['structure'], $selected, $draftContent);
+//            $this->setContentForChunkByHeader($response['structure'], $selected, $draftContent);
+//            $response['info'] = $this->generateInfo('warning', $lang['draft_editing']);
+//
+//
+//        } else {
+//
+//
+//            $locked = $this->lock($pid);
+//
+//            if ($locked['timeout'] < 0) {
+//                $response['info'] = $locked['info'];
+//            } else {
+//                $response['info'] = $this->generateInfo('success', $lang['chunk_editing'] . $pid . ':' . $selected);
+//            }
+//
+//        }
+//
+//
+//        // TODO: afegir el 'meta' que correspongui
+//
+//        // TODO: Sí s'afegeix la meta, s'ha d'afegir també els 'revs' perquè s'esborren!
+//
+//        return $response;
     }
 
     private function generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum)

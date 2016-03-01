@@ -45,9 +45,9 @@ class SavePartialPageAction extends SavePageAction{
     }
 
     protected function responseProcess(){
-        $response = parent::responseProcess();
+//        $response =  parent::responseProcess();
         //$response['structure'] = $this->getStructuredDocument($selected, $pid, $prev, $editing_chunks);
-        $response['structure'] = $this->getModel()->getData();
+        $response = array_merge($response =  parent::responseProcess(), $this->getModel()->getData());
 
         // TODO: afegir el 'info' que correspongui
         if (!$response['info']) {

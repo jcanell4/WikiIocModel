@@ -31,9 +31,10 @@ class CreatePageAction extends SavePageAction {
     }
     
     protected function responseProcess() {
-        $response = array();
+//        $response = array();
         
-        $response['structure'] = $this->getModel()->getData();
+//        $response['structure'] = $this->getModel()->getData();
+        $response = $this->getModel()->getData();
 
         if (!$response['info']) {
             $response['info'] = $this->generateInfo("info", $lang['document_created']);

@@ -31,9 +31,9 @@ class CancelPartialEditPageAction extends CancelEditPageAction {
     }
     
     protected function responseProcess() {
-        $response = array();
+//        $response = array();
         //$response['structure'] = $this->getStructuredDocument(null, $pid, NULL, $editing_chunks);
-        $response['structure']  = $this->getModel()->getData();
+        $response = $this->getModel()->getData();
         $response['structure']['cancel'] = [$this->params['section_id']];
         $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('chunk_closed'));
         return $response;

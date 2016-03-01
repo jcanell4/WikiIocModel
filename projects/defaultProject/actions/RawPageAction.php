@@ -131,7 +131,7 @@ class RawPageAction extends PageAction{
                     'rev'     => $REV,
                     'info'    => $info,
                     'type'    => 'html',
-                    'draft'   => $this->getModel()->generateFullDratf()
+                    'draft'   => $this->getModel()->getDraftAsFull()
             );
 
             return $contentData;

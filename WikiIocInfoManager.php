@@ -70,12 +70,7 @@ class WikiIocInfoManager {
         global $ID;
         global $ACT;
         global $REV;
-        global $RANGE;
         global $DATE;
-        global $PRE;
-        global $TEXT;
-        global $SUF;
-        global $SUM;
 
         $ACT = $params['do'];
         $ACT = act_clean( $ACT );
@@ -86,23 +81,8 @@ class WikiIocInfoManager {
         if ( $params['rev']  ) {
                 $REV = $params['rev'];
         }
-        if ( $params['range']  ) {
-                $RANGE = $params['range'];
-        }
         if ( $params['date']  ) {
                 $DATE = $params['date'];
-        }
-        if ( $params['pre']  ) {
-                $PRE = cleanText( substr( $params['pre'], 0, - 1 ) );
-        }
-        if ( $params['text']  ) {
-                $TEXT = cleanText( $params['text']  );
-        }
-        if ( $params['suf']  ) {
-                $SUF = cleanText( $params['suf'] );
-        }
-        if ( $params['sum']  ) {
-                $SUM = $params['sum'];
         }
         self::$infoLoaded = FALSE;
         self::$mediaInfoLoaded = FALSE;
