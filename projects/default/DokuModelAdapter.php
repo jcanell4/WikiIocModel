@@ -136,7 +136,7 @@ class DokuModelAdapter extends AbstractModelAdapter
     public function createPage($pid, $text = NULL)
     {
         global $lang;
-        global $ACT;
+        //global $ACT;
         //[TODO JOSEP] Normalitzar: start do get...
 
         //inicialització del procés + esdeveniment WIOC_AJAX_COMMAND_STARTED.
@@ -969,8 +969,9 @@ class DokuModelAdapter extends AbstractModelAdapter
 //		return $content;
 //	}
 
-    private function doCreatePreProcess($pid)
-    {
+    private function doCreatePreProcess($pid) {
+        global $lang;
+        
         if (WikiIocInfoManager::getInfo("exists")) {
             throw new PageAlreadyExistsException($pid, $lang['pageExists']);
         }
@@ -979,8 +980,7 @@ class DokuModelAdapter extends AbstractModelAdapter
         
         if ($permis_actual < AUTH_CREATE) {
             //se pide el permiso para el directorio (no para la página)
-            $permis_actual = $this->setUserPagePermission(getNS($pid) . ':*'
-                , WikiIocInfoManager::getInfo('client'), AUTH_DELETE);
+            $permis_actual = $this->setUserPagePermission(getNS($pid) . ':*', WikiIocInfoManager::getInfo('client'), AUTH_DELETE);
         }
         if ($permis_actual >= AUTH_CREATE) {
             $code = $this->doSavePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
@@ -1062,7 +1062,7 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     private function getAdminTaskHtml()
     {
-        global $conf;
+        global $ACT;
 
         ob_start();
         trigger_event('TPL_ACT_RENDER', $ACT, "tpl_admin");
@@ -2009,7 +2009,7 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     public function getLoginName()
     {
-        global $_SERVER;
+        global $conf;
 
         $loginname = "";
         if (!empty($conf["useacl"])) {
