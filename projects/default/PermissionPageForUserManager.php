@@ -12,10 +12,11 @@ class PermissionPageForUserManager extends AbstractPermissionPageForUserManager 
     /**
      * @param $page y $user son obligatorios
      */
-    public static function getPermissionPageForUser( $page, $user ) {
-//	$acl_class = new admin_plugin_acl();
-//	$acl_class->handle();
-	$permis = auth_quickaclcheck( $page );  //hace referencia al usuario de la sesión actual
+    public static function getPermissionPageForUser( $page, $user=NULL ) {
+        global $USERINFO;
+        if (!$user) $user = $_SERVER['REMOTE_USER'];
+//	$permis = auth_quickaclcheck( $page );  //hace referencia al usuario de la sesión actual
+        $permis = auth_aclcheck($page, $user, $USERINFO['grps']);
 	/* este bucle obtiene el mismo resultado que auth_quickaclcheck()
 	$acl_class = new admin_plugin_acl();
 	$acl_class->handle();
@@ -33,11 +34,13 @@ class PermissionPageForUserManager extends AbstractPermissionPageForUserManager 
     /**
      * @param bool $force : true indica que s'ha d'establir estrictament el permís 
      */
-    public static function setPermissionPageForUser( $page, $user, $permis, $force = FALSE ) {
+    public static function setPermissionPageForUser( $page, $user, $permis, $force=FALSE ) {
+        global $USERINFO;
 	$acl_class = new admin_plugin_acl();
 	$acl_class->handle();
 	$acl_class->who = $user;
-	$permis_actual  = auth_quickaclcheck( $page );
+//	$permis_actual  = auth_quickaclcheck( $page );
+        $permis_actual  = auth_aclcheck($page, $user, $USERINFO['grps']);
 
         if ( $force || $permis > $permis_actual ) {
             $ret = $acl_class->_acl_add( $page, $user, $permis );
