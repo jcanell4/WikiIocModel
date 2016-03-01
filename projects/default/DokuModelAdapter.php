@@ -485,28 +485,28 @@ class DokuModelAdapter extends AbstractModelAdapter
     }
 
     //[Alerta Josep] Es trasllada a PermissionManager
-    private function setUserPagePermission($page, $user, $acl_level)
-    {
-        global $conf;
-        include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
-        $namespace = substr($page, 0, strrpos($page, ":"));
-        $userpage_ns = ":" . $namespace;
-        $user_name = substr($userpage_ns, strrpos($userpage_ns, ":") + 1);
-        $ret = FALSE;
-        if (WikiIocInfoManager::getInfo('isadmin')
-            || WikiIocInfoManager::getInfo('ismanager')
-            || (WikiIocInfoManager::getInfo('namespace') == $namespace
-                && $user_name == $user
-                && $conf['userpage_allowed'] === 1
-                && ($userpage_ns == $conf['userpage_ns'] . $user ||
-                    $userpage_ns == $conf['userpage_discuss_ns'] . $user)
-            )
-        ) {
-            $ret = PermissionPageForUserManager::setPermissionPageForUser($page, $user, $acl_level, TRUE);
-            WikiIocInfoManager::setInfo('perm', $ret);
-        }
-        return $ret;
-    }
+//    private function setUserPagePermission($page, $user, $acl_level)
+//    {
+//        global $conf;
+//        include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
+//        $namespace = substr($page, 0, strrpos($page, ":"));
+//        $userpage_ns = ":" . $namespace;
+//        $user_name = substr($userpage_ns, strrpos($userpage_ns, ":") + 1);
+//        $ret = FALSE;
+//        if (WikiIocInfoManager::getInfo('isadmin')
+//            || WikiIocInfoManager::getInfo('ismanager')
+//            || (WikiIocInfoManager::getInfo('namespace') == $namespace
+//                && $user_name == $user
+//                && $conf['userpage_allowed'] === 1
+//                && ($userpage_ns == $conf['userpage_ns'] . $user ||
+//                    $userpage_ns == $conf['userpage_discuss_ns'] . $user)
+//            )
+//        ) {
+//            $ret = PermissionPageForUserManager::setPermissionPageForUser($page, $user, $acl_level, TRUE);
+//            WikiIocInfoManager::setInfo('perm', $ret);
+//        }
+//        return $ret;
+//    }
 
     /**
      * administració de permisos
@@ -980,7 +980,7 @@ class DokuModelAdapter extends AbstractModelAdapter
         
         if ($permis_actual < AUTH_CREATE) {
             //se pide el permiso para el directorio (no para la página)
-            $permis_actual = $this->setUserPagePermission(getNS($pid) . ':*', WikiIocInfoManager::getInfo('client'), AUTH_DELETE);
+            $permis_actual = PermissionPageForUserManager::setUserPagePermission(getNS($pid).':*', WikiIocInfoManager::getInfo('client'), AUTH_DELETE);
         }
         if ($permis_actual >= AUTH_CREATE) {
             $code = $this->doSavePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
