@@ -5,7 +5,10 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC') ) die();
-require_once(DOKU_INC . 'lib/plugins/wikiiocmodel/AbstractPermissionPageForUserManager.php');
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+
+require_once(WIKI_IOC_MODEL . 'AbstractPermissionPageForUserManager.php');
+require_once(WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 
 class PermissionPageForUserManager extends AbstractPermissionPageForUserManager {
     
@@ -66,6 +69,28 @@ class PermissionPageForUserManager extends AbstractPermissionPageForUserManager 
             $ret = $acl_class->_acl_del( $page, $user );
 	}
 	return $ret;
+    }
+
+    public function setUserPagePermission($page, $user, $acl_level) {
+        global $conf;
+        include_once(WIKI_IOC_MODEL . 'conf/default.php');
+        $namespace = substr($page, 0, strrpos($page, ":"));
+        $userpage_ns = ":" . $namespace;
+        $user_name = substr($userpage_ns, strrpos($userpage_ns, ":") + 1);
+        $ret = FALSE;
+        if (WikiIocInfoManager::getInfo('isadmin')
+            || WikiIocInfoManager::getInfo('ismanager')
+            || (WikiIocInfoManager::getInfo('namespace') == $namespace
+                && $user_name == $user
+                && $conf['userpage_allowed'] === 1
+                && ($userpage_ns == $conf['userpage_ns'] . $user ||
+                    $userpage_ns == $conf['userpage_discuss_ns'] . $user)
+            )
+        ) {
+            $ret = $this->setPermissionPageForUser($page, $user, $acl_level, TRUE);
+            WikiIocInfoManager::setInfo('perm', $ret);
+        }
+        return $ret;
     }
 
 }
