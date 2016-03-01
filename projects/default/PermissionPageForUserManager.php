@@ -93,4 +93,11 @@ class PermissionPageForUserManager extends AbstractPermissionPageForUserManager 
         return $ret;
     }
 
+    public static function updatePermission($permission, $user) {
+        /*Comprovar si l'usuari no té permisos (No hi ha entrada al fitxer ) i és MyOwnPage.
+                Si => actualitzar el fitxer de permisos amb ns del usuari
+         * SI NO ACONSEGUEIX EL PERMIS ES LLANÇA UNA EXCEPCIÓ
+         */
+    }
+
 }
