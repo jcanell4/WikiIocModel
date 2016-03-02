@@ -17,7 +17,7 @@ class WikiIocModelManager {
     }
     
     private static function createDefaultModelManager(){
-        require_once(WIKI_IOC_MODEL . 'projects/default/DokuModelManager.php');  
+        require_once(WIKI_IOC_MODEL . 'projects/defaultProject/DokuModelManager.php');  
 //        return new \ioc_dokuwiki\WikiIocModelManager();
         return new DokuModelManager();
     }

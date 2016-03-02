@@ -9,6 +9,7 @@
 $lang['createDefaultText']  = 'Pagina creada per defecte';
 $lang['conflictsSaving']    = "Hi ha confictes amb altres versions. No s'han pogut guardar els canvis";
 $lang['saved']              = "Els canvis s'han guardat correctament";
+$lang['section_saved']      = "S'han guardat els canvis de la secció %s";
 $lang['pageNotFound']       = "La pàgina %s no s'ha trobat";
 $lang['pageExists']         = "La pàgina %s ja existeix";
 $lang['metaEditForm']       = "Camps Edició";
