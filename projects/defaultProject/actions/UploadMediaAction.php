@@ -9,6 +9,7 @@ if (!defined('DOKU_PLUGIN')) {
 
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
+require_once DOKU_PLUGIN."ajaxcommand/requestparams/MediaKeys.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/datamodel/DokuMediaModel.php";
 
@@ -42,14 +43,14 @@ class UploadMediaAction extends DokuAction{
 
     protected function runProcess() {       
         $toSet = array(
-            'filePathSource' => $this->params['filePathSource'], 
-            'overWrite' => $this->params['overWrite']
+            'filePathSource' => $this->params[MediaKeys::KEY_FILE_PATH_SOURCE], 
+            'overWrite' => $this->params[MediaKeys::KEY_OVERWRITE]
         );
         $this->actionReturn = $this->mediaModel->upLoadData($toSet);
     }
 
     protected function startProcess() {
-        $this->mediaModel->initWhitTarget($this->params['nsTarget'], $this->params['mediaName'], $this->params['rev'], $this->params['meta']);          
+        $this->mediaModel->initWhitTarget($this->params[MediaKeys::KEY_NS_TARGET], $this->params[MediaKeys::KEY_MEDIA_NAME], $this->params[MediaKeys::KEY_REV], $this->params[MediaKeys::KEY_META]);          
     }
 
 //put your code here

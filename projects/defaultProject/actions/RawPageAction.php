@@ -16,6 +16,7 @@ require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
+require_once DOKU_PLUGIN."ajaxcommand/requestparams/PageKeys.php";
 
 if (!defined('DW_ACT_EDIT')) {
     define('DW_ACT_EDIT', "edit");
@@ -87,10 +88,10 @@ class RawPageAction extends PageAction{
         $resp['info']   = self::generateInfo( $infoType, $pageToSend['info'] );
         $resp['locked'] = WikiIocInfoManager::getInfo('locked');
         
-         if ($this->params["recover"] != NULL) {
-            $resp['recover_draft'] = $this->params["recover"];
+         if ($this->params[PageKeys::KEY_RECOVER_DRAFT] != NULL) {
+            $resp['recover_draft'] = $this->params[PageKeys::KEY_RECOVER_DRAFT];
 
-            if ($this->params["recover"] == 'true') {
+            if ($this->params[PageKeys::KEY_RECOVER_DRAFT] == 'true') {
                 $info = $this->generateInfo("warning", $lang['draft_editing']);
 
                 if (array_key_exists('info', $resp)) {
@@ -109,7 +110,7 @@ class RawPageAction extends PageAction{
             global $REV;
             global $lang;
 
-            $pageTitle = tpl_pagetitle( $this->params['id'], TRUE );
+            $pageTitle = tpl_pagetitle( $this->params[PageKeys::KEY_ID], TRUE );
 
             $pattern    = '/^.*Aquesta és una revisió.*<hr \/>\\n\\n/mis';
             $count      = 0;
@@ -119,10 +120,10 @@ class RawPageAction extends PageAction{
             if ( $count > 0 ) {
                     $info = self::generateInfo( "warning", 
                                 $lang['document_revision_loaded'] . ' <b>' . WikiPageSystemManager::extractDateFromRevision( $REV, self::$SHORT_FORMAT ) . '</b>' 
-                                , $this->params['id']);
+                                , $this->params[PageKeys::KEY_ID]);
             }
 
-            $id          = $this->params['id'];
+            $id          = $this->params[PageKeys::KEY_ID];
             $contentData = array(
                     'id'      => str_replace( ":", "_", $id ),
                     'ns'      => $id,
@@ -178,12 +179,12 @@ class RawPageAction extends PageAction{
             $form = $match[1];
             
             $pattern = "/<form id=\"".$form."\"/";
-            $replace = "/<form id=\"form_".$this->params['id']."\"/";
+            $replace = "/<form id=\"form_".$this->params[PageKeys::KEY_ID]."\"/";
             $text = preg_replace($pattern, $replace, $text);
 
             // Afegim el id del formulari als inputs
             $pattern = "/<input/";
-            $replace = "<input form=\"form_".$this->params['id']. "\"";
+            $replace = "<input form=\"form_".$this->params[PageKeys::KEY_ID]. "\"";
             $meta    = preg_replace( $pattern, $replace, $meta );
 
             // Netegem el valor
@@ -198,7 +199,7 @@ class RawPageAction extends PageAction{
                     $response["info"][] = $license;
             }
 
-            $metaId           = str_replace( ":", "_", $this->params['id'] ) . '_metaEditForm';
+            $metaId           = str_replace( ":", "_", $this->params[PageKeys::KEY_ID] ) . '_metaEditForm';
             $response["meta"] = [
                     ( $this->getCommonPage( $metaId,
                                             $lang['metaEditForm'],

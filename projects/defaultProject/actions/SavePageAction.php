@@ -15,6 +15,7 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
+require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
 
 
 if (!defined('DW_ACT_SAVE')) {
@@ -61,7 +62,7 @@ class SavePageAction extends RawPageAction
         global $ACT;
         global $ID;
         
-        if($this->params['do']==DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
+        if($this->params[PageKeys::KEY_DO]==DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
         }
 

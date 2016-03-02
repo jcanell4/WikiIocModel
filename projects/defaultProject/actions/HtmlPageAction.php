@@ -17,6 +17,7 @@ require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
+require_once DOKU_PLUGIN."ajaxcommand/requestparams/PageKeys.php";
 
 if (!defined('DW_ACT_SHOW')) {
     define('DW_ACT_SHOW', "show");
@@ -50,10 +51,10 @@ class HtmlPageAction extends PageAction{
      */
     protected function runProcess(){
         if (!WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($this->params['id'], WikiIocLangManager::getLang('pageNotFound'));
+            throw new PageNotFoundException($this->params[PageKeys::KEY_ID], WikiIocLangManager::getLang('pageNotFound'));
         }
         if (!WikiIocInfoManager::getInfo("perm")) {
-            throw new InsufficientPermissionToViewPageException($this->params['id']); //TODO [Josep] Internacionalització missatge per defecte!
+            throw new InsufficientPermissionToViewPageException($this->params[PageKeys::KEY_ID]); 
         }
     }
     

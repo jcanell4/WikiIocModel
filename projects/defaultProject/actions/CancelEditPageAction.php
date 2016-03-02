@@ -12,6 +12,7 @@ require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
+require_once DOKU_PLUGIN."ajaxcommand/requestparams/PageKeys.php";
 
 if (!defined('DW_ACT_DRAFTDEL')) {
     define('DW_ACT_DRAFTDEL', "draftdel");
@@ -31,11 +32,11 @@ class CancelEditPageAction extends PageAction {
   }
   
   protected function startProcess() {
-      if(!isset($this->params['keep_draft'])){
-          $this->params['keep_draft'] = false;
+      if(!isset($this->params[PageKeys::KEY_KEEP_DRAFT])){
+          $this->params[PageKeys::KEY_KEEP_DRAFT] = false;
       }
       parent::startProcess();
-     $this->dokuPageModel->init($this->params['id'], $this->params['editingChunks'], NULL, $this->params['rev']);                
+     $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], $this->params[PageKeys::KEY_EDITING_CHUNKS], NULL, $this->params[PageKeys::KEY_REV]);                
   }
 
   protected function responseProcess() {
@@ -57,11 +58,11 @@ class CancelEditPageAction extends PageAction {
 
   protected function runProcess() {
     // Si es passa keep_draft = true no s'esborra
-    if (!$this->params['keep_draft']) {
+    if (!$this->params[PageKeys::KEY_KEEP_DRAFT]) {
         $this->clearFullDraft();
         $this->clearPartialDraft();
     }
-    unlock($this->params['id']);
+    unlock($this->params[PageKeys::KEY_ID]);
     if(!WikiIocInfoManager::getInfo("exists")){
         throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
     }

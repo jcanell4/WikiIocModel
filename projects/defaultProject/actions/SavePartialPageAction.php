@@ -30,10 +30,10 @@ class SavePartialPageAction extends SavePageAction{
     protected function startProcess() {
         parent::startProcess();
         // $editing=NULL, $selected=NULL, $rev = null)
-        $this->dokuPageModel->init($this->params['id'], 
-                $this->params['editing_chunks'],
-                $this->params['section_id'],
-                $this->params['rev']);     
+        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], 
+                $this->params[PageKeys::KEY_EDITING_CHUNKS],
+                $this->params[PageKeys::KEY_SECTION_ID],
+                $this->params[PageKeys::KEY_REV]);     
     }
 
         protected function runProcess() {

@@ -16,6 +16,7 @@ require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
+require_once(DOKU_PLUGIN.'ajaxcommand/requestparams/PageKeys.php');
 
 if (!defined('DW_ACT_EDIT')) {
     define('DW_ACT_EDIT', "edit");
@@ -42,11 +43,11 @@ class RawPartialPageAction extends PageAction{
     
     protected function startProcess() {
         parent::startProcess();
-        $this->dokuPageModel->init( $this->params['id'],  
-                                    $this->params['editing_chunks'],
-                                    $this->params['section_id'],
-                                    $this->params['rev'],
-                                    $this->params['recover_draft']);                
+        $this->dokuPageModel->init( $this->params[PageKeys::KEY_ID],  
+                                    $this->params[PageKeys::KEY_EDITING_CHUNKS],
+                                    $this->params[PageKeys::KEY_SECTION_ID],
+                                    $this->params[PageKeys::KEY_REV],
+                                    $this->params[PageKeys::KEY_RECOVER_DRAFT]);                
     }
 
     /**
@@ -73,7 +74,7 @@ class RawPartialPageAction extends PageAction{
 //        $response['structure'] = $this->getModel()->getData(TRUE);
         $response = $this->getModel()->getData(TRUE);
         
-        if($this->params["recover_draft"]){            
+        if($this->params[PageKeys::KEY_RECOVER_DRAFT]){            
             $draftContent = $response["draft"];
             if($response["draftType"]==DokuPageModel::PARTIAL_DRAFT){
                 $this->setContentForChunkByHeader($response['structure'], $selected, $response["draft"]);

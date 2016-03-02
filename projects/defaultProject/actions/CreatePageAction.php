@@ -18,6 +18,8 @@ require_once DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePag
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once (DOKU_INC . 'inc/common.php');
+require_once DOKU_PLUGIN."ajaxcommand/requestparams/PageKeys.php";
+
 
 /**
  * Description of CreatePageAction
@@ -59,8 +61,8 @@ class CreatePageAction extends SavePageAction {
         global $ACT;
         parent::startProcess();
         $ACT = DW_ACT_SAVE;
-        if (!$this->params['text']) {
-            $TEXT = $this->params['text'] = cleanText(WikiIocLangManager::getLang('createDefaultText'));
+        if (!$this->params[PageKeys::KEY_TEXT]) {
+            $TEXT = $this->params[PageKeys::KEY_TEXT] = cleanText(WikiIocLangManager::getLang('createDefaultText'));
         }        
     }
 }

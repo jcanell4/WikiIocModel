@@ -88,6 +88,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
                 $response['draftType'] = self::NO_DRAFT;
             }
         }
+        return $response;
     }
 
     public function getRawData(){
