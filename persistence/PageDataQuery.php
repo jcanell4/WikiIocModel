@@ -7,10 +7,13 @@ if (!defined('DOKU_PLUGIN')) {
 
 
 require_once (DOKU_INC . 'inc/common.php');
+require_once (DOKU_INC . 'inc/changelog.php');
+require_once(DOKU_INC . 'inc/template.php');
 require_once (DOKU_INC . 'inc/pageutils.php');
 require_once (DOKU_INC . 'inc/parserutils.php');
 require_once (DOKU_INC . 'inc/io.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
 require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 
@@ -35,7 +38,7 @@ class PageDataQuery extends DataQuery {
         }else{
             $rev = $specparams;
         }
-        return wikiFN($raw_id, $rev, $clean);
+        return wikiFN($id, $rev, $clean);
     }
 
     /**
@@ -68,13 +71,6 @@ class PageDataQuery extends DataQuery {
         
     }
     
-    public function getChunks($id){
-        $instructions = $this->getInstructionsForDocument($id);              
-        $chunks = $this->_getChunks($instructions);
-        
-        return $chunks;
-    }
-    
     public function getRaw($id, $rev=NULL){
         return rawWiki($id, $rev);
     }
@@ -83,7 +79,16 @@ class PageDataQuery extends DataQuery {
         return rawWikiSlices($range, $id, $rev);
     }
     
-    //[ALERTA Josep] CAL revisar per fer servir el PageDataQuery!
+    public function getToc($id){
+        global $ACT;
+        $act_aux = $ACT;
+        $ACT = "show";
+        $toc = tpl_toc(TRUE);
+        $ACT = $act_aux;
+        return $toc;
+    }
+
+
    private function p_wiki_xhtml($id, $rev='', $excuse=true){
        $file = $this->getFileName($id,$rev);
        $ret  = '';
@@ -113,57 +118,23 @@ class PageDataQuery extends DataQuery {
        return $ret;
     }
    
-    private function getInstructionsForDocument($id){
+    public function getInstructions($id){
         $file = $this->getFileName($id);
         $instructions = p_cached_instructions($file, FALSE, $id);
         return $instructions;
     }
     
-        // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
-    // Només son editables parcialment les seccions de nivell 1, 2 i 3
-    private function _getChunks($instructions){
-        $sections = [];
-        $currentSection = [];
-        $lastClosePosition = 0;
-        $lastHeaderRead = '';
-        $firstSection = true;
+     public function getRevisionList($id){
+        $revisions = getRevisions($id, -1, 50);
 
+        $ret = [];
 
-        for ($i = 0; $i < count($instructions); $i++) {
-            $currentSection['type'] = 'section';
-
-            if ($instructions[$i][0] === 'header') {
-                $lastHeaderRead = $instructions[$i][1][0];
-            }
-
-            if ($instructions[$i][0] === 'section_open' && $instructions[$i][1][0] < 4) {
-                // Tanquem la secció anterior
-                if ($firstSection) {
-                    // Ho descartem, el primer element no conté informació
-                    $firstSection = false;
-                } else {
-                    $currentSection['end'] = $instructions[$i][2];
-                    $sections[] = $currentSection;
-                }
-
-                // Obrim la nova secció
-                $currentSection = [];
-                $currentSection['title'] = $lastHeaderRead;
-                $currentSection['start'] = $instructions[$i][2];
-                $currentSection['params']['level'] = $instructions[$i][1][0];
-            }
-
-            // Si trobem un tancament de secció actualitzem la ultima posició de tancament
-            if ($instructions[$i][0] === 'section_close') {
-                $lastClosePosition = $instructions[$i][2];
-            }
-
+        foreach ($revisions as $revision) {
+            $ret[$revision] = getRevisionInfo($id, $revision);
+            $ret[$revision]['date'] =  WikiPageSystemManager::extractDateFromRevision($ret[$revision]['date']);
         }
-        // La última secció es tanca amb la posició final del document
-        $currentSection['end'] = $lastClosePosition;
-        $sections[] = $currentSection;
-
-        return $sections;
+        $ret['current'] = @filemtime(wikiFN($id));
+        $ret['docId'] = $id;
+        return $ret;
     }
-
 }

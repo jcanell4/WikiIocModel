@@ -231,7 +231,7 @@ abstract class DokuAction extends AbstractWikiAction{
      *
      * @return array - array amb la configuració del item de informació
      */
-    public static function generateInfo( $type, $message, $id, $duration = - 1 ) {
+    public static function generateInfo( $type, $message, $id='', $duration = - 1 ) {
             return [
                     "id"        => $id,
                     "type"      => $type,

@@ -21,6 +21,7 @@ class WikiIocInfoManager {
         global $INFO;
         self::loadInfo();
         $INFO[$key]=$value;
+        self::updateJsInfo();
     }
     
     public static function loadInfo() {
@@ -45,31 +46,31 @@ class WikiIocInfoManager {
     }
 
     protected static function fillInfo() {
-	global $JSINFO;
 	global $INFO;
 
 	$INFO = pageinfo();
-	//export minimal infos to JS, plugins can add more
-	$JSINFO['isadmin']   = $INFO['isadmin'];
-	$JSINFO['ismanager'] = $INFO['ismanager'];
+        self::updateJsInfo();
         if ($INFO['isadmin'])
             $INFO['userinfo']['grps'][] = 'admin';
         if ($INFO['ismanager'])
             $INFO['userinfo']['grps'][] = 'manager';
-
+        
 	self::$infoLoaded = TRUE;
+    }
+    
+    private static function updateJsInfo(){
+	global $JSINFO;
+	global $INFO;
+        
+	$JSINFO['isadmin']   = $INFO['isadmin'];
+	$JSINFO['ismanager'] = $INFO['ismanager'];
     }
     
     public static function setParams($params){
         global $ID;
         global $ACT;
         global $REV;
-        global $RANGE;
         global $DATE;
-        global $PRE;
-        global $TEXT;
-        global $SUF;
-        global $SUM;
 
         $ACT = $params['do'];
         $ACT = act_clean( $ACT );
@@ -80,23 +81,8 @@ class WikiIocInfoManager {
         if ( $params['rev']  ) {
                 $REV = $params['rev'];
         }
-        if ( $params['range']  ) {
-                $RANGE = $params['range'];
-        }
         if ( $params['date']  ) {
                 $DATE = $params['date'];
-        }
-        if ( $params['pre']  ) {
-                $PRE = cleanText( substr( $params['pre'], 0, - 1 ) );
-        }
-        if ( $params['text']  ) {
-                $TEXT = cleanText( $params['text']  );
-        }
-        if ( $params['suf']  ) {
-                $SUF = cleanText( $params['suf'] );
-        }
-        if ( $params['sum']  ) {
-                $SUM = $params['sum'];
         }
         self::$infoLoaded = FALSE;
         self::$mediaInfoLoaded = FALSE;
