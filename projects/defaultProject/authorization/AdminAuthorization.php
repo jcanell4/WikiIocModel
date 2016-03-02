@@ -13,8 +13,8 @@ require_once (DOKU_IOC_MODEL . 'authorization/CommandAuthorization.php');
 
 class AdminAuthorization extends CommandAuthorization {
 
-    public function canRun($permission = NULL) {
-        if ( parent::canRun($permission) && $this->permission->getInfoPerm() < AUTH_ADMIN) {
+    public function canRun() {
+        if ( parent::canRun() && $this->permission->getInfoPerm() < AUTH_ADMIN) {
             $this->errorAuth['error'] = TRUE;
             $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
             $this->errorAuth['extra_param'] = $this->permission->getIdPage();

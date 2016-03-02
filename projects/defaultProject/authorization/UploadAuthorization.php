@@ -13,8 +13,8 @@ require_once (DOKU_IOC_MODEL . 'authorization/CommandAuthorization.php');
 
 class UploadAuthorization extends CommandAuthorization {
 
-    public function canRun($permission = NULL) {
-        if ( parent::canRun($permission) && $this->permission->getInfoPerm() < AUTH_UPLOAD) {
+    public function canRun() {
+        if ( parent::canRun() && $this->permission->getInfoPerm() < AUTH_UPLOAD) {
             $this->errorAuth['error'] = TRUE;
             $this->errorAuth['exception'] = 'InsufficientPermissionToUploadMediaException';
         }

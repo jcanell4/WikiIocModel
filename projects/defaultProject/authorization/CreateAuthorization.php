@@ -22,8 +22,8 @@ class CreateAuthorization extends PageCommandAuthorization {
 //        return !$this->errorAuth['error'];
 //    }
     
-    public function getPermissionException($permission) {
-        if ($permission->getInfoPerm() < AUTH_CREATE) {
+    public function getPermissionException() {
+        if ($this->permission->getInfoPerm() < AUTH_CREATE) {
             $exception = 'InsufficientPermissionToCreatePageException';
         }
         return $exception;

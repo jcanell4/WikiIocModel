@@ -22,8 +22,8 @@ class WriteAuthorization extends PageCommandAuthorization {
 //        return !$this->errorAuth['error'];
 //    }
     
-    public function getPermissionException($permission) {
-        if ($permission->getPageExist() && $permission->getInfoPerm() < AUTH_EDIT) {
+    public function getPermissionException() {
+        if ($this->permission->getPageExist() && $this->permission->getInfoPerm() < AUTH_EDIT) {
             $exception = 'InsufficientPermissionToWritePageException';
         }
         return $exception;

@@ -17,10 +17,10 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
         parent::__construct($params);
     }
 
-    public function canRun($permission = NULL) {  // el parámetro $permission contiene lo mismo que $this->permission
-        if ( parent::canRun($permission) ) { 
-            if (!$permission->getIsMyOwnNs()) {
-                $exception = $this->getPermissionException($permission);
+    public function canRun() {  // el parámetro $permission contiene lo mismo que $this->permission
+        if ( parent::canRun() ) { 
+            if (!$this->permission->getIsMyOwnNs()) {
+                $exception = $this->getPermissionException($this->permission);
                 if ($exception) {
                     $this->errorAuth['error'] = TRUE;
                     $this->errorAuth['exception'] = $exception;
@@ -54,5 +54,5 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
         return $ret;
     }
     
-    protected abstract function getPermissionException($permission);
+    protected abstract function getPermissionException();
 }
