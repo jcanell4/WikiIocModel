@@ -26,7 +26,7 @@ abstract class AbstractCommandAuthorization {
      * Responde a la pregunta: ¿los permisos permiten la ejecución del comando?
      * @return bool. Indica si se han obtenido, o no, los permisos generales
      */
-    public function canRun($permis) {   // el parámetro $permis contiene lo mismo que $this->permission
+    public function canRun() {   // el parámetro $permis contiene lo mismo que $this->permission
                                         // por tanto, no es necesario
         $this->errorAuth = array(
                               'error' => FALSE
@@ -34,12 +34,12 @@ abstract class AbstractCommandAuthorization {
                              ,'extra_param' => ''
                            );
         
-        if ($permis->getAuthenticatedUsersOnly()) {
-            if (($this->errorAuth['error'] = !$permis->getSecurityTokenVerified())){
+        if ($this->permission->getAuthenticatedUsersOnly()) {
+            if (($this->errorAuth['error'] = !$this->permission->getSecurityTokenVerified())){
                 $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
             } else { 
                 // getSecurityTokenVerified = OK!
-                if (($this->errorAuth['error'] = !$permis->getUserAuthenticated())) {
+                if (($this->errorAuth['error'] = !$this->permission->getUserAuthenticated())) {
                     $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
                 } else {
                     if (($this->errorAuth['error'] = !$this->isCommandAllowed())){

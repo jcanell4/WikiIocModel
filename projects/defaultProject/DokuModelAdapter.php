@@ -30,7 +30,7 @@ if (!defined('DOKU_PLUGIN')) {
 require_once(DOKU_PLUGIN . 'wikiiocmodel/AbstractModelAdapter.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocInfoManager.php');
 require_once(DOKU_PLUGIN . 'ownInit/WikiGlobalConfig.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/default/PermissionPageForUserManager.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/PermissionPageForUserManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelExceptions.php');
 
 require_once(DOKU_PLUGIN . 'acl/admin.php');
