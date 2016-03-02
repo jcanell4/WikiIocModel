@@ -65,7 +65,8 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
          *      crida efectiva al mètode concret de la persistència
          */
-        $jSONArray = $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->getMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
+        $jSONArray = $this->__getMetaPersistence($MetaDataRequestMessage);
+        
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
@@ -83,6 +84,19 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
         }
 
         return $jSONArray;
+    }
+    
+    /**
+     * Purpose:
+     * - Create object from class ProjectMetaDataQuery and call getMeta of this persistence query object
+     * - It's possible personalize this method to especific (projectType, metaDataSubSet) MetaDataDao class
+     * @param array
+     * Restrictions:
+     * - 
+     * @return json with metadata values
+     */
+    public function __getMetaPersistence($MetaDataRequestMessage) {
+        return $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery($MetaDataRequestMessage)->getMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
     }
 
     /**
@@ -146,8 +160,9 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
          *      crida efectiva al mètode concret de la persistència
          */
-
-        $jSONArray = $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->setMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataEntity->getMetaDataValue());
+        
+        $jSONArray = $this->__setMetaPersistence($MetaDataEntity,$MetaDataRequestMessage);
+        
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
@@ -178,6 +193,19 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
                 }
             }
         }
+    }
+    /**
+     * Purpose:
+     * - Create object from class ProjectMetaDataQuery and call setMeta of this persistence query object
+     * - It's possible personalize this method to especific (projectType, metaDataSubSet) MetaDataDao class
+     * @param array
+     * Restrictions:
+     * - 
+     * @return success -> true, error --> json with error value
+     */
+    public function __setMetaPersistence($MetaDataEntity,$MetaDataRequestMessage) {
+        return $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->setMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataEntity->getMetaDataValue());
+        
     }
 
 }

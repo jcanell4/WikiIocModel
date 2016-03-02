@@ -61,7 +61,7 @@ class BasicPersistenceEngine {
      * 
      * @return \ProjectMetaDataQuery
      */
-    public function createProjectMetaDataQuery(){
+    public function createProjectMetaDataQuery($MetaDataRequestMessage = null){
         require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/ProjectMetaDataQuery.php');
         return new ProjectMetaDataQuery();
     }

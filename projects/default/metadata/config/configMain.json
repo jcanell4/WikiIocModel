@@ -1,0 +1,17 @@
+{"metaDataClassesNameSpaces":
+            {"MetaDataDAO": "ns","MetaDataEntity": "ns","MetaDataRender": "ns"}
+,
+"metaDataProjectStructure":
+            [{"SubSet1": "fitxerx", "keysDefinition": [
+                {"name":"idXYZ",
+                 "tipus":"integer", 
+                 "mandatory":true
+                    },
+                {"name":"user", 
+                 "mandatory":true
+                    },
+                {"name":"rol"
+                    }
+            ]}]
+}
+

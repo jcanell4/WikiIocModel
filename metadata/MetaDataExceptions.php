@@ -27,6 +27,14 @@ class NotAllEntityMandatoryProperties extends WikiIocModelException {
     }
 
 }
+class NotAllEntityValidateProperties extends WikiIocModelException {
+
+    public function __construct($code = 5115, $message = "Set de propietats no passen la validació del model", $previous = NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+}
+
+
 
 class MetaDataNotFound extends WikiIocModelException {
 

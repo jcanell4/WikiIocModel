@@ -108,6 +108,10 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         if (!$allMandatories) {
             throw new NotAllEntityMandatoryProperties();
         }
+        $allValues= $this->__checkValues($arrayEntryKeys);
+        if (!$allValues) {
+            throw new NotAllEntityValidateProperties();
+        }
         foreach ($arrayStatus as $property => $value) {
             if (property_exists($this, $property)) {
                 $isJsonType = false;
@@ -138,11 +142,11 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * @return exception || false || true 
      */
     public function checkFilter($filter) {
-        $encoder = new JSON();                
+        $encoder = new JSON();
         //$arraymd = $encoder->decode($this->MetaDataValue);
-        $arraymd = json_decode($this->MetaDataValue,true); //true to force json_decode to return an array and not an object
+        $arraymd = json_decode($this->MetaDataValue, true); //true to force json_decode to return an array and not an object
         //$arrayfi = $encoder->decode($filter);
-        $arrayfi = json_decode($filter,true);
+        $arrayfi = json_decode($filter, true);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new MalFormedJSON();
             //print_r($this->MetaDataValue);
@@ -174,8 +178,8 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * @return N/A
      */
     public function updateMetaDataValue($paramMetaDataValue) {
-        $arraymd = json_decode($this->MetaDataValue,true);
-        $arraypi = json_decode($paramMetaDataValue,true);
+        $arraymd = json_decode($this->MetaDataValue, true);
+        $arraypi = json_decode($paramMetaDataValue, true);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new MalFormedJSON();
         }
@@ -212,6 +216,19 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
             }
         }
         return $found;
+    }
+    
+    /**
+     * Purpose:
+     * - Check if all values from param are validated by the model
+     * (allways true in this Abstract Class)
+     * @param array
+     * Restrictions:
+     * - 
+     * @return true if all values are validated by the model (allways true in this Abstract Class)
+     */
+    public function __checkValues($checkValues) {
+        return true;
     }
 
 }
