@@ -26,8 +26,8 @@ abstract class AbstractCommandAuthorization {
      * Responde a la pregunta: ¿los permisos permiten la ejecución del comando?
      * @return bool. Indica si se han obtenido, o no, los permisos generales
      */
-    public function canRun() {   // el parámetro $permis contiene lo mismo que $this->permission
-                                        // por tanto, no es necesario
+    public function canRun() {
+                            
         $this->errorAuth = array(
                               'error' => FALSE
                              ,'exception' => ''
@@ -51,11 +51,14 @@ abstract class AbstractCommandAuthorization {
         return !$this->errorAuth['error'];
     }
     
-    public function getPermission($command) {
+    public function setPermission($command) {
         WikiIocInfoManager::setParams($command->getParams());
         if ($this->permission === NULL) {
             $this->createPermission($command);
         }
+    }
+
+    public function getPermission() {
         return $this->permission;
     }
 

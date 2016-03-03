@@ -98,6 +98,10 @@ class PermissionPageForUserManager extends AbstractPermissionPageForUserManager 
                 Si => actualitzar el fitxer de permisos amb ns del usuari
          * SI NO ACONSEGUEIX EL PERMIS ES LLANÇA UNA EXCEPCIÓ
          */
+        if ($permission->getIsMyOwnNs()) {  //si es tracta de la pròpia pàgina de l'usuari ...
+            // Si no hi ha entrada al fitxer 
+            //      => crida a setUserPagePermission (actualitzar el fitxer de permisos amb ns del usuari)
+        }
     }
 
 }

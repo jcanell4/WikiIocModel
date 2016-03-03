@@ -31,19 +31,18 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
         return !$this->errorAuth['error'];
     }
     
-    public function getPermission($command) {
-        parent::getPermission($command);
+    public function setPermission($command) {
+        parent::setPermission($command);
         $this->permission->setPageExist(WikiIocInfoManager::getInfo('exists'));
         $this->permission->setIsMyOwnNs($this->isMyOwnNs($this->permission->getIdPage(), WikiIocInfoManager::getInfo('client')));
-        return $this->permission;
     }
 
     public function isMyOwnNs($page, $user) {
         global $conf;
         include_once(WIKI_IOC_MODEL . 'conf/default.php');
         $namespace = substr($page, 0, strrpos($page, ":"));
+        $user_name = substr($namespace, strrpos($namespace, ":") + 1);
         $userpage_ns = ":" . $namespace;
-        $user_name = substr($userpage_ns, strrpos($userpage_ns, ":") + 1);
         $ret = FALSE;
         $ret = (WikiIocInfoManager::getInfo('namespace') == $namespace
                 && $user_name == $user

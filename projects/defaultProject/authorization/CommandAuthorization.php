@@ -28,13 +28,12 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         return $_SERVER['REMOTE_USER'] ? TRUE : FALSE;
     }
     
-    public function getPermission($command) {
-        parent::getPermission($command);
+    public function setPermission($command) {
+        parent::setPermission($command);
         $this->permission->setIdPage($command->getParams('id'));
         $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
 //        $this->permission->setIsDenied($this->isDenied());  Gestionat per DokuAction
-        return $this->permission;
     }
 
     /**

@@ -29,10 +29,9 @@ class EditAuthorization extends PageCommandAuthorization {
         return $exception;
     }
     
-    public function getPermission($command) {
-        parent::getPermission($command);
+    public function setPermission($command) {
+        parent::setPermission($command);
         $this->permission->setReadOnly($this->permission->getInfoPerm() == AUTH_READ);
-        return $this->permission;
     }
 
 }
