@@ -41,8 +41,7 @@ class PermissionPageForUserManager extends AbstractPermissionPageForUserManager 
         global $USERINFO;
 	$acl_class = new admin_plugin_acl();
 	$acl_class->handle();
-	$acl_class->who = $user;
-//	$permis_actual  = auth_quickaclcheck( $page );
+	//$acl_class->who = $user;
         $permis_actual  = auth_aclcheck($page, $user, $USERINFO['grps']);
 
         if ( $force || $permis > $permis_actual ) {
@@ -71,37 +70,23 @@ class PermissionPageForUserManager extends AbstractPermissionPageForUserManager 
 	return $ret;
     }
 
-    public function setUserPagePermission($page, $user, $acl_level) {
-        global $conf;
-        include_once(WIKI_IOC_MODEL . 'conf/default.php');
-        $namespace = substr($page, 0, strrpos($page, ":"));
-        $userpage_ns = ":" . $namespace;
-        $user_name = substr($userpage_ns, strrpos($userpage_ns, ":") + 1);
-        $ret = FALSE;
-        if (WikiIocInfoManager::getInfo('isadmin')
-            || WikiIocInfoManager::getInfo('ismanager')
-            || (WikiIocInfoManager::getInfo('namespace') == $namespace
-                && $user_name == $user
-                && $conf['userpage_allowed'] === 1
-                && ($userpage_ns == $conf['userpage_ns'] . $user ||
-                    $userpage_ns == $conf['userpage_discuss_ns'] . $user)
-            )
-        ) {
-            $ret = $this->setPermissionPageForUser($page, $user, $acl_level, TRUE);
-            WikiIocInfoManager::setInfo('perm', $ret);
+    public static function updatePermission($permission) {
+
+        if ($permission->getIsMyOwnNs()) {  //si es tracta de la pròpia pàgina de l'usuari ...
+            $acl_class = new admin_plugin_acl();
+            $acl_class->handle();
+
+            $user = WikiIocInfoManager::getInfo('client');
+            $page = $permission->getIdPage();
+            $ns = substr($page, 0, strrpos($page, ":")) . ':*';
+            
+            if ( !$acl_class->acl[$ns][$user] ) {  
+                // La pàgina de l'usuari no existeix al fitxer de permissos
+                $ret = self::setPermissionPageForUser($ns, $user, AUTH_DELETE, TRUE);
+                WikiIocInfoManager::setInfo('perm', $ret);
+            }
         }
         return $ret;
-    }
-
-    public static function updatePermission($permission, $user) {
-        /*Comprovar si l'usuari no té permisos (No hi ha entrada al fitxer ) i és MyOwnPage.
-                Si => actualitzar el fitxer de permisos amb ns del usuari
-         * SI NO ACONSEGUEIX EL PERMIS ES LLANÇA UNA EXCEPCIÓ
-         */
-        if ($permission->getIsMyOwnNs()) {  //si es tracta de la pròpia pàgina de l'usuari ...
-            // Si no hi ha entrada al fitxer 
-            //      => crida a setUserPagePermission (actualitzar el fitxer de permisos amb ns del usuari)
-        }
     }
 
 }

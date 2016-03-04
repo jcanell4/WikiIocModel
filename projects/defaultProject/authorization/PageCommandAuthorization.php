@@ -38,17 +38,14 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
     }
 
     public function isMyOwnNs($page, $user) {
-        global $conf;
-        include_once(WIKI_IOC_MODEL . 'conf/default.php');
         $namespace = substr($page, 0, strrpos($page, ":"));
         $user_name = substr($namespace, strrpos($namespace, ":") + 1);
         $userpage_ns = ":" . $namespace;
-        $ret = FALSE;
         $ret = (WikiIocInfoManager::getInfo('namespace') == $namespace
                 && $user_name == $user
-                && $conf['userpage_allowed'] === 1
-                && ($userpage_ns == $conf['userpage_ns'] . $user ||
-                    $userpage_ns == $conf['userpage_discuss_ns'] . $user)
+                && WikiGlobalConfig::getConf('userpage_allowed', 'wikiiocmodel') === 1
+                && ($userpage_ns == WikiGlobalConfig::getConf('userpage_ns', 'wikiiocmodel') . $user ||
+                    $userpage_ns == WikiGlobalConfig::getConf('userpage_discuss_ns', 'wikiiocmodel') . $user)
                 );
         return $ret;
     }
