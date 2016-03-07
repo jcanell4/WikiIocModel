@@ -1,12 +1,8 @@
 <?php
 
 
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once (DOKU_INC . 'inc/common.php');
 require_once (DOKU_INC . 'inc/actions.php');
@@ -18,17 +14,9 @@ require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/PageActio
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN."ajaxcommand/requestparams/PageKeys.php";
 
-if (!defined('DW_ACT_EDIT')) {
-    define('DW_ACT_EDIT', "edit");
-}
-
-if (!defined('DW_ACT_DENIED')) {
-    define('DW_ACT_DENIED', "denied");
-}
-
-if (!defined('DW_DEFAULT_PAGE')) {
-    define('DW_DEFAULT_PAGE', "start");
-}
+if (!defined('DW_ACT_EDIT'))     define('DW_ACT_EDIT', "edit");
+if (!defined('DW_ACT_DENIED'))   define('DW_ACT_DENIED', "denied");
+if (!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
 
 /**
  * Description of RawPageAction
@@ -53,7 +41,7 @@ class RawPageAction extends PageAction{
         global $ACT;
         global $ID;
         
-        if (!WikiIocInfoManager::getInfo("exists")) {
+        if (!WikiIocInfoManager::getInfo(PageKeys::KEY_EXISTS)) {
             throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
         }
 
@@ -79,14 +67,13 @@ class RawPageAction extends PageAction{
 
         $infoType = 'info';
 
-        if ( WikiIocInfoManager::getInfo('locked')) {
+        if ( WikiIocInfoManager::getInfo(PageKeys::KEY_LOCKED)) {
                 $infoType           = 'error';
-                $pageToSend['info'] = $lang['lockedby'] . ' ' 
-                                . WikiIocInfoManager::getInfo('locked');
+                $pageToSend['info'] = $lang['lockedby'] . ' ' . WikiIocInfoManager::getInfo(PageKeys::KEY_LOCKED);
         }
 
         $resp['info']   = self::generateInfo( $infoType, $pageToSend['info'] );
-        $resp['locked'] = WikiIocInfoManager::getInfo('locked');
+        $resp[PageKeys::KEY_LOCKED] = WikiIocInfoManager::getInfo(PageKeys::KEY_LOCKED);
         
          if ($this->params[PageKeys::KEY_RECOVER_DRAFT] != NULL) {
             $resp['recover_draft'] = $this->params[PageKeys::KEY_RECOVER_DRAFT];
@@ -231,7 +218,7 @@ class RawPageAction extends PageAction{
             global $TEXT;
 
             switch ( $data ) {
-                    case 'locked':
+                    case PageKeys::KEY_LOCKED:
                     case 'edit':
                     case 'recover':
                             html_edit();

@@ -27,15 +27,15 @@ if (!defined('DW_ACT_SAVE')) {
  *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
-class SavePageAction extends RawPageAction
-{
+class SavePageAction extends RawPageAction {
+
+    protected $deleted = FALSE;
+    private $code = 0;
+    
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
         $this->defaultDo = DW_ACT_SAVE;
     }
-
-
-    private $code = 0;
 
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la
@@ -62,18 +62,15 @@ class SavePageAction extends RawPageAction
         global $ACT;
         global $ID;
         
-        if($this->params[PageKeys::KEY_DO]==DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
+        if($this->params[PageKeys::KEY_DO]==DW_ACT_SAVE && !WikiIocInfoManager::getInfo(PageKeys::KEY_EXISTS)) {
             throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
         }
 
         $ACT = act_permcheck($ACT);
 
         if ($ACT == DW_ACT_SAVE) {
-
             $ret = act_save($ACT);
-
         } else {
-
             $ret = $ACT;
         }
 
@@ -93,7 +90,9 @@ class SavePageAction extends RawPageAction
         // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
         //$this->draftQuery->removePartialDraft($this->params['id']);
         $this->getModel()->removePartialDraft();
-
+        
+        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
+        $this->deleted = ($this->params[PageKeys::KEY_PRE].$this->params[PageKeys::KEY_TEXT].$this->params[PageKeys::KEY_SUF]);
     }
 
     /**
@@ -119,7 +118,6 @@ class SavePageAction extends RawPageAction
         $duration = 10;
 
         $response['info'] = $this->generateInfo($type, $response['info'], NULL, $duration);
-
 
         return $response;
     }

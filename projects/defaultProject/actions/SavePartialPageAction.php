@@ -36,7 +36,7 @@ class SavePartialPageAction extends SavePageAction{
                 $this->params[PageKeys::KEY_REV]);     
     }
 
-        protected function runProcess() {
+    protected function runProcess() {
         parent::runProcess();
         $this->getModel()->removeChunkDraft($selected);
 
@@ -60,12 +60,10 @@ class SavePartialPageAction extends SavePageAction{
         // TODO: afegir el 'meta' que correspongui
         $response['meta'] = $this->getMetaTocResponse();
 
-
         // TODO: afegir les 'revs' que correspongui
         $response['revs'] = $this->getRevisionList();
 
 //        $this->removeStructuredDraft($pid, $selected);
-//
 //        $this->lock($pid);
 
         return $response;  
