@@ -118,9 +118,13 @@ class PageDataQuery extends DataQuery {
        return $ret;
     }
    
-    public function getInstructions($id){
+    public function getInstructions($id, $rev=NULL){
         $file = $this->getFileName($id);
-        $instructions = p_cached_instructions($file, FALSE, $id);
+        if(!$rev){
+            $instructions = p_cached_instructions($file, FALSE, $id);
+        }else{
+            $instructions = p_get_instructions(io_readWikiPage($file,$id,$rev));
+        }
         return $instructions;
     }
     
