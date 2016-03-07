@@ -54,6 +54,7 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/UploadM
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
+require_once(DOKU_PLUGIN . 'ajaxcommand/requestparams/PageKeys.php');
 
 if (!defined('DW_DEFAULT_PAGE')) {
     define('DW_DEFAULT_PAGE', "start");
@@ -184,9 +185,9 @@ class DokuModelAdapter extends AbstractModelAdapter
      */
     public function getHtmlPage($pars)
     {
-        global $lang;
 
-        if (!$prev) {
+
+        if (!$pars[PageKeys::KEY_REV]) {
 //            return $this->getPartialPage($pid, $prev, null, null, null);
             $action = new HtmlPageAction($this->persistenceEngine);
             $response = $action->get($pars);

@@ -65,7 +65,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
                                                 $this->rev);
         if($this->draftDataQuery->hasAny($this->id)){
             $ret['draftType']=  self::FULL_DRAFT;
-            $ret['dratf'] = $this->draftDataQuery->getAsFull();
+            $ret['dratf'] = $this->getDraftAsFull();
         }
         return $ret;
     }
@@ -131,17 +131,17 @@ class DokuPageModel extends WikiRenderizableDataModel {
             // Si no, Existe el draft parcial?
         } else if ($this->draftDataQuery->hasStructured($this->id)) {
             // Construimos el draft
-            $draft = self::getFullDraftFromPartials($this->id);
+            $draft = $this->getFullDraftFromPartials();
         }
 
         return $draft;
     }
 
-    private function getFullDraftFromPartials($id){
+    private function getFullDraftFromPartials(){
         $draftContent = '';
 
-        $structuredDraft = $this->draftDataQuery->getStructured($id);
-        $chunks = self::getAllChunksWithText($id)['chunks']; //TODO[Xavi] Això es força complicat de refactoritzar perquè crida una pila de mètodes al dokumodel
+        $structuredDraft = $this->draftDataQuery->getStructured($this->id);
+        $chunks = self::getAllChunksWithText($this->id, $this->pageDataQuery)['chunks']; //TODO[Xavi] Això es força complicat de refactoritzar perquè crida una pila de mètodes al dokumodel
 //        $chunks = [];
 
         $draftContent .= $structuredDraft['pre'] . "\n";
@@ -157,7 +157,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
         $draft['content'] = $draftContent;
 
-        $draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime(self::getStructuredDraftFilename($id)));
+        //$draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime(self::getStructuredDraftFilename($this->id)));
+        $draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime($this->draftDataQuery->getStructuredFilename($this->id)));
 
         return $draft;
     }
@@ -236,7 +237,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
         //S'han unificat les dues instruccions següents a PageDataQuery sota el nom únic de getChunks
         //$instructions = self::getInstructionsForDocument($id, $rev);
         
-        $chunks = self::getChunks($pageDataQuery, $id);
+        $chunks = self::getChunks($pageDataQuery, $id, $rev);
 
         $editingChunks = [];
         $dictionary = [];
@@ -280,17 +281,16 @@ class DokuPageModel extends WikiRenderizableDataModel {
         }
     }
 
-    public static function getAllChunksWithText($id)
+    private static function getAllChunksWithText($id, $pageDataQuery)
     {
-        $html = self::getHtmlForDocument($id);
+        $html = $pageDataQuery->getHtml($id);
         $headerIds = self::getHeadersFromHtml($html);
-        $instructions = self::getInstructionsForDocument($id);
-        $chunks = self::getChunks($instructions);
+        $chunks = self::getChunks($pageDataQuery, $id);
         $editing = $headerIds;
         $editingChunks = [];
         $dictionary = [];
 
-        self::getEditingChunks($editingChunks, $dictionary, $chunks, $id, $headerIds, $editing);
+        self::getEditingChunks($pageDataQuery, $editingChunks, $dictionary, $chunks, $id, $headerIds, $editing);
 
         return ['chunks' => $editingChunks, 'dictionary' => $dictionary];
 
@@ -344,8 +344,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
     
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     // Només son editables parcialment les seccions de nivell 1, 2 i 3
-    private static function getChunks($pageDataQuery, $id){
-        $instructions = $pageDataQuery->getInstructions($id);              
+    private static function getChunks($pageDataQuery, $id, $rev=NULL){
+        $instructions = $pageDataQuery->getInstructions($id, $rev);              
         $chunks = self::_getChunks($instructions);
         
         return $chunks;
