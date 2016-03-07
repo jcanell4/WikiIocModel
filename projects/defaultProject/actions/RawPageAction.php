@@ -41,7 +41,7 @@ class RawPageAction extends PageAction{
         global $ACT;
         global $ID;
         
-        if (!WikiIocInfoManager::getInfo(PageKeys::KEY_EXISTS)) {
+        if (!WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS)) {
             throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
         }
 
@@ -67,13 +67,13 @@ class RawPageAction extends PageAction{
 
         $infoType = 'info';
 
-        if ( WikiIocInfoManager::getInfo(PageKeys::KEY_LOCKED)) {
+        if ( WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED)) {
                 $infoType           = 'error';
-                $pageToSend['info'] = $lang['lockedby'] . ' ' . WikiIocInfoManager::getInfo(PageKeys::KEY_LOCKED);
+                $pageToSend['info'] = $lang['lockedby'].' '.WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
         }
 
-        $resp['info']   = self::generateInfo( $infoType, $pageToSend['info'] );
-        $resp[PageKeys::KEY_LOCKED] = WikiIocInfoManager::getInfo(PageKeys::KEY_LOCKED);
+        $resp['info'] = self::generateInfo( $infoType, $pageToSend['info'] );
+        $resp[WikiIocInfoManager::KEY_LOCKED] = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
         
          if ($this->params[PageKeys::KEY_RECOVER_DRAFT] != NULL) {
             $resp['recover_draft'] = $this->params[PageKeys::KEY_RECOVER_DRAFT];
@@ -218,7 +218,7 @@ class RawPageAction extends PageAction{
             global $TEXT;
 
             switch ( $data ) {
-                    case PageKeys::KEY_LOCKED:
+                    case WikiIocInfoManager::KEY_LOCKED:
                     case 'edit':
                     case 'recover':
                             html_edit();

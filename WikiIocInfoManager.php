@@ -8,6 +8,9 @@ require_once (DOKU_INC . 'inc/actions.php');
 
 class WikiIocInfoManager {
 
+    const KEY_EXISTS    = "exists";
+    const KEY_LOCKED    = "locked";
+
     private static $infoLoaded = FALSE;
     private static $mediaInfoLoaded = FALSE;
 

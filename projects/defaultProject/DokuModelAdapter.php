@@ -294,13 +294,12 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     public function saveEdition($params)
     {
-
         $action = new SavePageAction($this->persistenceEngine);
         // Remove partialDraft
-
 //        $this->clearPartialDraft($params['id']); // TODO[Xavi] Aquí o al SavePageAction? importa si es abans del $response?
 
-        return $action->get($params);
+        $ret = $action->get($params);
+        return $ret;
 
 //	$this->startPageProcess(
 //		DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate, $ppre, $ptext, $psuf

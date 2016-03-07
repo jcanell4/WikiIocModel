@@ -33,7 +33,7 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
     
     public function setPermission($command) {
         parent::setPermission($command);
-        $this->permission->setPageExist(WikiIocInfoManager::getInfo('exists'));
+        $this->permission->setPageExist(WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS));
         $this->permission->setIsMyOwnNs($this->isMyOwnNs($this->permission->getIdPage(), WikiIocInfoManager::getInfo('client')));
     }
 
