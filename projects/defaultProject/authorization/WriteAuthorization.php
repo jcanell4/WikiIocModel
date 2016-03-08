@@ -6,29 +6,26 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+if (!defined('DOKU_IOC_MODEL')) define('DOKU_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/projects/defaultProject/");
+
 require_once (DOKU_INC . 'inc/auth.php');
-require_once (WIKI_IOC_MODEL . 'projects/defaultProject/DokuModelExceptions.php');
-require_once (WIKI_IOC_MODEL . 'projects/defaultProject/authorization/CommandAuthorization.php');
+require_once (DOKU_IOC_MODEL . 'authorization/PageCommandAuthorization.php');
 
-class WriteAuthorization extends CommandAuthorization {
+class WriteAuthorization extends PageCommandAuthorization {
 
-        //ALERTA [Josep] Ara ja no cal això, només necessitem si hi ha error i el nom de l'excepció    
-//    const NOT_AUTH_WRITE = 256 * AUTH_EDIT;
-
-    public function canRun($permission = NULL) {
-//        parent::canRun($permission);
-//        if ( $this->permission->getInfoPerm() < AUTH_EDIT) {
-//            $this->permission->error = 1009;
-//            $this->errorAuth['error'] += self::NOT_AUTH_WRITE;
+//    public function canRun($permission = NULL) {
+//        if ( parent::canRun($permission) && $this->permission->getInfoPerm() < AUTH_EDIT) {
+//            $this->errorAuth['error'] = TRUE;
 //            $this->errorAuth['exception'] = 'InsufficientPermissionToWritePageException';
 //            $this->errorAuth['extra_param'] = $this->permission->getIdPage();
 //        }
-        if ( parent::canRun($permission) && $this->permission->getInfoPerm() < AUTH_EDIT) {
-            $this->errorAuth['error'] = TRUE;
-            $this->errorAuth['exception'] = 'InsufficientPermissionToWritePageException';
-            $this->errorAuth['extra_param'] = $this->permission->getIdPage();
+//        return !$this->errorAuth['error'];
+//    }
+    
+    public function getPermissionException() {
+        if ($this->permission->getPageExist() && $this->permission->getInfoPerm() < AUTH_EDIT) {
+            $exception = 'InsufficientPermissionToWritePageException';
         }
-        return !$this->errorAuth['error'];
+        return $exception;
     }
 }

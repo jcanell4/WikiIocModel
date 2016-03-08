@@ -4,11 +4,17 @@
  *
  * @author Joseo Cañellas<jcanell4@ioc.cat>
  */
+const PAG_DEFAULT   = "createDefaultText";
+const PAG_SAVED     = "saved";
+const PAG_DELETED   = "deleted";
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :
-$lang['createDefaultText']  = 'Pagina creada per defecte';
+
+$lang['createDefaultText']  = 'Pàgina creada per defecte';
 $lang['conflictsSaving']    = "Hi ha confictes amb altres versions. No s'han pogut guardar els canvis";
 $lang['saved']              = "Els canvis s'han guardat correctament";
+$lang['section_saved']      = "S'han guardat els canvis de la secció %s";
+$lang['deleted']            = "La pàgina %s ha estat eliminada";
 $lang['pageNotFound']       = "La pàgina %s no s'ha trobat";
 $lang['pageExists']         = "La pàgina %s ja existeix";
 $lang['metaEditForm']       = "Camps Edició";

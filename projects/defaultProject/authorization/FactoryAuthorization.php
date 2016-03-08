@@ -5,8 +5,9 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_IOC_MODEL_AUTH'))
+if (!defined('DOKU_IOC_MODEL_AUTH')) 
     define('DOKU_IOC_MODEL_AUTH', DOKU_INC . 'lib/plugins/wikiiocmodel/projects/defaultProject/authorization/');
+
 require_once(DOKU_IOC_MODEL_AUTH . 'CommandAuthorization.php');
 
 class FactoryAuthorization {

@@ -15,6 +15,7 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
+require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
 
 
 if (!defined('DW_ACT_SAVE')) {
@@ -26,31 +27,30 @@ if (!defined('DW_ACT_SAVE')) {
  *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
-class SaveAction extends RawPageAction
-{
+class SavePageAction extends RawPageAction {
+
+    protected $deleted = FALSE;
+    private $code = 0;
+    
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
         $this->defaultDo = DW_ACT_SAVE;
     }
-
-
-    private $code = 0;
 
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la
      * sobrescriptura permet fer assignacions a les variables globals de la
      * wiki a partir dels valors de DokuAction#params.
      */
-    protected function startProcess()
-    {
-        global $ACT;
-
-        if ($this->params['wikitext']) {
-            $this->params['text'] = $this->params['wikitext']; // TODO[Xavi] canviar el formulari del frontent per enviar el paràmetre text en lloc de wikitext? <-- en el save total, el partial ja ho fa amb text només
-        }
-
-        parent::startProcess();
-    }
+//    protected function startProcess(){
+////        if ($this->params['wikitext']) {
+////            $this->params['text'] = $this->params['wikitext']; // TODO[Xavi] canviar el formulari del frontent per enviar el paràmetre text en lloc de wikitext? <-- en el save total, el partial ja ho fa amb text només
+////        }
+//
+//        parent::startProcess();
+//        //$this->dokuPageModel->init($this->params['id']);                
+//
+//    }
 
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la
@@ -58,19 +58,19 @@ class SaveAction extends RawPageAction
      * dades  intermèdies que siguin necessàries per generar la resposta final:
      * DokuAction#responseProcess.
      */
-    protected function runProcess()
-    {
+    protected function runProcess(){
         global $ACT;
         global $ID;
+        
+        if($this->params[PageKeys::KEY_DO]==DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
+            throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
+        }
 
         $ACT = act_permcheck($ACT);
 
-        if ($ACT == $this->params['do']) {
-
+        if ($ACT == DW_ACT_SAVE) {
             $ret = act_save($ACT);
-
         } else {
-
             $ret = $ACT;
         }
 
@@ -88,8 +88,14 @@ class SaveAction extends RawPageAction
         }
 
         // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
-        $this->draftQuery->removePartialDraft($this->params['id']);
-
+        //$this->draftQuery->removePartialDraft($this->params['id']);
+        $this->getModel()->removePartialDraft();
+        
+        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
+        $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
+                                $this->params[PageKeys::KEY_TEXT].
+                                $this->params[PageKeys::KEY_SUF] )
+                          == NULL );
     }
 
     /**
@@ -103,20 +109,28 @@ class SaveAction extends RawPageAction
         global $TEXT;
         global $ID;
 
-        $response = ['code' => $this->code, 'info' => WikiIocLangManager::getLang('saved')];
+        if ($this->deleted) {
+            $response['deleted'] = TRUE;
+            $type = 'success';
+            $response['info'] = sprintf(WikiIocLangManager::getLang('deleted'), $this->params[PageKeys::KEY_ID]);
+            $response['code'] = $this->code;
+            $response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+            $duration = NULL;
+        }
+        else {
+            $response = ['code' => $this->code, 'info' => WikiIocLangManager::getLang('saved')];
 
-        //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg <-- [Xavi] el nom del formulari ara es dinamic, canvia per cada document
-
-        $response['formId'] = 'form_' . WikiPageSystemManager::cleanIDForFiles($ID);
-        $response['inputs'] = [
-            'date' => @filemtime(wikiFN($ID)),
-            'changecheck' => md5($TEXT)
-        ];
-        $type = 'success';
-        $duration = 10;
-
+            //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg <-- [Xavi] el nom del formulari ara es dinamic, canvia per cada document
+            $response['formId'] = 'form_' . WikiPageSystemManager::cleanIDForFiles($ID);
+            $response['inputs'] = [
+                'date' => @filemtime(wikiFN($ID)),
+                'changecheck' => md5($TEXT)
+            ];
+            $type = 'success';
+            $duration = 10;
+        }
+        
         $response['info'] = $this->generateInfo($type, $response['info'], NULL, $duration);
-
 
         return $response;
     }

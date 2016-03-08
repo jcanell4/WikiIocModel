@@ -32,7 +32,11 @@ class WikiPageSystemManager {
      *
      */
     public static function extractDateFromRevision( $revision, $mode = NULL ) {
-         if(!$mode){
+        if(!$revision){
+            return NULL;
+        }
+        
+        if(!$mode){
             $mode = self::$DEFAULT_FORMAT;
         }
 

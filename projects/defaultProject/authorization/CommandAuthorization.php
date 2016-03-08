@@ -20,7 +20,6 @@ class CommandAuthorization extends AbstractCommandAuthorization {
     public function __construct($params) {
         parent::__construct();
          $this->modelWrapper = $params->getModelWrapper();
-        
     }
 
     /* pendent de convertir a private quan no l'utilitzi ajax.php(duplicat) ni login_command */
@@ -29,12 +28,12 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         return $_SERVER['REMOTE_USER'] ? TRUE : FALSE;
     }
     
-    public function getPermission($command) {
-        parent::getPermission($command);
+    public function setPermission($command) {
+        parent::setPermission($command);
         $this->permission->setIdPage($command->getParams('id'));
         $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
-        return $this->permission;
+//        $this->permission->setIsDenied($this->isDenied());  Gestionat per DokuAction
     }
 
     /**
@@ -45,14 +44,11 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         return checkSecurityToken();
     }
 
-    /**
-     * Si el valor de la variable global $ACT es 'denied' retorna false, en cualsevol altre cas retorna true.
-     * @return bool
-     */
-    public function isDenied() {
-	global $ACT;
-	$this->modelWrapper->setParams('do', $ACT);
-	return $ACT == DW_ACT_DENIED;
-    }
-}
+//  Gestionat per DokuAction
+//    public function isDenied() {
+//	global $ACT;
+//	$this->modelWrapper->setParams('do', $ACT);
+//	return $ACT == DW_ACT_DENIED;
+//    }
 
+}
