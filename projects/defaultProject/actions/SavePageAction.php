@@ -114,6 +114,7 @@ class SavePageAction extends RawPageAction {
             $type = 'success';
             $response['info'] = sprintf(WikiIocLangManager::getLang('deleted'), $this->params[PageKeys::KEY_ID]);
             $response['code'] = $this->code;
+            $response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
             $duration = NULL;
         }
         else {
