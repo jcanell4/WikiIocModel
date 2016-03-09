@@ -1,6 +1,6 @@
 <?php
 /**
- * Description: Clase abtracta para los Gestores de Acciones de los proyectos
+ * Description: Classe abstracta para los Gestores de Acciones de los proyectos
  *
  * @author Rafael Claver
  */
