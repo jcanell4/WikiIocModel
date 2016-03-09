@@ -114,8 +114,9 @@ class SavePageAction extends RawPageAction {
             $type = 'success';
             $response['info'] = sprintf(WikiIocLangManager::getLang('deleted'), $this->params[PageKeys::KEY_ID]);
             $response['code'] = $this->code;
-            $response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+            $id = $response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
             $duration = NULL;
+            
         }
         else {
             $response = ['code' => $this->code, 'info' => WikiIocLangManager::getLang('saved')];
@@ -128,9 +129,10 @@ class SavePageAction extends RawPageAction {
             ];
             $type = 'success';
             $duration = 10;
+            $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
         }
         
-        $response['info'] = $this->generateInfo($type, $response['info'], NULL, $duration);
+        $response['info'] = $this->generateInfo($type, $response['info'], $id, $duration);
 
         return $response;
     }
