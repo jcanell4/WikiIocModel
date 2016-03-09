@@ -30,6 +30,7 @@ if (!defined('DOKU_PLUGIN')) {
 require_once(DOKU_PLUGIN . 'wikiiocmodel/AbstractModelAdapter.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocInfoManager.php');
 require_once(DOKU_PLUGIN . 'ownInit/WikiGlobalConfig.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/PermissionPageForUserManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelExceptions.php');
 
 require_once(DOKU_PLUGIN . 'acl/admin.php');
@@ -53,6 +54,7 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/UploadM
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
+require_once(DOKU_PLUGIN . 'ajaxcommand/requestparams/PageKeys.php');
 
 if (!defined('DW_DEFAULT_PAGE')) {
     define('DW_DEFAULT_PAGE', "start");
@@ -123,10 +125,7 @@ class DokuModelAdapter extends AbstractModelAdapter
 {
     const ADMIN_PERMISSION = "admin";
 
-    private $draftManager;
-    private $lockManager;
     /**
-     *
      * @var BasicPersistenceEngine
      */
     private $persistenceEngine;
@@ -134,9 +133,6 @@ class DokuModelAdapter extends AbstractModelAdapter
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
-    // ver WikiIocInfoManager
-    //protected $infoLoaded = FALSE;
-    //protected $wikiIocInfo;
 
     public function init($persistenceEngine)
     {
@@ -189,9 +185,9 @@ class DokuModelAdapter extends AbstractModelAdapter
      */
     public function getHtmlPage($pars)
     {
-        global $lang;
 
-        if (!$prev) {
+
+        if (!$pars[PageKeys::KEY_REV]) {
 //            return $this->getPartialPage($pid, $prev, null, null, null);
             $action = new HtmlPageAction($this->persistenceEngine);
             $response = $action->get($pars);
@@ -253,16 +249,18 @@ class DokuModelAdapter extends AbstractModelAdapter
     public function getCodePage($params)
     {
         $action = new RawPageAction($this->persistenceEngine);
-        return $action->get($params);
+        $contentData = $action->get($params);
+        return $contentData;
     }
 
     /**
      * Crida principal de la comanda cancel
-     * @global type $lang
      * @param type $pid
      * @param type $prev
-     * @param type $keep_draft
+     * @param bool|type $keep_draft
+     * @param bool $discard_changes si es cert es descartaran els canvis sense preguntar
      * @return type
+     * @global type $lang
      */
     //[ALERTA Josep] Es queda aquí.
     public function cancelEdition($pars){
@@ -297,25 +295,19 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     public function saveEdition($params)
     {
-
         $action = new SavePageAction($this->persistenceEngine);
         // Remove partialDraft
-
 //        $this->clearPartialDraft($params['id']); // TODO[Xavi] Aquí o al SavePageAction? importa si es abans del $response?
 
-        return $action->get($params);
+        $ret = $action->get($params);
+        return $ret;
 
-//		$this->startPageProcess(
-//			DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate,
-//			$ppre, $ptext, $psuf
-//		);
-//		$code = $this->doSavePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-
-
-//        $response = $this->getSaveInfoResponse($code);
-
-
-//        return $response;
+//	$this->startPageProcess(
+//		DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate, $ppre, $ptext, $psuf
+//	);
+//	$code = $this->doSavePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
+//      $response = $this->getSaveInfoResponse($code);
+//      return $response;
     }
 
 //    public function getMediaFileName($id, $rev = '')
@@ -741,7 +733,6 @@ class DokuModelAdapter extends AbstractModelAdapter
         global $ID;
         global $AUTH;
         global $vector_action;
-        //global $vector_context;
         global $loginname;
         global $IMG;
         global $ERROR;
@@ -833,8 +824,8 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     private function triggerStartEvents()
     {
-        $tmp = array(); //NO DATA
-//		trigger_event( 'DOKUWIKI_STARTED', $tmp );
+//      $tmp = array(); //NO DATA
+//	trigger_event( 'DOKUWIKI_STARTED', $tmp );
         trigger_event('WIOC_AJAX_COMMAND_STARTED', $this->dataTmp);
     }
 
@@ -2056,7 +2047,7 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     public function getLoginName()
     {
-        global $_SERVER;
+        global $conf;
 
         $loginname = "";
         if (!empty($conf["useacl"])) {
@@ -3000,6 +2991,7 @@ class DokuModelAdapter extends AbstractModelAdapter
         global $lang,
                $conf;
 
+        $ns = $pid;
         $pid = $this->cleanIDForFiles($pid);
         $lockManager = new LockManager($this);
         $locker = $lockManager->lock($pid);
@@ -3007,11 +2999,11 @@ class DokuModelAdapter extends AbstractModelAdapter
         if ($locker === false) {
 
             $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-            $response = ['id' => $pid, 'timeout' => $conf['locktime'], 'info' => $info];
+            $response = ['id' => $pid, 'ns' => $ns, 'timeout' => $conf['locktime'], 'info' => $info];
 
         } else {
 
-            $response = ['id' => $pid, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
+            $response = ['id' => $pid, 'ns' => $ns, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
         }
 
         return $response;
@@ -3020,10 +3012,14 @@ class DokuModelAdapter extends AbstractModelAdapter
     public function unlock($pid)
     {
         $lockManager = new LockManager($this);
-        $lockManager->unlock($this->cleanIDForFiles($pid));
+
+        $ns = $pid;
+        $pid = $this->cleanIDForFiles($pid);
+
+        $lockManager->unlock($pid);
 
         $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
-        $response['info'] = $info; // TODO[Xavi] Localitzar el missatge
+        $response = ['id' => $pid, 'ns' => $ns, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
 
         return $response;
     }
@@ -3036,7 +3032,7 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     public function saveDraft($draft)
     {
-        DraftManager::saveDraft($draft);
+        return DraftManager::saveDraft($draft);
     }
 
 //    public function getStructuredDraft($id)

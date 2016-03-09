@@ -2,12 +2,13 @@
 if (!defined("DOKU_INC")) {
     die();
 }
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied" );
+
 require_once DOKU_PLUGIN."wikiiocmodel/AbstractWikiAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
+require_once DOKU_PLUGIN."wikiiocmodel/WikiIocModelExceptions.php";
 
 //namespace ioc_dokuwiki;
 
@@ -37,10 +38,14 @@ abstract class DokuAction extends AbstractWikiAction{
         $this->start($paramsArr);
         $this->run();
         $response = $this->getResponse();
+        
+        if ($this->isDenied()) {
+            throw new HttpErrorCodeException('accessdenied', 403);
+        }
+        
         if(is_string($this->preResponseTmp)){
             $response["before.content"] = $this->preResponseTmp;
         }else{
-            $preContent="";
             foreach ($this->preResponseTmp as $key => $value ){
                 if($key==="before.content"){
                      $response["before.content"] = $value;
@@ -300,4 +305,10 @@ abstract class DokuAction extends AbstractWikiAction{
 
         return $contentData;
     }
+
+    private function isDenied() {
+	global $ACT;
+	return $ACT == DW_ACT_DENIED;
+    }
+    
 }

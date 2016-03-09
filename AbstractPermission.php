@@ -8,7 +8,6 @@ if (!defined('DOKU_INC') ) die();
 
 abstract class AbstractPermission {
     
-    protected $cmdAuthorization;        //objecte command
     protected $authenticatedUsersOnly;  //bool (de command_class)
     protected $isSecurityTokenVerified;
     protected $isUserAuthenticated;     // bool
@@ -19,10 +18,6 @@ abstract class AbstractPermission {
     protected $info_ismanager;
     protected $permissionLoaded = FALSE;
     protected $userGroups;
-    
-    public function __construct($cmdAuthorization) {
-        $this->cmdAuthorization = $cmdAuthorization;
-    }
     
     public function getPermissionLoaded() {
         return $this->permissionLoaded;
@@ -108,7 +103,4 @@ abstract class AbstractPermission {
         return $this->userGroups;
     }
 
-    public function isDenied() {
-        return FALSE;   //valor per defecte per aquells que no el necessiten
-    }
 }

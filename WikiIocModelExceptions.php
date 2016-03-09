@@ -22,6 +22,13 @@ abstract class WikiIocModelException extends Exception {
     }
 }
 
+class HttpErrorCodeException extends WikiIocModelException
+{
+    public function __construct($code, $message = "", $previous = NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+}
+
 class UnavailableMethodExecutionException extends Exception {
     public function __construct($method, $message="Unavailable method %s", 
                                                 $code=9001, $previous=NULL) {

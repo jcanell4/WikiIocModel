@@ -19,11 +19,11 @@ class DraftManager
 
         switch ($type) {
             case 'structured':
-                self::generateStructuredDraft($draft['content'], $draft['id']);
+                return self::generateStructuredDraft($draft['content'], $draft['id']);
                 break;
 
             case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
-                self::saveFullDraft($draft['content'], $draft['id']);
+                return self::saveFullDraft($draft['content'], $draft['id']);
                 break;
 
             default:
@@ -92,6 +92,11 @@ class DraftManager
             @unlink($draftFile);
         }
 
+        // TODO[Xavi] afegir la localització del missatge
+        $response = ['info' => DokuAction::generateInfo('info', 'Desat esborrany parcial', $id)];// TODO[Xavi] guardar els drafts ha de ser també una acció i aix`serà self::
+
+
+        return $response;
     }
 
     public static function getStructuredDraftForHeader($id, $header)
@@ -344,5 +349,7 @@ class DraftManager
 
         self::removeStructuredDraftAll($id);
 
+        $response = ['info' => DokuAction::generateInfo('info', 'Desat esborrany complet', $id)];// TODO[Xavi] guardar els drafts ha de ser també una acció i aix`serà self::
+        return $response;
     }
 }
