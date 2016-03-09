@@ -42,20 +42,24 @@ abstract class DokuExtraAction extends DokuActionManager{
     }
     
     /**
-     * Obté la llista d'arxius del directori "actions/extra"
-     * @return array Llista dels arxius corresponents a les "accions"
+     * Carrega en memòria els arxius del directori "actions/extra" i
+     * omple un array amb la llista de classes
+     * @return array Llista de classes dels arxius corresponents a les "accions/extra"
      */
     private static function getListOfExtraActions() {
-        if (($rdir = opendir(DOKU_ACTIONS . 'extra/'))) {
+        $path = DOKU_ACTIONS . 'extra/';
+        if (($rdir = opendir($path))) {
             while (false !== ($file = readdir($rdir))){
-                if (filetype(DOKU_ACTIONS . 'extra/' . $file) == 'file') {
-                    $ficheros[] = $file;
+                if (filetype($path . $file) == 'file') {
+                    require_once $path . $file;
+                    // El nom de la classe ha de coincidir, necessàriament, amb el nom del fitxer
+                    $fileClasses[] = substr($file, 0, strrchr($file, '.'));
                 }
             }
             closedir($rdir);
         }
-        sort($ficheros, SORT_LOCALE_STRING); 
-        return $ficheros;
+        sort($fileClasses, SORT_LOCALE_STRING); 
+        return $fileClasses;
     }
     
 }
