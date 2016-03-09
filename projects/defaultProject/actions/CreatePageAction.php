@@ -17,6 +17,7 @@ if (!defined('DW_ACT_SAVE')) {
 require_once DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePageAction.php';
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
+require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once (DOKU_INC . 'inc/common.php');
 require_once DOKU_PLUGIN."ajaxcommand/requestparams/PageKeys.php";
 
@@ -39,7 +40,8 @@ class CreatePageAction extends SavePageAction {
         $response = $this->getModel()->getData();
 
         if (!$response['info']) {
-            $response['info'] = $this->generateInfo("info", $lang['document_created']);
+            $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('document_created'), $id);
         }
 
         $response['meta'] = $this->getMetaTocResponse();
@@ -51,7 +53,7 @@ class CreatePageAction extends SavePageAction {
 
     protected function runProcess() {
         if (WikiIocInfoManager::getInfo("exists")) {
-            throw new PageAlreadyExistsException($pid, $lang['pageExists']);
+            throw new PageAlreadyExistsException($this->params[PageKeys::KEY_ID], WikiIocLangManager::getlang('pageExists'));
         }
         parent::runProcess();
     }
