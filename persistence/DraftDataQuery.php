@@ -70,8 +70,8 @@ class DraftDataQuery extends DataQuery{
         if (@file_exists($draftFile)) {
             $oldDraft = $this->getStructured($id);
 
-            if (array_key_exists($header_id, $oldDraft)) {
-                unset($oldDraft[$header_id]);
+            if (array_key_exists($chunkId, $oldDraft)) {
+                unset($oldDraft[$chunkId]);
             }
 
             if (count($oldDraft) > 0) {
