@@ -17,6 +17,7 @@ $_AuthorizationCfg =
 	,'revision'		=> 'write'
 	,'save'			=> 'write'
 	,'save_partial'		=> 'write'
+	,'save_draft'		=> 'write'
 	,'copy_image_to_project'=> 'upload'
 	,'get_image_detail'	=> 'read'
 	,'media'		=> 'read'
