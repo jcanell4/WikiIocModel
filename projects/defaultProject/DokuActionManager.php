@@ -12,6 +12,6 @@ require_once DOKU_PLUGIN . "wikiiocmodel/AbstractActionManager.php";
  */
 abstract class DokuActionManager extends AbstractActionManager{
 
-    abstract public function getActionParams();
+    abstract public static function getActionParams();
     
  }
