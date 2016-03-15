@@ -104,7 +104,7 @@ class RawPartialPageAction extends PageAction
             $response['original_call'] = $this->generateOriginalCall();
             $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('partial_draft_found'));
 
-        } else if ($this->params[PageKeys::KEY_RECOVER_DRAFT]) {
+        } else if ($this->params[PageKeys::KEY_RECOVER_DRAFT]==='true') {
             // Existeix el KEY_RECOVER_DRAFT i es cert
             // Acció: recuperar esborrany
 
