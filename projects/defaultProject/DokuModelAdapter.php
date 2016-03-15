@@ -2677,33 +2677,33 @@ class DokuModelAdapter extends AbstractModelAdapter
 
     }
 
-    // Hi ha draft pel chunk a editar?
-    private function thereIsStructuredDraftFor($id, $document, $selected = null)
-    {
-        if (!$selected) {
-            return false;
-        }
-
-        $draft = $this->getStructuredDraft($id);
-
-        for ($i = 0; $i < count($document['chunks']); $i++) {
-            if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
-                && $document['chunks'][$i]['header_id'] == $selected
-            ) {
-
-                // Si el contingut del draft i el propi es igual, l'eliminem
-                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]['content']) {
-                    $this->removeStructuredDraft($id, $selected);
-                } else {
-                    return true;
-                }
-
-            }
-
-        }
-
-        return false;
-    }
+//    // Hi ha draft pel chunk a editar?
+//    private function thereIsStructuredDraftFor($id, $document, $selected = null)
+//    {
+//        if (!$selected) {
+//            return false;
+//        }
+//
+//        $draft = $this->getStructuredDraft($id);
+//
+//        for ($i = 0; $i < count($document['chunks']); $i++) {
+//            if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
+//                && $document['chunks'][$i]['header_id'] == $selected
+//            ) {
+//
+//                // Si el contingut del draft i el propi es igual, l'eliminem
+//                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]['content']) {
+//                    $this->removeStructuredDraft($id, $selected);
+//                } else {
+//                    return true;
+//                }
+//
+//            }
+//
+//        }
+//
+//        return false;
+//    }
 
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
@@ -3062,16 +3062,16 @@ class DokuModelAdapter extends AbstractModelAdapter
 //        return DraftManager::existsPartialDraft($id);
 //    }
 
-    public function clearFullDraft($id)
-    {
-        global $ACT, $ID;
-
-        $ID = $id;
-
-        WikiIocInfoManager::setInfo('draft', $this->getDraftFilename($id));
-        $ACT = act_draftdel($ACT);
-
-    }
+//    public function clearFullDraft($id)
+//    {
+//        global $ACT, $ID;
+//
+//        $ID = $id;
+//
+//        WikiIocInfoManager::setInfo('draft', $this->getDraftFilename($id));
+//        $ACT = act_draftdel($ACT);
+//
+//    }
 
 //    public function clearPartialDraft($id)
 //    {

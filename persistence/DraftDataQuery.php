@@ -1,50 +1,56 @@
 <?php
-if (! defined('DOKU_INC')) die();
+if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
 
-require_once (DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
-require_once (DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
-require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
+require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
+require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
+require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
 
 /**
  * Description of DraftDataQuery
  *
  * @author Josep Cañellas i Xavier Garcia
  */
-class DraftDataQuery extends DataQuery{
-    public function getFileName($id, $extra=NULL) {
-       return $this->getFullFileName($id);
+class DraftDataQuery extends DataQuery
+{
+    public function getFileName($id, $extra = NULL)
+    {
+        return $this->getFullFileName($id);
     }
-    
-    public function getFullFileName($id) {
+
+    public function getFullFileName($id)
+    {
         $id = WikiPageSystemManager::cleanIDForFiles($id);
-        return getCacheName(WikiIocInfoManager::getInfo("client") . $id, '.draft');          
+        return getCacheName(WikiIocInfoManager::getInfo("client") . $id, '.draft');
     }
-    
-    public function getStructuredFilename($id){
+
+    public function getStructuredFilename($id)
+    {
         $id = WikiPageSystemManager::cleanIDForFiles($id);
         return $this->getFilename($id) . '.structured';
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE) {
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE)
+    {
         throw new UnavailableMethodExecutionException("DraftDataQuery#getNsTree");
-    }    
-    
-    public function getFull($id){
+    }
+
+    public function getFull($id)
+    {
         $id = WikiPageSystemManager::cleanIDForFiles($id);
         $draftFile = $this->getFilename($id);
         $cleanedDraft = NULL;
 
         // Si el draft es més antic que el document actual esborrem el draft
-        if($this->hasFull($id)){
+        if ($this->hasFull($id)) {
 //        if (@file_exists($draftFile)) {
 //            if (@filemtime($draftFile) < @filemtime(wikiFN($id))) {
 //                @unlink($draftFile);
 //            } else {
-                $draft = unserialize(io_readFile($draftFile, FALSE));
-                $cleanedDraft = self::cleanDraft(con($draft['prefix'], $draft['text'], $draft['suffix']));
+            $draft = unserialize(io_readFile($draftFile, FALSE));
+            $cleanedDraft = self::cleanDraft(con($draft['prefix'], $draft['text'], $draft['suffix']));
 //            }
         }
 
@@ -53,25 +59,25 @@ class DraftDataQuery extends DataQuery{
         return ['content' => $cleanedDraft, 'date' => $draftDate];
     }
 
-    public function removeStructured($id) {
+    public function removeStructured($id)
+    {
         $id = WikiPageSystemManager::cleanIDForFiles($id);
         $draftFile = $this->getStructuredFilename($id);
         if (@file_exists($draftFile)) {
             @unlink($draftFile);
         }
-
-
     }
-    
-    public function removeChunk($id, $chunkId){
+
+    public function removeChunk($id, $chunkId)
+    {
         $id = WikiPageSystemManager::cleanIDForFiles($id);
         $draftFile = $this->getStructuredFilename($id);
-        
+
         if (@file_exists($draftFile)) {
             $oldDraft = $this->getStructured($id);
 
-            if (array_key_exists($header_id, $oldDraft)) {
-                unset($oldDraft[$header_id]);
+            if (array_key_exists($chunkId, $oldDraft)) {
+                unset($oldDraft[$chunkId]);
             }
 
             if (count($oldDraft) > 0) {
@@ -83,10 +89,11 @@ class DraftDataQuery extends DataQuery{
             }
         }
     }
-    
-    public function getStructured($id){
+
+    public function getStructured($id)
+    {
         $id = WikiPageSystemManager::cleanIDForFiles($id);
-                $draftFile = self::getStructuredFilename($id);
+        $draftFile = self::getStructuredFilename($id);
         $draft = [];
 
         if (@file_exists($draftFile)) {
@@ -96,17 +103,19 @@ class DraftDataQuery extends DataQuery{
         return $draft;
     }
 
-    
-    public function hasFull($id){
+
+    public function hasFull($id)
+    {
         $draftFile = $this->getFullFileName($id);
         return self::existsDraft($draftFile, $id);
     }
-    
-    public function hasStructured($id){
+
+    public function hasStructured($id)
+    {
         $draftFile = $this->getStructuredFilename($id);
         return self::existsDraft($draftFile, $id);
     }
-    
+
     /**
      * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
      * esborrat.
@@ -115,11 +124,13 @@ class DraftDataQuery extends DataQuery{
      *
      * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
      */
-    public function hasAny($id){
-        return  $this->hasFull($id) || $this->hasStructured($id);
+    public function hasAny($id)
+    {
+        return $this->hasFull($id) || $this->hasStructured($id);
     }
 
-    public function getChunk($id, $header){
+    public function getChunk($id, $header)
+    {
         $draftFile = $this->getStructuredFilename($id);
 
 
@@ -136,10 +147,9 @@ class DraftDataQuery extends DataQuery{
     }
 
 
-    
-    
     /*** AIXÒ VE DE DraftManager.php ***/
-    private function saveDraft($draft){
+    private function saveDraft($draft)
+    {
 
         $type = $draft['type'];
 
@@ -160,7 +170,8 @@ class DraftDataQuery extends DataQuery{
         }
     }
 
-    private function generateStructured($draft, $id){
+    private function generateStructured($draft, $id)
+    {
 
         $time = time();
         $newDraft = [];
@@ -219,12 +230,13 @@ class DraftDataQuery extends DataQuery{
 
     }
 
-  /**
+    /**
      * Guarda l'esborrany complet del document i s'eliminen els esborranys parcials
      * @param $draft
      * @param $id
      */
-    private function saveFullDraft($draft, $id){
+    private function saveFullDraft($draft, $id)
+    {
         $aux = ['id' => $id,
             'prefix' => '',
             'text' => $draft,
@@ -243,8 +255,8 @@ class DraftDataQuery extends DataQuery{
 //        self::removeStructuredDraftAll($id);
 
     }
-        
-   
+
+
 //    private static function getStructuredDraft($id){
 //        $draftFile = self::getStructuredFilename($id);
 //        $draft = [];
@@ -284,7 +296,8 @@ class DraftDataQuery extends DataQuery{
      * @param {string} $id id del document a comprovar
      * @return bool
      */
-    private static function existsDraft($draftFile, $id){
+    private static function existsDraft($draftFile, $id)
+    {
 
         $exists = false;
 
@@ -313,4 +326,15 @@ class DraftDataQuery extends DataQuery{
         $content = preg_replace($pattern, '', $text);
         return $content;
     }
+
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+    public function removeFull($id)
+    {
+        $id = WikiPageSystemManager::cleanIDForFiles($id);
+        $draftFile = $this->getFileName($id);
+        if (@file_exists($draftFile)) {
+            @unlink($draftFile);
+        }
+    }
+
 }

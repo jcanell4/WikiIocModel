@@ -7,14 +7,15 @@ if (!defined('DOKU_PLUGIN')) {
 }
 
 require_once(DOKU_INC . 'inc/common.php');
-require_once DOKU_PLUGIN."wikiiocmodel/datamodel/WikiRenderizableDataModel.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/WikiRenderizableDataModel.php";
 
 /**
  * Description of DokuPageModel
  *
  * @author josep
  */
-class DokuPageModel extends WikiRenderizableDataModel {
+class DokuPageModel extends WikiRenderizableDataModel
+{
     const NO_DRAFT = "none";
     const PARTIAL_DRAFT = "partial";
     const FULL_DRAFT = "full";
@@ -26,76 +27,90 @@ class DokuPageModel extends WikiRenderizableDataModel {
     protected $recoverDraft;
     protected $pageDataQuery;
     protected $draftDataQuery;
-    
-    public function __construct($persistenceEngine) {
+
+    public function __construct($persistenceEngine)
+    {
         $this->pageDataQuery = $persistenceEngine->createPageDataQuery();
         $this->draftDataQuery = $persistenceEngine->createDraftDataQuery();
     }
-    
-    public function init($id, $editing=NULL, $selected=NULL, $rev = null){
+
+    public function init($id, $editing = NULL, $selected = NULL, $rev = null)
+    {
         $this->id = $id;
         $this->editing = $editing;
         $this->selected = $selected;
         $this->rev = $rev;
     }
-    
-    public function setData($toSet) {
-        if(is_array($toSet)){
-            $params=$toSet;
-        }else{
-            $params=array('text' => $toSet);
+
+    public function setData($toSet)
+    {
+        if (is_array($toSet)) {
+            $params = $toSet;
+        } else {
+            $params = array('text' => $toSet);
         }
-        $this->pageDataQuery->save($this->id, $params['text'], $params['summary'], $params['minor']);        
+        $this->pageDataQuery->save($this->id, $params['text'], $params['summary'], $params['minor']);
     }
 
 
-    public function getData($partial = FALSE){
-        if($partial){
+    public function getData($partial = FALSE)
+    {
+        if ($partial) {
             $ret = $this->getViewRawData();
-        }else{
+        } else {
             $ret = $this->getViewData();
         }
-        
+
         return $ret;
     }
 
-    public function getViewData(){
-        $ret['structure'] = self::getStructuredDocument($this->pageDataQuery, $this->id, 
-                                                $this->editing, $this->selected,
-                                                $this->rev);
-        if($this->draftDataQuery->hasAny($this->id)){
-            $ret['draftType']=  self::FULL_DRAFT;
+    public function getViewData()
+    {
+        $ret['structure'] = self::getStructuredDocument($this->pageDataQuery, $this->id,
+            $this->editing, $this->selected,
+            $this->rev);
+        if ($this->draftDataQuery->hasAny($this->id)) {
+            $ret['draftType'] = self::FULL_DRAFT;
             $ret['dratf'] = $this->getDraftAsFull();
         }
         return $ret;
     }
 
-    public function getViewRawData(){
-        $response['structure'] = self::getStructuredDocument($this->pageDataQuery, $this->id, 
-                                                $this->editing, $this->selected,
-                                                $this->rev);
-         // TODO[Xavi] si es troba una draft per la edició, no es retornarà la resposta edit_html
-        // TODO[Xavi] aquí s'haura d'afegir la comprovació de que no s'ha passat el paràmetre recover draft
-        // TODO[Xavi] La diferencia en aquest if es que aquest primer bloc es pel draft parcial
-        if ($this->isChunkInDraft($pid, $response['structure'], $selected) && $this->recoverDraft === null) {
-            $response['draftType']= self::PARTIAL_DRAFT;
-            $response['content'] = $this->getChunkFromStructure($response['structure'], $selected);
-            $response['draft'] = $this->getChunkFromDraft($pid, $selected);
+    public function getViewRawData()
+    {
+        $response['structure'] = self::getStructuredDocument($this->pageDataQuery, $this->id,
+            $this->editing, $this->selected,
+            $this->rev);
+
+        if ($this->draftDataQuery->hasFull($this->id)) {
+            $response['draftType'] = self::FULL_DRAFT;
+
+        } else if ($this->isChunkInDraft($this->id, $response['structure'], $this->selected) && $this->recoverDraft === null) {
+            $response['draftType'] = self::PARTIAL_DRAFT;
+            $response['content'] = $this->getChunkFromStructure($response['structure'], $this->selected);
+            $response['draft'] = $this->getChunkFromDraft($this->id, $this->selected);
+
             if ($response['draft']['content'] === $response['content']['editing']) {
                 $this->draftDataQuery->removeChunk($this->id, $this->selected);
                 unset($response['draft']);
                 unset($response['content']);
                 $response['draftType'] = self::NO_DRAFT;
             }
+
+        } else {
+            $response['draftType'] = self::NO_DRAFT;
         }
+
         return $response;
     }
 
-    public function getRawData(){
+    public function getRawData()
+    {
         return $this->pageDataQuery->getRaw($this->id);
     }
-    
-    public function getMetaToc(){
+
+    public function getMetaToc()
+    {
         $toc = $this->pageDataQuery->getToc($this->id);
         $toc = preg_replace(
             '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i',
@@ -103,24 +118,29 @@ class DokuPageModel extends WikiRenderizableDataModel {
         );
         return $toc;
     }
-    
-    public function getRevisionList(){
+
+    public function getRevisionList()
+    {
         return $this->pageDataQuery->getRevisionList($this->id);
     }
-    
-    public function getDraftFilename(){
+
+    public function getDraftFilename()
+    {
         return $this->draftDataQuery->getFileName($this->id);
     }
-    
-    public function removePartialDraft(){
+
+    public function removePartialDraft()
+    {
         $this->draftDataQuery->removeStructured($this->id);
     }
 
-    public function removeChunkDraft($chunkId){
+    public function removeChunkDraft($chunkId)
+    {
         $this->draftDataQuery->removeChunk($this->id, $chunkId);
     }
 
-    public function getDraftAsFull(){
+    public function getDraftAsFull()
+    {
         $draft = null;
 
         // Existe el draft completo?
@@ -137,7 +157,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
         return $draft;
     }
 
-    private function getFullDraftFromPartials(){
+    private function getFullDraftFromPartials()
+    {
         $draftContent = '';
 
         $structuredDraft = $this->draftDataQuery->getStructured($this->id);
@@ -164,7 +185,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
     }
 
 
-    private function getChunkFromStructure($structure, $selected){
+    private function getChunkFromStructure($structure, $selected)
+    {
         $chunks = $structure['chunks'];
         foreach ($chunks as $chunk) {
             if ($chunk['header_id'] == $selected) {
@@ -174,7 +196,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
         return null;
     }
 
-    private function getChunkFromDraft($id, $selected){
+    private function getChunkFromDraft($id, $selected)
+    {
         return $this->draftDataQuery->getChunk($id, $selected);
     }
 
@@ -196,7 +219,6 @@ class DokuPageModel extends WikiRenderizableDataModel {
 //    }
 
 
-    
     /**
      * Hi ha un casos en que no hi ha selected, per exemple quan es cancela un document.
      *
@@ -210,8 +232,9 @@ class DokuPageModel extends WikiRenderizableDataModel {
      * @internal param $ {string|null} $selected - Chunk seleccionat $selected - Chunk seleccionat
      */
     // TODO[Xavi] PER REFACTORITZAR QUANT TINGUEM EL PLUGIN DEL RENDER. Fer privada?
-    private static function getStructuredDocument($pageDataQuery, $id, $editing = null, 
-                                                $selected=NULL, $rev = null){
+    private static function getStructuredDocument($pageDataQuery, $id, $editing = null,
+                                                  $selected = NULL, $rev = null)
+    {
 
         if (!$editing && $selected) {
             $editing = [$selected];
@@ -236,7 +259,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
         //S'han unificat les dues instruccions següents a PageDataQuery sota el nom únic de getChunks
         //$instructions = self::getInstructionsForDocument($id, $rev);
-        
+
         $chunks = self::getChunks($pageDataQuery, $id, $rev);
 
         $editingChunks = [];
@@ -258,13 +281,15 @@ class DokuPageModel extends WikiRenderizableDataModel {
         return $document;
     }
 
-    private static function getHeadersFromHtml($html){
+    private static function getHeadersFromHtml($html)
+    {
         $pattern = '/(?:<h[123] class="sectionedit\d+" id=")(.+?)">/s'; // aquest patró només funciona si s'aplica el scedit
         preg_match_all($pattern, $html, $match);
         return $match[1]; // Conté l'array amb els ids trobats per cada secció
     }
 
-    private static function getEditingChunks($pageDataQuery, &$editingChunks, &$dictionary , &$chunks, $id, $headerIds, $editing){
+    private static function getEditingChunks($pageDataQuery, &$editingChunks, &$dictionary, &$chunks, $id, $headerIds, $editing)
+    {
         for ($i = 0; $i < count($chunks); $i++) {
             $chunks[$i]['header_id'] = $headerIds[$i];
             // Afegim el text només al seleccionat i els textos en edició
@@ -303,7 +328,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
             return false;
         }
 
-        $draft = $this->getStructuredDraft($id);
+        $draft = $this->draftDataQuery->getStructured($id);
+//        $draft = $this->getStructuredDraft($id);
 
         for ($i = 0; $i < count($document['chunks']); $i++) {
             if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
@@ -326,7 +352,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
-    private static function addPreToChunks($pageDataQuery, &$chunks, $id){
+    private static function addPreToChunks($pageDataQuery, &$chunks, $id)
+    {
         //[ALERTA JOSEP] Cal passar rawWikiSlices a PageDataQuery i fer la crida des d'allà
         $lastPos = 0;
 
@@ -339,21 +366,23 @@ class DokuPageModel extends WikiRenderizableDataModel {
         }
 
     }
-    
-    
-    
+
+
+
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     // Només son editables parcialment les seccions de nivell 1, 2 i 3
-    private static function getChunks($pageDataQuery, $id, $rev=NULL){
-        $instructions = $pageDataQuery->getInstructions($id, $rev);              
+    private static function getChunks($pageDataQuery, $id, $rev = NULL)
+    {
+        $instructions = $pageDataQuery->getInstructions($id, $rev);
         $chunks = self::_getChunks($instructions);
-        
+
         return $chunks;
     }
-    
+
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     // Només son editables parcialment les seccions de nivell 1, 2 i 3
-    private static function _getChunks($instructions){
+    private static function _getChunks($instructions)
+    {
         $sections = [];
         $currentSection = [];
         $lastClosePosition = 0;
@@ -397,4 +426,19 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
         return $sections;
     }
+
+
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+    public function removeFullDraft()
+    {
+        $this->draftDataQuery->removeFull($this->id);
+    }
+
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+    public function replaceContentForChunk(&$structure, $chunkId, $content)
+    {
+        $index = $structure['dictionary'][$chunkId];
+        $structure['chunks'][$index]['text']['editing'] = $content;
+    }
+
 }
