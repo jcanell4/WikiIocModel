@@ -82,13 +82,11 @@ class DokuPageModel extends WikiRenderizableDataModel
             $this->editing, $this->selected,
             $this->rev);
 
-        $response['draftTypesFound'] = [];
-
         if ($this->draftDataQuery->hasFull($this->id)) {
-            $response['draftTypesFound'][] = self::FULL_DRAFT;
+            $response['draftType'] = self::FULL_DRAFT;
 
-        }  else if ($this->isChunkInDraft($this->id, $response['structure'], $this->selected) && $this->recoverDraft === null) {
-            $response['draftType'] = self::PARTIAL_DRAFT; // ALERTA[Xavi] Segurament no cal, substituit per draftTypesFound
+        } else if ($this->isChunkInDraft($this->id, $response['structure'], $this->selected) && $this->recoverDraft === null) {
+            $response['draftType'] = self::PARTIAL_DRAFT;
             $response['content'] = $this->getChunkFromStructure($response['structure'], $this->selected);
             $response['draft'] = $this->getChunkFromDraft($this->id, $this->selected);
 
@@ -96,11 +94,11 @@ class DokuPageModel extends WikiRenderizableDataModel
                 $this->draftDataQuery->removeChunk($this->id, $this->selected);
                 unset($response['draft']);
                 unset($response['content']);
-                $response['draftType'][] = self::NO_DRAFT; // ALERTA[Xavi] Segurament no cal, substituit per draftTypesFound
-            } else {
-                $response['draftTypesFound'][] = self::PARTIAL_DRAFT;
+                $response['draftType'] = self::NO_DRAFT;
             }
 
+        } else {
+            $response['draftType'] = self::NO_DRAFT;
         }
 
         return $response;
@@ -428,4 +426,19 @@ class DokuPageModel extends WikiRenderizableDataModel
 
         return $sections;
     }
+
+
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+    public function removeFullDraft()
+    {
+        $this->draftDataQuery->removeFull($this->id);
+    }
+
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+    public function replaceContentForChunk(&$structure, $chunkId, $content)
+    {
+        $index = $structure['dictionary'][$chunkId];
+        $structure['chunks'][$index]['text']['editing'] = $content;
+    }
+
 }

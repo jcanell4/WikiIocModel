@@ -3062,16 +3062,16 @@ class DokuModelAdapter extends AbstractModelAdapter
 //        return DraftManager::existsPartialDraft($id);
 //    }
 
-    public function clearFullDraft($id)
-    {
-        global $ACT, $ID;
-
-        $ID = $id;
-
-        WikiIocInfoManager::setInfo('draft', $this->getDraftFilename($id));
-        $ACT = act_draftdel($ACT);
-
-    }
+//    public function clearFullDraft($id)
+//    {
+//        global $ACT, $ID;
+//
+//        $ID = $id;
+//
+//        WikiIocInfoManager::setInfo('draft', $this->getDraftFilename($id));
+//        $ACT = act_draftdel($ACT);
+//
+//    }
 
 //    public function clearPartialDraft($id)
 //    {
