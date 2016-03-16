@@ -23,6 +23,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
     protected $metaDataSubSet;
     protected $idResource;
     protected $MetaDataValue;  //JSON array containing metadata
+    protected $metaDataStructure;
     protected static $MANDATORIES = array("projectType", "metaDataSubSet", "idResource");
     protected static $JSONTYPES = array("MetaDataValue");
 
@@ -58,12 +59,23 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         $this->MetaDataValue = $MetaDataValue;
     }
 
+    function getMetaDataStructure() {
+        return $this->metaDataStructure;
+    }
+
+    function setMetaDataStructure($metaDataStructure) {
+        $this->metaDataStructure = $metaDataStructure;
+    }
+
     /**
-     * Constructor
-     * 
+     * CONSTRUCTOR
+     * Purpose:
+     * - Object with model set (MetaDataStructure)
+     * @param any
+     * @return String JSON
      */
-    public function __construct() {
-        
+    public function __construct($MetaDataStructure = null) {
+        $this->setMetaDataStructure($MetaDataStructure);        
     }
 
     /**
@@ -108,7 +120,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         if (!$allMandatories) {
             throw new NotAllEntityMandatoryProperties();
         }
-        $allValues= $this->__checkValues($arrayEntryKeys);
+        $allValues = $this->__checkValues($arrayEntryKeys);
         if (!$allValues) {
             throw new NotAllEntityValidateProperties();
         }
@@ -217,7 +229,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         }
         return $found;
     }
-    
+
     /**
      * Purpose:
      * - Check if all values from param are validated by the model

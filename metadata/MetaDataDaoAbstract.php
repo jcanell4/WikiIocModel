@@ -96,7 +96,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      * @return json with metadata values
      */
     public function __getMetaPersistence($MetaDataRequestMessage) {
-        return $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery($MetaDataRequestMessage)->getMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
+        return $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->getMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
     }
 
     /**
