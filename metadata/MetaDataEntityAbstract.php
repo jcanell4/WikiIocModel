@@ -75,7 +75,11 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * @return String JSON
      */
     public function __construct($MetaDataStructure = null) {
-        $this->setMetaDataStructure($MetaDataStructure);        
+        print_r("\nP P P P P  P P P P P P P P P P PP P PPe\n");
+        print_r($MetaDataStructure);
+        $this->setMetaDataStructure($MetaDataStructure);
+        print_r("\nX  X X X X X X X X X X X X \n");
+        print_r($this->getMetaDataStructure());
     }
 
     /**
@@ -195,11 +199,22 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new MalFormedJSON();
         }
+
         foreach ($arraypi as $keypi => $valuepi) {
             $arraymd[$keypi] = $arraypi[$keypi];
         }
         $encoder = new JSON();
         $this->setMetaDataValue($encoder->encode($arraymd));
+        /*
+         * CheckStructure
+         */
+        $arraypi = json_decode($paramMetaDataValue, true);
+        $allValues = $this->__checkStructure($arraypi);
+        print_r("\nallValues allValues allValues\n");
+        print_r($allValues);
+        if (!$allValues) {
+            throw new NotAllEntityValidateProperties();
+        }
     }
 
     /**
@@ -241,6 +256,49 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      */
     public function __checkValues($checkValues) {
         return true;
+    }
+
+    /**
+     * Purpose:
+     * - Check if param array validate model $this->metaDataStructure
+     * @param zarray
+     * Restrictions:
+     * @return true if validate
+     */
+    public function __checkStructure($arraypi) {
+        print_r("\n__checkStructure __checkStructure __checkStructure");
+        print_r("\narraypi arraypi arraypi\n");
+        print_r($arraypi);
+        $arrayst = json_decode($this->metaDataStructure, true);
+        print_r("\nmetaDataStructure metaDataStructure metaDataStructure\n");
+        print_r($this->metaDataStructure);
+        print_r("\narrayst arrayst arrayst\n");
+        print_r($arrayst);
+        $validate = false;
+        foreach ($arrayst as $keyst => $valuest) {
+            $validate = false;
+            $found = false;
+            foreach ($arraypi as $keypi => $valuepi) {
+                if ($keyst == $keypi) {
+                    $found = true;
+                    if (isset($valuest['tipus'])) {
+                        if (gettype($valuepi) == $valuest['tipus']) {
+                            $validate = true;
+                        }
+                    } else {
+                        $validate = true;
+                    }
+                    break;
+                }
+            }
+            if (!$found && !$valuest['mandatory']) {
+                $validate = true;
+            }
+            if (!$validate) {
+                break;
+            }
+        }
+        return $validate;
     }
 
 }

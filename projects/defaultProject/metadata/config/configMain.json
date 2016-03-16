@@ -12,8 +12,7 @@
                     "keysDefinition": {
                         "idXYZ": {
                             "tipus": "integer",
-                            "mandatory": true,
-                            "default": "0"
+                            "mandatory": true
                         },
                         "user": {
                             "mandatory": true
