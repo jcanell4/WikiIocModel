@@ -34,6 +34,12 @@ class HtmlRevisionPageAction extends HtmlPageAction{
         $this->defaultDo = DW_ACT_SHOW;
     }
     
+    protected function startProcess() {
+        parent::startProcess();
+         $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], NULL, NULL, $this->params[PageKeys::KEY_REV]);
+    }
+
+
     protected function responseProcess() {
 //        $response['structure'] = $this->getModel()->getData();
         $response = $this->getModel()->getData();
