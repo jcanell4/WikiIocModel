@@ -20,6 +20,9 @@ class DokuPageModel extends WikiRenderizableDataModel
     const PARTIAL_DRAFT = "partial";
     const FULL_DRAFT = "full";
 
+    const LOCAL_PARTIAL_DRAFT = "local_partial";
+    const LOCAL_FULL_DRAFT = "local_full";
+
     protected $id;
     protected $selected;
     protected $editing;

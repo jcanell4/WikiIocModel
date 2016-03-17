@@ -85,7 +85,8 @@ class RawPartialPageAction extends PageAction
         $response['timeout'] = $locked['timeout'];
 
 
-        if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && $response['draftType'] === DokuPageModel::FULL_DRAFT) {
+        if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && ($response['draftType'] === DokuPageModel::FULL_DRAFT
+                || $response['draftType'] === DokuPageModel::LOCAL_FULL_DRAFT)) {
 
             // No existeix el KEY_RECOVER_DRAFT però hi ha un full draft
             // Acció: mostrar dialeg continuar amb edició parcial (es perd l'esborrany) o passar a edició completa
@@ -96,7 +97,8 @@ class RawPartialPageAction extends PageAction
             $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_found'));
 
 
-        } else if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && $response['draftType'] === DokuPageModel::PARTIAL_DRAFT) {
+        } else if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && ($response['draftType'] === DokuPageModel::PARTIAL_DRAFT
+                || $response['draftType'] === DokuPageModel::LOCAL_PARTIAL_DRAFT)) {
             // No existeix el KEY_RECOVER_DRAFT però hi ha un partial_draft
             // Acció: mostrar dialeg seleccionar document o esborrany
 
@@ -121,6 +123,7 @@ class RawPartialPageAction extends PageAction
                 $response['info'] = $this->generateInfo('success', WikiIocLangManager::getLang('chunk_editing') . $this->params[PageKeys::KEY_ID] . ':' . $this->params[PageKeys::KEY_SECTION_ID]);
             }
         }
+
 
         return $response;
     }
