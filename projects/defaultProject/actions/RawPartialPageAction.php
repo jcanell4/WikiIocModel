@@ -85,8 +85,6 @@ class RawPartialPageAction extends PageAction
         $response['timeout'] = $locked['timeout'];
 
 
-
-
         // ALERTA[Xavi] Bloc per determinar si es fa servir el draft local o remot
 
         /*
@@ -118,10 +116,10 @@ class RawPartialPageAction extends PageAction
 
        */
 
-        $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME],0,10));
-        $structuredLastLocalDraftTime = intval(substr($this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME],0,10));
+        $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
+        $structuredLastLocalDraftTime = intval(substr($this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME], 0, 10));
 
-        if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $fullLastLocalDraftTime ) {
+        if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $fullLastLocalDraftTime) {
             // obtenir la data del draft full local
             $fullLastSavedDraftTime = $this->dokuPageModel->fullDraftDate();
             if ($fullLastLocalDraftTime > $fullLastSavedDraftTime) { // local es més recent
@@ -130,7 +128,7 @@ class RawPartialPageAction extends PageAction
             }
         } else if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $structuredLastLocalDraftTime) {
             $structuredLastSavedDraftTime = $this->dokuPageModel->structuredDraftDate();
-            if ($structuredLastLocalDraftTime > $structuredLastSavedDraftTime ) { // local es més recent
+            if ($structuredLastLocalDraftTime > $structuredLastSavedDraftTime) { // local es més recent
                 $response['local'] = true;
                 $response['draftType'] = DokuPageModel::LOCAL_PARTIAL_DRAFT;
             }
@@ -142,10 +140,13 @@ class RawPartialPageAction extends PageAction
         // ALERTA[Xavi] Fi del bloc
 
 
+        if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] ==='true') {
+            // TODO[Xavi] Moure aqui la recuperació del draft? si s'ha demanat recuperar es que ja s'han mostrat els dialogs que tocaven i no cal comprovar els 'isset'
+            $response[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
+            $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
 
 
-
-        if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && ($response['draftType'] === DokuPageModel::FULL_DRAFT
+        } else if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && ($response['draftType'] === DokuPageModel::FULL_DRAFT
                 || $response['draftType'] === DokuPageModel::LOCAL_FULL_DRAFT)) {
 
             // No existeix el KEY_RECOVER_DRAFT però hi ha un full draft

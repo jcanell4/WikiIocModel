@@ -87,6 +87,11 @@ class DokuPageModel extends WikiRenderizableDataModel
             $this->editing, $this->selected,
             $this->rev);
 
+
+        // El content es necessari en si hi ha un draft structurat local o remot, en aquest punt no podem saber si caldrà el local
+        $response['content'] = $this->getChunkFromStructure($response['structure'], $this->selected);
+
+
         if ($this->draftDataQuery->hasFull($this->id)) {
             // Si exiteix el esborrany complet, el tipus serà FULL_DRAFT
             $response['draftType'] = self::FULL_DRAFT;
@@ -94,14 +99,14 @@ class DokuPageModel extends WikiRenderizableDataModel
         } else if ($this->isChunkInDraft($this->id, $response['structure'], $this->selected) && $this->recoverDraft === null) {
             // Si no el chunk seleccionat es troba al draft, i no s'ha indicat que s'ha de recuperar el draft el tipus sera PARTIAL_DRAFT
             $response['draftType'] = self::PARTIAL_DRAFT;
-            $response['content'] = $this->getChunkFromStructure($response['structure'], $this->selected);
+//            $response['content'] = $this->getChunkFromStructure($response['structure'], $this->selected);
             $response['draft'] = $this->getChunkFromDraft($this->id, $this->selected);
 
             // TODO[Xavi] aquesta comprovació no hauria de ser necessaria, mai s'hauria de desar un draft igual al content, i en qualsevol cas la eliminació s'hauria de fer en un altre lloc
             if ($response['draft']['content'] === $response['content']['editing']) {
                 $this->draftDataQuery->removeChunk($this->id, $this->selected);
                 unset($response['draft']);
-                unset($response['content']);
+//                unset($response['content']);
                 $response['draftType'] = self::NO_DRAFT;
             }
 
