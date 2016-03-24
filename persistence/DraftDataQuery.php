@@ -337,4 +337,17 @@ class DraftDataQuery extends DataQuery
         }
     }
 
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+    public function fullDraftDate($id)
+    {
+        $draftFile = $this->getFullFileName($id);
+        return @file_exists($draftFile)?@filemtime($draftFile) : -1;
+    }
+
+    public function fullStructuredDate($id)
+    {
+        $draftFile = $this->getFullFileName($id);
+        return @file_exists($draftFile)?@filemtime($draftFile) : -1;
+    }
+
 }

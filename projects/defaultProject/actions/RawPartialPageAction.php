@@ -85,6 +85,66 @@ class RawPartialPageAction extends PageAction
         $response['timeout'] = $locked['timeout'];
 
 
+
+
+        // ALERTA[Xavi] Bloc per determinar si es fa servir el draft local o remot
+
+        /*
+
+        ALERTA[Xavi] Compte, pot ser s'han de tenir en compte els flags KEY_RECOVER_DRAFT?
+        ALERTA[Xavi] Pot ser no cal afegir les constants LOCAL_xxx i es suficient amb afegir a la resposta el 'local'?
+
+
+
+        FULL DRAFT:
+            Si existeix LOCAL_FULL_DRAFT, comparem data:
+                LOCAL_FULL_DRAFT es més recent (major), canviem a LOCAL_FULL_DRAFT, afegir response 'LOCAL'=true
+
+            Si no existeix FULL (la data es -1) s'estableix el local
+
+
+        sino STRUCTURED_DRAFT:
+
+            Si existeix LOCAL_STRUCTURED:
+                STRUCTURED_DRAFT es més recent (data major), sense canvis
+                LOCAL_STRUCTURED_DRAFT es més recent (data major), canviem a LOCAL_STRUCTURED_DRAFT, afegir response 'LOCAL'=true
+
+        sino NO_DRAFT:
+            Si existeix LOCAL_FULL_DRAFT:
+                canviem a LOCAL_FULL_DRAFT, afegir response 'LOCAL'=true
+
+            Sino, si existeix LOCAL_STRUCTURED:
+                canviem a LOCAL_STRUCTURED_DRAFT, afegir response 'LOCAL'=true
+
+       */
+
+        $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME],0,10));
+        $structuredLastLocalDraftTime = intval(substr($this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME],0,10));
+
+        if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $fullLastLocalDraftTime ) {
+            // obtenir la data del draft full local
+            $fullLastSavedDraftTime = $this->dokuPageModel->fullDraftDate();
+            if ($fullLastLocalDraftTime > $fullLastSavedDraftTime) { // local es més recent
+                $response['local'] = true;
+                $response['draftType'] = DokuPageModel::LOCAL_FULL_DRAFT;
+            }
+        } else if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $structuredLastLocalDraftTime) {
+            $structuredLastSavedDraftTime = $this->dokuPageModel->structuredDraftDate();
+            if ($structuredLastLocalDraftTime > $structuredLastSavedDraftTime ) { // local es més recent
+                $response['local'] = true;
+                $response['draftType'] = DokuPageModel::LOCAL_PARTIAL_DRAFT;
+            }
+
+
+        }
+
+
+        // ALERTA[Xavi] Fi del bloc
+
+
+
+
+
         if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && ($response['draftType'] === DokuPageModel::FULL_DRAFT
                 || $response['draftType'] === DokuPageModel::LOCAL_FULL_DRAFT)) {
 

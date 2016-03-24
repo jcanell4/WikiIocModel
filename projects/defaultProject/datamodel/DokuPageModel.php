@@ -81,18 +81,23 @@ class DokuPageModel extends WikiRenderizableDataModel
 
     public function getViewRawData()
     {
+
+
         $response['structure'] = self::getStructuredDocument($this->pageDataQuery, $this->id,
             $this->editing, $this->selected,
             $this->rev);
 
         if ($this->draftDataQuery->hasFull($this->id)) {
+            // Si exiteix el esborrany complet, el tipus serà FULL_DRAFT
             $response['draftType'] = self::FULL_DRAFT;
 
         } else if ($this->isChunkInDraft($this->id, $response['structure'], $this->selected) && $this->recoverDraft === null) {
+            // Si no el chunk seleccionat es troba al draft, i no s'ha indicat que s'ha de recuperar el draft el tipus sera PARTIAL_DRAFT
             $response['draftType'] = self::PARTIAL_DRAFT;
             $response['content'] = $this->getChunkFromStructure($response['structure'], $this->selected);
             $response['draft'] = $this->getChunkFromDraft($this->id, $this->selected);
 
+            // TODO[Xavi] aquesta comprovació no hauria de ser necessaria, mai s'hauria de desar un draft igual al content, i en qualsevol cas la eliminació s'hauria de fer en un altre lloc
             if ($response['draft']['content'] === $response['content']['editing']) {
                 $this->draftDataQuery->removeChunk($this->id, $this->selected);
                 unset($response['draft']);
@@ -442,6 +447,23 @@ class DokuPageModel extends WikiRenderizableDataModel
     {
         $index = $structure['dictionary'][$chunkId];
         $structure['chunks'][$index]['text']['editing'] = $content;
+    }
+
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+    public function fullDraftDate() {
+        return $this->draftDataQuery->fullDraftDate($this->id);
+    }
+
+    public function structuredDraftDate() {
+        $draft = $this->draftDataQuery->getStructured($this->id);
+
+        // Tenim el diccionari? Al chunk es troba la data en que es va guardar?
+        if ($draft[$this->selected]) {
+            return $draft[$this->selected]['date'];
+        } else {
+            return -1;
+        }
+
     }
 
 }
