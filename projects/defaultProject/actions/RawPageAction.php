@@ -82,6 +82,9 @@ class RawPageAction extends PageAction
         $resp[WikiIocInfoManager::KEY_LOCKED] = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
 
         if ($this->params[PageKeys::KEY_RECOVER_DRAFT] != NULL) {
+            // S'ha seleccionat si volem recuperar o no l'esborrany
+
+            // TODO[Xavi] Determinar si l'esborrany a recuperar es el local
             $resp['recover_draft'] = $this->params[PageKeys::KEY_RECOVER_DRAFT];
 
             if ($this->params[PageKeys::KEY_RECOVER_DRAFT] == 'true') {
