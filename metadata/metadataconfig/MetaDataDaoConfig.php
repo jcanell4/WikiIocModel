@@ -65,7 +65,10 @@ class MetaDataDaoConfig {
      * - mandatory $projectType, $metaDataSubSet
      * @return JSON with {class:ns, ..., class:ns}
      */
-    public static function getMetaDataConfig($projectType, $metaDataSubset, $persistence) {
+    public static function getMetaDataConfig($projectType, $metaDataSubset, $persistence, $configSubSet = null) {
+        if($configSubSet == null){
+            $configSubSet = self::$CONFIGUSUBSET;
+        }
         $exists = false;
         if (array_key_exists($projectType, self::$ClassesNameSpaces)) {
             if (array_key_exists($metaDataSubset, self::$ClassesNameSpaces[$projectType])) {
@@ -78,7 +81,7 @@ class MetaDataDaoConfig {
              * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
              *      crida efectiva al mètode concret de la persistència
              */
-            $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, self::$CONFIGUSUBSET);
+            $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, $configSubSet);
             /*
              * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
              */

@@ -12,7 +12,7 @@
  * @author josep
  */
 class ProjectMetaDataQuery {
-    
+
     private static $retornNsConfig = '{"metaDataClassesNameSpaces":
             {
             "MetaDataRepository": "default", 
@@ -47,20 +47,25 @@ class ProjectMetaDataQuery {
     private static $retornGetMetaDataMaterialsM03 = '{"keymd1":"valorf","keymd3x":"valormd3x"}';
     private static $retornGetMetaDataMaterialsM07 = '{"keymd7":"valormd7","keymd7x":"valormd7x"}';
     private static $retornGetMetaDataAdocsM09 = '{"keymd1":"valorf","keymd9x":"valormd9x"}';
+    private static $retornStructure = '{"user":{"tipus": "string","mandatory":true},"rol":{"mandatory":true},"xyz":{"mandatory":false}}';
 
     public function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
-        if ($projectType == "a" || $projectType == "fp" || $projectType == "Materials" || $projectType == "materials") {
-            return self::$retornNsConfig;
-        } else {
-            if ($projectType == "pt1" || $projectType == "adocs") {
-                return self::$retornNsConfigPt1;
+        if ($configSubSet == 'metaDataClassesNameSpaces') {
+            if ($projectType == "a" || $projectType == "fp" || $projectType == "Materials" || $projectType == "materials") {
+                return self::$retornNsConfig;
             } else {
-                if ($projectType == "pt2") {
-                    return self::$retornNsConfigPt2;
+                if ($projectType == "pt1" || $projectType == "adocs") {
+                    return self::$retornNsConfigPt1;
                 } else {
-                    return self::$retornNsConfigM;
+                    if ($projectType == "pt2") {
+                        return self::$retornNsConfigPt2;
+                    } else {
+                        return self::$retornNsConfigM;
+                    }
                 }
             }
+        } else {
+            return self::$retornStructure;
         }
     }
 
@@ -74,13 +79,13 @@ class ProjectMetaDataQuery {
     }
 
     public function getMeta($idResource, $projectType, $metaDataSubSet) {
-        if($idResource==="fp:dam:m03"){
+        if ($idResource === "fp:dam:m03") {
             return self::$retornGetMetaDataMaterialsM03;
         }
-        if($idResource==="fp:daw:m07"){
+        if ($idResource === "fp:daw:m07") {
             return self::$retornGetMetaDataMaterialsM07;
         }
-        if($idResource==="fp:daw:m09"){
+        if ($idResource === "fp:daw:m09") {
             return self::$retornGetMetaDataAdocsM09;
         }
         if ($idResource === "fp") {
@@ -95,7 +100,7 @@ class ProjectMetaDataQuery {
     }
 
     public function setMeta($idResource, $projectType, $metaDataSubSet, $metaDataValue) {
-        if ($idResource === "fp"|| $projectType == "adocs" || $projectType == "materials") {
+        if ($idResource === "fp" || $projectType == "adocs" || $projectType == "materials") {
             return true;
         } else {
             if ($idResource === "nt") {
@@ -110,4 +115,5 @@ class ProjectMetaDataQuery {
             }
         }
     }
+
 }
