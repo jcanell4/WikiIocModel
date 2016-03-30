@@ -2,9 +2,9 @@
     "metaDataClassesNameSpaces": [
         {
             "defaultSubSet": {
-                "MetaDataDAO": "defaultProject",
-                "MetaDataEntity": "defaultProject",
-                "MetaDataRender": "defaultProject"
+                "MetaDataDAO": "pt1",
+                "MetaDataEntity": "pt1",
+                "MetaDataRender": "pt1"
             }
         },
         {
@@ -27,13 +27,13 @@
                         "user": {
                             "mandatory": true
                         },
-                        "rol": {
+                        "rolp111": {
                             "mandatory": false
                         }
                     }
                 },
                 {
-                    "SubSet1": "aaa",
+                    "SubSet1": "fitxerx",
                     "keysDefinition": {
                         "idXYZ": {
                             "tipus": "integer",
@@ -42,7 +42,7 @@
                         "user": {
                             "mandatory": true
                         },
-                        "rol22": {
+                        "rolpt1": {
                             "mandatory": false
                         }
                     }

@@ -40,6 +40,7 @@ class MetaDataDaoConfig {
      */
 
     protected static $CONFIGUSUBSET = "metaDataClassesNameSpaces";
+    protected static $CONFIGUSUBSETST = "metaDataProjectStructure";
 
     /*
      * Array bidimensional containing 
@@ -66,9 +67,10 @@ class MetaDataDaoConfig {
      * @return JSON with {class:ns, ..., class:ns}
      */
     public static function getMetaDataConfig($projectType, $metaDataSubset, $persistence, $configSubSet = null) {
-        if($configSubSet == null){
+        if ($configSubSet == null) {
             $configSubSet = self::$CONFIGUSUBSET;
         }
+        print_r("configSubSet ES ES: " . $configSubSet);
         $exists = false;
         if (array_key_exists($projectType, self::$ClassesNameSpaces)) {
             if (array_key_exists($metaDataSubset, self::$ClassesNameSpaces[$projectType])) {
@@ -86,15 +88,17 @@ class MetaDataDaoConfig {
              * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
              */
             //print_r("getMetaDataConfig -> projectType: ".$projectType);
-            print_r("\ngetMetaDataConfig -> jSONArray: ".$jSONArray);
+            print_r("\ngetMetaDataConfig -> jSONArray: " . $jSONArray);
 
             $encoder = new JSON();
-            $arrayConfigPre = $encoder->decode($jSONArray);
+            $arrayConfigPre = $encoder->decode($jSONArray, true);
             if (json_last_error() != JSON_ERROR_NONE) {
                 throw new MalFormedJSON();
             }
 
             $arrayConfig = array();
+            print_r("\nAAAAAAAAAAAAAAAAAAAAAA arrayConfigPre\n");
+            print_r($arrayConfigPre);
             foreach ($arrayConfigPre as $obj1 => $value1) {
                 foreach ($value1 as $obj => $value) {
                     $arrayConfig[$obj] = $value;
@@ -105,6 +109,95 @@ class MetaDataDaoConfig {
         return self::$ClassesNameSpaces[$projectType][$metaDataSubset];
     }
 
+    /**
+     * Purpose:
+     * - Call PERSISTENCE component to obtain file name containing metadata
+     * @param String projectType, String metaDataSubset
+     * Restrictions:
+     * - Persistence returns wellformed JSON
+     * - mandatory $projectType, $metaDataSubSet
+     * @return JSON with {class:ns, ..., class:ns}
+     */
+    public static function getMetaDataFileName($projectType, $metaDataSubset, $persistence, $configSubSet = null) {
+        if ($configSubSet == null) {
+            $configSubSet = self::$CONFIGUSUBSETST;
+        }
+        print_r("\nconfigSubSet ES ES: " . $configSubSet);
+
+        //Call PERSISTENCE method
+        /*
+         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
+         *      crida efectiva al mètode concret de la persistència
+         */
+        $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, $configSubSet);
+        /*
+         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
+         */
+        //print_r("getMetaDataConfig -> projectType: ".$projectType);
+        print_r("\ngetMetaDataConfig -> jSONArray: " . $jSONArray);
+
+        $encoder = new JSON();
+        $arrayConfigPre = $encoder->decode($jSONArray, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            throw new MalFormedJSON();
+        }
+
+        $arrayConfig = array();
+        print_r("\nAAAAAAAAAAAAAAAAAAAAAA arrayConfigPre\n");
+        print_r($arrayConfigPre);
+        $arrayConfigPre = get_object_vars($arrayConfigPre);
+        print_r("\nAAAAAAAAAAAAAAAAAAAAAAGAIN arrayConfigPre\n");
+        print_r($arrayConfigPre);
+        print_r("\nAAAAAAAAAAAAAAAAAAAAAAGAIN00000000000000000000 arrayConfigPre\n");
+        print_r(reset($arrayConfigPre));
+        return reset($arrayConfigPre);
+    }
+
+    /**
+     * Purpose:
+     * - Call PERSISTENCE component to obtain data model from metaDataSubSet (structure)
+     * @param String projectType, String metaDataSubset
+     * Restrictions:
+     * - Persistence returns wellformed JSON
+     * - mandatory $projectType, $metaDataSubSet
+     * @return JSON with {class:ns, ..., class:ns}
+     */
+    public static function getMetaDataStructure($projectType, $metaDataSubset, $persistence, $configSubSet = null) {
+        if ($configSubSet == null) {
+            $configSubSet = self::$CONFIGUSUBSETST;
+        }
+        print_r("\nconfigSubSet ES ES: " . $configSubSet);
+
+        //Call PERSISTENCE method
+        /*
+         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
+         *      crida efectiva al mètode concret de la persistència
+         */
+        $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, $configSubSet);
+        /*
+         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
+         */
+        //print_r("getMetaDataConfig -> projectType: ".$projectType);
+        print_r("\ngetMetaDataConfig -> jSONArray: " . $jSONArray);
+
+        $encoder = new JSON();
+        $arrayConfigPre = $encoder->decode($jSONArray, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            throw new MalFormedJSON();
+        }
+
+        $arrayConfig = array();
+        print_r("\nAAAAAAAAAAAAAAAAAAAAAA arrayConfigPre\n");
+        print_r($arrayConfigPre);
+        $arrayConfigPre = get_object_vars($arrayConfigPre);
+        print_r("\nAAAAAAAAAAAAAAAAAAAAAAGAIN arrayConfigPre\n");
+        print_r($arrayConfigPre);
+        print_r("\nAAAAAAAAAAAAAAAAAAAAAAGAIN00000000000000000000 arrayConfigPre\n");
+        print_r($arrayConfigPre["keysDefinition"]);
+        print_r($encoder->encode($arrayConfigPre["keysDefinition"]));
+        return $encoder->encode($arrayConfigPre["keysDefinition"]);
+    }
+    
     /**
      * Purpose:
      * - Call PERSISTENCE component to obtain ns containing project metadata and his projectType (starting from a nsRoot given)

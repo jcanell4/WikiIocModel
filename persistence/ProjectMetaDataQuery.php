@@ -1,10 +1,10 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+if (!defined("DOKU_INC"))
+    die();
+if (!defined('DOKU_PLUGIN')) {
+    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+}
+require_once( DOKU_INC . 'inc/JSON.php' );
 
 /**
  * Description of ProjectMetaDataQuery
@@ -49,7 +49,7 @@ class ProjectMetaDataQuery {
     private static $retornGetMetaDataAdocsM09 = '{"keymd1":"valorf","keymd9x":"valormd9x"}';
     private static $retornStructure = '{"user":{"tipus": "string","mandatory":true},"rol":{"mandatory":true},"xyz":{"mandatory":false}}';
 
-    public function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
+    /*public function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
         if ($configSubSet == 'metaDataClassesNameSpaces') {
             if ($projectType == "a" || $projectType == "fp" || $projectType == "Materials" || $projectType == "materials") {
                 return self::$retornNsConfig;
@@ -67,7 +67,33 @@ class ProjectMetaDataQuery {
         } else {
             return self::$retornStructure;
         }
+    }*/
+    
+    public function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
+        $configMain = @file_get_contents(DOKU_PLUGIN."wikiiocmodel/projects/".$projectType."/metadata/config/configMain.json");
+        if($configMain == false){
+            $configMain = @file_get_contents(DOKU_PLUGIN."wikiiocmodel/projects/"."defaultProject"."/metadata/config/configMain.json");
+        }       
+        $configMainArray= json_decode($configMain,true);
+        $toReturn = "";
+        $encoder = new JSON();
+        for($i=0;$i<sizeof($configMainArray[$configSubSet]);$i++){
+            if (isset($configMainArray[$configSubSet][$i][$metaDataSubset])){              
+                $toReturn = $encoder->encode($configMainArray[$configSubSet][$i]);
+            }else{
+                if (isset($configMainArray[$configSubSet][$i]["defaultSubSet"])){
+                    if($toReturn == ""){
+                        $toReturn = $encoder->encode($configMainArray[$configSubSet][$i]);
+                    }
+                }
+            }            
+        }
+        print_r("\ntoReturn");
+        print_r($toReturn);
+        return $toReturn;
+        
     }
+    
 
     //Retorn → JSON {ns1:projectType1, …, nsm:projectTypem}
     public function getMetaDataElementsKey($nsRoot) {
