@@ -74,7 +74,7 @@ class DokuPageModel extends WikiRenderizableDataModel
             $this->rev);
         if ($this->draftDataQuery->hasAny($this->id)) {
             $ret['draftType'] = self::FULL_DRAFT;
-            $ret['dratf'] = $this->getDraftAsFull();
+            $ret['draft'] = $this->getDraftAsFull();
         }
         return $ret;
     }

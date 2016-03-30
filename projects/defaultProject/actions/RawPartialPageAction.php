@@ -119,6 +119,11 @@ class RawPartialPageAction extends PageAction
         $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
         $structuredLastLocalDraftTime = intval(substr($this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME], 0, 10));
 
+        // Si l'esborrany estructurad local es més recent que l'esborrany complet local, ignorem l'esborrany local complet
+        if ($structuredLastLocalDraftTime>$fullLastLocalDraftTime) {
+            $fullLastLocalDraftTime = null;
+        }
+
         if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $fullLastLocalDraftTime) {
             // obtenir la data del draft full local
             $fullLastSavedDraftTime = $this->dokuPageModel->fullDraftDate();
