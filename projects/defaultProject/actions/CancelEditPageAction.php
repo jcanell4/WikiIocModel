@@ -46,6 +46,10 @@ class CancelEditPageAction extends PageAction {
 //    $response['structure']  = $this->getModel()->getData();
     $response = $this->getModel()->getData();
 
+      if ($this->params[PageKeys::DISCARD_CHANGES]) {
+          $response['structure']['discard_changes'] =$this->params[PageKeys::DISCARD_CHANGES];
+      }
+
 
     $response ['info'] = $this->generateInfo("warning", WikiIocLangManager::getLang('edition_cancelled'));
 
