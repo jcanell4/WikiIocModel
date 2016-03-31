@@ -12,7 +12,7 @@
  *
  * @author professor
  */
-namespace pt1;
+namespace ptx;
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderAbstract.php');
 
 

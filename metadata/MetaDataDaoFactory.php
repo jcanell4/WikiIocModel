@@ -36,8 +36,8 @@ class MetaDataDaoFactory {
         if (!isset($arrayConfigPre->MetaDataDAO) || $arrayConfigPre->MetaDataDAO == '' || $arrayConfigPre->MetaDataDAO == null) {
             throw new ClassDaoNotFound();
         }
-        require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/classes/' . $arrayConfigPre->MetaDataDAO . '/MetaDataDao.php');
-        $fully_qualified_name = "ns" . $arrayConfigPre->MetaDataDAO . '\\' . "MetaDataDao";
+        require_once (DOKU_PLUGIN . 'wikiiocmodel/projects/' . $arrayConfigPre->MetaDataDAO . '/metadata/MetaDataDao.php');
+        $fully_qualified_name =  $arrayConfigPre->MetaDataDAO . '\\' . "MetaDataDao";
 
         return new $fully_qualified_name();
         //return new MetaDataDao();

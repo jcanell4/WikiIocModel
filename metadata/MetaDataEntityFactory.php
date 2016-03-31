@@ -36,10 +36,10 @@ class MetaDataEntityFactory {
         if (!isset($arrayConfigPre->MetaDataEntity) || $arrayConfigPre->MetaDataEntity == '' || $arrayConfigPre->MetaDataEntity == null) {
             throw new ClassEntityNotFound();
         }
-        require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/classes/' . $arrayConfigPre->MetaDataEntity . '/MetaDataEntity.php');
-        $fully_qualified_name = "ns" . $arrayConfigPre->MetaDataEntity . '\\' . "MetaDataEntity";
-
-        return new $fully_qualified_name();
+        require_once (DOKU_PLUGIN . 'wikiiocmodel/projects/' . $arrayConfigPre->MetaDataEntity . '/metadata/MetaDataEntity.php');
+        $fully_qualified_name = $arrayConfigPre->MetaDataEntity . '\\' . "MetaDataEntity";
+        //getMetaDataStructure($projectType, $metaDataSubset, $persistence, $configSubSet = null)
+        return new $fully_qualified_name(MetaDataDaoConfig::getMetaDataStructure($projectType, $metaDataSubset, $persistence));
         //return new MetaDataEntity();
     }
 

@@ -12,7 +12,7 @@
  *
  * @author professor
  */
-namespace nsdefault;
+namespace pt1;
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataDaoAbstract.php');
 class MetaDataDao extends \MetaDataDaoAbstract{
 

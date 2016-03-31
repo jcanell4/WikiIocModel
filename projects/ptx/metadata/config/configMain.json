@@ -2,9 +2,9 @@
     "metaDataClassesNameSpaces": [
         {
             "defaultSubSet": {
-                "MetaDataDAO": "pt1",
-                "MetaDataEntity": "pt1",
-                "MetaDataRender": "pt1"
+                "MetaDataDAO": "ptx",
+                "MetaDataEntity": "ptx",
+                "MetaDataRender": "ptx"
             }
         },
         {
@@ -18,16 +18,16 @@
     ,
     "metaDataProjectStructure":
             [{
-                    "defaultSubSet": "fpt1",
+                    "defaultSubSet": "fptx",
                     "keysDefinition": {
                         "idXYZ": {
                             "tipus": "integer",
-                            "mandatory": true
+                            "mandatory": false
                         },
                         "user": {
                             "mandatory": true
                         },
-                        "rolp111": {
+                        "rol": {
                             "mandatory": false
                         }
                     }

@@ -36,8 +36,9 @@ class MetaDataRenderFactory {
         if (!isset($arrayConfigPre->MetaDataRender) || $arrayConfigPre->MetaDataRender == '' || $arrayConfigPre->MetaDataRender == null) {
             throw new ClassRenderNotFound();
         }
-        require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/classes/' . $arrayConfigPre->MetaDataRender . '/MetaDataRender.php');
-        $fully_qualified_name = "ns" . $arrayConfigPre->MetaDataRender . '\\' . "MetaDataRender";
+        require_once (DOKU_PLUGIN . 'wikiiocmodel/projects/' . $arrayConfigPre->MetaDataRender . '/metadata/MetaDataRender.php');
+
+        $fully_qualified_name = $arrayConfigPre->MetaDataRender . '\\' . "MetaDataRender";
 
         return new $fully_qualified_name();
         //return new MetaDataRender();
