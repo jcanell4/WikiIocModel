@@ -89,7 +89,14 @@ class SavePageAction extends RawPageAction {
 
         // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
         //$this->draftQuery->removePartialDraft($this->params['id']);
-        $this->getModel()->removePartialDraft();
+
+        // Eliminem el fitxer d'esborranys parcials. ALERTA[Xavi] aquesta comprovació no s'hauria de fer! s'ha de mirar com restructurar el SavePartialPageAction perquè no es faci aquesta crida
+
+        if (!isset($this->params[PageKeys::KEY_SECTION_ID])){ // TODO[Xavi] Fix temporal
+            $this->getModel()->removePartialDraft();
+        }
+
+
         
         // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
         $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
@@ -133,6 +140,8 @@ class SavePageAction extends RawPageAction {
         }
         
         $response['info'] = $this->generateInfo($type, $response['info'], $id, $duration);
+
+
 
         return $response;
     }

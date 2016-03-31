@@ -93,7 +93,6 @@ class RawPartialPageAction extends PageAction
         ALERTA[Xavi] Pot ser no cal afegir les constants LOCAL_xxx i es suficient amb afegir a la resposta el 'local'?
 
 
-
         FULL DRAFT:
             Si existeix LOCAL_FULL_DRAFT, comparem data:
                 LOCAL_FULL_DRAFT es més recent (major), canviem a LOCAL_FULL_DRAFT, afegir response 'LOCAL'=true

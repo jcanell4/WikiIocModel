@@ -249,6 +249,10 @@ class DokuPageModel extends WikiRenderizableDataModel
                                                   $selected = NULL, $rev = null)
     {
 
+        if ($editing && !is_array($editing)) {
+
+        }
+
         if (!$editing && $selected) {
             $editing = [$selected];
         } else if (!$editing) {

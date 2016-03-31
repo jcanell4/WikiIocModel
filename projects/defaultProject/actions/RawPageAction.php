@@ -65,7 +65,41 @@ class RawPageAction extends PageAction
      * DokuAction#response.
      */
     protected function responseProcess()
+
     {
+
+        /*
+            SI hi ha un draft complet:
+                preseleccionat el complet amb data
+
+            SINO SI hi ha un draft estructurat:
+                preseleccionat estructurat amb data
+
+            FSI
+
+            // Es una comparació a banda, primer establim si el preseleccionat es full o structured, i llavors si es més recent que el local
+
+            SI hi ha fulldraft local
+                fulldraftlocal més recent -> establim el fulldraftlocal
+            FSI
+
+        */
+
+        // només tenim en compte el temps del full draft local, perquè no es pot reconstruir el document localment
+
+
+        $fullLastSavedDraftTime = $this->dokuPageModel->fullDraftDate();
+
+        $structuredLastSavedDraftTime = $this->dokuPageModel->structuredDraftDate();
+        $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
+
+
+
+
+        // ALERTA[Xavi] Fi del codi nou
+
+
+
         $pageToSend = $this->cleanResponse($this->_getCodePage());
 
         $resp = $this->getContentPage($pageToSend["content"]);

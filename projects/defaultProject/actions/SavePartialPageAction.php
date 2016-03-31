@@ -38,10 +38,8 @@ class SavePartialPageAction extends SavePageAction{
 
     protected function runProcess() {
         parent::runProcess();
-        $this->getModel()->removeChunkDraft($selected);
-
-        $this->lock();        
-        
+        $this->getModel()->removeChunkDraft($this->params[PageKeys::KEY_SECTION_ID]);
+        $this->lock();
     }
 
     protected function responseProcess(){
@@ -53,7 +51,7 @@ class SavePartialPageAction extends SavePageAction{
         if (!$response['info']) {
             $response['info'] = $this->generateInfo(
                     "info", 
-                    sprintf(WikiIocLangManager::getLang('section_saved'), $selected)
+                    sprintf(WikiIocLangManager::getLang('section_saved'), $this->params[PageKeys::KEY_SECTION_ID])
             ); // TODO[Xavi] Aquesta info s'afegeix en algún lloc, s'ha de moure aquí i fe la localització
         }
 
