@@ -50,6 +50,9 @@ class ProjectMetaDataQuery {
     private static $retornGetMetaDataAdocsM09 = '{"keymd1":"valorf","keymd9x":"valormd9x"}';
     private static $retornStructure = '{"user":{"tipus": "string","mandatory":true},"rol":{"mandatory":true},"xyz":{"mandatory":false}}';
     private static $retornNsProjectX = '{"fp:dam:m03:fptx":"ptx","fp:daw:m07:fitxerx":"ptx","fp:daw:m07:fptx":"ptx","fp:daw:m09:fitxerx":"defaultProject"}';
+    private static $retornGetMetaDataMX = '{"user":"mlozan54","rol":"autor"}';
+    private static $retornGetMetaDataMXX = '{"user":"mlozan54","rol":"editor"}';
+    private static $retornGetMetaDataMXY = '{"user":"mlozan54","rol":"autor"}';
 
     /* public function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
       if ($configSubSet == 'metaDataClassesNameSpaces') {
@@ -103,7 +106,11 @@ class ProjectMetaDataQuery {
             if ($nsRoot == "chg2") {
                 return self::$retornNsProjectX;
             } else {
-                return self::$retornNsProjectM;
+                if ($nsRoot == "fp:daw:m07") {
+                    return null;
+                } else {
+                    return self::$retornNsProjectM;
+                }
             }
         }
     }
@@ -118,6 +125,21 @@ class ProjectMetaDataQuery {
         if ($idResource === "fp:daw:m09") {
             return self::$retornGetMetaDataAdocsM09;
         }
+        /*
+         * Change2
+         */
+        if ($idResource === "fp:daw:m09:fitxerx") {
+            return self::$retornGetMetaDataMX;
+        }
+        if ($idResource === "fp:daw:m07:fptx") {
+            return self::$retornGetMetaDataMXX;
+        }
+        if ($idResource === "fp:dam:m03:fptx") {
+            return self::$retornGetMetaDataMXY;
+        }
+        /*
+         * Fi Change 2
+         */
         if ($idResource === "fp") {
             return self::$retornGetMetaData;
         } else {
@@ -130,7 +152,7 @@ class ProjectMetaDataQuery {
     }
 
     public function setMeta($idResource, $projectType, $metaDataSubSet, $metaDataValue) {
-        if ($idResource === "fp" || $projectType == "adocs" || $projectType == "materials") {
+        if ($idResource === "fp" || $projectType == "adocs" || $projectType == "materials" || $projectType == "defaultProject" || $projectType == "ptx") {
             return true;
         } else {
             if ($idResource === "nt") {

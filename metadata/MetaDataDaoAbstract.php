@@ -66,6 +66,8 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
          *      crida efectiva al mètode concret de la persistència
          */
         $jSONArray = $this->__getMetaPersistence($MetaDataRequestMessage);
+        print_r("XXXXXXXXXXXXXXXXXXXXX getMeta in DAO XXXXXXXXXXXXXXXXXXXXX");
+        print_r($jSONArray);
         
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 

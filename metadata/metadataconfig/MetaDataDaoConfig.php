@@ -217,6 +217,9 @@ class MetaDataDaoConfig {
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
+        print_r("\nEEEEEEEEEEEEEEEEEEEE  ElementsKey  Null????????????\n");
+        print_r($jSONArray);
+        print_r("\nFIFIFIFIFIFIEEEEEEEEEEEEEEEEEEEE  ElementsKey  Null????????????\n");
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray);
         if (json_last_error() != JSON_ERROR_NONE) {
