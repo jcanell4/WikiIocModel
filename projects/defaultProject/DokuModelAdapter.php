@@ -246,7 +246,7 @@ class DokuModelAdapter extends AbstractModelAdapter
      * @throws PageNotFoundException
      * @throws InsufficientPermissionToEditPageException
      */
-    public function getCodePage($params)
+    public function getCodePage($params) // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
     {
         $action = new RawPageAction($this->persistenceEngine);
         $contentData = $action->get($params);
