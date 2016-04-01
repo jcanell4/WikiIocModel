@@ -464,15 +464,25 @@ class DokuPageModel extends WikiRenderizableDataModel
     }
 
     public function structuredDraftDate() {
+        $date = -1;
         $draft = $this->draftDataQuery->getStructured($this->id);
+
 
         // Tenim el diccionari? Al chunk es troba la data en que es va guardar?
         if ($draft[$this->selected]) {
-            return $draft[$this->selected]['date'];
-        } else {
-            return -1;
+            $date = $draft[$this->selected]['date'];
+        } else if (!$this->selected && count($draft)>0) {
+            // Si no hi ha cap seleccionat retornem la data més recent
+
+            foreach ($draft as $content) {
+                if ($content['date']>$date) {
+                    $date= $content['date'];
+                }
+            }
+
         }
 
+        return $date;
     }
 
 }

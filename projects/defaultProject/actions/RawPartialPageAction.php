@@ -85,12 +85,9 @@ class RawPartialPageAction extends PageAction
         $response['timeout'] = $locked['timeout'];
 
 
-        // ALERTA[Xavi] Bloc per determinar si es fa servir el draft local o remot
-
         /*
 
-        ALERTA[Xavi] Compte, pot ser s'han de tenir en compte els flags KEY_RECOVER_DRAFT?
-        ALERTA[Xavi] Pot ser no cal afegir les constants LOCAL_xxx i es suficient amb afegir a la resposta el 'local'?
+        TODO[Xavi] En lloc de les constants LOCAL_FULL_DRAFT pot ser suficient detecgar el valor de la resposta 'local'
 
 
         FULL DRAFT:
@@ -142,9 +139,6 @@ class RawPartialPageAction extends PageAction
 
 
         }
-
-
-        // ALERTA[Xavi] Fi del bloc
 
 
         if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] ==='true') {

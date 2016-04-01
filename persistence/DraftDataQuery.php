@@ -188,21 +188,9 @@ class DraftDataQuery extends DataQuery
         // Recorrem la llista de headers de old drafts
 
         foreach ($oldDraft as $header => $chunk) {
-            $content1 = $draft[$header]['content'];
-            $content2 = $chunk['content'];
-            $iguals = $content1 == $content2;
 
-
-//            if (!$draft[$header]['content']) {
-            //TODO[Xavi] Encara que no es passi una secció en particular no vol dir que s'hagi d'esborrar, si no solament es guarda el chunk seleccionat
-            //
-//                continue;
-
-//            } else
             if (array_key_exists($header, $draft)
-
                 && $chunk['content'] != $draft[$header]['content']
-
             ) {
 
                 $chunk['date'] = $time;
@@ -222,6 +210,7 @@ class DraftDataQuery extends DataQuery
         // Guardem el draft si hi ha cap chunk
         if (count($newDraft) > 0) {
             io_saveFile($draftFile, serialize($newDraft));
+            $this->removeFull($id);
 
         } else {
             // No hi ha res, l'esborrem
