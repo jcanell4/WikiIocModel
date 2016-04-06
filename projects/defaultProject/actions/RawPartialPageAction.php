@@ -122,13 +122,13 @@ class RawPartialPageAction extends PageAction
 
         if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $fullLastLocalDraftTime) {
             // obtenir la data del draft full local
-            $fullLastSavedDraftTime = $this->dokuPageModel->fullDraftDate();
+            $fullLastSavedDraftTime = $this->dokuPageModel->getFullDraftDate();
             if ($fullLastLocalDraftTime > $fullLastSavedDraftTime) { // local es més recent
                 $response['local'] = true;
                 $response['draftType'] = DokuPageModel::LOCAL_FULL_DRAFT;
             }
         } else if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $structuredLastLocalDraftTime) {
-            $structuredLastSavedDraftTime = $this->dokuPageModel->structuredDraftDate();
+            $structuredLastSavedDraftTime = $this->dokuPageModel->getStructuredDraftDate();
 
 //            $structuredLastSavedDraftTime = 1558822524; // TODO[Xavi] Forçant la comprovació, ELIMINAR!
 

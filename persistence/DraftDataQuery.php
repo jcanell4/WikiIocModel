@@ -327,16 +327,37 @@ class DraftDataQuery extends DataQuery
     }
 
     // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
-    public function fullDraftDate($id)
+    public function getFullDraftDate($id)
     {
         $draftFile = $this->getFullFileName($id);
-        return @file_exists($draftFile)?@filemtime($draftFile) : -1;
+        return @file_exists($draftFile) ? @filemtime($draftFile) : -1;
     }
 
-    public function fullStructuredDate($id)
+    // TODO[Xavi] Arreglar, això retorna la data del fitxer, però a la estructura es troba la data del chunk
+    public function getStructuredDraftDate($id, $chunkId)
     {
-        $draftFile = $this->getFullFileName($id);
-        return @file_exists($draftFile)?@filemtime($draftFile) : -1;
+
+        $date = -1;
+        $draft = $this->getStructured($id);
+
+
+        // Tenim el diccionari? Al chunk es troba la data en que es va guardar?
+        if ($draft[$chunkId]) {
+            $date = $draft[$chunkId]['date'];
+        } else if (!$chunkId && count($draft) > 0) {
+            // Si no hi ha cap seleccionat retornem la data més recent
+
+            foreach ($draft as $content) {
+                if ($content['date'] > $date) {
+                    $date = $content['date'];
+                }
+            }
+
+        }
+
+        return $date;
+
+
     }
 
 }

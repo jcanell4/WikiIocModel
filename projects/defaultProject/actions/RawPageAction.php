@@ -85,8 +85,8 @@ class RawPageAction extends PageAction
 
         // només tenim en compte el temps del full draft local, perquè no es pot reconstruir el document localment
 
-        $fullLastSavedDraftTime = $this->dokuPageModel->fullDraftDate();
-        $structuredLastSavedDraftTime = $this->dokuPageModel->structuredDraftDate();
+        $fullLastSavedDraftTime = $this->dokuPageModel->getFullDraftDate();
+        $structuredLastSavedDraftTime = $this->dokuPageModel->getStructuredDraftDate();
         $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
 
         // Només pot existir un dels dos, i el draft que arriba aquí ja es el complet si existeix algun dels dos
