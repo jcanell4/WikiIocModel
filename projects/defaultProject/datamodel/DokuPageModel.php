@@ -463,10 +463,9 @@ class DokuPageModel extends WikiRenderizableDataModel
         return $this->draftDataQuery->getFullDraftDate($this->id);
     }
 
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
     public function getStructuredDraftDate() {
-
         return $this->draftDataQuery->getStructuredDraftDate($this->id, $this->selected);
-
     }
 
 }

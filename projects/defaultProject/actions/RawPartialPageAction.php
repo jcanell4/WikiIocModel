@@ -86,7 +86,6 @@ class RawPartialPageAction extends PageAction
 
 
         /*
-
         TODO[Xavi] En lloc de les constants LOCAL_FULL_DRAFT pot ser suficient detecgar el valor de la resposta 'local'
 
 
@@ -154,7 +153,7 @@ class RawPartialPageAction extends PageAction
             // Acció: mostrar dialeg continuar amb edició parcial (es perd l'esborrany) o passar a edició completa
 
             $response['original_call'] = $this->generateOriginalCall();
-            $response['id'] = $this->params[PageKeys::KEY_ID];
+            $response['id'] = WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]);
             $response['show_full_draft_dialog'] = true;
             $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_found'));
 
@@ -195,6 +194,7 @@ class RawPartialPageAction extends PageAction
         // ALERTA[Xavi] Cal afegir el el ns, ja que aquest no forma part dels params
         $originalCall = $this->params;
         $originalCall['ns'] = $this->params[PageKeys::KEY_ID];
+        $originalCall['id'] = WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]);
         return $originalCall;
     }
 
