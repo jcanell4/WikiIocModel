@@ -215,6 +215,10 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         if (!$allValues) {
             throw new NotAllEntityValidateProperties();
         }
+        $allValues = $this->__checkValues($arrayEntryKeys);
+        if (!$allValues) {
+            throw new NotAllEntityValidateProperties();
+        }
     }
 
     /**
