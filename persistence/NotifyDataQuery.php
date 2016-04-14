@@ -16,24 +16,18 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
 class NotifyDataQuery extends DataQuery
 {
     // TODO[Xavi] moure a altre fitxer com els PageKeys?
-    const TIMESTAMP = 'timestamp';
+    const NOTIFICATION_ID = 'notification_id';
     const SENDER_ID = 'sender_id';
-    const MESSAGE = 'message';
-    const TYPE = 'type'; // ALERT, INFO, DIALOG
-    const SUBTYPE = 'subtype'; // debug, warning, info, success, error, etc. els que fem servir actualment pels infos
-    const DOC_ID = 'doc_id'; // ID del document, o res si es global
-    const DURATION = 'duration';
+    const TEXT = 'text';
+    const TYPE = 'type'; // ALERT, MESSAGE, DIALOG
     const PARAMS = 'params';
 
     const TYPE_ALERT = 'alert';
-    const TYPE_INFO = 'info';
+    const TYPE_MESSAGE = 'message';
     const TYPE_DIALOG = 'dialog';
 
-    const SUBTYPE_INFO = 'info';
-    const SUBTYPE_SUCCESS = 'success';
-    const SUBTYPE_WARNING = 'warning';
-    const SUBTYPE_ERROR = 'error';
-    const SUBTYPE_DEBUG = 'debug';
+
+    const DEFAULT_USER = 'SYSTEM';
 
     // TODO[Xavi] Segons la configuració del servidor (conf wikiiocmodel) es farà servir un sistema de timers o de websockets
 
@@ -52,24 +46,32 @@ class NotifyDataQuery extends DataQuery
     }
 
 
-    public function generateMessage($text, $params = [])
+    public function generateNotification($text, $type = self::TYPE_MESSAGE, $params = [], $senderId = NULL)
     {
         $message = [];
-        $now = new DateTime();
-        $message[self::TIMESTAMP] = $now->getTimestamp();
-        $message[self::MESSAGE] = $text;
+        $now = new DateTime(); // id
+        $message[self::NOTIFICATION_ID] = $now->getTimestamp();
+        $message[self::TYPE] = $type;
+        $message[self::TEXT] = $text;
         $message[self::PARAMS] = $params;
 
+
+        // Si no s'ha especificat el sender s'atribueix al sistema
+        if ($senderId === NULL) {
+            $message[self::SENDER_ID] = self::DEFAULT_USER;
+        } else {
+            $message[self::SENDER_ID] = $senderId;
+        }
 
         return $message;
     }
 
-    public function pushMessage($message, $receiverId, $senderId = NULL)
+    public function add($receiverId, $textMessage, $params, $senderId = NULL, $type = self::TYPE_ALERT)
     {
-        // Si no s'ha especificat el sender s'afegeix l'usuari connectat
-        if ($senderId === NULL) {
-            $message[self::SENDER_ID] = $senderId;
-        }
+
+
+        // Generar la notificació
+        $message = $this->generateNotification($textMessage, $type, $params, $senderId);
 
 
         $this->loadBlackboard($receiverId);
@@ -80,15 +82,26 @@ class NotifyDataQuery extends DataQuery
     }
 
 
-    public function popNotifications($userId)
+    // ALERTA[Xavi] no tinc clar per a que necessitem aquesta funció, afegida perquè es trobava al document
+    public function save($receiverId, $textMessage, $params, $senderId = NULL, $type = self::TYPE_ALERT)
     {
-        // Alerta[Xavi] PHP copia els arrays per valor, i no per referència
-        $messages = $this->getBlackboard($userId);
-        $this->clearBlackboard($userId);
+        return $this->add($receiverId, $textMessage, $params, $senderId, $type);
+    }
+
+    public function get($userId, $deleteContent = TRUE)
+    {
+
+        $messages = $this->getBlackboard($userId);// Alerta[Xavi] PHP copia els arrays per valor, i no per referència
+
+        if ($deleteContent) {
+            $this->delete($userId);
+        }
+
         return $messages;
     }
 
-    public function loadBlackboard($userId)
+
+    private function loadBlackboard($userId)
     {
         // Generem el nom
         $filename = $this->getFileName($userId);
@@ -106,7 +119,7 @@ class NotifyDataQuery extends DataQuery
         $this->blackboard[$userId] = $blackboard;
     }
 
-    public function saveBlackboard($userId)
+    private function saveBlackboard($userId)
     {
         $filename = $this->getFileName($userId);
         $blackboard = $this->getBlackboard($userId);
@@ -117,13 +130,13 @@ class NotifyDataQuery extends DataQuery
             io_saveFile($filename, serialize($blackboard));
         } else {
             // No hi ha res, l'esborrem
-            $this->clearBlackboard($userId);
+            $this->delete($userId);
 
         }
     }
 
     // ALERTA[Xavi] el que es retorna es una copia del array, així que els canvis no afectan al cache
-    public function getBlackboard($userId)
+    private function getBlackboard($userId)
     {
         if (!$this->blackboard[$userId]) {
             // Carreguem el blackboard
@@ -133,7 +146,7 @@ class NotifyDataQuery extends DataQuery
         return $this->blackboard[$userId];
     }
 
-    public function clearBlackboard($userId)
+    public function delete($userId)
     {
         // Eliminem el contingut del cache
         unset ($this->blackboard[$userId]);

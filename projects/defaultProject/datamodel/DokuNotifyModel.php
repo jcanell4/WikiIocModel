@@ -54,9 +54,8 @@ class DokuNotifyModel extends AbstractWikiDataModel
         switch ($init['type']) {
             case 'ajax':
                 // No cal fer res al servidor, només indicar la periodicitat per comprovar si hi ha notificacions (en ms)
-                $init['check_timer'] =  WikiGlobalConfig::getConf('notifier_check_timer', 'wikiiocmodel');
+                $init['check_timer'] = WikiGlobalConfig::getConf('notifier_check_timer', 'wikiiocmodel');
                 break;
-
 
             case 'websocket':
                 // TODO[Xavi]
@@ -68,21 +67,18 @@ class DokuNotifyModel extends AbstractWikiDataModel
 
         }
 
-
         return $init;
     }
 
-    public function notifyToFrom($text, $receiverId, $senderId, $params)
+    public function notifyToFrom($text, $receiverId, $params = [], $senderId = NULL)
     {
         // Posa el missatge text a la cua d'enviaments de l'usuari receiverId i firma el missatge amb el nom indicat a
         // sender. En el sistema de WebSockets el missatge s'envia de forma immediata al client. En el cas de Timers,
         // s'emmagatzema a la pissarra de l'usuari receiverId.
 
-        // Generar el missatge
-        $message = $this->dataQuery->generateMessage($text, $params);
 
         // L'afegim al blackboard del destinatari
-        $this->dataQuery->pushMessage($message, $receiverId, $senderId);
+        $this->dataQuery->add($receiverId, $text, $params, $senderId, 'message'); // TODO[Xavi] S'ha de canviar per una constant
     }
 
     public function popNotifications($userId)
@@ -92,14 +88,14 @@ class DokuNotifyModel extends AbstractWikiDataModel
         // l'enviament de forma immediata. El mètode  popNotifications, a més de retornar el contingut, elimina també
         // la pissarra consultada.
 
-        return $this->dataQuery->popNotifications($userId);
+        return $this->dataQuery->get($userId);
     }
 
     public function close($userId)
     {
         // Tanca la sessió i el sistema (per exemple els sockets)
         // TODO[Xavi] Tancar la sessió
-        $this->dataQuery->clearBlackboard($userId);
+        $this->dataQuery->delete($userId);
     }
 
 
