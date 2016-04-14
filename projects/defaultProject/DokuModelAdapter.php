@@ -51,6 +51,8 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CreateP
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelEditPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelPartialEditPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/UploadMediaAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/NotifyAction.php');
+
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
@@ -3215,5 +3217,12 @@ class DokuModelAdapter extends AbstractModelAdapter
         return $toc;
     }
 
+    // ALERTA[Xavi] Afegit pel notifier
+    public function notify($params) // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
+    {
+        $action = new NotifyAction($this->persistenceEngine);
+        $contentData = $action->get($params);
+        return $contentData;
+    }
 }
 

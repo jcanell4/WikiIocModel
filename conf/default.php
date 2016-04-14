@@ -9,3 +9,7 @@
 $conf['userpage_allowed']           = 1;
 $conf['userpage_ns']                =":wiki:user:";
 $conf['userpage_discuss_ns']        =":talk:wiki:user:";
+
+// TODO[Xavi] Comprovar si es pot possar com array
+$conf['notifier_type'] = 'ajax';
+$conf['notifier_check_timer'] = 60 * 1000;
