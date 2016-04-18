@@ -54,7 +54,9 @@ class DokuNotifyModel extends AbstractWikiDataModel
         switch ($init['type']) {
             case 'ajax':
                 // No cal fer res al servidor, només indicar la periodicitat per comprovar si hi ha notificacions (en ms)
-                $init['check_timer'] = WikiGlobalConfig::getConf('notifier_check_timer', 'wikiiocmodel');
+                //$init['check_timer'] = WikiGlobalConfig::getConf('notifier_check_timer', 'wikiiocmodel'); 
+                //No cal especificar el plugin per a wikiiocmodel, perquè aquest és un plugin especial i es carrega per defecte a l'arrel
+                $init['check_timer'] = WikiGlobalConfig::getConf('notifier_check_timer');
                 break;
 
             case 'websocket':
