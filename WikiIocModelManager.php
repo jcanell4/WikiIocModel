@@ -7,6 +7,9 @@
 if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
 
+require_once WIKI_IOC_MODEL . "datamodel/TimerNotifyModel.php";
+require_once WIKI_IOC_MODEL . "datamodel/WebsocketNotifyModel.php";
+
 class WikiIocModelManager {
 
     public static function Instance(){
@@ -20,5 +23,18 @@ class WikiIocModelManager {
         require_once(WIKI_IOC_MODEL . 'projects/defaultProject/DokuModelManager.php');  
 //        return new \ioc_dokuwiki\WikiIocModelManager();
         return new DokuModelManager();
+    }
+
+    public function getNotifyModel($type, $persistenceEngine) {
+        switch ($type) {
+            case 'ajax':
+                return new TimerNotifyModel($persistenceEngine);
+
+            case 'websocket':
+                return new WebsocketNotifyModel($persistenceEngine);
+
+            default:
+                throw new UnknownTypeParamException($type);
+        }
     }
 }

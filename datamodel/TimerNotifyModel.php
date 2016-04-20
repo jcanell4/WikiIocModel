@@ -6,6 +6,7 @@ if (!defined('DOKU_PLUGIN')) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
 require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/AbstractWikiDataModel.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/DokuNotifyModel.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php";
 require_once DOKU_INC . "inc/media.php";
 require_once(DOKU_INC . 'inc/pageutils.php');
@@ -13,21 +14,17 @@ require_once(DOKU_INC . 'inc/common.php');
 
 
 /**
- * Description of DokuLockModel
+ * Description of TimerLockModel
  *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
-class DokuNotifyModel extends AbstractWikiDataModel
+class TimerNotifyModel extends DokuNotifyModel
 {
+    protected $type = 'ajax';
 
     protected /*NotifyDataQuery*/
         $dataQuery;
 
-    public function __construct($persistenceEngine)
-    {
-        // TODO[Xavi] Segons la configuració del wikiioc model farem servir el NotifyDataQuery o el WebSocketConnection
-        $this->dataQuery = $persistenceEngine->createNotifyDataQuery();
-    }
 
     public function getData()
     {
@@ -43,32 +40,9 @@ class DokuNotifyModel extends AbstractWikiDataModel
 
     public function init()
     {
-        // Incialitza el sistema per l'usuari actiu. En el sistema de WebSockets incialitzarà el socket corresponent al
-        // canal de comunicació entre client i servidor. En el sistema de Timers no es retorrnarà  una resposta
-        // consistent en indicar els paràmetres per configurar el Timer del client (periodicitat de les peticions).
-        // TODO[Xavi] Carregar la configuració: tipus de notifier i params per inicialitzar el frontend
-        //      Notifier normal: tipus i checktimer
 
-        $init['type'] = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
-
-        switch ($init['type']) {
-            case 'ajax':
-                // No cal fer res al servidor, només indicar la periodicitat per comprovar si hi ha notificacions (en ms)
-                //$init['check_timer'] = WikiGlobalConfig::getConf('notifier_check_timer', 'wikiiocmodel'); 
-                //No cal especificar el plugin per a wikiiocmodel, perquè aquest és un plugin especial i es carrega per defecte a l'arrel
-                $init['check_timer'] = WikiGlobalConfig::getConf('notifier_check_timer');
-                break;
-
-            case 'websocket':
-                // TODO[Xavi]
-                throw new UnavailableMethodExecutionException("DokuNotifyModel#init_websocket");
-                break;
-
-            default:
-                throw new UnavailableMethodExecutionException("DokuNotifyModel#init");
-
-        }
-
+        $init['type'] = $this->type;
+        $init['check_timer'] = WikiGlobalConfig::getConf('notifier_ajax_timer', 'wikiiocmodel');
         return $init;
     }
 

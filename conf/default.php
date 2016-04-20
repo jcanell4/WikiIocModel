@@ -11,5 +11,9 @@ $conf['userpage_ns']                =":wiki:user:";
 $conf['userpage_discuss_ns']        =":talk:wiki:user:";
 
 // TODO[Xavi] Comprovar si es pot possar com array
-$conf['notifier_type'] = 'ajax';
-$conf['notifier_check_timer'] = 60 * 1000;
+$conf['notifier_type'] = 'websocket'; // 'ajax' o 'websocket'
+
+$conf['notifier_ajax_timer'] = 60 * 1000;
+
+$conf['notifier_ws_port'] = '9090';
+$conf['notifier_ws_ip'] = '127.0.0.1';

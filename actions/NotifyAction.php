@@ -12,9 +12,8 @@ require_once DOKU_PLUGIN . "wikiiocmodel/LockManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
-//require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/datamodel/DokuPageModel.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/datamodel/DokuNotifyModel.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocModelManager.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
 require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
 
 /**
@@ -22,7 +21,7 @@ require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
  *
  * @author josep
  */
-class NotifyAction extends DokuAction
+class NotifyAction extends AbstractWikiAction
 {
     const ALERT = "alert";
     const INFO = "info";
@@ -34,10 +33,13 @@ class NotifyAction extends DokuAction
     const DO_CLOSE = "close";
 
     protected $dokuNotifyModel;
+    protected $params;
 
     public function __construct($persistenceEngine)
     {
-        $this->dokuNotifyModel = new DokuNotifyModel($persistenceEngine);
+        $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
+        $modelManager = WikiIocModelManager::Instance();
+        $this->dokuNotifyModel = $modelManager->getNotifyModel($type, $persistenceEngine);
     }
 
     /**
@@ -103,7 +105,7 @@ class NotifyAction extends DokuAction
         $params = $this->params[PageKeys::KEY_PARAMS];
         $text = $this->params['message']; // TODO[Xavi] Convertir en constants, decidir on
         $receiverId = $this->params['to'];
-        $senderId= $this->getCurrentUser();
+        $senderId = $this->getCurrentUser();
 
         $response['params'] = $this->dokuNotifyModel->notifyToFrom($text, $receiverId, $params, $senderId);
         $response['action'] = 'notification_send';
@@ -130,8 +132,16 @@ class NotifyAction extends DokuAction
         return $response;
     }
 
-    public function getCurrentUser() {
+    public function getCurrentUser()
+    {
         return WikiIocInfoManager::getInfo('userinfo')['name'];
     }
 
+    public function get(/*Array*/
+        $paramsArr = array())
+    {
+        $this->params = $paramsArr;
+        return $this->responseProcess();
+
+    }
 }
