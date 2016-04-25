@@ -5,7 +5,7 @@ if (!defined("DOKU_INC")) {
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied" );
 
-require_once DOKU_PLUGIN."wikiiocmodel/actions/AbstractWikiAction.php";
+require_once DOKU_PLUGIN."wikiiocmodel/AbstractWikiAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocModelExceptions.php";

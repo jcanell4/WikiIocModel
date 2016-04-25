@@ -56,22 +56,4 @@ class BasicPersistenceEngine {
         require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DraftDataQuery.php');
         return new DraftDataQuery();
     }
-
-    /**
-     *
-     * @return \NotifyDataQuery
-     */
-    public function createNotifyDataQuery(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
-        return new NotifyDataQuery();
-    }
-
-    /**
-     *
-     * @return \NotifyDataQuery
-     */
-    public function createLockDataQuery(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/LockDataQuery.php');
-        return new LockDataQuery();
-    }
 }

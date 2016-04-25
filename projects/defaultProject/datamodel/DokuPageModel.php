@@ -459,13 +459,20 @@ class DokuPageModel extends WikiRenderizableDataModel
     }
 
     // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
-    public function getFullDraftDate() {
-        return $this->draftDataQuery->getFullDraftDate($this->id);
+    public function fullDraftDate() {
+        return $this->draftDataQuery->fullDraftDate($this->id);
     }
 
-    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
-    public function getStructuredDraftDate() {
-        return $this->draftDataQuery->getStructuredDraftDate($this->id, $this->selected);
+    public function structuredDraftDate() {
+        $draft = $this->draftDataQuery->getStructured($this->id);
+
+        // Tenim el diccionari? Al chunk es troba la data en que es va guardar?
+        if ($draft[$this->selected]) {
+            return $draft[$this->selected]['date'];
+        } else {
+            return -1;
+        }
+
     }
 
 }

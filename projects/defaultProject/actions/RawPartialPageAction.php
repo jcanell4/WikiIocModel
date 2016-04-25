@@ -85,8 +85,12 @@ class RawPartialPageAction extends PageAction
         $response['timeout'] = $locked['timeout'];
 
 
+        // ALERTA[Xavi] Bloc per determinar si es fa servir el draft local o remot
+
         /*
-        TODO[Xavi] En lloc de les constants LOCAL_FULL_DRAFT pot ser suficient detecgar el valor de la resposta 'local'
+
+        ALERTA[Xavi] Compte, pot ser s'han de tenir en compte els flags KEY_RECOVER_DRAFT?
+        ALERTA[Xavi] Pot ser no cal afegir les constants LOCAL_xxx i es suficient amb afegir a la resposta el 'local'?
 
 
         FULL DRAFT:
@@ -121,13 +125,13 @@ class RawPartialPageAction extends PageAction
 
         if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $fullLastLocalDraftTime) {
             // obtenir la data del draft full local
-            $fullLastSavedDraftTime = $this->dokuPageModel->getFullDraftDate();
+            $fullLastSavedDraftTime = $this->dokuPageModel->fullDraftDate();
             if ($fullLastLocalDraftTime > $fullLastSavedDraftTime) { // local es més recent
                 $response['local'] = true;
                 $response['draftType'] = DokuPageModel::LOCAL_FULL_DRAFT;
             }
         } else if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $structuredLastLocalDraftTime) {
-            $structuredLastSavedDraftTime = $this->dokuPageModel->getStructuredDraftDate();
+            $structuredLastSavedDraftTime = $this->dokuPageModel->structuredDraftDate();
 
 //            $structuredLastSavedDraftTime = 1558822524; // TODO[Xavi] Forçant la comprovació, ELIMINAR!
 
@@ -138,6 +142,9 @@ class RawPartialPageAction extends PageAction
 
 
         }
+
+
+        // ALERTA[Xavi] Fi del bloc
 
 
         if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] ==='true') {
@@ -153,7 +160,7 @@ class RawPartialPageAction extends PageAction
             // Acció: mostrar dialeg continuar amb edició parcial (es perd l'esborrany) o passar a edició completa
 
             $response['original_call'] = $this->generateOriginalCall();
-            $response['id'] = WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]);
+            $response['id'] = $this->params[PageKeys::KEY_ID];
             $response['show_full_draft_dialog'] = true;
             $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_found'));
 
@@ -194,7 +201,6 @@ class RawPartialPageAction extends PageAction
         // ALERTA[Xavi] Cal afegir el el ns, ja que aquest no forma part dels params
         $originalCall = $this->params;
         $originalCall['ns'] = $this->params[PageKeys::KEY_ID];
-        $originalCall['id'] = WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]);
         return $originalCall;
     }
 
