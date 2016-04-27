@@ -100,8 +100,6 @@ class MetaDataService {
         if (isset($MetaDataRequestMessage['projectType'])) {
             if ($MetaDataRequestMessage['projectType'] != '') {
                 $projectTypeParameter = $MetaDataRequestMessage['projectType'];
-                print_r("\n setting project type parameter\n");
-                print_r($projectTypeParameter);
             }
         }
 
@@ -112,13 +110,8 @@ class MetaDataService {
             if ($this->getMetaDataElements() != null) {
                 $encoder = new JSON();
                 $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));
-                print_r("--------------TO GETDATAELELEMENTS PRE ASORT");
-                print_r($arrayElements);
                 asort($arrayElements);
-                print_r("--------------TO GETDATAELELEMENTS AFTER ASORT");
-                print_r($arrayElements);
                 $this->setMetaDataElements($arrayElements);
-                print_r($this->getMetaDataElements());
                 $this->render = null;
                 $this->metaDataEntityWrapper = array();
                 $indexWrapper = 0;
@@ -127,12 +120,6 @@ class MetaDataService {
                 $metaDataResponseGet = null;
 
                 foreach ($this->getMetaDataElements() as $idResource => $projectType) {
-                    print_r("\nprojects types param\n");
-                    print_r($projectTypeParameter);
-                    print_r("\nprojects types actual\n");
-                    print_r($projectTypeActual);
-                    print_r("\nprojects types bucle\n");
-                    print_r($projectType);
                     /*
                      * Check $idResource (sense path) == 
                      * == configMain filename: F($projectType, $metaDataSubset, $persistence, $configSubSet = "metaDataProjectStructure")
@@ -141,9 +128,6 @@ class MetaDataService {
                      *       for instance, that this mataDataSubSet has metada in separate files
                      */
                     $filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($projectType, $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
-                    print_r("\nEEEEEEEEEEEEEEEL FILE NAME\n");
-                    print_r($filename);
-                    print_r("\FIIIIIIIIIIIIIIIIIIIIIN FILE NAME\n");
                     $filenameParamArray = explode(':', $idResource);
                     if ($filename == $filenameParamArray[sizeof($filenameParamArray) - 1]) {
 
@@ -158,19 +142,11 @@ class MetaDataService {
                                 $indexWrapper = 0;
                                 $this->render = MetaDataRenderFactory::getObject($projectType, $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
                                 $rc = new ReflectionClass(get_class($this->render));
-                                print_r(basename(dirname($rc->getFileName())));
                             }
                             $MetaDataRequestMessageActual = $MetaDataRequestMessage;
                             $MetaDataRequestMessageActual['projectType'] = $projectType;
                             $MetaDataRequestMessageActual['idResource'] = $idResource;
-                            print_r("\nMESSAGE ACTUAL\n");
-                            print_r($MetaDataRequestMessageActual);
                             $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequestMessageActual);
-
-                            print_r("\nENTITY GET\n");
-                            print_r($metaDataEntity->getMetaDataValue());
-                            print_r("\nENTITY projectType\n");
-                            print_r($metaDataEntity->getProjectType());
                             $filterChecked = true;
                             if (isset($MetaDataRequestMessage['filter']) && ($MetaDataRequestMessage['filter'] != '')) {
                                 $filterChecked = $metaDataEntity->checkFilter($MetaDataRequestMessage['filter']);
@@ -186,8 +162,6 @@ class MetaDataService {
             if ($this->render != null) {
                 $metaDataResponseGet[$indexResponse] = $this->render->render($this->metaDataEntityWrapper);
             }
-            print_r("\nmetaDataResponseGet\n");
-            print_r($metaDataResponseGet);
             if ($metaDataResponseGet == null) {
                 throw new ClassProjectsNotFound();
             } else {
@@ -234,8 +208,6 @@ class MetaDataService {
         if (isset($MetaDataRequestMessage['projectType'])) {
             if ($MetaDataRequestMessage['projectType'] != '') {
                 $projectTypeParameter = $MetaDataRequestMessage['projectType'];
-                print_r("\n setting project type parameter\n");
-                print_r($projectTypeParameter);
             }
         }
 
@@ -246,13 +218,8 @@ class MetaDataService {
             if ($this->getMetaDataElements() != null) {
                 $encoder = new JSON();
                 $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));
-                print_r("--------------TO GETDATAELELEMENTS PRE ASORT");
-                print_r($arrayElements);
                 asort($arrayElements);
-                print_r("--------------TO GETDATAELELEMENTS AFTER ASORT");
-                print_r($arrayElements);
                 $this->setMetaDataElements($arrayElements);
-                print_r($this->getMetaDataElements());
                 $this->metaDataEntityWrapper = array();
                 $metaDataResponseSet = null;
                 $indexWrapper = 0;
@@ -267,9 +234,6 @@ class MetaDataService {
                      *       for instance, that this mataDataSubSet has metada in separate files
                      */
                     $filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($projectType, $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
-                    print_r("\nEEEEEEEEEEEEEEEL FILE NAME\n");
-                    print_r($filename);
-                    print_r("\FIIIIIIIIIIIIIIIIIIIIIN FILE NAME\n");
                     $filenameParamArray = explode(':', $idResource);
                     if ($filename == $filenameParamArray[sizeof($filenameParamArray) - 1]) {
                         if ($projectTypeParameter == null || $projectTypeParameter == $projectType) {
@@ -285,14 +249,7 @@ class MetaDataService {
                             $MetaDataRequestMessageActual = $MetaDataRequestMessage;
                             $MetaDataRequestMessageActual['projectType'] = $projectType;
                             $MetaDataRequestMessageActual['idResource'] = $idResource;
-                            print_r("\nMESSAGE ACTUAL\n");
-                            print_r($MetaDataRequestMessageActual);
                             $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequestMessageActual);
-
-                            print_r("\nENTITY GET\n");
-                            print_r($metaDataEntity->getMetaDataValue());
-                            print_r("\nENTITY projectType\n");
-                            print_r($metaDataEntity->getProjectType());
                             $filterChecked = true;
                             if (isset($MetaDataRequestMessage['filter']) && ($MetaDataRequestMessage['filter'] != '')) {
                                 $filterChecked = $metaDataEntity->checkFilter($MetaDataRequestMessage['filter']);
@@ -333,13 +290,9 @@ class MetaDataService {
                         $this->metaDataEntityWrapper[$indexWrapper] = $metaDataEntity;
                     }
                     $metaDataResponseSet[$indexResponse] = $this->toAddResponse();
-                    print_r("\n11111111111111111111111111REEEEEEEEEEEEEEEEEEEEEEESPONSE TOOOOOOOOOTAL\n");
-                    print_r($metaDataResponseSet);
                     return $metaDataResponseSet;
                 }
             } else {
-                print_r("\nREEEEEEEEEEEEEEEEEEEEEEESPONSE TOOOOOOOOOTAL\n");
-                print_r($metaDataResponseSet);
                 return $metaDataResponseSet;
             }
         } catch (Exception $ex) {

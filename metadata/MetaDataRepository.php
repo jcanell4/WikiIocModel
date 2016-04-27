@@ -105,9 +105,6 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
         }
 
         try {
-            //print_r("\nRA setMeta projectType: ".$MetaDataRequestMessage['projectType']."\n");
-            //print_r("\nRA setMeta metaDataSubSet: ".$MetaDataRequestMessage['metaDataSubSet']."\n");
-            //print_r("\nRA setMeta MetaDataEntity: ".$MetaDataEntity->getMetaDataValue()."\n");
             $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['persistence']);
             $jSONArray = $metaDataDao->setMeta($MetaDataEntity, $MetaDataRequestMessage);
             return $jSONArray;

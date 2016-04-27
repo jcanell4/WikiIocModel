@@ -27,15 +27,12 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
      * @return JSON (convert each Entity model to a JSON element)
      */
     public function render($metaDataEntityWrapper) {
-        //print_r("\nMetaDataRender -> metaDataEntityWrapper0: " . $metaDataEntityWrapper[0]->getMetaDataValue());
-        //print_r("\nMetaDataRender -> metaDataEntityWrapper1: " . $metaDataEntityWrapper[1]->getMetaDataValue());
         $toReturn = array();
         
         for ($i = 0; $i < sizeof($metaDataEntityWrapper); $i++) {
             $toReturn[$i]=$metaDataEntityWrapper[$i]->getArrayFromModel();            
         }
-        //$encoder = new JSON();
-        //return $encoder->encode($toReturn);
+
         return $toReturn;
     }
 

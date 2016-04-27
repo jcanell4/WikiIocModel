@@ -70,7 +70,6 @@ class MetaDataDaoConfig {
         if ($configSubSet == null) {
             $configSubSet = self::$CONFIGUSUBSET;
         }
-        print_r("configSubSet ES ES: " . $configSubSet);
         $exists = false;
         if (array_key_exists($projectType, self::$ClassesNameSpaces)) {
             if (array_key_exists($metaDataSubset, self::$ClassesNameSpaces[$projectType])) {
@@ -87,8 +86,6 @@ class MetaDataDaoConfig {
             /*
              * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
              */
-            //print_r("getMetaDataConfig -> projectType: ".$projectType);
-            print_r("\ngetMetaDataConfig -> jSONArray: " . $jSONArray);
 
             $encoder = new JSON();
             $arrayConfigPre = $encoder->decode($jSONArray, true);
@@ -97,8 +94,6 @@ class MetaDataDaoConfig {
             }
 
             $arrayConfig = array();
-            print_r("\nAAAAAAAAAAAAAAAAAAAAAA arrayConfigPre\n");
-            print_r($arrayConfigPre);
             foreach ($arrayConfigPre as $obj1 => $value1) {
                 foreach ($value1 as $obj => $value) {
                     $arrayConfig[$obj] = $value;
@@ -122,7 +117,6 @@ class MetaDataDaoConfig {
         if ($configSubSet == null) {
             $configSubSet = self::$CONFIGUSUBSETST;
         }
-        print_r("\nconfigSubSet ES ES: " . $configSubSet);
 
         //Call PERSISTENCE method
         /*
@@ -133,8 +127,6 @@ class MetaDataDaoConfig {
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
-        //print_r("getMetaDataConfig -> projectType: ".$projectType);
-        print_r("\ngetMetaDataConfig -> jSONArray: " . $jSONArray);
 
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray, true);
@@ -143,13 +135,7 @@ class MetaDataDaoConfig {
         }
 
         $arrayConfig = array();
-        print_r("\nAAAAAAAAAAAAAAAAAAAAAA arrayConfigPre\n");
-        print_r($arrayConfigPre);
         $arrayConfigPre = get_object_vars($arrayConfigPre);
-        print_r("\nAAAAAAAAAAAAAAAAAAAAAAGAIN arrayConfigPre\n");
-        print_r($arrayConfigPre);
-        print_r("\nAAAAAAAAAAAAAAAAAAAAAAGAIN00000000000000000000 arrayConfigPre\n");
-        print_r(reset($arrayConfigPre));
         return reset($arrayConfigPre);
     }
 
@@ -166,7 +152,6 @@ class MetaDataDaoConfig {
         if ($configSubSet == null) {
             $configSubSet = self::$CONFIGUSUBSETST;
         }
-        print_r("\nconfigSubSet ES ES: " . $configSubSet);
 
         //Call PERSISTENCE method
         /*
@@ -177,8 +162,6 @@ class MetaDataDaoConfig {
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
-        //print_r("getMetaDataConfig -> projectType: ".$projectType);
-        print_r("\ngetMetaDataConfig -> jSONArray: " . $jSONArray);
 
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray, true);
@@ -187,14 +170,7 @@ class MetaDataDaoConfig {
         }
 
         $arrayConfig = array();
-        print_r("\nAAAAAAAAAAAAAAAAAAAAAA arrayConfigPre\n");
-        print_r($arrayConfigPre);
         $arrayConfigPre = get_object_vars($arrayConfigPre);
-        print_r("\nAAAAAAAAAAAAAAAAAAAAAAGAIN arrayConfigPre\n");
-        print_r($arrayConfigPre);
-        print_r("\nAAAAAAAAAAAAAAAAAAAAAAGAIN00000000000000000000 arrayConfigPre\n");
-        print_r($arrayConfigPre["keysDefinition"]);
-        print_r($encoder->encode($arrayConfigPre["keysDefinition"]));
         return $encoder->encode($arrayConfigPre["keysDefinition"]);
     }
     
@@ -217,9 +193,6 @@ class MetaDataDaoConfig {
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
-        print_r("\nEEEEEEEEEEEEEEEEEEEE  ElementsKey  Null????????????\n");
-        print_r($jSONArray);
-        print_r("\nFIFIFIFIFIFIEEEEEEEEEEEEEEEEEEEE  ElementsKey  Null????????????\n");
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray);
         if (json_last_error() != JSON_ERROR_NONE) {

@@ -6,13 +6,15 @@ if (!defined('DOKU_PLUGIN')) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
 require_once( DOKU_INC . 'inc/JSON.php' );
+require_once (DOKU_PLUGIN . 'ownInit/WikiGlobalConfig.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
 
 /**
  * Description of ProjectMetaDataQuery
  *
  * @author josep
  */
-class ProjectMetaDataQuery {
+class ProjectMetaDataQuery extends DataQuery{
 
     private static $retornNsConfig = '{"metaDataClassesNameSpaces":
             {
@@ -54,26 +56,6 @@ class ProjectMetaDataQuery {
     private static $retornGetMetaDataMXX = '{"user":"mlozan54","rol":"editor"}';
     private static $retornGetMetaDataMXY = '{"user":"mlozan54","rol":"autor"}';
 
-    /* public function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
-      if ($configSubSet == 'metaDataClassesNameSpaces') {
-      if ($projectType == "a" || $projectType == "fp" || $projectType == "Materials" || $projectType == "materials") {
-      return self::$retornNsConfig;
-      } else {
-      if ($projectType == "pt1" || $projectType == "adocs") {
-      return self::$retornNsConfigPt1;
-      } else {
-      if ($projectType == "pt2") {
-      return self::$retornNsConfigPt2;
-      } else {
-      return self::$retornNsConfigM;
-      }
-      }
-      }
-      } else {
-      return self::$retornStructure;
-      }
-      } */
-
     public function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
         $configMain = @file_get_contents(DOKU_PLUGIN . "wikiiocmodel/projects/" . $projectType . "/metadata/config/configMain.json");
         if ($configMain == false) {
@@ -93,8 +75,6 @@ class ProjectMetaDataQuery {
                 }
             }
         }
-        print_r("\ntoReturn");
-        print_r($toReturn);
         return $toReturn;
     }
 
@@ -115,57 +95,93 @@ class ProjectMetaDataQuery {
         }
     }
 
+    // Retorn --> JSON
     public function getMeta($idResource, $projectType, $metaDataSubSet) {
-        if ($idResource === "fp:dam:m03") {
-            return self::$retornGetMetaDataMaterialsM03;
-        }
-        if ($idResource === "fp:daw:m07") {
-            return self::$retornGetMetaDataMaterialsM07;
-        }
-        if ($idResource === "fp:daw:m09") {
-            return self::$retornGetMetaDataAdocsM09;
-        }
         /*
-         * Change2
+         * Obtain metadata files general path
          */
-        if ($idResource === "fp:daw:m09:fitxerx") {
-            return self::$retornGetMetaDataMX;
-        }
-        if ($idResource === "fp:daw:m07:fptx") {
-            return self::$retornGetMetaDataMXX;
-        }
-        if ($idResource === "fp:dam:m03:fptx") {
-            return self::$retornGetMetaDataMXY;
-        }
-        /*
-         * Fi Change 2
-         */
-        if ($idResource === "fp") {
-            return self::$retornGetMetaData;
-        } else {
-            if ($idResource === "bl") {
-                return "";
-            } else {
-                return self::$retornGetMetaDataM;
-            }
-        }
-    }
+        $metaDataPath = DOKU_INC . WikiGlobalConfig::getConf('mdprojects');
 
-    public function setMeta($idResource, $projectType, $metaDataSubSet, $metaDataValue) {
-        if ($idResource === "fp" || $projectType == "adocs" || $projectType == "materials" || $projectType == "defaultProject" || $projectType == "ptx") {
-            return true;
-        } else {
-            if ($idResource === "nt") {
-                print("ABC ABC ABC ABC");
-                return "abc";
-            } else {
-                if ($idResource === "idResource") {
-                    return self::$retornSetMetaDataNs;
-                } else {
-                    return self::$retornSetMetaDataGen;
+        /*
+         * Convert idResource delimiter ':' to persistence delimiter '/'
+         */
+        $idResourceArray = explode(':', $idResource);
+        $idResoucePath = implode("/", $idResourceArray);
+
+        $metaDataReturn = null;
+        /*
+         * Get content file and return metaData included in $metaDataSubSet
+         */
+        $contentFile = @file_get_contents($metaDataPath . $idResoucePath);
+        if ($contentFile != false) {
+            $contentMainArray = json_decode($contentFile, true);
+            foreach ($contentMainArray as $clave => $valor) {
+                if ($clave == $metaDataSubSet) {
+                    if (is_array($valor)) {
+                        $encoder = new JSON();
+                        $metaDataReturn = $encoder->encode($valor);
+                        break;
+                    }
                 }
             }
         }
+        return $metaDataReturn;
+    }
+
+    public function setMeta($idResource, $projectType, $metaDataSubSet, $metaDataValue) {
+        $metaDataPath = DOKU_INC . WikiGlobalConfig::getConf('mdprojects');
+
+        /*
+         * Convert idResource delimiter ':' to persistence delimiter '/'
+         */
+        $idResourceArray = explode(':', $idResource);
+        $theFile = array_pop($idResourceArray);
+
+        $idResoucePath = implode("/", $idResourceArray);
+        /*
+         * CHECK AND CREATES DIRS
+         */
+        $resourceCreated = false;
+        if (!is_dir($metaDataPath . $idResoucePath)) {
+            $resourceCreated = mkdir($metaDataPath . $idResoucePath, 0777, true);
+        }
+        $fp = @fopen($metaDataPath . $idResoucePath . '/' . $theFile, 'a');
+        if ($fp != false) {
+            fclose($fp);
+            $resourceCreated = true;
+        }
+
+        if ($resourceCreated) {
+            $contentFile = file_get_contents($metaDataPath . $idResoucePath . '/' . $theFile);
+            $newMetaDataSubSet = true;
+            if ($contentFile != false) {
+                $contentMainArray = json_decode($contentFile, true);
+                foreach ($contentMainArray as $clave => $valor) {
+                    if ($clave == $metaDataSubSet) {
+                        $contentMainArray[$metaDataSubSet] = json_decode($metaDataValue, true);
+                        $newMetaDataSubSet = false;
+                    }
+                }
+                $encoder = new JSON();
+                $resultPutContents = file_put_contents($metaDataPath . $idResoucePath . '/' . $theFile, $encoder->encode($contentMainArray));
+            }
+            if ($newMetaDataSubSet) {
+                $contentMainArray[$metaDataSubSet] = json_decode($metaDataValue, true);
+                $encoder = new JSON();
+                $resultPutContents = file_put_contents($metaDataPath . $idResoucePath . '/' . $theFile, $encoder->encode($contentMainArray));
+            }
+        } else {
+            $resourceCreated = '{"error":"5090"}';
+        }
+        return $resourceCreated;
+    }
+
+    public function getFileName($id, $especParams = NULL) {
+        
+    }
+
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE) {
+        
     }
 
 }

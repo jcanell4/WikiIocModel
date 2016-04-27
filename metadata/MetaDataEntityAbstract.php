@@ -75,11 +75,9 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * @return String JSON
      */
     public function __construct($MetaDataStructure = null) {
-        print_r("\nP P P P P  P P P P P P P P P P PP P PPe\n");
-        print_r($MetaDataStructure);
+
         $this->setMetaDataStructure($MetaDataStructure);
-        print_r("\nX  X X X X X X X X X X X X \n");
-        print_r($this->getMetaDataStructure());
+
     }
 
     /**
@@ -119,7 +117,6 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
             $arrayEntryKeys[$i] = $key;
             $i++;
         }
-        //print_r($arrayEntryKeys);
         $allMandatories = $this->__checkMandatory($arrayEntryKeys);
         if (!$allMandatories) {
             throw new NotAllEntityMandatoryProperties();
@@ -165,7 +162,6 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         $arrayfi = json_decode($filter, true);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new MalFormedJSON();
-            //print_r($this->MetaDataValue);
         }
         $filterChecked = false;
 
@@ -210,8 +206,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
          */
         $arraypi = json_decode($paramMetaDataValue, true);
         $allValues = $this->__checkStructure($arraypi);
-        print_r("\nallValues allValues allValues\n");
-        print_r($allValues);
+
         if (!$allValues) {
             throw new NotAllEntityValidateProperties();
         }
@@ -230,8 +225,6 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * @return true if all mandatory properties are in checkKeys
      */
     public function __checkMandatory($checkKeys) {
-        //print_r($checkKeys);
-        //print_r(MetaDataEntityAbstract::$MANDATORIES);
         $found = false;
         for ($i = 0; $i < sizeof(MetaDataEntityAbstract::$MANDATORIES); $i++) {
             //print(MetaDataEntityAbstract::$MANDATORIES[$i]);
@@ -270,14 +263,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * @return true if validate
      */
     public function __checkStructure($arraypi) {
-        print_r("\n__checkStructure __checkStructure __checkStructure");
-        print_r("\narraypi arraypi arraypi\n");
-        print_r($arraypi);
         $arrayst = json_decode($this->metaDataStructure, true);
-        print_r("\nmetaDataStructure metaDataStructure metaDataStructure\n");
-        print_r($this->metaDataStructure);
-        print_r("\narrayst arrayst arrayst\n");
-        print_r($arrayst);
         $validate = false;
         foreach ($arrayst as $keyst => $valuest) {
             $validate = false;

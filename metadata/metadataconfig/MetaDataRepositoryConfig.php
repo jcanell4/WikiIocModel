@@ -35,7 +35,6 @@ class MetaDataRepositoryConfig {
         } catch (Exception $ex) {
             throw $ex;
         }
-        print_r($jSONArray);
         return $jSONArray;
     }
 
