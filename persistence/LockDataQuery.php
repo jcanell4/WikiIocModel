@@ -130,7 +130,6 @@ class LockDataQuery extends DataQuery
     {
 //        unlock(WikiPageSystemManager::cleanIDForFiles($id));
         unlock($id);
-
     }
 
     /**
@@ -179,6 +178,7 @@ class LockDataQuery extends DataQuery
         // Nom del fitxer:
         $lockFilename = $this->getFileName($id);
         $lockFilenameExtended = $this->getFileName($id, 'extended');
+        $alreadyNotified = false;
 
         // TODO[Xavi] Afegit la neteja de locks (com en el checklock de la wiki)
         $locked = $this->clearLockIfNeeded($id);
@@ -204,6 +204,11 @@ class LockDataQuery extends DataQuery
                 ];
 
             }
+
+            if (isset($extended['requirers'][$requirerUser])) {
+                $alreadyNotified = true;
+            }
+
             $extended['requirers'][$requirerUser] = $requirerTimestamp;
 
         } else {
@@ -215,8 +220,11 @@ class LockDataQuery extends DataQuery
         // Afegir la informació al sistema de bloquejos extés
         io_saveFile($lockFilenameExtended, serialize($extended));
 
-        // Afegir una notificació al usuari que el bloqueja
-        $this->addRequirementNotification($extended['locker']['user'], $id);
+        // Afegir una notificació al usuari que el bloqueja si no existia ja (per evitar que s'envii més d'una notificació en cas d'edicions parcials)
+        if (!$alreadyNotified) {
+            $this->addRequirementNotification($extended['locker']['user'], $id);
+        }
+
 
         return; // Test, per afegir breakpoint
     }

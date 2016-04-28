@@ -94,7 +94,6 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
                 $returnState = self::UNLOCKED;
                 break;
 
-
             case LockDataQuery::LOCKED:
                 // Bloquejat per altre usuari
                 $this->lockDataQuery->removeRequirement($docId);
