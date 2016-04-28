@@ -30,8 +30,9 @@ $lang['auth_UserNotAuthenticated'] = "Usuari no autenticat";
 $lang['auth_CommadNotAllowed'] = "Comanda no permesa";
 
 $lang['lockedByDialog'] = "El document està bloquejat per %s. Vols obrir-lo en mode de només lectura o demanar el bloqueig";
-$lang['lockedByAlert'] = "El document està bloquejat per altra usuari";
+$lang['lockedByAlert'] = "El document està bloquejat per altre usuari";
 $lang['lockedByTitle'] = "Document bloquejat";
 $lang['BtnReadOnly'] = "Només lectura";
 $lang['BtnRequireLock'] = "Demanar el bloqueig";
 $lang['alreadyLocked'] = "Ja s'havia bloquejat el document previament";
+$lang['documentRequired'] = "L'usuari %s requereix el document %s. Si no el necessites, si us plau, tanca la edició.";

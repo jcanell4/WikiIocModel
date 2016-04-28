@@ -134,7 +134,8 @@ class NotifyAction extends AbstractWikiAction
 
     public function getCurrentUser()
     {
-        return WikiIocInfoManager::getInfo('userinfo')['name'];
+        return $_SERVER['REMOTE_USER'];
+//        return WikiIocInfoManager::getInfo('userinfo')['name']; // Aquest no concorda amb el id desat al lock de la wiki
     }
 
     public function get(/*Array*/

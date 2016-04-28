@@ -67,7 +67,7 @@ class NotifyDataQuery extends DataQuery
 //        return $message;
     }
 
-    public function add($receiverId, $textMessage, $params, $senderId = NULL, $type = self::TYPE_ALERT)
+    public function add($receiverId, $textMessage, $params = [], $senderId = NULL, $type = self::TYPE_ALERT)
     {
 
 

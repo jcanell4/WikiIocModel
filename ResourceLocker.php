@@ -8,6 +8,9 @@ if (!defined('DOKU_PLUGIN')) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
 
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+
+require_once WIKI_IOC_MODEL . 'WikiIocModelExceptions.php';
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
 
@@ -20,6 +23,7 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
         $persistenceEngine, $params)
     {
         $this->lockDataQuery = $persistenceEngine->createLockDataQuery();
+
         $this->params = $params;
     }
 
@@ -57,7 +61,11 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
                 $state = self::LOCKED_BEFORE;
                 $this->lockDataQuery->xlock($docId, $lock);
                 break;
+
+            default:
+                throw new WikiIocModelException('Codi de bloqueig desconegut'); // TODO[Xavi] Canviar per excepció més apropiada i localitzada
         }
+
 
         return $state;
     }
@@ -74,7 +82,18 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
      */
     public function leaveResource($unlock = FALSE)
     {
-        return -1;
+        // Carregar el fitxer extès
+
+
+        // Si el locker es aquest usuari, notificar a tots els requirers que el fitxer està disponible.
+
+
+        // En cas contrari eliminar a aquest usuari de la llista de requirers
+
+
+
+
+        return -1; // TODO[Xavi] Retorna el codi correcte
     }
 
 
