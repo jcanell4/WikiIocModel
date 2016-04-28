@@ -305,19 +305,9 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
         return $this->resourceLocker->requireResource($lock);
     }
 
-    /**
-     * Es tracta del mètode que hauran d'executar en iniciar el desbloqueig o també quan l'usuari cancel·la la demanda
-     * de bloqueig. Per  defecte no es desbloqueja el recurs, perquè actualment el desbloqueig es realitza internament
-     * a les funcions natives de la wiki. Malgrat tot, per a futurs projectes es contempla la possibilitat de fer el
-     * desbloqueig directament aquí, si es passa el paràmetre amb valor TRUE. EL mètode retorna una constant amb el
-     * resultat obtingut de la petició.
-     *
-     * @param bool $unlock
-     * @return int
-     */
     public function leaveResource($unlock = FALSE)
     {
-        return $this->resourceLocker->leaveResource($unlock);
+        throw new UnavailableMethodExecutionException('CancelEditPageAction#leaveResource');
     }
 
     private function generateLockInfo($lockState, $message)

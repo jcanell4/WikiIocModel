@@ -36,3 +36,4 @@ $lang['BtnReadOnly'] = "Només lectura";
 $lang['BtnRequireLock'] = "Demanar el bloqueig";
 $lang['alreadyLocked'] = "Ja s'havia bloquejat el document previament";
 $lang['documentRequired'] = "L'usuari %s requereix el document %s. Si no el necessites, si us plau, tanca la edició.";
+$lang['documentUnlocked'] = "El fitxer %s ha sigut alliberat. Cancela la edició i torna a editar per accedir";

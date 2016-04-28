@@ -42,7 +42,6 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
     {
         $docId = $this->params[PageKeys::KEY_ID];
 
-        // TODO[Xavi] Si no està bloquejat s'ha de bloquejar
         $lock = $this->lockDataQuery->checklock($docId);
         $state = -1;
 
@@ -82,18 +81,35 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
      */
     public function leaveResource($unlock = FALSE)
     {
-        // Carregar el fitxer extès
+
+        $docId = $this->params[PageKeys::KEY_ID];
+
+        // Estat del lock?
+        $lockState  = $this->lockDataQuery->checklock($docId);
+
+        switch ($lockState) {
+            case LockDataQuery::LOCKED_BEFORE:
+                // Bloquejat per aquest usuari
+                $this->lockDataQuery->xUnlock($docId, $unlock);
+                $returnState = self::UNLOCKED;
+                break;
 
 
-        // Si el locker es aquest usuari, notificar a tots els requirers que el fitxer està disponible.
+            case LockDataQuery::LOCKED:
+                // Bloquejat per altre usuari
+                $this->lockDataQuery->removeRequirement($docId);
+                $returnState = self::LEAVED;
+                break;
+
+            case LockDataQuery::UNLOCKED:
+            default:
+                // Estava desbloquejat: No cal fer res
+                $returnState = self::OTHER;
+                break;
+        }
 
 
-        // En cas contrari eliminar a aquest usuari de la llista de requirers
-
-
-
-
-        return -1; // TODO[Xavi] Retorna el codi correcte
+        return $returnState; // TODO[Xavi] Retorna el codi correcte
     }
 
 

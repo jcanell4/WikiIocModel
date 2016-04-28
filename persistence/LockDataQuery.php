@@ -70,13 +70,14 @@ class LockDataQuery extends DataQuery
      */
     public function xUnlock($id, $unlock = FALSE)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
 
-        // TODO: Actualitzar el registre estès de bloquejos
+        $this->notifyRequirers($id);
 
         if ($unlock) {
-            $this->unlock($id);
+            $this->unlock(WikiPageSystemManager::cleanIDForFiles($id));
         }
+
+        $this->removeExtendedFile($id);
     }
 
     /**
@@ -105,6 +106,7 @@ class LockDataQuery extends DataQuery
     public function unlock($id)
     {
         unlock(WikiPageSystemManager::cleanIDForFiles($id));
+
     }
 
     /**
@@ -116,16 +118,25 @@ class LockDataQuery extends DataQuery
     public function checklock($id)
     {
         $id = WikiPageSystemManager::cleanIDForFiles($id);
-        $lock = checklock($id);
+        $lock = wikiLockFN($id);
+        $state = self::LOCKED;
 
-        if ($lock === false) {
+        //no lockfile
+        if(!@file_exists($lock)) {
             $state = self::UNLOCKED;
-        } else if ($lock === WikiIocInfoManager::getInfo('userinfo')['name']) {
-            $state = self::LOCKED_BEFORE;
         } else {
-            $state = self::LOCKED;
+            //lockfile expired
+            if((time() - filemtime($lock)) > WikiGlobalConfig::getConf('locktime')) {
+                @unlink($lock);
+                $state = self::UNLOCKED;
+            } else {
+                // own lock
+                list($ip, $session) = explode("\n", io_readFile($lock));
+                if($ip == $_SERVER['REMOTE_USER'] || $ip == clientIP() || $session == session_id()) {
+                    $state = self::LOCKED_BEFORE;
+                }
+            }
         }
-
 
         return $state;
     }
@@ -190,12 +201,12 @@ class LockDataQuery extends DataQuery
     private function addRequirementNotification($lockerId, $docId) {
         $message = sprintf(WikiIocLangManager::getLang('documentRequired'), $this->getCurrentUser(), $docId);
         $this->notifyDataQuery->add($lockerId, $message);
-
-        //add($receiverId, $textMessage, $params, $senderId = NULL, $type = self::TYPE_ALERT)
     }
 
     /**
-     * Retorna cert si s'han eliminat els bloquejos o no existian i fals en cas contrari
+     * Retorna cert si s'han eliminat els bloquejos o no existian i fals en cas contrari.
+     *
+     * ALERTA[Xavi] Com que depenem de la existencia del lock de la wiki, la eliminació de l'extended només es produeix si el primer s'ha d'eliminar
      *
      * @param String $id
      * @return bool
@@ -217,17 +228,19 @@ class LockDataQuery extends DataQuery
         } else {
             list($ip, $session) = explode("\n", io_readFile($lock));
             if ($ip == $_SERVER['REMOTE_USER'] || $ip == clientIP() || $session == session_id()) {
-//                $clear = false; // Està bloquejat pel mateix usuari, ALERTA[Xavi] descomentar després de les proves!
+                $clear = false; // Està bloquejat pel mateix usuari
             }
         }
 
         if (!$clear) {
-            @unlink($extended);
+            $this->removeExtendedFile($id);
         }
 
-
         return $clear;
+    }
 
+    public function removeExtendedFile($id) {
+        @unlink($this->getFileName($id, 'extended'));
     }
 
     private function getCurrentUser()
@@ -259,4 +272,21 @@ class LockDataQuery extends DataQuery
             io_saveFile($lockFilenameExtended, serialize($extended));
         }
     }
+
+    private function notifyRequirers($id) {
+        $lockFilenameExtended = $this->getFileName($id, 'extended');
+        $extended = unserialize(io_readFile($lockFilenameExtended, FALSE));
+
+        foreach ($extended['requirers'] as $user => $timestamp) {
+            $this->addUnlockedNotification($user, $id);
+        }
+
+    }
+
+    private function addUnlockedNotification($requirerId, $docId) {
+        $message = sprintf(WikiIocLangManager::getLang('documentUnlocked'), $docId);
+        $this->notifyDataQuery->add($requirerId, $message);
+    }
+
+
 }
