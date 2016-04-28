@@ -1,7 +1,29 @@
 <?php
 
+if (!defined("DOKU_INC")) {
+    die();
+}
+
+if (!defined('DOKU_PLUGIN')) {
+    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+}
+
+require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
+
 class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterface
 {
+    protected $lockDataQuery;
+    protected $params;
+
+    public function __construct(/*BasicPersistenceEngine*/
+        $persistenceEngine, $params)
+    {
+        $this->lockDataQuery = $persistenceEngine->createLockDataQuery();
+        $this->params = $params;
+    }
+
+
     /**
      * Es tracta del mètode que hauran d'executar en iniciar el bloqueig. Per  defecte no bloqueja el recurs, perquè
      * actualment el bloqueig es realitza internament a les funcions natives de la wiki. Malgrat tot, per a futurs
@@ -14,7 +36,30 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
      */
     public function requireResource($lock = FALSE)
     {
-        // TODO: Implement requireResource() method.
+        $docId = $this->params[PageKeys::KEY_ID];
+
+        // TODO[Xavi] Si no està bloquejat s'ha de bloquejar
+        $lock = $this->lockDataQuery->checklock($docId);
+        $state = -1;
+
+        switch ($lock) {
+            case LockDataQuery::LOCKED:
+                $state = self::REQUIRED;
+                $this->lockDataQuery->addRequirement($docId);
+                break;
+
+            case LockDataQuery::UNLOCKED:
+                $state = self::LOCKED;
+                $this->lockDataQuery->xlock($docId, $lock);
+                break;
+
+            case LockDataQuery::LOCKED_BEFORE:
+                $state = self::LOCKED_BEFORE;
+                $this->lockDataQuery->xlock($docId, $lock);
+                break;
+        }
+
+        return $state;
     }
 
     /**
@@ -29,6 +74,8 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
      */
     public function leaveResource($unlock = FALSE)
     {
-        // TODO: Implement leaveResource() method.
+        return -1;
     }
+
+
 }

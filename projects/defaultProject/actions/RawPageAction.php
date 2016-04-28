@@ -13,6 +13,8 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
 
 if (!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
 if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
@@ -23,9 +25,11 @@ if (!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
  *
  * @author josep
  */
-class RawPageAction extends PageAction
+class RawPageAction extends PageAction implements ResourceLockerInterface, ResourceUnlockerInterface
 {
     //protected $draftQuery;
+
+    protected $engine;
 
     public function __construct(/*BasicPersistenceEngine*/
         $engine)
@@ -33,6 +37,8 @@ class RawPageAction extends PageAction
         parent::__construct($engine);
         //$this->draftQuery = $engine->createDraftDataQuery();
         $this->defaultDo = DW_ACT_EDIT;
+        $this->engine = $engine;
+
     }
 
     /**
@@ -58,6 +64,8 @@ class RawPageAction extends PageAction
         }
     }
 
+
+
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la
      * sobrescriptura permet generar la resposta a enviar al client. Aquest
@@ -73,15 +81,23 @@ class RawPageAction extends PageAction
         $resp = $this->getContentPage($pageToSend["content"]);
         $resp['meta'] = $pageToSend['meta'];
 
-        $infoType = 'info';
 
-        if (WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED)) {
-            $infoType = 'error';
-            $pageToSend['info'] = WikiIocLangManager::getLang('lockedby') . ' ' . WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
-        }
+        // ALERTA[Xavi] Nova gestió del lock
+        $resp[PageKeys::KEY_LOCK_STATE] = $this->requireResource(true);
 
-        $resp['info'] = self::generateInfo($infoType, $pageToSend['info']);
-        $resp[WikiIocInfoManager::KEY_LOCKED] = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
+        $resp['info'] = $this->generateLockInfo($resp[PageKeys::KEY_LOCK_STATE], $pageToSend['info']);
+
+
+//        $infoType = 'info';
+//        if ($resp[PageKeys::KEY_LOCK_STATE]===100) {// Substituida la coprovació pel nou sistema, 200 es l'estat bloquejat
+//            $infoType = 'error';
+//            $pageToSend['info'] = WikiIocLangManager::getLang('lockedby') . ' ' . WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
+//        }
+//        $resp['info'] = self::generateInfo($infoType, $pageToSend['info']);
+//        $resp[WikiIocInfoManager::KEY_LOCKED] = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
+
+
+
 
         // només tenim en compte el temps del full draft local, perquè no es pot reconstruir el document localment
 
@@ -92,18 +108,16 @@ class RawPageAction extends PageAction
         // Només pot existir un dels dos, i el draft que arriba aquí ja es el complet si existeix algun dels dos
         $savedDraftTime = max($fullLastSavedDraftTime, $structuredLastSavedDraftTime);
 
-        if ($savedDraftTime>-1 && $fullLastLocalDraftTime<$savedDraftTime) {
+        if ($savedDraftTime > -1 && $fullLastLocalDraftTime < $savedDraftTime) {
             // El desat es més recent, no cal fer res
             $resp['draftType'] = DokuPageModel::FULL_DRAFT; // ALERTA[Xavi] El valor no es fa servir per a res en especial
-        } else if ($fullLastLocalDraftTime>0) {
+        } else if ($fullLastLocalDraftTime > 0) {
             $resp['local'] = true;
             $resp['draftType'] = DokuPageModel::LOCAL_FULL_DRAFT;  // ALERTA[Xavi] El valor no es fa servir per a res en especial
         }
 
 
-
-
-        if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] ==='true') {
+        if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] === 'true') {
 
             $resp[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
             $resp['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
@@ -112,7 +126,6 @@ class RawPageAction extends PageAction
 
             // S'ha seleccionat si volem recuperar o no l'esborrany
             $resp['recover_draft'] = $this->params[PageKeys::KEY_RECOVER_DRAFT];
-
 
 
             if ($this->params[PageKeys::KEY_RECOVER_DRAFT] == 'true') {
@@ -275,5 +288,66 @@ class RawPageAction extends PageAction
                 print p_locale_xhtml('denied');
                 break;
         }
+    }
+
+    /**
+     * Es tracta del mètode que hauran d'executar en iniciar el bloqueig. Per  defecte no bloqueja el recurs, perquè
+     * actualment el bloqueig es realitza internament a les funcions natives de la wiki. Malgrat tot, per a futurs
+     * projectes es contempla la possibilitat de fer el bloqueig directament aquí, si es passa el paràmetre amb valor
+     * TRUE. EL mètode comprova si algú està bloquejant ja el recurs i en funció d'això, retorna una constant amb el
+     * resultat obtingut de la petició.
+     *
+     * @param bool $lock
+     * @return int
+     */
+    public function requireResource($lock = FALSE)
+    {
+        return $this->resourceLocker->requireResource($lock);
+    }
+
+    /**
+     * Es tracta del mètode que hauran d'executar en iniciar el desbloqueig o també quan l'usuari cancel·la la demanda
+     * de bloqueig. Per  defecte no es desbloqueja el recurs, perquè actualment el desbloqueig es realitza internament
+     * a les funcions natives de la wiki. Malgrat tot, per a futurs projectes es contempla la possibilitat de fer el
+     * desbloqueig directament aquí, si es passa el paràmetre amb valor TRUE. EL mètode retorna una constant amb el
+     * resultat obtingut de la petició.
+     *
+     * @param bool $unlock
+     * @return int
+     */
+    public function leaveResource($unlock = FALSE)
+    {
+        return $this->resourceLocker->leaveResource($unlock);
+    }
+
+    private function generateLockInfo($lockState, $message)
+    {
+        $info = null;
+        $infoType = 'message';
+
+        switch ($lockState) {
+
+            case self::LOCKED:
+                // El fitxer no estava bloquejat
+                break;
+
+            case self::REQUIRED:
+                // S'ha d'afegir una notificació per l'usuari que el te bloquejat
+                $lockingUser = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
+                $message = WikiIocLangManager::getLang('lockedby') . ' ' . $lockingUser;
+                $infoType = 'error';
+                break;
+
+            case self::LOCKED_BEFORE:
+                // El teniem bloquejat nosaltres
+                $message = WikiIocLangManager::getLang('alreadyLocked');
+                $infoType = 'warning';
+                break;
+
+            default:
+                throw new UnknownTypeParamException($lockState);
+
+        }
+        return self::generateInfo($infoType, $message);
     }
 }

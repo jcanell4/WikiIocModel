@@ -7,33 +7,50 @@ if (!defined('DOKU_PLUGIN')) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
 
-require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
-require_once DOKU_PLUGIN."wikiiocmodel/LockManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/persistence/WikiPageSystemManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuAction.php";
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/datamodel/DokuPageModel.php";
-require_once DOKU_PLUGIN."ajaxcommand/requestparams/PageKeys.php";
+require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/LockManager.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/datamodel/DokuPageModel.php";
+require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLocker.php";
 
 /**
  * Description of PageAction
  *
  * @author josep
  */
-abstract class PageAction extends DokuAction {
+abstract class PageAction extends DokuAction
+{
     protected $dokuPageModel;
-    
-    public function __construct($persistenceEngine) {
+    protected $resourceLocker;
+    protected $persistenceEngine;
+
+    public function __construct($persistenceEngine)
+    {
+        $this->persistenceEngine = $persistenceEngine;
         $this->dokuPageModel = new DokuPageModel($persistenceEngine);
+
     }
-    
+
+    /** @override */
+    public function get(/*Array*/
+        $paramsArr = array())
+    {
+        $this->resourceLocker = new ResourceLocker($this->persistenceEngine, $paramsArr);
+        return parent::get($paramsArr);
+
+    }
+
     /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la 
-     * sobrescriptura permet fer assignacions a les variables globals de la 
+     * És un mètode per sobrescriure. Per defecte no fa res, però la
+     * sobrescriptura permet fer assignacions a les variables globals de la
      * wiki a partir dels valors de DokuAction#params.
      */
-    protected function startProcess(){        
+    protected function startProcess()
+    {
         global $ID;
         global $ACT;
         global $REV;
@@ -44,54 +61,56 @@ abstract class PageAction extends DokuAction {
         global $SUF;
         global $SUM;
 
-        $ACT = $this->params[PageKeys::KEY_DO]=  $this->defaultDo;
-        $ACT = act_clean( $ACT );
+        $ACT = $this->params[PageKeys::KEY_DO] = $this->defaultDo;
+        $ACT = act_clean($ACT);
 
-        if ( ! $this->params[PageKeys::KEY_ID] ) {
-                $this->params[PageKeys::KEY_ID] = WikiGlobalConfig::getConf(DW_DEFAULT_PAGE);
+        if (!$this->params[PageKeys::KEY_ID]) {
+            $this->params[PageKeys::KEY_ID] = WikiGlobalConfig::getConf(DW_DEFAULT_PAGE);
         }
         $ID = $this->params[PageKeys::KEY_ID];
-        if ( $this->params[PageKeys::KEY_REV] ) {
-                $REV = $this->params[PageKeys::KEY_REV];
+        if ($this->params[PageKeys::KEY_REV]) {
+            $REV = $this->params[PageKeys::KEY_REV];
         }
         if ($this->params[PageKeys::KEY_RANGE]) {
-                $RANGE = $this->params[PageKeys::KEY_RANGE];
+            $RANGE = $this->params[PageKeys::KEY_RANGE];
         }
-        if ( $this->params[PageKeys::KEY_DATE] ) {
-                $DATE = $this->params[PageKeys::KEY_DATE];
+        if ($this->params[PageKeys::KEY_DATE]) {
+            $DATE = $this->params[PageKeys::KEY_DATE];
         }
-        if ( $this->params[PageKeys::KEY_PRE] ) {
-                $PRE = $this->params[PageKeys::KEY_PRE] 
-                                    = cleanText( substr( $this->params[PageKeys::KEY_PRE], 0, - 1 ) );
+        if ($this->params[PageKeys::KEY_PRE]) {
+            $PRE = $this->params[PageKeys::KEY_PRE]
+                = cleanText(substr($this->params[PageKeys::KEY_PRE], 0, -1));
         }
-        if ( $this->params['text'] ) {
-                $TEXT = $this->params[PageKeys::KEY_TEXT] = $this->params['text'] = cleanText( $this->params['text']  );
-        }elseif($this->params[PageKeys::KEY_TEXT]){
-            $TEXT = $this->params[PageKeys::KEY_TEXT] = $this->params['text'] = cleanText( $this->params[PageKeys::KEY_TEXT]  );
+        if ($this->params['text']) {
+            $TEXT = $this->params[PageKeys::KEY_TEXT] = $this->params['text'] = cleanText($this->params['text']);
+        } elseif ($this->params[PageKeys::KEY_TEXT]) {
+            $TEXT = $this->params[PageKeys::KEY_TEXT] = $this->params['text'] = cleanText($this->params[PageKeys::KEY_TEXT]);
         }
-        if ( $this->params[PageKeys::KEY_SUF] ) {
-                $SUF = $this->params[PageKeys::KEY_SUF] = cleanText( $this->params[PageKeys::KEY_SUF]  );
+        if ($this->params[PageKeys::KEY_SUF]) {
+            $SUF = $this->params[PageKeys::KEY_SUF] = cleanText($this->params[PageKeys::KEY_SUF]);
         }
-        if ( $this->params[PageKeys::KEY_SUM] ) {
-                $SUM = $this->params['sum'] = $this->params[PageKeys::KEY_SUM];
-        }  
-        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID]);                
+        if ($this->params[PageKeys::KEY_SUM]) {
+            $SUM = $this->params['sum'] = $this->params[PageKeys::KEY_SUM];
+        }
+        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID]);
     }
-    
-    protected function getModel(){
+
+    protected function getModel()
+    {
         return $this->dokuPageModel;
     }
 
-    public function getMetaTocResponse($meta=NULL){
+    public function getMetaTocResponse($meta = NULL)
+    {
         $ret = array('id' => \str_replace(":", "_", $this->params[PageKeys::KEY_ID]));
-        if(!$meta){
+        if (!$meta) {
             $meta = array();
         }
         $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
         if ($mEvt->advise_before()) {
             $toc = $this->getModel()->getMetaToc();
             $metaId = \str_replace(":", "_", $this->params[PageKeys::KEY_ID]) . '_toc';
-            $meta[] = ($this->getCommonPage($metaId,  WikiIocLangManager::getLang('toc'), $toc) + ['type' => 'TOC']);
+            $meta[] = ($this->getCommonPage($metaId, WikiIocLangManager::getLang('toc'), $toc) + ['type' => 'TOC']);
         }
         $mEvt->advise_after();
         unset($mEvt);
@@ -100,18 +119,19 @@ abstract class PageAction extends DokuAction {
         return $ret;
     }
 
-    protected function getRevisionList(){
-        $extra =array();
+    protected function getRevisionList()
+    {
+        $extra = array();
         $mEvt = new Doku_Event('WIOC_ADD_META_REVISION_LIST', $extra);
         if ($mEvt->advise_before()) {
             $ret = $this->getModel()->getRevisionList();
         }
         $mEvt->advise_after();
         unset($mEvt);
-        return $ret;        
+        return $ret;
     }
 
-     public function lock()
+    public function lock()
     {
         $pid = WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]);
         //$lockManager = new LockManager($this);
@@ -137,7 +157,7 @@ abstract class PageAction extends DokuAction {
         $lockManager = new LockManager();
         //$lockManager->unlock($this->cleanIDForFiles($pid));
         $lockManager->unlock(WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]));
-        
+
         $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
         $response['info'] = $info; // TODO[Xavi] Localitzar el missatge
 

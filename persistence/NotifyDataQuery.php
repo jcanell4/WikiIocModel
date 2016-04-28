@@ -48,22 +48,23 @@ class NotifyDataQuery extends DataQuery
 
     public function generateNotification($text, $type = self::TYPE_MESSAGE, $params = [], $senderId = NULL)
     {
-        $message = [];
-        $now = new DateTime(); // id
-        $message[self::NOTIFICATION_ID] = $now->getTimestamp();
-        $message[self::TYPE] = $type;
-        $message[self::TEXT] = $text;
-        $message[self::PARAMS] = $params;
-
-
-        // Si no s'ha especificat el sender s'atribueix al sistema
-        if ($senderId === NULL) {
-            $message[self::SENDER_ID] = self::DEFAULT_USER;
-        } else {
-            $message[self::SENDER_ID] = $senderId;
-        }
-
-        return $message;
+        return WikiPageSystemManager::generateNotification($text, $type, $params, $senderId);
+//        $message = [];
+//        $now = new DateTime(); // id
+//        $message[self::NOTIFICATION_ID] = $now->getTimestamp();
+//        $message[self::TYPE] = $type;
+//        $message[self::TEXT] = $text;
+//        $message[self::PARAMS] = $params;
+//
+//
+//        // Si no s'ha especificat el sender s'atribueix al sistema
+//        if ($senderId === NULL) {
+//            $message[self::SENDER_ID] = self::DEFAULT_USER;
+//        } else {
+//            $message[self::SENDER_ID] = $senderId;
+//        }
+//
+//        return $message;
     }
 
     public function add($receiverId, $textMessage, $params, $senderId = NULL, $type = self::TYPE_ALERT)

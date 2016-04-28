@@ -41,6 +41,11 @@ class LockDataQuery extends DataQuery
     public function xLock($id, $lock = FALSE)
     {
 
+        // TODO: Actualitzar el registre estès de bloquejos
+
+        if ($lock) {
+            $this->lock($id);
+        }
     }
 
     /**
@@ -54,7 +59,13 @@ class LockDataQuery extends DataQuery
      */
     public function xUnlock($id, $unlock = FALSE)
     {
+        $id = WikiPageSystemManager::cleanIDForFiles($id);
 
+        // TODO: Actualitzar el registre estès de bloquejos
+
+        if ($unlock) {
+            $this->unlock($id);
+        }
     }
 
     /**
@@ -64,7 +75,15 @@ class LockDataQuery extends DataQuery
      */
     public function lock($id)
     {
+        $id = WikiPageSystemManager::cleanIDForFiles($id);
 
+        $locker = $this->checklock($id);
+
+        if ($locker !== self::LOCKED) {
+            lock($id);
+        } else {
+            throw new WikiIocModelException("El fitxer es troba bloquejat");
+        }
     }
 
     /**
@@ -74,7 +93,7 @@ class LockDataQuery extends DataQuery
      */
     public function unlock($id)
     {
-
+        unlock(WikiPageSystemManager::cleanIDForFiles($id));
     }
 
     /**
@@ -85,7 +104,20 @@ class LockDataQuery extends DataQuery
      */
     public function checklock($id)
     {
+        $id = WikiPageSystemManager::cleanIDForFiles($id);
+        $lock = checklock($id);
 
+        if ($lock === false) {
+            // TODO[Xavi] Com es determina si està bloquejat pel mateix usuari? del fitxer extès?
+            $state = self::UNLOCKED;
+        } else if ($lock === WikiIocInfoManager::getInfo('userinfo')['name']){
+            $state = self::LOCKED_BEFORE;
+        } else {
+            $state = self::LOCKED;
+        }
+
+
+        return $state;
     }
 
     /**
@@ -100,7 +132,8 @@ class LockDataQuery extends DataQuery
 
     }
 
-    public function removeRequirement($id) {
+    public function removeRequirement($id)
+    {
 
     }
 
