@@ -33,6 +33,14 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
         if (!$this->params[PageKeys::KEY_KEEP_DRAFT]) {
             $this->getModel()->removeChunkDraft($this->params[PageKeys::KEY_SECTION_ID]);
         }
+
+        // TODO[Xavi] Només es desbloqueja si no queda cap chunk en edició
+        $count = count($this->params[PageKeys::KEY_EDITING_CHUNKS]);
+        if (count($this->params[PageKeys::KEY_EDITING_CHUNKS])==0) {
+            $this->leaveResource();
+            unlock($this->params[PageKeys::KEY_ID]);
+        }
+
     }
     
     protected function responseProcess() {

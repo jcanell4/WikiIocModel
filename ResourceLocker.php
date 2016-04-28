@@ -42,10 +42,10 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
     {
         $docId = $this->params[PageKeys::KEY_ID];
 
-        $lock = $this->lockDataQuery->checklock($docId);
+        $lockState = $this->lockDataQuery->checklock($docId);
         $state = -1;
 
-        switch ($lock) {
+        switch ($lockState) {
             case LockDataQuery::LOCKED:
                 $state = self::REQUIRED;
                 $this->lockDataQuery->addRequirement($docId);

@@ -17,7 +17,8 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once(DOKU_PLUGIN . 'ajaxcommand/requestparams/PageKeys.php');
-require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLocker.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
 
 if (!defined('DW_ACT_EDIT')) {
     define('DW_ACT_EDIT', "edit");
@@ -36,7 +37,7 @@ if (!defined('DW_DEFAULT_PAGE')) {
  *
  * @author josep
  */
-class RawPartialPageAction extends PageAction
+class RawPartialPageAction extends PageAction  implements ResourceLockerInterface, ResourceUnlockerInterface
 {
     public function __construct(/*BasicPersistenceEngine*/
         $engine)
@@ -84,6 +85,11 @@ class RawPartialPageAction extends PageAction
         $response = $this->getModel()->getData(TRUE);
         $locked = $this->lock($this->params[PageKeys::KEY_ID]); // Alerta[Xavi] el document ha d'estar bloquejat en qualsevol cas
         $response['timeout'] = $locked['timeout'];
+
+        // ALERTA[Xavi] Nova gestió del lock
+        $response[PageKeys::KEY_LOCK_STATE] = $this->requireResource();
+
+
 
 
         /*
@@ -199,4 +205,24 @@ class RawPartialPageAction extends PageAction
         return $originalCall;
     }
 
+
+    /**
+     * Es tracta del mètode que hauran d'executar en iniciar el bloqueig. Per  defecte no bloqueja el recurs, perquè
+     * actualment el bloqueig es realitza internament a les funcions natives de la wiki. Malgrat tot, per a futurs
+     * projectes es contempla la possibilitat de fer el bloqueig directament aquí, si es passa el paràmetre amb valor
+     * TRUE. EL mètode comprova si algú està bloquejant ja el recurs i en funció d'això, retorna una constant amb el
+     * resultat obtingut de la petició.
+     *
+     * @param bool $lock
+     * @return int
+     */
+    public function requireResource($lock = FALSE)
+    {
+        return $this->resourceLocker->requireResource($lock);
+    }
+
+    public function leaveResource($unlock = FALSE)
+    {
+        throw new UnavailableMethodExecutionException('CancelEditPageAction#leaveResource');
+    }
 }

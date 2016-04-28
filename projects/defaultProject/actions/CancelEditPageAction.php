@@ -79,8 +79,9 @@ class CancelEditPageAction extends PageAction implements ResourceLockerInterface
             $this->clearPartialDraft();
         }
 
+        $this->leaveResource();
         unlock($this->params[PageKeys::KEY_ID]);
-        $this->leaveResource(true);
+
 
         if (!WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID], WikiIocLangManager::getLang('pageNotFound'));

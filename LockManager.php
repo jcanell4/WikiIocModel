@@ -10,14 +10,7 @@ if (!defined('DOKU_INC')) die();
  */
 class LockManager{
     
-//    public function __construct(WikiIocModel $modelWrapper = NULL)
-//    {
-//        if ($modelWrapper) {
-//            $this->modelWrapper = $modelWrapper;
-//        } else {
-//            $this->modelWrapper = new DokuModelAdapter();
-//        }
-//    }
+
 
     public function lock($pid) {
 

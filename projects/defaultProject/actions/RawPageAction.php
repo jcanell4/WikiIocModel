@@ -83,7 +83,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
 
 
         // ALERTA[Xavi] Nova gestió del lock
-        $resp[PageKeys::KEY_LOCK_STATE] = $this->requireResource(true);
+        $resp[PageKeys::KEY_LOCK_STATE] = $this->requireResource();
 
         $resp['info'] = $this->generateLockInfo($resp[PageKeys::KEY_LOCK_STATE], $pageToSend['info']);
 

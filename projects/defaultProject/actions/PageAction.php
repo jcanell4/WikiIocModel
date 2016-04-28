@@ -133,7 +133,10 @@ abstract class PageAction extends DokuAction
 
     public function lock()
     {
-        $pid = WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]);
+
+        $pid = $this->params[PageKeys::KEY_ID];
+        $cleanId = WikiPageSystemManager::cleanIDForFiles($pid);
+
         //$lockManager = new LockManager($this);
         $lockManager = new LockManager();
         $locker = $lockManager->lock($pid);
@@ -141,11 +144,11 @@ abstract class PageAction extends DokuAction
         if ($locker === false) {
 
             $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-            $response = ['id' => $pid, 'timeout' => WikiGlobalConfig::getConf('locktime'), 'info' => $info];
+            $response = ['id' => $cleanId , 'timeout' => WikiGlobalConfig::getConf('locktime'), 'info' => $info];
 
         } else {
 
-            $response = ['id' => $pid, 'timeout' => -1, 'info' => $this->generateInfo('error', WikiIocLangManager::getLang('lockedby') . ' ' . $locker)];
+            $response = ['id' => $cleanId , 'timeout' => -1, 'info' => $this->generateInfo('error', WikiIocLangManager::getLang('lockedby') . ' ' . $locker)];
         }
 
         return $response;
@@ -156,7 +159,8 @@ abstract class PageAction extends DokuAction
         //$lockManager = new LockManager($this);
         $lockManager = new LockManager();
         //$lockManager->unlock($this->cleanIDForFiles($pid));
-        $lockManager->unlock(WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]));
+//        $lockManager->unlock(WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]));
+        $lockManager->unlock($this->params[PageKeys::KEY_ID]);
 
         $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
         $response['info'] = $info; // TODO[Xavi] Localitzar el missatge
@@ -167,9 +171,9 @@ abstract class PageAction extends DokuAction
     public function checklock($pid)
     {
         //[ALERTA JOSEP] Cal passar checklock a LockDataQuery i fer la crida des d'allà
-        return checklock(WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]));
+        return checklock($this->params[PageKeys::KEY_ID]);
+//        return checklock(WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]));
     }
 
 
-//put your code here
 }

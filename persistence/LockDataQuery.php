@@ -23,7 +23,8 @@ class LockDataQuery extends DataQuery
 
     protected $notifyDataQuery;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->notifyDataQuery = new NotifyDataQuery();
     }
 
@@ -51,12 +52,34 @@ class LockDataQuery extends DataQuery
      */
     public function xLock($id, $lock = FALSE)
     {
-
+        // Afegim el fitxer extended buit
+        $this->createExtendedFile($id);
         // TODO: Actualitzar el registre estès de bloquejos
 
         if ($lock) {
             $this->lock($id);
         }
+    }
+
+    private function createExtendedFile($id)
+    {
+
+        $locker = $this->_getLockerInfo($id);
+
+        $extended['locker'] = $locker;
+        $extended['requirers'] = [];
+
+        io_saveFile($this->getFileName($id, 'extended'), serialize($extended));
+    }
+
+    private function _getLockerInfo($id)
+    {
+        list($ip, $session) = explode("\n", io_readFile($this->getFileName($id)));
+
+        return [
+            'user' => $ip,
+            'session' => $session
+        ];
     }
 
     /**
@@ -74,7 +97,7 @@ class LockDataQuery extends DataQuery
         $this->notifyRequirers($id);
 
         if ($unlock) {
-            $this->unlock(WikiPageSystemManager::cleanIDForFiles($id));
+            $this->unlock($id);
         }
 
         $this->removeExtendedFile($id);
@@ -105,7 +128,8 @@ class LockDataQuery extends DataQuery
      */
     public function unlock($id)
     {
-        unlock(WikiPageSystemManager::cleanIDForFiles($id));
+//        unlock(WikiPageSystemManager::cleanIDForFiles($id));
+        unlock($id);
 
     }
 
@@ -117,22 +141,21 @@ class LockDataQuery extends DataQuery
      */
     public function checklock($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
         $lock = wikiLockFN($id);
         $state = self::LOCKED;
 
         //no lockfile
-        if(!@file_exists($lock)) {
+        if (!@file_exists($lock)) {
             $state = self::UNLOCKED;
         } else {
             //lockfile expired
-            if((time() - filemtime($lock)) > WikiGlobalConfig::getConf('locktime')) {
+            if ((time() - filemtime($lock)) > WikiGlobalConfig::getConf('locktime')) {
                 @unlink($lock);
                 $state = self::UNLOCKED;
             } else {
                 // own lock
                 list($ip, $session) = explode("\n", io_readFile($lock));
-                if($ip == $_SERVER['REMOTE_USER'] || $ip == clientIP() || $session == session_id()) {
+                if ($ip == $_SERVER['REMOTE_USER'] || $ip == clientIP() || $session == session_id()) {
                     $state = self::LOCKED_BEFORE;
                 }
             }
@@ -198,7 +221,8 @@ class LockDataQuery extends DataQuery
         return; // Test, per afegir breakpoint
     }
 
-    private function addRequirementNotification($lockerId, $docId) {
+    private function addRequirementNotification($lockerId, $docId)
+    {
         $message = sprintf(WikiIocLangManager::getLang('documentRequired'), $this->getCurrentUser(), $docId);
         $this->notifyDataQuery->add($lockerId, $message);
     }
@@ -214,11 +238,7 @@ class LockDataQuery extends DataQuery
     private function clearLockIfNeeded($id)
     {
         $clear = true;
-
-
         $lock = $this->getFileName($id);
-        $extended = $this->getFileName($id, 'extended');
-
 
         if (!@file_exists($lock)) {
             $clear = false;
@@ -239,7 +259,8 @@ class LockDataQuery extends DataQuery
         return $clear;
     }
 
-    public function removeExtendedFile($id) {
+    public function removeExtendedFile($id)
+    {
         @unlink($this->getFileName($id, 'extended'));
     }
 
@@ -273,7 +294,8 @@ class LockDataQuery extends DataQuery
         }
     }
 
-    private function notifyRequirers($id) {
+    private function notifyRequirers($id)
+    {
         $lockFilenameExtended = $this->getFileName($id, 'extended');
         $extended = unserialize(io_readFile($lockFilenameExtended, FALSE));
 
@@ -283,7 +305,8 @@ class LockDataQuery extends DataQuery
 
     }
 
-    private function addUnlockedNotification($requirerId, $docId) {
+    private function addUnlockedNotification($requirerId, $docId)
+    {
         $message = sprintf(WikiIocLangManager::getLang('documentUnlocked'), $docId);
         $this->notifyDataQuery->add($requirerId, $message);
     }
