@@ -60,7 +60,7 @@ class SavePageAction extends RawPageAction {
      */
     protected function runProcess(){
         global $ACT;
-        global $ID;
+        $ID=  $this->params[PageKeys::KEY_ID];
         
         if($this->params[PageKeys::KEY_DO]==DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
@@ -70,6 +70,7 @@ class SavePageAction extends RawPageAction {
 
         if ($ACT == DW_ACT_SAVE) {
             $ret = act_save($ACT);
+            lock($ID);
         } else {
             $ret = $ACT;
         }
@@ -144,6 +145,33 @@ class SavePageAction extends RawPageAction {
 
 
         return $response;
+    }
+    
+    private function _save($act){
+        //spam check
+        if(checkwordblock()) {
+//            msg($lang['wordblock'], -1);
+//            return 'edit';
+            throw new WordBlockedException();
+        }
+        //conflict check
+        if($DATE != 0 && $INFO['meta']['date']['modified'] > $DATE ){
+            //return 'conflict';
+            throw new DateConflictSavingException();
+        }
+
+        //save it
+        //saveWikiText($ID,con($PRE,$TEXT,$SUF,1),$SUM,$INPUT->bool('minor')); //use pretty mode for con
+        $this->dokuPageModel->setData(array(
+            "text" => con($this->params[PageKeys::KEY_PRE],
+                                $this->params[PageKeys::KEY_TEXT], 
+                                $this->params[PageKeys::KEY_SUF], 1), 
+            "summary" => $this->params[PageKeys::KEY_SUM], 
+            "minor" =>  $this->params[PageKeys::KEY_MINOR]));
+
+        //delete draft
+//        act_draftdel($act);
+        $this->dokuPageModel->removeFullDraft();
     }
 
 }

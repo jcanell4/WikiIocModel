@@ -40,7 +40,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
         //$this->draftQuery = $engine->createDraftDataQuery();
         $this->defaultDo = DW_ACT_EDIT;
         $this->engine = $engine;
-        //Indica que la resposta 
+        //Indica que la resposta es renderitza i caldrà llançar l'esdeveniment quan calgui
         $this->setRenderer(TRUE);
     }
     
