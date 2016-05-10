@@ -43,7 +43,8 @@ class CancelEditPageAction extends PageAction implements ResourceLockerInterface
     protected function startProcess()
     {
         if (!isset($this->params[PageKeys::KEY_KEEP_DRAFT])) {
-            $this->params[PageKeys::KEY_KEEP_DRAFT] = false;
+            //$this->params[PageKeys::KEY_KEEP_DRAFT] = false;
+            $this->params[PageKeys::KEY_KEEP_DRAFT] = TRUE; //[JOSEP] Alerta [Xavi]! si es maté a FALSE elimina el draft sempre per defecte!
         }
         parent::startProcess();
         $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], $this->params[PageKeys::KEY_EDITING_CHUNKS], NULL, $this->params[PageKeys::KEY_REV]);
@@ -79,27 +80,13 @@ class CancelEditPageAction extends PageAction implements ResourceLockerInterface
             $this->clearPartialDraft();
         }
 
-        $this->leaveResource();
-        unlock($this->params[PageKeys::KEY_ID]);
+        $this->leaveResource(TRUE);
+        //unlock($this->params[PageKeys::KEY_ID]);
 
 
         if (!WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID], WikiIocLangManager::getLang('pageNotFound'));
         }
-    }
-
-    private function clearFullDraft()
-    {
-        global $ACT;
-        WikiIocInfoManager::setInfo('draft', $this->getModel()->getDraftFileName());
-        $ACT = act_draftdel($ACT);
-
-    }
-
-
-    private function clearPartialDraft()
-    {
-        $this->getModel()->removePartialDraft();
     }
 
     /**

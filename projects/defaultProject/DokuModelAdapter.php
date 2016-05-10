@@ -1551,13 +1551,13 @@ class DokuModelAdapter extends AbstractModelAdapter
      * @return mixed
      */
 
-    private function cleanIDForFiles($id = NULL)
+    private function getContainerIdFromPageId($id = NULL)
     {
         if ($id == NULL) {
             $id = $this->params['id'];
         }
 
-        return WikiPageSystemManager::cleanIDForFiles($id);
+        return WikiPageSystemManager::getContainerIdFromPageId($id);
     }
 
 
@@ -2994,18 +2994,18 @@ class DokuModelAdapter extends AbstractModelAdapter
                $conf;
 
         $ns = $pid;
-        $pid = $this->cleanIDForFiles($pid);
+        $cid = $this->getContainerIdFromPageId($pid);
         $lockManager = new LockManager($this);
         $locker = $lockManager->lock($pid);
 
         if ($locker === false) {
 
             $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-            $response = ['id' => $pid, 'ns' => $ns, 'timeout' => $conf['locktime'], 'info' => $info];
+            $response = ['id' => $cid, 'ns' => $ns, 'timeout' => $conf['locktime'], 'info' => $info];
 
         } else {
 
-            $response = ['id' => $pid, 'ns' => $ns, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
+            $response = ['id' => $cid, 'ns' => $ns, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
         }
 
         return $response;
@@ -3016,12 +3016,12 @@ class DokuModelAdapter extends AbstractModelAdapter
         $lockManager = new LockManager($this);
 
         $ns = $pid;
-        $pid = $this->cleanIDForFiles($pid);
+        $cid = $this->getContainerIdFromPageId($pid);
 
         $lockManager->unlock($pid);
 
         $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
-        $response = ['id' => $pid, 'ns' => $ns, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
+        $response = ['id' => $cid, 'ns' => $ns, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
 
         return $response;
     }

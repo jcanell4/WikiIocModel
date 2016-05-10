@@ -210,7 +210,7 @@ class DraftManager
      */
     public static function getDraftFilename($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
         return getCacheName(WikiIocInfoManager::getInfo("client") . $id, '.draft');
     }
 
@@ -304,7 +304,7 @@ class DraftManager
      */
     public static function hasDraft($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
 
         $draftFilename = self::getDraftFilename($id);
 

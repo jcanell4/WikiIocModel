@@ -52,13 +52,12 @@ class LockDataQuery extends DataQuery
      */
     public function xLock($id, $lock = FALSE)
     {
-        // Afegim el fitxer extended buit
-        $this->createExtendedFile($id);
-        // TODO: Actualitzar el registre estès de bloquejos
-
         if ($lock) {
             $this->lock($id);
         }
+        // Afegim el fitxer extended buit
+        $this->createExtendedFile($id);
+        // TODO: Actualitzar el registre estès de bloquejos
     }
 
     private function createExtendedFile($id)
@@ -76,8 +75,12 @@ class LockDataQuery extends DataQuery
     {
         list($ip, $session) = explode("\n", io_readFile($this->getFileName($id)));
 
+        if(!$session){
+            $session = $_COOKIE["DokuWiki"];
+        }
         return [
             'user' => $ip,
+            'name' => WikiIocInfoManager::getInfo("userinfo")["name"],
             'session' => $session
         ];
     }
@@ -110,14 +113,12 @@ class LockDataQuery extends DataQuery
      */
     public function lock($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
-
         $locker = $this->checklock($id);
 
         if ($locker !== self::LOCKED) {
             lock($id);
         } else {
-            throw new WikiIocModelException("El fitxer es troba bloquejat");
+            throw new FileIsLockedException();
         }
     }
 
@@ -128,7 +129,6 @@ class LockDataQuery extends DataQuery
      */
     public function unlock($id)
     {
-//        unlock(WikiPageSystemManager::cleanIDForFiles($id));
         unlock($id);
     }
 
@@ -231,8 +231,12 @@ class LockDataQuery extends DataQuery
 
     private function addRequirementNotification($lockerId, $docId)
     {
-        $message = sprintf(WikiIocLangManager::getLang('documentRequired'), $this->getCurrentUser(), $docId);
-        $this->notifyDataQuery->add($lockerId, $message);
+        $class_ = get_class($this->notifyDataQuery);
+        $message = array(
+            "text" => sprintf(WikiIocLangManager::getLang('documentRequired'), $this->getCurrentUser(), $docId),
+            "timestamp" => date( "d-m-Y H:i:s" ),
+        );
+        $this->notifyDataQuery->add($lockerId, $message, $class_::TYPE_MESSAGE, $lockerId.$docId."requirement");
     }
 
     /**
@@ -315,8 +319,12 @@ class LockDataQuery extends DataQuery
 
     private function addUnlockedNotification($requirerId, $docId)
     {
-        $message = sprintf(WikiIocLangManager::getLang('documentUnlocked'), $docId);
-        $this->notifyDataQuery->add($requirerId, $message);
+        $class_ = get_class($this->notifyDataQuery);
+        $message = array(
+            "text" => sprintf(WikiIocLangManager::getLang('documentUnlocked'), $docId),
+            "timestamp" => date( "d-m-Y H:i:s" ),
+        );
+        $this->notifyDataQuery->add($requirerId, $message, $class_::TYPE_ALERT, $requirerId.$docId."release");
     }
 
 

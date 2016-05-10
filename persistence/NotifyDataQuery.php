@@ -18,14 +18,14 @@ class NotifyDataQuery extends DataQuery
     // TODO[Xavi] moure a altre fitxer com els PageKeys?
     const NOTIFICATION_ID = 'notification_id';
     const SENDER_ID = 'sender_id';
-    const TEXT = 'text';
+    const DATA = 'data';
     const TYPE = 'type'; // ALERT, MESSAGE, DIALOG
-    const PARAMS = 'params';
-
+    
     const TYPE_ALERT = 'alert';
     const TYPE_MESSAGE = 'message';
     const TYPE_DIALOG = 'dialog';
-
+    const TYPE_CANCEL_NOTIFICATION = 'cancel_notification';
+    const TYPE_EXPIRING = 'expiring';    
 
     const DEFAULT_USER = 'SYSTEM';
 
@@ -35,7 +35,8 @@ class NotifyDataQuery extends DataQuery
 
     public function getFileName($userId, $especParams = NULL)
     {
-        $fileName = getCacheName($userId, '.blackboard');
+//        $fileName = getCacheName($userId, '.blackboard');
+        $fileName = $this->_notifyFN($userId);
 
         return $fileName;
     }
@@ -46,33 +47,36 @@ class NotifyDataQuery extends DataQuery
     }
 
 
-    public function generateNotification($text, $type = self::TYPE_MESSAGE, $params = [], $senderId = NULL)
+    public function generateNotification($notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
     {
-        return WikiPageSystemManager::generateNotification($text, $type, $params, $senderId);
-//        $message = [];
-//        $now = new DateTime(); // id
-//        $message[self::NOTIFICATION_ID] = $now->getTimestamp();
-//        $message[self::TYPE] = $type;
-//        $message[self::TEXT] = $text;
-//        $message[self::PARAMS] = $params;
-//
-//
-//        // Si no s'ha especificat el sender s'atribueix al sistema
-//        if ($senderId === NULL) {
-//            $message[self::SENDER_ID] = self::DEFAULT_USER;
-//        } else {
-//            $message[self::SENDER_ID] = $senderId;
-//        }
-//
-//        return $message;
+
+        $notification = [];
+        if($id===NULL){
+            $now = new DateTime(); // id
+            $id = $now->getTimestamp();
+        }
+        
+        $notification[self::NOTIFICATION_ID] = $id; // ALERTA[Xavi] Moure les constants a un altre fitxer?
+        $notification[self::TYPE] = $type;
+        $notification[self::DATA] = $notificationData;
+
+
+        // Si no s'ha especificat el sender s'atribueix al sistema
+        if ($senderId === NULL) {
+            $notification[self::SENDER_ID] = self::DEFAULT_USER;
+        } else {
+            $notification[self::SENDER_ID] = $senderId;
+        }
+
+        return $notification;
     }
 
-    public function add($receiverId, $textMessage, $params = [], $senderId = NULL, $type = self::TYPE_ALERT)
+    public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
     {
 
 
         // Generar la notificació
-        $message = $this->generateNotification($textMessage, $type, $params, $senderId);
+        $message = $this->generateNotification($notificationData, $type, $id, $senderId);
 
 
         $this->loadBlackboard($receiverId);
@@ -80,13 +84,6 @@ class NotifyDataQuery extends DataQuery
         $this->blackboard[$receiverId][] = $message;
 
         $this->saveBlackboard($receiverId);
-    }
-
-
-    // ALERTA[Xavi] no tinc clar per a que necessitem aquesta funció, afegida perquè es trobava al document
-    public function save($receiverId, $textMessage, $params, $senderId = NULL, $type = self::TYPE_ALERT)
-    {
-        return $this->add($receiverId, $textMessage, $params, $senderId, $type);
     }
 
     public function get($userId, $deleteContent = TRUE)
@@ -157,5 +154,10 @@ class NotifyDataQuery extends DataQuery
         // Eliminem el fitxer
 
         @unlink($filename);
+    }
+
+    private function _notifyFN($user) {
+        $dir = WikiGlobalConfig::getConf("notificationdir");
+        return $dir.'/'.md5(cleanID($user)).'.blackboard';
     }
 }

@@ -22,13 +22,13 @@ class DraftDataQuery extends DataQuery
 
     public function getFullFileName($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
         return getCacheName(WikiIocInfoManager::getInfo("client") . $id, '.draft');
     }
 
     public function getStructuredFilename($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
         return $this->getFilename($id) . '.structured';
     }
 
@@ -39,7 +39,7 @@ class DraftDataQuery extends DataQuery
 
     public function getFull($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
         $draftFile = $this->getFilename($id);
         $cleanedDraft = NULL;
 
@@ -61,7 +61,7 @@ class DraftDataQuery extends DataQuery
 
     public function removeStructured($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
         $draftFile = $this->getStructuredFilename($id);
         if (@file_exists($draftFile)) {
             @unlink($draftFile);
@@ -70,7 +70,7 @@ class DraftDataQuery extends DataQuery
 
     public function removeChunk($id, $chunkId)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
         $draftFile = $this->getStructuredFilename($id);
 
         if (@file_exists($draftFile)) {
@@ -92,7 +92,7 @@ class DraftDataQuery extends DataQuery
 
     public function getStructured($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
         $draftFile = self::getStructuredFilename($id);
         $draft = [];
 
@@ -319,7 +319,7 @@ class DraftDataQuery extends DataQuery
     // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
     public function removeFull($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
         $draftFile = $this->getFileName($id);
         if (@file_exists($draftFile)) {
             @unlink($draftFile);

@@ -1,10 +1,10 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+if (!defined("DOKU_INC")) {
+    die();
+}
+require_once DOKU_INC . 'inc/pageutils.php';
+
 
 /**
  * Description of WikiPageSystemManager 
@@ -18,7 +18,11 @@ class WikiPageSystemManager {
 
 
     
-    public static function cleanIDForFiles( $id) {
+    public static function cleanPageID( $raw_id) {
+        return cleanID($raw_id);
+    }
+    
+    public static function getContainerIdFromPageId($id) {
             return str_replace( ':', '_', $id );
     }
     
@@ -54,26 +58,5 @@ class WikiPageSystemManager {
         }
 
         return date( $format, $revision );
-    }
-
-    public static function generateNotification($text, $type = NotifyDataQuery::TYPE_MESSAGE, $params = [], $senderId = NULL)
-    {
-
-        $notification = [];
-        $now = new DateTime(); // id
-        $notification[NotifyDataQuery::NOTIFICATION_ID] = $now->getTimestamp(); // ALERTA[Xavi] Moure les constants a un altre fitxer?
-        $notification[NotifyDataQuery::TYPE] = $type;
-        $notification[NotifyDataQuery::TEXT] = $text;
-        $notification[NotifyDataQuery::PARAMS] = $params;
-
-
-        // Si no s'ha especificat el sender s'atribueix al sistema
-        if ($senderId === NULL) {
-            $notification[NotifyDataQuery::SENDER_ID] = NotifyDataQuery::DEFAULT_USER;
-        } else {
-            $notification[NotifyDataQuery::SENDER_ID] = $senderId;
-        }
-
-        return $notification;
     }
 }

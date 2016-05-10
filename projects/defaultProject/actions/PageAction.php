@@ -92,7 +92,8 @@ abstract class PageAction extends DokuAction
         if ($this->params[PageKeys::KEY_SUM]) {
             $SUM = $this->params['sum'] = $this->params[PageKeys::KEY_SUM];
         }
-        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID]);
+//        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID]);
+        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], NULL, NULL, $this->params[PageKeys::KEY_REV]);
     }
 
     protected function getModel()
@@ -135,7 +136,7 @@ abstract class PageAction extends DokuAction
     {
 
         $pid = $this->params[PageKeys::KEY_ID];
-        $cleanId = WikiPageSystemManager::cleanIDForFiles($pid);
+        $cleanId = WikiPageSystemManager::getContainerIdFromPageId($pid);
 
         //$lockManager = new LockManager($this);
         $lockManager = new LockManager();
@@ -173,6 +174,19 @@ abstract class PageAction extends DokuAction
         //[ALERTA JOSEP] Cal passar checklock a LockDataQuery i fer la crida des d'allà
         return checklock($this->params[PageKeys::KEY_ID]);
 //        return checklock(WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]));
+    }
+
+    protected function clearFullDraft()
+    {
+        WikiIocInfoManager::setInfo('draft', $this->getModel()->getDraftFileName());
+        act_draftdel($this->params[PageKeys::KEY_DO]);
+
+    }
+
+
+    protected function clearPartialDraft()
+    {
+        $this->getModel()->removePartialDraft();
     }
 
 

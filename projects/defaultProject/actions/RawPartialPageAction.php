@@ -160,7 +160,7 @@ class RawPartialPageAction extends PageAction  implements ResourceLockerInterfac
             // Acció: mostrar dialeg continuar amb edició parcial (es perd l'esborrany) o passar a edició completa
 
             $response['original_call'] = $this->generateOriginalCall();
-            $response['id'] = WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]);
+            $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
             $response['show_full_draft_dialog'] = true;
             $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_found'));
 
@@ -201,7 +201,7 @@ class RawPartialPageAction extends PageAction  implements ResourceLockerInterfac
         // ALERTA[Xavi] Cal afegir el el ns, ja que aquest no forma part dels params
         $originalCall = $this->params;
         $originalCall['ns'] = $this->params[PageKeys::KEY_ID];
-        $originalCall['id'] = WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]);
+        $originalCall['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
         return $originalCall;
     }
 

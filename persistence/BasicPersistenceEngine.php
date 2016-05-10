@@ -68,6 +68,15 @@ class BasicPersistenceEngine {
 
     /**
      *
+     * @return \NotifyDataQuery class
+     */
+    public function getNotifyDataQueryClass(){
+        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
+        return NotifyDataQuery::class;
+    }
+
+    /**
+     *
      * @return \NotifyDataQuery
      */
     public function createLockDataQuery(){

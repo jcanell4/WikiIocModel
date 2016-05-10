@@ -42,7 +42,7 @@ class TimerNotifyModel extends DokuNotifyModel
     {
 
         $init['type'] = $this->type;
-        $init['timer'] = WikiGlobalConfig::getConf('notifier_ajax_timer', 'wikiiocmodel');
+        $init['timer'] = WikiGlobalConfig::getConf('notifier_ajax_timer', 'wikiiocmodel') * 1000;
         return $init;
     }
 

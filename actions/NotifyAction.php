@@ -23,14 +23,22 @@ require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
  */
 class NotifyAction extends AbstractWikiAction
 {
-    const ALERT = "alert";
-    const INFO = "info";
-    const DIALOG = "dialog";
-
     const DO_INIT = "init";
     const DO_ADD = "add";
     const DO_GET = "get";
     const DO_CLOSE = "close";
+
+    /*
+     * NO CAL. Ho deixo per il·lustrar com mentenir constants amb un únic orígen de dades, sense necessitat de conèixer la seva classe.
+     
+    static $TYPE_ALERT;
+    static $TYPE_MESSAGE;
+    static $TYPE_DIALOG;
+    static $TYPE_REQUIREMENT;
+    static $TYPE_RELEASE;
+    static $TYPE_CANCEL_NOTIFICATION;
+    static $TYPE_EXPIRING;
+     */
 
     protected $dokuNotifyModel;
     protected $params;
@@ -40,6 +48,18 @@ class NotifyAction extends AbstractWikiAction
         $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
         $modelManager = WikiIocModelManager::Instance();
         $this->dokuNotifyModel = $modelManager->getNotifyModel($type, $persistenceEngine);
+       
+        /*
+        $notifyClass = $persistenceEngine->getNotifyDataQueryClass();
+        
+        self::$TYPE_ALERT = $notifyClass::TYPE_ALERT;
+        self::$TYPE_MESSAGE = $notifyClass::TYPE_MESSAGE;
+        self::$TYPE_DIALOG = $notifyClass::TYPE_DIALOG;
+        self::$TYPE_REQUIREMENT = $notifyClass::TYPE_REQUIREMENT;
+        self::$TYPE_RELEASE = $notifyClass::TYPE_RELEASE;
+        self::$TYPE_CANCEL_NOTIFICATION = $notifyClass::TYPE_CANCEL_NOTIFICATION;
+        self::$TYPE_EXPIRING = $notifyClass::TYPE_EXPIRING;
+         */
     }
 
     /**

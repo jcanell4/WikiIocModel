@@ -129,7 +129,7 @@ class SavePageAction extends RawPageAction {
             $response = ['code' => $this->code, 'info' => WikiIocLangManager::getLang('saved')];
 
             //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg <-- [Xavi] el nom del formulari ara es dinamic, canvia per cada document
-            $response['formId'] = 'form_' . WikiPageSystemManager::cleanIDForFiles($ID);
+            $response['formId'] = 'form_' . WikiPageSystemManager::getContainerIdFromPageId($ID);
             $response['inputs'] = [
                 'date' => @filemtime(wikiFN($ID)),
                 'changecheck' => md5($TEXT)
