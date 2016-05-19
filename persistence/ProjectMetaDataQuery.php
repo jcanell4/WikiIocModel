@@ -14,7 +14,7 @@ require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
  *
  * @author josep
  */
-class ProjectMetaDataQuery extends DataQuery{
+class ProjectMetaDataQuery extends DataQuery {
 
     private static $retornNsConfig = '{"metaDataClassesNameSpaces":
             {
@@ -181,7 +181,14 @@ class ProjectMetaDataQuery extends DataQuery{
     }
 
     public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE) {
-        
+
+        $base = WikiGlobalConfig::getConf('datadir');
+        //$base = WikiGlobalConfig::getConf('datadir').'/'.$dir;
+        //$base = DOKU_INC .'data/pages/';
+        print_r("\nBAAAAAAAAAAAASE ".$base."\n");
+
+        return $this->getNsTreeFromBase($base, $currentNode, $sortBy, $onlyDirs,'search_universal',true);
+        //return $this->getNsTreeFromBase($base, $currentNode, $sortBy, $onlyDirs);
     }
 
 }
