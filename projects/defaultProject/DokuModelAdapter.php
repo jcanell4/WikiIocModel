@@ -3037,6 +3037,11 @@ class DokuModelAdapter extends AbstractModelAdapter
         return DraftManager::saveDraft($draft);
     }
 
+    public function removeDraft($draft)
+    {
+        return DraftManager::removeDraft($draft);
+    }
+
 //    public function getStructuredDraft($id)
 //    {
 //        return DraftManager::getStructuredDraft($id);

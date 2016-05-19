@@ -2,7 +2,8 @@
 if (!defined('DOKU_INC')) die();
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelAdapter.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelAdapter.php'); 
+require_once(DOKU_INC . 'inc/actions.php');
 /**
  * Class DraftManager
  *
@@ -24,6 +25,32 @@ class DraftManager
 
             case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
                 return self::saveFullDraft($draft['content'], $draft['id']);
+                break;
+
+            default:
+                // error o no draft
+
+
+                break;
+        }
+    }
+
+    public static function removeDraft($draft)
+    {
+
+        $type = $draft['type'];
+
+        switch ($type) {
+            case 'structured':
+                if(isset($draft["section_id"])){
+                    return self::removeStructuredDraft($draft['id'], $draft["section_id"]);
+                }else{
+                    return self::removeStructuredDraftAll($draft['id']);                    
+                }
+                break;
+
+            case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
+                return self::removeFullDraft($draft['id']);
                 break;
 
             default:
@@ -151,6 +178,15 @@ class DraftManager
                 // No hi ha res, l'esborrem
                 @unlink($draftFile);
             }
+        }
+
+    }
+
+    public static function removeFullDraft($id)
+    {
+        $draftFile = self::getDraftFilename($id);
+        if (@file_exists($draftFile)) {
+            @unlink($draftFile);
         }
 
     }
@@ -331,20 +367,18 @@ class DraftManager
      */
     public static function saveFullDraft($draft, $id)
     {
-        $info = basicinfo($id);
-
         $aux = ['id' => $id,
             'prefix' => '',
             'text' => $draft,
             'suffix' => '',
-            'date' => time(), // TODO[Xavi] Posar la data
-            'client' => $info['client']
+            'date' => isset($draft["date"])?$draft["date"]:time(), // TODO[Xavi] Posar la data
+            'client' => WikiIocInfoManager::getInfo("client")
         ];
 
         $filename = self::getDraftFilename($id);
 
         if (io_saveFile($filename, serialize($aux))) {
-            $INFO['draft'] = $filename;
+            WikiIocInfoManager::setInfo("draft", $filename);
         }
 
         self::removeStructuredDraftAll($id);

@@ -44,6 +44,18 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
         $this->setRenderer(TRUE);
     }
     
+    protected function startProcess() {
+        parent::startProcess();
+        if($this->params[PageKeys::KEY_DO]===PageKeys::KEY_TO_REQUIRE){
+            $this->params[PageKeys::KEY_TO_REQUIRE]=TRUE;
+        }else if($this->params[PageKeys::KEY_DO]===PageKeys::KEY_RECOVER_LOCAL_DRAFT){
+            $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]=TRUE;
+        }else if($this->params[PageKeys::KEY_DO]===PageKeys::KEY_RECOVER_LOCAL_DRAFT){
+            $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]=TRUE;
+        }
+    }
+
+
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la
      * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
@@ -63,6 +75,19 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
         }
         
         $this->lockState = $this->requireResource(TRUE);
+        
+         //set summary default
+        if(!$this->params[PageKeys::KEY_SUM]){
+            if($this->params[PageKeys::KEY_REV]){
+                $this->params[PageKeys::KEY_SUM] = sprintf(WikiIocLangManager::getLang('restored'), dformat($this->params[PageKeys::KEY_REV]));
+            }elseif(!WikiIocInfoManager::getInfo ('exists')){
+                $this->params[PageKeys::KEY_SUM] = WikiIocLangManager::getLang('created');
+            }
+        }
+
+        // Use the date of the newest revision, not of the revision we edit
+        // This is used for conflict detection
+        if(!$this->params[PageKeys::KEY_DATE]) $this->params[PageKeys::KEY_DATE] = @filemtime(wikiFN($this->params[PageKeys::KEY_ID]));
     }
 
     /**
@@ -84,7 +109,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
             $resp = $this->_getDraftResponse();
         }else{ //
             $rawData = $this->getModel()->getRawData();
-//            $rawData["draftType"] = $this->_getDrafType($rawData["draftType"]);
+            $rawData["draftType"] = $this->_getDrafType($rawData["draftType"]);
             // 3) No hi ha draft
             if($rawData["draftType"]==DokuPageModel::NO_DRAFT
                     || isset($this->params[PageKeys::KEY_RECOVER_DRAFT])){
@@ -388,13 +413,18 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
         $resp = $this->_getBaseDataToSend();
         
         $resp["recover_local"] = true;
+
+        $resp = array_merge($resp, $this->_getStructuredHtmlForm($this->getModel()->getRawData()["content"]));
         
         //ALERTA [Josep]: De moment cal retornar $resp[recover_local]=true, però cal valorar 
         //si cal fer-ho així.
         $resp[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
         //$resp["meta"]
-        $resp['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
-            
+        $info = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
+
+        if (array_key_exists('info', $resp)) {
+            $info = $this->addInfoToInfo($resp['info'], $info);
+        }
         return $resp;
     }
     
@@ -434,13 +464,22 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
     }
     
     private function _getStructuredHtmlForm($ptext){
+        global $DATE;
+        global $SUM;
         global $TEXT;
-        $aux = $TEXT;
+        
+        $auxText = $TEXT;
         $TEXT = $ptext;
+        $auxDate = $DATE;
+        $DATE = $this->params[PageKeys::KEY_DATE];
+        $auxSum = $SUM;
+        $SUM = $this->params[PageKeys::KEY_SUM];
         ob_start();
         html_edit(); 
         $form = ob_get_clean();       
-        $TEXT = $aux;
+        $TEXT = $auxText;
+        $SUM = $auxSum;
+        $DATE = $auxDate;
         return  $this->_cleanResponse($form);        
     }
 
