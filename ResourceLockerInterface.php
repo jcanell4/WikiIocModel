@@ -17,5 +17,4 @@ interface ResourceLockerInterface
      * @return int
      */
     public function requireResource($lock = FALSE);
-
 }

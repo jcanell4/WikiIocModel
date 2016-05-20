@@ -67,43 +67,49 @@ class SavePageAction extends RawPageAction {
         }
 
         $ACT = act_permcheck($ACT);
-
-        if ($ACT == DW_ACT_SAVE) {
-            $ret = act_save($ACT);
-            lock($ID);
-        } else {
-            $ret = $ACT;
-        }
-
-//        $ret='edit';
-
-        switch ($ret) {
-            case 'edit':
-                throw new WordBlockedException($ID);
-
-            case 'conflict':
-                throw new DateConflictSavingException($ID);
-
-            case 'denied':
-                throw new InsufficientPermissionToCreatePageException($ID);
-        }
-
-        // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
-        //$this->draftQuery->removePartialDraft($this->params['id']);
-
-        // Eliminem el fitxer d'esborranys parcials. ALERTA[Xavi] aquesta comprovació no s'hauria de fer! s'ha de mirar com restructurar el SavePartialPageAction perquè no es faci aquesta crida
-
-        if (!isset($this->params[PageKeys::KEY_SECTION_ID])){ // TODO[Xavi] Fix temporal
-            $this->getModel()->removePartialDraft();
-        }
-
-
         
-        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
-        $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
-                                $this->params[PageKeys::KEY_TEXT].
-                                $this->params[PageKeys::KEY_SUF] )
-                          == NULL );
+        if($ACT==="denied"){
+            throw new InsufficientPermissionToCreatePageException($ID);
+        }
+        
+        $this->_save($act);
+
+//        if ($ACT == DW_ACT_SAVE) {
+//            $ret = act_save($ACT);
+//            lock($ID);
+//        } else {
+//            $ret = $ACT;
+//        }
+//
+////        $ret='edit';
+//
+//        switch ($ret) {
+//            case 'edit':
+//                throw new WordBlockedException($ID);
+//
+//            case 'conflict':
+//                throw new DateConflictSavingException($ID);
+//
+//            case 'denied':
+//                throw new InsufficientPermissionToCreatePageException($ID);
+//        }
+
+//        // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
+//        //$this->draftQuery->removePartialDraft($this->params['id']);
+//
+//        // Eliminem el fitxer d'esborranys parcials. ALERTA[Xavi] aquesta comprovació no s'hauria de fer! s'ha de mirar com restructurar el SavePartialPageAction perquè no es faci aquesta crida
+//
+//        if (!isset($this->params[PageKeys::KEY_SECTION_ID])){ // TODO[Xavi] Fix temporal
+//            $this->getModel()->removePartialDraft();
+//        }
+//
+//
+//        
+//        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
+//        $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
+//                                $this->params[PageKeys::KEY_TEXT].
+//                                $this->params[PageKeys::KEY_SUF] )
+//                          == NULL );
     }
 
     /**
@@ -147,7 +153,7 @@ class SavePageAction extends RawPageAction {
         return $response;
     }
     
-    private function _save($act){
+    private function _save(){
         //spam check
         if(checkwordblock()) {
 //            msg($lang['wordblock'], -1);
@@ -155,7 +161,8 @@ class SavePageAction extends RawPageAction {
             throw new WordBlockedException();
         }
         //conflict check
-        if($DATE != 0 && $INFO['meta']['date']['modified'] > $DATE ){
+        if($this->params[PageKeys::KEY_DATE] != 0 
+                && WikiIocInfoManager::getInfo('meta')['date']['modified'] > $this->params[PageKeys::KEY_DATE] ){
             //return 'conflict';
             throw new DateConflictSavingException();
         }
@@ -172,6 +179,22 @@ class SavePageAction extends RawPageAction {
         //delete draft
 //        act_draftdel($act);
         $this->dokuPageModel->removeFullDraft();
+
+        // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
+        //$this->draftQuery->removePartialDraft($this->params['id']);
+
+        // Eliminem el fitxer d'esborranys parcials. ALERTA[Xavi] aquesta comprovació no s'hauria de fer! s'ha de mirar com restructurar el SavePartialPageAction perquè no es faci aquesta crida
+
+        if (!isset($this->params[PageKeys::KEY_SECTION_ID])){ // TODO[Xavi] Fix temporal
+            $this->getModel()->removePartialDraft();
+        }
+
+        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
+        $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
+                                $this->params[PageKeys::KEY_TEXT].
+                                $this->params[PageKeys::KEY_SUF] )
+                          == NULL );    
+        
     }
 
 }

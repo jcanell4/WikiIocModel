@@ -20,13 +20,16 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
     protected $params;
 
     public function __construct(/*BasicPersistenceEngine*/
-        $persistenceEngine, $params)
+        $persistenceEngine, $params=NULL)
     {
         $this->lockDataQuery = $persistenceEngine->createLockDataQuery();
 
         $this->params = $params;
     }
 
+    public function init($params){
+        $this->params = $params;
+    }
 
     /**
      * Es tracta del mètode que hauran d'executar en iniciar el bloqueig. Per  defecte no bloqueja el recurs, perquè
@@ -43,28 +46,30 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
         $docId = $this->params[PageKeys::KEY_ID];
 
         $lockState = $this->lockDataQuery->checklock($docId);
-        $state = -1;
+        $state = array();
 
         switch ($lockState) {
             case LockDataQuery::LOCKED:
-                $state = self::REQUIRED;
+                $state["state"] = self::REQUIRED;
                 if($this->params[PageKeys::KEY_TO_REQUIRE]){
-                    $this->lockDataQuery->addRequirement($docId);
+                    $state["info"] = $this->lockDataQuery->addRequirement($docId);
+                }else{
+                    $state["info"] = $this->lockDataQuery->getLockInfo($docId);
                 }
                 break;
 
             case LockDataQuery::UNLOCKED:
-                $state = self::LOCKED;
-                $this->lockDataQuery->xLock($docId, $lock);
+                $state["state"] = self::LOCKED;
+                $state["info"] = $this->lockDataQuery->xLock($docId, $lock);
                 break;
 
             case LockDataQuery::LOCKED_BEFORE:
-                $state = self::LOCKED_BEFORE;
-                $this->lockDataQuery->xLock($docId);
+                $state["state"] = self::LOCKED_BEFORE;
+                $state["info"] = $this->lockDataQuery->xLock($docId);
                 break;
 
             default:
-                throw new WikiIocModelException('Codi de bloqueig desconegut'); // TODO[Xavi] Canviar per excepció més apropiada i localitzada
+                throw new UnexpectedLockCodeException($lockState); // TODO[Xavi] Canviar per excepció més apropiada i localitzada
         }
 
 
@@ -113,5 +118,8 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
         return $returnState; // TODO[Xavi] Retorna el codi correcte
     }
 
+    public function checklock() {
+        return $this->lockDataQuery->removeRequirement($this->params[PageKeys::KEY_ID]);
+    }
 
 }

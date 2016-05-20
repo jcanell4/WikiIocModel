@@ -56,8 +56,10 @@ class LockDataQuery extends DataQuery
             $this->lock($id);
         }
         // Afegim el fitxer extended buit
-        $this->createExtendedFile($id);
+        $ret = $this->createExtendedFile($id);
         // TODO: Actualitzar el registre estès de bloquejos
+        
+        return $ret;
     }
 
     private function createExtendedFile($id)
@@ -69,11 +71,14 @@ class LockDataQuery extends DataQuery
         $extended['requirers'] = [];
 
         io_saveFile($this->getFileName($id, 'extended'), serialize($extended));
+        
+        return $extended;
     }
 
     private function _getLockerInfo($id)
     {
-        list($ip, $session) = explode("\n", io_readFile($this->getFileName($id)));
+        $filename = $this->getFileName($id);
+        list($ip, $session) = explode("\n", io_readFile($filename));
 
         if(!$session){
             $session = $_COOKIE["DokuWiki"];
@@ -81,8 +86,35 @@ class LockDataQuery extends DataQuery
         return [
             'user' => $ip,
             'name' => WikiIocInfoManager::getInfo("userinfo")["name"],
-            'session' => $session
+            'session' => $session,
+            "time" =>  filemtime($filename)
         ];
+    }
+
+    public function getLockInfo($id)
+    {
+        $extended = array();
+        $lockFilename = $this->getFileName($id);
+        $lockFilenameExtended = $this->getFileName($id, 'extended');
+        $locked = $this->clearLockIfNeeded($id);
+        
+        if ($locked) {
+            if (@file_exists($lockFilenameExtended)) {
+                // S'ha d'actualitzar
+                $extended = unserialize(io_readFile($lockFilenameExtended, FALSE));
+                $extended["locker"]["time"] =  filemtime($lockFilename);
+
+            } else {
+                // S'ha de crear un nou, llegim la informació del lock base
+                $extended["locker"] = $this->_getLockerInfo($id);
+            }
+
+        } else{
+            // ALERTA[Xavi] El document no està bloquejat, aquest cas no s'hauria de donar mai
+            
+        }
+        
+        return $extended;
     }
 
     /**
@@ -154,8 +186,12 @@ class LockDataQuery extends DataQuery
             } else {
                 // own lock
                 list($ip, $session) = explode("\n", io_readFile($lock));
-                if ($ip == $_SERVER['REMOTE_USER'] || $ip == clientIP() || $session == session_id()) {
-                    $state = self::LOCKED_BEFORE;
+                if ($ip == $_SERVER['REMOTE_USER'] || $ip == clientIP()) {
+                    if($session ===  $_COOKIE["DokuWiki"]){
+                           $state = self::UNLOCKED;
+                    }else{
+                        $state = self::LOCKED_BEFORE;
+                    }
                 }
             }
         }
@@ -192,28 +228,22 @@ class LockDataQuery extends DataQuery
             if (@file_exists($lockFilenameExtended)) {
                 // S'ha d'actualitzar
                 $extended = unserialize(io_readFile($lockFilenameExtended, FALSE));
+                $extended["locker"]["time"] =  filemtime($lockFilename);
 
-            } else {
+                } else {
                 // S'ha de crear un nou, llegim la informació del lock base
-                list($ip, $session) = explode("\n", io_readFile($lockFilename));
-
-                $extended = [];
-                $extended['locker'] = [
-                    'user' => $ip,  // Correspón al nom d'usuari
-                    'session' => $session // ALERTA[Xavi] sempre es null? És el que guarda la wiki
-                ];
-
+                $extended = $this->_getLockerInfo($id);
             }
 
-            if (isset($extended['requirers'][$requirerUser])) {
-                $alreadyNotified = true;
-            }
+//            if (isset($extended['requirers'][$requirerUser])) {
+//                $alreadyNotified = true;
+//            }
 
             $extended['requirers'][$requirerUser] = $requirerTimestamp;
 
         } else {
             // ALERTA[Xavi] El document no està bloquejat, aquest cas no s'hauria de donar mai
-            return;
+            return array();
 
         }
 
@@ -221,14 +251,14 @@ class LockDataQuery extends DataQuery
         io_saveFile($lockFilenameExtended, serialize($extended));
 
         // Afegir una notificació al usuari que el bloqueja si no existia ja (per evitar que s'envii més d'una notificació en cas d'edicions parcials)
-        if (!$alreadyNotified) {
+//        if (!$alreadyNotified) {
             $this->addRequirementNotification($extended['locker']['user'], $id);
-        }
+//        }
 
 
-        return; // Test, per afegir breakpoint
+        return $extended; // Test, per afegir breakpoint
     }
-
+    
     private function addRequirementNotification($lockerId, $docId)
     {
         $class_ = get_class($this->notifyDataQuery);
@@ -297,6 +327,7 @@ class LockDataQuery extends DataQuery
         if (@file_exists($lockFilenameExtended)) {
             $requirerUser = $this->getCurrentUser();
             $extended = unserialize(io_readFile($lockFilenameExtended, FALSE));
+            $extended["locker"]["time"] =  filemtime($lockFilename);
 
             // Si existeix eliminar el usuari
             unset($extended['requirers'][$requirerUser]);
@@ -310,6 +341,7 @@ class LockDataQuery extends DataQuery
     {
         $lockFilenameExtended = $this->getFileName($id, 'extended');
         $extended = unserialize(io_readFile($lockFilenameExtended, FALSE));
+        $extended["locker"]["time"] =  filemtime($lockFilename);
 
         foreach ($extended['requirers'] as $user => $timestamp) {
             $this->addUnlockedNotification($user, $id);

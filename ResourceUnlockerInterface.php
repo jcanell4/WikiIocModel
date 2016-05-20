@@ -16,5 +16,5 @@ interface ResourceUnlockerInterface
      * @param bool $unlock
      * @return int
      */
-    public function leaveResource($unlock = FALSE);
+    public function leaveResource($unlock = FALSE);    
 }

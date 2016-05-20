@@ -28,6 +28,8 @@ $lang['auth_UploadMedia'] = "No teniu permís per a pujar fitxers";
 $lang['auth_TokenNotVerified'] = "Token no verificat";
 $lang['auth_UserNotAuthenticated'] = "Usuari no autenticat";
 $lang['auth_CommadNotAllowed'] = "Comanda no permesa";
+$lang['DraftNotFoundException'] = "No s'ha trobat l'esborrany del document %s";
+$lang['UnexpectedLockCode'] = "Codi de bloqueig '%s' desconegut. No hi ha cap acció associada.";
 
 $lang['lockedByDialog'] = "El document està bloquejat per %s. Vols obrir-lo en mode de només lectura o demanar el bloqueig";
 $lang['lockedByAlert'] = "El document està bloquejat per altre usuari";
@@ -38,3 +40,10 @@ $lang['alreadyLocked'] = "Ja s'havia bloquejat el document previament";
 $lang['documentRequired'] = "L'usuari %s requereix el document %s. Si no el necessites, si us plau, tanca la edició.";
 $lang['documentUnlocked'] = "El document %s ha sigut alliberat. Cancela la edició i torna a editar per accedir";
 $lang['structuredDocumentUnlocked'] = "El document %s ha sigut alliberat. Cancela la edició o obre un altre fragment per accedir a la edició";
+
+$lang['requiring_message'] = "El document %s està bloquejat per l'usuari %s. La data estimada de desbloqueig és: %s";
+$lang['requiring_dialog_title'] = "ALERTA. Document bloquejat!";
+$lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari %s. La data estimada de desbloqueig és: %s\n"
+        . "Vols que t'avisem quan es desbloquegi aquest document?\n"
+        . "Això enviarà una notificació a %s indicant que t'interessa editar el document %s i que l'alliberi l'abans possible.\n"
+        . "Activem la notificació?";

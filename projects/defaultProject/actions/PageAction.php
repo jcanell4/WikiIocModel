@@ -32,14 +32,14 @@ abstract class PageAction extends DokuAction
     {
         $this->persistenceEngine = $persistenceEngine;
         $this->dokuPageModel = new DokuPageModel($persistenceEngine);
-
+        $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
     }
 
     /** @override */
     public function get(/*Array*/
         $paramsArr = array())
     {
-        $this->resourceLocker = new ResourceLocker($this->persistenceEngine, $paramsArr);
+        $this->resourceLocker->init($paramsArr);
         return parent::get($paramsArr);
 
     }

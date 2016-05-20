@@ -65,3 +65,10 @@ class DraftNotFoundException extends WikiIocModelException{
     }
 }
 
+class UnexpectedLockCodeException extends WikiIocModelException{
+    public function __construct($id="", $codeMessage = 'UnexpectedLockCode', $code = 1025, $previous = NULL)
+    {
+        parent::__construct($codeMessage, $code, $previous, $id);
+    }
+}
+

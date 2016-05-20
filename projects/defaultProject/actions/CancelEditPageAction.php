@@ -42,6 +42,9 @@ class CancelEditPageAction extends PageAction implements ResourceLockerInterface
 
     protected function startProcess()
     {
+        if (isset($this->params[PageKeys::KEY_DO]) && $this->params[PageKeys::KEY_DO]==="leaveResource") {
+            $this->params[PageKeys::KEY_NO_RESPONSE] = TRUE;
+        }
         if (!isset($this->params[PageKeys::KEY_KEEP_DRAFT])) {
             //$this->params[PageKeys::KEY_KEEP_DRAFT] = false;
             $this->params[PageKeys::KEY_KEEP_DRAFT] = TRUE; //[JOSEP] Alerta [Xavi]! si es maté a FALSE elimina el draft sempre per defecte!
@@ -52,8 +55,10 @@ class CancelEditPageAction extends PageAction implements ResourceLockerInterface
 
     protected function responseProcess()
     {
-//    $response = array();
-
+        if($this->params[PageKeys::KEY_NO_RESPONSE]){
+            $response["codeType"]=0;
+            return $response;
+        }
 
 //    $response['structure']  = $this->getModel()->getData();
         $response = $this->getModel()->getData();
@@ -82,7 +87,6 @@ class CancelEditPageAction extends PageAction implements ResourceLockerInterface
 
         $this->leaveResource(TRUE);
         //unlock($this->params[PageKeys::KEY_ID]);
-
 
         if (!WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID], WikiIocLangManager::getLang('pageNotFound'));

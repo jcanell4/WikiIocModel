@@ -26,12 +26,12 @@ if (!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
  *
  * @author josep
  */
-class RawPageAction extends PageAction implements ResourceLockerInterface, ResourceUnlockerInterface
+class RawPageAction extends PageAction implements ResourceLockerInterface/*, ResourceUnlockerInterface*/
 {
     //protected $draftQuery;
 
     protected $engine;
-    private $lockState;
+    private $lockStruct;
 
     public function __construct(/*BasicPersistenceEngine*/
         $engine)
@@ -45,13 +45,26 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
     }
     
     protected function startProcess() {
-        parent::startProcess();
         if($this->params[PageKeys::KEY_DO]===PageKeys::KEY_TO_REQUIRE){
             $this->params[PageKeys::KEY_TO_REQUIRE]=TRUE;
         }else if($this->params[PageKeys::KEY_DO]===PageKeys::KEY_RECOVER_LOCAL_DRAFT){
             $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]=TRUE;
         }else if($this->params[PageKeys::KEY_DO]===PageKeys::KEY_RECOVER_LOCAL_DRAFT){
             $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]=TRUE;
+        }
+        parent::startProcess();
+
+        if(!$this->params[PageKeys::KEY_SUM]){
+            if($this->params[PageKeys::KEY_REV]){
+                $this->params[PageKeys::KEY_SUM] = sprintf(WikiIocLangManager::getLang('restored'), dformat($this->params[PageKeys::KEY_REV]));
+            }elseif(!WikiIocInfoManager::getInfo ('exists')){
+                $this->params[PageKeys::KEY_SUM] = WikiIocLangManager::getLang('created');
+            }
+        }
+
+        if(!$this->params[PageKeys::KEY_DATE]){
+            global $DATE;
+            $DATE = $this->params[PageKeys::KEY_DATE] = @filemtime(wikiFN($this->params[PageKeys::KEY_ID]));
         }
     }
 
@@ -74,20 +87,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
         
-        $this->lockState = $this->requireResource(TRUE);
-        
-         //set summary default
-        if(!$this->params[PageKeys::KEY_SUM]){
-            if($this->params[PageKeys::KEY_REV]){
-                $this->params[PageKeys::KEY_SUM] = sprintf(WikiIocLangManager::getLang('restored'), dformat($this->params[PageKeys::KEY_REV]));
-            }elseif(!WikiIocInfoManager::getInfo ('exists')){
-                $this->params[PageKeys::KEY_SUM] = WikiIocLangManager::getLang('created');
-            }
-        }
-
-        // Use the date of the newest revision, not of the revision we edit
-        // This is used for conflict detection
-        if(!$this->params[PageKeys::KEY_DATE]) $this->params[PageKeys::KEY_DATE] = @filemtime(wikiFN($this->params[PageKeys::KEY_ID]));
+        $this->lockStruct = $this->requireResource(TRUE);
     }
 
     /**
@@ -130,6 +130,8 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
             }
         }
         
+        $resp["lockInfo"] = $this->lockStruct["info"];
+        
         //$pageToSend = $this->cleanResponse($this->_getCodePage());
 
         //$resp = $this->getContentPage($pageToSend["content"]);
@@ -141,7 +143,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
         $resp[PageKeys::KEY_LOCK_STATE] = $this->requireResource();
          */
 
-         $resp['info'] = $this->generateLockInfo($this->lockState, $resp['info']);
+         $resp['info'] = $this->generateLockInfo($this->lockState(), $resp['info']);
          
 
 //        $infoType = 'info';
@@ -358,13 +360,13 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
      */
     public function requireResource($lock = FALSE)
     {
-        return $this->resourceLocker->requireResource($lock);
+        return $this->resourceLocker->requireResource($lock, $this->params[PageKeys::KEY_TO_REQUIRE]);
     }
 
-    public function leaveResource($unlock = FALSE)
-    {
-        throw new UnavailableMethodExecutionException('CancelEditPageAction#leaveResource');
-    }
+//    public function leaveResource($unlock = FALSE)
+//    {
+//        throw new UnavailableMethodExecutionException('CancelEditPageAction#leaveResource');
+//    }
 
     private function generateLockInfo($lockState, $mes)
     {
@@ -406,7 +408,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
     }
 
     private function _getLocalDraftResponse(){
-        if($this->lockState==self::REQUIRED){
+        if($this->lockState()==self::REQUIRED){
             //No ha de ser possible aquest cas. LLancem excepció si arriba aquí.
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);           
         }
@@ -428,11 +430,15 @@ class RawPageAction extends PageAction implements ResourceLockerInterface, Resou
         return $resp;
     }
     
+    private function lockState(){
+        return $this->lockStruct["state"];
+    }
+    
     private function _getDraftResponse(){
         if(!$this->dokuPageModel->hasDraft()){
             throw new DraftNotFoundException($this->params[PageKeys::KEY_ID]);
         }
-        if($this->lockState==self::REQUIRED){
+        if($this->lockState()==self::REQUIRED){
             //No ha de ser possible aquest cas. LLancem excepció si arriba aquí.
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);           
         }
