@@ -34,7 +34,12 @@ class WebsocketNotifyModel extends DokuNotifyModel
         return $init;
     }
 
-    public function notifyToFrom($text, $receiverId, $params = [], $senderId = NULL)
+    public function notifyMessageToFrom($text, $receiverId, $senderId = NULL)
+    {
+        throw new UnavailableMethodExecutionException("DokuNotifyModel#notifyToFrom");
+    }
+
+    public function notifyTo($data, $receiverId, $type, $id=NULL)
     {
         throw new UnavailableMethodExecutionException("DokuNotifyModel#notifyToFrom");
     }

@@ -51,6 +51,7 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CreateP
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelEditPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelPartialEditPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/UploadMediaAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/DraftPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/actions/NotifyAction.php');
 
 
@@ -3031,6 +3032,13 @@ class DokuModelAdapter extends AbstractModelAdapter
 //        //[ALERTA JOSEP] Cal passar checklock a LockDataQuery i fer la crida des d'allà
 //        return checklock($this->cleanIDForFiles($pid));
 //    }
+
+    public function draft($params)
+    {
+        $action = new DraftPageAction($this->persistenceEngine);
+        $ret = $action->get($params);
+        return $ret;
+    }
 
     public function saveDraft($draft)
     {

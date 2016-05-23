@@ -132,48 +132,48 @@ abstract class PageAction extends DokuAction
         return $ret;
     }
 
-    public function lock()
+//    public function lock()
+//    {
+//
+//        $pid = $this->params[PageKeys::KEY_ID];
+//        $cleanId = WikiPageSystemManager::getContainerIdFromPageId($pid);
+//
+//        //$lockManager = new LockManager($this);
+//        $lockManager = new LockManager();
+//        $locker = $lockManager->lock($pid);
+//
+//        if ($locker === false) {
+//
+//            $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
+//            $response = ['id' => $cleanId , 'timeout' => WikiGlobalConfig::getConf('locktime'), 'info' => $info];
+//
+//        } else {
+//
+//            $response = ['id' => $cleanId , 'timeout' => -1, 'info' => $this->generateInfo('error', WikiIocLangManager::getLang('lockedby') . ' ' . $locker)];
+//        }
+//
+//        return $response;
+//    }
+
+//    public function unlock()
+//    {
+////        $lockManager = new LockManager();
+////        $lockManager->unlock($this->params[PageKeys::KEY_ID]);
+//        $this->resourceLocker->unlock();
+//        
+//        $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
+//        $response['info'] = $info; // TODO[Xavi] Localitzar el missatge
+//
+//        return $response;
+//    }
+
+    public function checklock()
     {
-
-        $pid = $this->params[PageKeys::KEY_ID];
-        $cleanId = WikiPageSystemManager::getContainerIdFromPageId($pid);
-
-        //$lockManager = new LockManager($this);
-        $lockManager = new LockManager();
-        $locker = $lockManager->lock($pid);
-
-        if ($locker === false) {
-
-            $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-            $response = ['id' => $cleanId , 'timeout' => WikiGlobalConfig::getConf('locktime'), 'info' => $info];
-
-        } else {
-
-            $response = ['id' => $cleanId , 'timeout' => -1, 'info' => $this->generateInfo('error', WikiIocLangManager::getLang('lockedby') . ' ' . $locker)];
-        }
-
-        return $response;
+        return $this->resourceLocker->checklock();
     }
 
-    public function unlock()
-    {
-        //$lockManager = new LockManager($this);
-        $lockManager = new LockManager();
-        //$lockManager->unlock($this->cleanIDForFiles($pid));
-//        $lockManager->unlock(WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]));
-        $lockManager->unlock($this->params[PageKeys::KEY_ID]);
-
-        $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
-        $response['info'] = $info; // TODO[Xavi] Localitzar el missatge
-
-        return $response;
-    }
-
-    public function checklock($pid)
-    {
-        //[ALERTA JOSEP] Cal passar checklock a LockDataQuery i fer la crida des d'allà
-        return checklock($this->params[PageKeys::KEY_ID]);
-//        return checklock(WikiPageSystemManager::cleanIDForFiles($this->params[PageKeys::KEY_ID]));
+    public function updateLock() {
+        return $this->resourceLocker->updateLock();
     }
 
     protected function clearFullDraft()

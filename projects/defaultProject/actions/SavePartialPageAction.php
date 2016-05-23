@@ -39,7 +39,7 @@ class SavePartialPageAction extends SavePageAction{
     protected function runProcess() {
         parent::runProcess();
         $this->getModel()->removeChunkDraft($this->params[PageKeys::KEY_SECTION_ID]);
-        $this->lock();
+//        $this->updateLock();
     }
 
     protected function responseProcess(){

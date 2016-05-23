@@ -39,21 +39,6 @@ class SavePageAction extends RawPageAction {
 
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet fer assignacions a les variables globals de la
-     * wiki a partir dels valors de DokuAction#params.
-     */
-//    protected function startProcess(){
-////        if ($this->params['wikitext']) {
-////            $this->params['text'] = $this->params['wikitext']; // TODO[Xavi] canviar el formulari del frontent per enviar el paràmetre text en lloc de wikitext? <-- en el save total, el partial ja ho fa amb text només
-////        }
-//
-//        parent::startProcess();
-//        //$this->dokuPageModel->init($this->params['id']);                
-//
-//    }
-
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
      * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
      * dades  intermèdies que siguin necessàries per generar la resposta final:
      * DokuAction#responseProcess.
@@ -72,7 +57,12 @@ class SavePageAction extends RawPageAction {
             throw new InsufficientPermissionToCreatePageException($ID);
         }
         
-        $this->_save($act);
+        if($this->checklock()==ST_LOCKED){        
+            throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
+        }
+
+        $this->updateLock();
+        $this->_save();
 
 //        if ($ACT == DW_ACT_SAVE) {
 //            $ret = act_save($ACT);
@@ -193,8 +183,7 @@ class SavePageAction extends RawPageAction {
         $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
                                 $this->params[PageKeys::KEY_TEXT].
                                 $this->params[PageKeys::KEY_SUF] )
-                          == NULL );    
-        
+                          == NULL );            
     }
 
 }

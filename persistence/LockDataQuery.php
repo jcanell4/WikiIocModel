@@ -9,6 +9,19 @@ require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
 
+
+if (!defined('ST_UNLOCKED')) {
+    define('ST_UNLOCKED', 100);
+}
+
+if (!defined('ST_LOCKED')) {
+    define('ST_LOCKED', 200);
+}
+
+
+if (!defined('ST_LOCKED_BEFORE')) {
+    define('ST_LOCKED_BEFORE', 400);
+}
 /**
  * Description of LockDataQuery
  *
@@ -16,9 +29,9 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
  */
 class LockDataQuery extends DataQuery
 {
-    const UNLOCKED = 100; // El recurs no es troba bloquejat per ningú
-    const LOCKED = 200;  // El recurs es troba bloquejat per un altre usuari
-    const LOCKED_BEFORE = 400; // El recurs està bloquejat per l'usuari actual
+    const UNLOCKED = ST_UNLOCKED; // El recurs no es troba bloquejat per ningú
+    const LOCKED = ST_LOCKED;  // El recurs es troba bloquejat per un altre usuari
+    const LOCKED_BEFORE = ST_LOCKED_BEFORE; // El recurs està bloquejat per l'usuari actual
 
 
     protected $notifyDataQuery;

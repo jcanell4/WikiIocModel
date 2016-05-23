@@ -25,6 +25,7 @@ class NotifyAction extends AbstractWikiAction
 {
     const DO_INIT = "init";
     const DO_ADD = "add";
+    const DO_ADDMESS = "add_message";
     const DO_GET = "get";
     const DO_CLOSE = "close";
 
@@ -96,6 +97,10 @@ class NotifyAction extends AbstractWikiAction
                 $response = $this->notifyToFrom();
                 break;
 
+            case self::DO_ADDMESS: // El usuari idUser envia una notificació, notifyToFrom(). ALERTA[Xavi] Pel que hem parlat Josep i jo, s'envia la notificació al sistema. El sistema
+                $response = $this->notifyMessageToFrom();
+                break;
+
             case self::DO_GET: // Obtenir totes les notificacions pel idUser, cridat periodicament pel timer, popNotifications()
                 $response = $this->popNotifications();
                 break;
@@ -120,10 +125,23 @@ class NotifyAction extends AbstractWikiAction
         return $response;
     }
 
-    public function notifyToFrom()
+    public function notifyMessageToFrom()
     {
         $params = $this->params[PageKeys::KEY_PARAMS];
         $text = $this->params['message']; // TODO[Xavi] Convertir en constants, decidir on
+        $receiverId = $this->params['to'];
+        $senderId = $this->getCurrentUser();
+
+        $response['params'] = $this->dokuNotifyModel->notifyMessageToFrom($text, $receiverId, $senderId);
+        $response['action'] = 'notification_send';
+
+        return $response;
+    }
+
+    public function notifyTo()
+    {
+        $params = $this->params[PageKeys::KEY_PARAMS];
+        $data = $this->params['data']; // TODO[Xavi] Convertir en constants, decidir on
         $receiverId = $this->params['to'];
         $senderId = $this->getCurrentUser();
 

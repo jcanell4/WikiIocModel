@@ -1,5 +1,4 @@
 <?php
-
 if (!defined("DOKU_INC")) {
     die();
 }
@@ -16,6 +15,16 @@ require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
 
 class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterface
 {
+    //RETORNAT PER checklock
+    public static $ST_UNLOCKED = ResourceLockerInterface::LOCKED; // El recurs no es troba bloquejat per ningú
+    public static $ST_LOCKED = ResourceLockerInterface::REQUIRED; // // El recurs es troba bloquejat per un altre usuari
+    public static $ST_LOCKED_BEFORE = ResourceLockerInterface::LOCKED_BEFORE; // El recurs està bloquejat pel mateix usuari des d'un altre ordinador
+    
+    //RETORNAT PER requireResource o leaveResource
+    public static $RS_LOCKED = ResourceLockerInterface::LOCKED; // El recurs no es troba bloquejat per ningú
+    public static $RS_REQUIRED = ResourceLockerInterface::REQUIRED; // // El recurs es troba bloquejat per un altre usuari
+    public static $RS_LOCKED_BEFORE = ResourceLockerInterface::LOCKED_BEFORE; // El recurs està bloquejat pel mateix usuari des d'un altre ordinador
+    
     protected $lockDataQuery;
     protected $params;
 
@@ -119,7 +128,19 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
     }
 
     public function checklock() {
-        return $this->lockDataQuery->removeRequirement($this->params[PageKeys::KEY_ID]);
+        return $this->lockDataQuery->checklock($this->params[PageKeys::KEY_ID]);
+    }
+
+//    public function lock() {
+//        return $this->lockDataQuery->lock($this->params[PageKeys::KEY_ID], TRUE);
+//    }
+//
+//    public function unlock() {
+//        return $this->lockDataQuery->xUnlock($this->params[PageKeys::KEY_ID], TRUE);
+//    }
+
+    public function updateLock() {
+        return $this->lockDataQuery->lock($this->params[PageKeys::KEY_ID]);
     }
 
 }
