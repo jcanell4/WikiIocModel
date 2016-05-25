@@ -80,7 +80,26 @@ class ProjectMetaDataQuery extends DataQuery {
 
     //Retorn → JSON {ns1:projectType1, …, nsm:projectTypem}
     public function getMetaDataElementsKey($nsRoot) {
-        if ($nsRoot == "fp") {
+        //getNsTree("fp:dam", 0, false,true)
+        $elementsKeyArray = $this->getNsTree($nsRoot, 0, true, false);
+        print_r("\ngetMetaDataElementsKey getMetaDataElementsKey getMetaDataElementsKey\n");
+        print_r($elementsKeyArray);
+        $returnArray = array();
+        foreach ($elementsKeyArray['children'] as $index => $arrayElement) {
+            if($arrayElement['type']=='p'){
+                $returnArray[$arrayElement['id']]=$arrayElement['projectType'];
+            }
+            
+        }
+        
+        
+        $encoder = new JSON();
+        $toReturn = $encoder->encode($returnArray);
+        return $toReturn;
+        
+        
+        //$retornNsProject = '{"fp:dam:m03":"materials","fp:daw:m07":"materials","fp:daw:m09":"adocs"}'
+        /*if ($nsRoot == "fp") {
             return self::$retornNsProject;
         } else {
             if ($nsRoot == "chg2") {
@@ -92,7 +111,7 @@ class ProjectMetaDataQuery extends DataQuery {
                     return self::$retornNsProjectM;
                 }
             }
-        }
+        }*/
     }
 
     // Retorn --> JSON
@@ -180,14 +199,14 @@ class ProjectMetaDataQuery extends DataQuery {
         
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE) {
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProjects = TRUE) {
 
         $base = WikiGlobalConfig::getConf('datadir');
         //$base = WikiGlobalConfig::getConf('datadir').'/'.$dir;
         //$base = DOKU_INC .'data/pages/';
         print_r("\nBAAAAAAAAAAAASE ".$base."\n");
 
-        return $this->getNsTreeFromBase($base, $currentNode, $sortBy, $onlyDirs,'search_universal',true);
+        return $this->getNsTreeFromBase($base, $currentNode, $sortBy, $onlyDirs,'search_universal',$expandProjects);
         //return $this->getNsTreeFromBase($base, $currentNode, $sortBy, $onlyDirs);
     }
 

@@ -35,7 +35,7 @@ abstract class DataQuery {
 
     public abstract function getFileName($id, $especParams = NULL);
 
-    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE);
+    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProjects = TRUE);
 
     /**
      * Retorna la llista de fitxers continguts a l'espai de noms identificat per $ns
@@ -86,7 +86,7 @@ abstract class DataQuery {
      * @param type $onlyDirs
      * @return string
      */
-    protected function getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs = FALSE, $function = 'search_index', $expandProjects = FALSE) {
+    protected function getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs = FALSE, $function = 'search_index', $expandProjects = TRUE) {
         $sortOptions = array(0 => 'name', 'date');
         $nodeData = array();
         $children = array();
@@ -128,10 +128,10 @@ abstract class DataQuery {
         $metaDataPath = DOKU_INC . WikiGlobalConfig::getConf('mdprojects');
         $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
         foreach (array_keys($nodeData) as $item) {
-            print_r($nodeData[$item]);
+            //print_r($nodeData[$item]);
             $type = 'd';
-            print_r("\n" . $levelProject . "\n");
-            print_r("\n" . $isProject . "\n");
+            //print_r("\n" . $levelProject . "\n");
+            //print_r("\n" . $isProject . "\n");
             if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
                 if ($nodeData[$item]['type'] == 'd') {
                     if (!$isProject || ($isProject && $levelProject == $nodeData[$item]['level'])) {
