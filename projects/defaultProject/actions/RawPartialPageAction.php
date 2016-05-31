@@ -83,10 +83,13 @@ class RawPartialPageAction extends PageAction  implements ResourceLockerInterfac
         }
 
         $response = $this->getModel()->getData(TRUE);
-        $locked = $this->lock($this->params[PageKeys::KEY_ID]); // Alerta[Xavi] el document ha d'estar bloquejat en qualsevol cas
-        $response['timeout'] = $locked['timeout'];
+
+//        $locked = $this->lock($this->params[PageKeys::KEY_ID]); // Alerta[Xavi] el document ha d'estar bloquejat en qualsevol cas
+//        $response['timeout'] = $locked['timeout'];
 
         // ALERTA[Xavi] Nova gestió del lock
+
+        /* ALERTA[Josep] Ja no serveix. Ara arriba l'estat amb la resposta de getModel()->rawData() [Xavi] Comprovar com funciona pel parcial
         $response[PageKeys::KEY_LOCK_STATE] = $this->requireResource();
 
 
