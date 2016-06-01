@@ -354,7 +354,7 @@ class LockDataQuery extends DataQuery
     {
         $lockFilenameExtended = $this->getFileName($id, 'extended');
         $extended = unserialize(io_readFile($lockFilenameExtended, FALSE));
-        $extended["locker"]["time"] =  filemtime($lockFilename);
+        $extended["locker"]["time"] =  filemtime($this->getFileName($id));
 
         foreach ($extended['requirers'] as $user => $timestamp) {
             $this->addUnlockedNotification($user, $id);

@@ -43,26 +43,28 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         //Indica que la resposta es renderitza i caldrà llançar l'esdeveniment quan calgui
         $this->setRenderer(TRUE);
     }
-    
-    protected function startProcess() {
-        if($this->params[PageKeys::KEY_DO]===PageKeys::KEY_TO_REQUIRE){
-            $this->params[PageKeys::KEY_TO_REQUIRE]=TRUE;
-        }else if($this->params[PageKeys::KEY_DO]===PageKeys::KEY_RECOVER_LOCAL_DRAFT){
-            $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]=TRUE;
-        }else if($this->params[PageKeys::KEY_DO]===PageKeys::KEY_RECOVER_LOCAL_DRAFT){
-            $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]=TRUE;
+
+    protected function startProcess()
+    {
+        if ($this->params[PageKeys::KEY_DO] === PageKeys::KEY_TO_REQUIRE) {
+            $this->params[PageKeys::KEY_TO_REQUIRE] = TRUE;
+        } else if ($this->params[PageKeys::KEY_DO] === PageKeys::KEY_RECOVER_LOCAL_DRAFT) {
+            $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = TRUE;
+        } else if ($this->params[PageKeys::KEY_DO] === PageKeys::KEY_RECOVER_LOCAL_DRAFT) {
+            $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = TRUE;
         }
+
         parent::startProcess();
 
-        if(!$this->params[PageKeys::KEY_SUM]){
-            if($this->params[PageKeys::KEY_REV]){
+        if (!$this->params[PageKeys::KEY_SUM]) {
+            if ($this->params[PageKeys::KEY_REV]) {
                 $this->params[PageKeys::KEY_SUM] = sprintf(WikiIocLangManager::getLang('restored'), dformat($this->params[PageKeys::KEY_REV]));
-            }elseif(!WikiIocInfoManager::getInfo ('exists')){
+            } elseif (!WikiIocInfoManager::getInfo('exists')) {
                 $this->params[PageKeys::KEY_SUM] = WikiIocLangManager::getLang('created');
             }
         }
 
-        if(!$this->params[PageKeys::KEY_DATE]){
+        if (!$this->params[PageKeys::KEY_DATE]) {
             global $DATE;
             $DATE = $this->params[PageKeys::KEY_DATE] = @filemtime(wikiFN($this->params[PageKeys::KEY_ID]));
         }
@@ -86,7 +88,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         if ($ACT == DW_ACT_DENIED) {
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
-        
+
         $this->lockStruct = $this->requireResource(TRUE);
     }
 
@@ -100,38 +102,39 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
     {
 
         //Casos
-            // 1) Ja s'ha recuperat el draft local
-        if($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]){
+        // 1) Ja s'ha recuperat el draft local
+        if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]) {
             $resp = $this->_getLocalDraftResponse();
-        }else            
+        } else
             // 2) Es demana recuperar el draft
-        if($this->params[PageKeys::KEY_RECOVER_DRAFT]){
-            $resp = $this->_getDraftResponse();
-        }else{ //
-            $rawData = $this->getModel()->getRawData();
-            $rawData["draftType"] = $this->_getDrafType($rawData["draftType"]);
-            // 3) No hi ha draft
-            if($rawData["draftType"]==DokuPageModel::NO_DRAFT
-                    || isset($this->params[PageKeys::KEY_RECOVER_DRAFT])){
-                $resp = $this->_getRawDataContent($rawData);
-            }else
-            //4) Hi ha draft però no hi ha bloqueig (!locked)
-            if($rawData["draftType"]==DokuPageModel::FULL_DRAFT && !$rawData["locked"]){
-                //Enviar diàleg
-                $resp = $this->_getDraftDialog($rawData);
-            }else
-            //5) no hi ha bloqueig (!locked) i el draft local és més nou
-            if($rawData["draftType"]==DokuPageModel::LOCAL_FULL_DRAFT && !$rawData["locked"]){
-                //Enviar diàleg
-                $resp = $this->_getLocalDraftDialog($rawData);                
-            }else{ // 6) Hi ha draft però el recurs està blquejat per un altre usuari
-                //No es pot editar. Cal esperar que s'acabi el bloqueig
-                $resp = $this->_getWaitingUnlockDialog($rawData);
+            if ($this->params[PageKeys::KEY_RECOVER_DRAFT]) {
+                $resp = $this->_getDraftResponse();
+            } else { //
+                $rawData = $this->getModel()->getRawData();
+                $rawData["draftType"] = $this->_getDrafType($rawData["draftType"]);
+                // 3) No hi ha draft
+                if ($rawData["draftType"] == DokuPageModel::NO_DRAFT
+                    || isset($this->params[PageKeys::KEY_RECOVER_DRAFT])
+                ) {
+                    $resp = $this->_getRawDataContent($rawData);
+                } else
+                    //4) Hi ha draft però no hi ha bloqueig (!locked)
+                    if ($rawData["draftType"] == DokuPageModel::FULL_DRAFT && !$rawData["locked"]) {
+                        //Enviar diàleg
+                        $resp = $this->_getDraftDialog($rawData);
+                    } else
+                        //5) no hi ha bloqueig (!locked) i el draft local és més nou
+                        if ($rawData["draftType"] == DokuPageModel::LOCAL_FULL_DRAFT && !$rawData["locked"]) {
+                            //Enviar diàleg
+                            $resp = $this->_getLocalDraftDialog($rawData);
+                        } else { // 6) Hi ha draft però el recurs està blquejat per un altre usuari
+                            //No es pot editar. Cal esperar que s'acabi el bloqueig
+                            $resp = $this->_getWaitingUnlockDialog($rawData);
+                        }
             }
-        }
-        
+
         $resp["lockInfo"] = $this->lockStruct["info"];
-        
+
         //$pageToSend = $this->cleanResponse($this->_getCodePage());
 
         //$resp = $this->getContentPage($pageToSend["content"]);
@@ -143,8 +146,8 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         $resp[PageKeys::KEY_LOCK_STATE] = $this->requireResource();
          */
 
-         $resp['info'] = $this->generateLockInfo($this->lockState(), $resp['info']);
-         
+        $resp['info'] = $this->generateLockInfo($this->lockState(), $resp['info']);
+
 
 //        $infoType = 'info';
 //        if ($resp[PageKeys::KEY_LOCK_STATE]===100) {// Substituida la coprovació pel nou sistema, 200 es l'estat bloquejat
@@ -153,8 +156,6 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 //        }
 //        $resp['info'] = self::generateInfo($infoType, $pageToSend['info']);
 //        $resp[WikiIocInfoManager::KEY_LOCKED] = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
-
-
 
 
         // només tenim en compte el temps del full draft local, perquè no es pot reconstruir el document localment
@@ -204,7 +205,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 
         return $resp;
     }
-    
+
 //    protected function getContentPage($pageToSend)
 //    {
 //        global $REV;
@@ -263,11 +264,11 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 
         // Eliminem l'etiqueta
         $text = preg_replace($pattern, "", $text);
-        
+
         //eliminem el text de la textarea
-        $pattern ="/(<textarea.*?>)(.*?)(<\/textarea>)/s";
+        $pattern = "/(<textarea.*?>)(.*?)(<\/textarea>)/s";
         $text = preg_replace($pattern, "$1$3", $text);
-        
+
         // Copiem el wiki__editbar
         $pattern = "/<div id=\"wiki__editbar\".*?<\/div>\\s*<\/div>\\s*/s";
         preg_match($pattern, $text, $match);
@@ -372,6 +373,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
     {
         $info = null;
         $infoType = 'message';
+        $message = null;
 
         switch ($lockState) {
 
@@ -396,28 +398,29 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
                 throw new UnknownTypeParamException($lockState);
 
         }
-        if($mes && $message){
-            $message = $this->addInfoToInfo(self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]), 
-                                            self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]));
-        }else if($mes){
+        if ($mes && $message) {
+            $message = $this->addInfoToInfo(self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]),
+                self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]));
+        } else if ($mes) {
             $message = self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]);
-        }else{
+        } else {
             $message = self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]);
         }
         return $message;
     }
 
-    private function _getLocalDraftResponse(){
-        if($this->lockState()==self::REQUIRED){
+    private function _getLocalDraftResponse()
+    {
+        if ($this->lockState() == self::REQUIRED) {
             //No ha de ser possible aquest cas. LLancem excepció si arriba aquí.
-            throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);           
+            throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
         $resp = $this->_getBaseDataToSend();
-        
+
         $resp["recover_local"] = true;
 
         $resp = array_merge($resp, $this->_getStructuredHtmlForm($this->getModel()->getRawData()["content"]));
-        
+
         //ALERTA [Josep]: De moment cal retornar $resp[recover_local]=true, però cal valorar 
         //si cal fer-ho així.
         $resp[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
@@ -425,28 +428,30 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         $info = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
 
         if (array_key_exists('info', $resp)) {
-            $info = $this->addInfoToInfo($resp['info'], $info);
+            $resp['info'] = $this->addInfoToInfo($resp['info'], $info);
         }
         return $resp;
     }
-    
-    private function lockState(){
+
+    private function lockState()
+    {
         return $this->lockStruct["state"];
     }
-    
-    private function _getDraftResponse(){
-        if(!$this->dokuPageModel->hasDraft()){
+
+    private function _getDraftResponse()
+    {
+        if (!$this->dokuPageModel->hasDraft()) {
             throw new DraftNotFoundException($this->params[PageKeys::KEY_ID]);
         }
-        if($this->lockState()==self::REQUIRED){
+        if ($this->lockState() == self::REQUIRED) {
             //No ha de ser possible aquest cas. LLancem excepció si arriba aquí.
-            throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);           
+            throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
-        
+
         $resp = $this->_getBaseDataToSend();
-        
+
         $resp["draft"] = $this->dokuPageModel->getFullDraft();
-        $resp = array_merge($resp, $this->_getStructuredHtmlForm( $resp["draft"]["content"]));
+        $resp = array_merge($resp, $this->_getStructuredHtmlForm($resp["draft"]["content"]));
 
         $resp["recover_draft"] = TRUE;
 
@@ -456,24 +461,26 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
             $info = $this->addInfoToInfo($resp['info'], $info);
         }
 
-        $resp["info"] = $info;       
-        
+        $resp["info"] = $info;
+
         return $resp;
     }
-    
-    private function _getRawDataContent($rawData){
+
+    private function _getRawDataContent($rawData)
+    {
         $resp = $this->_getBaseDataToSend();
         $resp = array_merge($resp, $this->_getStructuredHtmlForm($rawData["content"]));
         $resp["content"] = $rawData["content"];
-        $resp["locked"]=$rawData["locked"];
+        $resp["locked"] = $rawData["locked"];
         return $resp;
     }
-    
-    private function _getStructuredHtmlForm($ptext){
+
+    private function _getStructuredHtmlForm($ptext)
+    {
         global $DATE;
         global $SUM;
         global $TEXT;
-        
+
         $auxText = $TEXT;
         $TEXT = $ptext;
         $auxDate = $DATE;
@@ -481,41 +488,45 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         $auxSum = $SUM;
         $SUM = $this->params[PageKeys::KEY_SUM];
         ob_start();
-        html_edit(); 
-        $form = ob_get_clean();       
+        html_edit();
+        $form = ob_get_clean();
         $TEXT = $auxText;
         $SUM = $auxSum;
         $DATE = $auxDate;
-        return  $this->_cleanResponse($form);        
+        return $this->_cleanResponse($form);
     }
 
-    private function _getLocalDraftDialog($rawData){
+    private function _getLocalDraftDialog($rawData)
+    {
         $resp = $this->_getRawDataContent($rawData);
         $resp["type"] = "full_document";
         $resp["local"] = TRUE;
         $resp["lastmod"] = WikiPageSystemManager::extractDateFromRevision(WikiIocInfoManager::getInfo("lastmod"));
         $resp['show_draft_dialog'] = TRUE;
-        
+
         return $resp;
     }
 
-    private function _getDraftDialog($rawData){
+    private function _getDraftDialog($rawData)
+    {
         $resp = $this->_getLocalDraftDialog($rawData);
         $resp["draft"] = $this->dokuPageModel->getFullDraft();
         $resp["local"] = FALSE;
-        
+
         return $resp;
     }
-    
-    private function _getWaitingUnlockDialog($rawData){
+
+    private function _getWaitingUnlockDialog($rawData)
+    {
         $resp = $this->_getBaseDataToSend();
         //TODO [Josep] Cal implementar quan estigui fet el sistema de diàlegs al client.
         //Aquí caldrà avisar que no és possible editar l'esborrany perquè hi ha algú editant prèviament el document
         // i es podrien perdre dades. També caldrà demanar si vol que l'avisin quan acabi el bloqueig
         return $resp;
     }
-    
-    private function  _getBaseDataToSend(){
+
+    private function _getBaseDataToSend()
+    {
         $pageTitle = tpl_pagetitle($this->params[PageKeys::KEY_ID], TRUE);
         $id = $this->params[PageKeys::KEY_ID];
         $contentData = array(
@@ -527,7 +538,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 
         return $contentData;
     }
-    
+
 //    private function  getContentPage($dataToSend){
 //        $pattern = '/^.*Aquesta és una revisió.*<hr \/>\\n\\n/mis';
 //        $count = 0;
@@ -556,8 +567,9 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 //        return $contentData;
 //    }
 
-    private function _getDrafType($dt=DokuPageModel::NO_DRAFT){
-        if($dt===DokuPageModel::NO_DRAFT && !$this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME]){
+    private function _getDrafType($dt = DokuPageModel::NO_DRAFT)
+    {
+        if ($dt === DokuPageModel::NO_DRAFT && !$this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME]) {
             return DokuPageModel::NO_DRAFT;
         }
         $fullLastSavedDraftTime = $this->dokuPageModel->getFullDraftDate();
