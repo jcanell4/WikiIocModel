@@ -164,7 +164,7 @@ class RawPartialPageAction extends PageAction  implements ResourceLockerInterfac
 
             $response['original_call'] = $this->generateOriginalCall();
             $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
-            $response['show_full_draft_dialog'] = true;
+            $response['show_draft_conflict_dialog'] = true;
             $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_found'));
 
 
