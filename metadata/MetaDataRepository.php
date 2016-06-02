@@ -53,13 +53,22 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
         }
 
         try {
-            $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['persistence']);
+            print_r($MetaDataRequestMessage);
+            $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
             $jSONArray = $metaDataDao->getMeta($MetaDataRequestMessage);
-            $metaDataEntity = MetaDataEntityFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['persistence']);
+            $metaDataEntity = MetaDataEntityFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
             $metaDataEntity->setProjectType($MetaDataRequestMessage['projectType']);
             $metaDataEntity->setmetaDataSubSet($MetaDataRequestMessage['metaDataSubSet']);
             $metaDataEntity->setNsRoot($MetaDataRequestMessage['idResource']);
             $metaDataEntity->setMetaDataValue($jSONArray);
+            return $metaDataEntity;
+        } catch (MetaDataNotFound $exnf) {
+            $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);            
+            $metaDataEntity = MetaDataEntityFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
+            $metaDataEntity->setProjectType($MetaDataRequestMessage['projectType']);
+            $metaDataEntity->setmetaDataSubSet($MetaDataRequestMessage['metaDataSubSet']);
+            $metaDataEntity->setNsRoot($MetaDataRequestMessage['idResource']);
+            //$metaDataEntity->setMetaDataValue($jSONArray);
             return $metaDataEntity;
         } catch (Exception $ex) {
             throw $ex;
@@ -105,7 +114,7 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
         }
 
         try {
-            $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['persistence']);
+            $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
             $jSONArray = $metaDataDao->setMeta($MetaDataEntity, $MetaDataRequestMessage);
             return $jSONArray;
         } catch (Exception $ex) {

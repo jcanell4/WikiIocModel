@@ -18,12 +18,8 @@
     ,
     "metaDataProjectStructure":
             [{
-                    "defaultSubSet": "fitxerx",
+                    "defaultSubSet": "fptx.mdpr",
                     "keysDefinition": {
-                        "idXYZ": {
-                            "tipus": "integer",
-                            "mandatory": true
-                        },
                         "user": {
                             "mandatory": true
                         },
@@ -33,17 +29,13 @@
                     }
                 },
                 {
-                    "SubSet1": "aaa",
+                    "Authorization": "fptx.mdpr",
                     "keysDefinition": {
-                        "idXYZ": {
-                            "tipus": "integer",
-                            "mandatory": true
-                        },
                         "user": {
                             "mandatory": true
                         },
-                        "rol22": {
-                            "mandatory": false
+                        "rol": {
+                            "mandatory": true
                         }
                     }
                 }]

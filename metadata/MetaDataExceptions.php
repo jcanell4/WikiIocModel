@@ -94,7 +94,7 @@ class ClassRenderNotFound extends WikiIocModelException {
 
 class ClassProjectsNotFound extends WikiIocModelException {
 
-    public function __construct($code = 5050, $message = "NCap projecte compleix els criteris de cerca", $previous = NULL) {
+    public function __construct($code = 5050, $message = "Cap projecte compleix els criteris de cerca", $previous = NULL) {
         parent::__construct($message, $code, $previous);
     }
 

@@ -82,56 +82,65 @@ class ProjectMetaDataQuery extends DataQuery {
     public function getMetaDataElementsKey($nsRoot) {
         //getNsTree("fp:dam", 0, false,true)
         $elementsKeyArray = $this->getNsTree($nsRoot, 0, true, false);
-        print_r("\ngetMetaDataElementsKey getMetaDataElementsKey getMetaDataElementsKey\n");
-        print_r($elementsKeyArray);
         $returnArray = array();
         foreach ($elementsKeyArray['children'] as $index => $arrayElement) {
-            if($arrayElement['type']=='p'){
-                $returnArray[$arrayElement['id']]=$arrayElement['projectType'];
+            if ($arrayElement['type'] == 'p') {
+                $returnArray[$arrayElement['id']] = $arrayElement['projectType'];
             }
-            
         }
-        
-        
-        $encoder = new JSON();
-        $toReturn = $encoder->encode($returnArray);
-        return $toReturn;
-        
-        
-        //$retornNsProject = '{"fp:dam:m03":"materials","fp:daw:m07":"materials","fp:daw:m09":"adocs"}'
-        /*if ($nsRoot == "fp") {
-            return self::$retornNsProject;
+
+        if (sizeof($returnArray) > 0) {
+            $encoder = new JSON();
+            $toReturn = $encoder->encode($returnArray);
         } else {
-            if ($nsRoot == "chg2") {
-                return self::$retornNsProjectX;
-            } else {
-                if ($nsRoot == "fp:daw:m07") {
-                    return null;
-                } else {
-                    return self::$retornNsProjectM;
-                }
-            }
-        }*/
+            return null;
+        }
+
+        print_r("\n INIT getMetaDataElementsKey getMetaDataElementsKey getMetaDataElementsKey \n");
+        print_r($toReturn);
+        print_r("\n END getMetaDataElementsKey getMetaDataElementsKey getMetaDataElementsKey \n");
+        return $toReturn;
+
+
+        //$retornNsProject = '{"fp:dam:m03":"materials","fp:daw:m07":"materials","fp:daw:m09":"adocs"}'
+        /* if ($nsRoot == "fp") {
+          return self::$retornNsProject;
+          } else {
+          if ($nsRoot == "chg2") {
+          return self::$retornNsProjectX;
+          } else {
+          if ($nsRoot == "fp:daw:m07") {
+          return null;
+          } else {
+          return self::$retornNsProjectM;
+          }
+          }
+          } */
     }
 
     // Retorn --> JSON
-    public function getMeta($idResource, $projectType, $metaDataSubSet) {
+    public function getMeta($idResource, $projectType, $metaDataSubSet, $filename) {
         /*
          * Obtain metadata files general path
          */
-        $metaDataPath = DOKU_INC . WikiGlobalConfig::getConf('mdprojects');
+        //$metaDataPath = DOKU_INC . WikiGlobalConfig::getConf('mdprojects');
 
+        $metaDataPath = '/home/professor/DesenvolupamentIOC/DesenvolupamentIOC/dokuwiki_30/' . WikiGlobalConfig::getConf('mdprojects');
         /*
          * Convert idResource delimiter ':' to persistence delimiter '/'
          */
         $idResourceArray = explode(':', $idResource);
         $idResoucePath = implode("/", $idResourceArray);
-
+        print_r("\n");
+        print_r(DOKU_INC);
+        print_r("\n");
+        print_r($metaDataPath);
+        print_r($idResoucePath);
         $metaDataReturn = null;
         /*
          * Get content file and return metaData included in $metaDataSubSet
          */
-        $contentFile = @file_get_contents($metaDataPath . $idResoucePath);
+        $contentFile = @file_get_contents($metaDataPath . $idResoucePath . '/' . $projectType . '/' . $filename);
         if ($contentFile != false) {
             $contentMainArray = json_decode($contentFile, true);
             foreach ($contentMainArray as $clave => $valor) {
@@ -144,10 +153,11 @@ class ProjectMetaDataQuery extends DataQuery {
                 }
             }
         }
+        print_r($metaDataReturn);
         return $metaDataReturn;
     }
 
-    public function setMeta($idResource, $projectType, $metaDataSubSet, $metaDataValue) {
+    public function setMeta($idResource, $projectType, $metaDataSubSet, $filename, $metaDataValue) {
         $metaDataPath = DOKU_INC . WikiGlobalConfig::getConf('mdprojects');
 
         /*
@@ -161,17 +171,18 @@ class ProjectMetaDataQuery extends DataQuery {
          * CHECK AND CREATES DIRS
          */
         $resourceCreated = false;
-        if (!is_dir($metaDataPath . $idResoucePath)) {
-            $resourceCreated = mkdir($metaDataPath . $idResoucePath, 0777, true);
+        if (!is_dir($metaDataPath . $idResoucePath . '/' . $projectType)) {
+            $resourceCreated = mkdir($metaDataPath . $idResoucePath . '/' . $projectType, 0777, true);
         }
-        $fp = @fopen($metaDataPath . $idResoucePath . '/' . $theFile, 'a');
+        //$fp = @fopen($metaDataPath . $idResoucePath .'/'.$projectType. '/' . $theFile, 'a');
+        $fp = @fopen($metaDataPath . $idResoucePath . '/' . $projectType . '/' . $filename, 'a');
         if ($fp != false) {
             fclose($fp);
             $resourceCreated = true;
         }
 
         if ($resourceCreated) {
-            $contentFile = file_get_contents($metaDataPath . $idResoucePath . '/' . $theFile);
+            $contentFile = file_get_contents($metaDataPath . $idResoucePath . '/' . $projectType . '/' . $filename);
             $newMetaDataSubSet = true;
             if ($contentFile != false) {
                 $contentMainArray = json_decode($contentFile, true);
@@ -182,12 +193,12 @@ class ProjectMetaDataQuery extends DataQuery {
                     }
                 }
                 $encoder = new JSON();
-                $resultPutContents = file_put_contents($metaDataPath . $idResoucePath . '/' . $theFile, $encoder->encode($contentMainArray));
+                $resultPutContents = file_put_contents($metaDataPath . $idResoucePath . '/' . $projectType . '/' . $filename, $encoder->encode($contentMainArray));
             }
             if ($newMetaDataSubSet) {
                 $contentMainArray[$metaDataSubSet] = json_decode($metaDataValue, true);
                 $encoder = new JSON();
-                $resultPutContents = file_put_contents($metaDataPath . $idResoucePath . '/' . $theFile, $encoder->encode($contentMainArray));
+                $resultPutContents = file_put_contents($metaDataPath . $idResoucePath . '/' . $projectType . '/' . $filename, $encoder->encode($contentMainArray));
             }
         } else {
             $resourceCreated = '{"error":"5090"}';
@@ -202,12 +213,8 @@ class ProjectMetaDataQuery extends DataQuery {
     public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProjects = TRUE) {
 
         $base = WikiGlobalConfig::getConf('datadir');
-        //$base = WikiGlobalConfig::getConf('datadir').'/'.$dir;
-        //$base = DOKU_INC .'data/pages/';
-        print_r("\nBAAAAAAAAAAAASE ".$base."\n");
 
-        return $this->getNsTreeFromBase($base, $currentNode, $sortBy, $onlyDirs,'search_universal',$expandProjects);
-        //return $this->getNsTreeFromBase($base, $currentNode, $sortBy, $onlyDirs);
+        return $this->getNsTreeFromBase($base, $currentNode, $sortBy, $onlyDirs, 'search_universal', $expandProjects);
     }
 
 }

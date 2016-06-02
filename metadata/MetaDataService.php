@@ -108,6 +108,9 @@ class MetaDataService {
         try {
             $this->setMetaDataElements($this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['persistence']));
             if ($this->getMetaDataElements() != null) {
+                print_r("\n INIT xetMetaDataElements getMetaDataElements getMetaDataElements \n");
+                print_r($this->getMetaDataElements());
+                print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
                 $encoder = new JSON();
                 $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));
                 asort($arrayElements);
@@ -118,7 +121,9 @@ class MetaDataService {
                 $indexResponse = 0;
                 $projectTypeActual = null;
                 $metaDataResponseGet = null;
-
+                print_r("\n INIT getMetaDataElements getMetaDataElements getMetaDataElements \n");
+                print_r($this->getMetaDataElements());
+                print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
                 foreach ($this->getMetaDataElements() as $idResource => $projectType) {
                     /*
                      * Check $idResource (sense path) == 
@@ -129,34 +134,36 @@ class MetaDataService {
                      */
                     $filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($projectType, $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
                     $filenameParamArray = explode(':', $idResource);
-                    if ($filename == $filenameParamArray[sizeof($filenameParamArray) - 1]) {
+                    print_r($filename);
+                    //if ($filename == $filenameParamArray[sizeof($filenameParamArray) - 1]) {
 
-                        if ($projectTypeParameter == null || $projectTypeParameter == $projectType) {
-                            if ($projectType != $projectTypeActual) {
-                                if ($projectTypeActual != null) {
-                                    $metaDataResponseGet[$indexResponse] = $this->render->render($this->metaDataEntityWrapper);
-                                    $indexResponse++;
-                                }
-                                $projectTypeActual = $projectType;
-                                $this->metaDataEntityWrapper = array();
-                                $indexWrapper = 0;
-                                $this->render = MetaDataRenderFactory::getObject($projectType, $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
-                                $rc = new ReflectionClass(get_class($this->render));
+                    if ($projectTypeParameter == null || $projectTypeParameter == $projectType) {
+                        if ($projectType != $projectTypeActual) {
+                            if ($projectTypeActual != null) {
+                                $metaDataResponseGet[$indexResponse] = $this->render->render($this->metaDataEntityWrapper);
+                                $indexResponse++;
                             }
-                            $MetaDataRequestMessageActual = $MetaDataRequestMessage;
-                            $MetaDataRequestMessageActual['projectType'] = $projectType;
-                            $MetaDataRequestMessageActual['idResource'] = $idResource;
-                            $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequestMessageActual);
-                            $filterChecked = true;
-                            if (isset($MetaDataRequestMessage['filter']) && ($MetaDataRequestMessage['filter'] != '')) {
-                                $filterChecked = $metaDataEntity->checkFilter($MetaDataRequestMessage['filter']);
-                            }
-                            if ($filterChecked) {
-                                $this->metaDataEntityWrapper[$indexWrapper] = $metaDataEntity;
-                                $indexWrapper++;
-                            }
+                            $projectTypeActual = $projectType;
+                            $this->metaDataEntityWrapper = array();
+                            $indexWrapper = 0;
+                            $this->render = MetaDataRenderFactory::getObject($projectType, $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
+                            $rc = new ReflectionClass(get_class($this->render));
+                        }
+                        $MetaDataRequestMessageActual = $MetaDataRequestMessage;
+                        $MetaDataRequestMessageActual['projectType'] = $projectType;
+                        $MetaDataRequestMessageActual['idResource'] = $idResource;
+                        $MetaDataRequestMessageActual['filename'] = $filename;
+                        $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequestMessageActual);
+                        $filterChecked = true;
+                        if (isset($MetaDataRequestMessage['filter']) && ($MetaDataRequestMessage['filter'] != '')) {
+                            $filterChecked = $metaDataEntity->checkFilter($MetaDataRequestMessage['filter']);
+                        }
+                        if ($filterChecked) {
+                            $this->metaDataEntityWrapper[$indexWrapper] = $metaDataEntity;
+                            $indexWrapper++;
                         }
                     }
+                    //}
                 }
             }
             if ($this->render != null) {
@@ -215,7 +222,10 @@ class MetaDataService {
         try {
             $this->setMetaDataElements($this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['persistence']));
             //'{"fp:dam:m03":"materials","fp:daw:m07":"materials"}'
-            if ($this->getMetaDataElements() != null) {
+            print_r("\n INIT getMetaDataElements getMetaDataElements getMetaDataElements \n");
+                print_r($this->getMetaDataElements());
+                print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
+            if ($this->getMetaDataElements() != null && count($this->getMetaDataElements() > 0)) {
                 $encoder = new JSON();
                 $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));
                 asort($arrayElements);
@@ -235,35 +245,36 @@ class MetaDataService {
                      */
                     $filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($projectType, $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
                     $filenameParamArray = explode(':', $idResource);
-                    if ($filename == $filenameParamArray[sizeof($filenameParamArray) - 1]) {
-                        if ($projectTypeParameter == null || $projectTypeParameter == $projectType) {
-                            if ($projectType != $projectTypeActual) {
-                                if ($projectTypeActual != null) {
-                                    $metaDataResponseSet[$indexResponse] = $this->toAddResponse();
-                                    $indexResponse++;
-                                }
-                                $projectTypeActual = $projectType;
-                                $this->metaDataEntityWrapper = array();
-                                $indexWrapper = 0;
+                    //if ($filename == $filenameParamArray[sizeof($filenameParamArray) - 1]) {
+                    if ($projectTypeParameter == null || $projectTypeParameter == $projectType) {
+                        if ($projectType != $projectTypeActual) {
+                            if ($projectTypeActual != null) {
+                                $metaDataResponseSet[$indexResponse] = $this->toAddResponse();
+                                $indexResponse++;
                             }
-                            $MetaDataRequestMessageActual = $MetaDataRequestMessage;
-                            $MetaDataRequestMessageActual['projectType'] = $projectType;
-                            $MetaDataRequestMessageActual['idResource'] = $idResource;
-                            $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequestMessageActual);
-                            $filterChecked = true;
-                            if (isset($MetaDataRequestMessage['filter']) && ($MetaDataRequestMessage['filter'] != '')) {
-                                $filterChecked = $metaDataEntity->checkFilter($MetaDataRequestMessage['filter']);
-                            }
-                            if ($filterChecked) {
-                                $metaDataEntity->updateMetaDataValue($MetaDataRequestMessage['metaDataValue']);
-                                $returnSet = $this->metaDataRepository->setMeta($metaDataEntity, $MetaDataRequestMessageActual);
-                                if ($returnSet) {
-                                    $this->metaDataEntityWrapper[$indexWrapper] = $metaDataEntity;
-                                    $indexWrapper++;
-                                }
+                            $projectTypeActual = $projectType;
+                            $this->metaDataEntityWrapper = array();
+                            $indexWrapper = 0;
+                        }
+                        $MetaDataRequestMessageActual = $MetaDataRequestMessage;
+                        $MetaDataRequestMessageActual['projectType'] = $projectType;
+                        $MetaDataRequestMessageActual['idResource'] = $idResource;
+                        $MetaDataRequestMessageActual['filename'] = $filename;
+                        $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequestMessageActual);
+                        $filterChecked = true;
+                        if (isset($MetaDataRequestMessage['filter']) && ($MetaDataRequestMessage['filter'] != '')) {
+                            $filterChecked = $metaDataEntity->checkFilter($MetaDataRequestMessage['filter']);
+                        }
+                        if ($filterChecked) {
+                            $metaDataEntity->updateMetaDataValue($MetaDataRequestMessage['metaDataValue']);
+                            $returnSet = $this->metaDataRepository->setMeta($metaDataEntity, $MetaDataRequestMessageActual);
+                            if ($returnSet) {
+                                $this->metaDataEntityWrapper[$indexWrapper] = $metaDataEntity;
+                                $indexWrapper++;
                             }
                         }
                     }
+                    //}
                 }
             }
             $metaDataResponseSet[$indexResponse] = $this->toAddResponse();
@@ -276,13 +287,15 @@ class MetaDataService {
                      */
 
                     // Will returns an Entity Object with $MetaDataValue empty
+                    $filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
+                    $MetaDataRequestMessage['filename'] = $filename;
                     $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequestMessage);
                     // Must not check filter
                     // Will update (fill) $MetaDataValue
                     $metaDataEntity->updateMetaDataValue($MetaDataRequestMessage['metaDataValue']);
                     $this->metaDataEntityWrapper = array();
                     $indexWrapper = 0;
-                    $filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
+                    //$filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
                     $MetaDataRequestMessageActual = $MetaDataRequestMessage;
                     $MetaDataRequestMessageActual['idResource'] = $MetaDataRequestMessage['idResource'] . ":" . $filename;
                     $returnSet = $this->metaDataRepository->setMeta($metaDataEntity, $MetaDataRequestMessageActual);

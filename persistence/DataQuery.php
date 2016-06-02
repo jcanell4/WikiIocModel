@@ -120,7 +120,6 @@ abstract class DataQuery {
         search(
                 $nodeData, $base, $function, $opts, $dir, 1
         );
-        print_r("\ngetNSTree\n");
 
         $levelProject = -1;
         $isProject = false;
@@ -139,31 +138,31 @@ abstract class DataQuery {
                         $levelProject = $nodeData[$item]['level'];
                         $pathProject = str_replace(':', '/', $nodeData[$item]['id']);
                         $pathProject = $metaDataPath . $pathProject;
-                        print_r("\n PATHPROJECT PATHPROJECT PATHPROJECT PATHPROJECT PATHPROJECT \n");
-                        print_r("\n" . $pathProject . "\n");
+                        //print_r("\n PATHPROJECT PATHPROJECT PATHPROJECT PATHPROJECT PATHPROJECT \n");
+                        //print_r("\n" . $pathProject . "\n");
                         $isProject = false;
                         if (is_dir($pathProject)) {
-                            print_r("\n ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR \n");
-                            print_r("\n" . $pathProject . "\n");
+                            //print_r("\n ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR \n");
+                            //print_r("\n" . $pathProject . "\n");
                             $dirProject = opendir($pathProject);
                             while ($current = readdir($dirProject)) {
-                                print_r("\n current current current current current current current current current \n");
-                                print_r("\n" . $current . "\n");
+                                //print_r("\n current current current current current current current current current \n");
+                                //print_r("\n" . $current . "\n");
                                 $pathProjectOne = $pathProject . '/' . $current;
                                 if (is_dir($pathProjectOne)) {
-                                    print_r("\n ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2\n");
-                                    print_r("\n" . $pathProjectOne . "\n");
+                                    //print_r("\n ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2\n");
+                                    //print_r("\n" . $pathProjectOne . "\n");
                                     $dirProjectOne = opendir($pathProjectOne);
                                     while ($currentOne = readdir($dirProjectOne)) {
-                                        print_r("\n current2 current2 current2 current2 current2 current2 current2 current2 current2 \n");
-                                        print_r("\n" . $currentOne . "\n");
+                                        //print_r("\n current2 current2 current2 current2 current2 current2 current2 current2 current2 \n");
+                                        //print_r("\n" . $currentOne . "\n");
                                         if (!is_dir($pathProjectOne . '/' . $currentOne)) {
                                             $fileTokens = explode(".", $currentOne);
-                                            print_r("\n" . $fileTokens[sizeof($fileTokens) - 1] . "\n");
-                                            print_r("\naaa" . $metaDataExtension . "\n");
+                                            //print_r("\n" . $fileTokens[sizeof($fileTokens) - 1] . "\n");
+                                            //print_r("\naaa" . $metaDataExtension . "\n");
                                             if ($fileTokens[sizeof($fileTokens) - 1] == $metaDataExtension) {
-                                                print_r("\n PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE \n");
-                                                print_r("\n" . $currentOne . "\n");
+                                                //print_r("\n PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE \n");
+                                                //print_r("\n" . $currentOne . "\n");
                                                 //És projecte i escriure   p  
                                                 $levelProject = $nodeData[$item]['level'];
                                                 $isProject = true;
@@ -181,7 +180,6 @@ abstract class DataQuery {
                         $children[$item]['name'] = $aname[$level];
                         $children[$item]['type'] = $type;
                     } else {
-                        print_r("\n SUBNIVELL DE PROJECTE" . $nodeData[$item]['id'] . "\n");
                         //Subnivell de projecte - i només quan s'ha d'expadir el projecte
                         if ($expandProjects) {
                             $children[$item]['id'] = $nodeData[$item]['id'];
@@ -193,10 +191,10 @@ abstract class DataQuery {
                     }
                 } else {
                     //fitxer de projecte o no
-                    print_r("\n FITXER DE PROJECTE O NO DE PROJECTE" . $nodeData[$item]['id'] . "\n");
+                    //print_r("\n FITXER DE PROJECTE O NO DE PROJECTE" . $nodeData[$item]['id'] . "\n");
                     if ($isProject) {
                         if ($expandProjects) {
-                            print_r("\n FITXER DE PROJECTE" . $children[$item]['id'] . "\n");
+                            //print_r("\n FITXER DE PROJECTE" . $children[$item]['id'] . "\n");
                             $children[$item]['id'] = $nodeData[$item]['id'];
                             $aname = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
                             $children[$item]['name'] = $aname[$level];
@@ -211,7 +209,7 @@ abstract class DataQuery {
                     }
                 }
             }
-            print_r($children[$item]);
+            //print_r($children[$item]);
         }
 
         $tree = array(
@@ -221,7 +219,10 @@ abstract class DataQuery {
             'children' => $children
         );
 
+        //print_r($tree);
+        //print_r("\n");
         return $tree;
+        
     }
 
 }

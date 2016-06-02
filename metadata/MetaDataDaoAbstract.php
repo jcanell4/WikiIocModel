@@ -70,6 +70,9 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
+        print_r("\n START MetaDataDaoAbstract.getMeta \n");
+        print_r($jSONArray);
+        print_r("\n END MetaDataDaoAbstract.getMeta \n");
 
         //if doesn't exist metadata, then WikiIocModelException -> MetaDataNotFound
         if (!isset($jSONArray) || $jSONArray == null) {
@@ -96,7 +99,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      * @return json with metadata values
      */
     public function __getMetaPersistence($MetaDataRequestMessage) {
-        return $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->getMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet']);
+        return $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->getMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['filename']);
     }
 
     /**
@@ -204,7 +207,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      * @return success -> true, error --> json with error value
      */
     public function __setMetaPersistence($MetaDataEntity,$MetaDataRequestMessage) {
-        return $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->setMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataEntity->getMetaDataValue());
+        return $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->setMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['filename'],$MetaDataEntity->getMetaDataValue());
         
     }
 
