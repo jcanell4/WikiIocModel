@@ -37,7 +37,7 @@ if (!defined('DW_DEFAULT_PAGE')) {
  *
  * @author josep
  */
-class RawPartialPageAction extends PageAction  implements ResourceLockerInterface, ResourceUnlockerInterface
+class RawPartialPageAction extends PageAction implements ResourceLockerInterface, ResourceUnlockerInterface
 {
     private $lockStruct;
 
@@ -58,6 +58,10 @@ class RawPartialPageAction extends PageAction  implements ResourceLockerInterfac
             $this->params[PageKeys::KEY_REV],
             $this->params[PageKeys::KEY_RECOVER_DRAFT]);
 
+        // Abans de generar la resposta s'ha d'eliminar l'esborrany complet si escau
+        if ($this->params[PageKeys::KEY_DISCARD_DRAFT]) {
+            $this->getModel()->removeFullDraft($this->params[PageKeys::KEY_ID]);
+        }
     }
 
     /**
@@ -91,133 +95,44 @@ class RawPartialPageAction extends PageAction  implements ResourceLockerInterfac
      */
     protected function responseProcess()
     {
-        // Abans de generar la resposta s'ha d'eliminar l'esborrany complet si escau
-        if ($this->params[PageKeys::KEY_DISCARD_DRAFT]) {
-            $this->getModel()->removeFullDraft($this->params[PageKeys::KEY_ID]);
-        }
+        $response = [];
+        $data = $this->getModel()->getData(TRUE);
 
-        $response = $this->getModel()->getData(TRUE);
+        // 1) Ja s'ha recuperat el draft local
+        if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]) {
 
+            $response = $this->_getLocalDraftResponse($data);
 
-
-//        $locked = $this->lock($this->params[PageKeys::KEY_ID]); // Alerta[Xavi] el document ha d'estar bloquejat en qualsevol cas
-//        $response['timeout'] = $locked['timeout'];
-
-        // ALERTA[Xavi] Nova gestió del lock
-
-        /* ALERTA[Josep] Ja no serveix. Ara arriba l'estat amb la resposta de getModel()->rawData() [Xavi] Comprovar com funciona pel parcial
-        $response[PageKeys::KEY_LOCK_STATE] = $this->requireResource();
-
-
-
-
-        /*
-        TODO[Xavi] En lloc de les constants LOCAL_FULL_DRAFT pot ser suficient detecgar el valor de la resposta 'local'
-
-
-        FULL DRAFT:
-            Si existeix LOCAL_FULL_DRAFT, comparem data:
-                LOCAL_FULL_DRAFT es més recent (major), canviem a LOCAL_FULL_DRAFT, afegir response 'LOCAL'=true
-
-            Si no existeix FULL (la data es -1) s'estableix el local
-
-
-        sino STRUCTURED_DRAFT:
-
-            Si existeix LOCAL_STRUCTURED:
-                STRUCTURED_DRAFT es més recent (data major), sense canvis
-                LOCAL_STRUCTURED_DRAFT es més recent (data major), canviem a LOCAL_STRUCTURED_DRAFT, afegir response 'LOCAL'=true
-
-        sino NO_DRAFT:
-            Si existeix LOCAL_FULL_DRAFT:
-                canviem a LOCAL_FULL_DRAFT, afegir response 'LOCAL'=true
-
-            Sino, si existeix LOCAL_STRUCTURED:
-                canviem a LOCAL_STRUCTURED_DRAFT, afegir response 'LOCAL'=true
-
-       */
-
-        // ALERTA[Xavi] QUE FEM: Calcular la data dels esborranys locals
-        $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
-        $structuredLastLocalDraftTime = intval(substr($this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME], 0, 10));
-
-        // Si l'esborrany estructurad local es més recent que l'esborrany complet local, ignorem l'esborrany local complet
-        // ALERTA[Xavi] QUE FEM: Descartar la data del esborrany complet local si el parcial es més recent
-        if ($structuredLastLocalDraftTime>$fullLastLocalDraftTime) {
-            $fullLastLocalDraftTime = null;
-        }
-
-        // ALERTA[Xavi] QUE FEM: No existeix el KEY_RECOVER_DRAFT, ni KEY_DISCARD_DRAFT, però existeix un FULL LOCAL DRAFT, comprovem si es més recent el FULL REMOT
-        if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $fullLastLocalDraftTime) {
-            // obtenir la data del draft full local
-            $fullLastSavedDraftTime = $this->dokuPageModel->getFullDraftDate();
-            if ($fullLastLocalDraftTime > $fullLastSavedDraftTime) { // local es més recent
-                $response['local'] = true;
-                $response['draftType'] = DokuPageModel::LOCAL_FULL_DRAFT;
-            }
-
-            // ALERTA[Xavi] QUE FEM: Igual que l'anterior però amb STRUCTURED LOCAL
-        } else if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT] && $structuredLastLocalDraftTime) {
-            $structuredLastSavedDraftTime = $this->dokuPageModel->getStructuredDraftDate();
-
-//            $structuredLastSavedDraftTime = 1558822524; // TODO[Xavi] Forçant la comprovació, ELIMINAR!
-
-            if ($structuredLastLocalDraftTime > $structuredLastSavedDraftTime) { // local es més recent
-                $response['local'] = true;
-                $response['draftType'] = DokuPageModel::LOCAL_PARTIAL_DRAFT;
-            }
-        }
-
-        // ALERTA[Xavi] QUE FEM: s'ha demanat recuperar el LOCAL DRAFT des del client
-        if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] === true) {
-            // TODO[Xavi] Moure aqui la recuperació del draft? si s'ha demanat recuperar es que ja s'han mostrat els dialogs que tocaven i no cal comprovar els 'isset'
-            $response[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
-            $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
-
-
-            // ALERTA[Xavi] QUE FEM: No s'ha rebut cap informació sobre la recuperació del draft i el tipus es FULL DRAFT remot o local
-        } else if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && ($response['draftType'] === DokuPageModel::FULL_DRAFT
-                || $response['draftType'] === DokuPageModel::LOCAL_FULL_DRAFT)) {
-
-            // No existeix el KEY_RECOVER_DRAFT però hi ha un full draft
-            // Acció: mostrar dialeg continuar amb edició parcial (es perd l'esborrany) o passar a edició completa
-
-            $response['original_call'] = $this->generateOriginalCall();
-            $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
-            $response['show_draft_conflict_dialog'] = true;
-            $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_found'));
-
-            // ALERTA[Xavi] QUE FEM: igual que l'anterior però local
-        } else if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && ($response['draftType'] === DokuPageModel::PARTIAL_DRAFT
-                || $response['draftType'] === DokuPageModel::LOCAL_PARTIAL_DRAFT)) {
-            // No existeix el KEY_RECOVER_DRAFT però hi ha un partial_draft
-            // Acció: mostrar dialeg seleccionar document o esborrany
-
-            $response['show_draft_dialog'] = true;
-            $response['original_call'] = $this->generateOriginalCall();
-            $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('partial_draft_found'));
-
-
-            // ALERTA[Xavi] QUE FEM: S'ha demanat recuperar el draft
-        } else if ($this->params[PageKeys::KEY_RECOVER_DRAFT]===true) {
-            // Existeix el KEY_RECOVER_DRAFT i es cert
-            // Acció: recuperar esborrany
-
-            $this->getModel()->replaceContentForChunk($response['structure'], $this->params[PageKeys::KEY_SECTION_ID],
-                $response["draft"]['content']);
-            $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_editing'));
-
-            // ALERTA[Xavi] QUE FEM: Recuperar el document, ¿?¿? aqui no es fa res, només s'estableix la info i ni tan sols existeix el locked['timeout']
         } else {
-            // Acció: recuperar el document
 
-            if (!$response['structure']['locked']) {
-                $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
+            // 2.1) Es demana recuperar el draft?
+            if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === TRUE) {
+
+                $response = $this->_getDraftResponse($data);
+
+                // 2.2) Es troba desbloquejat?
+            } else if (!$data['structured']['locked']) { //
+
+                if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === FALSE) {
+
+                    // 2.2.1) S'ha especificat recuperar el document
+                    $response = $this->_getDocumentResponse($data);
+                } else {
+
+                    // 2.2.1) Es generarà el dialog de draft pertinent, o el document si no hi ha cap draft per enviar
+                    $response = $this->_getDialogOrDocumentResponse($data);
+                }
+
+                // 2.3) El document es troba bloquejat
             } else {
-                $response['info'] = $this->generateInfo('success', WikiIocLangManager::getLang('chunk_editing') . $this->params[PageKeys::KEY_ID] . ':' . $this->params[PageKeys::KEY_SECTION_ID]);
+
+                // TODO[Xavi]El document està bloquejat
+                //  No es pot editar. Cal esperar que s'acabi el bloqueig
+                // $resp = $this->_getWaitingUnlockDialog($rawData); <-- acció equivalent al RawPageAction
+
+
             }
         }
-
 
         return $response;
     }
@@ -225,9 +140,13 @@ class RawPartialPageAction extends PageAction  implements ResourceLockerInterfac
     private function generateOriginalCall()
     {
         // ALERTA[Xavi] Cal afegir el  ns, ja que aquest no forma part dels params
-        $originalCall = $this->params;
+
         $originalCall['ns'] = $this->params[PageKeys::KEY_ID];
         $originalCall['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
+        $originalCall['rev'] = $this->params[PageKeys::KEY_REV];
+        $originalCall['section_id'] = $this->params[PageKeys::KEY_SECTION_ID];
+        $originalCall['editing_chunks'] = $this->params[PageKeys::KEY_EDITING_CHUNKS];
+
         return $originalCall;
     }
 
@@ -299,4 +218,141 @@ class RawPartialPageAction extends PageAction  implements ResourceLockerInterfac
     {
         return $this->lockStruct["state"];
     }
+
+    private function _getLocalDraftResponse($data)
+    {
+        $response = $data;
+        $response[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
+        $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
+
+        return $response;
+    }
+
+    private function _getDraftResponse($data)
+    {
+        // Existeix el KEY_RECOVER_DRAFT i es cert
+        // Acció: recuperar esborrany
+
+        $response = $data;
+
+        $this->getModel()->replaceContentForChunk($response['structure'], $this->params[PageKeys::KEY_SECTION_ID],
+            $response["draft"]['content']);
+        $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_editing'));
+
+        return $response;
+    }
+
+    private function _getConflictDialogResponse($response)
+    {
+        $response['original_call'] = $this->generateOriginalCall();
+        $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
+        $response['show_draft_conflict_dialog'] = true;
+        $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_found'));
+
+        return $response;
+    }
+
+    private function _getDraftInfo($data)
+    {
+
+        $draftInfo ['draftType'] = $data['draftType'];
+        $draftInfo['local'] = false;
+
+        // ALERTA[Xavi] QUE FEM: Calcular la data dels esborranys locals
+        $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
+        $structuredLastLocalDraftTime = intval(substr($this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME], 0, 10));
+
+        // Si l'esborrany estructurad local es més recent que l'esborrany complet local, ignorem l'esborrany local complet
+        // ALERTA[Xavi] QUE FEM: Descartar la data del esborrany complet local si el parcial es més recent
+        if ($structuredLastLocalDraftTime > $fullLastLocalDraftTime) {
+            $fullLastLocalDraftTime = null;
+        }
+
+        // ALERTA[Xavi] QUE FEM: No existeix el KEY_RECOVER_DRAFT, ni KEY_DISCARD_DRAFT, però existeix un FULL LOCAL DRAFT, comprovem si es més recent el FULL REMOT
+        if (!isset($this->params[PageKeys::KEY_RECOVER_DRAFT]) && !$this->params[PageKeys::KEY_DISCARD_DRAFT]) {
+            if ($fullLastLocalDraftTime) {
+                // obtenir la data del draft full local
+                $fullLastSavedDraftTime = $this->dokuPageModel->getFullDraftDate();
+                if ($fullLastLocalDraftTime > $fullLastSavedDraftTime) { // local es més recent
+                    $draftInfo ['local'] = true;
+                    $draftInfo ['draftType'] = DokuPageModel::LOCAL_FULL_DRAFT;
+                }
+
+                // ALERTA[Xavi] QUE FEM: Igual que l'anterior però amb STRUCTURED LOCAL
+            } else if ($structuredLastLocalDraftTime) {
+                $structuredLastSavedDraftTime = $this->dokuPageModel->getStructuredDraftDate();
+
+//            $structuredLastSavedDraftTime = 1558822524; // TODO[Xavi] Forçant la comprovació, ELIMINAR!
+
+                if ($structuredLastLocalDraftTime > $structuredLastSavedDraftTime) { // local es més recent
+                    $draftInfo ['local'] = true;
+                    $draftInfo ['draftType'] = DokuPageModel::LOCAL_PARTIAL_DRAFT;
+                }
+            }
+
+        }
+
+        return $draftInfo;
+    }
+
+    private function _getDraftDialogResponse($data)
+    {
+        $response = $this->generateOriginalCall();
+        $response['show_draft_dialog'] = true;
+        $response['title'] = $data['structure']['title'];
+        $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('partial_draft_found'));
+        $response['lastmod'] = $data['structure']['date'];
+        $response['content'] = $data['content']['editing'];
+        $response['draft'] = $data['draft'];
+
+        return $response;
+    }
+
+    private function _getDocumentResponse($data)
+    {
+        $response = $data;
+
+        if (!$response['structure']['locked']) {
+            $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
+        } else {
+            $response['info'] = $this->generateInfo('success', WikiIocLangManager::getLang('chunk_editing') . $this->params[PageKeys::KEY_ID] . ':' . $this->params[PageKeys::KEY_SECTION_ID]);
+        }
+
+        return $response;
+    }
+
+    private function _getDialogOrDocumentResponse($data)
+    {
+        $draftInfo = $this->_getDraftInfo($data);
+
+        switch ($draftInfo['draftType']) {
+
+            // Conflicte de drafts
+            case DokuPageModel::LOCAL_FULL_DRAFT:
+            case DokuPageModel::FULL_DRAFT:
+                // Conflict
+                $response = $this->_getConflictDialogResponse($data);
+                break;
+
+            // Existeix un draft parcial
+            case DokuPageModel::LOCAL_PARTIAL_DRAFT:
+            case DokuPageModel::PARTIAL_DRAFT:
+                $response = $this->_getDraftDialogResponse($data);
+                $response['local'] = $draftInfo['local'];
+                break;
+
+            // No hi ha draft, es mostrarà el document
+            case DokuPageModel::NO_DRAFT:
+                $response = $this->_getDocumentResponse($data);
+                break;
+
+            default:
+                throw new UnknownTypeParamException($draftInfo['draftType']);
+        }
+
+        return $response;
+    }
+
 }
+
+
