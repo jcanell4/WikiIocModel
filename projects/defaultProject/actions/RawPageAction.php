@@ -111,7 +111,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
                 $resp = $this->_getDraftResponse();
             } else { //
                 $rawData = $this->getModel()->getRawData();
-                $rawData["draftType"] = $this->_getDrafType($rawData["draftType"]);
+                $rawData["draftType"] = $this->_getDraftType($rawData["draftType"]);
                 // 3) No hi ha draft
                 if ($rawData["draftType"] == DokuPageModel::NO_DRAFT
                     || isset($this->params[PageKeys::KEY_RECOVER_DRAFT])
@@ -567,7 +567,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 //        return $contentData;
 //    }
 
-    private function _getDrafType($dt = DokuPageModel::NO_DRAFT)
+    private function _getDraftType($dt = DokuPageModel::NO_DRAFT)
     {
         if ($dt === DokuPageModel::NO_DRAFT && !$this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME]) {
             return DokuPageModel::NO_DRAFT;

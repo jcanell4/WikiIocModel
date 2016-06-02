@@ -52,6 +52,15 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
     {
         parent::startProcess();
 
+        // TODO[Xavi] Actualitzar al client les crides dels esborranys per fer servir el KEY_DO
+        if ($this->params[PageKeys::KEY_DO] === PageKeys::KEY_TO_REQUIRE) {
+            $this->params[PageKeys::KEY_TO_REQUIRE] = TRUE;
+        } else if ($this->params[PageKeys::KEY_DO] === PageKeys::KEY_RECOVER_LOCAL_DRAFT) {
+            $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = TRUE;
+        } else if ($this->params[PageKeys::KEY_DO] === PageKeys::KEY_RECOVER_LOCAL_DRAFT) {
+            $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = TRUE;
+        }
+
         $this->dokuPageModel->init($this->params[PageKeys::KEY_ID],
             $this->params[PageKeys::KEY_EDITING_CHUNKS],
             $this->params[PageKeys::KEY_SECTION_ID],
@@ -111,7 +120,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
                 $response = $this->_getDraftResponse($data);
 
                 // 2.2) Es troba desbloquejat?
-            } else if (!$data['structured']['locked']) { //
+            } else if (!$data['structure']['locked']) { //
 
                 if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === FALSE) {
 
@@ -128,7 +137,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
                 // TODO[Xavi]El document està bloquejat
                 //  No es pot editar. Cal esperar que s'acabi el bloqueig
-                // $resp = $this->_getWaitingUnlockDialog($rawData); <-- acció equivalent al RawPageAction
+                 $response = $this->_getWaitingUnlockDialog($data); // <-- acció equivalent al RawPageAction
 
 
             }
@@ -351,6 +360,15 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         }
 
         return $response;
+    }
+
+    private function _getWaitingUnlockDialog($data)
+    {
+        $resp = $this->_getDocumentResponse($data);
+        //TODO [Josep][Xavi] Cal implementar quan estigui fet el sistema de diàlegs al client.
+        //Aquí caldrà avisar que no és possible editar l'esborrany perquè hi ha algú editant prèviament el document
+        // i es podrien perdre dades. També caldrà demanar si vol que l'avisin quan acabi el bloqueig
+        return $resp;
     }
 
 }
