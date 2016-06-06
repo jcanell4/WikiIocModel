@@ -265,18 +265,18 @@ class LockDataQuery extends DataQuery
 
         // Afegir una notificació al usuari que el bloqueja si no existia ja (per evitar que s'envii més d'una notificació en cas d'edicions parcials)
 //        if (!$alreadyNotified) {
-            $this->addRequirementNotification($extended['locker']['user'], $id);
+            $this->addRequirementNotification($extended['locker']['user'], $id, count($extended['requirers']));
 //        }
 
 
         return $extended; // Test, per afegir breakpoint
     }
     
-    private function addRequirementNotification($lockerId, $docId)
+    private function addRequirementNotification($lockerId, $docId, $requirers)
     {
         $class_ = get_class($this->notifyDataQuery);
         $message = array(
-            "text" => sprintf(WikiIocLangManager::getLang('documentRequired'), $this->getCurrentUser(), $docId),
+            "text" => sprintf(WikiIocLangManager::getLang('documentRequired'), $requirers, $docId),
             "timestamp" => date( "d-m-Y H:i:s" ),
         );
         $this->notifyDataQuery->add($lockerId, $message, $class_::TYPE_MESSAGE, $lockerId.$docId."requirement");
@@ -343,13 +343,16 @@ class LockDataQuery extends DataQuery
             $extended["locker"]["time"] =  filemtime($lockFilename);
 
             // Si existeix eliminar el usuari
-            unset($extended['requirers'][$requirerUser]);
+            if(isset($extended['requirers'][$requirerUser])){
+                unset($extended['requirers'][$requirerUser]);
+                // Desar el fitxer
+                io_saveFile($lockFilenameExtended, serialize($extended));
 
-            // Desar el fitxer
-            io_saveFile($lockFilenameExtended, serialize($extended));
-            
-            //avisar al locker que ja no es demana
-             $this->addUnrequirementNotification($extended['locker']['user'], $id);
+                if(count($extended['requirers'])==0){
+                 //avisar al locker que ja no es demana
+                    $this->addUnrequirementNotification($extended['locker']['user'], $id);
+                }            
+            }
         }
     }
 
@@ -379,7 +382,7 @@ class LockDataQuery extends DataQuery
     {
         $class_ = get_class($this->notifyDataQuery);
         $message = array(
-            "text" => sprintf(WikiIocLangManager::getLang('documentUnrequired'), $this->getCurrentUser(), $docId),
+            "text" => sprintf(WikiIocLangManager::getLang('documentUnrequired'), $docId),
             "timestamp" => date( "d-m-Y H:i:s" ),
         );
         $this->notifyDataQuery->add($lockerId, $message, $class_::TYPE_MESSAGE, $lockerId.$docId."requirement");
