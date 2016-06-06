@@ -24,8 +24,8 @@ class NotifyDataQuery extends DataQuery
     const TYPE_ALERT = 'alert';
     const TYPE_MESSAGE = 'message';
     const TYPE_DIALOG = 'dialog';
-    const TYPE_CANCEL_NOTIFICATION = 'cancel_notification';
-    const TYPE_LOCK_EXPIRING = 'lock_expiring';    
+    const TYPE_RELEASED = 'released';
+    const TYPE_CANCELED_BY_REMOTE_AGENT = 'canceled_by_remote_agent';    
 
     const DEFAULT_USER = 'SYSTEM';
 
