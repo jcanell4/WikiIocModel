@@ -347,6 +347,9 @@ class LockDataQuery extends DataQuery
 
             // Desar el fitxer
             io_saveFile($lockFilenameExtended, serialize($extended));
+            
+            //avisar al locker que ja no es demana
+             $this->addUnrequirementNotification($extended['locker']['user'], $id);
         }
     }
 
@@ -370,6 +373,16 @@ class LockDataQuery extends DataQuery
             "timestamp" => date( "d-m-Y H:i:s" ),
         );
         $this->notifyDataQuery->add($requirerId, $message, $class_::TYPE_ALERT, $requirerId.$docId."release");
+    }
+
+    private function addUnrequirementNotification($lockerId, $docId)
+    {
+        $class_ = get_class($this->notifyDataQuery);
+        $message = array(
+            "text" => sprintf(WikiIocLangManager::getLang('documentUnrequired'), $this->getCurrentUser(), $docId),
+            "timestamp" => date( "d-m-Y H:i:s" ),
+        );
+        $this->notifyDataQuery->add($lockerId, $message, $class_::TYPE_MESSAGE, $lockerId.$docId."requirement");
     }
 
 
