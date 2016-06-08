@@ -41,6 +41,7 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskListAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RefreshEditionAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPartialPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/HtmlPageAction.php');
@@ -236,6 +237,8 @@ class DokuModelAdapter extends AbstractModelAdapter
 //
 //        return $response;
     }
+    
+    
 
     /**
      * Crida principal de la comanda edit i de la comanda raw_code
@@ -245,6 +248,32 @@ class DokuModelAdapter extends AbstractModelAdapter
      * @param type $prange
      * @param type $psum
      * @param type $recover
+     * @return type
+     * @throws PageNotFoundException
+     * @throws InsufficientPermissionToEditPageException
+     */
+    public function editPage($params){ // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
+        if($params["refresh"]){
+            return $this->refreshEdition($params);            
+        }else{
+            return $this->getCodePage($params);
+        }
+    }
+
+    /**
+     * @param type $params
+     * @return type
+     * @throws PageNotFoundException
+     * @throws InsufficientPermissionToEditPageException
+     */
+    public function refreshEdition($params)
+    {
+        $action = new RefreshEditionAction($this->persistenceEngine);
+        $contentData = $action->get($params);
+        return $contentData;
+    }
+    /**
+     * @param type $params
      * @return type
      * @throws PageNotFoundException
      * @throws InsufficientPermissionToEditPageException

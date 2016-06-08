@@ -361,7 +361,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
      */
     public function requireResource($lock = FALSE)
     {
-        return $this->resourceLocker->requireResource($lock, $this->params[PageKeys::KEY_TO_REQUIRE]);
+        return $this->resourceLocker->requireResource($lock);
     }
 
 //    public function leaveResource($unlock = FALSE)

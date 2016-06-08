@@ -25,7 +25,7 @@ if (!defined('DW_ACT_DRAFTDEL')) {
  *
  * @author josep
  */
-class CancelEditPageAction extends PageAction implements ResourceLockerInterface, ResourceUnlockerInterface
+class CancelEditPageAction extends PageAction implements ResourceUnlockerInterface
 {
     //protected $draftQuery;
 
@@ -69,6 +69,11 @@ class CancelEditPageAction extends PageAction implements ResourceLockerInterface
 
 
         $response ['info'] = $this->generateInfo("warning", WikiIocLangManager::getLang('edition_cancelled'));
+        if($this->params[PageKeys::KEY_AUTO]){
+            $response ['info'] = $this->addInfoToInfo($response['info'], $this->generateInfo("warning", WikiIocLangManager::getLang('auto_cancelled')));
+        }
+        
+        
 
         $response['meta'] = $this->getMetaTocResponse();
         $response['revs'] = $this->getRevisionList();
@@ -93,22 +98,7 @@ class CancelEditPageAction extends PageAction implements ResourceLockerInterface
         }
     }
 
-    /**
-     * Es tracta del mètode que hauran d'executar en iniciar el bloqueig. Per  defecte no bloqueja el recurs, perquè
-     * actualment el bloqueig es realitza internament a les funcions natives de la wiki. Malgrat tot, per a futurs
-     * projectes es contempla la possibilitat de fer el bloqueig directament aquí, si es passa el paràmetre amb valor
-     * TRUE. EL mètode comprova si algú està bloquejant ja el recurs i en funció d'això, retorna una constant amb el
-     * resultat obtingut de la petició.
-     *
-     * @param bool $lock
-     * @return int
-     */
-    public function requireResource($lock = FALSE)
-    {
-        throw new UnavailableMethodExecutionException('CancelEditPageAction#requireResource');
-    }
-
-    /**
+   /**
      * Es tracta del mètode que hauran d'executar en iniciar el desbloqueig o també quan l'usuari cancel·la la demanda
      * de bloqueig. Per  defecte no es desbloqueja el recurs, perquè actualment el desbloqueig es realitza internament
      * a les funcions natives de la wiki. Malgrat tot, per a futurs projectes es contempla la possibilitat de fer el

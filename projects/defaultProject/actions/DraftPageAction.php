@@ -62,7 +62,7 @@ class DraftPageAction extends PageAction
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID], WikiIocLangManager::getLang('pageNotFound'));
         }
 
-        $ACT = act_permcheck($this->params[PageKeys::KEY_ID]);
+        $ACT = act_permcheck($this->defaultDo);
 
         if ($ACT == DW_ACT_DENIED) {
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
@@ -73,11 +73,14 @@ class DraftPageAction extends PageAction
         }
         
         if($this->params[PageKeys::KEY_DO]===DW_ACT_SAVEDRAFT){
-            $this->updateLock();
+            $lockInfo = $this->updateLock()["info"];
             $draft =json_decode($this->params['draft'], true);
             $this->response = DraftManager::saveDraft($draft);// TODO[Xavi] Això hurà de contenir la info
+            $this->response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+            $this->response["lockInfo"] = $lockInfo;
         }else if($this->params[PageKeys::KEY_DO]===DW_ACT_DELDRAFT){
             $this->response = DraftManager::removeDraft($this->params);// TODO[Xavi] Això hurà de contenir la info
+            $this->response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
         }else{
             throw new UnexpectedValueException("Unexpected value '".$this->params["do"]."', for parameter 'do'");
         }

@@ -31,6 +31,7 @@ class SavePageAction extends RawPageAction {
 
     protected $deleted = FALSE;
     private $code = 0;
+     private $lockStruct;
     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
@@ -61,7 +62,7 @@ class SavePageAction extends RawPageAction {
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
 
-        $this->updateLock();
+        $this->lockStruct = $this->updateLock();
         $this->_save();
 
 //        if ($ACT == DW_ACT_SAVE) {
@@ -118,7 +119,7 @@ class SavePageAction extends RawPageAction {
             $type = 'success';
             $response['info'] = sprintf(WikiIocLangManager::getLang('deleted'), $this->params[PageKeys::KEY_ID]);
             $response['code'] = $this->code;
-            $id = $response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+            $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
             $duration = NULL;
             
         }
@@ -133,9 +134,10 @@ class SavePageAction extends RawPageAction {
             ];
             $type = 'success';
             $duration = 10;
-            $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+            $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
         }
         
+        $response["lockInfo"] = $this->lockStruct["info"];
         $response['info'] = $this->generateInfo($type, $response['info'], $id, $duration);
 
 

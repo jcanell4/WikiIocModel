@@ -87,7 +87,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID], WikiIocLangManager::getLang('pageNotFound'));
         }
 
-        $ACT = act_permcheck($this->params[PageKeys::KEY_ID]);
+        $ACT = act_permcheck($this->defaultDo);
 
         if ($ACT == DW_ACT_DENIED) {
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);

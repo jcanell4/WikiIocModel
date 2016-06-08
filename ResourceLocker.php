@@ -52,6 +52,11 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
      */
     public function requireResource($lock = FALSE)
     {
+        return $this->_requireResource($lock, $this->params[PageKeys::KEY_REFRESH]);
+    }
+    
+    public function _requireResource($lock = FALSE, $refresh=FALSE)
+    {
         $docId = $this->params[PageKeys::KEY_ID];
 
         $lockState = $this->lockDataQuery->checklock($docId);
@@ -69,12 +74,12 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
 
             case LockDataQuery::UNLOCKED:
                 $state["state"] = self::LOCKED;
-                $state["info"] = $this->lockDataQuery->xLock($docId, $lock);
+                $state["info"] = $this->lockDataQuery->xLock($docId, $lock, $refresh);
                 break;
 
             case LockDataQuery::LOCKED_BEFORE:
                 $state["state"] = self::LOCKED_BEFORE;
-                $state["info"] = $this->lockDataQuery->xLock($docId);
+                $state["info"] = $this->lockDataQuery->xLock($docId, TRUE, TRUE);
                 break;
 
             default:
@@ -140,7 +145,6 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
 //    }
 
     public function updateLock() {
-        return $this->lockDataQuery->lock($this->params[PageKeys::KEY_ID]);
+        return $this->_requireResource(TRUE, TRUE);
     }
-
 }

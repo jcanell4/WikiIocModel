@@ -63,18 +63,33 @@ class LockDataQuery extends DataQuery
      * @param String $id
      * @param bool $lock
      */
-    public function xLock($id, $lock = FALSE)
+    public function xLock($id, $lock = FALSE, $keepExtended = FALSE)
     {
         if ($lock) {
             $this->lock($id);
         }
-        // Afegim el fitxer extended buit
-        $ret = $this->createExtendedFile($id);
-        // TODO: Actualitzar el registre estès de bloquejos
+        $file = $this->getFileName($id, "extended");
+        if(!$keepExtended || !file_exists($file)){
+            // Afegim el fitxer extended buit
+            $ret = $this->createExtendedFile($id);
+            // TODO: Actualitzar el registre estès de bloquejos
+        }else{
+            $ret = $this->readExtendedFile($id);
+        }
         
         return $ret;
     }
 
+    private function readExtendedFile($id)
+    {
+        $file = $this->getFileName($id);
+        $extendedFile = $this->getFileName($id, "extended");
+        $ret = unserialize(io_readFile($extendedFile, FALSE));
+        $ret["locker"]["time"] = filemtime($file);
+        
+        return $ret;
+    }
+    
     private function createExtendedFile($id)
     {
 
@@ -185,7 +200,8 @@ class LockDataQuery extends DataQuery
      */
     public function checklock($id)
     {
-        $lock = wikiLockFN($id);
+        $lock = $this->getFileName($id);
+        $extendedlock = $this->getFileName($id, 'extended');
         $state = self::LOCKED;
 
         //no lockfile
@@ -199,6 +215,9 @@ class LockDataQuery extends DataQuery
             } else {
                 // own lock
                 list($ip, $session) = explode("\n", io_readFile($lock));
+                if(!$session && @file_exists($extendedlock)){
+                    $session =  unserialize(io_readFile($extendedlock, FALSE))['locker']['session'];
+                }
                 if ($ip == $_SERVER['REMOTE_USER'] || $ip == clientIP()) {
                     if($session ===  $_COOKIE["DokuWiki"]){
                            $state = self::UNLOCKED;
