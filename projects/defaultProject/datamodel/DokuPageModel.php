@@ -496,7 +496,7 @@ class DokuPageModel extends WikiRenderizableDataModel
     public function getStructuredDraftDate() {
         return $this->draftDataQuery->getStructuredDraftDate($this->id, $this->selected);
     }
-    
+
     public function getLockState(){
         return  $this->lockDataQuery->checklock($this->id);
     }
