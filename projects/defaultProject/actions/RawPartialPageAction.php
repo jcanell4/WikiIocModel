@@ -143,6 +143,8 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
             }
         }
 
+        $response["lockInfo"] = $this->lockStruct["info"];
+
         return $response;
     }
 
