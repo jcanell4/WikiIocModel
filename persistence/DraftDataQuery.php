@@ -192,30 +192,30 @@ class DraftDataQuery extends DataQuery
             if (array_key_exists($header, $draft)
                 && $chunk['content'] != $draft[$header]['content']
             ) {
-
                 $chunk['date'] = $time;
                 $chunk['content'] = $draft[$chunk[$header]];
                 $newDraft[$header] = ['content' => $draft[$header], 'date' => $time];
                 unset($draft[$header]);
-
+                
             } else {
                 $newDraft[$header] = $chunk;
             }
         }
 
+
         foreach ($draft as $header => $content) {
             $newDraft[$header] = ['content' => $content, 'date' => $time];
         }
 
-        // Guardem el draft si hi ha cap chunk
+                // Guardem el draft si hi ha cap chunk
         if (count($newDraft) > 0) {
             io_saveFile($draftFile, serialize($newDraft));
             $this->removeFull($id);
-
         } else {
             // No hi ha res, l'esborrem
             @unlink($draftFile);
         }
+
 
     }
 
@@ -326,38 +326,29 @@ class DraftDataQuery extends DataQuery
         }
     }
 
-    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+        // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
     public function getFullDraftDate($id)
     {
         $draftFile = $this->getFullFileName($id);
         return @file_exists($draftFile) ? @filemtime($draftFile) : -1;
     }
-
     // TODO[Xavi] Arreglar, això retorna la data del fitxer, però a la estructura es troba la data del chunk
     public function getStructuredDraftDate($id, $chunkId)
     {
-
         $date = -1;
         $draft = $this->getStructured($id);
-
-
         // Tenim el diccionari? Al chunk es troba la data en que es va guardar?
         if ($draft[$chunkId]) {
             $date = $draft[$chunkId]['date'];
         } else if (!$chunkId && count($draft) > 0) {
             // Si no hi ha cap seleccionat retornem la data més recent
-
             foreach ($draft as $content) {
                 if ($content['date'] > $date) {
                     $date = $content['date'];
                 }
             }
-
         }
-
         return $date;
-
-
     }
 
 }
