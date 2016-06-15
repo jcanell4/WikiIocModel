@@ -36,7 +36,7 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
 
         // TODO[Xavi] Només es desbloqueja si no queda cap chunk en edició
         if (count($this->params[PageKeys::KEY_EDITING_CHUNKS])==0) {
-            $this->leaveResource();
+            $this->leaveResource(TRUE);
             unlock($this->params[PageKeys::KEY_ID]);
         }
 

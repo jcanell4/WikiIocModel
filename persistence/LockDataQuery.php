@@ -198,7 +198,7 @@ class LockDataQuery extends DataQuery
      * @param String $id
      * @return int
      */
-    public function checklock($id)
+    public function checklock($id, $checkAutoLock=FALSE)
     {
         $lock = $this->getFileName($id);
         $extendedlock = $this->getFileName($id, 'extended');
@@ -219,7 +219,7 @@ class LockDataQuery extends DataQuery
                     $session =  unserialize(io_readFile($extendedlock, FALSE))['locker']['session'];
                 }
                 if ($ip == $_SERVER['REMOTE_USER'] || $ip == clientIP()) {
-                    if($session ===  $_COOKIE["DokuWiki"]){
+                    if(!$checkAutoLock && $session ===  $_COOKIE["DokuWiki"]){
                            $state = self::UNLOCKED;
                     }else{
                         $state = self::LOCKED_BEFORE;

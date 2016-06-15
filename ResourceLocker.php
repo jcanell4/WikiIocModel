@@ -106,7 +106,7 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
         $docId = $this->params[PageKeys::KEY_ID];
 
         // Estat del lock?
-        $lockState  = $this->lockDataQuery->checklock($docId);
+        $lockState  = $this->lockDataQuery->checklock($docId, TRUE);
 
         switch ($lockState) {
             case LockDataQuery::LOCKED_BEFORE:

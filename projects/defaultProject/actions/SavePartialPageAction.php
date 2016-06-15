@@ -22,6 +22,8 @@ require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
  * @author josep
  */
 class SavePartialPageAction extends SavePageAction{
+     private $lockStruct;
+     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
         $this->defaultDo = DW_ACT_SAVE;
@@ -40,6 +42,7 @@ class SavePartialPageAction extends SavePageAction{
         parent::runProcess();
         $this->getModel()->removeChunkDraft($this->params[PageKeys::KEY_SECTION_ID]);
 //        $this->updateLock();
+        $this->lockStruct = $this->updateLock();
     }
 
     protected function responseProcess(){
@@ -60,7 +63,7 @@ class SavePartialPageAction extends SavePageAction{
 
         // TODO: afegir les 'revs' que correspongui
         $response['revs'] = $this->getRevisionList();
-
+        $response["lockInfo"] = $this->lockStruct["info"];
 //        $this->removeStructuredDraft($pid, $selected);
 //        $this->lock($pid);
 
