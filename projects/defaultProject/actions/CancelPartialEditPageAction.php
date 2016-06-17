@@ -47,7 +47,13 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
         //$response['structure'] = $this->getStructuredDocument(null, $pid, NULL, $editing_chunks);
         $response = $this->getModel()->getData();
         $response['structure']['cancel'] = [$this->params[PageKeys::KEY_SECTION_ID]];
-        $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('chunk_closed'));
+        if($this->params[PageKeys::KEY_TO_REQUIRE]){
+                // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou 
+                $response['meta'] = $this->getMetaTocResponse();
+                // TODO: afegir les revisions
+                $response['revs'] = $this->getRevisionList();            
+        }
+        $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('chunk_closed'), $this->params[PageKeys::KEY_ID]);
         return $response;
     }
 

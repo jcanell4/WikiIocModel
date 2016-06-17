@@ -133,7 +133,7 @@ class SavePageAction extends RawPageAction {
                 'changecheck' => md5($TEXT)
             ];
             $type = 'success';
-            $duration = 10;
+            $duration = 15;
             $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
         }
         

@@ -282,7 +282,7 @@ abstract class DokuAction extends AbstractWikiAction{
      */
     public static function generateInfo( $type, $message, $id='', $duration = - 1 ) {
             return [
-                    "id"        => $id,  //netejar l'ID i posar : a _
+                    "id"        => str_replace(':', '_', $id),  //netejar l'ID i posar : a _
                     "type"      => $type,
                     "message"   => $message,
                     "duration"  => $duration,

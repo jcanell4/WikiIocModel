@@ -54,7 +54,9 @@ class SavePartialPageAction extends SavePageAction{
         if (!$response['info']) {
             $response['info'] = $this->generateInfo(
                     "info", 
-                    sprintf(WikiIocLangManager::getLang('section_saved'), $this->params[PageKeys::KEY_SECTION_ID])
+                    sprintf(WikiIocLangManager::getLang('section_saved'), $this->params[PageKeys::KEY_SECTION_ID]),
+                    $response["structure"]["id"],
+                    15
             ); // TODO[Xavi] Aquesta info s'afegeix en algún lloc, s'ha de moure aquí i fe la localització
         }
 

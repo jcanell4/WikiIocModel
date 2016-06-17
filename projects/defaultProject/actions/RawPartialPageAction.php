@@ -129,7 +129,14 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
                 } else {
 
                     // 2.2.1) Es generarà el dialog de draft pertinent, o el document si no hi ha cap draft per enviar
-                    $response = $this->_getDialogOrDocumentResponse($data);
+                   $response = $this->_getDialogOrDocumentResponse($data);
+                    
+                   if($this->params[PageKeys::KEY_TO_REQUIRE]){
+                        // TODO: afegir el 'meta' que correspongui perquè si ve del requiring dialog, el content tool es crerà de nou 
+                       $response['meta'] = $this->getMetaTocResponse();
+                        // TODO: afegir les revisions
+                       $response['revs'] = $this->getRevisionList();
+                   }
                 }
 
                 // 2.3) El document es troba bloquejat
@@ -138,7 +145,10 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
                 // TODO[Xavi]El document està bloquejat
                 //  No es pot editar. Cal esperar que s'acabi el bloqueig
                  $response = $this->_getWaitingUnlockDialog($data); // <-- acció equivalent al RawPageAction
-
+                // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou 
+                $response['meta'] = $this->getMetaTocResponse();
+                // TODO: afegir les revisions
+                $response['revs'] = $this->getRevisionList();
 
             }
         }
@@ -193,6 +203,8 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             case self::LOCKED:
                 // El fitxer no estava bloquejat
+                $message = WikiIocLangManager::getLang('chunk_editing'). $this->params[PageKeys::KEY_ID] . ':' . $this->params[PageKeys::KEY_SECTION_ID];
+                $infoType = 'info';
                 break;
 
             case self::REQUIRED:
@@ -217,7 +229,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
                 self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]));
         } else if ($mes) {
             $message = self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]);
-        } else {
+        } else{
             $message = self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]);
         }
         return $message;
@@ -323,10 +335,14 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
     {
         $response = $data;
 
-        if (!$response['structure']['locked']) {
+        if ($response['structure']['locked']) {
             $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
         } else {
-            $response['info'] = $this->generateInfo('success', WikiIocLangManager::getLang('chunk_editing') . $this->params[PageKeys::KEY_ID] . ':' . $this->params[PageKeys::KEY_SECTION_ID]);
+            $response['info'] = $this->generateInfo(
+                    'info', 
+                    WikiIocLangManager::getLang('chunk_editing') . $this->params[PageKeys::KEY_ID] . ':' . $this->params[PageKeys::KEY_SECTION_ID],
+                    $this->params[PageKeys::KEY_ID]
+            );
         }
 
         return $response;

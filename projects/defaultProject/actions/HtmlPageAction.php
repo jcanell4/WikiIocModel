@@ -74,9 +74,9 @@ class HtmlPageAction extends PageAction{
 
         // Si no s'ha especificat cap altre missatge mostrem el de carrega
         if (!$response['info']) {
-            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded'));
+            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded'), $this->params[PageKeys::KEY_ID]);
         }else {
-            $this->addInfoToInfo($response['info'], $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded')));
+            $this->addInfoToInfo($response['info'], $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded'), $this->params[PageKeys::KEY_ID]));
         }
 
         // TODO: afegir el 'meta' que correspongui

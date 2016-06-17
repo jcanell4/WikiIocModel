@@ -68,9 +68,9 @@ class CancelEditPageAction extends PageAction implements ResourceUnlockerInterfa
         }
 
 
-        $response ['info'] = $this->generateInfo("warning", WikiIocLangManager::getLang('edition_cancelled'));
+        $response ['info'] = $this->generateInfo("warning", WikiIocLangManager::getLang('edition_cancelled'), $response['structure']['id']);
         if($this->params[PageKeys::KEY_AUTO]){
-            $response ['info'] = $this->addInfoToInfo($response['info'], $this->generateInfo("warning", WikiIocLangManager::getLang('auto_cancelled')));
+            $response ['info'] = $this->addInfoToInfo($response['info'], $this->generateInfo("warning", WikiIocLangManager::getLang('auto_cancelled'), $response['structure']['id']));
         }
         
         

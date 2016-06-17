@@ -13,6 +13,8 @@ require_once(DOKU_INC . 'inc/actions.php');
  */
 class DraftManager
 {
+    private static $infoDuration = 15;
+    
     public static function saveDraft($draft)
     {
 
@@ -120,7 +122,7 @@ class DraftManager
         }
 
         // TODO[Xavi] afegir la localització del missatge
-        $response = ['info' => DokuAction::generateInfo('info', 'Desat esborrany parcial', $id)];// TODO[Xavi] guardar els drafts ha de ser també una acció i aix`serà self::
+        $response = ['info' => DokuAction::generateInfo('info', 'Desat esborrany parcial', $id, self::$infoDuration)];// TODO[Xavi] guardar els drafts ha de ser també una acció i aix`serà self::
 
 
         return $response;
@@ -383,7 +385,7 @@ class DraftManager
 
         self::removeStructuredDraftAll($id);
 
-        $response = ['info' => DokuAction::generateInfo('info', 'Desat esborrany complet', $id)];// TODO[Xavi] guardar els drafts ha de ser també una acció i aix`serà self::
+        $response = ['info' => DokuAction::generateInfo('info', 'Desat esborrany complet', $id, self::$infoDuration)];// TODO[Xavi] guardar els drafts ha de ser també una acció i aix`serà self::
         return $response;
     }
 }
