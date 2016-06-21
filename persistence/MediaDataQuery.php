@@ -28,10 +28,10 @@ class MediaDataQuery extends DataQuery{
         return mediaFN( $id, $rev );
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE) {
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject=FALSE) {
         $base = WikiGlobalConfig::getConf('mediadir');
 
-        return $this->getNsTreeFromBase( $base, $currentNode, $sortBy, $onlyDirs );        
+        return $this->getNsTreeFromBase( $base, $currentNode, $sortBy, $onlyDirs, $expandProject);        
     }
     
     public function save($id, $filePathSource, $overWrite = TRUE ) {

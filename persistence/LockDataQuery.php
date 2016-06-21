@@ -51,7 +51,7 @@ class LockDataQuery extends DataQuery
         return $filename;
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE)
+    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE)
     {
         throw new UnavailableMethodExecutionException("LockDataQuery#getNsTree");
     }

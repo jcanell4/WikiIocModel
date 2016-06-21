@@ -34,7 +34,7 @@ abstract class DataQuery {
     }
     
     public abstract function getFileName($id, $especParams=NULL);
-    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE);
+    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE);
 
 
     /**
@@ -79,7 +79,7 @@ abstract class DataQuery {
      * @param type $onlyDirs
      * @return string
      */
-    protected function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs = FALSE ) {
+    protected function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE ) {
         $sortOptions = array( 0 => 'name', 'date' );
         $nodeData    = array();
         $children    = array();
