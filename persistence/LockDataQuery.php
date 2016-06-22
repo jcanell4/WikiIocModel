@@ -298,7 +298,7 @@ class LockDataQuery extends DataQuery
             "text" => sprintf(WikiIocLangManager::getLang('documentRequired'), $requirers, $docId),
             "timestamp" => date( "d-m-Y H:i:s" ),
         );
-        $this->notifyDataQuery->add($lockerId, $message, $class_::TYPE_MESSAGE, $lockerId.$docId."requirement");
+        $this->notifyDataQuery->add($lockerId, $message, $class_::TYPE_MESSAGE, str_replace(":", "_",$lockerId.$docId."requirement"));
     }
 
     /**
@@ -394,7 +394,7 @@ class LockDataQuery extends DataQuery
             "text" => sprintf(WikiIocLangManager::getLang('documentUnlocked'), $docId),
             "timestamp" => date( "d-m-Y H:i:s" ),
         );
-        $this->notifyDataQuery->add($requirerId, $message, $class_::TYPE_ALERT, $requirerId.$docId."release");
+        $this->notifyDataQuery->add($requirerId, $message, $class_::TYPE_MESSAGE, str_replace(":", "_", $requirerId.$docId."release"));
     }
 
     private function addUnrequirementNotification($lockerId, $docId)
@@ -404,7 +404,7 @@ class LockDataQuery extends DataQuery
             "text" => sprintf(WikiIocLangManager::getLang('documentUnrequired'), $docId),
             "timestamp" => date( "d-m-Y H:i:s" ),
         );
-        $this->notifyDataQuery->add($lockerId, $message, $class_::TYPE_MESSAGE, $lockerId.$docId."requirement");
+        $this->notifyDataQuery->add($lockerId, $message, $class_::TYPE_MESSAGE, str_replace(":", "_", $lockerId.$docId."requirement"));
     }
 
 
