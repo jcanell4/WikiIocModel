@@ -169,6 +169,18 @@ class MetaDataService {
             if ($this->render != null) {
                 $metaDataResponseGet[$indexResponse] = $this->render->render($this->metaDataEntityWrapper);
             }
+            print_r("\n START metadataResponseGet \n");
+            print_r($metaDataResponseGet);
+            print_r("\n END metadataResponseGet \n");
+            $allZero = true;
+            for ($i = 0; $i < sizeof($metaDataResponseGet); $i++) {
+                if (sizeof($metaDataResponseGet[$i]) > 0) {
+                    $allZero = false;
+                }
+            }
+            if ($allZero) {
+                $metaDataResponseGet = null;
+            }
             if ($metaDataResponseGet == null) {
                 throw new ClassProjectsNotFound();
             } else {
@@ -223,8 +235,8 @@ class MetaDataService {
             $this->setMetaDataElements($this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['persistence']));
             //'{"fp:dam:m03":"materials","fp:daw:m07":"materials"}'
             print_r("\n INIT getMetaDataElements getMetaDataElements getMetaDataElements \n");
-                print_r($this->getMetaDataElements());
-                print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
+            print_r($this->getMetaDataElements());
+            print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
             if ($this->getMetaDataElements() != null && count($this->getMetaDataElements() > 0)) {
                 $encoder = new JSON();
                 $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));
@@ -278,6 +290,15 @@ class MetaDataService {
                 }
             }
             $metaDataResponseSet[$indexResponse] = $this->toAddResponse();
+            $allZero = true;
+            for ($i = 0; $i < sizeof($metaDataResponseSet); $i++) {
+                if (sizeof($metaDataResponseSet[$i]) > 0) {
+                    $allZero = false;
+                }
+            }
+            if ($allZero) {
+                $metaDataResponseSet = null;
+            }
             if ($metaDataResponseSet == null) {
                 if ($projectTypeParameter == null) {
                     throw new ClassProjectsNotFound();
@@ -297,7 +318,8 @@ class MetaDataService {
                     $indexWrapper = 0;
                     //$filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
                     $MetaDataRequestMessageActual = $MetaDataRequestMessage;
-                    $MetaDataRequestMessageActual['idResource'] = $MetaDataRequestMessage['idResource'] . ":" . $filename;
+                    //$MetaDataRequestMessageActual['idResource'] = $MetaDataRequestMessage['idResource'] . ":" . $filename;
+                    $MetaDataRequestMessageActual['idResource'] = $MetaDataRequestMessage['idResource'];
                     $returnSet = $this->metaDataRepository->setMeta($metaDataEntity, $MetaDataRequestMessageActual);
                     if ($returnSet) {
                         $this->metaDataEntityWrapper[$indexWrapper] = $metaDataEntity;

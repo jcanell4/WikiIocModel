@@ -61,20 +61,46 @@ class ProjectMetaDataQuery extends DataQuery {
         if ($configMain == false) {
             $configMain = @file_get_contents(DOKU_PLUGIN . "wikiiocmodel/projects/" . "defaultProject" . "/metadata/config/configMain.json");
         }
+        print_r("\n START getMetaDataConfig getMetaDataConfig \n");
+
+        print_r(DOKU_PLUGIN . "wikiiocmodel/projects/" . $projectType . "/metadata/config/configMain.json");
+        print_r("\n");
         $configMainArray = json_decode($configMain, true);
+        print_r($configMainArray);
+        print_r("\n");
         $toReturn = "";
         $encoder = new JSON();
         for ($i = 0; $i < sizeof($configMainArray[$configSubSet]); $i++) {
+            print_r("\n i \n");
+            print_r($i);
+            print_r("\n");
+            print_r("\n configSubSet \n");
+            print_r($configSubSet);
+            print_r("\n");
+            print_r("\n metaDataSubset \n");
+            print_r($metaDataSubset);
+            print_r("\n");
+            print_r("\n");
+            print_r($configMainArray[$configSubSet]);
+            print_r("\n");
             if (isset($configMainArray[$configSubSet][$i][$metaDataSubset])) {
+
                 $toReturn = $encoder->encode($configMainArray[$configSubSet][$i]);
+                print_r("\n NO DEFAULT");
+                print_r($toReturn);
+                print_r("\n");
             } else {
                 if (isset($configMainArray[$configSubSet][$i]["defaultSubSet"])) {
                     if ($toReturn == "") {
                         $toReturn = $encoder->encode($configMainArray[$configSubSet][$i]);
+                        print_r("\n SI DEFAULT");
+                        print_r($toReturn);
+                        print_r("\n");
                     }
                 }
             }
         }
+        print_r("\n END getMetaDataConfig getMetaDataConfig \n");
         return $toReturn;
     }
 
@@ -123,9 +149,9 @@ class ProjectMetaDataQuery extends DataQuery {
         /*
          * Obtain metadata files general path
          */
-        //$metaDataPath = DOKU_INC . WikiGlobalConfig::getConf('mdprojects');
+        $metaDataPath = DOKU_INC . WikiGlobalConfig::getConf('mdprojects');
 
-        $metaDataPath = '/home/professor/DesenvolupamentIOC/DesenvolupamentIOC/dokuwiki_30/' . WikiGlobalConfig::getConf('mdprojects');
+        //$metaDataPath = '/home/professor/DesenvolupamentIOC/DesenvolupamentIOC/dokuwiki_30/' . WikiGlobalConfig::getConf('mdprojects');
         /*
          * Convert idResource delimiter ':' to persistence delimiter '/'
          */
@@ -164,12 +190,22 @@ class ProjectMetaDataQuery extends DataQuery {
          * Convert idResource delimiter ':' to persistence delimiter '/'
          */
         $idResourceArray = explode(':', $idResource);
-        $theFile = array_pop($idResourceArray);
+        //$theFile = array_pop($idResourceArray);
 
         $idResoucePath = implode("/", $idResourceArray);
         /*
          * CHECK AND CREATES DIRS
          */
+        print_r("\n START pmdqsetmeta \n");
+        print_r($idResource . "\n");
+        print_r($filename . "\n");
+        print_r($idResourceArray . "\n");
+        print_r($theFile . "\n");
+        print_r($metaDataPath . "\n");
+        print_r($idResoucePath . "\n");
+        print_r($projectType . "\n");
+        print_r($metaDataPath . $idResoucePath . '/' . $projectType);
+        print_r("\n END pmdqsetmeta \n");
         $resourceCreated = false;
         if (!is_dir($metaDataPath . $idResoucePath . '/' . $projectType)) {
             $resourceCreated = mkdir($metaDataPath . $idResoucePath . '/' . $projectType, 0777, true);

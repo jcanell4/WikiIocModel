@@ -207,6 +207,11 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      * @return success -> true, error --> json with error value
      */
     public function __setMetaPersistence($MetaDataEntity,$MetaDataRequestMessage) {
+        print_r("\n START __setMetaPersistence __setMetaPersistence \n");
+            print_r($MetaDataRequestMessage['idResource']);
+            print_r("\n");
+            print_r($MetaDataRequestMessage['filename']);
+            print_r("\n END __setMetaPersistence __setMetaPersistence \n");
         return $MetaDataRequestMessage['persistence']->createProjectMetaDataQuery()->setMeta($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'],$MetaDataRequestMessage['filename'],$MetaDataEntity->getMetaDataValue());
         
     }
