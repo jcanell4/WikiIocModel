@@ -39,20 +39,20 @@ require_once(DOKU_PLUGIN . 'acl/admin.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
 
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskListAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RefreshEditionAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPartialPageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/HtmlPageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/HtmlRevisionPageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePartialPageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CreatePageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelEditPageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelPartialEditPageAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/UploadMediaAction.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/DraftPageAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskListAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RefreshEditionAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPageAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPartialPageAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/HtmlPageAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/HtmlRevisionPageAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePageAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePartialPageAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CreatePageAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelEditPageAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelPartialEditPageAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/UploadMediaAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/DraftPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/actions/NotifyAction.php');
 
 

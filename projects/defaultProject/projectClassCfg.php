@@ -4,7 +4,9 @@
  *
  * @culpable Rafael Claver
   */
-if (!defined("DOKU_INC")) die();
+if (!defined("DOKU_INC")){
+    die();
+}
 
 class projectClassCfg {
 
