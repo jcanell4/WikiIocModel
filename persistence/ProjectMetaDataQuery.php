@@ -108,12 +108,54 @@ class ProjectMetaDataQuery extends DataQuery {
     public function getMetaDataElementsKey($nsRoot) {
         //getNsTree("fp:dam", 0, false,true)
         $elementsKeyArray = $this->getNsTree($nsRoot, 0, true, false);
+        print_r("\n INIT elementsKeyArray elementsKeyArray elementsKeyArray \n");
+        print_r($elementsKeyArray);
+        print_r("\n END elementsKeyArray elementsKeyArray elementsKeyArray \n");
         $returnArray = array();
         foreach ($elementsKeyArray['children'] as $index => $arrayElement) {
             if ($arrayElement['type'] == 'p') {
                 $returnArray[$arrayElement['id']] = $arrayElement['projectType'];
             }
         }
+        /*
+         * Add the $nsRoot itself, if it's a project (only a type of project)
+         */
+        $metaDataPath = DOKU_INC . WikiGlobalConfig::getConf('mdprojects');
+        $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
+        $pathProject = str_replace(':', '/', $nsRoot);
+        $pathProject = $metaDataPath . $pathProject;
+        $dirProject = opendir($pathProject);
+        while ($current = readdir($dirProject)) {
+            $pathProjectOne = $pathProject . '/' . $current;
+            if (is_dir($pathProjectOne)) {
+                $dirProjectOne = opendir($pathProjectOne);
+                                    while ($currentOne = readdir($dirProjectOne)) {
+                                        //print_r("\n current2 current2 current2 current2 current2 current2 current2 current2 current2 \n");
+                                        //print_r("\n" . $currentOne . "\n");
+                                        if (!is_dir($pathProjectOne . '/' . $currentOne)) {
+                                            $fileTokens = explode(".", $currentOne);
+                                            //print_r("\n" . $fileTokens[sizeof($fileTokens) - 1] . "\n");
+                                            //print_r("\naaa" . $metaDataExtension . "\n");
+                                            if ($fileTokens[sizeof($fileTokens) - 1] == $metaDataExtension) {
+                                                //print_r("\n PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE \n");
+                                                //print_r("\n" . $currentOne . "\n");
+                                                //És projecte i escriure   p  
+                                                $returnArray[$nsRoot] = $current;
+                                            }
+                                        }
+                                    }
+                
+                
+                
+            }
+        }
+        
+        /*
+         * END Add the $nsRoot, if it's a project
+         */
+        print_r("\n INIT returnArray \n");
+        print_r($returnArray);
+        print_r("\n END returnArray \n");
 
         if (sizeof($returnArray) > 0) {
             $encoder = new JSON();

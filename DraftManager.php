@@ -2,7 +2,8 @@
 if (!defined('DOKU_INC')) die();
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelAdapter.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelAdapter.php'); 
+require_once(DOKU_INC . 'inc/actions.php');
 /**
  * Class DraftManager
  *
@@ -12,6 +13,8 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelAdapte
  */
 class DraftManager
 {
+    private static $infoDuration = 15;
+    
     public static function saveDraft($draft)
     {
 
@@ -24,6 +27,32 @@ class DraftManager
 
             case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
                 return self::saveFullDraft($draft['content'], $draft['id']);
+                break;
+
+            default:
+                // error o no draft
+
+
+                break;
+        }
+    }
+
+    public static function removeDraft($draft)
+    {
+
+        $type = $draft['type'];
+
+        switch ($type) {
+            case 'structured':
+                if(isset($draft["section_id"])){
+                    return self::removeStructuredDraft($draft['id'], $draft["section_id"]);
+                }else{
+                    return self::removeStructuredDraftAll($draft['id']);                    
+                }
+                break;
+
+            case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
+                return self::removeFullDraft($draft['id']);
                 break;
 
             default:
@@ -93,7 +122,7 @@ class DraftManager
         }
 
         // TODO[Xavi] afegir la localització del missatge
-        $response = ['info' => DokuAction::generateInfo('info', 'Desat esborrany parcial', $id)];// TODO[Xavi] guardar els drafts ha de ser també una acció i aix`serà self::
+        $response = ['info' => DokuAction::generateInfo('info', 'Desat esborrany parcial', $id, self::$infoDuration)];// TODO[Xavi] guardar els drafts ha de ser també una acció i aix`serà self::
 
 
         return $response;
@@ -155,6 +184,15 @@ class DraftManager
 
     }
 
+    public static function removeFullDraft($id)
+    {
+        $draftFile = self::getDraftFilename($id);
+        if (@file_exists($draftFile)) {
+            @unlink($draftFile);
+        }
+
+    }
+
     public static function removeStructuredDraftAll($id)
     {
         $draftFile = self::getStructuredDraftFilename($id);
@@ -210,7 +248,7 @@ class DraftManager
      */
     public static function getDraftFilename($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
         return getCacheName(WikiIocInfoManager::getInfo("client") . $id, '.draft');
     }
 
@@ -304,7 +342,7 @@ class DraftManager
      */
     public static function hasDraft($id)
     {
-        $id = WikiPageSystemManager::cleanIDForFiles($id);
+//        $id = WikiPageSystemManager::cleanIDForFiles($id);
 
         $draftFilename = self::getDraftFilename($id);
 
@@ -331,25 +369,23 @@ class DraftManager
      */
     public static function saveFullDraft($draft, $id)
     {
-        $info = basicinfo($id);
-
         $aux = ['id' => $id,
             'prefix' => '',
             'text' => $draft,
             'suffix' => '',
-            'date' => time(), // TODO[Xavi] Posar la data
-            'client' => $info['client']
+            'date' => isset($draft["date"])?$draft["date"]:time(), // TODO[Xavi] Posar la data
+            'client' => WikiIocInfoManager::getInfo("client")
         ];
 
         $filename = self::getDraftFilename($id);
 
         if (io_saveFile($filename, serialize($aux))) {
-            $INFO['draft'] = $filename;
+            WikiIocInfoManager::setInfo("draft", $filename);
         }
 
         self::removeStructuredDraftAll($id);
 
-        $response = ['info' => DokuAction::generateInfo('info', 'Desat esborrany complet', $id)];// TODO[Xavi] guardar els drafts ha de ser també una acció i aix`serà self::
+        $response = ['info' => DokuAction::generateInfo('info', 'Desat esborrany complet', $id, self::$infoDuration)];// TODO[Xavi] guardar els drafts ha de ser també una acció i aix`serà self::
         return $response;
     }
 }

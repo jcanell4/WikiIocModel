@@ -41,6 +41,7 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskListAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RefreshEditionAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPartialPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/HtmlPageAction.php');
@@ -51,6 +52,9 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CreateP
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelEditPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelPartialEditPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/UploadMediaAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/DraftPageAction.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/actions/NotifyAction.php');
+
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
@@ -233,6 +237,8 @@ class DokuModelAdapter extends AbstractModelAdapter
 //
 //        return $response;
     }
+    
+    
 
     /**
      * Crida principal de la comanda edit i de la comanda raw_code
@@ -242,6 +248,32 @@ class DokuModelAdapter extends AbstractModelAdapter
      * @param type $prange
      * @param type $psum
      * @param type $recover
+     * @return type
+     * @throws PageNotFoundException
+     * @throws InsufficientPermissionToEditPageException
+     */
+    public function editPage($params){ // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
+        if($params["refresh"]){
+            return $this->refreshEdition($params);            
+        }else{
+            return $this->getCodePage($params);
+        }
+    }
+
+    /**
+     * @param type $params
+     * @return type
+     * @throws PageNotFoundException
+     * @throws InsufficientPermissionToEditPageException
+     */
+    public function refreshEdition($params)
+    {
+        $action = new RefreshEditionAction($this->persistenceEngine);
+        $contentData = $action->get($params);
+        return $contentData;
+    }
+    /**
+     * @param type $params
      * @return type
      * @throws PageNotFoundException
      * @throws InsufficientPermissionToEditPageException
@@ -457,10 +489,10 @@ class DokuModelAdapter extends AbstractModelAdapter
      * @param type $onlyDirs
      * @return type
      */
-    public function getNsTree($currentnode, $sortBy, $onlyDirs = FALSE)
+    public function getNsTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE)
     {
         $dataQuery = $this->persistenceEngine->createPageDataQuery();
-        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs);
+        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject);
     }
 
     /**
@@ -1549,13 +1581,13 @@ class DokuModelAdapter extends AbstractModelAdapter
      * @return mixed
      */
 
-    private function cleanIDForFiles($id = NULL)
+    private function getContainerIdFromPageId($id = NULL)
     {
         if ($id == NULL) {
             $id = $this->params['id'];
         }
 
-        return WikiPageSystemManager::cleanIDForFiles($id);
+        return WikiPageSystemManager::getContainerIdFromPageId($id);
     }
 
 
@@ -2035,10 +2067,10 @@ class DokuModelAdapter extends AbstractModelAdapter
     }
 
     //És la crida principal de la comanda ns_mediatree_rest
-    public function getNsMediaTree($currentnode, $sortBy, $onlyDirs = FALSE)
+    public function getNsMediaTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE)
     {
         $dataQuery = $this->persistenceEngine->createMediaDataQuery();
-        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs);
+        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject);
     }
 
     /**
@@ -2992,18 +3024,18 @@ class DokuModelAdapter extends AbstractModelAdapter
                $conf;
 
         $ns = $pid;
-        $pid = $this->cleanIDForFiles($pid);
+        $cid = $this->getContainerIdFromPageId($pid);
         $lockManager = new LockManager($this);
         $locker = $lockManager->lock($pid);
 
         if ($locker === false) {
 
             $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-            $response = ['id' => $pid, 'ns' => $ns, 'timeout' => $conf['locktime'], 'info' => $info];
+            $response = ['id' => $cid, 'ns' => $ns, 'timeout' => $conf['locktime'], 'info' => $info];
 
         } else {
 
-            $response = ['id' => $pid, 'ns' => $ns, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
+            $response = ['id' => $cid, 'ns' => $ns, 'timeout' => -1, 'info' => $this->generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
         }
 
         return $response;
@@ -3014,12 +3046,12 @@ class DokuModelAdapter extends AbstractModelAdapter
         $lockManager = new LockManager($this);
 
         $ns = $pid;
-        $pid = $this->cleanIDForFiles($pid);
+        $cid = $this->getContainerIdFromPageId($pid);
 
         $lockManager->unlock($pid);
 
         $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
-        $response = ['id' => $pid, 'ns' => $ns, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
+        $response = ['id' => $cid, 'ns' => $ns, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
 
         return $response;
     }
@@ -3030,9 +3062,21 @@ class DokuModelAdapter extends AbstractModelAdapter
 //        return checklock($this->cleanIDForFiles($pid));
 //    }
 
+    public function draft($params)
+    {
+        $action = new DraftPageAction($this->persistenceEngine);
+        $ret = $action->get($params);
+        return $ret;
+    }
+
     public function saveDraft($draft)
     {
         return DraftManager::saveDraft($draft);
+    }
+
+    public function removeDraft($draft)
+    {
+        return DraftManager::removeDraft($draft);
     }
 
 //    public function getStructuredDraft($id)
@@ -3215,5 +3259,12 @@ class DokuModelAdapter extends AbstractModelAdapter
         return $toc;
     }
 
+    // ALERTA[Xavi] Afegit pel notifier
+    public function notify($params) // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
+    {
+        $action = new NotifyAction($this->persistenceEngine);
+        $contentData = $action->get($params);
+        return $contentData;
+    }
 }
 

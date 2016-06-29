@@ -29,7 +29,7 @@ class FactoryAuthorization {
             require_once(DOKU_IOC_MODEL_AUTH . 'FactoryAuthorizationCfg.php');
             $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg[$str_cmd], 'authorization');
             if ($fileAuthorization === NULL) {
-                $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg['_command'], 'authorization');
+                $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg['_default'], 'authorization');
             }
         }
         $authorization = new $fileAuthorization($params);

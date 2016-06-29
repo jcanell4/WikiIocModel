@@ -86,10 +86,10 @@ abstract class DataQuery {
      * @param type $onlyDirs
      * @return string
      */
-    protected function getNsTreeFromBase($base, $currentnode, $sortBy, $onlyDirs = FALSE, $function = 'search_index', $expandProjects = TRUE) {
-        $sortOptions = array(0 => 'name', 'date');
-        $nodeData = array();
-        $children = array();
+    protected function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE ) {
+        $sortOptions = array( 0 => 'name', 'date' );
+        $nodeData    = array();
+        $children    = array();
 
         if ($currentnode == "_") {
             return array('id' => "", 'name' => "", 'type' => 'd');

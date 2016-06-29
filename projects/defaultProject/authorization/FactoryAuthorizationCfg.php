@@ -1,13 +1,16 @@
 <?php
 /**
  * FactoryAuthorizationCfg: Definició de les classes (fitxers de classe) d'autoritzacions de comandes
- *
+ *                          Associa un nom de classe a un fitxer d'autorització
+ *                          Serveix pels noms de classe que no ténen un fitxer d'autorització
+ *                          amb el seu nom
+ *                          ( el nom de la comanda s'estableix amb el mètode getAuthorizationType() )
  * @author Rafael Claver
  */
 
 $_AuthorizationCfg = 
     array(
-        '_command'              => 'admin'      /*Default case*/
+        '_default'              => 'admin'      /*Default case*/
 	,'cancel'		=> 'read'
 	,'cancel_partial'	=> 'read'
 	,'edit_partial'		=> 'edit'
@@ -17,7 +20,7 @@ $_AuthorizationCfg =
 	,'revision'		=> 'write'
 	,'save'			=> 'write'
 	,'save_partial'		=> 'write'
-	,'save_draft'		=> 'write'
+	,'draft'		=> 'write'
 	,'copy_image_to_project'=> 'upload'
 	,'get_image_detail'	=> 'read'
 	,'media'		=> 'read'
@@ -33,3 +36,12 @@ $_AuthorizationCfg =
 	,'unlock'               => 'read'
         ,"_none"                => "command"
     );
+
+/* Noms de commanda que ja ténen un fitxer d'autorització amb el seu nom
+ * 
+ * 	'edit'                          => 'edit' -> EditAuthorization.php
+ * 	'edit_partial' ('edit')         => 'edit'
+ * 
+ * Noms de comanda modificats amb el mètode getAuthorizationType()
+ * 	'cancel_partial' ('cancel')	=> 'read'
+ */

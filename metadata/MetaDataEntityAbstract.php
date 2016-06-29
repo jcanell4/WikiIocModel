@@ -167,8 +167,16 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         foreach ($arrayfi as $keyfi => $valuefi) {
             $filterChecked = false;
             if (isset($arraymd[$keyfi])) {
-                if ($arraymd[$keyfi] == $arrayfi[$keyfi]) {
-                    $filterChecked = true;
+                if (is_array($arraymd[$keyfi])) {
+                    for ($i = 0; $i < sizeof($arraymd[$keyfi]); $i++) {
+                        if ($arraymd[$keyfi][$i] == $arrayfi[$keyfi]) {
+                            $filterChecked = true;
+                        }
+                    }
+                } else {
+                    if ($arraymd[$keyfi] == $arrayfi[$keyfi]) {
+                        $filterChecked = true;
+                    }
                 }
             }
             if (!$filterChecked) {

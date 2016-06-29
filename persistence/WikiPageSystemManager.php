@@ -1,10 +1,10 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+if (!defined("DOKU_INC")) {
+    die();
+}
+require_once DOKU_INC . 'inc/pageutils.php';
+
 
 /**
  * Description of WikiPageSystemManager 
@@ -18,7 +18,11 @@ class WikiPageSystemManager {
 
 
     
-    public static function cleanIDForFiles( $id) {
+    public static function cleanPageID( $raw_id) {
+        return cleanID($raw_id);
+    }
+    
+    public static function getContainerIdFromPageId($id) {
             return str_replace( ':', '_', $id );
     }
     
@@ -55,5 +59,4 @@ class WikiPageSystemManager {
 
         return date( $format, $revision );
     }
-
 }

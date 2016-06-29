@@ -22,6 +22,8 @@ require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
  * @author josep
  */
 class SavePartialPageAction extends SavePageAction{
+     private $lockStruct;
+     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
         $this->defaultDo = DW_ACT_SAVE;
@@ -39,7 +41,8 @@ class SavePartialPageAction extends SavePageAction{
     protected function runProcess() {
         parent::runProcess();
         $this->getModel()->removeChunkDraft($this->params[PageKeys::KEY_SECTION_ID]);
-        $this->lock();
+//        $this->updateLock();
+        $this->lockStruct = $this->updateLock();
     }
 
     protected function responseProcess(){
@@ -51,7 +54,9 @@ class SavePartialPageAction extends SavePageAction{
         if (!$response['info']) {
             $response['info'] = $this->generateInfo(
                     "info", 
-                    sprintf(WikiIocLangManager::getLang('section_saved'), $this->params[PageKeys::KEY_SECTION_ID])
+                    sprintf(WikiIocLangManager::getLang('section_saved'), $this->params[PageKeys::KEY_SECTION_ID]),
+                    $response["structure"]["id"],
+                    15
             ); // TODO[Xavi] Aquesta info s'afegeix en algún lloc, s'ha de moure aquí i fe la localització
         }
 
@@ -60,7 +65,7 @@ class SavePartialPageAction extends SavePageAction{
 
         // TODO: afegir les 'revs' que correspongui
         $response['revs'] = $this->getRevisionList();
-
+        $response["lockInfo"] = $this->lockStruct["info"];
 //        $this->removeStructuredDraft($pid, $selected);
 //        $this->lock($pid);
 

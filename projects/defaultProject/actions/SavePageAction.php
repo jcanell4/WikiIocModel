@@ -31,26 +31,12 @@ class SavePageAction extends RawPageAction {
 
     protected $deleted = FALSE;
     private $code = 0;
+     private $lockStruct;
     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
         $this->defaultDo = DW_ACT_SAVE;
     }
-
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet fer assignacions a les variables globals de la
-     * wiki a partir dels valors de DokuAction#params.
-     */
-//    protected function startProcess(){
-////        if ($this->params['wikitext']) {
-////            $this->params['text'] = $this->params['wikitext']; // TODO[Xavi] canviar el formulari del frontent per enviar el paràmetre text en lloc de wikitext? <-- en el save total, el partial ja ho fa amb text només
-////        }
-//
-//        parent::startProcess();
-//        //$this->dokuPageModel->init($this->params['id']);                
-//
-//    }
 
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la
@@ -60,49 +46,61 @@ class SavePageAction extends RawPageAction {
      */
     protected function runProcess(){
         global $ACT;
-        global $ID;
+        $ID=  $this->params[PageKeys::KEY_ID];
         
         if($this->params[PageKeys::KEY_DO]==DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
         }
 
         $ACT = act_permcheck($ACT);
-
-        if ($ACT == DW_ACT_SAVE) {
-            $ret = act_save($ACT);
-        } else {
-            $ret = $ACT;
-        }
-
-//        $ret='edit';
-
-        switch ($ret) {
-            case 'edit':
-                throw new WordBlockedException($ID);
-
-            case 'conflict':
-                throw new DateConflictSavingException($ID);
-
-            case 'denied':
-                throw new InsufficientPermissionToCreatePageException($ID);
-        }
-
-        // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
-        //$this->draftQuery->removePartialDraft($this->params['id']);
-
-        // Eliminem el fitxer d'esborranys parcials. ALERTA[Xavi] aquesta comprovació no s'hauria de fer! s'ha de mirar com restructurar el SavePartialPageAction perquè no es faci aquesta crida
-
-        if (!isset($this->params[PageKeys::KEY_SECTION_ID])){ // TODO[Xavi] Fix temporal
-            $this->getModel()->removePartialDraft();
-        }
-
-
         
-        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
-        $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
-                                $this->params[PageKeys::KEY_TEXT].
-                                $this->params[PageKeys::KEY_SUF] )
-                          == NULL );
+        if($ACT==="denied"){
+            throw new InsufficientPermissionToCreatePageException($ID);
+        }
+        
+        if($this->checklock()==ST_LOCKED){        
+            throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
+        }
+
+        $this->lockStruct = $this->updateLock();
+        $this->_save();
+
+//        if ($ACT == DW_ACT_SAVE) {
+//            $ret = act_save($ACT);
+//            lock($ID);
+//        } else {
+//            $ret = $ACT;
+//        }
+//
+////        $ret='edit';
+//
+//        switch ($ret) {
+//            case 'edit':
+//                throw new WordBlockedException($ID);
+//
+//            case 'conflict':
+//                throw new DateConflictSavingException($ID);
+//
+//            case 'denied':
+//                throw new InsufficientPermissionToCreatePageException($ID);
+//        }
+
+//        // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
+//        //$this->draftQuery->removePartialDraft($this->params['id']);
+//
+//        // Eliminem el fitxer d'esborranys parcials. ALERTA[Xavi] aquesta comprovació no s'hauria de fer! s'ha de mirar com restructurar el SavePartialPageAction perquè no es faci aquesta crida
+//
+//        if (!isset($this->params[PageKeys::KEY_SECTION_ID])){ // TODO[Xavi] Fix temporal
+//            $this->getModel()->removePartialDraft();
+//        }
+//
+//
+//        
+//        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
+//        $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
+//                                $this->params[PageKeys::KEY_TEXT].
+//                                $this->params[PageKeys::KEY_SUF] )
+//                          == NULL );
     }
 
     /**
@@ -121,7 +119,7 @@ class SavePageAction extends RawPageAction {
             $type = 'success';
             $response['info'] = sprintf(WikiIocLangManager::getLang('deleted'), $this->params[PageKeys::KEY_ID]);
             $response['code'] = $this->code;
-            $id = $response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+            $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
             $duration = NULL;
             
         }
@@ -129,21 +127,65 @@ class SavePageAction extends RawPageAction {
             $response = ['code' => $this->code, 'info' => WikiIocLangManager::getLang('saved')];
 
             //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg <-- [Xavi] el nom del formulari ara es dinamic, canvia per cada document
-            $response['formId'] = 'form_' . WikiPageSystemManager::cleanIDForFiles($ID);
+            $response['formId'] = 'form_' . WikiPageSystemManager::getContainerIdFromPageId($ID);
             $response['inputs'] = [
                 'date' => @filemtime(wikiFN($ID)),
                 'changecheck' => md5($TEXT)
             ];
             $type = 'success';
-            $duration = 10;
-            $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+            $duration = 15;
+            $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
         }
         
+        $response["lockInfo"] = $this->lockStruct["info"];
         $response['info'] = $this->generateInfo($type, $response['info'], $id, $duration);
 
 
 
         return $response;
+    }
+    
+    private function _save(){
+        //spam check
+        if(checkwordblock()) {
+//            msg($lang['wordblock'], -1);
+//            return 'edit';
+            throw new WordBlockedException();
+        }
+        //conflict check
+        if($this->params[PageKeys::KEY_DATE] != 0 
+                && WikiIocInfoManager::getInfo('meta')['date']['modified'] > $this->params[PageKeys::KEY_DATE] ){
+            //return 'conflict';
+            throw new DateConflictSavingException();
+        }
+
+        //save it
+        //saveWikiText($ID,con($PRE,$TEXT,$SUF,1),$SUM,$INPUT->bool('minor')); //use pretty mode for con
+        $this->dokuPageModel->setData(array(
+            "text" => con($this->params[PageKeys::KEY_PRE],
+                                $this->params[PageKeys::KEY_TEXT], 
+                                $this->params[PageKeys::KEY_SUF], 1), 
+            "summary" => $this->params[PageKeys::KEY_SUM], 
+            "minor" =>  $this->params[PageKeys::KEY_MINOR]));
+
+        //delete draft
+//        act_draftdel($act);
+        $this->dokuPageModel->removeFullDraft();
+
+        // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
+        //$this->draftQuery->removePartialDraft($this->params['id']);
+
+        // Eliminem el fitxer d'esborranys parcials. ALERTA[Xavi] aquesta comprovació no s'hauria de fer! s'ha de mirar com restructurar el SavePartialPageAction perquè no es faci aquesta crida
+
+        if (!isset($this->params[PageKeys::KEY_SECTION_ID])){ // TODO[Xavi] Fix temporal
+            $this->getModel()->removePartialDraft();
+        }
+
+        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
+        $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
+                                $this->params[PageKeys::KEY_TEXT].
+                                $this->params[PageKeys::KEY_SUF] )
+                          == NULL );            
     }
 
 }

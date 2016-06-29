@@ -5,7 +5,7 @@ if (!defined("DOKU_INC")) {
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied" );
 
-require_once DOKU_PLUGIN."wikiiocmodel/AbstractWikiAction.php";
+require_once DOKU_PLUGIN."wikiiocmodel/actions/AbstractWikiAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocModelExceptions.php";
@@ -28,12 +28,16 @@ abstract class DokuAction extends AbstractWikiAction{
                                        //title, content, info, meta, etc.
     private $response;
     
+    private $renderer = FALSE;
+    private $addContentIsAllowed=FALSE; //Per defecte no deixem afegir contingut HTML a la renderització
+    
     /**
      * 
      * @param Array $paramsArr
      */
     public function get(/*Array*/ $paramsArr=array()){
         global $MSG;
+        $this->response="";
         
         $this->start($paramsArr);
         $this->run();
@@ -43,68 +47,88 @@ abstract class DokuAction extends AbstractWikiAction{
             throw new HttpErrorCodeException('accessdenied', 403);
         }
         
-        if(is_string($this->preResponseTmp)){
-            $response["before.content"] = $this->preResponseTmp;
-        }else{
-            foreach ($this->preResponseTmp as $key => $value ){
-                if($key==="before.content"){
-                     $response["before.content"] = $value;
-                }else if($key==="info"){
-                    if(isset($response["info"])){
-                        if(is_string($value)){
-                            $response["info"] = $this->addInfoToInfo($response["info"], $value);
+        foreach ($this->preResponseTmp as $preResponseTmp) {
+            if(is_string($preResponseTmp) && $this->addContentIsAllowed){
+                if(!$response["before.content"])
+                    $response["before.content"]="";
+                $response["before.content"] .= $preResponseTmp;
+            }else{
+                foreach ($preResponseTmp as $key => $value ){
+                    if($key==="before.content"  && $this->addContentIsAllowed){
+                        if(!$response["before.content"])
+                            $response["before.content"]="";
+                         $response["before.content"] .= $value;
+                    }else if($key==="after.content"  && $this->addContentIsAllowed){
+                        if(!$response["after.content"])
+                            $response["after.content"]="";
+                         $response["after.content"] .= $value;
+                    }else if($key==="info"){
+                        if(isset($response["info"])){
+                            if(is_string($value)){
+                                $response["info"] = $this->addInfoToInfo($response["info"], $value);
+                            }else{
+                                $response["info"] = $this->addInfoToInfo($response["info"], self::generateInfo($value["type"], $value["message"], $value["id"], $value["duration"]));
+                            }
                         }else{
-                            $response["info"] = $this->addInfoToInfo($response["info"], self::generateInfo($value["type"], $value["message"], $value["id"], $value["duration"]));
-                        }
+                            $response["info"] = self::generateInfo($MSG['lvl'], $MSG['msg']);
+                        }                    
                     }else{
-                        $response["info"] = self::generateInfo($MSG['lvl'], $MSG['msg']);
-                    }                    
-                }else{
-                    if(isset($response[$key])){
-                        if(is_string($response[$key])){
-                            $response[$key] .= $value;
-                        }else if(is_array($response[$key])){
-                            $response[$key][] = $value;
+                        if(isset($response[$key])){
+                            if(is_string($response[$key])){
+                                $response[$key] .= $value;
+                            }else if(is_array($response[$key])){
+                                $response[$key][] = $value;
+                            }else{
+                                $response[$key] = $value;
+                            }
                         }else{
                             $response[$key] = $value;
                         }
-                    }else{
-                        $response[$key] = $value;
                     }
                 }
-            }
+            }    
         }
-       
-        if(is_string($this->postResponseTmp)){
-            $response["after.content"] = $this->postResponseTmp;
-        }else{
-            foreach ($this->postResponseTmp as $key => $value ){
-                if($key==="after.content" && $this->addContentFromPlugins){
-                    $response["after.content"] = $value;
-                }else if($key==="info"){
-                    if(isset($response["info"])){
-                        if(is_string($value)){
-                            $response["info"] = $this->addInfoToInfo($response["info"], $value);
+        
+        foreach ($this->postResponseTmp as $postResponseTmp) {
+            if(is_string($postResponseTmp) && $this->addContentIsAllowed){
+                if(!$response["after.content"])
+                    $response["after.content"]="";
+                $response["after.content"] = $postResponseTmp;
+            }else{
+                foreach ($postResponseTmp as $key => $value ){
+                    if($key==="before.content"  && $this->addContentIsAllowed){
+                        if(!$response["before.content"])
+                            $response["before.content"]="";
+                         $response["before.content"] .= $value;
+                    }else if($key==="after.content"  && $this->addContentIsAllowed){
+                        if(!$response["after.content"])
+                            $response["after.content"]="";
+                         $response["after.content"] .= $value;
+                    }else if($key==="info"){
+                        if(isset($response["info"])){
+                            if(is_string($value)){
+                                $response["info"] = $this->addInfoToInfo($response["info"], $value);
+                            }else{
+                                $response["info"] = $this->addInfoToInfo($response["info"], self::generateInfo($value["type"], $value["message"], $value["id"], $value["duration"]));
+                            }
                         }else{
-                            $response["info"] = $this->addInfoToInfo($response["info"], self::generateInfo($value["type"], $value["message"], $value["id"], $value["duration"]));
-                        }
+                            $response["info"] = self::generateInfo($MSG['lvl'], $MSG['msg']);
+                        }                    
                     }else{
-                        $response["info"] = self::generateInfo($MSG['lvl'], $MSG['msg']);
-                    }                    
-                }else{
-                    if(isset($response[$key])){
-                        if(is_string($response[$key])){
-                            $response[$key] .= $value;
-                        }else if(is_array($response[$key])){
-                            $response[$key][] = $value;
+                        if(isset($response[$key])){
+                            if(is_string($response[$key])){
+                                $response[$key] .= $value;
+                            }else if(is_array($response[$key])){
+                                $response[$key][] = $value;
+                            }else{
+                                $response[$key] = $value;
+                            }
                         }else{
                             $response[$key] = $value;
                         }
-                    }else{
-                        $response[$key] = $value;
                     }
-                }
-            }     
+                }     
+            }
         }
         if(isset($MSG)){
             $shown = array();
@@ -206,14 +230,39 @@ abstract class DokuAction extends AbstractWikiAction{
         unset( $this->ppEvt );
 
         if(!empty($content)){
-            $this->postResponseTmp[] = $content;
+            $this->preResponseTmp[] = $content;
         }
     }
     
     private function getResponse(){
-        $response = $this->responseProcess();
-        if(!$response){
-            $response = $this->response;
+        if($this->isRenderer()){
+            $evt = new Doku_Event('TPL_ACT_RENDER', $this->params[PageKeys::KEY_DO]);
+            ob_start();
+            if($evt->advise_before()){
+                $pre_output = ob_get_clean();
+                $response = $this->responseProcess();
+            }else{    
+                $pre_output = ob_get_clean();
+            }
+            ob_start();
+            $evt->advise_after();
+            $post_output = ob_get_clean();
+            ob_start();
+            trigger_event('TPL_CONTENT_DISPLAY', $post_output, 'ptln');
+            $post_output = ob_get_clean();   
+            if(!empty($pre_output)) 
+                $this->preResponseTmp[] = $pre_output;
+            if(!empty($post_output))
+                $this->postResponseTmp[] = $post_output;
+        }else{
+            $response = $this->responseProcess();
+        }
+        if(!empty($this->response)){
+            if(!$response){
+                $response = $this->response;
+            }else{
+                
+            }
         }
         return $response;
     }
@@ -233,7 +282,7 @@ abstract class DokuAction extends AbstractWikiAction{
      */
     public static function generateInfo( $type, $message, $id='', $duration = - 1 ) {
             return [
-                    "id"        => $id,
+                    "id"        => str_replace(':', '_', $id),  //netejar l'ID i posar : a _
                     "type"      => $type,
                     "message"   => $message,
                     "duration"  => $duration,
@@ -309,6 +358,14 @@ abstract class DokuAction extends AbstractWikiAction{
     private function isDenied() {
 	global $ACT;
 	return $ACT == DW_ACT_DENIED;
+    }
+    
+    protected function setRenderer($val){
+        $this->renderer=$val;
+    }
+    
+    protected function isRenderer(){
+        return $this->renderer;
     }
     
 }

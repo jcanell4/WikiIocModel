@@ -56,13 +56,31 @@ class BasicPersistenceEngine {
         require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DraftDataQuery.php');
         return new DraftDataQuery();
     }
-    
-     /**
-     * 
-     * @return \ProjectMetaDataQuery
+
+    /**
+     *
+     * @return \NotifyDataQuery
      */
-    public function createProjectMetaDataQuery($MetaDataRequestMessage = null){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/ProjectMetaDataQuery.php');
-        return new ProjectMetaDataQuery();
+    public function createNotifyDataQuery(){
+        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
+        return new NotifyDataQuery();
+    }
+
+    /**
+     *
+     * @return \NotifyDataQuery class
+     */
+    public function getNotifyDataQueryClass(){
+        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
+        return NotifyDataQuery::class;
+    }
+
+    /**
+     *
+     * @return \NotifyDataQuery
+     */
+    public function createLockDataQuery(){
+        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/LockDataQuery.php');
+        return new LockDataQuery();
     }
 }

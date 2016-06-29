@@ -25,9 +25,15 @@ class WikiIocLangManager {
         global $lang;
         self::load($plugin);
         if(empty($plugin)){
-            return $lang[$key];
+            $value = $lang[$key];
+        }else{
+            $value = self::$pluginLangLoaded[$plugin][$key];
         }
-        return self::$pluginLangLoaded[$plugin][$key];
+        if(!isset($value)){
+            $value = $key;
+        }
+        
+        return $value;
     }
     
     public static function load($plugin="") {

@@ -16,8 +16,13 @@ class WikiIocInfoManager {
 
     public static function getInfo($key){
         global $INFO;
-        self::loadInfo();
-        return $INFO[$key];
+        self::loadInfo();        
+        if(!isset($INFO[$key])){
+            $ret = $key;
+        }else{
+            $ret = $INFO[$key];
+        }
+        return $ret;
     }
     
     public static function setInfo($key, $value){

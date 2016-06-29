@@ -37,18 +37,38 @@ class UnavailableMethodExecutionException extends Exception {
 }
 
 class AuthorizationNotTokenVerified extends WikiIocModelException {
-    public function __construct($code=1020, $codeMessage='auth_TokenNotVerified', $previous=NULL) {
+    public function __construct($codeMessage='auth_TokenNotVerified', $code=1020, $previous=NULL) {
         parent::__construct($codeMessage, $code, $previous);
     }
 }
 
 class AuthorizationNotUserAuthenticated extends WikiIocModelException {
-    public function __construct($code=1021, $codeMessage='auth_UserNotAuthenticated', $previous=NULL) {
+    public function __construct($codeMessage='auth_UserNotAuthenticated', $code=1021, $previous=NULL) {
         parent::__construct($codeMessage, $code, $previous);
     }
 }
 class AuthorizationNotCommandAllowed extends WikiIocModelException {
-    public function __construct($code=1022, $codeMessage="auth_CommadNotAllowed", $previous=NULL) {
+    public function __construct($codeMessage="auth_CommadNotAllowed", $code=1022, $previous=NULL) {
         parent::__construct($codeMessage, $code, $previous);
     }
 }
+class FileIsLockedException extends WikiIocModelException {
+    public function __construct($id="", $codeMessage="lockedByAlert", $code=1023, $previous=NULL) {
+        parent::__construct($codeMessage, $code, $previous, $id);
+    }
+}
+
+class DraftNotFoundException extends WikiIocModelException{
+    public function __construct($id="", $codeMessage = 'DraftNotFoundException', $code = 1024, $previous = NULL)
+    {
+        parent::__construct($codeMessage, $code, $previous, $id);
+    }
+}
+
+class UnexpectedLockCodeException extends WikiIocModelException{
+    public function __construct($id="", $codeMessage = 'UnexpectedLockCode', $code = 1025, $previous = NULL)
+    {
+        parent::__construct($codeMessage, $code, $previous, $id);
+    }
+}
+

@@ -36,7 +36,7 @@ class HtmlRevisionPageAction extends HtmlPageAction{
     
     protected function startProcess() {
         parent::startProcess();
-         $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], NULL, NULL, $this->params[PageKeys::KEY_REV]);
+//         $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], NULL, NULL, $this->params[PageKeys::KEY_REV]);
     }
 
 

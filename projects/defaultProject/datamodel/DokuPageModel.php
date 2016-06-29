@@ -30,11 +30,13 @@ class DokuPageModel extends WikiRenderizableDataModel
     protected $recoverDraft;
     protected $pageDataQuery;
     protected $draftDataQuery;
+    protected $lockDataQuery;
 
     public function __construct($persistenceEngine)
     {
         $this->pageDataQuery = $persistenceEngine->createPageDataQuery();
         $this->draftDataQuery = $persistenceEngine->createDraftDataQuery();
+        $this->lockDataQuery = $persistenceEngine->createLockDataQuery();
     }
 
     public function init($id, $editing = NULL, $selected = NULL, $rev = null)
@@ -100,7 +102,7 @@ class DokuPageModel extends WikiRenderizableDataModel
             // Si no el chunk seleccionat es troba al draft, i no s'ha indicat que s'ha de recuperar el draft el tipus sera PARTIAL_DRAFT
             $response['draftType'] = self::PARTIAL_DRAFT;
 //            $response['content'] = $this->getChunkFromStructure($response['structure'], $this->selected);
-            $response['draft'] = $this->getChunkFromDraft($this->id, $this->selected);
+            $response['draft'] = $this->_getChunkFromDraft($this->id, $this->selected);
 
             // TODO[Xavi] aquesta comprovació no hauria de ser necessaria, mai s'hauria de desar un draft igual al content, i en qualsevol cas la eliminació s'hauria de fer en un altre lloc
             if ($response['draft']['content'] === $response['content']['editing']) {
@@ -113,13 +115,25 @@ class DokuPageModel extends WikiRenderizableDataModel
         } else {
             $response['draftType'] = self::NO_DRAFT;
         }
+        
+        //readonly si bloquejat
 
         return $response;
     }
 
     public function getRawData()
     {
-        return $this->pageDataQuery->getRaw($this->id);
+        $id = $this->id;
+        $response['locked'] = checklock($id);
+        $response['content'] = $this->pageDataQuery->getRaw($id, $this->rev);        
+        if ($this->draftDataQuery->hasAny($id)) {
+            $response['draftType'] = self::FULL_DRAFT;
+//            $response['draft'] = $this->getDraftAsFull();
+        }else{
+            $response['draftType'] = self::NO_DRAFT;
+        }
+        
+        return $response;
     }
 
     public function getMetaToc()
@@ -152,7 +166,22 @@ class DokuPageModel extends WikiRenderizableDataModel
         $this->draftDataQuery->removeChunk($this->id, $chunkId);
     }
 
-    public function getDraftAsFull()
+    public function getChunkFromDraft(){
+        return $this->_getChunkFromDraft($this->id, $this->selected);
+    }
+    
+    public function getFullDraft(){
+        $respose = $this->getDraftAsFull();
+//        $respose["date"] = $this->getFullDraftDate();
+//        $response["draftype"]=  self::FULL_DRAFT;
+        return $respose;
+    }
+    
+    public function hasDraft(){
+        return $this->draftDataQuery->hasAny($this->id);
+    }
+    
+    private function getDraftAsFull()
     {
         $draft = null;
 
@@ -209,7 +238,7 @@ class DokuPageModel extends WikiRenderizableDataModel
         return null;
     }
 
-    private function getChunkFromDraft($id, $selected)
+    private function _getChunkFromDraft($id, $selected)
     {
         return $this->draftDataQuery->getChunk($id, $selected);
     }
@@ -293,7 +322,7 @@ class DokuPageModel extends WikiRenderizableDataModel
 
         $document['chunks'] = $chunks;
         $document['dictionary'] = $dictionary;
-        $document['locked'] = checklock(WikiPageSystemManager::cleanIDForFiles($id));
+        $document['locked'] = checklock($id);
 
         return $document;
     }
@@ -459,20 +488,16 @@ class DokuPageModel extends WikiRenderizableDataModel
     }
 
     // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
-    public function fullDraftDate() {
-        return $this->draftDataQuery->fullDraftDate($this->id);
+    public function getFullDraftDate() {
+        return $this->draftDataQuery->getFullDraftDate($this->id);
     }
 
-    public function structuredDraftDate() {
-        $draft = $this->draftDataQuery->getStructured($this->id);
-
-        // Tenim el diccionari? Al chunk es troba la data en que es va guardar?
-        if ($draft[$this->selected]) {
-            return $draft[$this->selected]['date'];
-        } else {
-            return -1;
-        }
-
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+    public function getStructuredDraftDate() {
+        return $this->draftDataQuery->getStructuredDraftDate($this->id, $this->selected);
     }
 
+    public function getLockState(){
+        return  $this->lockDataQuery->checklock($this->id);
+    }
 }
