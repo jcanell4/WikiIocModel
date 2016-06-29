@@ -1,6 +1,6 @@
 <?php
 /**
- * Valors de les classes per defecte del projecte defaultProject
+ * Ruta de les classes per defecte del projecte defaultProject
  *
  * @culpable Rafael Claver
   */
@@ -10,37 +10,20 @@ class projectClassCfg {
 
     const DEF = DOKU_INC.'lib/plugins/wikiiocmodel/projects/defaultProject/';
     static $cfg = array (
-                        "default" => array (
-                                        "Action" => array (
-                                                        projectClassCfg::DEF."actions"
-                                                       ,projectClassCfg::DEF."actions/extra"
-                                                    )
-                                       ,"Authorization" => array (
-                                                            projectClassCfg::DEF."authorization"
-                                                           )
-                                       ,"Model" => array (
-                                                    projectClassCfg::DEF."datamodel"
-                                                   )
-                                     )
-                       ,"class" => array (
-                                        "Action" => array (
-                                                        "actions"
-                                                       ,"actions/extra"
-                                                    )
-                                       ,"Authorization" => array (
-                                                            "authorization"
-                                                           )
-                                       ,"Model" => array (
-                                                    "datamodel"
-                                                   )
-                                   )
-    );
+                     "Action" => array (
+                                    projectClassCfg::DEF."actions"
+                                   ,projectClassCfg::DEF."actions/extra"
+                                 )
+                    ,"Authorization" => array (
+                                           projectClassCfg::DEF."authorization"
+                                        )
+                    ,"Model" => array (
+                                   projectClassCfg::DEF."datamodel"
+                                )
+                  );
 
     public function getDefaultClassDir($name) {
-        return projectClassCfg::$cfg["default"][$name];
+        return projectClassCfg::$cfg[$name];
     }
 
-    public function getClassDir($name) {
-        return projectClassCfg::$cfg["class"][$name];
-    }
 }
