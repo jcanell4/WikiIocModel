@@ -13,7 +13,6 @@ $_AuthorizationCfg =
         '_default'              => 'admin'      /*Default case*/
 	,'cancel'		=> 'read'
 	,'cancel_partial'	=> 'read'
-	,'edit_partial'		=> 'edit'
 	,'diff'			=> 'read'
 	,'new_page'		=> 'create'
 	,'page'			=> 'read'
