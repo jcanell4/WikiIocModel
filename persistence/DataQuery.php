@@ -129,7 +129,7 @@ abstract class DataQuery {
         $levelProject = -1;
         $isProject = false;
         $projectType = "";
-        $metaDataPath = DOKU_INC . WikiGlobalConfig::getConf('mdprojects');
+        $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
         $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
         foreach (array_keys($nodeData) as $item) {
             //print_r($nodeData[$item]);
@@ -142,7 +142,7 @@ abstract class DataQuery {
                         //Determinar si és projecte
                         $levelProject = $nodeData[$item]['level'];
                         $pathProject = str_replace(':', '/', $nodeData[$item]['id']);
-                        $pathProject = $metaDataPath . $pathProject;
+                        $pathProject = $metaDataPath . '/' . $pathProject;
                         //print_r("\n PATHPROJECT PATHPROJECT PATHPROJECT PATHPROJECT PATHPROJECT \n");
                         //print_r("\n" . $pathProject . "\n");
                         $isProject = false;
