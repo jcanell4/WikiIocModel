@@ -29,7 +29,7 @@ require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataExceptions.php');
  *      Elements necessaris per a la crida efectiva al component de PERSISTÈNCIA
  *      require_once, ...
  */
-require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/persistencesimul/PersistenceSimul.php');
+//require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/persistencesimul/PersistenceSimul.php');
 /*
  * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
  */
