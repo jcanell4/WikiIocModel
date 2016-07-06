@@ -88,4 +88,5 @@ class BasicPersistenceEngine {
         require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/ProjectMetaDataQuery.php');
         return new ProjectMetaDataQuery();
     }
+
 }

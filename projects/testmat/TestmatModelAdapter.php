@@ -10,7 +10,7 @@ class TestmatModelAdapter extends DokuModelAdapter {
     // TODO [XAVI] crear una funció que generi el formulai
     public function getProjectMetaData($params) {
 
-        $action = new ProjectMetaDataAction();
+        $action = new ProjectMetaDataAction($this->persistenceEngine);
         return $action->get($params);
 
     }

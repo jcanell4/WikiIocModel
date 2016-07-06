@@ -108,9 +108,9 @@ class MetaDataService {
         try {
             $this->setMetaDataElements($this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['persistence']));
             if ($this->getMetaDataElements() != null) {
-                print_r("\n INIT xetMetaDataElements getMetaDataElements getMetaDataElements \n");
-                print_r($this->getMetaDataElements());
-                print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
+//                print_r("\n INIT xetMetaDataElements getMetaDataElements getMetaDataElements \n");
+//                print_r($this->getMetaDataElements());
+//                print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
                 $encoder = new JSON();
                 $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));
                 asort($arrayElements);
@@ -121,9 +121,9 @@ class MetaDataService {
                 $indexResponse = 0;
                 $projectTypeActual = null;
                 $metaDataResponseGet = null;
-                print_r("\n INIT getMetaDataElements getMetaDataElements getMetaDataElements \n");
-                print_r($this->getMetaDataElements());
-                print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
+//                print_r("\n INIT getMetaDataElements getMetaDataElements getMetaDataElements \n");
+//                print_r($this->getMetaDataElements());
+//                print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
                 foreach ($this->getMetaDataElements() as $idResource => $projectType) {
                     /*
                      * Check $idResource (sense path) == 
@@ -134,7 +134,7 @@ class MetaDataService {
                      */
                     $filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($projectType, $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
                     $filenameParamArray = explode(':', $idResource);
-                    print_r($filename);
+//                    print_r($filename);
                     //if ($filename == $filenameParamArray[sizeof($filenameParamArray) - 1]) {
 
                     if ($projectTypeParameter == null || $projectTypeParameter == $projectType) {
@@ -169,9 +169,9 @@ class MetaDataService {
             if ($this->render != null) {
                 $metaDataResponseGet[$indexResponse] = $this->render->render($this->metaDataEntityWrapper);
             }
-            print_r("\n START metadataResponseGet \n");
-            print_r($metaDataResponseGet);
-            print_r("\n END metadataResponseGet \n");
+//            print_r("\n START metadataResponseGet \n");
+//            print_r($metaDataResponseGet);
+//            print_r("\n END metadataResponseGet \n");
             $allZero = true;
             for ($i = 0; $i < sizeof($metaDataResponseGet); $i++) {
                 if (sizeof($metaDataResponseGet[$i]) > 0) {
@@ -234,9 +234,9 @@ class MetaDataService {
         try {
             $this->setMetaDataElements($this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['persistence']));
             //'{"fp:dam:m03":"materials","fp:daw:m07":"materials"}'
-            print_r("\n INIT getMetaDataElements getMetaDataElements getMetaDataElements \n");
-            print_r($this->getMetaDataElements());
-            print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
+//            print_r("\n INIT getMetaDataElements getMetaDataElements getMetaDataElements \n");
+//            print_r($this->getMetaDataElements());
+//            print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
             if ($this->getMetaDataElements() != null && count($this->getMetaDataElements() > 0)) {
                 $encoder = new JSON();
                 $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));

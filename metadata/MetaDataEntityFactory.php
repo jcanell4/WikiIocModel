@@ -30,7 +30,7 @@ class MetaDataEntityFactory {
      */
     public static function getObject($projectType, $metaDataSubSet,$persistence) {
 
-        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubset,$persistence);
+        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet,$persistence);
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray, true);
         if (!isset($arrayConfigPre->MetaDataEntity) || $arrayConfigPre->MetaDataEntity == '' || $arrayConfigPre->MetaDataEntity == null) {
@@ -39,7 +39,7 @@ class MetaDataEntityFactory {
         require_once (DOKU_PLUGIN . 'wikiiocmodel/projects/' . $arrayConfigPre->MetaDataEntity . '/metadata/MetaDataEntity.php');
         $fully_qualified_name = $arrayConfigPre->MetaDataEntity . '\\' . "MetaDataEntity";
         //getMetaDataStructure($projectType, $metaDataSubset, $persistence, $configSubSet = null)
-        return new $fully_qualified_name(MetaDataDaoConfig::getMetaDataStructure($projectType, $metaDataSubset, $persistence));
+        return new $fully_qualified_name(MetaDataDaoConfig::getMetaDataStructure($projectType, $metaDataSubSet, $persistence));
         //return new MetaDataEntity();
     }
 

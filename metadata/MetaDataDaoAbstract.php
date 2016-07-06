@@ -70,9 +70,9 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
         /*
          * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
          */
-        print_r("\n START MetaDataDaoAbstract.getMeta \n");
-        print_r($jSONArray);
-        print_r("\n END MetaDataDaoAbstract.getMeta \n");
+//        print_r("\n START MetaDataDaoAbstract.getMeta \n");
+//        print_r($jSONArray);
+//        print_r("\n END MetaDataDaoAbstract.getMeta \n");
 
         //if doesn't exist metadata, then WikiIocModelException -> MetaDataNotFound
         if (!isset($jSONArray) || $jSONArray == null) {
