@@ -1,0 +1,22 @@
+{
+  "metaDataClassesNameSpaces": [
+    {
+      "main": {
+        "MetaDataDAO": "defaultProject",
+        "MetaDataEntity": "defaultProject",
+        "MetaDataRender": "defaultProject"
+      }
+    }
+  ],
+  "metaDataProjectStructure": [
+    {
+      "main": "fptx.mdpr",
+      "keysDefinition": {
+        "title": {
+          "mandatory": false
+        }
+      }
+    }
+  ]
+}
+
