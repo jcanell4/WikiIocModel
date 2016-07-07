@@ -7,10 +7,17 @@ require_once(DOKU_IOC_MODEL . 'DokuModelAdapter.php');
 require_once(DOKU_IOC_MODEL . 'DokuModelExceptions.php');
 
 class TestmatModelAdapter extends DokuModelAdapter {
-    // TODO [XAVI] crear una funció que generi el formulai
+
     public function getProjectMetaData($params) {
 
-        $action = new ProjectMetaDataAction($this->persistenceEngine);
+        $action = new GetProjectMetaDataAction($this->persistenceEngine);
+        return $action->get($params);
+
+    }
+
+    public function setProjectMetaData($params) {
+
+        $action = new SetProjectMetaDataAction($this->persistenceEngine);
         return $action->get($params);
 
     }

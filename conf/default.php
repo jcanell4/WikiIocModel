@@ -14,7 +14,8 @@ $conf['userpage_discuss_ns']        =":talk:wiki:user:";
 //$conf['notifier_type'] = 'websocket'; // 'ajax' o 'websocket'
 $conf['notifier_type'] = 'ajax'; // 'ajax' o 'websocket'
 
-$conf['notifier_ajax_timer'] = 10; // Temps en s
+//$conf['notifier_ajax_timer'] = 10; // Temps en s
+$conf['notifier_ajax_timer'] = 100000; // Temps en s (Augmentat per no interferir amb altres proves)
 
 $conf['notifier_ws_port'] = '9090';
 $conf['notifier_ws_ip'] = '127.0.0.1';

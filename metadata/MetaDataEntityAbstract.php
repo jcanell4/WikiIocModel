@@ -27,6 +27,8 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
     protected static $MANDATORIES = array("projectType", "metaDataSubSet", "idResource");
     protected static $JSONTYPES = array("MetaDataValue");
 
+    protected $metaDataTypesDefinition;
+
     function getProjectType() {
         return $this->projectType;
     }
@@ -67,6 +69,10 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         $this->metaDataStructure = $metaDataStructure;
     }
 
+    function setMetaDataTypesDefinition($metaDataTypesDefinition) {
+        $this->metaDataTypesDefinition= $metaDataTypesDefinition;
+    }
+
     /**
      * CONSTRUCTOR
      * Purpose:
@@ -74,9 +80,10 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * @param any
      * @return String JSON
      */
-    public function __construct($MetaDataStructure = null) {
+    public function __construct($MetaDataStructure = null, $metaDataTypesDefinition = null) {
 
         $this->setMetaDataStructure($MetaDataStructure);
+        $this->setMetaDataTypesDefinition($metaDataTypesDefinition);
     }
 
     /**
@@ -151,7 +158,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * - $filter wellformed JSON
      * - All keys in $filter must exist in MetaDataValue
      * - All key:value in $filter are the same in MetaDataValue
-     * @return exception || false || true 
+     * @return exception || false || true
      */
     public function checkFilter($filter) {
         $encoder = new JSON();
@@ -265,7 +272,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * (allways true in this Abstract Class)
      * @param array
      * Restrictions:
-     * - 
+     * -
      * @return true if all values are validated by the model (allways true in this Abstract Class)
      */
     public function __checkValues($checkValues) {
@@ -281,6 +288,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      */
     public function __checkStructure($arraypi) {
         $arrayst = json_decode($this->metaDataStructure, true);
+
 //        print_r("\n START arrayst arrayst \n");
 //        print_r($arrayst);
 //        print_r("\n END arrayst arrayst \n");
@@ -310,6 +318,10 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
 //                    print_r("\n END arraystin2 arraystin2 \n");
                     $found = true;
                     if (isset($valuest['tipus'])) {
+
+                        $typeValuepi =gettype($valuepi);
+                        $typeTipus = $valuest['tipus'];
+
                         if (gettype($valuepi) == $valuest['tipus']) {
                             $validate = true;
                         }

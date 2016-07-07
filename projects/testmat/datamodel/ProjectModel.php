@@ -46,13 +46,30 @@ class ProjectModel extends WikiRenderizableDataModel
     // Set metadata
     public function setData($toSet)
     {
-        $this->metaDataService->setData($toSet);
-//        if (is_array($toSet)) {
-//            $params = $toSet;
-//        } else {
-//            $params = array('text' => $toSet);
-//        }
-//        $this->pageDataQuery->save($this->id, $params['text'], $params['summary'], $params['minor']);
+
+        // En aquest cas el $toSet equival al $query, que es genera al Action corresponent
+        $meta = $this->metaDataService->setMeta($toSet);
+        // El retorn es un array, agrupats:
+        // Primer nivell: project-type
+        // Segon nivell: idResource
+        // Per tant, aquí sempre voldrem el [0][0] perquè només demanem un id i un projecttype
+        $metaJSON = json_decode($meta[0][0], true);
+        $ret['projectMetaData']['values'] = json_decode($metaJSON['MetaDataValue'], true);
+        $ret['projectMetaData']['structure'] = json_decode($metaJSON['metaDataStructure'], true);
+
+
+//        $ret = [];
+//
+//        $ret['structure'] = json_decode($this->projectMetaDataQuery->getMetaDataConfig($this->projectType, 'main', self::METADATA_PROJECT_STRUCTURE), true); // TODO [Xavi] com obtenim el subset?
+//
+//        $filename = $ret['structure']['main'];  // TODO [Xavi] com obtenim el subset?
+//
+//        $ret['values'] = json_decode($this->projectMetaDataQuery->getMeta($this->id, $this->projectType, 'main', $filename), true);
+        return $ret;
+
+
+//        return $this->metaDataService->setMeta($toSet);
+
     }
 
     // Get metadata

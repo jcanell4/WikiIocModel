@@ -5,7 +5,7 @@ require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/testmat/datamodel/ProjectModel.php";
 require_once DOKU_PLUGIN."ajaxcommand/requestparams/ProjectKeys.php";
 
-class ProjectMetaDataAction extends AbstractWikiAction
+class GetProjectMetaDataAction extends AbstractWikiAction
 {
 
     protected $projectModel;

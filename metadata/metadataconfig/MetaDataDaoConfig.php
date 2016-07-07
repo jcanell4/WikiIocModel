@@ -139,16 +139,8 @@ class MetaDataDaoConfig {
         return reset($arrayConfigPre);
     }
 
-    /**
-     * Purpose:
-     * - Call PERSISTENCE component to obtain data model from metaDataSubSet (structure)
-     * @param String projectType, String metaDataSubset
-     * Restrictions:
-     * - Persistence returns wellformed JSON
-     * - mandatory $projectType, $metaDataSubSet
-     * @return JSON with {class:ns, ..., class:ns}
-     */
-    public static function getMetaDataStructure($projectType, $metaDataSubset, $persistence, $configSubSet = null) {
+    // ALERTA[Xavi] Afegit nou
+    private static function getMetaDataDefinition($type, $projectType, $metaDataSubset, $persistence, $configSubSet = null) {
         if ($configSubSet == null) {
             $configSubSet = self::$CONFIGUSUBSETST;
         }
@@ -160,7 +152,7 @@ class MetaDataDaoConfig {
          */
         $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, $configSubSet);
         /*
-         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
+         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END
          */
 
         $encoder = new JSON();
@@ -171,7 +163,28 @@ class MetaDataDaoConfig {
 
         $arrayConfig = array();
         $arrayConfigPre = get_object_vars($arrayConfigPre);
-        return $encoder->encode($arrayConfigPre["keysDefinition"]);
+        return $encoder->encode($arrayConfigPre["typesDefinition"]);
+    }
+
+    /**
+     * Purpose:
+     * - Call PERSISTENCE component to obtain data model from metaDataSubSet (structure)
+     * @param String projectType, String metaDataSubset
+     * Restrictions:
+     * - Persistence returns wellformed JSON
+     * - mandatory $projectType, $metaDataSubSet
+     * @return JSON with {class:ns, ..., class:ns}
+     *
+     * ALERTA[Xavi] Modificat
+     */
+    public static function getMetaDataStructure($projectType, $metaDataSubset, $persistence, $configSubSet = null) {
+        // ALERTA[Xavi] afegit nou
+        return self::getMetaDataDefinition("keysDefinition", $projectType, $metaDataSubset, $persistence, $configSubSet);
+    }
+
+    // ALERTA[Xavi] afegit nou
+    public static function getMetaDataTypesDefinition($projectType, $metaDataSubset, $persistence, $configSubSet = null) {
+        return self::getMetaDataDefinition("typesDefinition", $projectType, $metaDataSubset, $persistence, $configSubSet);
     }
     
     /**

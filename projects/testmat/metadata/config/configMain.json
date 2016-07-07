@@ -13,7 +13,58 @@
       "main": "fptx.mdpr",
       "keysDefinition": {
         "title": {
-          "mandatory": false
+          "mandatory": false,
+          "tipus": "string"
+        },
+        "blocs": {
+          "mandatory": false,
+          "tipus": "array"
+        },
+        "modul": {
+          "mandatory": true,
+          "tipus": "string"
+        },
+        "coordinador": {
+          "mandatory": true,
+          "tipus": "string"
+        }
+      },
+      "typesDefinition": {
+        "bloc": {
+          "tipus": "array",
+          "itemsType": "unitat"
+        },
+        "unitat": {
+          "tipus": "object",
+          "keys": {
+            "title": {
+              "mandatory": false,
+              "tipus": "string"
+            },
+            "autor": {
+              "mandatory": false,
+              "tipus": "string"
+            },
+            "apartats": {
+              "mandatory": true,
+              "tipus": "array",
+              "itemsType": "apartat"
+            }
+          }
+        },
+        "apartat": {
+          "tipus": "object",
+          "keys": {
+            "title": {
+              "mandatory": false,
+              "tipus": "string"
+            },
+            "autor": {
+              "mandatory": false,
+              "tipus": "string",
+              "inherit": true
+            }
+          }
         }
       }
     }
