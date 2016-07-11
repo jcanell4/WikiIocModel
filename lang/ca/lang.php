@@ -11,7 +11,7 @@ const PAG_DELETED = "deleted";
 //Setup VIM: ex: et ts=2 enc=utf-8 :
 
 $lang['createDefaultText'] = 'Pàgina creada per defecte';
-$lang['conflictsSaving'] = "Hi ha confictes amb altres versions. No s'han pogut guardar els canvis";
+$lang['conflictsSaving'] = "Hi ha conflictes amb altres versions. No s'han pogut guardar els canvis";
 $lang['saved'] = "Els canvis s'han guardat correctament";
 $lang['section_saved'] = "S'han guardat els canvis de la secció %s";
 $lang['deleted'] = "La pàgina %s ha estat eliminada";
@@ -40,7 +40,7 @@ $lang['alreadyLocked'] = "Ja s'havia bloquejat el document previament";
 $lang['documentRequired'] = "%d usuari(s) requereix(en) el document %s. Si no el necessites, si us plau, tanca la edició.";
 $lang['documentUnrequired'] = "Actualment, ja ningú necessita el document %s.";
 $lang['documentUnlocked'] = "El document %s ha sigut alliberat. Cancela la edició i torna a editar per accedir";
-$lang['structuredDocumentUnlocked'] = "El document %s ha sigut alliberat. Cancela la edició o obre un altre fragment per accedir a la edició";
+$lang['structuredDocumentUnlocked'] = "El document ha estat alliberat. Cancel•la l'edició, o bé, obre un altre fragment per accedir a l'edició";
 
 $lang['requiring_message'] = "El document %s està bloquejat per l'usuari %s. La data estimada de desbloqueig és: %s";
 $lang['requiring_dialog_title'] = "ALERTA. Document bloquejat!";
