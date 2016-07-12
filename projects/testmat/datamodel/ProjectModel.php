@@ -106,15 +106,10 @@ class ProjectModel extends WikiRenderizableDataModel
 
         ];
 
-        $meta = $this->metaDataService->getMeta($query);
-        // El retorn es un array, agrupats:
-        // Primer nivell: project-type
-        // Segon nivell: idResource
-        // Per tant, aquí sempre voldrem el [0][0] perquè només demanem un id i un projecttype
-        $metaJSON = json_decode($meta[0][0], true);
-        $ret['projectMetaData']['values'] = json_decode($metaJSON['MetaDataValue'], true);
-        $ret['projectMetaData']['structure'] = json_decode($metaJSON['metaDataStructure'], true);
+        $meta = $this->metaDataService->getMeta($query)[0];
 
+        $ret['projectMetaData']['values'] = $meta['values'];
+        $ret['projectMetaData']['structure'] = $meta['structure']; // inclou els valors
 
 //        $ret = [];
 //

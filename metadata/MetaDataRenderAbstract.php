@@ -29,8 +29,6 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     public function render($metaDataEntityWrapper) {
         $toReturn = array();
 
-        // Tenim tots els values
-        // Necessitem obtenir també el typesDefinition
 
         for ($i = 0; $i < sizeof($metaDataEntityWrapper); $i++) {
             $toReturn[$i]=$metaDataEntityWrapper[$i]->getArrayFromModel();            

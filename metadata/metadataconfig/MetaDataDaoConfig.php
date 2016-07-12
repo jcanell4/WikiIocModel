@@ -163,7 +163,7 @@ class MetaDataDaoConfig {
 
         $arrayConfig = array();
         $arrayConfigPre = get_object_vars($arrayConfigPre);
-        return $encoder->encode($arrayConfigPre["typesDefinition"]);
+        return $encoder->encode($arrayConfigPre[$type]);
     }
 
     /**

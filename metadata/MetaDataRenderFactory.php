@@ -40,7 +40,8 @@ class MetaDataRenderFactory {
 
         $fully_qualified_name = $arrayConfigPre->MetaDataRender . '\\' . "MetaDataRender";
 
-        return new $fully_qualified_name();
+        $render = new $fully_qualified_name();
+        return $render;
         //return new MetaDataRender();
     }
 

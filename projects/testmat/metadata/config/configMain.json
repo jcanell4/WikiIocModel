@@ -4,7 +4,7 @@
       "main": {
         "MetaDataDAO": "defaultProject",
         "MetaDataEntity": "defaultProject",
-        "MetaDataRender": "defaultProject"
+        "MetaDataRender": "testmat"
       }
     }
   ],
@@ -18,7 +18,8 @@
         },
         "blocs": {
           "mandatory": false,
-          "tipus": "array"
+          "tipus": "array",
+          "itemsType": "bloc"
         },
         "modul": {
           "mandatory": true,
