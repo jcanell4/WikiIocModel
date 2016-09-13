@@ -12,15 +12,22 @@ require_once WIKI_IOC_MODEL . "datamodel/WebsocketNotifyModel.php";
 
 class WikiIocModelManager {
 
-    public static function Instance(){
+    public static function Instance($type){
         //logica er decidir quin espai de noms cal activar
         //per defecte activarem defaultNamespace
-        $inst = WikiIocModelManager::createDefaultModelManager();
+
+        if ($type) {
+            $inst = WikiIocModelManager::createModelManager($type);
+        } else {
+            $inst = WikiIocModelManager::createModelManager('defaultProject');
+        }
+
+
         return $inst;
     }
-    
-    private static function createDefaultModelManager(){
-        require_once(WIKI_IOC_MODEL . 'projects/defaultProject/DokuModelManager.php');  
+
+    private static function createModelManager($type){
+        require_once(WIKI_IOC_MODEL . 'projects/' .$type . '/DokuModelManager.php');
 //        return new \ioc_dokuwiki\WikiIocModelManager();
         return new DokuModelManager();
     }

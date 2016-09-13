@@ -132,7 +132,7 @@ class DokuModelAdapter extends AbstractModelAdapter
     /**
      * @var BasicPersistenceEngine
      */
-    private $persistenceEngine;
+    protected $persistenceEngine;
 
     protected $params;
     protected $dataTmp;

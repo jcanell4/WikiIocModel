@@ -39,7 +39,10 @@ class MetaDataEntityFactory {
         require_once (DOKU_PLUGIN . 'wikiiocmodel/projects/' . $arrayConfigPre->MetaDataEntity . '/metadata/MetaDataEntity.php');
         $fully_qualified_name = $arrayConfigPre->MetaDataEntity . '\\' . "MetaDataEntity";
         //getMetaDataStructure($projectType, $metaDataSubset, $persistence, $configSubSet = null)
-        return new $fully_qualified_name(MetaDataDaoConfig::getMetaDataStructure($projectType, $metaDataSubset, $persistence));
+
+        // ALERTA[Xavi] Modificat, he afegit un segon paràmetre amb la definicions dels tipus: Opció alternativa, cridar al setter en lloc de passar-lo al constructor
+        return new $fully_qualified_name(MetaDataDaoConfig::getMetaDataStructure($projectType, $metaDataSubSet, $persistence),
+            MetaDataDaoConfig::getMetaDataTypesDefinition($projectType, $metaDataSubSet, $persistence));
         //return new MetaDataEntity();
     }
 

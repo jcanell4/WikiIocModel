@@ -53,7 +53,7 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
         }
 
         try {
-            print_r($MetaDataRequestMessage);
+//            print_r($MetaDataRequestMessage);
             $metaDataDao = MetaDataDaoFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
             $jSONArray = $metaDataDao->getMeta($MetaDataRequestMessage);
             $metaDataEntity = MetaDataEntityFactory::getObject($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
