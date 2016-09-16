@@ -56,7 +56,7 @@ class NotifyDataQuery extends DataQuery
             $id = $now->getTimestamp();
         }
         
-        $notification[self::NOTIFICATION_ID] = $id; // ALERTA[Xavi] Moure les constants a un altre fitxer?
+        $notification[self::NOTIFICATION_ID] = $id;
         $notification[self::TYPE] = $type;
         $notification[self::DATA] = $notificationData;
 
@@ -92,7 +92,7 @@ class NotifyDataQuery extends DataQuery
         $messages = $this->getBlackboard($userId);// Alerta[Xavi] PHP copia els arrays per valor, i no per referència
 
         if ($deleteContent) {
-            $this->delete($userId);
+//            $this->delete($userId);
         }
 
         return $messages;
