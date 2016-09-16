@@ -92,7 +92,7 @@ class NotifyDataQuery extends DataQuery
         $messages = $this->getBlackboard($userId);// Alerta[Xavi] PHP copia els arrays per valor, i no per referència
 
         if ($deleteContent) {
-//            $this->delete($userId);
+            $this->delete($userId);
         }
 
         return $messages;
