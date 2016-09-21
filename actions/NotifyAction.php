@@ -47,8 +47,7 @@ class NotifyAction extends AbstractWikiAction
     public function __construct($persistenceEngine)
     {
         $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
-        $modelManager = WikiIocModelManager::Instance();
-        $this->dokuNotifyModel = $modelManager->getNotifyModel($type, $persistenceEngine);
+        $this->dokuNotifyModel = WikiIocModelManager::getNotifyModel($type, $persistenceEngine);
        
         /*
         $notifyClass = $persistenceEngine->getNotifyDataQueryClass();

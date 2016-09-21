@@ -1,39 +1,25 @@
 <?php
-//namespace ioc_dokuwiki;
-
 /**
- * WikiIocModelManager: proporciona autorizaciones y ModelWrapper
- *
+ * DokuModelManager:
+ * - proporciona autorizaciones y ModelWrapper
+ * - define las rutas de las clases y las clases por defecto necesarias para este proyecto
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
-if (!defined('DOKU_IOC_MODEL')) define('DOKU_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/projects/defaultProject/");
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined('DOKU_IOC_DEFAULT_PROJECT')) define('DOKU_IOC_DEFAULT_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
+if (!defined('DOKU_IOC_PROJECT')) define('DOKU_IOC_PROJECT', WIKI_IOC_MODEL . "projects/testmat/");
 
-require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');  
+require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 require_once(WIKI_IOC_MODEL . 'WikiIocModelManager.php');
-require_once(DOKU_IOC_MODEL . 'DokuModelAdapter.php');
-require_once(DOKU_IOC_MODEL . 'DokuModelExceptions.php');
-require_once(DOKU_IOC_MODEL . 'authorization/FactoryAuthorization.php');
-
-require_once(WIKI_IOC_MODEL . '/projects/testmat/TestmatModelAdapter.php');
-
-require_once(DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataService.php');
+require_once(WIKI_IOC_MODEL . 'metadata/MetaDataService.php');
+require_once(DOKU_IOC_PROJECT . 'TestmatModelExceptions.php');
+//Las siguientes includes son para Clases específicas y exclusivas de este proyecto
+require_once(DOKU_IOC_PROJECT . 'TestmatModelAdapter.php');
 
 class DokuModelManager extends WikiIocModelManager{
     
     public function __construct() {}
-
-    public static function Instance(){
-        static $inst = null;
-        if ($inst === null) {
-            $inst = new WikiIocModelManager();
-        }
-        return $inst;
-    }
 
     public function getAuthorizationManager($str_command, $params) {
         $factory = \FactoryAuthorization::Instance();
@@ -44,4 +30,26 @@ class DokuModelManager extends WikiIocModelManager{
         return (new \TestmatModelAdapter())->init(new \BasicPersistenceEngine());
     }
 
+    const PRJ = DOKU_IOC_PROJECT;
+    const DEF = DOKU_IOC_DEFAULT_PROJECT;
+    static $defClassDir = array (
+                "Authorization" => array (
+                        DokuModelManager::DEF."authorization"
+                )
+                //"Action" => los ficheros de estas clases no están en directorios ajenos a este proyecto
+                //"Model" =>  los ficheros de estas clases no están en directorios ajenos a este proyecto
+           );
+
+    static $defMainClass = array(
+               "FactoryAuthorization" => DokuModelManager::DEF."authorization/FactoryAuthorization.php"
+               //"TestmatModelAdapter" => DokuModelManager::PRJ."TestmatModelAdapter.php"
+           );
+
+    public static function getDefaultClassDir($name) {
+        return DokuModelManager::$defClassDir[$name];
+    }
+
+    public static function getDefaultMainClass() {
+        return DokuModelManager::$defMainClass;
+    }
 }
