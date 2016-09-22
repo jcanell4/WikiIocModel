@@ -60,10 +60,10 @@ class WebsocketNotifyModel extends TimerNotifyModel
 //        throw new UnavailableMethodExecutionException("DokuNotifyModel#notifyToFrom");
 //    }
 
-    public function notifyTo($data, $receiverId, $type, $id=NULL)
-    {
-        throw new UnavailableMethodExecutionException("DokuNotifyModel#notifyToFrom");
-    }
+//    public function notifyTo($data, $receiverId, $type, $id=NULL)
+//    {
+//        throw new UnavailableMethodExecutionException("DokuNotifyModel#notifyToFrom");
+//    }
 
 //    public function popNotifications($userId)
 //    {
