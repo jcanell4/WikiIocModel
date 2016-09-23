@@ -12,6 +12,7 @@ require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/TimerNotifyModel.php";
 require_once DOKU_INC . "inc/media.php";
 require_once(DOKU_INC . 'inc/pageutils.php');
 require_once(DOKU_INC . 'inc/common.php');
+require_once(DOKU_INC . 'inc/auth.php');
 
 
 // ALERTA[Xavi] Aquesta ruta pot no funcionar correctament, s'ha de revisar perquè DOKU_INC es diferent si es fa un startNotifyServer
@@ -54,6 +55,13 @@ class WebsocketNotifyModel extends TimerNotifyModel
 
         return $init;
     }
+
+    public function checkPass($user, $pass) {
+        global $auth;
+
+        return $auth->checkPass($user, $pass);
+    }
+
 
 //    public function notifyMessageToFrom($text, $receiverId, $senderId = NULL)
 //    {
