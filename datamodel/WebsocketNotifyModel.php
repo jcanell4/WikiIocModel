@@ -38,14 +38,22 @@ class WebsocketNotifyModel extends TimerNotifyModel
         $init['ip'] = WikiGlobalConfig::getConf('notifier_ws_ip', 'wikiiocmodel');
         $init['port'] = WikiGlobalConfig::getConf('notifier_ws_port', 'wikiiocmodel');
 
-        // TODO[Xavi] Això crec que no cal, s'autentica l'usuari al servidor amb el seu nom d'usuari i contrasenya
-        $init['token'] = 'TODO: generar token secret';// TODO[Xavi] El token s'ha de fer servir per autenticar al usuari a través del websocket, fer servir el mateix que sectok o un altre diferent?
 
+
+//        $run = shell_exec("php " . DOKU_INC . "libaaaa/exe/exe_ioc/websockets/startNotifyServer.php  >>server.log &");
+
+        $run = shell_exec("php " . DOKU_INC . "lib/exe/exe_ioc/websockets/startNotifyServer.php  &");
+
+        $check = shell_exec("lsof -i");
+        
+//        $run = shell_exec('php ' . DOKU_INC . 'lib/exe/exe_ioc/websockets/startNotifyServer.php ' . $init['ip'] . ' ' . $init['port']. ' &');
         // El propi server controla si ja s'està executant, no cal controlar-lo aquí
-        $server = new WebSocketNotifyServer($init['ip'], $init['port']);
+//        $server = new WebSocketNotifyServer($init['ip'], $init['port']);
 //
 //        try {
-            $server->run();
+//        ob_start();
+//            $server->run();
+//        ob_end_clean();
 //        } catch (Exception $e) {
 //            $errorMessage = $e->getMessage();
 //
