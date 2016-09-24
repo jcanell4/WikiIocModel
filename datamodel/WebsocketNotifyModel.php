@@ -69,11 +69,11 @@ class WebsocketNotifyModel extends TimerNotifyModel
         return $init;
     }
 
-    public function checkPass($user, $pass) {
-        global $auth;
-
-        return $auth->checkPass($user, $pass);
-    }
+//    public function checkPass($user, $pass) {
+//        global $auth;
+//
+//        return $auth->checkPass($user, $pass);
+//    }
 
 
 //    public function notifyMessageToFrom($text, $receiverId, $senderId = NULL)
@@ -93,7 +93,10 @@ class WebsocketNotifyModel extends TimerNotifyModel
 
     public function close($userId)
     {
-        throw new UnavailableMethodExecutionException("WebsocketNotifyModel#close");
+
+        // ALERTA[Xavi] No cal fer res, la acció close_notifier s'envia automàticament
+
+//        throw new UnavailableMethodExecutionException("WebsocketNotifyModel#close");
     }
 
 
