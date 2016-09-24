@@ -38,13 +38,18 @@ class WebsocketNotifyModel extends TimerNotifyModel
         $init['ip'] = WikiGlobalConfig::getConf('notifier_ws_ip', 'wikiiocmodel');
         $init['port'] = WikiGlobalConfig::getConf('notifier_ws_port', 'wikiiocmodel');
 
+        // Necessari per l'atuenticació
+        $init['session'] = session_id();
+        $init['token'] = auth_createToken();
+        $init['doku_cookie'] = DOKU_COOKIE;
+
 
 
 //        $run = shell_exec("php " . DOKU_INC . "libaaaa/exe/exe_ioc/websockets/startNotifyServer.php  >>server.log &");
 
-        $run = shell_exec("php " . DOKU_INC . "lib/exe/exe_ioc/websockets/startNotifyServer.php  &");
+        $run = shell_exec("php " . DOKU_INC . "lib/exe/exe_ioc/websockets/startNotifyServer.php &");
 
-        $check = shell_exec("lsof -i");
+//        $check = shell_exec("lsof -i");
         
 //        $run = shell_exec('php ' . DOKU_INC . 'lib/exe/exe_ioc/websockets/startNotifyServer.php ' . $init['ip'] . ' ' . $init['port']. ' &');
         // El propi server controla si ja s'està executant, no cal controlar-lo aquí
