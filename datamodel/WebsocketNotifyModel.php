@@ -88,6 +88,7 @@ class WebsocketNotifyModel extends TimerNotifyModel
 
 //    public function popNotifications($userId)
 //    {
+//        return parent::popNotifications($userId);
 //        throw new UnavailableMethodExecutionException("WebsocketNotifyModel#popNotifications");
 //    }
 

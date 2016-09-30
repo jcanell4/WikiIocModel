@@ -88,8 +88,13 @@ class NotifyDataQuery extends DataQuery
 
     public function get($userId, $deleteContent = TRUE)
     {
+//        $deleteContent = false; // ALERTA[Xavi] PROVES
 
         $messages = $this->getBlackboard($userId);// Alerta[Xavi] PHP copia els arrays per valor, i no per referència
+
+        echo "getting messages for ".$userId.":\n";
+        var_dump($messages);
+
 
         if ($deleteContent) {
             $this->delete($userId);
@@ -103,18 +108,28 @@ class NotifyDataQuery extends DataQuery
     {
         // Generem el nom
         $filename = $this->getFileName($userId);
+//        $deleteToken = $filename . '.delete';
+//
+//        // Si està marcat per esborrar l'esborrem
+//        if (@file_exists($deleteToken )) {
+//            @unlink($deleteToken);
+//            @unlink($filename);
+//        }
+
 
         // Carreguem el fitxer
         if (@file_exists($filename)) {
             // Unserialitzem el contingut
             $blackboard = unserialize(io_readFile($filename, FALSE));
         } else {
+//            echo "no existeix el fitxer de blackboard: " . $filename ."\n";
             // Si no existeix retornem un fitxer amb un array buit
             $blackboard = [];
         }
 
         //Establim el contingut carregat
         $this->blackboard[$userId] = $blackboard;
+
     }
 
     private function saveBlackboard($userId)
@@ -125,7 +140,7 @@ class NotifyDataQuery extends DataQuery
         if (count($blackboard) > 0) {
             // Serialitzem el contingut del blackboard del usuari
             // Desem el fitxer
-            io_saveFile($filename, serialize($blackboard));
+            $this->io_saveFileWithoutLock($filename, serialize($blackboard));
         } else {
             // No hi ha res, l'esborrem
             $this->delete($userId);
@@ -133,16 +148,80 @@ class NotifyDataQuery extends DataQuery
         }
     }
 
+    protected function io_saveFileWithoutLock($file, $content, $append=false) {
+            $mode = ($append) ? 'ab' : 'wb';
+
+            $fileexists = @file_exists($file);
+            io_makeFileDir($file);
+        io_unlock($file); // ALERTA[Xavi] ens assegurem que està desbloquejat
+
+//            io_lock($file);
+            if(substr($file,-3) == '.gz'){
+                $fh = @gzopen($file,$mode.'9');
+                if(!$fh){
+                    msg("Writing $file failed A",-1);
+//                    io_unlock($file);
+                    return false;
+                }
+                gzwrite($fh, $content);
+                gzclose($fh);
+            }else if(substr($file,-4) == '.bz2'){
+                $fh = @bzopen($file,$mode{0});
+                if(!$fh){
+                    msg("Writing $file failed B", -1);
+//                    io_unlock($file);
+                    return false;
+                }
+                bzwrite($fh, $content);
+                bzclose($fh);
+            }else{
+                $fh = fopen($file,$mode);
+                if(!$fh){
+                    msg("Writing $file failed C",-1);
+//                    io_unlock($file);
+                    return false;
+                }
+                fwrite($fh, $content);
+                fclose($fh);
+            }
+
+            if(!$fileexists and !empty($conf['fperm'])) chmod($file, $conf['fperm']);
+//            io_unlock($file);
+
+            // ALERTA[XAVI]Codi per fer proves, eliminar
+
+            $isWritable = is_writable($file);
+
+            if (file_exists($file)) {
+                // OK, s'ha creat
+                $check = true;
+            }
+
+
+
+
+
+            return true;
+    }
+
     // ALERTA[Xavi] el que es retorna es una copia del array, així que els canvis no afectan al cache
     private function getBlackboard($userId)
     {
-        if (!$this->blackboard[$userId]) {
+        if (!isset($this->blackboard[$userId])) {
             // Carreguem el blackboard
             $this->loadBlackboard($userId);
         }
 
+
         return $this->blackboard[$userId];
     }
+
+//    public function delete($userId) {
+//        unset ($this->blackboard[$userId]);
+//        $filename = $this->getFileName($userId);
+//        $this->io_saveFileWithoutLock($filename.'.delete', '');
+//    }
+
 
     public function delete($userId)
     {
@@ -151,13 +230,26 @@ class NotifyDataQuery extends DataQuery
         // Obtenim el nom del fitxer
 
         $filename = $this->getFileName($userId);
-        // Eliminem el fitxer
 
+
+        // Eliminem el fitxer
         @unlink($filename);
     }
-
     private function _notifyFN($user) {
-        $dir = WikiGlobalConfig::getConf("notificationdir");
+//        global $conf;
+
+        $conf= WikiGlobalConfig::getConf("savedir");
+
+        $dir = fullpath(DOKU_INC.$conf.'/'."notifications");
+
+
+
+//        $conf["notificationdir"]=fullpath(DOKU_INC.$conf['savedir'].'/'."notifications");
+//        echo ".....\n";
+//        echo "Notification dir: " . $dir. "\n";
+//        echo ".....\n";
+
         return $dir.'/'.md5(cleanID($user)).'.blackboard';
     }
+
 }
