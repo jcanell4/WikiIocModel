@@ -1,0 +1,31 @@
+{
+  "metaDataClassesNameSpaces": [
+    {
+      "main": {
+        "MetaDataDAO": "defaultProject",
+        "MetaDataEntity": "defaultProject",
+        "MetaDataRender": "documentation"
+      }
+    }
+  ],
+  "metaDataProjectStructure": [
+    {
+      "main": "meta.mdpr",
+      "keysDefinition": {
+        "responsable": {
+          "mandatory": true,
+          "tipus": "string"
+        },
+        "titol": {
+          "mandatory": true,
+          "tipus": "string"
+        },
+        "autor": {
+          "mandatory": false,
+          "tipus": "string"
+        }
+      }
+    }
+  ]
+}
+

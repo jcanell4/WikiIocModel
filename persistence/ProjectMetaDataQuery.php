@@ -106,8 +106,8 @@ class ProjectMetaDataQuery extends DataQuery {
 
     //Retorn → JSON {ns1:projectType1, …, nsm:projectTypem}
     public function getMetaDataElementsKey($nsRoot) {
-        //getNsTree("fp:dam", 0, false,true)
-        $elementsKeyArray = $this->getNsTree($nsRoot, 0, true, false);
+        //getNsTree("fp:dam", 0, false,true,false)
+        $elementsKeyArray = $this->getNsTree($nsRoot, 0, true, false, false);
 //        print_r("\n INIT elementsKeyArray elementsKeyArray elementsKeyArray \n");
 //        print_r($elementsKeyArray);
 //        print_r("\n END elementsKeyArray elementsKeyArray elementsKeyArray \n");
@@ -290,11 +290,11 @@ class ProjectMetaDataQuery extends DataQuery {
         
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProjects = TRUE) {
+    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProjects=TRUE, $hiddenProjects=FALSE) {
 
         $base = WikiGlobalConfig::getConf('datadir');
 
-        return $this->getNsTreeFromGenericSearch($base, $currentNode, $sortBy, $onlyDirs, 'search_universal', $expandProjects);
+        return $this->getNsTreeFromGenericSearch($base, $currentNode, $sortBy, $onlyDirs, 'search_universal', $expandProjects, $hiddenProjects);
     }
 
 }

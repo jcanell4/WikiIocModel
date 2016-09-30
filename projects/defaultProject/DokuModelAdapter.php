@@ -489,10 +489,10 @@ class DokuModelAdapter extends AbstractModelAdapter
      * @param type $onlyDirs
      * @return type
      */
-    public function getNsTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE)
+    public function getNsTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE)
     {
         $dataQuery = $this->persistenceEngine->createPageDataQuery();
-        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject);
+        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects);
     }
 
     /**
@@ -2067,10 +2067,10 @@ class DokuModelAdapter extends AbstractModelAdapter
     }
 
     //És la crida principal de la comanda ns_mediatree_rest
-    public function getNsMediaTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE)
+    public function getNsMediaTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE)
     {
         $dataQuery = $this->persistenceEngine->createMediaDataQuery();
-        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject);
+        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects);
     }
 
     /**

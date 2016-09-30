@@ -22,11 +22,11 @@ class MediaMetaDataQuery extends DataQuery {
         return mediaMetaFN($id, $ext);
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE) {
+    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE) {
         global $conf;
         $base = $conf['mediametadir'];
 
-        return $this->getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs, $expandProject );                
+        return $this->getNsTreeFromBase( $base, $currentNode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects );                
     }
 
     public function save($id, $data, $summary = "", $minor = false) {
