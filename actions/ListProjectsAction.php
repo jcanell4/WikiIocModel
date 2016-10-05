@@ -33,7 +33,7 @@ class ListProjectsAction extends AbstractWikiAction {
      * @return array 
      */
     public function get($paramsArr = array()) {
-        return $this->getListProjects();
+        return $this->getListProjects(DOKU_PPROJECTS_DIR);
     }
     
     private function getListProjects( $projectsPath=NULL ) {
