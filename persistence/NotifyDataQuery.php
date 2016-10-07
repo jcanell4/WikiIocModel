@@ -92,8 +92,6 @@ class NotifyDataQuery extends DataQuery
 
         $messages = $this->getBlackboard($userId);// Alerta[Xavi] PHP copia els arrays per valor, i no per referència
 
-        echo "getting messages for ".$userId.":\n";
-        var_dump($messages);
 
 
         if ($deleteContent) {

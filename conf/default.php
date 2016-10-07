@@ -20,3 +20,4 @@ $conf['notifier_ajax_timer'] = 30; // Temps en s
 $conf['notifier_ws_port'] = '9090';
 //$conf['notifier_ws_ip'] = '127.0.0.1';
 $conf['notifier_ws_ip'] = '192.168.33.10';
+$conf['notifier_ws_tick'] = 1; // Temps en s per cada tick de consulta al blackboard
