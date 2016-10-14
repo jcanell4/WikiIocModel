@@ -9,3 +9,5 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins
 
 require_once(WIKI_IOC_MODEL . 'WikiIocModelExceptions.php');
 require_once(WIKI_IOC_MODEL . 'WikiIocLangManager.php');
+
+//class PageNotFoundException extends WikiIocModelException

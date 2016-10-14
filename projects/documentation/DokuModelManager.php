@@ -13,8 +13,8 @@ if (!defined('DOKU_IOC_DEFAULT_PROJECT')) define('DOKU_IOC_DEFAULT_PROJECT', WIK
 require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 require_once(WIKI_IOC_MODEL . 'WikiIocModelManager.php');
 require_once(WIKI_IOC_MODEL . 'metadata/MetaDataService.php');
-require_once(DOKU_IOC_PROJECT . 'DocumentationModelExceptions.php');
 //Las siguientes includes son para Clases específicas y exclusivas de este proyecto
+require_once(DOKU_IOC_PROJECT . 'DocumentationModelExceptions.php');
 require_once(DOKU_IOC_PROJECT . 'DocumentationModelAdapter.php');
 
 class DokuModelManager extends WikiIocModelManager{
