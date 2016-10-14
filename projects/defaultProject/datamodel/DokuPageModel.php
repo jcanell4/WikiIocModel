@@ -150,6 +150,10 @@ class DokuPageModel extends WikiRenderizableDataModel
     {
         return $this->pageDataQuery->getRevisionList($this->id);
     }
+    
+    public function getPageDataQuery() {
+        return $this->pageDataQuery;
+    }
 
     public function getDraftFilename()
     {
