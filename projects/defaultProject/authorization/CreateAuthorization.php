@@ -9,7 +9,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
 
 require_once (DOKU_INC . 'inc/auth.php');
-require_once (DOKU_IOC_MODEL . 'authorization/PageCommandAuthorization.php');
+require_once (__DIR__ . '/PageCommandAuthorization.php');
 
 class CreateAuthorization extends PageCommandAuthorization {
 
