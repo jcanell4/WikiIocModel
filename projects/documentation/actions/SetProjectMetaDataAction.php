@@ -17,21 +17,25 @@ class SetProjectMetaDataAction extends AbstractWikiAction {
     }
 
     public function get($paramsArr = array()) {
-        $this->projectModel->init($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
+        //sólo se ejecuta si no existe el proyecto
+        if (!$this->projectModel->existProject($paramsArr[ProjectKeys::KEY_ID])) {
+            
+            $this->projectModel->init($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
 
-        $metaDataValues = $this->recullFormulari($paramsArr);
+            $metaDataValues = $this->recullFormulari($paramsArr);
+            
+            $metaData = [
+                ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
+                ProjectKeys::KEY_PROJECT_TYPE => $paramsArr[ProjectKeys::KEY_PROJECT_TYPE], // Opcional
+                ProjectKeys::KEY_METADATA_SUBSET => self::defaultSubSet,
+                ProjectKeys::KEY_ID_RESOURCE => $paramsArr[ProjectKeys::KEY_NS], //[TODO Rafa] Jooools! la ruta no está en ID, está en NS
+                ProjectKeys::KEY_FILTER => $paramsArr[ProjectKeys::KEY_FILTER], // Opcional
+                ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
+            ];
 
-        $metaData = [
-            ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
-            ProjectKeys::KEY_PROJECT_TYPE => $paramsArr[ProjectKeys::KEY_PROJECT_TYPE], // Opcional
-            ProjectKeys::KEY_METADATA_SUBSET => self::defaultSubSet,
-            ProjectKeys::KEY_ID_RESOURCE => $paramsArr[ProjectKeys::KEY_NS], //[TODO Rafa] Jooools! la ruta no está en ID, está en NS
-            ProjectKeys::KEY_FILTER => $paramsArr[ProjectKeys::KEY_FILTER], // Opcional
-            ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
-        ];
-
-        $ret = $this->projectModel->setData($metaData);
-        $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $paramsArr[ProjectKeys::KEY_ID]);
+            $ret = $this->projectModel->setData($metaData);
+            $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $paramsArr[ProjectKeys::KEY_ID]);
+        }
         return $ret; 
     }
 

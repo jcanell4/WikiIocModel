@@ -151,13 +151,29 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     public function getFileName($id, $especParams = NULL) {
-        
     }
 
     public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProjects=TRUE, $hiddenProjects=FALSE) {
-
         $base = WikiGlobalConfig::getConf('datadir');
         return $this->getNsTreeFromGenericSearch($base, $currentNode, $sortBy, $onlyDirs, 'search_universal', $expandProjects, $hiddenProjects);
     }
 
+    public function isDirProject($query) {
+        $dir = utf8_encodeFN(str_replace(':', '/', $query['idResource']));
+        $pathProject = WikiGlobalConfig::getConf('datadir') . "/$dir";
+        $ret = is_dir($pathProject);
+
+        //Este es un modelo, tal vez, demasiado complicado para averiguar si ya existe el proyecto
+        
+        if ($ret) {
+            require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataService.php');
+            $mDS = new MetaDataService();
+            $projectFilename = $mDS->getMetaDataDaoConfig()->getMetaDataFileName($query['projectType'], $query['metaDataSubSet'], $query['persistence']);            
+            $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
+            $pathProject = $metaDataPath . "/$dir";
+            $dirProject = opendir($pathProject);
+            $ret = is_dir($dirProject) && is_file($projectFilename);
+        }
+        return $ret;
+    }
 }

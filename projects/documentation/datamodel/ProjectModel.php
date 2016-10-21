@@ -73,9 +73,22 @@ class ProjectModel extends WikiRenderizableDataModel {
     }
     
     public function createDataDir($id) {
+        //Esto debería pasar a ProjectMetaDataQuery
         global $conf;
         $id = str_replace(':', '/', $id);
         $dir = $conf['datadir'] . '/' . utf8_encodeFN($id) . "/dummy";
         $this->dataquery->makeFileDir($dir);
+    }
+    
+    public function existProject($id) {
+        //Este es un modelo, tal vez, demasiado complicado para averiguar si ya existe el proyecto
+        $query = [
+            'persistence' => $this->persistenceEngine,
+            'projectType' => $this->projectType,
+            'metaDataSubSet' => self::defaultSubset,
+            'idResource' => $id
+        ];
+        $ret = $this->dataquery->isDirProject($query);
+        return $ret;
     }
 }
