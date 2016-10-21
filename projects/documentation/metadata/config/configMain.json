@@ -14,18 +14,20 @@
       "keysDefinition": {
         "responsable": {
           "mandatory": true,
-          "tipus": "string"
+          "tipus": "string",
+          "default": ""
         },
         "titol": {
           "mandatory": true,
-          "tipus": "string"
+          "tipus": "string",
+          "default": ""
         },
         "autor": {
           "mandatory": false,
-          "tipus": "string"
+          "tipus": "string",
+          "default": ""
         }
       }
     }
   ]
 }
-

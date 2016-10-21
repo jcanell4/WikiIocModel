@@ -17,12 +17,16 @@ class ProjectModel extends WikiRenderizableDataModel {
     protected $projectType;
     protected $metaDataService;
     protected $persistenceEngine;
+    protected $dataquery;
 
+    const METADATA_CLASSES_NAMESPACES = 'metaDataClassesNameSpaces';
+    const METADATA_PROJECT_STRUCTURE = 'metaDataProjectStructure';
     const defaultSubset = 'main';
 
     public function __construct($persistenceEngine)  {
         $this->metaDataService= new MetaDataService();
         $this->persistenceEngine = $persistenceEngine;
+        $this->dataquery = $persistenceEngine->createProjectMetaDataQuery();
     }
 
     public function init($id, $projectType = null) {
@@ -32,6 +36,7 @@ class ProjectModel extends WikiRenderizableDataModel {
 
     // Set metadata
     public function setData($toSet) {
+        $ret = [];
         // En aquest cas el $toSet equival al $query, que es genera al Action corresponent
         $meta = $this->metaDataService->setMeta($toSet);
         // El retorn es un array, agrupats:
@@ -50,9 +55,6 @@ class ProjectModel extends WikiRenderizableDataModel {
         return $this->getRawData();
     }
 
-    const METADATA_CLASSES_NAMESPACES = 'metaDataClassesNameSpaces';
-    const METADATA_PROJECT_STRUCTURE = 'metaDataProjectStructure';
-
     public function getRawData() {
         $ret = [];
         $query = [
@@ -68,5 +70,12 @@ class ProjectModel extends WikiRenderizableDataModel {
         $ret['projectMetaData']['structure'] = $meta['structure']; // inclou els valors
 
         return $ret;
+    }
+    
+    public function createDataDir($id) {
+        global $conf;
+        $id = str_replace(':', '/', $id);
+        $dir = $conf['datadir'] . '/' . utf8_encodeFN($id) . "/dummy";
+        $this->dataquery->makeFileDir($dir);
     }
 }

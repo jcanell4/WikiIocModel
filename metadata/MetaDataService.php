@@ -79,18 +79,11 @@ class MetaDataService {
      */
     public function getMeta($MetaDataRequestMessage) {
         //Check parameters mandatories
-        $checkParameters = false;
-        if (isset($MetaDataRequestMessage['persistence'])) {
-            if (isset($MetaDataRequestMessage['idResource'])) {
-                if ($MetaDataRequestMessage['idResource'] != '') {
-                    if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
-                        if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
-                            $checkParameters = true;
-                        }
-                    }
-                }
-            }
-        }
+        $checkParameters =  isset($MetaDataRequestMessage['persistence']) &&
+                            isset($MetaDataRequestMessage['idResource']) &&
+                            $MetaDataRequestMessage['idResource'] != '' &&
+                            isset($MetaDataRequestMessage['metaDataSubSet']) &&
+                            $MetaDataRequestMessage['metaDataSubSet'] != '';
 
         if (!$checkParameters) {
             throw new WrongParams();
@@ -202,41 +195,27 @@ class MetaDataService {
      */
     public function setMeta($MetaDataRequestMessage) {
         //Check parameters mandatories
-        $checkParameters = false;
-        if (isset($MetaDataRequestMessage['persistence'])) {
-            if (isset($MetaDataRequestMessage['idResource'])) {
-                if ($MetaDataRequestMessage['idResource'] != '') {
-                    if (isset($MetaDataRequestMessage['metaDataSubSet'])) {
-                        if ($MetaDataRequestMessage['metaDataSubSet'] != '') {
-                            if (isset($MetaDataRequestMessage['metaDataValue'])) {
-                                if ($MetaDataRequestMessage['metaDataValue'] != '') {
-                                    $checkParameters = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        $checkParameters =  isset($MetaDataRequestMessage['persistence']) &&
+                            isset($MetaDataRequestMessage['idResource']) &&
+                            $MetaDataRequestMessage['idResource'] != '' &&
+                            isset($MetaDataRequestMessage['metaDataSubSet']) &&
+                            $MetaDataRequestMessage['metaDataSubSet'] != '' &&
+                            isset($MetaDataRequestMessage['metaDataValue']) &&
+                            $MetaDataRequestMessage['metaDataValue'] != '';
 
         if (!$checkParameters) {
             throw new WrongParams();
         }
         //Control projectType in parameter
         $projectTypeParameter = null;
-        if (isset($MetaDataRequestMessage['projectType'])) {
-            if ($MetaDataRequestMessage['projectType'] != '') {
-                $projectTypeParameter = $MetaDataRequestMessage['projectType'];
-            }
+        if (isset($MetaDataRequestMessage['projectType']) && $MetaDataRequestMessage['projectType'] != '') {
+            $projectTypeParameter = $MetaDataRequestMessage['projectType'];
         }
 
+        $indexResponse = 0;
         //Init metaDataElements property (elements set to get metadata)
         try {
             $this->setMetaDataElements($this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['persistence']));
-            //'{"fp:dam:m03":"materials","fp:daw:m07":"materials"}'
-//            print_r("\n INIT getMetaDataElements getMetaDataElements getMetaDataElements \n");
-//            print_r($this->getMetaDataElements());
-//            print_r("\n END getMetaDataElements getMetaDataElements getMetaDataElements \n");
             if ($this->getMetaDataElements() != null && count($this->getMetaDataElements() > 0)) {
                 $encoder = new JSON();
                 $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));

@@ -14,8 +14,8 @@ require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 require_once(WIKI_IOC_MODEL . 'WikiIocModelManager.php');
 require_once(WIKI_IOC_MODEL . 'metadata/MetaDataService.php');
 //Las siguientes includes son para Clases específicas y exclusivas de este proyecto
+require_once(WIKI_IOC_MODEL . 'BasicModelAdapter.php');
 require_once(DOKU_IOC_PROJECT . 'DocumentationModelExceptions.php');
-require_once(DOKU_IOC_PROJECT . 'DocumentationModelAdapter.php');
 
 class DokuModelManager extends WikiIocModelManager{
     
@@ -27,16 +27,14 @@ class DokuModelManager extends WikiIocModelManager{
     }
 
     public function getModelWrapperManager() {
-        return (new \DocumentationModelAdapter())->init(new \BasicPersistenceEngine());
+        return (new \BasicModelAdapter())->init(new \BasicPersistenceEngine());
     }
 
     const DEF = DOKU_IOC_DEFAULT_PROJECT;
     static $defClassDir = array (
-                "Authorization" => array (
-                        DokuModelManager::DEF."authorization"
-                )
-                //"Action" => los ficheros de estas clases no están en directorios ajenos a este proyecto
-                //"Model" =>  los ficheros de estas clases no están en directorios ajenos a este proyecto
+                "Authorization" => array (DokuModelManager::DEF."authorization")
+                //,"Action" => los ficheros de estas clases NO están en directorios ajenos a este proyecto
+                //,"Model" =>  los ficheros de estas clases NO están en directorios ajenos a este proyecto
            );
 
     static $defMainClass = array(

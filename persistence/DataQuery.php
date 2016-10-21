@@ -32,8 +32,8 @@ abstract class DataQuery {
     }
     
     public abstract function getFileName($id, $especParams=NULL);
-    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE);
 
+    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE);
 
     /**
      * Retorna la llista de fitxers continguts a l'espai de noms identificat per $ns
@@ -122,12 +122,8 @@ abstract class DataQuery {
         $dir = str_replace(':', '/', $node);
         search($nodeData, $base, $function, $opts, $dir, 1);
 
-//        $levelProject = -1;
-//        $projectType = "";
-
         $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
         $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
-        //$pathProject = $metaDataPath . '/' . str_replace(':', '/', $currentnode);
         $pathProject = $metaDataPath . '/' . $dir;
         $itemProject = $this->isProject($pathProject, 1, $metaDataExtension);
         
@@ -162,10 +158,8 @@ abstract class DataQuery {
 
             if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
                 if ($nodeData[$item]['type'] == 'd') {
-//                    if (!$isProject || ($isProject && $levelProject == $nodeData[$item]['level'])) {
                     if ($levelProject == $nodeData[$item]['level']) {
                         //Determinar si és projecte
-//                        $levelProject = $nodeData[$item]['level'];
                         $pathProject = $metaDataPath . '/' . str_replace(':', '/', $nodeData[$item]['id']);
                         
                         $itemProject = $this->isProject($pathProject, $nodeData[$item]['level'], $metaDataExtension);
