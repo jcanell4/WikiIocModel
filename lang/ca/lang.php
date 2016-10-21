@@ -42,9 +42,9 @@ $lang['documentUnrequired'] = "Actualment, ja ningú necessita el document %s.";
 $lang['documentUnlocked'] = "El document %s ha sigut alliberat. Cancela la edició i torna a editar per accedir";
 $lang['structuredDocumentUnlocked'] = "El document ha estat alliberat. Cancel•la l'edició, o bé, obre un altre fragment per accedir a l'edició";
 
-$lang['requiring_message'] = "El document %s està bloquejat per l'usuari %s. La data estimada de desbloqueig és: %s";
+$lang['requiring_message'] = "El document %s està bloquejat per l'usuari %s. S'estima que quedarà alliberat a les %s";
 $lang['requiring_dialog_title'] = "ALERTA. Document bloquejat!";
-$lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari %s. La data estimada de desbloqueig és: %s\n"
+$lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari %s. S'estima que quedarà alliberat a les %s\n"
         . "Vols que t'avisem quan es desbloquegi aquest document?\n"
         . "Això enviarà una notificació a %s indicant que t'interessa editar el document %s i que l'alliberi l'abans possible.\n"
         . "Activem la notificació?";
