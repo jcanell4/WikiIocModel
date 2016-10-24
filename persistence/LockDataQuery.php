@@ -22,6 +22,10 @@ if (!defined('ST_LOCKED')) {
 if (!defined('ST_LOCKED_BEFORE')) {
     define('ST_LOCKED_BEFORE', 400);
 }
+
+if (!defined('ST_LOCAL_LOCKED_BEFORE')) {
+    define('ST_LOCAL_LOCKED_BEFORE', 800);
+}
 /**
  * Description of LockDataQuery
  *
@@ -32,6 +36,7 @@ class LockDataQuery extends DataQuery
     const UNLOCKED = ST_UNLOCKED; // El recurs no es troba bloquejat per ningú
     const LOCKED = ST_LOCKED;  // El recurs es troba bloquejat per un altre usuari
     const LOCKED_BEFORE = ST_LOCKED_BEFORE; // El recurs està bloquejat per l'usuari actual
+    const LOCAL_LOCKED_BEFORE = ST_LOCAL_LOCKED_BEFORE; // El recurs està bloquejat per l'usuari actual usant la sessió actual
 
 
     protected $notifyDataQuery;
@@ -221,6 +226,8 @@ class LockDataQuery extends DataQuery
                 if ($ip == $_SERVER['REMOTE_USER'] || $ip == clientIP()) {
                     if(!$checkAutoLock && $session ===  $_COOKIE["DokuWiki"]){
                            $state = self::UNLOCKED;
+                    }else if($session ===  $_COOKIE["DokuWiki"]){
+                        $state = self::LOCAL_LOCKED_BEFORE;
                     }else{
                         $state = self::LOCKED_BEFORE;
                     }

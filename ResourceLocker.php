@@ -79,7 +79,11 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
 
             case LockDataQuery::LOCKED_BEFORE:
                 $state["state"] = self::LOCKED_BEFORE;
-                $state["info"] = $this->lockDataQuery->xLock($docId, TRUE, TRUE);
+                if($this->params[PageKeys::KEY_FORCE_REQUIRE]){
+                    $state["info"] = $this->lockDataQuery->xLock($docId, TRUE, TRUE);
+                }else{
+                    $state["info"] = $this->lockDataQuery->xLock($docId, FALSE, TRUE);
+                }
                 break;
 
             default:
@@ -109,9 +113,11 @@ class ResourceLocker implements ResourceLockerInterface, ResourceUnlockerInterfa
         $lockState  = $this->lockDataQuery->checklock($docId, TRUE);
 
         switch ($lockState) {
-            case LockDataQuery::LOCKED_BEFORE:
+            case LockDataQuery::LOCAL_LOCKED_BEFORE:
                 // Bloquejat per aquest usuari
                 $this->lockDataQuery->xUnlock($docId, $unlock);
+
+            case LockDataQuery::LOCKED_BEFORE:
                 $returnState = self::UNLOCKED;
                 break;
 

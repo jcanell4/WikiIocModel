@@ -105,6 +105,9 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         // 1) Ja s'ha recuperat el draft local
         if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]) {
             $resp = $this->_getLocalDraftResponse();
+        } else if($this->lockState()==ST_LOCKED_BEFORE){
+            //-1 L'usuari te obert el document en una altra sessio
+            $resp = $this->_getSelfLockedDialog($this->getModel()->getRawData());
         } else
             // 2) Es demana recuperar el draft
             if ($this->params[PageKeys::KEY_RECOVER_DRAFT]) {
@@ -519,6 +522,17 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
     private function _getWaitingUnlockDialog($rawData)
     {
         $resp = $this->_getBaseDataToSend();
+        //TODO [Josep] Cal implementar quan estigui fet el sistema de diàlegs al client.
+        //Aquí caldrà avisar que no és possible editar l'esborrany perquè hi ha algú editant prèviament el document
+        // i es podrien perdre dades. També caldrà demanar si vol que l'avisin quan acabi el bloqueig
+        return $resp;
+    }
+
+    private function _getSelfLockedDialog($rawData)
+    {
+        $resp = $this->_getRawDataContent($rawData);
+        $resp["locked_before"]=true;
+        
         //TODO [Josep] Cal implementar quan estigui fet el sistema de diàlegs al client.
         //Aquí caldrà avisar que no és possible editar l'esborrany perquè hi ha algú editant prèviament el document
         // i es podrien perdre dades. També caldrà demanar si vol que l'avisin quan acabi el bloqueig
