@@ -67,7 +67,7 @@ class ProjectModel extends WikiRenderizableDataModel {
         $meta = $this->metaDataService->getMeta($query)[0];
 
         $ret['projectMetaData']['values'] = $meta['values'];
-        $ret['projectMetaData']['structure'] = $meta['structure']; // inclou els valors
+        $ret['projectMetaData']['structure'] = $meta['structure']; //inclou els valors
 
         return $ret;
     }
@@ -81,14 +81,6 @@ class ProjectModel extends WikiRenderizableDataModel {
     }
     
     public function existProject($id) {
-        //Este es un modelo, tal vez, demasiado complicado para averiguar si ya existe el proyecto
-        $query = [
-            'persistence' => $this->persistenceEngine,
-            'projectType' => $this->projectType,
-            'metaDataSubSet' => self::defaultSubset,
-            'idResource' => $id
-        ];
-        $ret = $this->dataquery->isDirProject($query);
-        return $ret;
+        return $this->dataquery->haveADirProject($id);
     }
 }

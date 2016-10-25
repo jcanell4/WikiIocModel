@@ -131,12 +131,12 @@ class DokuModelAdapter extends BasicModelAdapter {
         $this->params[$element] = $value;
     }
 
-    // ës la crida principal de la comanda new_page
-    public function createPage($pars)
-    {
-        $action = new CreatePageAction($this->persistenceEngine);
-        return $action->get($pars);
-    }
+//    // ës la crida principal de la comanda new_page -->> Ha ido a parar a DokuPageModel
+//    public function createPage($pars)
+//    {
+//        $action = new CreatePageAction($this->persistenceEngine);
+//        return $action->get($pars);
+//    }
 
 
     /**

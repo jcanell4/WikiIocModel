@@ -17,11 +17,11 @@ class SetProjectMetaDataAction extends AbstractWikiAction {
     }
 
     public function get($paramsArr = array()) {
+        $this->projectModel->init($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
+
         //sólo se ejecuta si no existe el proyecto
         if (!$this->projectModel->existProject($paramsArr[ProjectKeys::KEY_ID])) {
             
-            $this->projectModel->init($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
-
             $metaDataValues = $this->recullFormulari($paramsArr);
             
             $metaData = [
@@ -36,7 +36,10 @@ class SetProjectMetaDataAction extends AbstractWikiAction {
             $ret = $this->projectModel->setData($metaData);
             $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $paramsArr[ProjectKeys::KEY_ID]);
         }
-        return $ret; 
+        if (!$ret)
+            throw new ProjectExistException($paramsArr[ProjectKeys::KEY_NS]);
+        else
+            return $ret;
     }
 
     private function recullFormulari($params) {

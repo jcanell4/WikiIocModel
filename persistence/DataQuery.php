@@ -22,6 +22,26 @@ abstract class DataQuery {
     }
     
     /**
+     * Busca si la ruta (id) contiene un directorio de proyecto
+     * @param type string 'id'
+     * @return type boolean
+     */
+    public function haveADirProject($id) {
+        $ret = false;
+        $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
+        $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
+
+        $path = utf8_encodeFN(str_replace(':', '/', $id));
+        $aDir = explode("/", $path);
+        foreach ($aDir as $dir) {
+            $metaDataPath .= "/$dir";
+            $ret = ($this->isProject($metaDataPath, 1, $metaDataExtension) !== NULL);
+            if ($ret) break;
+        }
+        return $ret;
+    }
+    
+    /**
      * Retorna el nom simple (sense els espais de noms que el contenen) del 
      * firxer o directori identificat per $id
      * @param type $id
