@@ -1,14 +1,11 @@
 <?php
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN'))  define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
-require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/ProjectKeys.php";
-
-class CreateProjectMetaDataAction extends SetProjectMetaDataAction {
+class CreateProjectMetaDataAction extends ProjectMetadataAction {
 
     /**
-     * Crea un fichero para el nuevo proyecto (tipo de proyecto) a partir del archivo de configuración configMain.json
+     * Crea una estructura de directorios para el nuevo proyecto (tipo de proyecto) 
+     * a partir del archivo de configuración configMain.json
      * @param type $paramsArr
      */
     public function get($paramsArr = array()) {

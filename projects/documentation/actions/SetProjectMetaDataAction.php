@@ -1,20 +1,8 @@
 <?php
-
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/ProjectKeys.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
-//require_once DOKU_PLUGIN . "wikiiocmodel/projects/documentation/datamodel/ProjectModel.php"; //autoload
-
-class SetProjectMetaDataAction extends AbstractWikiAction {
-
-    const  defaultSubSet = 'main';
-    protected $projectModel;
-    protected $persistenceEngine;
-
-    public function __construct($persistenceEngine) {
-        $this->persistenceEngine = $persistenceEngine;
-        $this->projectModel = new ProjectModel($persistenceEngine);
-    }
+/**
+ * Desa els canvis fets al formulari que defineix el projecte
+ */
+class SetProjectMetaDataAction extends ProjectMetadataAction {
 
     public function get($paramsArr = array()) {
         $this->projectModel->init($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
@@ -26,10 +14,10 @@ class SetProjectMetaDataAction extends AbstractWikiAction {
             
             $metaData = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
-                ProjectKeys::KEY_PROJECT_TYPE => $paramsArr[ProjectKeys::KEY_PROJECT_TYPE], // Opcional
+                ProjectKeys::KEY_PROJECT_TYPE => $paramsArr[ProjectKeys::KEY_PROJECT_TYPE], //opcional
                 ProjectKeys::KEY_METADATA_SUBSET => self::defaultSubSet,
                 ProjectKeys::KEY_ID_RESOURCE => $paramsArr[ProjectKeys::KEY_NS], //[TODO Rafa] Jooools! la ruta no está en ID, está en NS
-                ProjectKeys::KEY_FILTER => $paramsArr[ProjectKeys::KEY_FILTER], // Opcional
+                ProjectKeys::KEY_FILTER => $paramsArr[ProjectKeys::KEY_FILTER],  //opcional
                 ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
             ];
 
@@ -45,7 +33,7 @@ class SetProjectMetaDataAction extends AbstractWikiAction {
     private function recullFormulari($params) {
         $excludeKeys = ['id', 'ns', 'projectType', 'do', 'submit', 'sectok']; //valors que no pertanyen al formulari
         $cleanParams = $this->removeKeysFromArray($excludeKeys, $params);     //[TODO Rafa] Aquestes keys haurien de ser conegudes per defecte
-        return $cleanParams;                                                  //sense que calgués possar-les manualment
+        return $cleanParams;                                                  //            sense que calgués possar-les manualment
     }
     
     private function removeKeysFromArray($excludeKeys, $array) {

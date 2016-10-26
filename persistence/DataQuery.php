@@ -22,6 +22,22 @@ abstract class DataQuery {
     }
     
     /**
+     * Devuelve la lista ordenada de tipos de proyecto obtenida a partir de la lectura 
+     * de la estructura de directorios de wikiiocmodel/projects/
+     */
+    public function getListProjectTypes() {
+        $base = DOKU_PLUGIN . 'wikiiocmodel/projects/';
+        $projectsDir = opendir($base);
+        while ($projType = readdir($projectsDir)) {
+            if (is_dir($base.$projType) && $projType !== '.' && $projType !== '..') {
+                $ret[] = $projType;
+            }
+        }
+        if ($ret) sort($ret);
+        return $ret;
+    }
+    
+    /**
      * Busca si la ruta (id) contiene un directorio de proyecto
      * @param type string 'id'
      * @return type boolean

@@ -1,11 +1,7 @@
 <?php
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN'))  define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
-require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/ProjectKeys.php";
-
-class GenerateProjectMetaDataAction extends SetProjectMetaDataAction {
+class GenerateProjectMetaDataAction extends ProjectMetadataAction {
 
     /**
      * Crea los archivos necesarios definidos en la estructura del proyecto
