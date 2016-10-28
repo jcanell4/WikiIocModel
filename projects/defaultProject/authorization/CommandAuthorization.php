@@ -30,7 +30,9 @@ class CommandAuthorization extends AbstractCommandAuthorization {
     public function setPermission($command) {
         parent::setPermission($command);
         $this->permission->setIdPage($command->getParams('id'));
-        $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
+        if(is_array(WikiIocInfoManager::getInfo('userinfo'))){
+            $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
+        }
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
     }
 
