@@ -165,6 +165,15 @@ class DokuModelAdapter extends AbstractModelAdapter
         return $action->get();
     }
 
+    public function getShortcutsTaskList()
+    {
+        $action = new ShortcutsTaskListAction($this->persistenceEngine);
+        $params = ['id' => 'wiki:user:' . $_REQUEST['u'] . ':dreceres']; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
+
+
+        return $action->get($params);
+    }
+
     public function setParams($element, $value)
     {
         $this->params[$element] = $value;

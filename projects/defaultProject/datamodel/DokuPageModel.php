@@ -123,7 +123,9 @@ class DokuPageModel extends WikiRenderizableDataModel
 
     public function getRawData()
     {
+
         $id = $this->id;
+
         $response['locked'] = checklock($id);
         $response['content'] = $this->pageDataQuery->getRaw($id, $this->rev);        
         if ($this->draftDataQuery->hasAny($id)) {
