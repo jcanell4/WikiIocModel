@@ -168,7 +168,14 @@ class DokuModelAdapter extends AbstractModelAdapter
     public function getShortcutsTaskList()
     {
         $action = new ShortcutsTaskListAction($this->persistenceEngine);
-        $params = ['id' => 'wiki:user:' . $_REQUEST['u'] . ':dreceres']; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
+        $user = WikiIocInfoManager::getInfo("userinfo");
+
+        if (!$user) {
+            throw new Exception("No es troba capusuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
+        } else {
+            $params = ['id' => 'wiki:user:' . strtolower($user['name']) . ':dreceres']; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
+        }
+
 
 
         return $action->get($params);

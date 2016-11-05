@@ -31,6 +31,7 @@ class ShortcutsTaskListAction extends HtmlPageAction {
      * DokuAction#responseProcess.
      */
     protected function runProcess(){
+        global $ACT;
         $ACT = act_permcheck( $ACT );
     }
 

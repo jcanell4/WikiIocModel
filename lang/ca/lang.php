@@ -49,4 +49,4 @@ $lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari
         . "Això enviarà una notificació a %s indicant que t'interessa editar el document %s i que l'alliberi l'abans possible.\n"
         . "Activem la notificació?";
 
-$lang['tab_shortcuts'] = "dreceres";
+$lang['tab_shortcuts'] = "Dreceres";
