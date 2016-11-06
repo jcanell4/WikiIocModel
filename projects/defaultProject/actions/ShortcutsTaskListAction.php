@@ -53,11 +53,15 @@ class ShortcutsTaskListAction extends HtmlPageAction {
      */
     protected function responseProcess(){
 //        $data = $this->getModel()->getRawData(); // ALERTA[Xavi] Es una estructura, s'ha de mirar si hi ha cap action que recuperi el document sencer
-        $data = $this->getModel()->getData();
-        $ret = $this->getCommonPage("TAB Dreceres", WikiIocLangManager::getLang('tab_shortcuts'), $data['structure']['html']);
+
+        if ($this->getModel()->pageExists()) {
+            $data = $this->getModel()->getData();
+            $ret = $this->getCommonPage("TAB Dreceres", WikiIocLangManager::getLang('tab_shortcuts'), $data['structure']['html']);
+        } else {
+            return ['content' => null];
+        }
+
         return $ret;
-
-
     }
 
 

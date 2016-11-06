@@ -502,4 +502,9 @@ class DokuPageModel extends WikiRenderizableDataModel
     public function getLockState(){
         return  $this->lockDataQuery->checklock($this->id);
     }
+
+    public function pageExists() {
+        $filename = $this->pageDataQuery->getFileName($this->id);
+        return file_exists($filename);
+    }
 }
