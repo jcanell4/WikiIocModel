@@ -16,7 +16,7 @@ $conf['notifier_type'] = 'ajax'; // 'ajax' o 'websocket'
 $conf['notifier_ajax_timer'] = 10; // Temps en s
 $conf['notifier_ws_port'] = '9090';
 $conf['notifier_ws_ip'] = '127.0.0.1';
-$conf['system_warnings_user'] = 'Avís del sistema';
+$conf['system_warning_user'] = 'Avís del sistema';
 
 
 $conf['projects']['defaultProject']['templates'][0]['id'] =0;

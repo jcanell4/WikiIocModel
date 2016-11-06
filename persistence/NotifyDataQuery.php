@@ -21,7 +21,8 @@ class NotifyDataQuery extends DataQuery
     const SENDER_ID = 'sender_id';
     const DATA = 'data';
     const TYPE = 'type'; // ALERT, MESSAGE, DIALOG
-    
+    const EXPIRE = 'expire';
+
     const TYPE_ALERT = 'alert';
     const TYPE_MESSAGE = 'message';
     const TYPE_WARNING = 'warning';
@@ -48,7 +49,7 @@ class NotifyDataQuery extends DataQuery
     }
 
 
-    public function generateNotification($notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
+    public function generateNotification($notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL, $expire = NULL)
     {
 
         $notification = [];
@@ -61,6 +62,10 @@ class NotifyDataQuery extends DataQuery
         $notification[self::TYPE] = $type;
         $notification[self::DATA] = $notificationData;
 
+        if ($expire) {
+            $notification[self::EXPIRE] = $expire;
+        }
+
 
         // Si no s'ha especificat el sender s'atribueix al sistema
         if ($senderId === NULL) {
@@ -72,19 +77,22 @@ class NotifyDataQuery extends DataQuery
         return $notification;
     }
 
-    public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
+    public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL, $expire = null)
     {
+        $now = (new DateTime)->getTimestamp();
+
+        if ($expire > $now) {
+            // Generar la notificació
+            $message = $this->generateNotification($notificationData, $type, $id, $senderId, $expire);
 
 
-        // Generar la notificació
-        $message = $this->generateNotification($notificationData, $type, $id, $senderId);
+            $this->loadBlackboard($receiverId);
 
+            $this->blackboard[$receiverId][] = $message;
 
-        $this->loadBlackboard($receiverId);
+            $this->saveBlackboard($receiverId);
+        }
 
-        $this->blackboard[$receiverId][] = $message;
-
-        $this->saveBlackboard($receiverId);
     }
 
     public function get($userId, $deleteContent = TRUE)
@@ -96,28 +104,29 @@ class NotifyDataQuery extends DataQuery
             $this->delete($userId);
         }
 
-        // ALERTA[Xavi] codi de prova, generem la notificació manualment
-        // S'ha d'afegir, inclou la generació: el type ha de ser self::TYPE_ALERT
-        // add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
+        // ALERTA[Xavi] codi de prova, per generar un avís del sistema que expira en 20 segons
+//        $this->delete(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel')); // ALERTA[Xavi] Això només s'ha de descomentar per esborrar la pissara completament
+//        $notificationData = ['type' => self::TYPE_WARNING, 'id' => time(), 'title' => WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'), 'text'=>"Prova pel sistema d'avisos del sistema. Ha de sortir una alerta y una notificació llegida"];
+//
+//        $this->add(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'),
+//            $notificationData,
+//            $type = self::TYPE_WARNING,
+//            /*id de l'alerta?*/null,
+//            WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'),
+//            (new DateTime())->getTimeStamp()+20);
 
-        // estructura del notification data:
-        //  type: type,
-        //  id: notification.notification_id,
-        //  title: notification.sender_id,
-        //  text: notification.data.text,
-//        $notificationData = ['type' => self::TYPE_WARNING, 'id' => time(), 'title' => WikiGlobalConfig::getConf('system_warning_user'), 'text'=>"Prova pel sistema d'avisos del sistema. Ha de sortir una alerta y una notificació llegida"];
-
-//        $this->add(WikiGlobalConfig::getConf('system_warning_user'), $notificationData, $type = self::TYPE_WARNING, /*id de l'alerta?*/null, WikiGlobalConfig::getConf('system_warning_user'));
-//        $this->delete(WikiGlobalConfig::getConf('system_warning_user'));
         // FI del codi de prova
 
+        $systemGlobalMessages = $this->getSystemGlobalMessages();
 
-
-        $systemMessages = $this->getBlackboard(WikiGlobalConfig::getConf('system_warning_user'));
-
-        return array_merge($messages, $systemMessages);
+        return array_merge($messages, $systemGlobalMessages);
     }
 
+    private function getSystemGlobalMessages() {
+
+        return $this->getBlackboard(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'));
+
+    }
 
     private function loadBlackboard($userId)
     {
@@ -133,14 +142,49 @@ class NotifyDataQuery extends DataQuery
             $blackboard = [];
         }
 
-        //Establim el contingut carregat
-        $this->blackboard[$userId] = $blackboard;
+        // Establim el contingut carregat
+
+        $this->blackboard[$userId] = $this->removeTimedOutMessages($blackboard);
+
+        // Comprovem si cal actualitzar el fitxer
+        if (count($this->blackboard[$userId]) != count($blackboard)) {
+            $this->updateBlackboard($userId, $this->blackboard[$userId]);
+        }
+
     }
+
+    private function removeTimedOutMessages($messages) {
+        $upToDateMessages = [];
+        $now = (new DateTime())->getTimestamp();
+
+        foreach ($messages as $message) {
+            if (!isset($message[self::EXPIRE]) || $message[self::EXPIRE] > $now) {
+                $upToDateMessages[] = $message;
+            }
+        }
+
+        return $upToDateMessages;
+    }
+
 
     private function saveBlackboard($userId)
     {
         $filename = $this->getFileName($userId);
         $blackboard = $this->getBlackboard($userId);
+
+        if (count($blackboard) > 0) {
+            // Serialitzem el contingut del blackboard del usuari
+            // Desem el fitxer
+            io_saveFile($filename, serialize($blackboard));
+        } else {
+            // No hi ha res, l'esborrem
+            $this->delete($userId);
+
+        }
+    }
+
+    private function updateBlackboard($userId, $blackboard) {
+        $filename = $this->getFileName($userId);
 
         if (count($blackboard) > 0) {
             // Serialitzem el contingut del blackboard del usuari
