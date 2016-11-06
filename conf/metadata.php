@@ -9,3 +9,4 @@ $meta['userpage_discuss_ns']        = array('string');;
 
 $meta['notifier_type'] = ['multichoice', '_choices' => ['ajax', 'websockets']];
 $meta['notifier_ajax_timer'] = ['numeric'];
+$meta['system_warnings_user'] = 'string';

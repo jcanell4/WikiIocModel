@@ -7,6 +7,7 @@ if (!defined('DOKU_PLUGIN')) {
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
+require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 
 /**
  * Description of NotifyDataQuery
@@ -23,6 +24,7 @@ class NotifyDataQuery extends DataQuery
     
     const TYPE_ALERT = 'alert';
     const TYPE_MESSAGE = 'message';
+    const TYPE_WARNING = 'warning';
     const TYPE_DIALOG = 'dialog';
     const TYPE_RELEASED = 'released';
     const TYPE_CANCELED_BY_REMOTE_AGENT = 'canceled_by_remote_agent';    
@@ -35,7 +37,6 @@ class NotifyDataQuery extends DataQuery
 
     public function getFileName($userId, $especParams = NULL)
     {
-//        $fileName = getCacheName($userId, '.blackboard');
         $fileName = $this->_notifyFN($userId);
 
         return $fileName;
@@ -95,7 +96,26 @@ class NotifyDataQuery extends DataQuery
             $this->delete($userId);
         }
 
-        return $messages;
+        // ALERTA[Xavi] codi de prova, generem la notificació manualment
+        // S'ha d'afegir, inclou la generació: el type ha de ser self::TYPE_ALERT
+        // add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
+
+        // estructura del notification data:
+        //  type: type,
+        //  id: notification.notification_id,
+        //  title: notification.sender_id,
+        //  text: notification.data.text,
+//        $notificationData = ['type' => self::TYPE_WARNING, 'id' => time(), 'title' => WikiGlobalConfig::getConf('system_warning_user'), 'text'=>"Prova pel sistema d'avisos del sistema. Ha de sortir una alerta y una notificació llegida"];
+
+//        $this->add(WikiGlobalConfig::getConf('system_warning_user'), $notificationData, $type = self::TYPE_WARNING, /*id de l'alerta?*/null, WikiGlobalConfig::getConf('system_warning_user'));
+//        $this->delete(WikiGlobalConfig::getConf('system_warning_user'));
+        // FI del codi de prova
+
+
+
+        $systemMessages = $this->getBlackboard(WikiGlobalConfig::getConf('system_warning_user'));
+
+        return array_merge($messages, $systemMessages);
     }
 
 
