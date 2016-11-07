@@ -22,52 +22,70 @@ class DokuMediaModel extends AbstractWikiDataModel {
     protected $id;
     protected $mediaName;
     protected $nstarget;
+    protected $ns;
     protected $rev;    
     protected $meta;    
+    protected $fromId;    
     protected /*MediaDataQuery*/ $dataQuery;
     
     public function __construct($persistenceEngine) {
         $this->dataQuery = $persistenceEngine->createMediaDataQuery();
     }
     
-    public function initWithId($id, $rev = null, $meta = FALSE){
+    public function initWithId($id, $rev = null, $meta = FALSE, $fromId=NULL){
         $this->id = $id;
         $this->rev = $rev;
         $this->meta = $meta;
-        $this->nstarget = $this->dataQuery->getNs($id);
+        $this->ns = $this->nstarget = $this->dataQuery->getNs($id);
         $this->mediaName = $this->dataQuery->getIdWithoutNs($id);
+        $this->fromId = $fromId!==NULL?$fromId:$this->ns.":*";
     }
     
-    public function initWhitTarget($nsTarget, $mediaName, $rev = null, $meta = FALSE){
-        $this->nstarget=$nsTarget;
+    public function initWhitTarget($nsTarget, $mediaName, $rev = null, $meta = FALSE, $fromId=NULL){
+        $this->ns = $this->nstarget=$nsTarget;
         $this->mediaName = $mediaName;               
         $this->rev = $rev;
         $this->meta = $meta;
         $this->id = $nsTarget . ':' . $mediaName;        
+        $this->fromId = $fromId!==NULL?$fromId:$this->ns.":*";
     }
     
-    public function init($id, $rev = null, $meta = FALSE, $nsTarget=NULL){
+    public function init($id, $rev = null, $meta = FALSE, $fromId=NULL, $nsTarget=NULL){
         if($nsTarget){
-            $this->initWhitTarget($nsTarget, $id, $rev, $meta);
+            $this->initWhitTarget($nsTarget, $id, $rev, $meta, $fromId);
         }else{
-            $this->initWithId($id, $rev, $meta);
+            $this->initWithId($id, $rev, $meta, $fromId);
         }
     }
     
-
-
+    public function exist(){
+        return file_exists(mediaFN($this->id));
+    }
+    
+    public function delete() {
+        return $this->dataQuery->delete($this->id);
+    }
+    
     public function getData() {
         return $this->getUrl();
     }
 
-    public function setData($toSet) {
+    public function setData($toSet, $overWrite=FALSE) {
         if(is_array($toSet)){
             $params=$toSet;
         }else{
-            $params=array('filePathSource' => $toSet, 'overWrite' => FALSE);
+            $params=array('filePathSource' => $toSet, 'overWrite' => $overWrite);
         }
 
-        $this->dataQuery->save($this->id, $params['filePathSource'], $params['overWrite']);
+        return $this->dataQuery->save($this->id, $params['filePathSource'], $params['overWrite']);
+    }
+    
+    public function getNS() {
+        return $this->ns;
+    }
+    
+    public function overWriteData($toSet) {
+        return $this->setData($toSet, TRUE);
     }
 
     public function upLoadData($toSet) {

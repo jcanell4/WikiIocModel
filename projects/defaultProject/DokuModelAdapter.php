@@ -20,7 +20,6 @@ require_once(DOKU_INC . 'inc/media.php');
 require_once(DOKU_INC . 'inc/auth.php');
 require_once(DOKU_INC . 'inc/confutils.php');
 require_once(DOKU_INC . 'inc/io.php');
-//require_once (DOKU_INC . 'inc/template.php');
 require_once(DOKU_INC . 'inc/JSON.php');
 require_once(DOKU_INC . 'inc/JpegMeta.php');
 
@@ -1646,6 +1645,16 @@ class DokuModelAdapter extends AbstractModelAdapter
      * - Obtenir el gestor de medis
      */
     //ës la crida principal de la comanda media
+//    public function deleteMediaManager($image = NULL, $fromPage = NULL, $prev = NULL){
+    public function deleteMediaManager($paramsArr){
+       $action = new DeleteMediaAction($this->persistenceEngine);
+       return $action->get($paramsArr);
+    }
+    /**
+     * Miguel Angel Lozano 12/12/2014
+     * - Obtenir el gestor de medis
+     */
+    //ës la crida principal de la comanda media
     public function getMediaManager($image = NULL, $fromPage = NULL, $prev = NULL)
     {
         //[TODO Josep] Normalitzar: start do get ...
@@ -1688,6 +1697,22 @@ class DokuModelAdapter extends AbstractModelAdapter
      * - en el futur volem partir la resposta de getMediaManager per ubicar cada component en l'àrea adient
      *   de la nostra pàgina principal de la dokuwiki_30
      */
+    private function startDeleteMediaManager($pImage = NULL, $pFromId = NULL, $prev = NULL)
+    {
+        global $DEL;
+
+        $DEL  = $this->params['delete'] = $pImage;
+        
+        $ret = $this->startMediaManager($pdo, $pImage, $pFromId, $prev);
+         if ($pImage) {
+            if ($AUTH < AUTH_DELETE) {
+                // no auth
+                $ret = $ERROR = 401;
+            }
+        }
+        return $ret;
+    }
+
     private function startMediaManager($pdo, $pImage = NULL, $pFromId = NULL, $prev = NULL)
     {
         global $ID;
@@ -1784,6 +1809,20 @@ class DokuModelAdapter extends AbstractModelAdapter
         return $ret;
     }
 
+    private function doDeleteMediaManagerPreProcess(){
+        global $DEL;
+        
+        $content = "";
+        if ($this->runBeforePreprocess($content)) {
+            $res = 0;
+            if(checkSecurityToken()) {
+                $res = media_delete($DEL,$AUTH);
+            }
+        }
+        $this->runAfterPreprocess($content);
+        return $res;
+    }
+    
     private function doMediaManagerPreProcess()
     {
         global $ACT;

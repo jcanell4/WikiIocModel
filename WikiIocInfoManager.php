@@ -11,6 +11,7 @@ class WikiIocInfoManager {
     const KEY_EXISTS    = "exists";
     const KEY_LOCKED    = "locked";
 
+    private static $isMediaAction = FALSE;
     private static $infoLoaded = FALSE;
     private static $mediaInfoLoaded = FALSE;
 
@@ -25,6 +26,10 @@ class WikiIocInfoManager {
         return $ret;
     }
     
+    public static function setIsMediaAction($value){
+        self::$isMediaAction=$value;
+    }
+    
     public static function setInfo($key, $value){
         global $INFO;
         self::loadInfo();
@@ -33,7 +38,9 @@ class WikiIocInfoManager {
     }
     
     public static function loadInfo() {
-        if (!self::$infoLoaded) {
+        if(self::$isMediaAction){
+            self::loadMediaInfo();
+        }else if (!self::$infoLoaded) {
             self::fillInfo();
         }
     }
@@ -46,7 +53,9 @@ class WikiIocInfoManager {
 
     public static function loadMediaInfo() {
 	global $INFO;
-        self::loadInfo();
+        if (!self::$infoLoaded) {
+            self::fillInfo();
+        }
         if (!self::$mediaInfoLoaded) {
             $INFO = array_merge( $INFO, mediainfo() );
             self::$mediaInfoLoaded = TRUE;
