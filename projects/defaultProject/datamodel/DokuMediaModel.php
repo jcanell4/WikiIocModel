@@ -33,20 +33,42 @@ class DokuMediaModel extends AbstractWikiDataModel {
     }
     
     public function initWithId($id, $rev = null, $meta = FALSE, $fromId=NULL){
-        $this->id = $id;
-        $this->rev = $rev;
-        $this->meta = $meta;
-        $this->ns = $this->nstarget = $this->dataQuery->getNs($id);
-        $this->mediaName = $this->dataQuery->getIdWithoutNs($id);
-        $this->fromId = $fromId!==NULL?$fromId:$this->ns.":*";
+        if($id)
+            $this->id = $id;
+        if($rev)
+            $this->rev = $rev;
+        if($meta){
+            $this->meta = $meta;
+        }else if(!$this->meta){
+            $this->meta = $meta;
+        }
+        if($id){
+            $this->ns = $this->nstarget = $this->dataQuery->getNs($id);
+            $this->mediaName = $this->dataQuery->getIdWithoutNs($id);
+        }
+        if($fromID || $id){
+            $this->fromId = $fromId!==NULL?$fromId:$this->ns.":*";
+        }
+        if(!$this->ns){
+            $this->ns = $this->dataQuery->getNs($fromId);
+        }
     }
     
     public function initWhitTarget($nsTarget, $mediaName, $rev = null, $meta = FALSE, $fromId=NULL){
-        $this->ns = $this->nstarget=$nsTarget;
-        $this->mediaName = $mediaName;               
-        $this->rev = $rev;
-        $this->meta = $meta;
-        $this->id = $nsTarget . ':' . $mediaName;        
+        if($nsTarget)
+            $this->ns = $this->nstarget=$nsTarget;
+        if($mediaName)
+            $this->mediaName = $mediaName;               
+        if($rev)
+            $this->rev = $rev;
+        if($meta){
+            $this->meta = $meta;
+        }else if(!$this->meta){
+            $this->meta = $meta;
+        }
+        if($nsTarget && $mediaName)
+            $this->id = $nsTarget . ':' . $mediaName;        
+
         $this->fromId = $fromId!==NULL?$fromId:$this->ns.":*";
     }
     

@@ -82,9 +82,15 @@ abstract class MediaAction extends DokuAction
             $DEL = $this->params[MediaKeys::KEY_IMAGE_ID];
         }
         
+        if($this->params[MediaKeys::KEY_MEDIA_ID] && !$this->params[MediaKeys::KEY_MEDIA_NAME]){
+            $this->params[MediaKeys::KEY_MEDIA_NAME] = $this->params[MediaKeys::KEY_MEDIA_ID];
+        }elseif($this->params[MediaKeys::KEY_MEDIA_NAME] && !$this->params[MediaKeys::KEY_MEDIA_ID]){
+            $this->params[MediaKeys::KEY_MEDIA_ID] = $this->params[MediaKeys::KEY_MEDIA_NAME];
+        }
+        
         $this->initModel();
         
-        $NS = $this->dokuModel->getNS();
+        $NS = $this->params[MediaKeys::KEY_NS] = $this->dokuModel->getNS();
     }
 
     protected function getModel(){

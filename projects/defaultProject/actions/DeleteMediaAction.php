@@ -16,15 +16,8 @@ require_once(DOKU_PLUGIN.'wikiiocmodel/projects/defaultProject/DokuModelExceptio
 require_once DOKU_INC."inc/media.php";
 
 
-//if (!defined('DW_ACT_MEDIA_UPLOAD')) {
-//    define('DW_ACT_MEDIA_UPLOAD', "mediadetails");
-//}
-//if (!defined('DW_ACT_MEDIA_MANAGER')) {
-//    define('DW_ACT_MEDIA_MANAGER', "media");
-//}
-
 /**
- * Description of UploadMediaAction
+ * Description of DeleteMediaAction
  *
  * @author josep
  */

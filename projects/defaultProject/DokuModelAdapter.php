@@ -426,7 +426,8 @@ class DokuModelAdapter extends AbstractModelAdapter
     {
         /* UploadMediaAction*/
         $action  = new UploadMediaAction($this->persistenceEngine);
-        return $action->get(array('nsTarget' => $nsTarget, 'mediaName' => $idTarget, 'filePathSource' => $filePathSource, 'overWrite' => $overWrite));
+        $res = $action->get(array('nsTarget' => $nsTarget, 'mediaName' => $idTarget, 'filePathSource' => $filePathSource, 'overWrite' => $overWrite));
+        return $res["resultCode"];
   }
 
   /**
@@ -1640,14 +1641,13 @@ class DokuModelAdapter extends AbstractModelAdapter
 //		return $html_output;
 //	}
 
-    /**
-     * Miguel Angel Lozano 12/12/2014
-     * - Obtenir el gestor de medis
-     */
-    //ës la crida principal de la comanda media
-//    public function deleteMediaManager($image = NULL, $fromPage = NULL, $prev = NULL){
     public function deleteMediaManager($paramsArr){
        $action = new DeleteMediaAction($this->persistenceEngine);
+       return $action->get($paramsArr);
+    }
+
+    public function uploadMediaManager($paramsArr){
+       $action = new UploadMediaAction($this->persistenceEngine);
        return $action->get($paramsArr);
     }
     /**
