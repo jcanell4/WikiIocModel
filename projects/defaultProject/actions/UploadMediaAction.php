@@ -67,7 +67,7 @@ class UploadMediaAction extends MediaAction{
 
     protected function responseProcess(){
         $res = array(
-                "content" => "",      //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
+                "content" => $this->mediaManagerFileList(),      //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
                 "id" => "media",
                 "title" => "media",
                 "ns" => $this->params[MediaKeys::KEY_NS],

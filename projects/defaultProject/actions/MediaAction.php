@@ -108,4 +108,54 @@ abstract class MediaAction extends DokuAction
 //        unset($mEvt);
 //        return $ret;
 //    }
+    
+    function mediaManagerFileList(){
+        $content = "";
+//        global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT, $AUTH;
+        $fullscreen = TRUE;
+//        require_once DOKU_INC . 'lib/exe/mediamanager.php';
+
+        $rev = '';
+        $image = cleanID($this->params[MediaKeys::KEY_IMAGE_ID]);
+//        if (isset($JUMPTO)) {
+//            $image = $JUMPTO;
+//        }
+        if (isset($this->params[MediaKeys::KEY_REV])) {
+            $rev = $this->params[MediaKeys::KEY_REV];
+        }else{
+            $jumpto = $image;
+        }
+
+        $content .= '<div id="mediamanager__page">' . NL;
+        if ($this->params[MediaKeys::KEY_NS] == "") {
+            $content .= '<h1>Documents de l\'arrel de documents</h1>';
+        } else {
+            $content .= '<h1>Documents de ' . $this->params[MediaKeys::KEY_NS] . '</h1>';
+        }
+
+
+        $content .= '<div class="panel filelist ui-resizable">' . NL;
+        $content .= '<div class="panelContent">' . NL;
+        $do = $this->params[MediaKeys::KEY_MEDIA_DO];     //$do = $AUTH;
+        $query = $this->params[MediaKeys::KEY_QUERY];    //$_REQUEST['q'];
+        if (!$query) {
+            $query = '';
+        }
+
+        ob_start();
+        if ($do == 'searchlist' || $query) {
+            media_searchlist($query, $this->params[MediaKeys::KEY_NS], $do, TRUE, $this->params[MediaKeys::KEY_SORT]);
+        } else {
+            media_tab_files($this->params[MediaKeys::KEY_NS], $do, $jumpto);
+        }
+        $content .= ob_get_clean();
+
+        $content .= '</div>' . NL;
+        $content .= '</div>' . NL;
+        $content .= '</div>' . NL;
+        
+        return $content;
+    }
+
+    
 }
