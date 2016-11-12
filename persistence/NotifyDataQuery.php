@@ -122,9 +122,40 @@ class NotifyDataQuery extends DataQuery
         return array_merge($messages, $systemGlobalMessages);
     }
 
-    private function getSystemGlobalMessages() {
+    private function getSystemGlobalMessages()
+    {
+        $notifications = [];
+        $plugins = ['wikiiocmodel', 'ajaxcommand']; // ALERTA[Xavi] Afegir altres plugins on es trobi la configuració dels missatges
 
-        return $this->getBlackboard(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'));
+
+        foreach ($plugins as $plugin) {
+            // Comprovem si hi ha un missatge actiu
+            $message = WikiGlobalConfig::getConf('system_warning_message', $plugin);
+
+            if (WikiGlobalConfig::getConf('system_warning_show_alert', $plugin) && strlen($message) > 0) {
+                $startDate = (new DateTime(WikiGlobalConfig::getConf('system_warning_start_date', $plugin)))->getTimestamp();
+                $endDate = (new DateTime(WikiGlobalConfig::getConf('system_warning_end_date', $plugin)))->getTimeStamp();
+                $today = (new DateTime())->getTimestamp();
+
+                if ($startDate <= $today && $endDate > $today) {
+                    $title = WikiGlobalConfig::getConf('system_warning_title', $plugin);
+                    if (strlen($title)==0) {
+                        $title  = WikiIocLangManager::getLang('system_warning_default_title', $plugin);
+                    }
+
+                    $message = WikiGlobalConfig::getConf('system_warning_message', $plugin);
+                    $id = hash('md5', $title . $message);
+                    $notificationData = ['type' => self::TYPE_WARNING, 'id' => $id, 'title' => $title, 'text' => $message];
+                    $sender = WikiGlobalConfig::getConf('system_warning_user', $plugin);
+                    $notifications[] = $this->generateNotification($notificationData, self::TYPE_WARNING, $id, $sender);
+                }
+            }
+
+        }
+
+        return $notifications;
+
+//        return $this->getBlackboard(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'));
 
     }
 

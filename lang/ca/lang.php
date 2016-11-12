@@ -50,3 +50,6 @@ $lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari
         . "Activem la notificació?";
 
 $lang['tab_shortcuts'] = "Dreceres";
+
+// Avisos del sistema
+$lang['system_warning_default_title'] = 'Avís del sistema';

@@ -124,6 +124,7 @@ class NotifyAction extends AbstractWikiAction
         return $response;
     }
 
+    // ALERTA[Xavi] això no es correcte, però tampoc s'està utilitzant
     public function notifyMessageToFrom()
     {
         $params = $this->params[PageKeys::KEY_PARAMS];
@@ -137,6 +138,7 @@ class NotifyAction extends AbstractWikiAction
         return $response;
     }
 
+    // ALERTA[Xavi] això no es correcte, però tampoc s'està utilitzant
     public function notifyTo()
     {
         $params = $this->params[PageKeys::KEY_PARAMS];
