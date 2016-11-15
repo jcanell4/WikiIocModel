@@ -53,3 +53,6 @@ $lang['tab_shortcuts'] = "Dreceres";
 
 // Avisos del sistema
 $lang['system_warning_default_title'] = 'Avís del sistema';
+
+// Plantilles
+$lang['template:shortcuts'] = "Per afegir enllaços a documents pots fer servir el següent format:\n\n[[playground:playground|Drecera al playground]]\n\n[[wiki:navigation|Drecera a la documentació de la wiki]]";

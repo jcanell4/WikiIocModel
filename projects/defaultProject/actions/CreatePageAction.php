@@ -63,8 +63,15 @@ class CreatePageAction extends SavePageAction {
         global $ACT;
         parent::startProcess();
         $ACT = DW_ACT_SAVE;
-        if (!$this->params[PageKeys::KEY_TEXT]) {
+
+        if ($this->params[PageKeys::KEY_TEMPLATE]) {
+
+            $TEXT = $this->params[PageKeys::KEY_TEXT] = cleanText(WikiIocLangManager::getLang('template:' . $this->params[PageKeys::KEY_TEMPLATE]));
+
+        } else if (!$this->params[PageKeys::KEY_TEXT]) {
+
             $TEXT = $this->params[PageKeys::KEY_TEXT] = cleanText(WikiIocLangManager::getLang('createDefaultText'));
+
         }        
     }
 }
