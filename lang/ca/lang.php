@@ -36,7 +36,7 @@ $lang['lockedByAlert'] = "El document està bloquejat per altre usuari";
 $lang['lockedByTitle'] = "Document bloquejat";
 $lang['BtnReadOnly'] = "Només lectura";
 $lang['BtnRequireLock'] = "Demanar el bloqueig";
-$lang['alreadyLocked'] = "Teniu obert aquest document en una altra màquina o en una alytre sessió. Per poder-lo editar tanque-lo prèviement.";
+$lang['alreadyLocked'] = "Teniu obert aquest document en una altra màquina o en una altre sessió. Per poder-lo editar tanqueu-lo prèviement.";
 $lang['documentRequired'] = "%d usuari(s) requereix(en) el document %s. Si no el necessites, si us plau, tanca la edició.";
 $lang['documentUnrequired'] = "Actualment, ja ningú necessita el document %s.";
 $lang['documentUnlocked'] = "El document %s ha sigut alliberat. Cancela la edició i torna a editar per accedir";
@@ -55,6 +55,7 @@ $lang['tab_shortcuts'] = "Dreceres";
 $lang['system_warning_default_title'] = 'Avís del sistema';
 
 // Plantilles
-$lang['template:shortcuts'] = "Per afegir dreceres a documents pots fer servir el següent format:\n\n"
+$lang['template:shortcuts'] = "Nou document de dreceres.\n\n"
+    . "Per afegir dreceres a documents pots fer servir el següent format:\n\n"
     . "[[playground:playground|Drecera al playground]]\n\n"
     . "[[wiki:navigation|Drecera a la documentació de la wiki]]";

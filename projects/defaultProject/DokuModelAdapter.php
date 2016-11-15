@@ -165,15 +165,15 @@ class DokuModelAdapter extends AbstractModelAdapter
         return $action->get();
     }
 
-    public function getShortcutsTaskList()
+    public function getShortcutsTaskList($user_id)
     {
         $action = new ShortcutsTaskListAction($this->persistenceEngine);
-        $user = WikiIocInfoManager::getInfo("userinfo");
+//        $user = WikiIocInfoManager::getInfo("userinfo");
 
-        if (!$user) {
+        if (!$user_id) {
             throw new Exception("No es troba capusuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
         } else {
-            $params = ['id' => 'wiki:user:' . strtolower($user['name']) . ':dreceres']; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
+            $params = ['id' => 'wiki:user:' . $user_id . ':dreceres']; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
         }
 
 
