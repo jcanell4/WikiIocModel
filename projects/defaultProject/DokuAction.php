@@ -273,7 +273,7 @@ abstract class DokuAction extends AbstractWikiAction{
      *
      * Per generar un info associat al esdeveniment global s'ha de passar el id com a buit, es a dir
      *
-     * @param string          $type     - tipus de missatge
+     * @param string          $type     - tipus de missatge [notify, info, success, warning, error, debug]
      * @param string|string[] $message  - Missatge o missatges associats amb aquesta informació
      * @param string          $id       - id del document al que pertany el missatge
      * @param int             $duration - Si existeix indica la quantitat de segons que es mostrarà el missatge

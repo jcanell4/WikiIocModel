@@ -52,6 +52,7 @@ abstract class AbstractCommandAuthorization {
     }
     
     public function setPermission($command) {
+        WikiIocInfoManager::setIsMediaAction($command->getNeedMediaInfo());
         WikiIocInfoManager::setParams($command->getParams());
         if ($this->permission === NULL) {
             $this->createPermission($command);

@@ -20,7 +20,6 @@ require_once(DOKU_INC . 'inc/media.php');
 require_once(DOKU_INC . 'inc/auth.php');
 require_once(DOKU_INC . 'inc/confutils.php');
 require_once(DOKU_INC . 'inc/io.php');
-//require_once (DOKU_INC . 'inc/template.php');
 require_once(DOKU_INC . 'inc/JSON.php');
 require_once(DOKU_INC . 'inc/JpegMeta.php');
 
@@ -443,7 +442,8 @@ class DokuModelAdapter extends AbstractModelAdapter
     {
         /* UploadMediaAction*/
         $action  = new UploadMediaAction($this->persistenceEngine);
-        return $action->get(array('nsTarget' => $nsTarget, 'mediaName' => $idTarget, 'filePathSource' => $filePathSource, 'overWrite' => $overWrite));
+        $res = $action->get(array('nsTarget' => $nsTarget, 'mediaName' => $idTarget, 'filePathSource' => $filePathSource, 'overWrite' => $overWrite));
+        return $res["resultCode"];
   }
 
   /**
@@ -1657,6 +1657,15 @@ class DokuModelAdapter extends AbstractModelAdapter
 //		return $html_output;
 //	}
 
+    public function deleteMediaManager($paramsArr){
+       $action = new DeleteMediaAction($this->persistenceEngine);
+       return $action->get($paramsArr);
+    }
+
+    public function uploadMediaManager($paramsArr){
+       $action = new UploadMediaAction($this->persistenceEngine);
+       return $action->get($paramsArr);
+    }
     /**
      * Miguel Angel Lozano 12/12/2014
      * - Obtenir el gestor de medis
@@ -1704,6 +1713,22 @@ class DokuModelAdapter extends AbstractModelAdapter
      * - en el futur volem partir la resposta de getMediaManager per ubicar cada component en l'àrea adient
      *   de la nostra pàgina principal de la dokuwiki_30
      */
+    private function startDeleteMediaManager($pImage = NULL, $pFromId = NULL, $prev = NULL)
+    {
+        global $DEL;
+
+        $DEL  = $this->params['delete'] = $pImage;
+        
+        $ret = $this->startMediaManager($pdo, $pImage, $pFromId, $prev);
+         if ($pImage) {
+            if ($AUTH < AUTH_DELETE) {
+                // no auth
+                $ret = $ERROR = 401;
+            }
+        }
+        return $ret;
+    }
+
     private function startMediaManager($pdo, $pImage = NULL, $pFromId = NULL, $prev = NULL)
     {
         global $ID;
@@ -1800,6 +1825,20 @@ class DokuModelAdapter extends AbstractModelAdapter
         return $ret;
     }
 
+    private function doDeleteMediaManagerPreProcess(){
+        global $DEL;
+        
+        $content = "";
+        if ($this->runBeforePreprocess($content)) {
+            $res = 0;
+            if(checkSecurityToken()) {
+                $res = media_delete($DEL,$AUTH);
+            }
+        }
+        $this->runAfterPreprocess($content);
+        return $res;
+    }
+    
     private function doMediaManagerPreProcess()
     {
         global $ACT;

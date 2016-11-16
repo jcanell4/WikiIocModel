@@ -22,52 +22,92 @@ class DokuMediaModel extends AbstractWikiDataModel {
     protected $id;
     protected $mediaName;
     protected $nstarget;
+    protected $ns;
     protected $rev;    
     protected $meta;    
+    protected $fromId;    
     protected /*MediaDataQuery*/ $dataQuery;
     
     public function __construct($persistenceEngine) {
         $this->dataQuery = $persistenceEngine->createMediaDataQuery();
     }
     
-    public function initWithId($id, $rev = null, $meta = FALSE){
-        $this->id = $id;
-        $this->rev = $rev;
-        $this->meta = $meta;
-        $this->nstarget = $this->dataQuery->getNs($id);
-        $this->mediaName = $this->dataQuery->getIdWithoutNs($id);
-    }
-    
-    public function initWhitTarget($nsTarget, $mediaName, $rev = null, $meta = FALSE){
-        $this->nstarget=$nsTarget;
-        $this->mediaName = $mediaName;               
-        $this->rev = $rev;
-        $this->meta = $meta;
-        $this->id = $nsTarget . ':' . $mediaName;        
-    }
-    
-    public function init($id, $rev = null, $meta = FALSE, $nsTarget=NULL){
-        if($nsTarget){
-            $this->initWhitTarget($nsTarget, $id, $rev, $meta);
-        }else{
-            $this->initWithId($id, $rev, $meta);
+    public function initWithId($id, $rev = null, $meta = FALSE, $fromId=NULL){
+        if($id)
+            $this->id = $id;
+        if($rev)
+            $this->rev = $rev;
+        if($meta){
+            $this->meta = $meta;
+        }else if(!$this->meta){
+            $this->meta = $meta;
+        }
+        if($id){
+            $this->ns = $this->nstarget = $this->dataQuery->getNs($id);
+            $this->mediaName = $this->dataQuery->getIdWithoutNs($id);
+        }
+        if($fromID || $id){
+            $this->fromId = $fromId!==NULL?$fromId:$this->ns.":*";
+        }
+        if(!$this->ns){
+            $this->ns = $this->dataQuery->getNs($fromId);
         }
     }
     
+    public function initWhitTarget($nsTarget, $mediaName, $rev = null, $meta = FALSE, $fromId=NULL){
+        if($nsTarget)
+            $this->ns = $this->nstarget=$nsTarget;
+        if($mediaName)
+            $this->mediaName = $mediaName;               
+        if($rev)
+            $this->rev = $rev;
+        if($meta){
+            $this->meta = $meta;
+        }else if(!$this->meta){
+            $this->meta = $meta;
+        }
+        if($nsTarget && $mediaName)
+            $this->id = $nsTarget . ':' . $mediaName;        
 
-
+        $this->fromId = $fromId!==NULL?$fromId:$this->ns.":*";
+    }
+    
+    public function init($id, $rev = null, $meta = FALSE, $fromId=NULL, $nsTarget=NULL){
+        if($nsTarget){
+            $this->initWhitTarget($nsTarget, $id, $rev, $meta, $fromId);
+        }else{
+            $this->initWithId($id, $rev, $meta, $fromId);
+        }
+    }
+    
+    public function exist(){
+        return file_exists(mediaFN($this->id));
+    }
+    
+    public function delete() {
+        return $this->dataQuery->delete($this->id);
+    }
+    
     public function getData() {
         return $this->getUrl();
     }
 
-    public function setData($toSet) {
+    public function setData($toSet, $overWrite=FALSE) {
         if(is_array($toSet)){
             $params=$toSet;
         }else{
-            $params=array('filePathSource' => $toSet, 'overWrite' => FALSE);
+            $params=array('filePathSource' => $toSet, 'overWrite' => $overWrite);
         }
 
-        $this->dataQuery->save($this->id, $params['filePathSource'], $params['overWrite']);
+        return $this->dataQuery->save($this->id, $params['filePathSource'], $params['overWrite']);
+    }
+    
+    public function getNS() {
+        return $this->ns;
+    }
+    
+    public function overWriteData($toSet) {
+        return $this->setData($toSet, TRUE);
     }
 
     public function upLoadData($toSet) {

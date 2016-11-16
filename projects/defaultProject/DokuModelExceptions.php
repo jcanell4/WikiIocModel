@@ -16,6 +16,7 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins
 
 require_once(WIKI_IOC_MODEL . 'WikiIocModelExceptions.php');
 require_once(WIKI_IOC_MODEL . 'WikiIocLangManager.php');
+require_once(DOKU_INC . 'inc/common.php');
 
 class PageNotFoundException extends WikiIocModelException
 {
@@ -126,3 +127,23 @@ class InsufficientPermissionToUploadMediaException extends WikiIocModelException
     }
 }
 
+class MaxSizeExcededToUploadMediaException extends WikiIocModelException
+{
+//    public function __construct($page, $message="You don't have enough permission to create page %s.", $code=1005, $previous=NULL) {
+    public function __construct($codeMessage = 'auth_UploadMedia', $code = 1012, $previous = NULL)
+    {
+        if(!$codeMessage){
+            $codeMessage = sprintf(WikiIocLangManager::getLang('uploadsize'), 
+                    filesize_h(php_to_byte(ini_get('upload_max_filesize'))));            
+        }
+        parent::__construct($codeMessage, $code, $previous);
+    }
+}
+
+class FailToUploadMediaException extends WikiIocModelException
+{
+    public function __construct($errorCode, $codeMessage = 'uploadfail', $code = 1013, $previous = NULL)
+    {
+        parent::__construct($codeMessage, $code, $previous, $errorCode);
+    }
+}

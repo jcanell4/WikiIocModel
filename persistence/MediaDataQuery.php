@@ -42,6 +42,10 @@ class MediaDataQuery extends DataQuery{
             );        
     }
     
+    public function delete($id) {
+        return $this->_deleteImage($id);        
+    }
+    
         /**
      * És la crida pincipal de la comanda save_unlinked_image. 
      * Guarda un fitxer de tipus media pujat des del client
@@ -80,6 +84,22 @@ class MediaDataQuery extends DataQuery{
     }
 
 
+      /**
+        * Handles media file deletions
+        *
+        * If configured, checks for media references before deletion
+        *
+        * @return int One of: 0,
+        *                     DOKU_MEDIA_DELETED,
+        *                     DOKU_MEDIA_DELETED | DOKU_MEDIA_EMPTY_NS,
+        *                     DOKU_MEDIA_INUSE
+        */
+    private function _deleteImage($idImge) {
+        $auth = auth_quickaclcheck( getNS( $idImge ) . ":*" );
+        $ret = media_delete($idImge, $auth);
+        return $ret;
+    }
+    
     /**
      * @param string   $nsTarget
      * @param string   $idTarget
