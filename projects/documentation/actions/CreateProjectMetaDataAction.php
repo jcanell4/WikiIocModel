@@ -13,11 +13,15 @@ class CreateProjectMetaDataAction extends ProjectMetadataAction {
         
         //sólo se ejecuta si no existe el proyecto
         if (!$this->projectModel->existProject($paramsArr[ProjectKeys::KEY_ID])) {
+            //obtiene la estructura y el contenido del proyecto en pruebas
+//            $projectMetaData = $this->projectModel->getMetaDataDef($paramsArr[ProjectKeys::KEY_ID],$paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
+
             //asigna los valores por defecto a los campos definidos en configMain.json
             $metaDataValues = [
                 "responsable" => $_SERVER['REMOTE_USER'],
                 "titol" => $paramsArr[ProjectKeys::KEY_ID],
-                "autor" => $_SERVER['REMOTE_USER']
+                "autor" => $_SERVER['REMOTE_USER'],
+                "plantilla" => "plantilles:projects:continguts"
             ];
 
             $metaData = [

@@ -1,91 +1,56 @@
 <?php
-
-if (! defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
-
 /**
  * Description of BasicPersistenceEngine
  *
  * @author josep
  */
+if (! defined('DOKU_INC')) die();
+if (!defined('DOKU_PERSISTENCE')) define('DOKU_PERSISTENCE', DOKU_INC . 'lib/plugins/wikiiocmodel/persistence/');
+
 class BasicPersistenceEngine {
-    /**
-     * 
-     * @return \PageDataQuery
-     */
+
     public function createPageDataQuery(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/PageDataQuery.php');
+        require_once(DOKU_PERSISTENCE . 'PageDataQuery.php');
         return new PageDataQuery();
-        
     }
 
-    /**
-     * 
-     * @return \MediaDataQuery
-     */
     public function createMediaDataQuery(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/MediaDataQuery.php');
+        require_once(DOKU_PERSISTENCE . 'MediaDataQuery.php');
         return new MediaDataQuery();
     }
 
-    /**
-     * 
-     * @return \MediaMetaDataQuery
-     */
     public function createMediaMetaDataQuery(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/MediaMetaDataQuery.php');
+        require_once(DOKU_PERSISTENCE . 'MediaMetaDataQuery.php');
         return new MediaMetaDataQuery();
     }
 
-    /**
-     * 
-     * @return \MetaDataQuery
-     */
     public function createMetaDataQuery(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/MetaDataQuery.php');
+        require_once(DOKU_PERSISTENCE . 'MetaDataQuery.php');
         return new MetaDataQuery();
     }
 
-    /**
-     * 
-     * @return \DraftDataQuery
-     */
     public function createDraftDataQuery(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DraftDataQuery.php');
+        require_once(DOKU_PERSISTENCE . 'DraftDataQuery.php');
         return new DraftDataQuery();
     }
 
-    /**
-     *
-     * @return \NotifyDataQuery
-     */
     public function createNotifyDataQuery(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
+        require_once(DOKU_PERSISTENCE . 'NotifyDataQuery.php');
         return new NotifyDataQuery();
     }
 
-    /**
-     *
-     * @return \NotifyDataQuery class
-     */
     public function getNotifyDataQueryClass(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
+        require_once(DOKU_PERSISTENCE . 'NotifyDataQuery.php');
         return NotifyDataQuery::class;
     }
 
-    /**
-     *
-     * @return \NotifyDataQuery
-     */
     public function createLockDataQuery(){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/LockDataQuery.php');
+        require_once(DOKU_PERSISTENCE . 'LockDataQuery.php');
         return new LockDataQuery();
     }
     
-    public function createProjectMetaDataQuery($MetaDataRequestMessage = null){
-        require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/ProjectMetaDataQuery.php');
+    public function createProjectMetaDataQuery(){
+        require_once(DOKU_PERSISTENCE . 'ProjectMetaDataQuery.php');
         return new ProjectMetaDataQuery();
     }
 }

@@ -21,6 +21,6 @@ class ProjectMetadataAction extends AbstractWikiAction {
         $this->projectModel = new ProjectModel($persistenceEngine);
     }
 
-    public function get($paramsArr = array()) {}
-
+    public function get( $paramsArr=array() ) {}
+    
 }

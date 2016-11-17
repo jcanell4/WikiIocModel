@@ -26,6 +26,11 @@
           "mandatory": false,
           "tipus": "string",
           "default": ""
+        },
+        "plantilla": {
+          "mandatory": false,
+          "tipus": "string",
+          "default": "plantilles:projects:continguts"
         }
       }
     }

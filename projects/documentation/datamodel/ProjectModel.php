@@ -17,7 +17,8 @@ class ProjectModel extends WikiRenderizableDataModel {
     protected $projectType;
     protected $metaDataService;
     protected $persistenceEngine;
-    protected $dataquery;
+    protected $projectMetaDataQuery;
+    protected $pageDataQuery;
 
     const METADATA_CLASSES_NAMESPACES = 'metaDataClassesNameSpaces';
     const METADATA_PROJECT_STRUCTURE = 'metaDataProjectStructure';
@@ -26,7 +27,8 @@ class ProjectModel extends WikiRenderizableDataModel {
     public function __construct($persistenceEngine)  {
         $this->metaDataService= new MetaDataService();
         $this->persistenceEngine = $persistenceEngine;
-        $this->dataquery = $persistenceEngine->createProjectMetaDataQuery();
+        $this->projectMetaDataQuery = $persistenceEngine->createProjectMetaDataQuery();
+        $this->pageDataQuery = $persistenceEngine->createPageDataQuery();
     }
 
     public function init($id, $projectType = null) {
@@ -50,17 +52,12 @@ class ProjectModel extends WikiRenderizableDataModel {
         return $ret;
     }
 
-    // Get metadata
-    public function getViewData() {
-        return $this->getRawData();
-    }
-
-    public function getRawData() {
+    public function getData() {
         $ret = [];
         $query = [
             'persistence' => $this->persistenceEngine,
             'projectType' => $this->projectType,
-            'metaDataSubSet' => self::defaultSubset, // TODO[Xavi] Com es passa el paràmetre si és necessari?
+            'metaDataSubSet' => self::defaultSubset,
             'idResource' => $this->id
         ];
 
@@ -72,15 +69,43 @@ class ProjectModel extends WikiRenderizableDataModel {
         return $ret;
     }
     
+//    public function getMetaDataDef($id, $projectType) {
+//        $ret0 = $this->metaDataService->getMetaDataElements();
+//        $dao = $this->metaDataService->getMetaDataDaoConfig();
+//        $mdNS = $dao->getMetaDataConfig($projectType, self::defaultSubset, $this->persistenceEngine, "metaDataClassesNameSpaces");
+//        $mdStruc = $this->projectMetaDataQuery->getMetaDataConfig($projectType, self::defaultSubset, $this->persistenceEngine, "metaDataProjectStructure");
+//        $ret2 = $dao->getMetaDataStructure($projectType, self::defaultSubset, $this->persistenceEngine);
+//        return $ret2;
+//    }
+    
     public function createDataDir($id) {
-        //Esto debería pasar a ProjectMetaDataQuery
-        global $conf;
-        $id = str_replace(':', '/', $id);
-        $dir = $conf['datadir'] . '/' . utf8_encodeFN($id) . "/dummy";
-        $this->dataquery->makeFileDir($dir);
+        $this->projectMetaDataQuery->createDataDir($id);
     }
     
     public function existProject($id) {
-        return $this->dataquery->haveADirProject($id);
+        return $this->projectMetaDataQuery->haveADirProject($id);
+    }
+    
+    /**
+     * Indica si el proyecto ya ha sido generado
+     * @return boolean
+     */
+    public function isProjectGenerated($id, $projectType) {
+        return $this->projectMetaDataQuery->isProjectGenerated($id, $projectType);
+    }
+
+    public function generateProject($id, $destino, $projectType, $plantilla) {
+        /*
+         * 1. Crea el archivo 'continguts' a partir de la plantilla especificada
+         */
+        $text = $this->pageDataQuery->getRaw($plantilla);
+        $this->pageDataQuery->save($destino, $text, "generate project");
+        /*
+         * 2. Establece la marca de proyecto generado
+         */
+        $this->projectMetaDataQuery->setProjectGenerated($id, $projectType);
+        /*
+         * 3. Otorga permisos
+         */
     }
 }
