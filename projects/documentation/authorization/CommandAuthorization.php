@@ -1,12 +1,12 @@
 <?php
 /**
- * CommandAuthorization: define la clase de autorizaciones de los comandos
+ * CommandAuthorization: define la clase de autorizaciones de los comandos de este proyecto
  *
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
-define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . 'projects/defaultProject/');
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . 'projects/documentation/');
 
 require_once (DOKU_INC . 'inc/common.php');
 require_once (DOKU_INC . 'inc/auth.php');
@@ -30,9 +30,7 @@ class CommandAuthorization extends AbstractCommandAuthorization {
     public function setPermission($command) {
         parent::setPermission($command);
         $this->permission->setIdPage($command->getParams('id'));
-        if(is_array(WikiIocInfoManager::getInfo('userinfo'))){
-            $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
-        }
+        $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
     }
 
