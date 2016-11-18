@@ -5,6 +5,7 @@
 if (!defined('DOKU_INC')) die();
 require_once (DOKU_INC . 'inc/common.php');
 require_once (DOKU_INC . 'inc/actions.php');
+//require_once (DOKU_INC . 'inc/pageutils.php');
 
 class WikiIocInfoManager {
 
@@ -88,6 +89,8 @@ class WikiIocInfoManager {
         global $ACT;
         global $REV;
         global $DATE;
+        global $NS;
+        
 
         $ACT = $params['do'];
         $ACT = act_clean( $ACT );
@@ -100,6 +103,15 @@ class WikiIocInfoManager {
         }
         if ( $params['date']  ) {
                 $DATE = $params['date'];
+        }
+        if($params['ns']){
+            $NS = $params['ns'];
+        }
+        
+        if($params['do'] === 'media'){
+            if($params['id'] && !$params['ns']){
+                $NS = $params['ns'] = $params['id'];
+            }
         }
         self::$infoLoaded = FALSE;
         self::$mediaInfoLoaded = FALSE;
