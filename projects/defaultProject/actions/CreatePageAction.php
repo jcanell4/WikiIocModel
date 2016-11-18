@@ -35,7 +35,6 @@ class CreatePageAction extends SavePageAction {
     
     protected function responseProcess() {
 //        $response = array();
-        
 //        $response['structure'] = $this->getModel()->getData();
         $response = $this->getModel()->getData();
 
@@ -45,7 +44,6 @@ class CreatePageAction extends SavePageAction {
         }
 
         $response['meta'] = $this->getMetaTocResponse();
-
         $response['revs'] = $this->getRevisionList();
         
         return $response;
@@ -64,7 +62,13 @@ class CreatePageAction extends SavePageAction {
         parent::startProcess();
         $ACT = DW_ACT_SAVE;
         if (!$this->params[PageKeys::KEY_TEXT]) {
-            $TEXT = $this->params[PageKeys::KEY_TEXT] = cleanText(WikiIocLangManager::getLang('createDefaultText'));
+            if ($this->params[PageKeys::KEY_TEMPLATE]) {
+                //[TO DO] JOSEP: La forma aquí seria $this->getModel()->getRawTemplate(ID template) i getRawTemplate implementar-lo a PageDokuModel o potser a WikiRenderizableDataModel.
+                $this->params[PageKeys::KEY_TEXT] = $this->getModel()->getPageDataQuery()->getRaw($this->params[PageKeys::KEY_TEMPLATE]);
+                $TEXT = $this->params[PageKeys::KEY_TEXT];
+            }else {
+                $TEXT = $this->params[PageKeys::KEY_TEXT] = cleanText(WikiIocLangManager::getLang('createDefaultText'));
+            }
         }        
     }
 }

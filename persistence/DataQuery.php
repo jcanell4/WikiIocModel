@@ -1,17 +1,15 @@
 <?php
-if (! defined('DOKU_INC')) die();
-
-require_once (DOKU_INC . 'inc/pageutils.php');
-require_once (DOKU_INC . 'inc/common.php');
-require_once (DOKU_INC . 'inc/io.php');
-
-
 /**
  * Description of DataQuery
  *
  * @author josep
  */
 
+if (! defined('DOKU_INC')) die();
+
+require_once (DOKU_INC . 'inc/pageutils.php');
+require_once (DOKU_INC . 'inc/common.php');
+require_once (DOKU_INC . 'inc/io.php');
 
 abstract class DataQuery {
     /**
@@ -21,6 +19,26 @@ abstract class DataQuery {
      */
     public function getNs($id){
         return getNS($id);
+    }
+    
+    /**
+     * Busca si la ruta (id) contiene un directorio de proyecto
+     * @param type string 'id'
+     * @return type boolean
+     */
+    public function haveADirProject($id) {
+        $ret = false;
+        $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
+        $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
+
+        $path = utf8_encodeFN(str_replace(':', '/', $id));
+        $aDir = explode("/", $path);
+        foreach ($aDir as $dir) {
+            $metaDataPath .= "/$dir";
+            $ret = ($this->isProject($metaDataPath, 1, $metaDataExtension) !== NULL);
+            if ($ret) break;
+        }
+        return $ret;
     }
     
     /**
@@ -34,8 +52,8 @@ abstract class DataQuery {
     }
     
     public abstract function getFileName($id, $especParams=NULL);
-    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE);
 
+    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE);
 
     /**
      * Retorna la llista de fitxers continguts a l'espai de noms identificat per $ns
@@ -67,7 +85,7 @@ abstract class DataQuery {
     * @param type $filePath
     */
     public function makeFileDir( $filePath ) {
-           io_makeFileDir( $filePath );
+        io_makeFileDir( $filePath );
     }
     
     /**
@@ -86,28 +104,28 @@ abstract class DataQuery {
      * @param type $onlyDirs
      * @return string
      */
-    protected function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE ) {
-    	return $this->getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs, 'search_index', $expandProject);
+    protected function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE ) {
+    	return $this->getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs, 'search_index', $expandProject, $hiddenProjects);
     }
     
-    protected function getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $function = 'search_index', $expandProject=FALSE ) {
+    protected function getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $function='search_index', $expandProject=FALSE, $hiddenProjects=FALSE ) {
     
         $sortOptions = array( 0 => 'name', 'date' );
         $nodeData    = array();
         $children    = array();
-
+                
         if ( $currentnode == "_" ) {
-                return array( 'id' => "", 'name' => "", 'type' => 'd' );
+            return array( 'id' => "", 'name' => "", 'type' => 'd' );
         }
         if ( $currentnode ) {
-                $node  = $currentnode;
-                $aname = split( ":", $currentnode );
-                $level = count( $aname );
-                $name  = $aname[ $level - 1 ];
-        } else {
-                $node  = '';
-                $name  = '';
-                $level = 0;
+            $node  = $currentnode;
+            $aname = split( ":", $currentnode );
+            $level = count( $aname );
+            $name  = $aname[ $level - 1 ];
+        }else {
+            $node  = '';
+            $name  = '';
+            $level = 0;
         }
         $sort = $sortOptions[ $sortBy ];
 
@@ -122,100 +140,21 @@ abstract class DataQuery {
             );
         }
         $dir = str_replace(':', '/', $node);
-        search(
-                $nodeData, $base, $function, $opts, $dir, 1
-        );
+        search($nodeData, $base, $function, $opts, $dir, 1);
 
-        $levelProject = -1;
-        $isProject = false;
-        $projectType = "";
         $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
         $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
-        foreach (array_keys($nodeData) as $item) {
-            //print_r($nodeData[$item]);
-            $type = 'd';
-            //print_r("\n" . $levelProject . "\n");
-            //print_r("\n" . $isProject . "\n");
-            if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
-                if ($nodeData[$item]['type'] == 'd') {
-                    if (!$isProject || ($isProject && $levelProject == $nodeData[$item]['level'])) {
-                        //Determinar si és projecte
-                        $levelProject = $nodeData[$item]['level'];
-                        $pathProject = str_replace(':', '/', $nodeData[$item]['id']);
-                        $pathProject = $metaDataPath . '/' . $pathProject;
-                        //print_r("\n PATHPROJECT PATHPROJECT PATHPROJECT PATHPROJECT PATHPROJECT \n");
-                        //print_r("\n" . $pathProject . "\n");
-                        $isProject = false;
-                        if (is_dir($pathProject)) {
-                            //print_r("\n ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR ISDIR \n");
-                            //print_r("\n" . $pathProject . "\n");
-                            $dirProject = opendir($pathProject);
-                            while ($current = readdir($dirProject)) {
-                                //print_r("\n current current current current current current current current current \n");
-                                //print_r("\n" . $current . "\n");
-                                $pathProjectOne = $pathProject . '/' . $current;
-                                if (is_dir($pathProjectOne)) {
-                                    //print_r("\n ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2 ISDIR2\n");
-                                    //print_r("\n" . $pathProjectOne . "\n");
-                                    $dirProjectOne = opendir($pathProjectOne);
-                                    while ($currentOne = readdir($dirProjectOne)) {
-                                        //print_r("\n current2 current2 current2 current2 current2 current2 current2 current2 current2 \n");
-                                        //print_r("\n" . $currentOne . "\n");
-                                        if (!is_dir($pathProjectOne . '/' . $currentOne)) {
-                                            $fileTokens = explode(".", $currentOne);
-                                            //print_r("\n" . $fileTokens[sizeof($fileTokens) - 1] . "\n");
-                                            //print_r("\naaa" . $metaDataExtension . "\n");
-                                            if ($fileTokens[sizeof($fileTokens) - 1] == $metaDataExtension) {
-                                                //print_r("\n PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE PROJECTE \n");
-                                                //print_r("\n" . $currentOne . "\n");
-                                                //És projecte i escriure   p  
-                                                $levelProject = $nodeData[$item]['level'];
-                                                $isProject = true;
-                                                $type = 'p';
-                                                $projectType = $current;
-                                                $children[$item]['projectType'] = $projectType;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        $children[$item]['id'] = $nodeData[$item]['id'];
-                        $aname = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
-                        $children[$item]['name'] = $aname[$level];
-                        $children[$item]['type'] = $type;
-                    } else {
-                        //Subnivell de projecte - i només quan s'ha d'expadir el projecte
-                        if ($expandProjects) {
-                            $children[$item]['id'] = $nodeData[$item]['id'];
-                            $aname = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
-                            $children[$item]['name'] = $aname[$level];
-                            $children[$item]['type'] = 'pd';
-                            $children[$item]['projectType'] = $projectType;
-                        }
-                    }
-                } else {
-                    //fitxer de projecte o no
-                    //print_r("\n FITXER DE PROJECTE O NO DE PROJECTE" . $nodeData[$item]['id'] . "\n");
-                    if ($isProject) {
-                        if ($expandProjects) {
-                            //print_r("\n FITXER DE PROJECTE" . $children[$item]['id'] . "\n");
-                            $children[$item]['id'] = $nodeData[$item]['id'];
-                            $aname = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
-                            $children[$item]['name'] = $aname[$level];
-                            $children[$item]['type'] = 'pf';
-                            $children[$item]['projectType'] = $projectType;
-                        }
-                    } else {
-                        $children[$item]['id'] = $nodeData[$item]['id'];
-                        $aname = split(":", $nodeData[$item]['id']); //TODO[Xavi] @deprecated substitur per explode()
-                        $children[$item]['name'] = $aname[$level];
-                        $children[$item]['type'] = $nodeData[$item]['type'];
-                    }
-                }
-            }
-            //print_r($children[$item]);
+        $pathProject = $metaDataPath . '/' . $dir;
+        $itemProject = $this->isProject($pathProject, 1, $metaDataExtension);
+        
+        if ($itemProject !== NULL) {
+            $children = $this->fillProjectNode($nodeData, $level, $itemProject, $onlyDirs, $hiddenProjects, $expandProject, $metaDataPath, $metaDataExtension);
+        }else {
+            $children = $this->fillNode($nodeData, $level, $onlyDirs, $hiddenProjects, $metaDataPath, $metaDataExtension);
         }
+        
+        array_unshift($children,"noname");  //Se usa para renumerar desde 0 las claves del array
+        array_shift($children);             //que se desmelenan al excluir los directorios de proyectos
 
         $tree = array(
                 'id'       => $node,
@@ -224,8 +163,131 @@ abstract class DataQuery {
                 'children' => $children
         );
 
-        //print_r($tree);
-        //print_r("\n");
         return $tree;
+    }
+
+    private function fillProjectNode($nodeData, $level, $itemProject, $onlyDirs, $hiddenProjects, $expandProject, $metaDataPath, $metaDataExtension) {
+        $children = array();
+        $projectType = $itemProject['projectType'];
+        $levelProject = $itemProject['levelProject'];
+        $isProject = TRUE;
+
+        foreach (array_keys($nodeData) as $item) {
+
+            $type = 'd';
+
+            if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
+                if ($nodeData[$item]['type'] == 'd') {
+                    if ($levelProject == $nodeData[$item]['level']) {
+                        //Determinar si és projecte
+                        $pathProject = $metaDataPath . '/' . str_replace(':', '/', $nodeData[$item]['id']);
+                        
+                        $itemProject = $this->isProject($pathProject, $nodeData[$item]['level'], $metaDataExtension);
+                        $isProject = ($itemProject !== NULL);
+
+                        if ($isProject && $hiddenProjects == FALSE) {
+                            $levelProject = $itemProject['levelProject'];
+                            $type = $itemProject['type'];
+                            $projectType = $itemProject['projectType'];
+                            $children[$item]['projectType'] = $projectType;
+                        }
+
+                        if (!$isProject || $hiddenProjects == FALSE) {
+                            $children[$item]['id'] = $nodeData[$item]['id'];
+                            $aname = explode(":", $nodeData[$item]['id']);
+                            $children[$item]['name'] = $aname[$level];
+                            $children[$item]['type'] = $type;
+                        }
+                            
+                    }else {
+                        //Subnivell de projecte - i només quan s'ha d'expadir el projecte
+                        if ($expandProject) {
+                            $children[$item]['id'] = $nodeData[$item]['id'];
+                            $aname = explode(":", $nodeData[$item]['id']);
+                            $children[$item]['name'] = $aname[$level];
+                            $children[$item]['type'] = 'pd';
+                            $children[$item]['projectType'] = $projectType;
+                        }
+                    }
+                }else {
+                    //fitxer de projecte o no
+                    if ($isProject) {
+                        if ($expandProject) {
+                            $children[$item]['id'] = $nodeData[$item]['id'];
+                            $aname = explode(":", $nodeData[$item]['id']);
+                            $children[$item]['name'] = $aname[$level];
+                            $children[$item]['type'] = 'pf';
+                            $children[$item]['projectType'] = $projectType;
+                        }
+                    }else {
+                        $children[$item]['id'] = $nodeData[$item]['id'];
+                        $aname = explode(":", $nodeData[$item]['id']); 
+                        $children[$item]['name'] = $aname[$level];
+                        $children[$item]['type'] = $nodeData[$item]['type'];
+                    }
+                }
+            }
+        }
+        return $children;
+    }
+    
+    private function fillNode($nodeData, $level, $onlyDirs, $hiddenProjects, $metaDataPath, $metaDataExtension) {
+        $children = array();
+        
+        foreach (array_keys($nodeData) as $item) {
+
+            if ($onlyDirs && $nodeData[$item]['type'] == 'd' || !$onlyDirs) {
+
+                if ($nodeData[$item]['type'] == 'd') {
+                    $type = 'd';
+                    $pathProject = $metaDataPath . '/' . str_replace(':', '/', $nodeData[$item]['id']);
+                    $itemProject = $this->isProject($pathProject, $nodeData[$item]['level'], $metaDataExtension);
+                    $isProject = ($itemProject !== NULL);
+
+                    if ($isProject && $hiddenProjects == FALSE) {
+                        $type = $itemProject['type'];
+                        $children[$item]['projectType'] = $itemProject['projectType'];
+                    }
+
+                    if (!$isProject || $hiddenProjects == FALSE) {
+                        $children[$item]['id'] = $nodeData[$item]['id'];
+                        $aname = explode(":", $nodeData[$item]['id']);
+                        $children[$item]['name'] = $aname[$level];
+                        $children[$item]['type'] = $type;
+                    }
+                            
+                } else {
+                    $children[$item]['id'] = $nodeData[$item]['id'];
+                    $aname = explode(":", $nodeData[$item]['id']); 
+                    $children[$item]['name'] = $aname[$level];
+                    $children[$item]['type'] = $nodeData[$item]['type'];
+                }
+            }
+        }
+        return $children;
+    }
+    
+    private function isProject($pathProject, $level, $metaDataExtension) {
+        if (is_dir($pathProject)) {
+            $dirProject = opendir($pathProject);
+            while ($current = readdir($dirProject)) {
+                $pathProjectOne = $pathProject . '/' . $current;
+                if (is_dir($pathProjectOne)) {
+                    $dirProjectOne = opendir($pathProjectOne);
+                    while ($currentOne = readdir($dirProjectOne)) {
+                        if (!is_dir($pathProjectOne . '/' . $currentOne)) {
+                            $fileTokens = explode(".", $currentOne);
+                            if ($fileTokens[sizeof($fileTokens) - 1] == $metaDataExtension) {
+                                //És projecte
+                                $ret['levelProject'] = $level;
+                                $ret['type'] = 'p';
+                                $ret['projectType'] = $current;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $ret;
     }
 }

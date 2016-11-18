@@ -1,13 +1,9 @@
 <?php
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once(DOKU_INC . 'inc/common.php');
-require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/WikiRenderizableDataModel.php";
+require_once(DOKU_PLUGIN . "wikiiocmodel/datamodel/WikiRenderizableDataModel.php");
 
 /**
  * Description of DokuPageModel
@@ -31,12 +27,17 @@ class DokuPageModel extends WikiRenderizableDataModel
     protected $pageDataQuery;
     protected $draftDataQuery;
     protected $lockDataQuery;
+    //JOSEP: NO CAL! Aquest atribut està a AbstractDataModel, però cal passar-li des del costructor. Elimino l'atribut i ho passo a través del cosntructor
+//    protected $persistenceEngine;
 
     public function __construct($persistenceEngine)
     {
+        parent::__construct($persistenceEngine);
         $this->pageDataQuery = $persistenceEngine->createPageDataQuery();
         $this->draftDataQuery = $persistenceEngine->createDraftDataQuery();
         $this->lockDataQuery = $persistenceEngine->createLockDataQuery();
+        //JOSEP: Això ja no cal!
+//        $this->persistenceEngine = $persistenceEngine;
     }
 
     public function init($id, $editing = NULL, $selected = NULL, $rev = null)
@@ -45,6 +46,10 @@ class DokuPageModel extends WikiRenderizableDataModel
         $this->editing = $editing;
         $this->selected = $selected;
         $this->rev = $rev;
+    }
+    
+    public function existProject($id) {
+        return $this->pageDataQuery->haveADirProject($id);
     }
 
     public function setData($toSet)
@@ -81,18 +86,14 @@ class DokuPageModel extends WikiRenderizableDataModel
         return $ret;
     }
 
-    public function getViewRawData()
-    {
-
+    public function getViewRawData() {
 
         $response['structure'] = self::getStructuredDocument($this->pageDataQuery, $this->id,
             $this->editing, $this->selected,
             $this->rev);
 
-
         // El content es necessari en si hi ha un draft structurat local o remot, en aquest punt no podem saber si caldrà el local
         $response['content'] = $this->getChunkFromStructure($response['structure'], $this->selected);
-
 
         if ($this->draftDataQuery->hasFull($this->id)) {
             // Si exiteix el esborrany complet, el tipus serà FULL_DRAFT
@@ -117,12 +118,10 @@ class DokuPageModel extends WikiRenderizableDataModel
         }
         
         //readonly si bloquejat
-
         return $response;
     }
 
-    public function getRawData()
-    {
+    public function getRawData() {
         $id = $this->id;
         $response['locked'] = checklock($id);
         $response['content'] = $this->pageDataQuery->getRaw($id, $this->rev);        
@@ -149,6 +148,15 @@ class DokuPageModel extends WikiRenderizableDataModel
     public function getRevisionList()
     {
         return $this->pageDataQuery->getRevisionList($this->id);
+    }
+    
+    //JOSEP: Per què cal això? Quí ho ha de fer servir? És necessari? 
+    //          Jo diria que no! Els dataquery haurien de ser privats dels models
+    //          Ells són els que saben fer.los servir
+    //          Els action trbellen amb els models i els models amb els dataquery
+    //JOSEP: Aquí o a WikiRenderizableDataModel, caldria crear un mètode getRawTemplate(id) que retorni el contongut cru del fitxer
+    public function getPageDataQuery() {
+        return $this->pageDataQuery;
     }
 
     public function getDraftFilename()
