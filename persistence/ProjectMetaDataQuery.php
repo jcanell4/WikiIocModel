@@ -290,7 +290,7 @@ class ProjectMetaDataQuery extends DataQuery {
         
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProjects = TRUE) {
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProjects = TRUE, $root=FALSE) {
 
         $base = WikiGlobalConfig::getConf('datadir');
 

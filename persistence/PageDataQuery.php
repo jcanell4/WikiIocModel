@@ -49,10 +49,10 @@ class PageDataQuery extends DataQuery {
      * @param type $onlyDirs
      * @return type
      */
-    public function getNsTree( $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE ) {
+    public function getNsTree( $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $root=FALSE ) {
             $base = WikiGlobalConfig::getConf('datadir');
 
-            return $this->getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs, $expandProject );
+            return $this->getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs, $expandProject, $root);
     }
         
     
