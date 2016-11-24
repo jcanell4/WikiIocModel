@@ -1,6 +1,6 @@
 <?php
 /**
- * FactoryAuthorization crea los objetos de autorización de los comandos
+ * FactoryAuthorization crea los objetos de autorización de los comandos del proyecto "documentation"
  *
  * @author Rafael Claver
  */
@@ -25,6 +25,7 @@ class FactoryAuthorization {
         
         $fileAuthorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization');
         if ($fileAuthorization === NULL) {
+            static $_AuthorizationCfg = array();
             require_once(WIKI_IOC_PROJECT_AUTH . 'FactoryAuthorizationCfg.php');
             $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg[$str_cmd], 'authorization');
             if ($fileAuthorization === NULL) {
@@ -39,11 +40,15 @@ class FactoryAuthorization {
         /* Carga el archivo correspondiente al comando.
          * buscando por el nombre en formato convencional y en formato CamelCase
          */
-        $name = $this->nameCaseFormat($str_cmd, $part2,'');
+        $name = $this->nameCaseFormat($str_cmd, $part2,'_');
         $ret = NULL;
         $authFile = WIKI_IOC_PROJECT_AUTH . "$name.php";
         if (!file_exists($authFile)) {
             $name = $this->nameCaseFormat($str_cmd, $part2,'camel');
+            $authFile = WIKI_IOC_PROJECT_AUTH . "$name.php";
+        }
+        if (!file_exists($authFile)) {
+            $name = $this->nameCaseFormat($str_cmd, $part2,'camel2');
             $authFile = WIKI_IOC_PROJECT_AUTH . "$name.php";
         }
         if (file_exists($authFile)) {
@@ -58,6 +63,9 @@ class FactoryAuthorization {
          * 'guion_bajo' o CamelCase
          */
         if ($case === 'camel') {
+            $ret = strtoupper(substr($part1, 0, 1)) . substr($part1, 1) 
+                 . strtoupper(substr($part2, 0, 1)) . substr($part2, 1);
+        }elseif ($case === 'camel2') {
             $ret = strtoupper(substr($part1, 0, 1)) . strtolower(substr($part1, 1)) 
                  . strtoupper(substr($part2, 0, 1)) . strtolower(substr($part2, 1));
         }else {
