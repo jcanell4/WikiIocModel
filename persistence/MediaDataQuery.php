@@ -28,7 +28,7 @@ class MediaDataQuery extends DataQuery{
         return mediaFN( $id, $rev );
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject=FALSE) {
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject=FALSE, $root=FALSE) {
         $base = WikiGlobalConfig::getConf('mediadir');
 
         return $this->getNsTreeFromBase( $base, $currentNode, $sortBy, $onlyDirs, $expandProject);        

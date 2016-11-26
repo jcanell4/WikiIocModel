@@ -42,7 +42,7 @@ class NotifyDataQuery extends DataQuery
         return $fileName;
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE)
+    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $root=FALSE)
     {
         throw new UnavailableMethodExecutionException("NotifyDataQuery#getNsTree");
     }

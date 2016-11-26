@@ -34,7 +34,7 @@ abstract class DataQuery {
     }
     
     public abstract function getFileName($id, $especParams=NULL);
-    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE);
+    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $root=FALSE);
 
 
     /**
@@ -86,11 +86,11 @@ abstract class DataQuery {
      * @param type $onlyDirs
      * @return string
      */
-    protected function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE ) {
-    	return $this->getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs, 'search_index', $expandProject);
+    protected function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $root=FALSE) {
+    	return $this->getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs, 'search_index', $expandProject, $root);
     }
     
-    protected function getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $function = 'search_index', $expandProject=FALSE ) {
+    protected function getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $function = 'search_index', $expandProject=FALSE, $root=false ) {
     
         $sortOptions = array( 0 => 'name', 'date' );
         $nodeData    = array();
@@ -121,7 +121,11 @@ abstract class DataQuery {
                 'sneakyacl' => $conf['sneaky_index']
             );
         }
-        $dir = str_replace(':', '/', $node);
+        if($root){
+            $dir = str_replace(':', '/', $root) . '/' . str_replace(':', '/', $node);
+        }else{
+            $dir = str_replace(':', '/', $node);
+        }
         search(
                 $nodeData, $base, $function, $opts, $dir, 1
         );
