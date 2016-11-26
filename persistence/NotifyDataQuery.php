@@ -7,7 +7,6 @@ if (!defined('DOKU_PLUGIN')) {
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
-require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 
 /**
  * Description of NotifyDataQuery
@@ -21,16 +20,15 @@ class NotifyDataQuery extends DataQuery
     const SENDER_ID = 'sender_id';
     const DATA = 'data';
     const TYPE = 'type'; // ALERT, MESSAGE, DIALOG
-    const EXPIRE = 'expire';
 
     const TYPE_ALERT = 'alert';
     const TYPE_MESSAGE = 'message';
-    const TYPE_WARNING = 'warning';
     const TYPE_DIALOG = 'dialog';
     const TYPE_RELEASED = 'released';
-    const TYPE_CANCELED_BY_REMOTE_AGENT = 'canceled_by_remote_agent';    
+    const TYPE_CANCELED_BY_REMOTE_AGENT = 'canceled_by_remote_agent';
 
     const DEFAULT_USER = 'SYSTEM';
+    const TYPE_WARNING = 'warning';
 
     // TODO[Xavi] Segons la configuració del servidor (conf wikiiocmodel) es farà servir un sistema de timers o de websockets
 
@@ -38,6 +36,7 @@ class NotifyDataQuery extends DataQuery
 
     public function getFileName($userId, $especParams = NULL)
     {
+//        $fileName = getCacheName($userId, '.blackboard');
         $fileName = $this->_notifyFN($userId);
 
         return $fileName;
@@ -49,7 +48,7 @@ class NotifyDataQuery extends DataQuery
     }
 
 
-    public function generateNotification($notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL, $expire = NULL)
+    public function generateNotification($notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
     {
 
         $notification = [];
@@ -57,14 +56,10 @@ class NotifyDataQuery extends DataQuery
             $now = new DateTime(); // id
             $id = $now->getTimestamp();
         }
-        
+
         $notification[self::NOTIFICATION_ID] = $id; // ALERTA[Xavi] Moure les constants a un altre fitxer?
         $notification[self::TYPE] = $type;
         $notification[self::DATA] = $notificationData;
-
-        if ($expire) {
-            $notification[self::EXPIRE] = $expire;
-        }
 
 
         // Si no s'ha especificat el sender s'atribueix al sistema
@@ -77,22 +72,19 @@ class NotifyDataQuery extends DataQuery
         return $notification;
     }
 
-    public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL, $expire = null)
+    public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
     {
-        $now = (new DateTime)->getTimestamp();
-
-        if ($expire > $now) {
-            // Generar la notificació
-            $message = $this->generateNotification($notificationData, $type, $id, $senderId, $expire);
 
 
-            $this->loadBlackboard($receiverId);
+        // Generar la notificació
+        $message = $this->generateNotification($notificationData, $type, $id, $senderId);
 
-            $this->blackboard[$receiverId][] = $message;
 
-            $this->saveBlackboard($receiverId);
-        }
+        $this->loadBlackboard($receiverId);
 
+        $this->blackboard[$receiverId][] = $message;
+
+        $this->saveBlackboard($receiverId);
     }
 
     public function get($userId, $deleteContent = TRUE)
@@ -104,7 +96,7 @@ class NotifyDataQuery extends DataQuery
             $this->delete($userId);
         }
 
-        // ALERTA[Xavi] codi de prova, per generar un avís del sistema que expira en 20 segons
+// ALERTA[Xavi] codi de prova, per generar un avís del sistema que expira en 20 segons
 //        $this->delete(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel')); // ALERTA[Xavi] Això només s'ha de descomentar per esborrar la pissara completament
 //        $notificationData = ['type' => self::TYPE_WARNING, 'id' => time(), 'title' => WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'), 'text'=>"Prova pel sistema d'avisos del sistema. Ha de sortir una alerta y una notificació llegida"];
 //
@@ -159,6 +151,8 @@ class NotifyDataQuery extends DataQuery
 
     }
 
+
+
     private function loadBlackboard($userId)
     {
         // Generem el nom
@@ -173,50 +167,14 @@ class NotifyDataQuery extends DataQuery
             $blackboard = [];
         }
 
-        // Establim el contingut carregat
-
-        $this->blackboard[$userId] = $this->removeTimedOutMessages($blackboard);
-
-        // Comprovem si cal actualitzar el fitxer
-        if (count($this->blackboard[$userId]) != count($blackboard)) {
-            $this->updateBlackboard($userId, $this->blackboard[$userId]);
-        }
-
+        //Establim el contingut carregat
+        $this->blackboard[$userId] = $blackboard;
     }
-
-    private function removeTimedOutMessages($messages) {
-//        $upToDateMessages = [];
-//        $now = (new DateTime())->getTimestamp();
-//
-//        foreach ($messages as $message) {
-//            if (!isset($message[self::EXPIRE]) || $message[self::EXPIRE] > $now) {
-//                $upToDateMessages[] = $message;
-//            }
-//        }
-//
-//        return $upToDateMessages;
-        return $messages;
-    }
-
 
     private function saveBlackboard($userId)
     {
         $filename = $this->getFileName($userId);
         $blackboard = $this->getBlackboard($userId);
-
-        if (count($blackboard) > 0) {
-            // Serialitzem el contingut del blackboard del usuari
-            // Desem el fitxer
-            io_saveFile($filename, serialize($blackboard));
-        } else {
-            // No hi ha res, l'esborrem
-            $this->delete($userId);
-
-        }
-    }
-
-    private function updateBlackboard($userId, $blackboard) {
-        $filename = $this->getFileName($userId);
 
         if (count($blackboard) > 0) {
             // Serialitzem el contingut del blackboard del usuari
@@ -257,3 +215,4 @@ class NotifyDataQuery extends DataQuery
         return $dir.'/'.md5(cleanID($user)).'.blackboard';
     }
 }
+
