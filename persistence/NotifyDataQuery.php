@@ -185,16 +185,17 @@ class NotifyDataQuery extends DataQuery
     }
 
     private function removeTimedOutMessages($messages) {
-        $upToDateMessages = [];
-        $now = (new DateTime())->getTimestamp();
-
-        foreach ($messages as $message) {
-            if (!isset($message[self::EXPIRE]) || $message[self::EXPIRE] > $now) {
-                $upToDateMessages[] = $message;
-            }
-        }
-
-        return $upToDateMessages;
+//        $upToDateMessages = [];
+//        $now = (new DateTime())->getTimestamp();
+//
+//        foreach ($messages as $message) {
+//            if (!isset($message[self::EXPIRE]) || $message[self::EXPIRE] > $now) {
+//                $upToDateMessages[] = $message;
+//            }
+//        }
+//
+//        return $upToDateMessages;
+        return $messages;
     }
 
 

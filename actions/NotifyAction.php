@@ -92,11 +92,11 @@ class NotifyAction extends AbstractWikiAction
                 $response = $this->init();
                 break;
 
-            case self::DO_ADD: // El usuari idUser envia una notificació, notifyToFrom(). ALERTA[Xavi] Pel que hem parlat Josep i jo, s'envia la notificació al sistema. El sistema
+            case self::DO_ADD: // El usuari idUser envia una notificació, notifyToFrom().
                 $response = $this->notifyToFrom();
                 break;
 
-            case self::DO_ADDMESS: // El usuari idUser envia una notificació, notifyToFrom(). ALERTA[Xavi] Pel que hem parlat Josep i jo, s'envia la notificació al sistema. El sistema
+            case self::DO_ADDMESS: // ALERTA[Xavi] Aquesta opció no funciona i no s'utilitza
                 $response = $this->notifyMessageToFrom();
                 break;
 
