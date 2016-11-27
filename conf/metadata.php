@@ -17,3 +17,4 @@ $meta['system_warning_message'] = ['string'];
 $meta['system_warning_show_alert'] = ['onoff'];
 $meta['system_warning_start_date'] = ['string', '_pattern' => '/\d\d-\d\d-\d\d\d\d \d\d:\d\d/'];
 $meta['system_warning_end_date'] = ['string', '_pattern' => '/\d\d-\d\d-\d\d\d\d \d\d:\d\d/'];
+$meta['system_warning_type'] = ['multichoice', '_choices' => ['error', 'warning', 'info', 'success']];

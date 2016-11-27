@@ -22,7 +22,7 @@ $conf['system_warning_title'] = '';
 $conf['system_warning_message'] = '';
 $conf['system_warning_start_date'] = '31-12-2000 00:00';
 $conf['system_warning_end_date'] = '31-12-2000 00:00';
-
+$conf['system_warning_type'] = 'warning';
 
 
 

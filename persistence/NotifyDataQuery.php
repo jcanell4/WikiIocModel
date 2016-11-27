@@ -128,6 +128,7 @@ class NotifyDataQuery extends DataQuery
                 $startDate = (new DateTime(WikiGlobalConfig::getConf('system_warning_start_date', $plugin)))->getTimestamp();
                 $endDate = (new DateTime(WikiGlobalConfig::getConf('system_warning_end_date', $plugin)))->getTimeStamp();
                 $today = (new DateTime())->getTimestamp();
+                $type = WikiGlobalConfig::getConf('system_warning_type', $plugin);
 
                 if ($startDate <= $today && $endDate > $today) {
                     $title = WikiGlobalConfig::getConf('system_warning_title', $plugin);
@@ -137,7 +138,7 @@ class NotifyDataQuery extends DataQuery
 
                     $message = WikiGlobalConfig::getConf('system_warning_message', $plugin);
                     $id = hash('md5', $title . $message);
-                    $notificationData = ['type' => self::TYPE_WARNING, 'id' => $id, 'title' => $title, 'text' => $message];
+                    $notificationData = ['type' => $type, 'id' => $id, 'title' => $title, 'text' => $message];
                     $sender = WikiGlobalConfig::getConf('system_warning_user', $plugin);
                     $notifications[] = $this->generateNotification($notificationData, self::TYPE_WARNING, $id, $sender);
                 }
