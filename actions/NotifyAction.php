@@ -85,27 +85,36 @@ class NotifyAction extends AbstractWikiAction
     {
         $option = $this->params[PageKeys::KEY_DO];
 
+        $response['notifications'] = [];
+
         switch ($option) {
 
             //TODO[Xavi] per fer proves només afegim una info amb el resultat, això ha de fer servir el propi notifier
             case self::DO_INIT: // Retorna la resposta que inicia el sistema de notificacions segons calgui: o el processNotifications o el processWebSocketClient
-                $response = $this->init();
+                $notificationInit = $this->init();
+                $response['notifications'][] = $notificationInit;
+
+                if ($notificationInit['params']['type'] == "ajax") {
+                    $response['notifications'][] = $this->popNotifications();
+
+                }
                 break;
 
             case self::DO_ADD: // El usuari idUser envia una notificació, notifyToFrom().
-                $response = $this->notifyToFrom();
+                $response['notifications'][] = $this->notifyToFrom();
+
                 break;
 
-            case self::DO_ADDMESS: // ALERTA[Xavi] Aquesta opció no funciona i no s'utilitza
-                $response = $this->notifyMessageToFrom();
-                break;
+//            case self::DO_ADDMESS: // ALERTA[Xavi] Aquesta opció no funciona i no s'utilitza
+//                $response = $this->notifyMessageToFrom();
+//                break;
 
             case self::DO_GET: // Obtenir totes les notificacions pel idUser, cridat periodicament pel timer, popNotifications()
-                $response = $this->popNotifications();
+                $response['notifications'][]= $this->popNotifications();
                 break;
 
             case self::DO_CLOSE: // Elimina totes les notificacions pendents pel usuari loginat, cridat al fer logout, close()
-                $response = $this->close();
+                $response['notifications'][] = $this->close();
                 break;
 
             default:
