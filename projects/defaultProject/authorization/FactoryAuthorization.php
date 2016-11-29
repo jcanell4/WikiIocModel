@@ -25,6 +25,7 @@ class FactoryAuthorization {
         
         $fileAuthorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization');
         if ($fileAuthorization === NULL) {
+            static $_AuthorizationCfg = array();
             require_once(WIKI_IOC_PROJECT_AUTH . 'FactoryAuthorizationCfg.php');
             $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg[$str_cmd], 'authorization');
             if ($fileAuthorization === NULL) {

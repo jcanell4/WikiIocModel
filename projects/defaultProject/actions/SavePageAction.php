@@ -49,7 +49,7 @@ class SavePageAction extends RawPageAction {
         $ID=  $this->params[PageKeys::KEY_ID];
         
         if($this->params[PageKeys::KEY_DO]==DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($ID, WikiIocLangManager::getLang('pageNotFound'));
+            throw new PageNotFoundException($ID, 'pageNotFound');
         }
 
         $ACT = act_permcheck($ACT);

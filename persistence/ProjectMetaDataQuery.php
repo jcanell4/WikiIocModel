@@ -225,4 +225,16 @@ class ProjectMetaDataQuery extends DataQuery {
         $this->makeFileDir($dir);
     }
     
+    /**
+     * Obtiene el array con los datos del proyecto
+     * @return array 
+     */
+    public function getDataProject($idResource, $projectType) {
+        $metaDataSubSet = "main";
+        $filename = $this->getProjectFileName(array('projectType'=>$projectType, 'metaDataSubSet'=>$metaDataSubSet));
+        $jArr = $this->getMeta($idResource, $projectType, $metaDataSubSet, $filename);
+        $data = json_decode($jArr, true);
+        return $data;
+    }
+    
 }

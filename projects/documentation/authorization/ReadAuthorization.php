@@ -1,7 +1,7 @@
 <?php
 /**
  * ReadAuthorization: Extensión clase Autorización para los comandos 
- * que precisan una autorización mínima de AUTH_READ
+ * que precisan una autorización mínima de AUTH_READ y que el usuario sea Autor o Responsable
  * 
  * @author Rafael Claver
  */
@@ -13,22 +13,11 @@ require_once (WIKI_IOC_PROJECT . 'authorization/PageCommandAuthorization.php');
 
 class ReadAuthorization extends PageCommandAuthorization {
 
-//    public function canRun($permission = NULL) {
-//        
-//        if ( parent::canRun($permission) && 
-//             $this->permission->getPageExist() &&
-//             $this->permission->getInfoPerm() < AUTH_READ ) 
-//        {
-//            $this->errorAuth['error'] = TRUE;
-//            $this->errorAuth['exception'] = 'InsufficientPermissionToViewPageException';
-//            $this->errorAuth['extra_param'] = $this->permission->getIdPage();
-//        }
-//        return !$this->errorAuth['error'];
-//    }
-    
-    public function getPermissionException() { // el parámetro $permission contiene lo mismo que $this->permission
+    public function getPermissionException() {
         if ($this->permission->getPageExist() && $this->permission->getInfoPerm() < AUTH_READ) {
             $exception = 'InsufficientPermissionToViewPageException';
+        }elseif (!$this->isResponsable() && !$this->isAuthor()) {
+            $exception = 'UserNotAuthorizedException';
         }
         return $exception;
     }

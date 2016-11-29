@@ -9,7 +9,8 @@ class GenerateProjectMetaDataAction extends ProjectMetadataAction {
      */
     public function get($paramsArr = array()) {
         
-        $id = str_replace("_", ":", $paramsArr[ProjectKeys::KEY_ID]);
+        //$id = str_replace("_", ":", $paramsArr[ProjectKeys::KEY_ID]);
+        $id = $paramsArr[ProjectKeys::KEY_ID];
         $projectType = $paramsArr[ProjectKeys::KEY_PROJECT_TYPE];
         
         $this->projectModel->init($id, $projectType);

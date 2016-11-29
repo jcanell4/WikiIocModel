@@ -414,9 +414,9 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         $error = $this->startMediaProcess(DW_ACT_MEDIA_DETAIL, $imageId, $fromPage);
         if ($error == 401) {
-            throw new HttpErrorCodeException($error, "Access denied");
+            throw new HttpErrorCodeException("Access denied", $error);
         } else if ($error == 404) {
-            throw new HttpErrorCodeException($error, "Resource " . $imageId . " not found.");
+            throw new HttpErrorCodeException("Resource " . $imageId . " not found.", $error);
         }
         $title = $lang['img_detail_title'] . $imageId;
         $ret = array(
@@ -1611,9 +1611,9 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
         if ($error == 401) {
-            throw new HttpErrorCodeException($error, "Access denied");
+            throw new HttpErrorCodeException("Access denied", $error);
         } else if ($error == 404) {
-            throw new HttpErrorCodeException($error, "Resource " . $image . " not found.");
+            throw new HttpErrorCodeException("Resource " . $image . " not found.", $error);
         }
         $title = $lang['img_manager'];
         $nou = trigger_event('IOC_WF_INTER', $ACT);
@@ -2354,9 +2354,9 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         $error = $this->startMediaDetails(DW_ACT_MEDIA_DETAILS, $image);
         if ($error == 401) {
-            throw new HttpErrorCodeException($error, "Access denied");
+            throw new HttpErrorCodeException("Access denied", $error);
         } else if ($error == 404) {
-            throw new HttpErrorCodeException($error, "Resource " . $image . " not found.");
+            throw new HttpErrorCodeException("Resource " . $image . " not found.", $error);
         }
         $title = $lang['img_manager'];
         $ret = array(
@@ -2373,7 +2373,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         }
         if ($MSG[0]) {
             if ($MSG[0]['lvl'] == 'error') {
-                throw new HttpErrorCodeException(404, $MSG[0]['msg']);
+                throw new HttpErrorCodeException($MSG[0]['msg'], 404);
             }
         }
         $JSINFO = array('id' => $image, 'namespace' => $NS);
@@ -2512,7 +2512,7 @@ class DokuModelAdapter extends BasicModelAdapter {
             if ($_REQUEST['tab_details']) {
                 if (!$size) {
                     $tr = ob_get_clean();
-                    throw new HttpErrorCodeException(1001, "No es poden editar les dades d'aquest element");
+                    throw new HttpErrorCodeException("No es poden editar les dades d'aquest element", 1001);
                 } else {
                     if ($_REQUEST['tab_details'] == 'edit') {
                         //$this->params['id'] = "form_".$image;

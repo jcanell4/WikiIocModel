@@ -9,7 +9,7 @@ if (!defined("DOKU_INC")) die();   //****** ANULADO ****** //
 //class projectClassCfg {
 //
 //    const DEF = DOKU_INC.'lib/plugins/wikiiocmodel/projects/defaultProject/';
-//    static $defClassDir = array (
+//    static $defDirClass = array (
 //                             "Action" => array (
 //                                            projectClassCfg::DEF."actions"
 //                                           ,projectClassCfg::DEF."actions/extra"
@@ -27,8 +27,8 @@ if (!defined("DOKU_INC")) die();   //****** ANULADO ****** //
 //                             ,"DokuModelManager" => projectClassCfg::DEF."DokuModelManager.php"
 //                           );
 //    
-//    public function getDefaultClassDir($name) {
-//        return projectClassCfg::$defClassDir[$name];
+//    public function getDefaultDirClass($name) {
+//        return projectClassCfg::$defDirClass[$name];
 //    }
 //
 //    public function getDefaultMainClass() {

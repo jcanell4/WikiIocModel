@@ -48,3 +48,23 @@ $lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari
         . "Vols que t'avisem quan es desbloquegi aquest document?\n"
         . "Això enviarà una notificació a %s indicant que t'interessa editar el document %s i que l'alliberi l'abans possible.\n"
         . "Activem la notificació?";
+
+//Excepciones del proyecto 'defaultProject'
+$lang['pageExist'] = 'The page %s already exists';
+$lang['commandAuthorizationNotFound'] = 'Command authorization not found';
+$lang['cantCreatePageInProject'] = 'No pots crear una pàgina en aquest projecte';
+$lang[''] = '';
+$lang[''] = '';
+$lang[''] = '';
+
+//Excepciones del proyecto 'documentation'
+$lang['projectException']['projectExist'] = 'The project %s already exist';
+$lang['projectException']['projectNotExist'] = 'The project %s not already exist';
+$lang['projectException']['unknown'] = 'Unknown project exception';
+$lang['projectException']['userNotAuthorized'] = 'Vosté no té permís a %s';
+$lang['projectException']['authorNotVerified'] = 'Vosté no té permís a %s';
+$lang['projectException']['responsableNotVerified'] = 'Vosté no té permís a %s';
+$lang['projectException']['insufficientPermissionToEditProject'] = 'Vosté no té permís per editar aquest projecte %s';
+$lang['projectException']['insufficientPermissionToCreateProject'] = 'Vosté no té permís per crear el projecte %s aquí';
+$lang['projectException']['insufficientPermissionToDeleteProject'] = 'Vosté no té permís per eliminar el projecte %s';
+$lang['projectException']['insufficientPermissionToGenerateProject'] = 'Vosté no té permís per generar el projecte %s';

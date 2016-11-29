@@ -18,15 +18,13 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
         parent::__construct($params);
     }
 
-    public function canRun() {  // el parámetro $permission contiene lo mismo que $this->permission
+    public function canRun() {
         if ( parent::canRun() ) { 
-            if (!$this->permission->getIsMyOwnNs()) {
-                $exception = $this->getPermissionException($this->permission);
-                if ($exception) {
-                    $this->errorAuth['error'] = TRUE;
-                    $this->errorAuth['exception'] = $exception;
-                    $this->errorAuth['extra_param'] = $this->permission->getIdPage();
-                }
+            $exception = $this->getPermissionException($this->permission);
+            if ($exception) {
+                $this->errorAuth['error'] = TRUE;
+                $this->errorAuth['exception'] = $exception;
+                $this->errorAuth['extra_param'] = $this->permission->getIdPage();
             }
         }
         return !$this->errorAuth['error'];
@@ -35,20 +33,6 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
     public function setPermission($command) {
         parent::setPermission($command);
         $this->permission->setPageExist(WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS));
-        $this->permission->setIsMyOwnNs($this->isMyOwnNs($this->permission->getIdPage(), WikiIocInfoManager::getInfo('client')));
-    }
-
-    public function isMyOwnNs($page, $user) {
-        $namespace = substr($page, 0, strrpos($page, ":"));
-        $user_name = substr($namespace, strrpos($namespace, ":") + 1);
-        $userpage_ns = ":" . $namespace;
-        $ret = (WikiIocInfoManager::getInfo('namespace') == $namespace
-                && $user_name == $user
-                && WikiGlobalConfig::getConf('userpage_allowed', 'wikiiocmodel') === 1
-                && ($userpage_ns == WikiGlobalConfig::getConf('userpage_ns', 'wikiiocmodel') . $user ||
-                    $userpage_ns == WikiGlobalConfig::getConf('userpage_discuss_ns', 'wikiiocmodel') . $user)
-                );
-        return $ret;
     }
     
     protected abstract function getPermissionException();

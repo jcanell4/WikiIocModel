@@ -12,34 +12,43 @@ require_once (WIKI_IOC_MODEL . 'AbstractPermission.php');
 class Permission extends AbstractPermission {
     
     private $info_perm;
+    private $author;
+    private $responsable;
     private $pageExist;
-    private $isMyOwnNs;
     
     public function getInfoPerm() {
         return $this->info_perm;
     }
   
-    public function setInfoPerm($info_perm) {
-        $this->info_perm = $info_perm;
+    public function getAuthor() {
+        return $this->author;
+    }
+
+    public function getResponsable() {
+        return $this->responsable;
+    }
+
+    public function getPageExist() {
+        return $this->pageExist;
     }
   
     public function isReadOnly(){
         return ($this->getInfoPerm() < AUTH_EDIT);
     }
     
-    public function getPageExist() {
-        return $this->pageExist;
+    public function setInfoPerm($info_perm) {
+        $this->info_perm = $info_perm;
     }
   
+    public function setAuthor($author) {
+        $this->author = $author;
+    }
+
+    public function setResponsable($responsable) {
+        $this->responsable = $responsable;
+    }
+
     public function setPageExist($pageExist) {
         $this->pageExist = $pageExist;
-    }
-
-    public function getIsMyOwnNs() {
-        return $this->isMyOwnNs;
-    }
-
-    public function setIsMyOwnNs($isMyOwnNs) {
-        $this->isMyOwnNs = $isMyOwnNs;
     }
 }

@@ -17,26 +17,26 @@ abstract class AbstractCommandAuthorization {
                              ,'exception' => ''
                              ,'extra_param' => ''
                            );
+    /**
+     * getPermissionInstance: Devuelve una nueva instancia de la clase Permission
+     */
+    abstract protected function getPermissionInstance();
     
     public function __construct() {}
-    
-    /* 
+
+    /**
      * Responde a la pregunta: ¿los permisos permiten la ejecución del comando?
      * @return bool. Indica si se han obtenido, o no, los permisos generales
      */
     public function canRun() {
-                            
-        $this->errorAuth = array(
-                              'error' => FALSE
-                             ,'exception' => ''
-                             ,'extra_param' => ''
-                           );
+        $this->errorAuth['error'] = FALSE;
+        $this->errorAuth['exception'] =  '';
+        $this->errorAuth['extra_param'] = '';
         
         if ($this->permission->getAuthenticatedUsersOnly()) {
             if (($this->errorAuth['error'] = !$this->permission->getSecurityTokenVerified())){
                 $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
             } else { 
-                // getSecurityTokenVerified = OK!
                 if (($this->errorAuth['error'] = !$this->permission->getUserAuthenticated())) {
                     $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
                 } else {
@@ -49,14 +49,6 @@ abstract class AbstractCommandAuthorization {
         return !$this->errorAuth['error'];
     }
     
-    public function setPermission($command) {
-        WikiIocInfoManager::setIsMediaAction($command->getNeedMediaInfo());
-        WikiIocInfoManager::setParams($command->getParams());
-        if ($this->permission === NULL) {
-            $this->createPermission($command);
-        }
-    }
-
     public function getPermission() {
         return $this->permission;
     }
@@ -65,10 +57,17 @@ abstract class AbstractCommandAuthorization {
         return $this->errorAuth[$key];
     }
     
-    private function createPermission($command) {
-        $permis = new Permission($this);
-        $this->permission = &$permis;
-        
+    public function setPermission($command) {
+        WikiIocInfoManager::setIsMediaAction($command->getNeedMediaInfo());
+        WikiIocInfoManager::setParams($command->getParams());
+        if ($this->permission === NULL) {
+            $this->_createPermission($command);
+        }
+    }
+
+    private function _createPermission($command) {
+        $this->permission = $this->getPermissionInstance();
+    
         $this->permission->setPermissionFor($command->getPermissionFor());
         $this->permission->setAuthenticatedUsersOnly($command->getAuthenticatedUsersOnly());
         $this->permission->setSecurityTokenVerified($this->isSecurityTokenVerified());

@@ -7,8 +7,8 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
     public function get($paramsArr = array()) {
         $this->projectModel->init($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
 
-        //sólo se ejecuta si no existe el proyecto
-        if (!$this->projectModel->existProject($paramsArr[ProjectKeys::KEY_ID])) {
+        //sólo se ejecuta si existe el proyecto
+        if ($this->projectModel->existProject($paramsArr[ProjectKeys::KEY_ID])) {
             
             $metaDataValues = $this->recullFormulari($paramsArr);
             
@@ -16,7 +16,7 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                 ProjectKeys::KEY_PROJECT_TYPE => $paramsArr[ProjectKeys::KEY_PROJECT_TYPE], //opcional
                 ProjectKeys::KEY_METADATA_SUBSET => self::defaultSubSet,
-                ProjectKeys::KEY_ID_RESOURCE => $paramsArr[ProjectKeys::KEY_NS], //[TODO Rafa] Jooools! la ruta no está en ID, está en NS
+                ProjectKeys::KEY_ID_RESOURCE => $paramsArr[ProjectKeys::KEY_ID],
                 ProjectKeys::KEY_FILTER => $paramsArr[ProjectKeys::KEY_FILTER],  //opcional
                 ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
             ];

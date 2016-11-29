@@ -7,18 +7,29 @@
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
-if (!defined('DOKU_IOC_PROJECT')) define('DOKU_IOC_PROJECT', WIKI_IOC_MODEL . "projects/documentation/");
-if (!defined('DOKU_IOC_DEFAULT_PROJECT')) define('DOKU_IOC_DEFAULT_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/documentation/");
 
 require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 require_once(WIKI_IOC_MODEL . 'WikiIocModelManager.php');
 require_once(WIKI_IOC_MODEL . 'metadata/MetaDataService.php');
 //Las siguientes includes son para Clases específicas y exclusivas de este proyecto
 require_once(WIKI_IOC_MODEL . 'BasicModelAdapter.php');
-require_once(DOKU_IOC_PROJECT . 'DocumentationModelExceptions.php');
+require_once(WIKI_IOC_PROJECT . 'DocumentationModelExceptions.php');
 
 class DokuModelManager extends WikiIocModelManager{
     
+    const DEF = WIKI_IOC_MODEL;
+    const PRJ = WIKI_IOC_PROJECT;
+    static $defDirClass = array (
+                //"Authorization" => array(self::DEF."authorization")
+                //,"Action" => se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
+                //,"Model" =>  se anula porque los ficheros de esta clase NO están en un directorio ajeno a este proyecto
+           );
+    static $defMainClass = array(
+                "DokuModelAdapter" => self::DEF."BasicModelAdapter.php",
+                "FactoryAuthorization" => self::PRJ."authorization/FactoryAuthorization.php"
+           );
+
     public function __construct() {}
 
     public function getAuthorizationManager($str_command, $params) {
@@ -30,22 +41,11 @@ class DokuModelManager extends WikiIocModelManager{
         return (new \BasicModelAdapter())->init(new \BasicPersistenceEngine());
     }
 
-    const DEF = DOKU_IOC_DEFAULT_PROJECT;
-    static $defClassDir = array (
-                "Authorization" => array (DokuModelManager::DEF."authorization")
-                //,"Action" => los ficheros de estas clases NO están en directorios ajenos a este proyecto
-                //,"Model" =>  los ficheros de estas clases NO están en directorios ajenos a este proyecto
-           );
-
-    static $defMainClass = array(
-               "FactoryAuthorization" => DokuModelManager::DEF."authorization/FactoryAuthorization.php"
-           );
-
-    public static function getDefaultClassDir($name) {
-        return DokuModelManager::$defClassDir[$name];
+    public static function getDefaultDirClass($name) {
+        return self::$defDirClass[$name];
     }
 
     public static function getDefaultMainClass() {
-        return DokuModelManager::$defMainClass;
+        return self::$defMainClass;
     }
 }

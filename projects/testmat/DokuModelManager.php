@@ -7,15 +7,15 @@
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
-if (!defined('DOKU_IOC_DEFAULT_PROJECT')) define('DOKU_IOC_DEFAULT_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
-if (!defined('DOKU_IOC_PROJECT')) define('DOKU_IOC_PROJECT', WIKI_IOC_MODEL . "projects/testmat/");
+if (!defined('WIKI_IOC_DEFAULT_PROJECT')) define('WIKI_IOC_DEFAULT_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/testmat/");
 
 require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 require_once(WIKI_IOC_MODEL . 'WikiIocModelManager.php');
 require_once(WIKI_IOC_MODEL . 'metadata/MetaDataService.php');
-require_once(DOKU_IOC_PROJECT . 'TestmatModelExceptions.php');
 //Las siguientes includes son para Clases específicas y exclusivas de este proyecto
-require_once(DOKU_IOC_PROJECT . 'TestmatModelAdapter.php');
+require_once(WIKI_IOC_PROJECT . 'TestmatModelAdapter.php');
+require_once(WIKI_IOC_PROJECT . 'TestmatModelExceptions.php');
 
 class DokuModelManager extends WikiIocModelManager{
     
@@ -30,9 +30,9 @@ class DokuModelManager extends WikiIocModelManager{
         return (new \TestmatModelAdapter())->init(new \BasicPersistenceEngine());
     }
 
-    const PRJ = DOKU_IOC_PROJECT;
-    const DEF = DOKU_IOC_DEFAULT_PROJECT;
-    static $defClassDir = array (
+    const PRJ = WIKI_IOC_PROJECT;
+    const DEF = WIKI_IOC_DEFAULT_PROJECT;
+    static $defDirClass = array (
                 "Authorization" => array (
                         DokuModelManager::DEF."authorization"
                 )
@@ -41,12 +41,12 @@ class DokuModelManager extends WikiIocModelManager{
            );
 
     static $defMainClass = array(
+               "TestmatModelAdapter" => DokuModelManager::PRJ."TestmatModelAdapter.php",
                "FactoryAuthorization" => DokuModelManager::DEF."authorization/FactoryAuthorization.php"
-               //"TestmatModelAdapter" => DokuModelManager::PRJ."TestmatModelAdapter.php"
            );
 
-    public static function getDefaultClassDir($name) {
-        return DokuModelManager::$defClassDir[$name];
+    public static function getDefaultDirClass($name) {
+        return DokuModelManager::$defDirClass[$name];
     }
 
     public static function getDefaultMainClass() {

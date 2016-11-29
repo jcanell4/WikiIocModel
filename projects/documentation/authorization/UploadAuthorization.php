@@ -1,7 +1,7 @@
 <?php
 /**
  * UploadAuthorization: Extensión clase Autorización para los comandos 
- * que precisan una autorización mínima de AUTH_UPLOAD
+ * que precisan una autorización mínima de AUTH_UPLOAD y que el usuario sea Autor o Responsable
  * 
  * @author Rafael Claver
  */
@@ -14,9 +14,15 @@ require_once (WIKI_IOC_PROJECT . 'authorization/CommandAuthorization.php');
 class UploadAuthorization extends CommandAuthorization {
 
     public function canRun() {
-        if ( parent::canRun() && $this->permission->getInfoPerm() < AUTH_UPLOAD) {
-            $this->errorAuth['error'] = TRUE;
-            $this->errorAuth['exception'] = 'InsufficientPermissionToUploadMediaException';
+        if (parent::canRun()) {
+            if ($this->permission->getInfoPerm() < AUTH_UPLOAD) {
+                $this->errorAuth['error'] = TRUE;
+                $this->errorAuth['exception'] = 'InsufficientPermissionToUploadMediaException';
+            }
+            elseif (!$this->isResponsable() && !$this->isAuthor()) {
+                $this->errorAuth['error'] = TRUE;
+                $this->errorAuth['exception'] = 'UserNotAuthorizedException';
+            }
         }
         return !$this->errorAuth['error'];        
     }

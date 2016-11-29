@@ -67,9 +67,9 @@ class WikiIocInfoManager {
 
 	$INFO = pageinfo();
         self::updateJsInfo();
-        if ($INFO['isadmin'])
+        if ($INFO['isadmin'] && !in_array('admin', $INFO['userinfo']['grps']))
             $INFO['userinfo']['grps'][] = 'admin';
-        if ($INFO['ismanager'])
+        if ($INFO['ismanager'] && in_array('manager', $INFO['userinfo']['grps']))
             $INFO['userinfo']['grps'][] = 'manager';
         
 	self::$infoLoaded = TRUE;
@@ -81,6 +81,8 @@ class WikiIocInfoManager {
         
 	$JSINFO['isadmin']   = $INFO['isadmin'];
 	$JSINFO['ismanager'] = $INFO['ismanager'];
+        if (in_array('projectmanager', $INFO['userinfo']['grps']))
+            $JSINFO['isprojectmanager'] = TRUE;
     }
     
     public static function setParams($params){
