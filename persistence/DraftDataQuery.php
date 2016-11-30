@@ -32,7 +32,7 @@ class DraftDataQuery extends DataQuery
         return $this->getFilename($id) . '.structured';
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject=FALSE, $root=FALSE)
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE)
     {
         throw new UnavailableMethodExecutionException("DraftDataQuery#getNsTree");
     }

@@ -33,7 +33,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         return $this->projectType;
     }
 
-    function getmetaDataSubSet() {
+    function getMetaDataSubSet() {
         return $this->metaDataSubSet;
     }
 
@@ -45,11 +45,15 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         return $this->MetaDataValue;
     }
 
+    function getMetaDataStructure() {
+        return $this->metaDataStructure;
+    }
+
     function setProjectType($projectType) {
         $this->projectType = $projectType;
     }
 
-    function setmetaDataSubSet($metaDataSubSet) {
+    function setMetaDataSubSet($metaDataSubSet) {
         $this->metaDataSubSet = $metaDataSubSet;
     }
 
@@ -59,10 +63,6 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
 
     function setMetaDataValue($MetaDataValue) {
         $this->MetaDataValue = $MetaDataValue;
-    }
-
-    function getMetaDataStructure() {
-        return $this->metaDataStructure;
     }
 
     function setMetaDataStructure($metaDataStructure) {
@@ -206,38 +206,15 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
     public function updateMetaDataValue($paramMetaDataValue) {
 
         $arraymd = json_decode($this->MetaDataValue, true);
-//        print_r("\n START arraydv arraydv");
-//        print_r($arraymd);
-//        print_r("\n END arraydv arraydv");
         $arraypi = json_decode($paramMetaDataValue, true);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new MalFormedJSON();
         }
-
+        //Amplía el array de MetaDataValue con las nuevas propiedades contenidas en $paramMetaDataValue
         foreach ($arraypi as $keypi => $valuepi) {
-            $arraymd[$keypi] = $arraypi[$keypi];
+            $arraymd[$keypi] = $valuepi;
         }
-        $encoder = new JSON();
-        $this->setMetaDataValue($encoder->encode($arraymd));
-//        print_r("\n START arraydva arraydva");
-//        print_r($this->MetaDataValue);
-//        print_r("\n END arraydva arraydva");
-        /*
-         * CheckStructure
-         */
-        //$arraypi = json_decode($paramMetaDataValue, true); //no cal que vinguin totes les dades si és una actualització
-        $arraypi = json_decode($this->MetaDataValue, true);
-        $allValues = $this->__checkStructure($arraypi);
-//        print_r("\n START arraypi arraypi");
-//        print_r($arraypi);
-//        print_r("\n END arraypi arraypi");
-        if (!$allValues) {
-            throw new NotAllEntityValidateProperties();
-        }
-        $allValues = $this->__checkValues($arrayEntryKeys);
-        if (!$allValues) {
-            throw new NotAllEntityValidateProperties();
-        }
+        $this->setMetaDataValue(json_encode($arraymd));
     }
 
     /**
@@ -288,54 +265,21 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      */
     public function __checkStructure($arraypi) {
         $arrayst = json_decode($this->metaDataStructure, true);
-
-//        print_r("\n START arrayst arrayst \n");
-//        print_r($arrayst);
-//        print_r("\n END arrayst arrayst \n");
-//        print_r("\n START arrayst1 arrayst1 \n");
-//        print_r($arraypi);
-//        print_r("\n END arrayst1 arrayst1 \n");
         $validate = false;
         foreach ($arrayst as $keyst => $valuest) {
-//            print_r("\n START arraystin arraystin \n");
-//            print_r($keyst);
-//            print_r("\n");
-//            print_r($valuest);
-//            print_r("\n END arraystin arraystin \n");
             $validate = false;
             $found = false;
             foreach ($arraypi as $keypi => $valuepi) {
-//                print_r("\n START arraystin1 arraystin1 \n");
-//                print_r($keypi);
-//                print_r("\n");
-//                print_r($valuepi);
-//                print_r("\n END arraystin1 arraystin1 \n");
                 if ($keyst == $keypi) {
-//                    print_r("\n START arraystin2 arraystin2 \n");
-//                    print_r($keypi);
-//                    print_r("\n");
-//                    print_r($valuepi);
-//                    print_r("\n END arraystin2 arraystin2 \n");
                     $found = true;
                     if (isset($valuest['tipus'])) {
-
-                        $typeValuepi =gettype($valuepi);
-                        $typeTipus = $valuest['tipus'];
-
-                        if (gettype($valuepi) == $valuest['tipus']) {
-                            $validate = true;
-                        }
+                        $validate = (gettype($valuepi) == $valuest['tipus']);
                     } else {
                         $validate = true;
                     }
                     break;
                 }
             }
-//            print_r("\n START arraystin3 arraystin3 \n");
-//            print_r(!$found);
-//            print_r("\n");
-//            print_r(!$valuest['mandatory']);
-//            print_r("\n END arraystin3 arraystin3 \n");
             if (!$found && !$valuest['mandatory']) {
                 $validate = true;
             }

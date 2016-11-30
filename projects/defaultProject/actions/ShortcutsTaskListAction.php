@@ -36,14 +36,12 @@ class ShortcutsTaskListAction extends HtmlPageAction {
     }
 
 
-    /** @override */
-    public function get(/*Array*/
-        $paramsArr = [])
-    {
-        $this->dokuPageModel->init($paramsArr['id']);
-        return parent::get($paramsArr);
-
-    }
+//    /** @override */
+//    public function get(/*Array*/$paramsArr = []){
+//        $this->dokuPageModel->init($paramsArr['id']);  //JOSEP: [TO DO] Xavi, les inicialitzacions van a startProcess!
+//        return parent::get($paramsArr);
+//
+//    }
 
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la 
@@ -58,20 +56,21 @@ class ShortcutsTaskListAction extends HtmlPageAction {
             $data = $this->getModel()->getData();
             $ret = $this->getCommonPage("TAB Dreceres", WikiIocLangManager::getLang('tab_shortcuts'), $data['structure']['html']);
         } else {
-            return ['content' => null];
+//            return ['content' => null];
+            return FALSE;
         }
 
         return $ret;
     }
 
-
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet fer assignacions a les variables globals de la
-     * wiki a partir dels valors de DokuAction#params.
-     */
-    protected function startProcess()
-    {
-        // TODO: Implement startProcess() method.
-    }
+//
+//    /**
+//     * És un mètode per sobrescriure. Per defecte no fa res, però la
+//     * sobrescriptura permet fer assignacions a les variables globals de la
+//     * wiki a partir dels valors de DokuAction#params.
+//     */
+//    protected function startProcess()
+//    {
+//        // TODO: Implement startProcess() method.
+//    }
 }

@@ -7,6 +7,7 @@ if (!defined('DOKU_PLUGIN')) {
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
+require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 
 /**
  * Description of NotifyDataQuery
@@ -42,7 +43,7 @@ class NotifyDataQuery extends DataQuery
         return $fileName;
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $root=FALSE)
+    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE)
     {
         throw new UnavailableMethodExecutionException("NotifyDataQuery#getNsTree");
     }

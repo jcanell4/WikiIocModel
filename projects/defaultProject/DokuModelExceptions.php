@@ -127,15 +127,8 @@ class InsufficientPermissionToUploadMediaException extends WikiIocModelException
     }
 }
 
-class MaxSizeExcededToUploadMediaException extends WikiIocModelException
-{
-//    public function __construct($page, $message="You don't have enough permission to create page %s.", $code=1005, $previous=NULL) {
-    public function __construct($codeMessage = 'auth_UploadMedia', $code = 1012, $previous = NULL)
-    {
-        if(!$codeMessage){
-            $codeMessage = sprintf(WikiIocLangManager::getLang('uploadsize'), 
-                    filesize_h(php_to_byte(ini_get('upload_max_filesize'))));            
-        }
+class CantCreatePageInProjectException extends WikiIocModelException {
+    public function __construct($codeMessage = "Can't Create Page In Project", $code = 1012, $previous = NULL) {
         parent::__construct($codeMessage, $code, $previous);
     }
 }
@@ -145,5 +138,18 @@ class FailToUploadMediaException extends WikiIocModelException
     public function __construct($errorCode, $codeMessage = 'uploadfail', $code = 1013, $previous = NULL)
     {
         parent::__construct($codeMessage, $code, $previous, $errorCode);
+    }
+}
+
+class MaxSizeExcededToUploadMediaException extends WikiIocModelException
+{
+//    public function __construct($page, $message="You don't have enough permission to create page %s.", $code=1005, $previous=NULL) {
+    public function __construct($codeMessage = 'auth_UploadMedia', $code = 1014, $previous = NULL)
+    {
+        if(!$codeMessage){
+            $codeMessage = sprintf(WikiIocLangManager::getLang('uploadsize'), 
+                    filesize_h(php_to_byte(ini_get('upload_max_filesize'))));            
+        }
+        parent::__construct($codeMessage, $code, $previous);
     }
 }

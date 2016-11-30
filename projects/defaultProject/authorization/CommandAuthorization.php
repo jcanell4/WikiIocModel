@@ -6,19 +6,19 @@
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . 'projects/defaultProject/');
 
 require_once (DOKU_INC . 'inc/common.php');
 require_once (DOKU_INC . 'inc/auth.php');
 require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 require_once (WIKI_IOC_MODEL . 'AbstractCommandAuthorization.php');
+require_once (WIKI_IOC_PROJECT . 'DokuModelExceptions.php');
+require_once (WIKI_IOC_PROJECT . 'authorization/Permission.php');
 
 class CommandAuthorization extends AbstractCommandAuthorization {
 
-    //protected $modelWrapper;    //está pendiente separar completamente el DokuModelAdapter de la Autorización
-
-    public function __construct(/*$params*/) {
+    public function __construct() {
         parent::__construct();
-        //$this->modelWrapper = $params->getModelWrapper();
     }
 
     /* pendent de convertir a private quan no l'utilitzi ajax.php(duplicat) ni login_command */
