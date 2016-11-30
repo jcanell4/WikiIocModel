@@ -7,9 +7,10 @@
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
 
 require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
-require_once (WIKI_IOC_MODEL . 'projects/defaultProject/authorization/CommandAuthorization.php');
+require_once (WIKI_IOC_PROJECT . 'authorization/CommandAuthorization.php');
 
 abstract class PageCommandAuthorization extends CommandAuthorization {
 
@@ -18,7 +19,7 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
     }
 
     public function canRun() {  // el parámetro $permission contiene lo mismo que $this->permission
-        if ( parent::canRun() ) {
+        if ( parent::canRun() ) { 
             if (!$this->permission->getIsMyOwnNs()) {
                 $exception = $this->getPermissionException($this->permission);
                 if ($exception) {

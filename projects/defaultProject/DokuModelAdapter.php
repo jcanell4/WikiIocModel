@@ -23,10 +23,9 @@ require_once(DOKU_INC . 'inc/io.php');
 require_once(DOKU_INC . 'inc/JSON.php');
 require_once(DOKU_INC . 'inc/JpegMeta.php');
 
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
-require_once(DOKU_PLUGIN . 'wikiiocmodel/AbstractModelAdapter.php');
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+
+require_once(DOKU_PLUGIN . 'wikiiocmodel/BasicModelAdapter.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocInfoManager.php');
 require_once(DOKU_PLUGIN . 'ownInit/WikiGlobalConfig.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/PermissionPageForUserManager.php');
@@ -124,24 +123,12 @@ if (!defined('DW_ACT_MEDIA_DETAILS')) {
  * Class DokuModelAdapter
  * Adaptador per passar les nostres comandes a la Dokuwiki.
  */
-class DokuModelAdapter extends AbstractModelAdapter
-{
+class DokuModelAdapter extends BasicModelAdapter {
     const ADMIN_PERMISSION = "admin";
-
-    /**
-     * @var BasicPersistenceEngine
-     */
-    protected $persistenceEngine;
 
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
-
-    public function init($persistenceEngine)
-    {
-        $this->persistenceEngine = $persistenceEngine;
-        return $this;
-    }
 
     /**
      * Crida principal de la comanda admin_task.
@@ -185,12 +172,12 @@ class DokuModelAdapter extends AbstractModelAdapter
         $this->params[$element] = $value;
     }
 
-    // ës la crida principal de la comanda new_page
-    public function createPage($pars)
-    {
-        $action = new CreatePageAction($this->persistenceEngine);
-        return $action->get($pars);
-    }
+//    // ës la crida principal de la comanda new_page -->> Ha ido a parar a DokuPageModel
+//    public function createPage($pars)
+//    {
+//        $action = new CreatePageAction($this->persistenceEngine);
+//        return $action->get($pars);
+//    }
 
 
     /**
@@ -204,8 +191,6 @@ class DokuModelAdapter extends AbstractModelAdapter
      */
     public function getHtmlPage($pars)
     {
-
-
         if (!$pars[PageKeys::KEY_REV]) {
 //            return $this->getPartialPage($pid, $prev, null, null, null);
             $action = new HtmlPageAction($this->persistenceEngine);
@@ -505,10 +490,13 @@ class DokuModelAdapter extends AbstractModelAdapter
      * @param type $onlyDirs
      * @return type
      */
-    public function getNsTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE)
+    public function getNsTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $fromRoot=FALSE)
     {
         $dataQuery = $this->persistenceEngine->createPageDataQuery();
-        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject);
+        if($fromRoot){
+            $root=$fromRoot;
+        }
+        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects, $root);
     }
 
     /**
@@ -1457,13 +1445,6 @@ class DokuModelAdapter extends AbstractModelAdapter
         return $ret;
     }
 
-    public function getJsInfo()
-    {
-        global $JSINFO;
-        WikiIocInfoManager::loadInfo();
-        return $JSINFO;
-    }
-
     public function getToolbarIds(&$value)
     {
         $value["varName"] = "toolbar";
@@ -2122,10 +2103,10 @@ class DokuModelAdapter extends AbstractModelAdapter
     }
 
     //És la crida principal de la comanda ns_mediatree_rest
-    public function getNsMediaTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE)
+    public function getNsMediaTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE)
     {
         $dataQuery = $this->persistenceEngine->createMediaDataQuery();
-        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject);
+        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects);
     }
 
     /**
