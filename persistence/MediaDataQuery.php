@@ -128,7 +128,7 @@ class MediaDataQuery extends DataQuery{
             $res = NULL; //(0=OK, -1=UNAUTHORIZED, -2=OVER_WRITING_NOT_ALLOWED,
             //-3=OVER_WRITING_UNAUTHORIZED, -5=FAILS, -4=WRONG_PARAMS
             //-6=BAD_CONTENT, -7=SPAM_CONTENT, -8=XSS_CONTENT)
-            $auth = auth_quickaclcheck( getNS( $idTarget ) . ":*" );
+            $auth = auth_quickaclcheck( $nsTarget . ":*" );
 
             if ( $auth >= AUTH_UPLOAD ) {
                     io_createNamespace( "$nsTarget:xxx", 'media' ); //TODO [Josep] Canviar el literal media pel valor de la configuració (mediadir?)
