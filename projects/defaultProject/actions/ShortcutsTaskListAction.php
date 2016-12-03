@@ -23,7 +23,8 @@ require_once WikiGlobalConfig::tplIncDir()."conf/cfgIdConstants.php";
  * @author josep
  */
 class ShortcutsTaskListAction extends HtmlPageAction {
-
+    private $shortcutExist;
+    
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la 
      * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles 
@@ -32,7 +33,10 @@ class ShortcutsTaskListAction extends HtmlPageAction {
      */
     protected function runProcess(){
         global $ACT;
-        $ACT = act_permcheck( $ACT );
+        $this->shortcutExist = $this->getModel()->pageExists();
+        if($this->shortcutExist){
+            $ACT = act_permcheck( $ACT );
+        }
     }
 
 
@@ -50,14 +54,12 @@ class ShortcutsTaskListAction extends HtmlPageAction {
      * DokuAction#response.
      */
     protected function responseProcess(){
-//        $data = $this->getModel()->getRawData(); // ALERTA[Xavi] Es una estructura, s'ha de mirar si hi ha cap action que recuperi el document sencer
-
-        if ($this->getModel()->pageExists()) {
+        if ($this->shortcutExist) {
             $data = $this->getModel()->getData();
             $ret = $this->getCommonPage("TAB Dreceres", WikiIocLangManager::getLang('tab_shortcuts'), $data['structure']['html']);
         } else {
-//            return ['content' => null];
-            return FALSE;
+            return ['content' => null];
+//            return FALSE;
         }
 
         return $ret;

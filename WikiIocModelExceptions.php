@@ -24,7 +24,7 @@ abstract class WikiIocModelException extends Exception {
 
 class HttpErrorCodeException extends WikiIocModelException
 {
-    public function __construct($code, $message = "", $previous = NULL) {
+    public function __construct($message, $code, $previous = NULL) {
         parent::__construct($message, $code, $previous);
     }
 }

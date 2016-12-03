@@ -75,10 +75,10 @@ class DeleteMediaAction extends MediaAction{
 
     protected function runProcess() {             
         if (auth_quickaclcheck( getNS( $this->params[MediaKeys::KEY_IMAGE_ID] ) . ":*" )< AUTH_DELETE) {
-            throw new HttpErrorCodeException(401, "Access denied");
+            throw new HttpErrorCodeException("Access denied", 401);
         }
         if(!$this->dokuModel->exist()){
-            throw new HttpErrorCodeException(404, "Resource " . $this->params[MediaKeys::KEY_IMAGE_ID]  . " not found.");
+            throw new HttpErrorCodeException("Resource " . $this->params[MediaKeys::KEY_IMAGE_ID]  . " not found.", 404);
         }
         $this->actionReturn = $this->dokuModel->delete();
     }
