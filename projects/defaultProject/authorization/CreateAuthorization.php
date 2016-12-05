@@ -13,15 +13,6 @@ require_once (WIKI_IOC_PROJECT . 'authorization/PageCommandAuthorization.php');
 
 class CreateAuthorization extends PageCommandAuthorization {
 
-//    public function canRun($permission = NULL) {
-//        if ( parent::canRun($permission) && $this->permission->getInfoPerm() < AUTH_CREATE) {
-//            $this->errorAuth['error'] = TRUE;
-//            $this->errorAuth['exception'] = 'InsufficientPermissionToCreatePageException';
-//            $this->errorAuth['extra_param'] = $this->permission->getIdPage();
-//        }
-//        return !$this->errorAuth['error'];
-//    }
-    
     public function getPermissionException() {
         if ($this->permission->getInfoPerm() < AUTH_CREATE) {
             $exception = 'InsufficientPermissionToCreatePageException';

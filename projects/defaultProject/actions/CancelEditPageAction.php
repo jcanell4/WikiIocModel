@@ -99,7 +99,7 @@ class CancelEditPageAction extends PageAction implements ResourceUnlockerInterfa
         //unlock($this->params[PageKeys::KEY_ID]);
 
         if (!WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($this->params[PageKeys::KEY_ID], WikiIocLangManager::getLang('pageNotFound'));
+            throw new PageNotFoundException($this->params[PageKeys::KEY_ID], 'pageNotFound');
         }
     }
 

@@ -21,12 +21,12 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         parent::__construct();
     }
 
-    /* pendent de convertir a private quan no l'utilitzi ajax.php(duplicat) ni login_command */
-    public function isUserAuthenticated() {
-        global $_SERVER;
-        return $_SERVER['REMOTE_USER'] ? TRUE : FALSE;
+    protected function getPermissionInstance() {
+        $permis = new Permission($this);
+        $ret = &$permis;
+        return $ret;
     }
-    
+
     public function setPermission($command) {
         parent::setPermission($command);
         $this->permission->setIdPage($command->getParams('id'));
@@ -36,6 +36,12 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
     }
 
+    /* pendent de convertir a private quan no l'utilitzi ajax.php(duplicat) ni login_command */
+    public function isUserAuthenticated() {
+        global $_SERVER;
+        return $_SERVER['REMOTE_USER'] ? TRUE : FALSE;
+    }
+    
     /**
      * Comproba si el token de seguretat està verificat, fent servir una funció de la DokuWiki.
      * @return bool

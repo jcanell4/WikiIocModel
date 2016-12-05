@@ -78,7 +78,7 @@ class DeleteMediaAction extends MediaAction{
             throw new HttpErrorCodeException("Access denied", 401);
         }
         if(!$this->dokuModel->exist()){
-            throw new HttpErrorCodeException("Resource " . $this->params[MediaKeys::KEY_IMAGE_ID]  . " not found.", 404);
+            throw new HttpErrorCodeException("Resource " . $this->params[MediaKeys::KEY_IMAGE_ID] . " not found.", 404);
         }
         $this->actionReturn = $this->dokuModel->delete();
     }

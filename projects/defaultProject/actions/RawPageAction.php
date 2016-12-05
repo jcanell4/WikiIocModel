@@ -80,7 +80,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
     protected function runProcess()
     {
         if (!WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS)) {
-            throw new PageNotFoundException($this->params[PageKeys::KEY_ID], WikiIocLangManager::getLang('pageNotFound'));
+            throw new PageNotFoundException($this->params[PageKeys::KEY_ID], 'pageNotFound');
         }
 
         $ACT = act_permcheck($this->params[PageKeys::KEY_ID]);

@@ -20,32 +20,17 @@ require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataExceptions.php');
  * TO DO ##mlozan54@xtec.cat MDC020 @@advisable  @@BEGIN
  *  - Aquesta classe podria actuar com a cache amb temps per buidar $ClassesNameSpaces
  */
-/*
- * TO DO ##mlozan54@xtec.cat MDC020 @@advisable  @@END
- */
-
-/*
- * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
- *      Elements necessaris per a la crida efectiva al component de PERSISTÈNCIA
- *      require_once, ...
- */
-//require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/persistencesimul/PersistenceSimul.php');
-/*
- * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
- */
 
 class MetaDataDaoConfig {
     /*
      * Constant to define key to obtain metadad configuration from Persistence
      */
-
     protected static $CONFIGUSUBSET = "metaDataClassesNameSpaces";
     protected static $CONFIGUSUBSETST = "metaDataProjectStructure";
 
     /*
      * Array bidimensional containing 
-     * projectType => array(
-     *                      metaDataSubset => JSON class:ns)
+     * projectType => array(metaDataSubset => JSON class:ns)
      */
     private static $ClassesNameSpaces = array();
 
@@ -77,15 +62,7 @@ class MetaDataDaoConfig {
             }
         }
         if (!$exists) {
-            //Call PERSISTENCE method
-            /*
-             * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
-             *      crida efectiva al mètode concret de la persistència
-             */
             $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, $configSubSet);
-            /*
-             * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
-             */
 
             $encoder = new JSON();
             $arrayConfigPre = $encoder->decode($jSONArray, true);
@@ -117,16 +94,7 @@ class MetaDataDaoConfig {
         if ($configSubSet == null) {
             $configSubSet = self::$CONFIGUSUBSETST;
         }
-
-        //Call PERSISTENCE method
-        /*
-         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
-         *      crida efectiva al mètode concret de la persistència
-         */
         $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, $configSubSet);
-        /*
-         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
-         */
 
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray, true);
@@ -134,7 +102,6 @@ class MetaDataDaoConfig {
             throw new MalFormedJSON();
         }
 
-        $arrayConfig = array();
         $arrayConfigPre = get_object_vars($arrayConfigPre);
         return reset($arrayConfigPre);
     }
@@ -144,16 +111,7 @@ class MetaDataDaoConfig {
         if ($configSubSet == null) {
             $configSubSet = self::$CONFIGUSUBSETST;
         }
-
-        //Call PERSISTENCE method
-        /*
-         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
-         *      crida efectiva al mètode concret de la persistència
-         */
         $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, $configSubSet);
-        /*
-         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
-         */
 
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray, true);
@@ -161,7 +119,6 @@ class MetaDataDaoConfig {
             throw new MalFormedJSON();
         }
 
-        $arrayConfig = array();
         $arrayConfigPre = get_object_vars($arrayConfigPre);
         return $encoder->encode($arrayConfigPre[$type]);
     }
@@ -197,17 +154,11 @@ class MetaDataDaoConfig {
      * @return {ns:projectType,...,ns:projectType}
      */
     public static function getMetaDataElementsKey($nsRoot, $persistence) {
-        //Call PERSISTENCE method
-        /*
-         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@BEGIN
-         *      crida efectiva al mètode concret de la persistència
-         */
+
         $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataElementsKey($nsRoot);
-        /*
-         * TO DO ##mlozan54@xtec.cat MDC010 @@mandatori @@END 
-         */
+
         $encoder = new JSON();
-        $arrayConfigPre = $encoder->decode($jSONArray);
+        $tmp = $encoder->decode($jSONArray);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new MalFormedJSON();
         }

@@ -51,7 +51,7 @@ class CreatePageAction extends SavePageAction {
 
     protected function runProcess() {
         if (WikiIocInfoManager::getInfo("exists")) {
-            throw new PageAlreadyExistsException($this->params[PageKeys::KEY_ID], WikiIocLangManager::getlang('pageExists'));
+            throw new PageAlreadyExistsException($this->params[PageKeys::KEY_ID], 'pageExists');
         }
         parent::runProcess();
     }

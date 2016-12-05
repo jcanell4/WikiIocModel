@@ -5,6 +5,7 @@
  * @author josep
  */
 abstract class AbstractWikiDataModel {
+    
     protected $persistenceEngine;
     
     public function __construct($persistenceEngine) {
