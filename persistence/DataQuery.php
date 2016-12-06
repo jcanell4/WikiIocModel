@@ -85,7 +85,7 @@ abstract class DataQuery {
     * @param type $filePath
     */
     public function makeFileDir( $filePath ) {
-           io_makeFileDir( $filePath );
+        io_makeFileDir( $filePath );
     }
     
     /**
@@ -135,14 +135,15 @@ abstract class DataQuery {
             return array( 'id' => "", 'name' => $name, 'type' => $type );
         }
         if ( $currentnode ) {
-                $node  = $currentnode;
-                $aname = split( ":", $currentnode );
+                $node  =  $currentnode;
+                $aname = split( ":", $node );
                 $level = count( $aname );
                 $name  = $aname[ $level - 1 ];
         } else {
-                $node  = '';
+                $node  = $root?$root:"";
+                $aname = split( ":", $node );
+                $level = $root?count( $aname ):0;
                 $name  = $root?$root:"";
-                $level = 0;
         }
         $sort = $sortOptions[ $sortBy ];
 
@@ -157,7 +158,7 @@ abstract class DataQuery {
             );
         }
         $dir = str_replace(':', '/', $node);
-        search($nodeData,  $base.'/'.str_replace(':', '/', $root), $function, $opts, $dir, 1);
+        search($nodeData,  $base, $function, $opts, $dir, $level);
 
 //        $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
 //        $metaDataExtension = WikiGlobalConfig::getConf('mdextension');

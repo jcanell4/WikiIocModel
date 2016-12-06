@@ -123,7 +123,7 @@ class ProjectMetaDataQuery extends DataQuery {
         $success = $this->setMeta($idResource, $projectType, $metaDataSubSet, $filename, json_encode($sysValue));
         return $success;
     }
-
+    
     // Retorn --> JSON
     public function getMeta($idResource, $projectType, $metaDataSubSet, $filename) {
 
@@ -215,7 +215,6 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProjects = TRUE, $hiddenProjects=FALSE, $root=FALSE) {
-
         $base = WikiGlobalConfig::getConf('datadir');
         return $this->getNsTreeFromGenericSearch($base, $currentNode, $sortBy, $onlyDirs, 'search_universal', $expandProjects, $hiddenProjects, $root);
     }

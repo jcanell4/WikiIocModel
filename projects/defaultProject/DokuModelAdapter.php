@@ -36,7 +36,6 @@ require_once(DOKU_PLUGIN . 'acl/admin.php');
 // TODO[Xavi] Afegit per mi per extreure la funcionalitat dels locks a una altra classe
 require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
-
 //require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskAction.php');
 //require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskListAction.php');
 //require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RefreshEditionAction.php');
@@ -53,47 +52,22 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
 //require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/DraftPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/actions/NotifyAction.php');
 
-
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
 require_once(DOKU_PLUGIN . 'ajaxcommand/requestparams/PageKeys.php');
 
-if (!defined('DW_DEFAULT_PAGE')) {
-    define('DW_DEFAULT_PAGE', "start");
-}
-if (!defined('DW_ACT_SHOW')) {
-    define('DW_ACT_SHOW', "show");
-}
-if (!defined('DW_ACT_DRAFTDEL')) {
-    define('DW_ACT_DRAFTDEL', "draftdel");
-}
-if (!defined('DW_ACT_SAVE')) {
-    define('DW_ACT_SAVE', "save");
-}
-if (!defined('DW_ACT_EDIT')) {
-    define('DW_ACT_EDIT', "edit");
-}
-if (!defined('DW_ACT_PREVIEW')) {
-    define('DW_ACT_PREVIEW', "preview");
-}
-if (!defined('DW_ACT_RECOVER')) {
-    define('DW_ACT_RECOVER', "recover");
-}
-if (!defined('DW_ACT_DENIED')) {
-    define('DW_ACT_DENIED', "denied");
-}
-if (!defined('DW_ACT_MEDIA_DETAIL')) {
-    define('DW_ACT_MEDIA_DETAIL', "media_detail");
-}
-if (!defined('DW_ACT_MEDIA_MANAGER')) {
-    define('DW_ACT_MEDIA_MANAGER', "media");
-}
-if (!defined('DW_ACT_EXPORT_ADMIN')) {
-    define('DW_ACT_EXPORT_ADMIN', "admin");
-}
-if (!defined('DW_ACT_MEDIA_DETAILS')) {
-    define('DW_ACT_MEDIA_DETAILS', "mediadetails");
-}
+if (!defined('DW_DEFAULT_PAGE'))      define('DW_DEFAULT_PAGE', "start");
+if (!defined('DW_ACT_SHOW'))          define('DW_ACT_SHOW', "show");
+if (!defined('DW_ACT_DRAFTDEL'))      define('DW_ACT_DRAFTDEL', "draftdel");
+if (!defined('DW_ACT_SAVE'))          define('DW_ACT_SAVE', "save");
+if (!defined('DW_ACT_EDIT'))          define('DW_ACT_EDIT', "edit");
+if (!defined('DW_ACT_PREVIEW'))       define('DW_ACT_PREVIEW', "preview");
+if (!defined('DW_ACT_RECOVER'))       define('DW_ACT_RECOVER', "recover");
+if (!defined('DW_ACT_DENIED'))        define('DW_ACT_DENIED', "denied");
+if (!defined('DW_ACT_MEDIA_DETAIL'))  define('DW_ACT_MEDIA_DETAIL', "media_detail");
+if (!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
+if (!defined('DW_ACT_EXPORT_ADMIN'))  define('DW_ACT_EXPORT_ADMIN', "admin");
+if (!defined('DW_ACT_MEDIA_DETAILS')) define('DW_ACT_MEDIA_DETAILS', "mediadetails");
 
 //    const DW_ACT_BACKLINK="backlink";
 //    const DW_ACT_REVISIONS="revisions";
@@ -167,6 +141,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $action->get($params);
     }
 
+    //JOSEP: ALERTA! cal mirar si es fa servir i eliminar en cas negatiu.
     public function setParams($element, $value)
     {
         $this->params[$element] = $value;
@@ -212,13 +187,9 @@ class DokuModelAdapter extends BasicModelAdapter {
 //        }
 //
 //        $this->doFormatedPartialPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-//
 //        $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
-//
 //        $revisionInfo = p_locale_xhtml('showrev'); //[ALERTA Josep] Cal crear una classe WikiMessageManager (similar a WikiInfoManager) que es pugui fer servir en comptes de la variable global $lang
-//
 //        $response['structure']['html'] = str_replace($revisionInfo, '', $response['structure']['html']);
-//
 //
 //        // Si no s'ha especificat cap altre missatge mostrem el de carrega
 //        if (!$response['info']) {
@@ -227,17 +198,14 @@ class DokuModelAdapter extends BasicModelAdapter {
 //            $this->addInfoToInfo($response['warning'], $this->generateInfo("info", strip_tags($revisionInfo)));
 //        }
 //
-//
 //        // TODO: afegir el 'meta' que correspongui
 //        $response['meta'] = $this->getMetaResponse($pid);
 //
 //        // TODO: afegir les revisions
 //        $response['revs'] = $this->getRevisions($pid);
 //
-//
 //        return $response;
     }
-    
     
 
     /**
@@ -304,9 +272,7 @@ class DokuModelAdapter extends BasicModelAdapter {
 //        $this->doCancelEditPreprocess($pid, $keep_draft);    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
 //
 //        $response = $this->getFormatedPageResponse();
-//
 //        $response ['info'] = $this->generateInfo("warning", $lang['edition_cancelled']);
-//
 //        $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
 //        $response['meta'] = $this->getMetaResponse($pid);
 //        $response['revs'] = $this->getRevisions($pid);

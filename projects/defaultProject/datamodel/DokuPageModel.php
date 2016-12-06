@@ -27,6 +27,8 @@ class DokuPageModel extends WikiRenderizableDataModel
     protected $pageDataQuery;
     protected $draftDataQuery;
     protected $lockDataQuery;
+    //JOSEP: NO CAL! Aquest atribut està a AbstractDataModel, però cal passar-li des del costructor. Elimino l'atribut i ho passo a través del cosntructor
+//    protected $persistenceEngine;
 
     public function __construct($persistenceEngine)
     {
@@ -34,6 +36,8 @@ class DokuPageModel extends WikiRenderizableDataModel
         $this->pageDataQuery = $persistenceEngine->createPageDataQuery();
         $this->draftDataQuery = $persistenceEngine->createDraftDataQuery();
         $this->lockDataQuery = $persistenceEngine->createLockDataQuery();
+        //JOSEP: Això ja no cal!
+//        $this->persistenceEngine = $persistenceEngine;
     }
 
     public function init($id, $editing = NULL, $selected = NULL, $rev = null)
@@ -144,6 +148,15 @@ class DokuPageModel extends WikiRenderizableDataModel
     public function getRevisionList()
     {
         return $this->pageDataQuery->getRevisionList($this->id);
+    }
+    
+    //JOSEP: Per què cal això? Quí ho ha de fer servir? És necessari? 
+    //          Jo diria que no! Els dataquery haurien de ser privats dels models
+    //          Ells són els que saben fer.los servir
+    //          Els action trbellen amb els models i els models amb els dataquery
+    //JOSEP: Aquí o a WikiRenderizableDataModel, caldria crear un mètode getRawTemplate(id) que retorni el contongut cru del fitxer
+    public function getPageDataQuery() {
+        return $this->pageDataQuery;
     }
 
     public function getDraftFilename()

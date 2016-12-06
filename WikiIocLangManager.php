@@ -3,6 +3,7 @@
 if (! defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN'))    define("DOKU_PLUGIN", DOKU_INC."lib/plugins/");
 
+require_once (DOKU_INC . 'inc/pageutils.php');
 require_once (DOKU_INC . 'inc/parserutils.php');
 require_once (DOKU_PLUGIN . 'ownInit/WikiGlobalConfig.php');
 
@@ -19,6 +20,37 @@ class WikiIocLangManager {
     
     public static function getXhtml($key){
         return p_locale_xhtml($key);
+    }
+    
+    public static function isTemplate($key){
+        return page_exists($key);
+    }
+    
+    public static function getXhtmlTemplate($key){
+        $ret = "";
+        $file = wikiFN($key);
+        if(file_exists($file)){
+            $ret = p_cached_output($file,'xhtml',$key);
+        }
+        return $ret;
+    }
+    
+    public static function getRawTemplate($key){
+        $ret = "";
+        $file = wikiFN($key);
+        if(file_exists($file)){
+            $ret = rawWiki($key);
+        }
+        return $ret;
+    }
+    
+    public static function isXhtmlKey($key){
+        return file_exists(localeFN($key));
+    }
+    
+    public static function isKey($key, $plugin=""){
+        $value = self::getLang($key, $plugin);
+        return $value!==$key;
     }
     
     public static function getLang($key, $plugin=""){
@@ -61,6 +93,7 @@ class WikiIocLangManager {
                     //cause non translated stuff is still existing as English array value)
                     include WikiGlobalConfig::tplIncDir() . "/lang/" . WikiGlobalConfig::getConf("lang") . "/lang.php";
             }
+            include DOKU_PLUGIN . "wikiiocmodel/lang/en/lang.php";;
             if ( ! empty( WikiGlobalConfig::getConf("lang") ) &&
                  WikiGlobalConfig::getConf("lang") !== "en" &&
                  file_exists( DOKU_PLUGIN . "wikiiocmodel/lang/" . WikiGlobalConfig::getConf("lang") . "/lang.php" )

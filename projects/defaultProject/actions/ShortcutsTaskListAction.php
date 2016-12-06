@@ -34,9 +34,6 @@ class ShortcutsTaskListAction extends HtmlPageAction {
     protected function runProcess(){
         global $ACT;
         $this->shortcutExist = $this->getModel()->pageExists();
-        if($this->shortcutExist){
-            $ACT = act_permcheck( $ACT );
-        }
     }
 
 
