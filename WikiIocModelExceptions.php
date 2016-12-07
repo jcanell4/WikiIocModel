@@ -73,7 +73,7 @@ class UnexpectedLockCodeException extends WikiIocModelException {
  */
 abstract class WikiIocProjectException extends Exception {
     public function __construct($codeMessage, $code, $target=NULL) {
-        $message = WikiIocLangManager::getLang($codeMessage, 'projectException');
+        $message = WikiIocLangManager::getLang('projectException')[$codeMessage];
         if ($message == NULL) {
             $message = $codeMessage;
         }
