@@ -15,9 +15,9 @@ class UploadAuthorization extends CommandAuthorization {
 
     public function canRun() {
         if ( parent::canRun() && $this->permission->getInfoPerm() < AUTH_UPLOAD) {
-            $this->errorAuth['error'] = TRUE;
-            $this->errorAuth['exception'] = 'InsufficientPermissionToUploadMediaException';
+            $this->errorAuth[self::ERROR_KEY] = TRUE;
+            $this->errorAuth[self::EXCEPTION_KEY] = 'InsufficientPermissionToUploadMediaException';
         }
-        return !$this->errorAuth['error'];        
+        return !$this->errorAuth[self::ERROR_KEY];        
     }
 }
