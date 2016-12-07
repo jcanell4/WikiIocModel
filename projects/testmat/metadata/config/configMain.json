@@ -14,37 +14,45 @@
       "keysDefinition": {
         "title": {
           "mandatory": false,
-          "tipus": "string"
+          "tipus": "string",
+          "default": ""
         },
         "blocs": {
           "mandatory": false,
           "tipus": "array",
-          "itemsType": "bloc"
+          "default": "",
+          "itemsType": "bloc",
+          "vista": "tree"
         },
         "modul": {
           "mandatory": true,
-          "tipus": "string"
+          "tipus": "string",
+          "default": ""
         },
         "coordinador": {
           "mandatory": true,
-          "tipus": "string"
+          "tipus": "string",
+          "default": ""
         }
       },
       "typesDefinition": {
         "bloc": {
           "tipus": "array",
-          "itemsType": "unitat"
+          "itemsType": "unitat",
+          "default": ""
         },
         "unitat": {
           "tipus": "object",
           "keys": {
             "title": {
               "mandatory": false,
-              "tipus": "string"
+              "tipus": "string",
+              "default": ""
             },
             "autor": {
               "mandatory": false,
-              "tipus": "string"
+              "tipus": "string",
+              "default": ""
             },
             "apartats": {
               "mandatory": true,

@@ -21,7 +21,8 @@ class CreateProjectMetaDataAction extends ProjectMetadataAction {
                 "responsable" => $_SERVER['REMOTE_USER'],
                 "titol" => $paramsArr[ProjectKeys::KEY_ID],
                 "autor" => $_SERVER['REMOTE_USER'],
-                "plantilla" => "plantilles:projects:continguts"
+                "plantilla" => "plantilles:projects:continguts",
+                "descripció" => "descripció del projecte"
             ];
 
             $metaData = [
