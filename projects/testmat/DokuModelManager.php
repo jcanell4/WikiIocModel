@@ -6,18 +6,32 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
-if (!defined('WIKI_IOC_DEFAULT_PROJECT')) define('WIKI_IOC_DEFAULT_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
-define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/testmat/");
+define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
+define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
 
-require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 require_once(WIKI_IOC_MODEL . 'WikiIocModelManager.php');
+require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 require_once(WIKI_IOC_MODEL . 'metadata/MetaDataService.php');
 //Las siguientes includes son para Clases específicas y exclusivas de este proyecto
-require_once(WIKI_IOC_PROJECT . 'TestmatModelAdapter.php');
-require_once(WIKI_IOC_PROJECT . 'TestmatModelExceptions.php');
+require_once(WIKI_IOC_PROJECTS . 'testmat/TestmatModelAdapter.php');
+require_once(WIKI_IOC_PROJECTS . 'testmat/TestmatModelExceptions.php');
 
 class DokuModelManager extends WikiIocModelManager{
+
+    const PRJ = WIKI_IOC_PROJECTS . 'testmat/';
+    const DEF = WIKI_IOC_PROJECTS . 'documentation/';
+    
+    static $defDirClass = array (
+                "Authorization" => array (
+                                        self::DEF."authorization"
+                                   )
+                //"Action" => los ficheros de estas clases no están en directorios ajenos a este proyecto
+                //"Model" =>  los ficheros de estas clases no están en directorios ajenos a este proyecto
+           );
+    static $defMainClass = array(
+               "TestmatModelAdapter" => self::PRJ."TestmatModelAdapter.php",
+               "FactoryAuthorization" => self::DEF."authorization/FactoryAuthorization.php"
+           );
     
     public function __construct() {}
 
@@ -30,23 +44,8 @@ class DokuModelManager extends WikiIocModelManager{
         return (new \TestmatModelAdapter())->init(new \BasicPersistenceEngine());
     }
 
-    const PRJ = WIKI_IOC_PROJECT;
-    const DEF = WIKI_IOC_DEFAULT_PROJECT;
-    static $defDirClass = array (
-                "Authorization" => array (
-                        DokuModelManager::DEF."authorization"
-                )
-                //"Action" => los ficheros de estas clases no están en directorios ajenos a este proyecto
-                //"Model" =>  los ficheros de estas clases no están en directorios ajenos a este proyecto
-           );
-
-    static $defMainClass = array(
-               "TestmatModelAdapter" => DokuModelManager::PRJ."TestmatModelAdapter.php",
-               "FactoryAuthorization" => DokuModelManager::DEF."authorization/FactoryAuthorization.php"
-           );
-
     public static function getDefaultDirClass($name) {
-        return DokuModelManager::$defDirClass[$name];
+        return self::$defDirClass[$name];
     }
 
     public static function getDefaultMainClass() {

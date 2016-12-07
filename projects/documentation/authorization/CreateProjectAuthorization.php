@@ -6,10 +6,10 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-define('WIKI_IOC_PROJECT', DOKU_INC . "lib/plugins/wikiiocmodel/projects/documentation/");
+define('WIKI_IOC_PROJECTS', DOKU_INC . "lib/plugins/wikiiocmodel/projects/");
 
 require_once (DOKU_INC . 'inc/auth.php');
-require_once (WIKI_IOC_PROJECT . 'authorization/CommandAuthorization.php');
+require_once (WIKI_IOC_PROJECTS . 'documentation/authorization/CommandAuthorization.php');
 
 class CreateProjectAuthorization extends CommandAuthorization {
 
@@ -20,8 +20,6 @@ class CreateProjectAuthorization extends CommandAuthorization {
                 $this->errorAuth['exception'] = 'InsufficientPermissionToCreateProjectException';
                 $this->errorAuth['extra_param'] = $this->permission->getIdPage();
             }else {
-//                $grups = $this->permission->getUserGroups();
-//                if (!in_array("projectmanager", $grups) && !in_array("admin", $grups)) {
                 if (!$this->isUserGroup(array("projectmanager","admin"))) {
                     $this->errorAuth['error'] = TRUE;
                     $this->errorAuth['exception'] = 'UserNotAuthorizedException';

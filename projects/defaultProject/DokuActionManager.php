@@ -1,17 +1,18 @@
 <?php
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-define('WIKI_IOC_PROJECT', DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/');
-if (!defined('WIKI_IOC_ACTIONS')) define('WIKI_IOC_ACTIONS', WIKI_IOC_PROJECT . 'actions/');
+if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', DOKU_PLUGIN . 'wikiiocmodel/projects/');
 
 require_once DOKU_PLUGIN . "wikiiocmodel/AbstractActionManager.php";
-require_once WIKI_IOC_PROJECT . "DokuExtraAction.php";
+require_once WIKI_IOC_PROJECTS . "defaultProject/DokuExtraAction.php";
 
 /**
  * Description: Recoge el conjunto de arrays de parámetros de las acciones extra
  * @author culpable Rafa
  */
 abstract class DokuActionManager extends AbstractActionManager{
+    
+    const EXTRA_ACTIONS = WIKI_IOC_PROJECTS . 'defaultProject/actions/extra/';
 
     /**
      * Construye un array que contiene las definiciones y parámetros de las acciones no comunes
@@ -34,7 +35,7 @@ abstract class DokuActionManager extends AbstractActionManager{
     }
     
     public static function getURLUpdateViewHandler() {
-        return DOKU_URL . WIKI_IOC_ACTIONS . 'extra/UpdateViewHandler.js';
+        return DOKU_URL . self::EXTRA_ACTIONS . 'UpdateViewHandler.js';
     }
     
     /**
@@ -70,7 +71,7 @@ abstract class DokuActionManager extends AbstractActionManager{
      * @return array Llista de classes dels arxius corresponents a les "accions/extra"
      */
     private static function getListOfExtraActions() {
-        $path = WIKI_IOC_ACTIONS . 'extra/';
+        $path = self::EXTRA_ACTIONS;
         if (($rdir = opendir($path))) {
             while (false !== ($file = readdir($rdir))){
                 if (strrchr($file, '.')=='.php' && filetype($path . $file) == 'file') {

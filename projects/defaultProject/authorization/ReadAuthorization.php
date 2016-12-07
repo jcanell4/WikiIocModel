@@ -6,10 +6,9 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-define('WIKI_IOC_PROJECT', DOKU_INC . "lib/plugins/wikiiocmodel/projects/defaultProject/");
 
 require_once (DOKU_INC . 'inc/auth.php');
-require_once (WIKI_IOC_PROJECT . 'authorization/PageCommandAuthorization.php');
+require_once (DOKU_INC . 'lib/plugins/wikiiocmodel/projects/defaultProject/authorization/PageCommandAuthorization.php');
 
 class ReadAuthorization extends PageCommandAuthorization {
 
