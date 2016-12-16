@@ -62,10 +62,11 @@ class ProjectModel extends AbstractWikiDataModel /*WikiRenderizableDataModel*/ {
         ];
 
         $meta = $this->metaDataService->getMeta($query)[0];
-
         $ret['projectMetaData']['values'] = $meta['values'];
         $ret['projectMetaData']['structure'] = $meta['structure']; //inclou els valors
 
+        $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->projectType, "defaultView");
+        
         return $ret;
     }
     

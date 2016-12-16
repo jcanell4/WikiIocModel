@@ -8,14 +8,14 @@ if (!defined('DOKU_INC') ) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
 
 require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
+require_once (WIKI_IOC_MODEL . 'AuthorizationKeys.php');
 
-abstract class AbstractCommandAuthorization {
-
+abstract class AbstractCommandAuthorization implements AuthorizationKeys{
     protected $permission;
     protected $errorAuth = array(
-                              'error' => TRUE
-                             ,'exception' => ''
-                             ,'extra_param' => ''
+                              self::ERROR_KEY => TRUE
+                             ,self::EXCEPTION_KEY => ''
+                             ,self::ERROR_PARAMS_KEY => ''
                            );
     /**
      * getPermissionInstance: Devuelve una nueva instancia de la clase Permission
@@ -29,24 +29,24 @@ abstract class AbstractCommandAuthorization {
      * @return bool. Indica si se han obtenido, o no, los permisos generales
      */
     public function canRun() {
-        $this->errorAuth['error'] = FALSE;
-        $this->errorAuth['exception'] =  '';
-        $this->errorAuth['extra_param'] = '';
+        $this->errorAuth[self::ERROR_KEY] = FALSE;
+        $this->errorAuth[self::EXCEPTION_KEY] =  '';
+        $this->errorAuth[self::EXCEPTION_KEY] = '';
         
         if ($this->permission->getAuthenticatedUsersOnly()) {
-            if (($this->errorAuth['error'] = !$this->permission->getSecurityTokenVerified())){
-                $this->errorAuth['exception'] = 'AuthorizationNotTokenVerified';
+            if (($this->errorAuth[self::ERROR_KEY] = !$this->permission->getSecurityTokenVerified())){
+                $this->errorAuth[self::EXCEPTION_KEY] = 'AuthorizationNotTokenVerified';
             } else { 
-                if (($this->errorAuth['error'] = !$this->permission->getUserAuthenticated())) {
-                    $this->errorAuth['exception'] = 'AuthorizationNotUserAuthenticated';
+                if (($this->errorAuth[self::ERROR_KEY] = !$this->permission->getUserAuthenticated())) {
+                    $this->errorAuth[self::EXCEPTION_KEY] = 'AuthorizationNotUserAuthenticated';
                 } else {
-                    if (($this->errorAuth['error'] = !$this->isCommandAllowed())){
-                        $this->errorAuth['exception'] = 'AuthorizationNotCommandAllowed';
+                    if (($this->errorAuth[self::ERROR_KEY] = !$this->isCommandAllowed())){
+                        $this->errorAuth[self::EXCEPTION_KEY] = 'AuthorizationNotCommandAllowed';
                     }
                 }
             }
         }
-        return !$this->errorAuth['error'];
+        return !$this->errorAuth[self::ERROR_KEY];
     }
     
     public function getPermission() {

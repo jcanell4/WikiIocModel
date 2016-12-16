@@ -113,3 +113,9 @@ class InsufficientPermissionToDeletePageException extends WikiIocProjectExceptio
         parent::__construct($codeMessage, $code, $page);
     }
 }
+
+class UnknownPojectTypeException extends WikiIocProjectException {
+    public function __construct($page, $codeMessage='UnknownPojectType', $code=7006) {
+        parent::__construct($codeMessage, $code, $page);
+    }
+}

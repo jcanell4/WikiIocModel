@@ -36,7 +36,7 @@ $lang['lockedByAlert'] = "El document està bloquejat per altre usuari";
 $lang['lockedByTitle'] = "Document bloquejat";
 $lang['BtnReadOnly'] = "Només lectura";
 $lang['BtnRequireLock'] = "Demanar el bloqueig";
-$lang['alreadyLocked'] = "Teniu obert aquest document en una altra màquina o en una alytre sessió. Per poder-lo editar tanque-lo prèviement.";
+$lang['alreadyLocked'] = "Teniu obert aquest document en una altra màquina o en una altre sessió. Per poder-lo editar tanqueu-lo prèviement.";
 $lang['documentRequired'] = "%d usuari(s) requereix(en) el document %s. Si no el necessites, si us plau, tanca la edició.";
 $lang['documentUnrequired'] = "Actualment, ja ningú necessita el document %s.";
 $lang['documentUnlocked'] = "El document %s ha sigut alliberat. Cancela la edició i torna a editar per accedir";
@@ -49,6 +49,16 @@ $lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari
         . "Això enviarà una notificació a %s indicant que t'interessa editar el document %s i que l'alliberi l'abans possible.\n"
         . "Activem la notificació?";
 
+$lang['tab_shortcuts'] = "Dreceres";
+
+// Avisos del sistema
+$lang['system_warning_default_title'] = 'Avís del sistema';
+
+// Plantilles
+$lang['template:shortcuts'] = "Nou document de dreceres.\n\n"
+    . "Per afegir dreceres a documents o espais de noms, afegir enllaços al document o a l'espai de noms, seguint la sintaxi wiki. Per exemple:\n\n"
+    . "[[wiki:user:|El meu espai]]\n\n"
+    . "[[wiki:navigation|Drecera a la documentació de la wiki]]";
 //Excepciones del proyecto 'defaultProject'
 $lang['pageExist'] = 'The page %s already exists';
 $lang['commandAuthorizationNotFound'] = 'Command authorization not found';

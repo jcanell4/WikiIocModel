@@ -125,6 +125,23 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $action->get();
     }
 
+    public function getShortcutsTaskList($user_id)
+    {
+        $action = new ShortcutsTaskListAction($this->persistenceEngine);
+//        $user = WikiIocInfoManager::getInfo("userinfo");
+
+        if (!$user_id) {
+            throw new Exception("No es troba capusuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
+        } else {
+            $params = ['id' => 'wiki:user:' . $user_id . ':dreceres']; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
+        }
+
+
+
+        return $action->get($params);
+    }
+
+    //JOSEP: ALERTA! cal mirar si es fa servir i eliminar en cas negatiu.
     public function setParams($element, $value)
     {
         $this->params[$element] = $value;
@@ -439,10 +456,13 @@ class DokuModelAdapter extends BasicModelAdapter {
      * @param type $onlyDirs
      * @return type
      */
-    public function getNsTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE)
+    public function getNsTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $fromRoot=FALSE)
     {
         $dataQuery = $this->persistenceEngine->createPageDataQuery();
-        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects);
+        if($fromRoot){
+            $root=$fromRoot;
+        }
+        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects, $root);
     }
 
     /**
@@ -2512,7 +2532,7 @@ class DokuModelAdapter extends BasicModelAdapter {
             if ($_REQUEST['tab_details']) {
                 if (!$size) {
                     $tr = ob_get_clean();
-                    throw new HttpErrorCodeException("No es poden editar les dades d'aquest element", 1001);
+                    throw new HttpErrorCodeException( "No es poden editar les dades d'aquest element", -1);//JOSEP: Alerta! Excepció incorrecta, cal buscar o crear una execpció adient!
                 } else {
                     if ($_REQUEST['tab_details'] == 'edit') {
                         //$this->params['id'] = "form_".$image;

@@ -64,11 +64,18 @@ class CreatePageAction extends SavePageAction {
         if (!$this->params[PageKeys::KEY_TEXT]) {
             if ($this->params[PageKeys::KEY_TEMPLATE]) {
                 //[TO DO] JOSEP: La forma aquí seria $this->getModel()->getRawTemplate(ID template) i getRawTemplate implementar-lo a PageDokuModel o potser a WikiRenderizableDataModel.
-                $this->params[PageKeys::KEY_TEXT] = $this->getModel()->getPageDataQuery()->getRaw($this->params[PageKeys::KEY_TEMPLATE]);
-                $TEXT = $this->params[PageKeys::KEY_TEXT];
+                //$this->params[PageKeys::KEY_TEXT] = $this->getModel()->getPageDataQuery()->getRaw($this->params[PageKeys::KEY_TEMPLATE]);
+                if(WikiIocLangManager::isTemplate($this->params[PageKeys::KEY_TEMPLATE])){
+                    $this->params[PageKeys::KEY_TEXT] = WikiIocLangManager::getRawTemplate($this->params[PageKeys::KEY_TEMPLATE]);
+                }else if(WikiIocLangManager::isKey($this->params[PageKeys::KEY_TEMPLATE])){
+                    $this->params[PageKeys::KEY_TEXT] = WikiIocLangManager::getLang($this->params[PageKeys::KEY_TEMPLATE]);
+                }else{
+                    $this->params[PageKeys::KEY_TEXT] = cleanText(WikiIocLangManager::getLang('createDefaultText'));
+                }
             }else {
-                $TEXT = $this->params[PageKeys::KEY_TEXT] = cleanText(WikiIocLangManager::getLang('createDefaultText'));
+                $this->params[PageKeys::KEY_TEXT] = cleanText(WikiIocLangManager::getLang('createDefaultText'));
             }
+            $TEXT = $this->params[PageKeys::KEY_TEXT];
         }        
     }
 }

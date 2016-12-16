@@ -1,0 +1,48 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10, 
+        "rows_row": 1
+    },
+    "groups": {
+        "main": {
+            "parent": "",
+            "label": "Dades Generals",
+            "n_cols": 6,
+            "n_rows": 1,
+            "frame": true
+        },
+        "admin": {
+            "parent": "dades",
+            "label": "Dades d'administració",
+            "n_cols": 6,
+            "n_rows": 1
+        },
+        "dades": {
+            "parent": "",
+            "label": "Dades extraordinàries",
+            "n_cols": 12,
+            "n_rows": 1,
+            "frame": true
+        }
+    },
+    "fields": {
+        "responsable": {
+          "mandatory": true,
+          "group": "admin"
+        },
+        "autor": {
+          "group": "admin"
+        },
+        "titol": {
+          "mandatory": true
+        },
+        "plantilla": {
+          "group": "dades"
+        },
+        "descripció": {
+          "group": "dades"
+        }
+    }
+}

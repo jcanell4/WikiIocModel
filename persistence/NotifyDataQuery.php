@@ -7,6 +7,7 @@ if (!defined('DOKU_PLUGIN')) {
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
+require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 
 /**
  * Description of NotifyDataQuery
@@ -20,14 +21,15 @@ class NotifyDataQuery extends DataQuery
     const SENDER_ID = 'sender_id';
     const DATA = 'data';
     const TYPE = 'type'; // ALERT, MESSAGE, DIALOG
-    
+
     const TYPE_ALERT = 'alert';
     const TYPE_MESSAGE = 'message';
     const TYPE_DIALOG = 'dialog';
     const TYPE_RELEASED = 'released';
-    const TYPE_CANCELED_BY_REMOTE_AGENT = 'canceled_by_remote_agent';    
+    const TYPE_CANCELED_BY_REMOTE_AGENT = 'canceled_by_remote_agent';
 
     const DEFAULT_USER = 'SYSTEM';
+    const TYPE_WARNING = 'warning';
 
     // TODO[Xavi] Segons la configuració del servidor (conf wikiiocmodel) es farà servir un sistema de timers o de websockets
 
@@ -41,7 +43,7 @@ class NotifyDataQuery extends DataQuery
         return $fileName;
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE)
+    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE)
     {
         throw new UnavailableMethodExecutionException("NotifyDataQuery#getNsTree");
     }
@@ -55,7 +57,7 @@ class NotifyDataQuery extends DataQuery
             $now = new DateTime(); // id
             $id = $now->getTimestamp();
         }
-        
+
         $notification[self::NOTIFICATION_ID] = $id; // ALERTA[Xavi] Moure les constants a un altre fitxer?
         $notification[self::TYPE] = $type;
         $notification[self::DATA] = $notificationData;
@@ -95,8 +97,62 @@ class NotifyDataQuery extends DataQuery
             $this->delete($userId);
         }
 
-        return $messages;
+// ALERTA[Xavi] codi de prova, per generar un avís del sistema que expira en 20 segons
+//        $this->delete(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel')); // ALERTA[Xavi] Això només s'ha de descomentar per esborrar la pissara completament
+//        $notificationData = ['type' => self::TYPE_WARNING, 'id' => time(), 'title' => WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'), 'text'=>"Prova pel sistema d'avisos del sistema. Ha de sortir una alerta y una notificació llegida"];
+//
+//        $this->add(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'),
+//            $notificationData,
+//            $type = self::TYPE_WARNING,
+//            /*id de l'alerta?*/null,
+//            WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'),
+//            (new DateTime())->getTimeStamp()+20);
+
+        // FI del codi de prova
+
+        $systemGlobalMessages = $this->getSystemGlobalMessages();
+
+        return array_merge($messages, $systemGlobalMessages);
     }
+
+    private function getSystemGlobalMessages()
+    {
+        $notifications = [];
+        $plugins = ['wikiiocmodel', 'ajaxcommand']; // ALERTA[Xavi] Afegir altres plugins on es trobi la configuració dels missatges
+
+
+        foreach ($plugins as $plugin) {
+            // Comprovem si hi ha un missatge actiu
+            $message = WikiGlobalConfig::getConf('system_warning_message', $plugin);
+
+            if (WikiGlobalConfig::getConf('system_warning_show_alert', $plugin) && strlen($message) > 0) {
+                $startDate = (new DateTime(WikiGlobalConfig::getConf('system_warning_start_date', $plugin)))->getTimestamp();
+                $endDate = (new DateTime(WikiGlobalConfig::getConf('system_warning_end_date', $plugin)))->getTimeStamp();
+                $today = (new DateTime())->getTimestamp();
+                $type = WikiGlobalConfig::getConf('system_warning_type', $plugin);
+
+                if ($startDate <= $today && $endDate > $today) {
+                    $title = WikiGlobalConfig::getConf('system_warning_title', $plugin);
+                    if (strlen($title)==0) {
+                        $title  = WikiIocLangManager::getLang('system_warning_default_title', $plugin);
+                    }
+
+                    $message = WikiGlobalConfig::getConf('system_warning_message', $plugin);
+                    $id = hash('md5', $title . $message);
+                    $notificationData = ['type' => $type, 'id' => $id, 'title' => $title, 'text' => $message];
+                    $sender = WikiGlobalConfig::getConf('system_warning_user', $plugin);
+                    $notifications[] = $this->generateNotification($notificationData, self::TYPE_WARNING, $id, $sender);
+                }
+            }
+
+        }
+
+        return $notifications;
+
+//        return $this->getBlackboard(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'));
+
+    }
+
 
 
     private function loadBlackboard($userId)
@@ -161,3 +217,4 @@ class NotifyDataQuery extends DataQuery
         return $dir.'/'.md5(cleanID($user)).'.blackboard';
     }
 }
+

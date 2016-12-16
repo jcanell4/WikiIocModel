@@ -53,7 +53,7 @@ abstract class DataQuery {
     
     public abstract function getFileName($id, $especParams=NULL);
 
-    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE);
+    public abstract function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE);
 
     /**
      * Retorna la llista de fitxers continguts a l'espai de noms identificat per $ns
@@ -104,28 +104,46 @@ abstract class DataQuery {
      * @param type $onlyDirs
      * @return string
      */
-    protected function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE ) {
-    	return $this->getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs, 'search_index', $expandProject, $hiddenProjects);
+    protected function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE) {
+    	return $this->getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs, 'search_index', $expandProject, $hiddenProjects, $root);
     }
     
-    protected function getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $function='search_index', $expandProject=FALSE, $hiddenProjects=FALSE ) {
+    protected function getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $function = 'search_index', $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE ) {
     
         $sortOptions = array( 0 => 'name', 'date' );
         $nodeData    = array();
         $children    = array();
-                
+        $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
+        $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
+        
         if ( $currentnode == "_" ) {
-            return array( 'id' => "", 'name' => "", 'type' => 'd' );
+            $path =  $base.'/'.($root?"$root/":"");
+            $path = str_replace(':', '/', $path);
+            if(is_dir($path)){
+                $pathProject = str_replace(':', '/',$metaDataPath.'/'.($root?"$root/":""));
+                if(($this->isProject($pathProject, 0, $metaDataExtension))){
+                    $name = $root?$root:"";
+                    $type = "p";
+                }else{
+                    $name = $root?$root:"";
+                    $type = "d";
+                }
+            }else{
+                $name = $root;
+                $type = "f";
+            }
+            return array( 'id' => "", 'name' => $name, 'type' => $type );
         }
         if ( $currentnode ) {
-            $node  = $currentnode;
-            $aname = split( ":", $currentnode );
-            $level = count( $aname );
-            $name  = $aname[ $level - 1 ];
-        }else {
-            $node  = '';
-            $name  = '';
-            $level = 0;
+                $node  =  $currentnode;
+                $aname = split( ":", $node );
+                $level = count( $aname );
+                $name  = $aname[ $level - 1 ];
+        } else {
+                $node  = $root?$root:"";
+                $aname = split( ":", $node );
+                $level = $root?count( $aname ):0;
+                $name  = $root?$root:"";
         }
         $sort = $sortOptions[ $sortBy ];
 
@@ -140,10 +158,10 @@ abstract class DataQuery {
             );
         }
         $dir = str_replace(':', '/', $node);
-        search($nodeData, $base, $function, $opts, $dir, 1);
+        search($nodeData,  $base, $function, $opts, $dir, $level);
 
-        $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
-        $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
+//        $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
+//        $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
         $pathProject = $metaDataPath . '/' . $dir;
         $itemProject = $this->isProject($pathProject, 1, $metaDataExtension);
         
@@ -158,7 +176,7 @@ abstract class DataQuery {
 
         $tree = array(
                 'id'       => $node,
-                'name'     => $node,
+                'name'     => $name,
                 'type'     => 'd',
                 'children' => $children
         );

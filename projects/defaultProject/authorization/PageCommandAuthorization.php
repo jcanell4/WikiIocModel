@@ -22,13 +22,13 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
             if (!$this->permission->getIsMyOwnNs()) {
                 $exception = $this->getPermissionException($this->permission);
                 if ($exception) {
-                    $this->errorAuth['error'] = TRUE;
-                    $this->errorAuth['exception'] = $exception;
-                    $this->errorAuth['extra_param'] = $this->permission->getIdPage();
+                    $this->errorAuth[self::ERROR_KEY] = TRUE;
+                    $this->errorAuth[self::EXCEPTION_KEY] = $exception;
+                    $this->errorAuth[self::ERROR_PARAMS_KEY] = $this->permission->getIdPage();
                 }
             }
         }
-        return !$this->errorAuth['error'];
+        return !$this->errorAuth[self::ERROR_KEY];
     }
     
     public function setPermission($command) {
