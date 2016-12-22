@@ -8,21 +8,29 @@
     "groups": {
         "main": {
             "parent": "",
-            "label": "Dades Generals",
-            "n_cols": 6,
-            "n_rows": 1,
+            "label": "Principal",
+            "n_columns": 5,
+            "n_rows": 4,
             "frame": true
         },
         "admin": {
             "parent": "dades",
-            "label": "Dades d'administració",
-            "n_cols": 6,
-            "n_rows": 1
+            "label": "dades d'administració",
+            "n_columns": 10,
+            "n_rows": 1,
+            "frame": true
         },
         "dades": {
             "parent": "",
-            "label": "Dades extraordinàries",
-            "n_cols": 12,
+            "label": "Dades generals",
+            "n_columns": 7,
+            "n_rows": 4,
+            "frame": true
+        },
+        "grupestret": {
+            "parent": "admin",
+            "label": "grup estret d'admin",
+            "n_columns": 6,
             "n_rows": 1,
             "frame": true
         }
@@ -30,6 +38,7 @@
     "fields": {
         "responsable": {
           "mandatory": true,
+          "n_columns": 6,
           "group": "admin"
         },
         "autor": {
@@ -38,11 +47,25 @@
         "titol": {
           "mandatory": true
         },
+        "descripcio_titol": {
+        },
         "plantilla": {
           "group": "dades"
         },
-        "descripció": {
+        "descripcio": {
           "group": "dades"
+        },
+        "descripcio_segona": {
+          "group": "dades"
+        },
+        "field1_grup3": {
+          "group": "grupestret"
+        },
+        "field2_grup3": {
+          "group": "grupestret"
+        },
+        "field3_grup3": {
+          "group": "grupestret"
         }
     }
 }

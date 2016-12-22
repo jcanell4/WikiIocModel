@@ -25,12 +25,23 @@
           "mandatory": true,
           "default": "Dades generals del projecte"
         },
+        "descripcio_titol": {
+        },
         "plantilla": {
           "group": "dades",
           "default": "plantilles:projects:continguts"
         },
-        "descripció": {
+        "descripcio": {
           "group": "dades"
+        },
+        "descripcio_segona": {
+          "group": "dades"
+        },
+        "field1_grup3": {
+        },
+        "field2_grup3": {
+        },
+        "field3_grup3": {
         }
       }
     }

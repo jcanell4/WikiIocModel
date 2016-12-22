@@ -46,13 +46,17 @@ class ProjectModel extends AbstractWikiDataModel /*WikiRenderizableDataModel*/ {
         // Segon nivell: idResource
         // Per tant, aquí sempre voldrem el [0][0] perquè només demanem un id i un projecttype
         $metaJSON = json_decode($meta[0][0], true);
-        $ret['projectMetaData']['values'] = json_decode($metaJSON['MetaDataValue'], true);
+        $ret['projectMetaData']['values'] = json_decode($metaJSON['metaDataValue'], true);
         $ret['projectMetaData']['structure'] = json_decode($metaJSON['metaDataStructure'], true);
 
         return $ret;
     }
 
     public function getData() {
+//        $dao = $this->metaDataService->getMetaDataDaoConfig();
+//        $meta = $dao->getMetaDataStructure($this->projectType, self::defaultSubset, $this->persistenceEngine);
+//        $ret2['projectMetaData']['structure'] = json_decode($meta, TRUE);
+
         $ret = [];
         $query = [
             'persistence' => $this->persistenceEngine,
@@ -69,15 +73,18 @@ class ProjectModel extends AbstractWikiDataModel /*WikiRenderizableDataModel*/ {
         
         return $ret;
     }
-    
-//    public function getMetaDataDef($id, $projectType) {
-//        $ret0 = $this->metaDataService->getMetaDataElements();
-//        $dao = $this->metaDataService->getMetaDataDaoConfig();
-//        $mdNS = $dao->getMetaDataConfig($projectType, self::defaultSubset, $this->persistenceEngine, "metaDataClassesNameSpaces");
-//        $mdStruc = $this->projectMetaDataQuery->getMetaDataConfig($projectType, self::defaultSubset, $this->persistenceEngine, "metaDataProjectStructure");
-//        $ret2 = $dao->getMetaDataStructure($projectType, self::defaultSubset, $this->persistenceEngine);
-//        return $ret2;
-//    }
+    /**
+     * Devuelve un array con las claves de la estructura definida en el archivo configMain.json
+     */
+    public function getMetaDataDefKeys($projectType) {
+        $dao = $this->metaDataService->getMetaDataDaoConfig();
+        $struct = $dao->getMetaDataStructure($projectType, self::defaultSubset, $this->persistenceEngine);
+        $arr = json_decode($struct, TRUE);
+        foreach ($arr as $k => $v) {
+            $ret[$k] = '';
+        }
+        return $ret;
+    }
     
     public function createDataDir($id) {
         $this->projectMetaDataQuery->createDataDir($id);

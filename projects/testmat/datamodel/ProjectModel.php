@@ -54,7 +54,7 @@ class ProjectModel extends WikiRenderizableDataModel
         // Segon nivell: idResource
         // Per tant, aquí sempre voldrem el [0][0] perquè només demanem un id i un projecttype
         $metaJSON = json_decode($meta[0][0], true);
-        $ret['projectMetaData']['values'] = json_decode($metaJSON['MetaDataValue'], true);
+        $ret['projectMetaData']['values'] = json_decode($metaJSON['metaDataValue'], true);
         $ret['projectMetaData']['structure'] = json_decode($metaJSON['metaDataStructure'], true);
 
 
