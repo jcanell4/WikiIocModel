@@ -34,7 +34,7 @@ class MetaDataRender extends \MetaDataRenderAbstract
         $objAux = json_decode($metaDataEntityWrapper[0]->getArrayFromModel(), true);
         $structure = json_decode($objAux['metaDataStructure'], true);
         $types = json_decode($objAux['metaDataTypesDefinition'], true);
-        $values = json_decode($objAux['MetaDataValue'], true);
+        $values = json_decode($objAux['metaDataValue'], true);
 
         $returnTree = [];
         $returnTree['structure'] = $this->initParser($values, $structure, $types);;

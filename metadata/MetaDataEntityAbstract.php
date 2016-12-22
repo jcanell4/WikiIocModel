@@ -22,10 +22,10 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
     protected $projectType;
     protected $metaDataSubSet;
     protected $idResource;
-    protected $MetaDataValue;  //JSON array containing metadata
+    protected $metaDataValue;  //JSON array containing metadata
     protected $metaDataStructure;
     protected static $MANDATORIES = array("projectType", "metaDataSubSet", "idResource");
-    protected static $JSONTYPES = array("MetaDataValue");
+    protected static $JSONTYPES = array("metaDataValue");
 
     protected $metaDataTypesDefinition;
 
@@ -42,7 +42,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
     }
 
     function getMetaDataValue() {
-        return $this->MetaDataValue;
+        return $this->metaDataValue;
     }
 
     function getMetaDataStructure() {
@@ -61,8 +61,8 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
         $this->idResource = $idResource;
     }
 
-    function setMetaDataValue($MetaDataValue) {
-        $this->MetaDataValue = $MetaDataValue;
+    function setMetaDataValue($metaDataValue) {
+        $this->metaDataValue = $metaDataValue;
     }
 
     function setMetaDataStructure($metaDataStructure) {
@@ -152,18 +152,18 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
 
     /**
      * Purpose:
-     * - Check de JSON filter with JSON entity metadata (MetaDataValue:  {keymd1:valormd1,...,keymdx:valormdx})
+     * - Check de JSON filter with JSON entity metadata (metaDataValue:  {keymd1:valormd1,...,keymdx:valormdx})
      * @param String JSON {keyf1:valorf1,...,keyfn:valorfn}
      * Restrictions:
      * - $filter wellformed JSON
-     * - All keys in $filter must exist in MetaDataValue
-     * - All key:value in $filter are the same in MetaDataValue
+     * - All keys in $filter must exist in metaDataValue
+     * - All key:value in $filter are the same in metaDataValue
      * @return exception || false || true 
      */
     public function checkFilter($filter) {
         $encoder = new JSON();
-        //$arraymd = $encoder->decode($this->MetaDataValue);
-        $arraymd = json_decode($this->MetaDataValue, true); //true to force json_decode to return an array and not an object
+        //$arraymd = $encoder->decode($this->metaDataValue);
+        $arraymd = json_decode($this->metaDataValue, true); //true to force json_decode to return an array and not an object
         //$arrayfi = $encoder->decode($filter);
         $arrayfi = json_decode($filter, true);
         if (json_last_error() != JSON_ERROR_NONE) {
@@ -195,22 +195,22 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
 
     /**
      * Purpose:
-     * - From data provided (JSON param) update JSON entity metadata (MetaDataValue:  {keymd1:valormd1,...,keymdx:valormdx})
+     * - From data provided (JSON param) update JSON entity metadata (metaDataValue:  {keymd1:valormd1,...,keymdx:valormdx})
      * @param String JSON {keyp1:valorp1,...,keypn:valorpn}
      * Restrictions:
      * - $paramMetaDataValue wellformed JSON
-     * - keys in $filter that do NOT exist in MetaDataValue, are added
-     * - keys in $filter that exist in MetaDataValue, are updated
+     * - keys in $filter that do NOT exist in metaDataValue, are added
+     * - keys in $filter that exist in metaDataValue, are updated
      * @return N/A
      */
     public function updateMetaDataValue($paramMetaDataValue) {
 
-        $arraymd = json_decode($this->MetaDataValue, true);
+        $arraymd = json_decode($this->metaDataValue, true);
         $arraypi = json_decode($paramMetaDataValue, true);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new MalFormedJSON();
         }
-        //Amplía el array de MetaDataValue con las nuevas propiedades contenidas en $paramMetaDataValue
+        //Amplía el array de metaDataValue con las nuevas propiedades contenidas en $paramMetaDataValue
         foreach ($arraypi as $keypi => $valuepi) {
             $arraymd[$keypi] = $valuepi;
         }
