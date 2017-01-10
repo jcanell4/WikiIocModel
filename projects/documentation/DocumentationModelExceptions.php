@@ -83,7 +83,7 @@ class MissingValueFormBuilderException extends WikiIocProjectException {
 }
 
 class WrongNumberOfColumnsFormBuilderException extends WikiIocProjectException {
-    public function __construct($page='', $message='WrongNumberOfColumnsFormBuilder', $code=7303) {
-        parent::__construct($message, $code, $page);
+    public function __construct($page='', $message='nombre incorrecte de', $code=7303) {
+        parent::__construct("Has indicat $message columnes i el nombre de columnes admés està entre 1 i 12", $code, $page);
     }
 }

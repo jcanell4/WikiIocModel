@@ -29,7 +29,7 @@
         },
         "grupestret": {
             "parent": "admin",
-            "label": "grup estret d'admin",
+            "label": "",
             "n_columns": 6,
             "n_rows": 1,
             "frame": true
@@ -42,6 +42,7 @@
           "group": "admin"
         },
         "autor": {
+          "n_columns": 6,
           "group": "admin"
         },
         "titol": {
