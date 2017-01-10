@@ -11,7 +11,6 @@ require_once DOKU_INC . 'inc/pageutils.php';
  * 
  * @author Josep Cañellas 
  */
-//[Alerta JOSEP] Cal traslladar aquesta classe al plugin de persistencia 
 class WikiPageSystemManager {
     public static $DEFAULT_FORMAT = 0;
     public static $SHORT_FORMAT = 1;
