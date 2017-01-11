@@ -51,9 +51,11 @@
         "descripcio_titol": {
         },
         "plantilla": {
+          "n_columns": 5,
           "group": "dades"
         },
         "descripcio": {
+          "n_columns": 7,
           "group": "dades"
         },
         "descripcio_segona": {
