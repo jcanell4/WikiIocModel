@@ -8,6 +8,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
 
 require_once (WIKI_IOC_MODEL . 'WikiIocLangManager.php');
+require_once (DOKU_INC . 'inc/inc_ioc/Logger.php');
 
 abstract class WikiIocModelException extends Exception {
     public function __construct($codeMessage, $code, $previous=NULL, $target=NULL) {
@@ -18,6 +19,7 @@ abstract class WikiIocModelException extends Exception {
         if ($target) {
             $message = sprintf($message, $target);
         }
+        Logger::debug("Params, codemessage: $codeMessage message: $message code: $code, previous: $previous, target: $target", 0, 0, "", 0);
         parent::__construct($message, $code, $previous);
     }
 }
