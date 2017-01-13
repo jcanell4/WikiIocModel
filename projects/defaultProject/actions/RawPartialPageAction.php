@@ -112,6 +112,15 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             $response = $this->_getLocalDraftResponse($data);
 
+        } else if($this->lockState()==ST_LOCKED_BEFORE){
+            //-1 L'usuari te obert el document en una altra sessio
+
+            // ALERTA[Xavi] Copiat de "bloquejat" el missatge enviat es l'únic que canvia.
+            //  No es pot editar. Cal esperar que s'acabi el bloqueig
+            $response = $this->_getSelfLockedDialog($data); // <-- acció equivalent al RawPageAction
+            $response['meta'] = $this->getMetaTocResponse();
+            $response['revs'] = $this->getRevisionList();
+
         } else {
 
             // 2.1) Es demana recuperar el draft?
@@ -157,6 +166,8 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
         return $response;
     }
+
+
 
     private function generateOriginalCall()
     {
@@ -334,16 +345,8 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
     private function _getDocumentResponse($data)
     {
         $response = $data;
+        $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
 
-        if ($response['structure']['locked']) {
-            $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
-        } else {
-            $response['info'] = $this->generateInfo(
-                    'info', 
-                    WikiIocLangManager::getLang('chunk_editing') . $this->params[PageKeys::KEY_ID] . ':' . $this->params[PageKeys::KEY_SECTION_ID],
-                    $this->params[PageKeys::KEY_ID]
-            );
-        }
 
         return $response;
     }
@@ -389,6 +392,17 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         return $resp;
     }
 
+    private function _getSelfLockedDialog($data)
+    {
+        $resp = $this->_getDialogOrDocumentResponse($data);
+        $resp["structure"]["locked_before"]=true;
+//        $resp['structure']['locked'] = true;
+
+        //TODO [Josep] Cal implementar quan estigui fet el sistema de diàlegs al client.
+        //Aquí caldrà avisar que no és possible editar l'esborrany perquè hi ha algú editant prèviament el document
+        // i es podrien perdre dades. També caldrà demanar si vol que l'avisin quan acabi el bloqueig
+        return $resp;
+    }
 }
 
 
