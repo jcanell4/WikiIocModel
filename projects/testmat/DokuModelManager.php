@@ -35,9 +35,9 @@ class DokuModelManager extends WikiIocModelManager{
     
     public function __construct() {}
 
-    public function getAuthorizationManager($str_command, $params) {
+    public function getAuthorizationManager($str_command) {
         $factory = \FactoryAuthorization::Instance();
-        return $factory->createAuthorizationManager($str_command, $params);
+        return $factory->createAuthorizationManager($str_command);
     }
 
     public function getModelWrapperManager() {

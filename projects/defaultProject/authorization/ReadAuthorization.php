@@ -13,7 +13,7 @@ require_once (DOKU_INC . 'lib/plugins/wikiiocmodel/projects/defaultProject/autho
 class ReadAuthorization extends PageCommandAuthorization {
 
     public function getPermissionException() {
-        if ($this->permission->getPageExist() && $this->permission->getInfoPerm() < AUTH_READ) {
+        if ($this->permission->getResourceExist() && $this->permission->getInfoPerm() < AUTH_READ) {
             $exception = 'InsufficientPermissionToViewPageException';
         }
         return $exception;

@@ -111,10 +111,11 @@ class AdminTaskAction extends DokuAction{
      */
     protected function responseProcess(){        
         $response=array();
-        
+
+        $id         = "admin_" . $this->params[AdminKeys::KEY_TASK];
+
         if ( ! $this->dataTmp["needRefresh"] ) {
                 $pageToSend = $this->getAdminTaskHtml();
-                $id         = "admin_" . $this->params[AdminKeys::KEY_TASK];
                 $response   = $this->getCommonPage( $id, $this->params[AdminKeys::KEY_TASK], $pageToSend );
         }
         $response["needRefresh"] = $this->dataTmp["needRefresh"];
@@ -125,11 +126,11 @@ class AdminTaskAction extends DokuAction{
                 case 'config':
                         if ( ! $response['needRefresh'] ) {
                                 if ( isset( $_REQUEST['do'] ) ) {
-                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $this->params[AdminKeys::KEY_ID], $info_time_visible );
+                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $id, $info_time_visible );
                                 } else {
 
                                         $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' 
-                                                                                        . \WikiIocLangManager::getLang('button_desa') . '"', $this->params[AdminKeys::KEY_ID], $info_time_visible );
+                                                                                        . \WikiIocLangManager::getLang('button_desa') . '"', $id, $info_time_visible );
                                 }
                         }
                         break;
@@ -137,7 +138,7 @@ class AdminTaskAction extends DokuAction{
                         switch ( key( $_REQUEST['fn'] ) ) {
                                 case NULL:
                                         // call from the admin tab
-                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $this->params[AdminKeys::KEY_ID], $info_time_visible );
+                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $id, $info_time_visible );
                                         break;
                                 default:
                                         // call from the user plugin tab
@@ -146,23 +147,23 @@ class AdminTaskAction extends DokuAction{
                                                 $fn = $fn[ key( $fn ) ];
                                         }
                                         $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' 
-                                                                                            . $fn[ key( $fn ) ] . '"', $this->params[AdminKeys::KEY_ID], $info_time_visible );
+                                                                                            . $fn[ key( $fn ) ] . '"', $id, $info_time_visible );
                         }
                         break;
                 case 'acl':
                         switch ( $_REQUEST['cmd'] ) {
                                 case NULL:
-                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $this->params[AdminKeys::KEY_ID] );
+                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $id );
                                         break;
                                 case 'del':
-                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_perm_delete'), $this->params[AdminKeys::KEY_ID], $info_time_visible );
+                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_perm_delete'), $id, $info_time_visible );
                                         break;
                                 case 'save':
                                 case 'update':
-                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_perm_update'), $this->params[AdminKeys::KEY_ID], $info_time_visible );
+                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_perm_update'), $id, $info_time_visible );
                                         break;
                                 default:
-                                        $response['info'] = self::generateInfo( "info", $_REQUEST['cmd'], $this->params[AdminKeys::KEY_ID] );
+                                        $response['info'] = self::generateInfo( "info", $_REQUEST['cmd'], $id );
                         }
                         break;
                 case 'usermanager':
@@ -170,7 +171,7 @@ class AdminTaskAction extends DokuAction{
                         $key = key( $fn );
                         if ( ! isset( $key ) ) {
                                 // call from the admin tab
-                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $this->params[AdminKeys::KEY_ID], $info_time_visible );
+                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $id, $info_time_visible );
                         } else {
                                 // call from the user plugin tab
                                 if ( is_array( $fn ) ) {
@@ -200,32 +201,32 @@ class AdminTaskAction extends DokuAction{
                                                 break;
                                 }
                                 $response['info']   = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' 
-                                                                                                . $param . '"', $this->params[AdminKeys::KEY_ID], $info_time_visible );
+                                                                                                . $param . '"', $id, $info_time_visible );
                                 $response['iframe'] = TRUE;
                         }
                         break;
                 case "revert":
                         if ( isset( $_REQUEST['revert'] ) ) {
                                 $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') 
-                                                                . '"' . \WikiIocLangManager::getLang('button_revert') . '"', $this->params[AdminKeys::KEY_ID], $info_time_visible );
+                                                                . '"' . \WikiIocLangManager::getLang('button_revert') . '"', $id, $info_time_visible );
                         } else if ( isset( $_REQUEST['filter'] ) ) {
                                 $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' 
-                                                                        . \WikiIocLangManager::getLang('button_cercar') . '"', $this->params[AdminKeys::KEY_ID], $info_time_visible );
+                                                                        . \WikiIocLangManager::getLang('button_cercar') . '"', $id, $info_time_visible );
                         } else {
-                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $this->params[PageKeys::KEY_ID], $info_time_visible );
+                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $id, $info_time_visible );
                         }
                         break;
                 case "latex":
                         if ( isset( $_REQUEST['latexpurge'] ) ) {
-                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' . $_REQUEST['latexpurge'] . '"', $this->params[PageKeys::KEY_ID], $info_time_visible );
+                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' . $_REQUEST['latexpurge'] . '"', $id, $info_time_visible );
                         } else if ( isset( $_REQUEST['dotest'] ) ) {
-                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' . $_REQUEST['dotest'] . '"', $this->params[PageKeys::KEY_ID], $info_time_visible );
+                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' . $_REQUEST['dotest'] . '"', $id, $info_time_visible );
                         } else {
-                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $this->params[PageKeys::KEY_ID], $info_time_visible );
+                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $id, $info_time_visible );
                         }
                         break;
                 default:
-                        $response['info'] = self::generateInfo( "info", "Emplenar a DokumodelAdapter->getAdminTask:" + $_REQUEST['page'], $this->params[PageKeys::KEY_ID] );
+                        $response['info'] = self::generateInfo( "info", "Emplenar a DokumodelAdapter->getAdminTask:" + $_REQUEST['page'], $id );
                         break;
         }
 

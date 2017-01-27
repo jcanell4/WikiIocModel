@@ -11,10 +11,9 @@ require_once (WIKI_IOC_MODEL . 'AbstractPermission.php');
 
 class Permission extends AbstractPermission {
     
-//    private $isDenied;    Gestionat per DokuAction
-//    private $readonly=FALSE;  no és útil, la seva informació ja està a $info_perm
     private $info_perm;
-    private $pageExist;
+    private $resourceExist;
+    private $overwriteRequired;
     private $isMyOwnNs;
     
     public function getInfoPerm() {
@@ -25,38 +24,26 @@ class Permission extends AbstractPermission {
         $this->info_perm = $info_perm;
     }
   
-//  versió molt antiga. Les seves succesores estan Gestionades per DokuAction
-//    public function isDenied() {
-//        return $this->cmdAuthorization->isDenied();
-//    }
-    
-//  Gestionat per DokuAction
-//    public function isDenied() {
-//        return $this->isDenied;
-//    }
-//    public function setIsDenied($isDenied) {
-//        $this->isDenied = $isDenied;
-//    }
-  
-//    public function isReadOnly(){
-//        return $this->readonly;
-//    }
-//    public function setReadOnly($readonly){
-//        $this->readonly = $readonly;
-//    }
-    
     public function isReadOnly(){
         return ($this->getInfoPerm() < AUTH_EDIT);
     }
     
-    public function getPageExist() {
-        return $this->pageExist;
+    public function getResourceExist() {
+        return $this->resourceExist;
     }
   
-    public function setPageExist($pageExist) {
-        $this->pageExist = $pageExist;
+    public function setResourceExist($resourceExist) {
+        $this->resourceExist = $resourceExist;
     }
 
+    public function getOverwriteRequired() {
+        return $this->overwriteRequired;
+    }
+  
+    public function setOverwriteRequired($overwriteRequired) {
+        $this->overwriteRequired = $overwriteRequired;
+    }
+  
     public function getIsMyOwnNs() {
         return $this->isMyOwnNs;
     }

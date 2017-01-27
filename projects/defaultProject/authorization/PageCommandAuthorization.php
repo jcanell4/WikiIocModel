@@ -13,11 +13,11 @@ require_once (WIKI_IOC_MODEL . 'projects/defaultProject/authorization/CommandAut
 
 abstract class PageCommandAuthorization extends CommandAuthorization {
 
-    public function __construct($params) {
-        parent::__construct($params);
+    public function __construct() {
+        parent::__construct();
     }
 
-    public function canRun() {  // el parámetro $permission contiene lo mismo que $this->permission
+    public function canRun() {
         if ( parent::canRun() ) { 
             if (!$this->permission->getIsMyOwnNs()) {
                 $exception = $this->getPermissionException($this->permission);
@@ -33,7 +33,7 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
     
     public function setPermission($command) {
         parent::setPermission($command);
-        $this->permission->setPageExist(WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS));
+        $this->permission->setResourceExist(WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS));
         $this->permission->setIsMyOwnNs($this->isMyOwnNs($this->permission->getIdPage(), WikiIocInfoManager::getInfo('client')));
     }
 

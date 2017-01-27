@@ -14,7 +14,7 @@ require_once (WIKI_IOC_PROJECTS . 'defaultProject/authorization/PageCommandAutho
 class WriteAuthorization extends PageCommandAuthorization {
 
     public function getPermissionException() {
-        if ($this->permission->getPageExist() && $this->permission->getInfoPerm() < AUTH_EDIT) {
+        if ($this->permission->getResourceExist() && $this->permission->getInfoPerm() < AUTH_EDIT) {
             $exception = 'InsufficientPermissionToWritePageException';
         }
         return $exception;

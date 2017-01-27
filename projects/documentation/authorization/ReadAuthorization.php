@@ -14,7 +14,7 @@ require_once (WIKI_IOC_PROJECTS . 'documentation/authorization/PageCommandAuthor
 class ReadAuthorization extends PageCommandAuthorization {
 
     public function getPermissionException() {
-        if ($this->permission->getPageExist() && $this->permission->getInfoPerm() < AUTH_READ) {
+        if ($this->permission->getResourceExist() && $this->permission->getInfoPerm() < AUTH_READ) {
             $exception = 'InsufficientPermissionToViewPageException';
         }elseif (!$this->isResponsable() && !$this->isAuthor()) {
             $exception = 'UserNotAuthorizedException';
