@@ -1,7 +1,6 @@
 <?php
 /**
  * FactoryAuthorization crea los objetos de autorización de los comandos
- *
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
@@ -21,7 +20,7 @@ class FactoryAuthorization {
         return $inst;
     }
 
-    public function createAuthorizationManager($str_cmd, $params) {
+    public function createAuthorizationManager($str_cmd) {
         
         $fileAuthorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization');
         if ($fileAuthorization === NULL) {
@@ -32,7 +31,7 @@ class FactoryAuthorization {
                 $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg['_default'], 'authorization');
             }
         }
-        $authorization = new $fileAuthorization($params);
+        $authorization = new $fileAuthorization();
         return $authorization;
     }
     
@@ -59,8 +58,10 @@ class FactoryAuthorization {
          * 'guion_bajo' o CamelCase
          */
         if ($case === 'camel') {
-            $ret = strtoupper(substr($part1, 0, 1)) . strtolower(substr($part1, 1)) 
-                 . strtoupper(substr($part2, 0, 1)) . strtolower(substr($part2, 1));
+//            $ret = strtoupper(substr($part1, 0, 1)) . strtolower(substr($part1, 1)) 
+//                 . strtoupper(substr($part2, 0, 1)) . strtolower(substr($part2, 1));
+            $ret = strtoupper(substr($part1, 0, 1)) . substr($part1, 1) 
+                 . strtoupper(substr($part2, 0, 1)) . substr($part2, 1);
         }else {
             $ret = $part1 . '_' . $part2;
         }

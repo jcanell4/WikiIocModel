@@ -14,7 +14,7 @@ class Permission extends AbstractPermission {
     private $info_perm;
     private $author;
     private $responsable;
-    private $pageExist;
+    private $resourceExist;
     
     public function getInfoPerm() {
         return $this->info_perm;
@@ -28,8 +28,8 @@ class Permission extends AbstractPermission {
         return $this->responsable;
     }
 
-    public function getPageExist() {
-        return $this->pageExist;
+    public function getResourceExist() {
+        return $this->resourceExist;
     }
   
     public function isReadOnly(){
@@ -48,7 +48,7 @@ class Permission extends AbstractPermission {
         $this->responsable = $responsable;
     }
 
-    public function setPageExist($pageExist) {
-        $this->pageExist = $pageExist;
+    public function setResourceExist($resourceExist) {
+        $this->resourceExist = $resourceExist;
     }
 }

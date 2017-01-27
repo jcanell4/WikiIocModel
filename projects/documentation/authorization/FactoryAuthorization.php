@@ -1,7 +1,6 @@
 <?php
 /**
  * FactoryAuthorization crea los objetos de autorización de los comandos del proyecto "documentation"
- *
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
@@ -21,7 +20,7 @@ class FactoryAuthorization {
         return $inst;
     }
 
-    public function createAuthorizationManager($str_cmd, $params) {
+    public function createAuthorizationManager($str_cmd) {
         
         $fileAuthorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization');
         if ($fileAuthorization === NULL) {
@@ -32,13 +31,13 @@ class FactoryAuthorization {
                 $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg['_default'], 'authorization');
             }
         }
-        $authorization = new $fileAuthorization($params);
+        $authorization = new $fileAuthorization();
         return $authorization;
     }
     
     private function readFileIn2CaseFormat($str_cmd, $part2) {
-        /* Carga el archivo correspondiente al comando.
-         * buscando por el nombre en formato convencional y en formato CamelCase
+        /* Carga el archivo correspondiente al comando,
+         * buscándolo por el nombre en formato convencional y en formato CamelCase
          */
         $name = $this->nameCaseFormat($str_cmd, $part2,'_');
         $ret = NULL;

@@ -14,8 +14,8 @@ require_once (WIKI_IOC_PROJECT . 'authorization/CommandAuthorization.php');
 
 abstract class PageCommandAuthorization extends CommandAuthorization {
 
-    public function __construct($params) {
-        parent::__construct($params);
+    public function __construct() {
+        parent::__construct();
     }
 
     public function canRun() {
@@ -32,7 +32,7 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
     
     public function setPermission($command) {
         parent::setPermission($command);
-        $this->permission->setPageExist(WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS));
+        $this->permission->setResourceExist(WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS));
     }
     
     protected abstract function getPermissionException();

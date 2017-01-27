@@ -816,7 +816,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         //detect revision
         $rev = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("rev"); //$INFO comes from the DokuWiki core
         if ($rev < 1) {
-            $rev = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("lastmod");
+            $this->params['rev'] = (int)WikiIocInfoManager::getInfo("lastmod");
         }
 
         $this->triggerStartEvents();
@@ -1614,20 +1614,12 @@ class DokuModelAdapter extends BasicModelAdapter {
        return $action->get($paramsArr);
     }
     /**
+     * és la crida principal de la comanda media
      * Miguel Angel Lozano 12/12/2014
-     * - Obtenir el gestor de medis
      */
-    //ës la crida principal de la comanda media
-    public function getMediaManager($image = NULL, $fromPage = NULL, $prev = NULL)
-    {
+    public function getMediaManager($image=NULL, $fromPage=NULL, $prev=NULL) {
         //[TODO Josep] Normalitzar: start do get ...
         global $lang, $NS, $INPUT, $JSINFO;
-        /*if(!$NS){
-            $NS = $fromPage;
-        }
-        $INPUT->access['ns'] = $NS;*/
-        //   $NS = getNS($fromPage);
-        //
 
         $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
         if ($error == 401) {
@@ -1681,13 +1673,9 @@ class DokuModelAdapter extends BasicModelAdapter {
         global $ID;
         global $AUTH;
         global $vector_action;
-        //global $vector_context;
-        //global $loginname;
         global $IMG;
         global $ERROR;
         global $SRC;
-        global $conf;
-        global $lang;
         global $REV;
 
         $ret = $ERROR = 0;
@@ -1728,43 +1716,12 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         WikiIocInfoManager::loadMediaInfo();
 
-        /**
-         * Stores the template wide context
-         *
-         * This template offers discussion pages via common articles, which should be
-         * marked as "special". DokuWiki does not know any "special" articles, therefore
-         * we have to take care about detecting if the current page is a discussion
-         * page or not.
-         *
-         * @var string
-         * @author Andreas Haerter <development@andreas-haerter.com>
-         */
-        /* $vector_context = $this->params['vector_context'] = "article";
-          if (preg_match("/^".tpl_getConf("ioc_template_discuss_ns")."?$|^".tpl_getConf("ioc_template_discuss_ns").".*?$/i", ":".getNS(getID()))){
-          $vector_context = $this->params['vector_context'] = "discuss";
-          } */
-
-        /**
-         * Stores the name the current client used to login
-         *
-         * @var string
-         * @author Andreas Haerter <development@andreas-haerter.com>
-         */
-        /* $loginname = $this->params['loginName'] = "";
-          if (!empty($conf["useacl"])) {
-          if (isset($_SERVER["REMOTE_USER"]) && //no empty() but isset(): "0" may be a valid username...
-          $_SERVER["REMOTE_USER"] !== "") {
-          $loginname = $this->params['loginName'] = $_SERVER["REMOTE_USER"]; //$INFO["client"] would not work here (-> e.g. if
-          //current IP differs from the one used to login)
-          }
-          } */
-
         $this->startUpLang();
 
         //detect revision
-        $rev = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("rev"); //$INFO comes from the DokuWiki core
-        if ($rev < 1) {
-            $rev = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("lastmod");
+        $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("rev"); //$INFO comes from the DokuWiki core
+        if ($this->params['rev'] < 1) {
+            $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("lastmod");
         }
 
         $this->triggerStartEvents();
@@ -1786,15 +1743,12 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $res;
     }
     
-    private function doMediaManagerPreProcess()
-    {
+    private function doMediaManagerPreProcess() {
         global $ACT;
-        global $JUMPTO;
 
         $content = "";
         if ($this->runBeforePreprocess($content)) {
             ob_start();
-            // tpl_media(); //crida antiga total del media manager
             //crida parcial: només a la llista de fitxers del directori
             $this->mediaManagerFileList();
             $content .= ob_get_clean();
@@ -2364,13 +2318,11 @@ class DokuModelAdapter extends BasicModelAdapter {
 
     /**
      * Miguel Angel Lozano 21/04/2015
-     * MEDIA DETAILS: Obtenció dels detalls de un media
+     * MEDIA DETAILS: Obtenció dels detalls de un media. És la crida principal de la comanda mediadetails
      */
-    //És la crida principal de la comanda mediadetails
-    public function getMediaDetails($image)
-    {
+    public function getMediaDetails($image) {
         //[TODO Josep] Normalitzar: start do get ...
-        global $lang, $NS, $JSINFO, $MSG, $INPUT;
+        global $NS, $JSINFO, $MSG, $INPUT;
 
         $error = $this->startMediaDetails(DW_ACT_MEDIA_DETAILS, $image);
         if ($error == 401) {
@@ -2378,23 +2330,29 @@ class DokuModelAdapter extends BasicModelAdapter {
         } else if ($error == 404) {
             throw new HttpErrorCodeException("Resource " . $image . " not found.", $error);
         }
-        $title = $lang['img_manager'];
+
+        $mdpp = $this->doMediaDetailsPreProcess();
+        if ($mdpp['error']) {
+            throw new UnknownMimeTypeException();
+        }
+        if ($mdpp['newImage']) {
+            $image = $mdpp['newImage'];
+        }
         $ret = array(
-            "content" => $this->doMediaDetailsPreProcess(),     //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
+            "content" => $mdpp['content'],   //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
             "id" => $image,
             "title" => $image,
             "ns" => $NS,
             "imageTitle" => $image,
-            "image" => $image
+            "image" => $image,
+            "newImage" => ($mdpp['newImage']) ? TRUE : NULL
         );
         $do = $INPUT->str('mediado');
-        if ($do == 'diff') {
-            $ret["mediado"] = "diff";
+        if ($do === 'diff') {
+            $ret["mediado"] = $do;
         }
-        if ($MSG[0]) {
-            if ($MSG[0]['lvl'] == 'error') {
-                throw new HttpErrorCodeException($MSG[0]['msg'], 404);
-            }
+        if ($MSG[0] && $MSG[0]['lvl'] == 'error') {
+            throw new HttpErrorCodeException($MSG[0]['msg'], 404);
         }
         $JSINFO = array('id' => $image, 'namespace' => $NS);
 
@@ -2402,38 +2360,25 @@ class DokuModelAdapter extends BasicModelAdapter {
     }
 
     /**
-     * Init per a l'obtenció del Media Details
-     * Nota: aquesta funció ha tingut com a base startMediaProcess, però la separem per les següents raons:
+     * Omple alguns valors de $this->params
+     * Retorna l'ERROR de permisos de la imatge
      */
-    private function startMediaDetails($pdo, $pImage)
-    {
-        global $ID;
-        global $AUTH;
-        global $IMG;
-        global $ERROR;
-        global $SRC;
-        global $conf;
-        global $lang;
-        global $REV;
+    private function startMediaDetails($pdo, $pImage) {
+        global $ID, $AUTH, $IMG, $ERROR, $SRC, $REV;
+
         $ret = $ERROR = 0;
         $this->params['action'] = $pdo;
+        $ID = $pImage;
 
         if ($pImage) {
             $IMG = $this->params['image'] = $pImage;
-        }
-        $ID = $pImage;
-
-        // check image permissions
-        if ($pImage) {
             $AUTH = auth_quickaclcheck($pImage);
             if ($AUTH >= AUTH_READ) {
-                // check if image exists
                 $SRC = mediaFN($pImage);
                 if (!file_exists($SRC)) {
                     $ret = $ERROR = 404;
                 }
             } else {
-                // no auth
                 $ret = $ERROR = 401;
             }
         }
@@ -2446,43 +2391,35 @@ class DokuModelAdapter extends BasicModelAdapter {
         $this->startUpLang();
 
         //detect revision
-        $rev = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("rev"); //$INFO comes from the DokuWiki core
-        if ($rev < 1) {
-            $rev = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("lastmod");
+        $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("rev"); //$INFO comes from the DokuWiki core
+        if ($this->params['rev'] < 1) {
+            $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("lastmod");
         }
 
         $this->triggerStartEvents();
-
         return $ret;
     }
 
-    private function doMediaDetailsPreProcess()
-    {
+    private function doMediaDetailsPreProcess() {
         global $ACT;
-        global $JUMPTO;
 
         $content = "";
         if ($this->runBeforePreprocess($content)) {
             ob_start();
-            $content = $this->mediaDetailsContent();
-
+            $ret = $this->mediaDetailsContent();
+            $ret['content'] = $content . $ret['content'];
             // check permissions again - the action may have changed
             $ACT = act_permcheck($ACT);
         }
-        $this->runAfterPreprocess($content);
-
-        return $content;
+        $this->runAfterPreprocess($ret['content']);
+        return $ret;
     }
 
     /**
      * Prints full-screen media details
      */
-
-    function mediaDetailsContent()
-    {
-
-
-        global $NS, $IMG, $JUMPTO, $REV, $lang, $conf, $fullscreen, $INPUT, $AUTH;
+    function mediaDetailsContent() {
+        global $NS, $IMG, $JUMPTO, $REV, $lang, $conf, $fullscreen, $INPUT, $AUTH, $MSG;
         $fullscreen = TRUE;
         require_once DOKU_INC . 'lib/exe/mediamanager.php';
 
@@ -2492,7 +2429,14 @@ class DokuModelAdapter extends BasicModelAdapter {
             $image = $IMG;
         }
         if (isset($JUMPTO)) {
-            $image = $JUMPTO;
+            if ($JUMPTO === false) {
+                $ret['error'] = "UnknownMimeType";
+                return $ret;
+            }elseif ($JUMPTO != $image) {
+                //éste es el caso de un nuevo fichero con un nuevo nombre, cuando se hace upload en una página mediadetails
+                $ret['newImage'] = $JUMPTO;
+                $image = $JUMPTO;
+            }
         }
         if (isset($REV) && !$JUMPTO) {
             $rev = $REV;
@@ -2526,13 +2470,12 @@ class DokuModelAdapter extends BasicModelAdapter {
 
             echo '<div style="float:left;width:20%;">' . NL;
             echo '<h1>Dades de ' . $image . '</h1>';
-            media_details($image, $auth, $rev, $meta);
+            media_details($image, $AUTH, $rev, $meta);
             echo '</div>' . NL;
 
             if ($_REQUEST['tab_details']) {
                 if (!$size) {
-                    $tr = ob_get_clean();
-                    throw new HttpErrorCodeException( "No es poden editar les dades d'aquest element", -1);//JOSEP: Alerta! Excepció incorrecta, cal buscar o crear una execpció adient!
+                    throw new HttpErrorCodeException("No es poden editar les dades d'aquest element", -1);//JOSEP: Alerta! Excepció incorrecta, cal buscar o crear una execpció adient!
                 } else {
                     if ($_REQUEST['tab_details'] == 'edit') {
                         //$this->params['id'] = "form_".$image;
@@ -2553,32 +2496,24 @@ class DokuModelAdapter extends BasicModelAdapter {
             $sustituciones[1] = '<img style="width: 60%;"';
             $content = preg_replace($patrones, $sustituciones, $content);
         }
-        return $content;
-
-
+        $ret['content'] = $content;
+        return $ret;
     }
 
     /**
-     * Per a històric de media details a la meta
+     * Omple la pestanya històric de la zona de metadades del mediadetails
      */
-
-    function mediaDetailsHistory()
-    {
-        global $NS, $IMG, $JUMPTO, $REV, $lang, $conf, $fullscreen, $INPUT, $AUTH;
-        $fullscreen = TRUE;
-        require_once DOKU_INC . 'lib/exe/mediamanager.php';
-
-        $image = cleanID($INPUT->str('image'));
-        $ns = $INPUT->str('ns');
+    function mediaDetailsHistory($ns, $image) {
+        global $NS, $IMG, $INPUT;
+        $NS = $ns;
+        $IMG = $image;
 
         ob_start();
-        //media_tab_history($image, $ns, $AUTH);
         $first = $INPUT->int('first');
         html_revisions($first, $image);
         $content = ob_get_clean();
-        /*
-                 * Substitució de l'id del form per fer-ho variable
-                 */
+
+        // Substitució de l'id del form per fer-ho variable
         $patrones = array();
         $patrones[0] = '/form id="page__revisions"/';
         $sustituciones = array();
@@ -2586,7 +2521,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         $content = preg_replace($patrones, $sustituciones, $content);
         return $content;
     }
-
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private static function getInstructionsForDocument($id, $rev = null)

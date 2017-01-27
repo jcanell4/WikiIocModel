@@ -1,16 +1,16 @@
 <?php
 /* 
- * WikiIocInfoManager: S'encarrega de carregar la variable global $INFO
+ * WikiIocInfoManager: Carrega la variable global $INFO
  */
 if (!defined('DOKU_INC')) die();
 require_once (DOKU_INC . 'inc/common.php');
 require_once (DOKU_INC . 'inc/actions.php');
-//require_once (DOKU_INC . 'inc/pageutils.php');
+require_once (DOKU_INC . 'inc/pageutils.php');
 
 class WikiIocInfoManager {
 
-    const KEY_EXISTS    = "exists";
-    const KEY_LOCKED    = "locked";
+    const KEY_EXISTS = "exists";
+    const KEY_LOCKED = "locked";
 
     private static $isMediaAction = FALSE;
     private static $infoLoaded = FALSE;
@@ -19,27 +19,23 @@ class WikiIocInfoManager {
     public static function getInfo($key){
         global $INFO;
         self::loadInfo();        
-        if(!isset($INFO[$key])){
-            $ret = $key;
-        }else{
-            $ret = $INFO[$key];
-        }
+        $ret = (isset($INFO[$key])) ? $INFO[$key] : $key;
         return $ret;
     }
     
     public static function setIsMediaAction($value){
-        self::$isMediaAction=$value;
+        self::$isMediaAction = $value;
     }
     
     public static function setInfo($key, $value){
         global $INFO;
         self::loadInfo();
-        $INFO[$key]=$value;
+        $INFO[$key] = $value;
         self::updateJsInfo();
     }
     
     public static function loadInfo() {
-        if(self::$isMediaAction){
+        if (self::$isMediaAction){
             self::loadMediaInfo();
         }else if (!self::$infoLoaded) {
             self::fillInfo();
@@ -53,12 +49,14 @@ class WikiIocInfoManager {
     }
 
     public static function loadMediaInfo() {
-	global $INFO;
+	global $INFO, $IMG;
         if (!self::$infoLoaded) {
             self::fillInfo();
         }
         if (!self::$mediaInfoLoaded) {
-            $INFO = array_merge( $INFO, mediainfo() );
+            $INFO = array_merge($INFO, mediainfo());
+            $INFO['mediapath'] = mediaFN($IMG);
+            $INFO['mediaexists'] = @file_exists($INFO['mediapath']);
             self::$mediaInfoLoaded = TRUE;
         }
     }
@@ -92,28 +90,28 @@ class WikiIocInfoManager {
         global $REV;
         global $DATE;
         global $NS;
-        
+        global $IMG;
 
         $ACT = $params['do'];
         $ACT = act_clean( $ACT );
 
-        if ( $params['id']  ) {
-                $ID = $params['id'];
-        }
-        if ( $params['rev']  ) {
-                $REV = $params['rev'];
-        }
-        if ( $params['date']  ) {
-                $DATE = $params['date'];
-        }
-        if($params['ns']){
+        if ($params['id'])
+            $ID = $params['id'];
+
+        if ($params['rev'])
+            $REV = $params['rev'];
+
+        if ($params['date'])
+            $DATE = $params['date'];
+
+        if ($params['ns'])
             $NS = $params['ns'];
-        }
         
-        if($params['do'] === 'media'){
-            if($params['id'] && !$params['ns']){
+        if ($params['do'] === 'media') {
+            if ($params['id'] && !$params['ns']) {
                 $NS = $params['ns'] = $params['id'];
             }
+            $IMG = $params['image'];
         }
         self::$infoLoaded = FALSE;
         self::$mediaInfoLoaded = FALSE;

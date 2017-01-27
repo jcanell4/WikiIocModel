@@ -14,7 +14,7 @@ require_once (WIKI_IOC_PROJECT . 'authorization/PageCommandAuthorization.php');
 class EditAuthorization extends PageCommandAuthorization {
     
     public function getPermissionException() {
-        if ($this->permission->getPageExist() && $this->permission->getInfoPerm() < AUTH_READ) {
+        if ($this->permission->getResourceExist() && $this->permission->getInfoPerm() < AUTH_READ) {
             $exception = 'InsufficientPermissionToEditPageException';
         }elseif (!$this->isResponsable() && !$this->isAuthor()) {
             $exception = 'UserNotAuthorizedException';
