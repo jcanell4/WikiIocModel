@@ -46,7 +46,7 @@ class TimerNotifyModel extends DokuNotifyModel
         return $init;
     }
 
-    public function notifyMessageToFrom($text, $receiverId, $senderId = NULL)
+    public function notifyMessageToFrom($data, $receiverId, $senderId = NULL)
     {
         // Posa el missatge text a la cua d'enviaments de l'usuari receiverId i firma el missatge amb el nom indicat a
         // sender. En el sistema de WebSockets el missatge s'envia de forma immediata al client. En el cas de Timers,
@@ -54,7 +54,8 @@ class TimerNotifyModel extends DokuNotifyModel
 
 
         // L'afegim al blackboard del destinatari ($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
-        $this->dataQuery->add($receiverId, $text, 'message', NULL, $senderId); // TODO[Xavi] S'ha de canviar per una constant
+
+        $this->dataQuery->add($receiverId, $data, 'message', NULL, $senderId); // TODO[Xavi] S'ha de canviar per una constant
     }
 
     public function notifyTo($data, $receiverId, $type, $id=NULL)

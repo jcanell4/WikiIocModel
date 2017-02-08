@@ -48,8 +48,14 @@ class NotifyDataQuery extends DataQuery
         throw new UnavailableMethodExecutionException("NotifyDataQuery#getNsTree");
     }
 
-
-    public function generateNotification($notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
+    /**
+     * @param array $notificationData el format d'aquest paràmetre és: ['type' => '', 'id' => '', 'title' => '', 'text' => '']
+     * @param string $type
+     * @param null $id
+     * @param null $senderId
+     * @return array
+     */
+    public function generateNotification(array $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
     {
 
         $notification = [];

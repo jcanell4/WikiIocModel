@@ -100,14 +100,17 @@ class NotifyAction extends AbstractWikiAction
                 }
                 break;
 
-            case self::DO_ADD: // El usuari idUser envia una notificació, notifyToFrom().
-                $response['notifications'][] = $this->notifyToFrom();
-
-                break;
-
-//            case self::DO_ADDMESS: // ALERTA[Xavi] Aquesta opció no funciona i no s'utilitza
-//                $response = $this->notifyMessageToFrom();
+            // ALERTA[Xavi] Aquesta opció no s'utilitza i no està implementada
+//            case self::DO_ADD: // El usuari idUser envia una notificació, notifyToFrom().
+//                $response['notifications'][] = $this->notifyTo();
+//
 //                break;
+
+            case self::DO_ADDMESS:
+                //TODO[Xavi] Casella confirmar correu
+                //TODO[Xavi]Casella notificar canvi (el missatge inclou document id)
+                $response = $this->notifyMessageToFrom();
+                break;
 
             case self::DO_GET: // Obtenir totes les notificacions pel idUser, cridat periodicament pel timer, popNotifications()
                 $response['notifications'][]= $this->popNotifications();
@@ -136,12 +139,26 @@ class NotifyAction extends AbstractWikiAction
     // ALERTA[Xavi] això no es correcte, però tampoc s'està utilitzant
     public function notifyMessageToFrom()
     {
-        $params = $this->params[PageKeys::KEY_PARAMS];
-        $text = $this->params['message']; // TODO[Xavi] Convertir en constants, decidir on
+
+        $data = $this->params['message']; // TODO[Xavi] Convertir en constants, decidir on
         $receiverId = $this->params['to'];
         $senderId = $this->getCurrentUser();
 
-        $response['params'] = $this->dokuNotifyModel->notifyMessageToFrom($text, $receiverId, $senderId);
+        if (is_string($data)) {
+            $message = [
+                'type' => isset($this->params['type']) ? $this->params['type'] : 'info',
+                'id' => $this->params['id'] . '_' . $senderId, // ALERTA[Xavi] La id d'aquests missatges concatenan la id del document i l'usuari.
+                'title' => 'Missatge', // TODO[Xavi]: Localitzar
+                'text' => $data
+            ];
+        } else {
+            $message = $data;
+        }
+
+
+
+
+        $response['params'] = $this->dokuNotifyModel->notifyMessageToFrom($message, $receiverId, $senderId);
         $response['action'] = 'notification_send';
 
         return $response;
@@ -150,15 +167,7 @@ class NotifyAction extends AbstractWikiAction
     // ALERTA[Xavi] això no es correcte, però tampoc s'està utilitzant
     public function notifyTo()
     {
-        $params = $this->params[PageKeys::KEY_PARAMS];
-        $data = $this->params['data']; // TODO[Xavi] Convertir en constants, decidir on
-        $receiverId = $this->params['to'];
-        $senderId = $this->getCurrentUser();
-
-        $response['params'] = $this->dokuNotifyModel->notifyToFrom($text, $receiverId, $params, $senderId);
-        $response['action'] = 'notification_send';
-
-        return $response;
+        // ALERTA[Xavi] No s'utilitza
     }
 
     public function popNotifications()
