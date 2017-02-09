@@ -157,7 +157,6 @@ class NotifyAction extends AbstractWikiAction
                 $message = sprintf(WikiIocLangManager::getLang("doc_message"), $docId) .  "\n\n" . $data;
             } else {
                 $title = sprintf(WikiIocLangManager::getLang("title_message_notification"), $senderId);
-                $title = WikiIocLangManager::getLang("title_message_notification"); // TODO[Xavi]: Localitzar
                 $message = $data;
             }
 

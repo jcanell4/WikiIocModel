@@ -142,7 +142,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
                     
                    if($this->params[PageKeys::KEY_TO_REQUIRE]){
                         // TODO: afegir el 'meta' que correspongui perquè si ve del requiring dialog, el content tool es crerà de nou 
-                       $response['meta'] = $this->getMetaTocResponse();
+                       $response['meta'][] = $this->getMetaTocResponse();
                         // TODO: afegir les revisions
                        $response['revs'] = $this->getRevisionList();
                    }
@@ -155,7 +155,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
                 //  No es pot editar. Cal esperar que s'acabi el bloqueig
                  $response = $this->_getWaitingUnlockDialog($data); // <-- acció equivalent al RawPageAction
                 // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou 
-                $response['meta'] = $this->getMetaTocResponse();
+                $response['meta'][] = $this->getMetaTocResponse();
                 // TODO: afegir les revisions
                 $response['revs'] = $this->getRevisionList();
 
@@ -164,9 +164,11 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
         $response["lockInfo"] = $this->lockStruct["info"];
 
+        $ns = isset($response['ns']) ? $response['ns'] : $response['structure']['ns'];
+        $response['meta'][] = $this->getNotificationsMetaToResponse($response, $ns);
+
         return $response;
     }
-
 
 
     private function generateOriginalCall()

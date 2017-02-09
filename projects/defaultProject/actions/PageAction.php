@@ -190,4 +190,25 @@ abstract class PageAction extends DokuAction
     }
 
 
+    protected function getNotificationsMetaToResponse(&$response, $ns) {
+
+
+        return [
+            "id" => $ns . "_metaNotifications",
+            "title" => WikiIocLangManager::getLang('notification_form_title'),
+            "content" => '<form action="lib/plugins/ajaxcommand/ajax.php" method="post">
+                <input type="hidden" name="sectok" value="'.getSecurityToken().'"/>
+                <input type="hidden" name="call" value="notify"/>
+                <input type="hidden" name="do" value="add_message">
+                <input type="hidden" name="type" value="warning"/>
+                <label>'. WikiIocLangManager::getLang('notification_form_to'). ':<input type="text" name="to" required></label>
+                <label><input type="checkbox" name="id" value="'. $ns.'"/>'. sprintf(WikiIocLangManager::getLang('notification_form_check_add_id'),  $response['id']). '</label><br>
+                <input type="checkbox" name="send_email" disabled />'. WikiIocLangManager::getLang('notification_form_check_add_email'). '</label><br>
+                <label>'. WikiIocLangManager::getLang('notification_form_message'). ':<textarea name="message" required></textarea></label>
+                <button>'. WikiIocLangManager::getLang('notification_form_button_send'). '</button></form>',
+            "type" => "notification" // aixó no se si es necessari
+        ];
+
+    }
+
 }

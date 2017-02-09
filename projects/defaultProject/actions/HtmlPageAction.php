@@ -80,11 +80,14 @@ class HtmlPageAction extends PageAction{
         }
 
         // TODO: afegir el 'meta' que correspongui
-        $response['meta'] = $this->getMetaTocResponse();
+        $response['meta'] = $this->getMetaTocResponse()['meta'];
 
         // TODO: afegir les revisions
         $response['revs'] = $this->getRevisionList();
-        
+
+        $ns = isset($response['ns']) ? $response['ns'] : $response['structure']['ns'];
+        $response['meta'][] = $this->getNotificationsMetaToResponse($response, $ns);
+
         return $response;
     }
 }

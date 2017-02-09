@@ -104,14 +104,14 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         //Casos
         // 1) Ja s'ha recuperat el draft local
         if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]) {
-            $resp = $this->_getLocalDraftResponse();
+            $response = $this->_getLocalDraftResponse();
         } else if($this->lockState()==ST_LOCKED_BEFORE){
             //-1 L'usuari te obert el document en una altra sessio
-            $resp = $this->_getSelfLockedDialog($this->getModel()->getRawData());
+            $response = $this->_getSelfLockedDialog($this->getModel()->getRawData());
         } else
             // 2) Es demana recuperar el draft
             if ($this->params[PageKeys::KEY_RECOVER_DRAFT]) {
-                $resp = $this->_getDraftResponse();
+                $response = $this->_getDraftResponse();
             } else { //
                 $rawData = $this->getModel()->getRawData();
                 $rawData["draftType"] = $this->_getDraftType($rawData["draftType"]);
@@ -119,24 +119,24 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
                 if ($rawData["draftType"] == DokuPageModel::NO_DRAFT
                     || isset($this->params[PageKeys::KEY_RECOVER_DRAFT])
                 ) {
-                    $resp = $this->_getRawDataContent($rawData);
+                    $response = $this->_getRawDataContent($rawData);
                 } else
                     //4) Hi ha draft però no hi ha bloqueig (!locked)
                     if ($rawData["draftType"] == DokuPageModel::FULL_DRAFT && !$rawData["locked"]) {
                         //Enviar diàleg
-                        $resp = $this->_getDraftDialog($rawData);
+                        $response = $this->_getDraftDialog($rawData);
                     } else
                         //5) no hi ha bloqueig (!locked) i el draft local és més nou
                         if ($rawData["draftType"] == DokuPageModel::LOCAL_FULL_DRAFT && !$rawData["locked"]) {
                             //Enviar diàleg
-                            $resp = $this->_getLocalDraftDialog($rawData);
+                            $response = $this->_getLocalDraftDialog($rawData);
                         } else { // 6) Hi ha draft però el recurs està blquejat per un altre usuari
                             //No es pot editar. Cal esperar que s'acabi el bloqueig
-                            $resp = $this->_getWaitingUnlockDialog($rawData);
+                            $response = $this->_getWaitingUnlockDialog($rawData);
                         }
             }
 
-        $resp["lockInfo"] = $this->lockStruct["info"];
+        $response["lockInfo"] = $this->lockStruct["info"];
 
         //$pageToSend = $this->cleanResponse($this->_getCodePage());
 
@@ -149,7 +149,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         $resp[PageKeys::KEY_LOCK_STATE] = $this->requireResource();
          */
 
-        $resp['info'] = $this->generateLockInfo($this->lockState(), $resp['info']);
+        $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
 
 
 //        $infoType = 'info';
@@ -206,8 +206,15 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
             $resp['show_draft_dialog'] = TRUE;
         }*/
 
-        return $resp;
+
+        $response['meta'][] = $this->getNotificationsMetaToResponse($response, $response['ns']);
+
+
+        return $response;
     }
+
+
+
 
 //    protected function getContentPage($pageToSend)
 //    {
@@ -314,8 +321,12 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
                     $meta) + ['type' => 'summary'])
         ];
 
+
+
         return $response;
     }
+
+
 
 //    private function _getCodePage()
 //    {
