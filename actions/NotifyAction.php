@@ -7,6 +7,8 @@ if (!defined('DOKU_PLUGIN')) {
     define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 }
 
+require_once DOKU_INC . 'inc/inc_ioc/MailerIOC.class.php';
+
 require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/LockManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
@@ -144,17 +146,28 @@ class NotifyAction extends AbstractWikiAction
     // ALERTA[Xavi] això no es correcte, però tampoc s'està utilitzant
     public function notifyMessageToFrom()
     {
+        global $auth;
+
 
         $data = $this->params['message'];
         $docId = $this->params['id'];
-        $receiverId = $this->params['to'];
+
+
         $senderId = $this->getCurrentUser();
+        $senderUser = $auth->getUserData($senderId);
+
+        $receiverId = $this->params['to'];
+        $receiverUser = $auth->getUserData($receiverId);
+
+        // TODO[Xavi] Si no existeix l'usuari llençar excepció
+
+
 
         if (is_string($data)) {
 
             if ($docId) {
                 $title = sprintf(WikiIocLangManager::getLang("title_message_notification_with_id"), $senderId, $docId);
-                $message = sprintf(WikiIocLangManager::getLang("doc_message"), $docId) .  "\n\n" . $data;
+                $message = sprintf(WikiIocLangManager::getLang("doc_message"), wl($docId,'',true), $docId) .  "\n\n" . $data;
             } else {
                 $title = sprintf(WikiIocLangManager::getLang("title_message_notification"), $senderId);
                 $message = $data;
@@ -168,14 +181,34 @@ class NotifyAction extends AbstractWikiAction
             ];
         } else {
             $message = $data;
+            $title = $data['title'];
         }
 
-        // TODO[Xavi] processar el missatge com codi de la wiki per obtenir la resposta en HTML que es la que s'enviarà
+        if ($this->params['send_email']) {
 
-        $response['params'] = $this->dokuNotifyModel->notifyMessageToFrom($message, $receiverId, $senderId);
+            $this->sendNotificationByEmail($senderUser, $receiverUser, $title, $message['text']);
+        }
+
+        $response['params'] = $this->dokuNotifyModel->notifyMessageToFrom($message, $receiverId, $message, $senderId);
         $response['action'] = 'notification_send';
 
         return $response;
+    }
+
+
+    public function sendNotificationByEmail($senderUser, $receiverUser, $subject, $message) {
+        $subject = sprintf(WikiIocLangManager::getLang("notificaction_email_subject"), $subject);
+//            mail_send($receiverUser['mail'], $subject, $message['text'], $senderUser['mail'] );
+
+        // TODO[Xavi] L'enllaç ha d'incloure la URL completa
+
+        $mail = new MailerIOC();
+        $mail->to($receiverUser['id'] . ' <' . $receiverUser['mail'] . '>');
+        $mail->subject($subject);
+        $mail->setBody($message);
+//            $mail->setBody($message['text']);
+        $mail->from($senderUser['mail']);
+        $mail->send();
     }
 
     // ALERTA[Xavi] això no es correcte, però tampoc s'està utilitzant

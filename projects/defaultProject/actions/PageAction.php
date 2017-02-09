@@ -203,7 +203,7 @@ abstract class PageAction extends DokuAction
                 <input type="hidden" name="type" value="warning"/>
                 <label>'. WikiIocLangManager::getLang('notification_form_to'). ':<input type="text" name="to" required></label>
                 <label><input type="checkbox" name="id" value="'. $ns.'"/>'. sprintf(WikiIocLangManager::getLang('notification_form_check_add_id'),  $response['id']). '</label><br>
-                <input type="checkbox" name="send_email" disabled />'. WikiIocLangManager::getLang('notification_form_check_add_email'). '</label><br>
+                <input type="checkbox" name="send_email" value="true"/>'. WikiIocLangManager::getLang('notification_form_check_add_email'). '</label><br>
                 <label>'. WikiIocLangManager::getLang('notification_form_message'). ':<textarea name="message" required></textarea></label>
                 <button>'. WikiIocLangManager::getLang('notification_form_button_send'). '</button></form>',
             "type" => "notification" // aixó no se si es necessari

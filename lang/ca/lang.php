@@ -82,7 +82,7 @@ $lang['projectException']['insufficientPermissionToGenerateProject'] = 'Vosté n
 
 $lang['title_message_notification'] = 'Missatge de %s';
 $lang['title_message_notification_with_id'] = 'Missatge de %s (document %s)';
-$lang['doc_message'] = 'Missatge referent a: [[%s]].';
+$lang['doc_message'] = 'Missatge referent a: [[%s|%s]].';
 
 $lang['notification_form_title'] = 'Enviar notificacions';
 $lang['notification_form_to'] = 'Destinatari';
@@ -90,3 +90,4 @@ $lang['notification_form_check_add_id'] = 'Afegir enllaç al document %s';
 $lang['notification_form_check_add_email'] = 'Enviar correu';
 $lang['notification_form_button_send'] = 'Enviar';
 $lang['notification_form_message'] = 'Missatge';
+$lang['notificaction_email_subject'] = 'Nova notificació - %s';
