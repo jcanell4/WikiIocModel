@@ -64,7 +64,7 @@ class NotifyDataQuery extends DataQuery
             $id = $now->getTimestamp();
         }
 
-        $notification[self::NOTIFICATION_ID] = $id; // ALERTA[Xavi] Moure les constants a un altre fitxer?
+        $notification[self::NOTIFICATION_ID] = $id;
         $notification[self::TYPE] = $type;
         $notification[self::DATA] = $notificationData;
 
