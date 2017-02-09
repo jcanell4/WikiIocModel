@@ -79,3 +79,7 @@ $lang['projectException']['insufficientPermissionToEditProject'] = 'Vosté no t�
 $lang['projectException']['insufficientPermissionToCreateProject'] = 'Vosté no té permís per crear el projecte %s aquí';
 $lang['projectException']['insufficientPermissionToDeleteProject'] = 'Vosté no té permís per eliminar el projecte %s';
 $lang['projectException']['insufficientPermissionToGenerateProject'] = 'Vosté no té permís per generar el projecte %s';
+
+$lang['title_message_notification'] = 'Missatge';
+$lang['title_message_notification_with_id'] = 'Missatge (document %s)';
+$lang['doc_message'] = 'Missatge (document [[%s]])';

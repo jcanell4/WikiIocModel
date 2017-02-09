@@ -136,27 +136,41 @@ class NotifyAction extends AbstractWikiAction
         return $response;
     }
 
+    protected function generateAboutDocument($id) {
+        // TODO[Xavi] Localitzar el missatge
+        return sprintf(WikiIocLangManager::getLang("doc_message"), $id);
+    }
+
     // ALERTA[Xavi] això no es correcte, però tampoc s'està utilitzant
     public function notifyMessageToFrom()
     {
 
-        $data = $this->params['message']; // TODO[Xavi] Convertir en constants, decidir on
+        $data = $this->params['message'];
+        $docId = $this->params['id'];
         $receiverId = $this->params['to'];
         $senderId = $this->getCurrentUser();
 
         if (is_string($data)) {
+
+            if ($docId) {
+                $title = sprintf(WikiIocLangManager::getLang("title_message_notification_with_id"), $docId);
+                $message = sprintf(WikiIocLangManager::getLang("doc_message"), $docId) .  "\n" . $data;
+            } else {
+                $title = WikiIocLangManager::getLang("title_message_notification"); // TODO[Xavi]: Localitzar
+                $message = $data;
+            }
+
             $message = [
                 'type' => isset($this->params['type']) ? $this->params['type'] : 'info',
-                'id' => $this->params['id'] . '_' . $senderId, // ALERTA[Xavi] La id d'aquests missatges concatenan la id del document i l'usuari.
-                'title' => 'Missatge', // TODO[Xavi]: Localitzar
-                'text' => $data
+                'id' => $docId . '_' . $senderId,
+                'title' => $title,
+                'text' => p_render('xhtml', p_get_instructions($message), $info)
             ];
         } else {
             $message = $data;
         }
 
-
-
+        // TODO[Xavi] processar el missatge com codi de la wiki per obtenir la resposta en HTML que es la que s'enviarà
 
         $response['params'] = $this->dokuNotifyModel->notifyMessageToFrom($message, $receiverId, $senderId);
         $response['action'] = 'notification_send';
