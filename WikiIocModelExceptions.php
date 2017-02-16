@@ -79,9 +79,16 @@ class UnexpectedLockCodeException extends WikiIocModelException {
 /**
  * Excepciones propias de los proyectos
  */
-abstract class WikiIocProjectException extends WikiIocModelException {
-    public function __construct($codeMessage, $code, $target=NULL) {       
-        parent::__construct($codeMessage, $code, NULL, $target);
+abstract class WikiIocProjectException extends Exception {
+    public function __construct($codeMessage, $code, $target=NULL) {
+        $message = WikiIocLangManager::getLang('projectException')[$codeMessage];
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
+        if ($target) {
+            $message = sprintf($message, $target);
+        }
+        parent::__construct($message, $code, NULL);
     }
 }
 
@@ -117,6 +124,12 @@ class InsufficientPermissionToDeletePageException extends WikiIocProjectExceptio
 
 class InsufficientPermissionToDeleteResourceException extends WikiIocProjectException {
     public function __construct($page, $codeMessage='auth_DeleteResource', $code=7006) {
+        parent::__construct($codeMessage, $code, $page);
+    }
+}
+
+class UnknownPojectTypeException extends WikiIocProjectException {
+    public function __construct($page, $codeMessage='UnknownPojectType', $code=7007) {
         parent::__construct($codeMessage, $code, $page);
     }
 }

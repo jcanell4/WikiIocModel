@@ -1,5 +1,6 @@
 <?php
 if (!defined("DOKU_INC")) die();
+include_once 'ProjectMetadataAction.php';
 
 class CreateProjectMetaDataAction extends ProjectMetadataAction {
 
@@ -9,20 +10,20 @@ class CreateProjectMetaDataAction extends ProjectMetadataAction {
      * @param type $paramsArr
      */
     public function get($paramsArr = array()) {
+        
         $this->projectModel->init($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
         
         //sólo se ejecuta si no existe el proyecto
         if (!$this->projectModel->existProject($paramsArr[ProjectKeys::KEY_ID])) {
-            //obtiene la estructura y el contenido del proyecto (para pruebas)
-//            $projectMetaData = $this->projectModel->getMetaDataDef($paramsArr[ProjectKeys::KEY_ID],$paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
+            //obtiene las claves de la estructura de los metadatos del proyecto
+            //$metaDataValues = $this->projectModel->getMetaDataDefKeys($paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
 
             //asigna los valores por defecto a los campos definidos en configMain.json
-            $metaDataValues = [
-                "responsable" => $_SERVER['REMOTE_USER'],
-                "titol" => $paramsArr[ProjectKeys::KEY_ID],
-                "autor" => $_SERVER['REMOTE_USER'],
-                "plantilla" => "plantilles:projects:continguts"
-            ];
+            $metaDataValues["responsable"] = $_SERVER['REMOTE_USER'];
+            $metaDataValues['titol'] = $paramsArr[ProjectKeys::KEY_ID];
+            $metaDataValues['autor'] = $_SERVER['REMOTE_USER'];
+            $metaDataValues['plantilla'] = "plantilles:projects:continguts";
+            $metaDataValues['descripcio'] = "descripció del projecte";
 
             $metaData = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,

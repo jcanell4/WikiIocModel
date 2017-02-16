@@ -13,40 +13,35 @@
       "main": "meta.mdpr",
       "keysDefinition": {
         "responsable": {
+          "struc_chars": "40",
+          "struc_rows": "1",
           "mandatory": true,
-          "tipus": "string",
-          "default": "",
-          "grup": "noms",
-          "prioritat": "0",
-          "ample": "40",
-          "alt": "1"
+          "group": "admin"
+        },
+        "autor": {
+          "group": "admin"
         },
         "titol": {
           "mandatory": true,
-          "tipus": "string",
-          "default": "",
-          "grup": "titol",
-          "prioritat": "1",
-          "ample": "40",
-          "alt": "1"
+          "default": "Dades generals del projecte"
         },
-        "autor": {
-          "mandatory": false,
-          "tipus": "string",
-          "default": "",
-          "grup": "noms",
-          "prioritat": "0",
-          "ample": "40",
-          "alt": "1"
+        "descripcio_titol": {
         },
         "plantilla": {
-          "mandatory": false,
-          "tipus": "string",
-          "default": "plantilles:projects:continguts",
-          "grup": "dades",
-          "prioritat": "1",
-          "ample": "40",
-          "alt": "1"
+          "group": "dades",
+          "default": "plantilles:projects:continguts"
+        },
+        "descripcio": {
+          "group": "dades"
+        },
+        "descripcio_segona": {
+          "group": "dades"
+        },
+        "field1_grup3": {
+        },
+        "field2_grup3": {
+        },
+        "field3_grup3": {
         }
       }
     }

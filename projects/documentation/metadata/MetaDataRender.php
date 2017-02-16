@@ -1,41 +1,26 @@
 <?php
 /**
  * Component: Project / MetaData
- * Status: @@Development
- * Purposes:
- * - Default / Class extending basis/MetaDataRender
  * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
- */
-
-/**
- * Description of MetaDataRender
- *
- * @author professor
  */
 namespace documentation;
 require_once(DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderAbstract.php');
-
 
 class MetaDataRender extends \MetaDataRenderAbstract {
 
     /**
      * Purpose:
-     * - Basis function to returns the same array of entities (converting it to JSON)
      * @param $metaDataEntityWrapper -> Entities array
-     * Restrictions:
-     * @return JSON (convert each Entity model to a JSON element)
      */
     public function render($metaDataEntityWrapper) {
-
-        // Alerta[Xavi] Per aquest tipus de projecte no es preveu la necessitat de fer servir un array
 
         $objAux = json_decode($metaDataEntityWrapper[0]->getArrayFromModel(), true);
         $structure = json_decode($objAux['metaDataStructure'], true);
         $types = json_decode($objAux['metaDataTypesDefinition'], true);
-        $values = json_decode($objAux['MetaDataValue'], true);
+        $values = json_decode($objAux['metaDataValue'], true);
 
         $returnTree = [];
-        $returnTree['structure'] = $this->initParser($values, $structure, $types);;
+        $returnTree['structure'] = $this->initParser($values, $structure, $types);
         $returnTree['values'] = $this->flatten($returnTree['structure']);
 
         return $returnTree;
@@ -44,7 +29,8 @@ class MetaDataRender extends \MetaDataRenderAbstract {
     protected function flatten($values) {
         $flat = [];
         foreach ($values as $key => $value) {
-            if (getType($value['value']) === 'array') { // Si es un array s'ha d'aplanar
+            if (getType($value['value']) === 'array') { 
+                // Si es un array s'ha d'aplanar
                 $newFlat = $this->flatten($value['value']);
                 $flat = array_merge($flat, $newFlat);
             } else if ($value['value']) {
@@ -56,7 +42,18 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         return $flat;
     }
 
-    protected function initParser($values, $structure, $definitionTypes) {
+    protected function initParser($values, $structure, $types) {
+        //Añade al array de campos de valores los campos de la estructura que le falten
+        foreach ($structure as $k => $v) {
+            if (!isset($values[$k])) {
+                $values[$k] = '';
+            }
+        }
+        $tree = $this->parser($values, $structure, $types);
+        return $tree;
+    }
+
+    protected function parser($values, $structure, $definitionTypes) {
         $tree = [];
 
         // El primer nivell de l'estructura depén de l'estructura
