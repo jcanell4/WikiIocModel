@@ -49,11 +49,11 @@ class Permission extends AbstractPermission {
         return ($this->getInfoPerm() < AUTH_EDIT);
     }
     
-    public function getPageExist() {
+    public function getResourceExist() {
         return $this->pageExist;
     }
   
-    public function setPageExist($pageExist) {
+    public function setResourceExist($pageExist) {
         $this->pageExist = $pageExist;
     }
 

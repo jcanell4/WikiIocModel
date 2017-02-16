@@ -28,7 +28,7 @@ class Permission extends AbstractPermission {
         return $this->responsable;
     }
 
-    public function getPageExist() {
+    public function getResourceExist() {
         return $this->pageExist;
     }
   
@@ -48,7 +48,7 @@ class Permission extends AbstractPermission {
         $this->responsable = $responsable;
     }
 
-    public function setPageExist($pageExist) {
+    public function setResourceExist($pageExist) {
         $this->pageExist = $pageExist;
     }
 }
