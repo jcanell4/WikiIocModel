@@ -54,6 +54,19 @@ class ProjectMetaDataQuery extends DataQuery {
         return $toReturn;
     }
 
+    public function getMetaViewConfig($projectType, $viewConfig) {
+        
+        $view = @file_get_contents(DOKU_PLUGIN . "wikiiocmodel/projects/$projectType/metadata/config/$viewConfig.json");
+        if ($view == false) {
+            $view = @file_get_contents(DOKU_PLUGIN . "wikiiocmodel/projects/$projectType/metadata/config/defaultView.json");
+            if ($view == false) {
+                $view = @file_get_contents(DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/metadata/config/defaultView.json");
+            }
+        }
+        $viewArray = json_decode($view, true);
+        return $viewArray;
+    }
+
     //Retorn JSON {ns1:projectType1, …, nsm:projectTypem}
     public function getMetaDataElementsKey($nsRoot) {
 

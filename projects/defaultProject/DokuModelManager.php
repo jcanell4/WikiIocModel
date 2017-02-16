@@ -6,18 +6,18 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
-define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");  //el valor cambia en cada proyecto
+define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
+define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
 
-require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');  
 require_once(WIKI_IOC_MODEL . 'WikiIocModelManager.php');
+require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');  
 //Los siguientes includes son para Clases específicas y exclusivas de este proyecto
-require_once(WIKI_IOC_PROJECT . 'DokuModelAdapter.php');
-require_once(WIKI_IOC_PROJECT . 'DokuModelExceptions.php');
+require_once(WIKI_IOC_PROJECTS . 'defaultProject/DokuModelAdapter.php');
+require_once(WIKI_IOC_PROJECTS . 'defaultProject/DokuModelExceptions.php');
 
 class DokuModelManager extends WikiIocModelManager{
     
-    const DEF = WIKI_IOC_PROJECT;
+    const DEF = WIKI_IOC_PROJECTS . 'defaultProject/';
     static $defDirClass = array (
                 //"Action" =>           Los ficheros de estas clases no están en directorios ajenos a este proyecto.
                 //,"Authorization" =>   Si algún fichero está fuera del directorio de proyecto, 
@@ -30,9 +30,9 @@ class DokuModelManager extends WikiIocModelManager{
     
     public function __construct() {}
 
-    public function getAuthorizationManager($str_command, $params) {
+    public function getAuthorizationManager($str_command) {
         $factory = \FactoryAuthorization::Instance();
-        return $factory->createAuthorizationManager($str_command, $params);
+        return $factory->createAuthorizationManager($str_command);
     }
 
     public function getModelWrapperManager() {

@@ -24,6 +24,7 @@ $lang['auth_EditPage'] = "No teniu permís per a Editar la pàgina %s";
 $lang['auth_ViewPage'] = "No teniu permís per a Veure la pàgina %s";
 $lang['auth_WritePage'] = "No teniu permís per a Escriure la pàgina %s";
 $lang['auth_DeletePage'] = "No teniu permís per a Eliminar la pàgina %s";
+$lang['auth_DeleteResource'] = "No teniu permís per a Eliminar el recurs %s";
 $lang['auth_UploadMedia'] = "No teniu permís per a pujar fitxers";
 $lang['auth_TokenNotVerified'] = "Token no verificat";
 $lang['auth_UserNotAuthenticated'] = "Usuari no autenticat";
@@ -78,3 +79,12 @@ $lang['projectException']['insufficientPermissionToEditProject'] = 'Vosté no t�
 $lang['projectException']['insufficientPermissionToCreateProject'] = 'Vosté no té permís per crear el projecte %s aquí';
 $lang['projectException']['insufficientPermissionToDeleteProject'] = 'Vosté no té permís per eliminar el projecte %s';
 $lang['projectException']['insufficientPermissionToGenerateProject'] = 'Vosté no té permís per generar el projecte %s';
+
+$lang['projectLabelForm']['responsable'] = 'responsable del projecte';
+$lang['projectLabelForm']['autor'] = 'autor del projecte';
+$lang['projectLabelForm']['titol'] = 'titol del projecte';
+$lang['projectLabelForm']['plantilla'] = 'plantilla per defecte';
+$lang['projectLabelForm']['descripció'] = 'descripció del projecte';
+
+$lang['projectGroup']['main'] = 'Grup principal del projecte';
+$lang['projectGroup']['admin'] = 'Dades de l\'administració del projecte';

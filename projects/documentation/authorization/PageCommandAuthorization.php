@@ -6,16 +6,16 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
-define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . 'projects/documentation/');
+define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
+define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
 
 require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
-require_once (WIKI_IOC_PROJECT . 'authorization/CommandAuthorization.php');
+require_once (WIKI_IOC_PROJECTS . 'documentation/authorization/CommandAuthorization.php');
 
 abstract class PageCommandAuthorization extends CommandAuthorization {
 
-    public function __construct($params) {
-        parent::__construct($params);
+    public function __construct() {
+        parent::__construct();
     }
 
     public function canRun() {

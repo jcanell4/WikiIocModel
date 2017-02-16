@@ -75,8 +75,8 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      * @param Array $MetaDataRequestMessage
      * Restrictions:     
      * - mandatory idResource,projectType,metaDataSubSet in param array $MetaDataRequestMessage
-     * - mandatory: MetaDataEntity->MetaDataValue
-     * - MetaDataEntity->MetaDataValue wellformed JSON --> this restriction is managed by MetaDataEntityAbstract
+     * - mandatory: MetaDataEntity->metaDataValue
+     * - MetaDataEntity->metaDataValue wellformed JSON --> this restriction is managed by MetaDataEntityAbstract
      * - if persistence return not true, then wellformed JSON
      * - if persistence returns {"error","5120"}, then WikiIocModelException->PersistenceNsNotFound
      * - if persistence returns {"error","5090"}, then WikiIocModelException->MetaDataNotUpdated

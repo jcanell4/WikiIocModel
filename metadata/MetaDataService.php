@@ -99,9 +99,9 @@ class MetaDataService {
 
         //Init metaDataElements property (elements set to get metadata)
         try {
-            $a = $this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['persistence']);
-            $this->setMetaDataElements($this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['persistence']));
-            if ($this->getMetaDataElements() != null) {
+            $metaDataElements = $this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequestMessage['idResource'], $MetaDataRequestMessage['persistence']);
+            if ($metaDataElements !== NULL) {
+                $this->setMetaDataElements($metaDataElements);
                 $encoder = new JSON();
                 $arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));
                 asort($arrayElements);
@@ -113,7 +113,8 @@ class MetaDataService {
                 $projectTypeActual = null;
                 $metaDataResponseGet = null;
 
-                foreach ($this->getMetaDataElements() as $idResource => $projectType) {
+                $metaDataElements = $this->getMetaDataElements();
+                foreach ($metaDataElements as $idResource => $projectType) {
                     /*
                      * Check $idResource (sense path) == 
                      * == configMain filename: F($projectType, $metaDataSubset, $persistence, $configSubSet = "metaDataProjectStructure")
@@ -172,7 +173,7 @@ class MetaDataService {
      * - Call Repository to set / update metadata (one o several elements)
      * @param Array $MetaDataRequestMessage
      * Restrictions:
-     * - mandatory idResource,metaDataSubSet,MetaDataValue in param array $MetaDataRequestMessage
+     * - mandatory idResource,metaDataSubSet,metaDataValue in param array $MetaDataRequestMessage
      * - other exceptions are delegate
      * @return success true
      */
@@ -258,13 +259,13 @@ class MetaDataService {
                 } else {
                     /*
                      * It's a new set of metadata (only 1 element)
-                     * Will returns an Entity Object with $MetaDataValue empty
+                     * Will returns an Entity Object with $metaDataValue empty
                      */
                     $filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($MetaDataRequestMessage['projectType'], $MetaDataRequestMessage['metaDataSubSet'], $MetaDataRequestMessage['persistence']);
                     $MetaDataRequestMessage['filename'] = $filename;
                     $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequestMessage);
                     // Must not check filter
-                    // Will update (fill) $MetaDataValue
+                    // Will update (fill) $metaDataValue
                     $metaDataEntity->updateMetaDataValue($MetaDataRequestMessage['metaDataValue']);
                     $this->metaDataEntityWrapper = array();
                     $indexWrapper = 0;

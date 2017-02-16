@@ -23,7 +23,7 @@ class ProjectNotExistException extends WikiIocProjectException {
 }
 
 class UnknownProjectException extends WikiIocProjectException {
-    public function __construct($page, $message='unknown', $code=7203) {
+    public function __construct($page, $message='unknownProject', $code=7203) {
         parent::__construct($message, $code, $page);
     }
 }
@@ -67,5 +67,23 @@ class InsufficientPermissionToDeleteProjectException extends WikiIocProjectExcep
 class InsufficientPermissionToGenerateProjectException extends WikiIocProjectException {
     public function __construct($page, $message='insufficientPermissionToGenerateProject', $code=7210) {
         parent::__construct("$message$page", $code, $page);
+    }
+}
+
+class MissingGroupFormBuilderException extends WikiIocProjectException {
+    public function __construct($page='', $message='MissingGroupFormBuilder', $code=7301) {
+        parent::__construct($message, $code, $page);
+    }
+}
+
+class MissingValueFormBuilderException extends WikiIocProjectException {
+    public function __construct($page='', $message='MissingValueFormBuilder', $code=7302) {
+        parent::__construct($message, $code, $page);
+    }
+}
+
+class WrongNumberOfColumnsFormBuilderException extends WikiIocProjectException {
+    public function __construct($page='', $message='nombre incorrecte de', $code=7303) {
+        parent::__construct("Has indicat $message columnes i el nombre de columnes admés està entre 1 i 12", $code, $page);
     }
 }

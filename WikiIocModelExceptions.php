@@ -19,7 +19,7 @@ abstract class WikiIocModelException extends Exception {
         if ($target) {
             $message = sprintf($message, $target);
         }
-        Logger::debug("Params, codemessage: $codeMessage message: $message code: $code, previous: $previous, target: $target", 0, 0, "", 0);
+        Logger::debug("Params, codemessage: $codeMessage message: $message code: $code, previous: $previous, target: $target", 0, 0, "", 1);
         parent::__construct($message, $code, $previous);
     }
 }
@@ -33,6 +33,12 @@ class HttpErrorCodeException extends WikiIocModelException {
 class UnavailableMethodExecutionException extends WikiIocModelException {
     public function __construct($method, $message="Unavailable method %s", $code=9001, $previous=NULL) {
         parent::__construct($message, $code, $previous, $method);
+    }
+}
+
+class UnknownMimeTypeException extends WikiIocModelException {
+    public function __construct($message="El format del fitxer no és un tipus mime reconegut.", $code=9002) {
+        parent::__construct($message, $code, NULL);
     }
 }
 
@@ -73,9 +79,16 @@ class UnexpectedLockCodeException extends WikiIocModelException {
 /**
  * Excepciones propias de los proyectos
  */
-abstract class WikiIocProjectException extends WikiIocModelException {
-    public function __construct($codeMessage, $code, $target=NULL) {       
-        parent::__construct($codeMessage, $code, NULL, $target);
+abstract class WikiIocProjectException extends Exception {
+    public function __construct($codeMessage, $code, $target=NULL) {
+        $message = WikiIocLangManager::getLang('projectException')[$codeMessage];
+        if ($message == NULL) {
+            $message = $codeMessage;
+        }
+        if ($target) {
+            $message = sprintf($message, $target);
+        }
+        parent::__construct($message, $code, NULL);
     }
 }
 
@@ -105,6 +118,18 @@ class InsufficientPermissionToWritePageException extends WikiIocProjectException
 
 class InsufficientPermissionToDeletePageException extends WikiIocProjectException {
     public function __construct($page, $codeMessage='auth_DeletePage', $code=7005) {
+        parent::__construct($codeMessage, $code, $page);
+    }
+}
+
+class InsufficientPermissionToDeleteResourceException extends WikiIocProjectException {
+    public function __construct($page, $codeMessage='auth_DeleteResource', $code=7006) {
+        parent::__construct($codeMessage, $code, $page);
+    }
+}
+
+class UnknownPojectTypeException extends WikiIocProjectException {
+    public function __construct($page, $codeMessage='UnknownPojectType', $code=7007) {
         parent::__construct($codeMessage, $code, $page);
     }
 }
