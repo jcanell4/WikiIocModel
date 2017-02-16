@@ -4,12 +4,11 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-define('WIKI_IOC_PROJECT_AUTH', DOKU_INC . 'lib/plugins/wikiiocmodel/projects/defaultProject/authorization/');
-
-require_once(WIKI_IOC_PROJECT_AUTH . 'CommandAuthorization.php');
 
 class FactoryAuthorization {
     /* SINGLETON CLASS */
+    const PROJECT_AUTH = DOKU_INC . 'lib/plugins/wikiiocmodel/projects/defaultProject/authorization/';
+    
     private function __construct() {}
 
     public static function Instance(){
@@ -25,7 +24,7 @@ class FactoryAuthorization {
         $fileAuthorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization');
         if ($fileAuthorization === NULL) {
             static $_AuthorizationCfg = array();
-            require_once(WIKI_IOC_PROJECT_AUTH . 'FactoryAuthorizationCfg.php');
+            require_once(self::PROJECT_AUTH . 'FactoryAuthorizationCfg.php');
             $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg[$str_cmd], 'authorization');
             if ($fileAuthorization === NULL) {
                 $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg['_default'], 'authorization');
@@ -39,12 +38,17 @@ class FactoryAuthorization {
         /* Carga el archivo correspondiente al comando.
          * buscando por el nombre en formato convencional y en formato CamelCase
          */
-        $name = $this->nameCaseFormat($str_cmd, $part2,'');
+        $name = $this->nameCaseFormat($str_cmd, $part2,'_');
         $ret = NULL;
-        $authFile = WIKI_IOC_PROJECT_AUTH . $name . '.php';
+        $authFile = self::PROJECT_AUTH . "$name.php";
         if (!file_exists($authFile)) {
             $name = $this->nameCaseFormat($str_cmd, $part2,'camel');
-            $authFile = WIKI_IOC_PROJECT_AUTH . $name . '.php';
+            $authFile = self::PROJECT_AUTH . "$name.php";
+        }
+        //[COMENT JOSEP: No veig clara aquesta segona crida. Es necessaria Rafa?]
+        if (!file_exists($authFile)) {
+            $name = $this->nameCaseFormat($str_cmd, $part2,'camel2');
+            $authFile = self::PROJECT_AUTH . "$name.php";
         }
         if (file_exists($authFile)) {
             require_once($authFile);

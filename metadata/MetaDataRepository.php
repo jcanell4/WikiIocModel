@@ -71,7 +71,7 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
      * @param Array $MetaDataRequestMessage
      * Restrictions:     
      * - mandatory idResource,projectType,metaDataSubSet in param array $MetaDataRequestMessage
-     * - mandatory: MetaDataEntity->MetaDataValue
+     * - mandatory: MetaDataEntity->metaDataValue
      * - other exceptions are delegate
      * @return success:true
      */

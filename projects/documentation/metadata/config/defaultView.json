@@ -1,0 +1,74 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10, 
+        "rows_row": 1
+    },
+    "groups": {
+        "main": {
+            "parent": "",
+            "label": "Principal",
+            "n_columns": 5,
+            "n_rows": 4,
+            "frame": true
+        },
+        "admin": {
+            "parent": "dades",
+            "label": "dades d'administració",
+            "n_columns": 10,
+            "n_rows": 1,
+            "frame": true
+        },
+        "dades": {
+            "parent": "",
+            "label": "Dades generals",
+            "n_columns": 7,
+            "n_rows": 4,
+            "frame": true
+        },
+        "grupestret": {
+            "parent": "admin",
+            "label": "",
+            "n_columns": 6,
+            "n_rows": 1,
+            "frame": true
+        }
+    },
+    "fields": {
+        "responsable": {
+          "mandatory": true,
+          "n_columns": 6,
+          "group": "admin"
+        },
+        "autor": {
+          "n_columns": 6,
+          "group": "admin"
+        },
+        "titol": {
+          "mandatory": true
+        },
+        "descripcio_titol": {
+        },
+        "plantilla": {
+          "n_columns": 5,
+          "group": "dades"
+        },
+        "descripcio": {
+          "n_columns": 7,
+          "group": "dades"
+        },
+        "descripcio_segona": {
+          "group": "dades"
+        },
+        "field1_grup3": {
+          "group": "grupestret"
+        },
+        "field2_grup3": {
+          "group": "grupestret"
+        },
+        "field3_grup3": {
+          "group": "grupestret"
+        }
+    }
+}

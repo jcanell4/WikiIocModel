@@ -91,3 +91,12 @@ $lang['notification_form_check_add_email'] = 'Enviar correu';
 $lang['notification_form_button_send'] = 'Enviar';
 $lang['notification_form_message'] = 'Missatge';
 $lang['notificaction_email_subject'] = 'Nova notificació - %s';
+
+$lang['projectLabelForm']['responsable'] = 'responsable del projecte';
+$lang['projectLabelForm']['autor'] = 'autor del projecte';
+$lang['projectLabelForm']['titol'] = 'titol del projecte';
+$lang['projectLabelForm']['plantilla'] = 'plantilla per defecte';
+$lang['projectLabelForm']['descripció'] = 'descripció del projecte';
+
+$lang['projectGroup']['main'] = 'Grup principal del projecte';
+$lang['projectGroup']['admin'] = 'Dades de l\'administració del projecte';
