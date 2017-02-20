@@ -161,6 +161,11 @@ class NotifyAction extends AbstractWikiAction
 
         // TODO[Xavi] Si no existeix l'usuari llençar excepció
 
+        if (!$receiverUser) {
+            throw new UnknownUserException($receiverId);
+        }
+
+
 
 
         if (is_string($data)) {

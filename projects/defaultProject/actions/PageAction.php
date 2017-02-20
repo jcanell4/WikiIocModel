@@ -196,17 +196,64 @@ abstract class PageAction extends DokuAction
         return [
             "id" => $ns . "_metaNotifications",
             "title" => WikiIocLangManager::getLang('notification_form_title'),
-            "content" => '<form action="lib/plugins/ajaxcommand/ajax.php" method="post">
-                <input type="hidden" name="sectok" value="'.getSecurityToken().'"/>
-                <input type="hidden" name="call" value="notify"/>
-                <input type="hidden" name="do" value="add_message">
-                <input type="hidden" name="type" value="warning"/>
-                <label>'. WikiIocLangManager::getLang('notification_form_to'). ':<input type="text" name="to" required></label>
-                <label><input type="checkbox" name="id" value="'. $ns.'"/>'. sprintf(WikiIocLangManager::getLang('notification_form_check_add_id'),  $response['id']). '</label><br>
-                <input type="checkbox" name="send_email" value="true"/>'. WikiIocLangManager::getLang('notification_form_check_add_email'). '</label><br>
-                <label>'. WikiIocLangManager::getLang('notification_form_message'). ':<textarea name="message" required></textarea></label>
-                <button>'. WikiIocLangManager::getLang('notification_form_button_send'). '</button></form>',
-            "type" => "notification" // aixó no se si es necessari
+            "content" => [
+                'action' => 'lib/plugins/ajaxcommand/ajax.php',
+                'method' => 'post',
+                'fields' => [
+                    [
+                        'type' => 'hidden',
+                        'name' => 'sectok',
+                        'value' => getSecurityToken(),
+                    ],
+                    [
+                        'type' => 'hidden',
+                        'name' => 'call',
+                        'value' => 'notify',
+                    ],
+                    [
+                        'type' => 'hidden',
+                        'name' => 'do',
+                        'value' => 'add_message',
+                    ],
+                    [
+                        'type' => 'hidden',
+                        'name' => 'type',
+                        'value' => 'warning',
+                    ],
+                    [
+                        'type' => 'text',
+                        'name' => 'to',
+                        'value' => '',
+                        'label' => WikiIocLangManager::getLang('notification_form_to'), // Optional
+                        'properties' => ['required'] // Optional
+                    ],
+                    [
+                        'type' => 'checkbox',
+                        'name' => 'id',
+                        'value' => $ns,
+                        'label' => sprintf(WikiIocLangManager::getLang('notification_form_check_add_id'), $response['id']), // Optional
+                        'properties' => ['checked'] // Optional
+                    ],
+                    [
+                        'type' => 'checkbox',
+                        'name' => 'send_email',
+                        'value' => true,
+                        'label' => WikiIocLangManager::getLang('notification_form_check_add_email'), // Optional
+                        'properties' => ['checked'] // Optional
+                    ],
+                    [
+                        'type' => 'textarea',
+                        'name' => 'message',
+                        'value' => '',
+                        'label' => WikiIocLangManager::getLang('notification_form_message'), // Optional
+                        'properties' => ['required'] // Optional
+                    ]
+
+                ],
+                'send_button' => WikiIocLangManager::getLang('notification_form_button_send')
+            ],
+
+            "type" => "request_form" // aixó no se si es necessari
         ];
 
     }

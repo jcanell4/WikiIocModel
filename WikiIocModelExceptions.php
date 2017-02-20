@@ -133,3 +133,9 @@ class UnknownPojectTypeException extends WikiIocProjectException {
         parent::__construct($codeMessage, $code, $page);
     }
 }
+
+class UnknownUserException extends WikiIocModelException {
+    public function __construct($user, $codeMessage='UnknownUser', $code=9021, $previous=NULL) {
+        parent::__construct($codeMessage, $code, $previous, $user);
+    }
+}
