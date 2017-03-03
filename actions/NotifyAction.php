@@ -160,25 +160,80 @@ class NotifyAction extends AbstractWikiAction
         global $auth;
 
 
-        $data = $this->params['message'];
-        $docId = $this->params['id'];
+//        $data = $this->params['message'];
+//        $docId = $this->params['id'];
 
 
         $senderId = $this->getCurrentUser();
         $senderUser = $auth->getUserData($senderId);
 
-        $receiverId = $this->params['to'];
-        $receiverUser = $auth->getUserData($receiverId);
 
-        // TODO[Xavi] Si no existeix l'usuari llençar excepció
 
-        if (!$receiverUser) {
-            throw new UnknownUserException($receiverId);
+
+
+//        $receiverId = $this->params['to'];
+//        $receiverUser = $auth->getUserData($receiverId);
+//
+//        // TODO[Xavi] Si no existeix l'usuari llençar excepció
+//
+//        if (!$receiverUser) {
+//            throw new UnknownUserException($receiverId);
+//        }
+
+
+        $receivers = $this->getReceivers($this->params['to']);
+
+        foreach ($receivers as $receiver) {
+            $notification = $this->buildMessage($this->params['message'], $senderId, $docId = $this->params['id']);
+
+            if ($this->params['send_email']) {
+                $this->sendNotificationByEmail($senderUser, $receiver, $notification['title'], $notification['content']['text']);
+            }
+
+            $this->dokuNotifyModel->notifyMessageToFrom($notification['content'], $receiver['id'], $senderId);
+
         }
 
+        //TODO[Xavi] Afegir aquest missatge a la bustia d'enviats i afegir aquest com a params.
+        $response['params'] = '';
+        $response['action'] = 'notification_send';
+
+//        $notification = $this->getNotification($data, $senderId, $docId);
 
 
+//        if (is_string($data)) {
+//
+//            if ($docId) {
+//                $title = sprintf(WikiIocLangManager::getLang("title_message_notification_with_id"), $senderId, $docId);
+//                $message = sprintf(WikiIocLangManager::getLang("doc_message"), wl($docId,'',true), $docId) .  "\n\n" . $data;
+//            } else {
+//                $title = sprintf(WikiIocLangManager::getLang("title_message_notification"), $senderId);
+//                $message = $data;
+//            }
+//
+//            $message = [
+//                'type' => isset($this->params['type']) ? $this->params['type'] : 'info',
+//                'id' => $docId . '_' . $senderId,
+//                'title' => $title,
+//                'text' => p_render('xhtml', p_get_instructions($message), $info)
+//            ];
+//        } else {
+//            $message = $data;
+//            $title = $data['title'];
+//        }
 
+//        if ($this->params['send_email']) {
+//
+//            $this->sendNotificationByEmail($senderUser, $receiverUser, $title, $message['text']);
+//        }
+//
+//        $response['params'] = $this->dokuNotifyModel->notifyMessageToFrom($message, $receiverId, $message, $senderId);
+//        $response['action'] = 'notification_send';
+
+        return $response;
+    }
+
+    private function buildMessage($data, $senderId, $docId) {
         if (is_string($data)) {
 
             if ($docId) {
@@ -189,26 +244,48 @@ class NotifyAction extends AbstractWikiAction
                 $message = $data;
             }
 
-            $message = [
+            $content = [
                 'type' => isset($this->params['type']) ? $this->params['type'] : 'info',
                 'id' => $docId . '_' . $senderId,
                 'title' => $title,
                 'text' => p_render('xhtml', p_get_instructions($message), $info)
             ];
         } else {
-            $message = $data;
             $title = $data['title'];
+            $content = $data;
         }
 
-        if ($this->params['send_email']) {
+        return ['title' => $title, 'content'=>$content];
+    }
 
-            $this->sendNotificationByEmail($senderUser, $receiverUser, $title, $message['text']);
+    private function getReceivers($receiversString) {
+        global $auth;
+
+        $receiversArray = preg_split('/[\s;,|.]+/', $receiversString);
+        $receiversUsers = [];
+
+        foreach ($receiversArray as $receiver) {
+            if (strlen($receiver) == 0) {
+                continue;
+            }
+
+            $receiverUser= $auth->getUserData($receiver);
+
+            // TODO[Xavi] Si no existeix l'usuari llençar excepció
+
+            if (!$receiverUser) {
+                throw new UnknownUserException($receiver);
+            } else {
+                $receiverUser['id']= $receiver;
+                $receiversUsers[] = $receiverUser;
+            }
         }
 
-        $response['params'] = $this->dokuNotifyModel->notifyMessageToFrom($message, $receiverId, $message, $senderId);
-        $response['action'] = 'notification_send';
+        return $receiversUsers;
+    }
 
-        return $response;
+    private function sendNotificationToUser() {
+
     }
 
 
