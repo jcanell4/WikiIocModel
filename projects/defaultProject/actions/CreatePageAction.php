@@ -34,18 +34,14 @@ class CreatePageAction extends SavePageAction {
     }
     
     protected function responseProcess() {
-//        $response = array();
-//        $response['structure'] = $this->getModel()->getData();
-        $response = $this->getModel()->getData();
-
+        
+        $response = RenderedPageAction::staticResponseProcess($this);
+        
         if (!$response['info']) {
             $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
             $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('document_created'), $id);
         }
 
-        $response['meta'] = $this->getMetaTocResponse();
-        $response['revs'] = $this->getRevisionList();
-        
         return $response;
     }
 

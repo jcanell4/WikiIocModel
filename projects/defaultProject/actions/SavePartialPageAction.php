@@ -61,7 +61,8 @@ class SavePartialPageAction extends SavePageAction{
         }
 
         // TODO: afegir el 'meta' que correspongui
-        $response['meta'] = $this->getMetaTocResponse();
+//        $response['meta'] = $this->addMetaTocResponse();
+        $this->addMetaTocResponse($response);
 
         // TODO: afegir les 'revs' que correspongui
         $response['revs'] = $this->getRevisionList();

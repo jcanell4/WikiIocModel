@@ -49,7 +49,8 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
         $response['structure']['cancel'] = [$this->params[PageKeys::KEY_SECTION_ID]];
         if($this->params[PageKeys::KEY_TO_REQUIRE]){
                 // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou 
-                $response['meta'] = $this->getMetaTocResponse();
+//                $response['meta'] = $this->addMetaTocResponse();
+                $this->addMetaTocResponse($response);
                 // TODO: afegir les revisions
                 $response['revs'] = $this->getRevisionList();            
         }

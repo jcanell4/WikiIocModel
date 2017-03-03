@@ -101,23 +101,27 @@ abstract class PageAction extends DokuAction
         return $this->dokuPageModel;
     }
 
-    public function getMetaTocResponse($meta = NULL)
+    public function addMetaTocResponse(&$response)
     {
-        $ret = array('id' => \str_replace(":", "_", $this->params[PageKeys::KEY_ID]));
-        if (!$meta) {
-            $meta = array();
+//        $ret = array('id' => \str_replace(":", "_", $this->params[PageKeys::KEY_ID]));
+//        if (!$meta) {
+//            $meta = array();
+//        }
+        if(!isset($response['meta'])){
+            $response['meta']=array();
         }
         $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
         if ($mEvt->advise_before()) {
             $toc = $this->getModel()->getMetaToc();
             $metaId = \str_replace(":", "_", $this->params[PageKeys::KEY_ID]) . '_toc';
-            $meta[] = ($this->getCommonPage($metaId, WikiIocLangManager::getLang('toc'), $toc) + ['type' => 'TOC']);
+            $response["meta"][] = ($this->getCommonPage($metaId, WikiIocLangManager::getLang('toc'), $toc) + ['type' => 'TOC']);
         }
         $mEvt->advise_after();
         unset($mEvt);
-        $ret['meta'] = $meta;
-
-        return $ret;
+//        $ret['meta'] = $meta;
+//
+//        return $ret;
+//        return $meta;
     }
 
     protected function getRevisionList()
@@ -190,10 +194,13 @@ abstract class PageAction extends DokuAction
     }
 
 
-    protected function getNotificationsMetaToResponse(&$response, $ns) {
-
-
-        return [
+    protected function addNotificationsMetaToResponse(&$response) {
+        if(!isset($response['meta'])){
+            $response['meta']=array();
+        }
+        $ns = isset($response['ns']) ? $response['ns'] : $response['structure']['ns'];
+        
+        $response['meta'][] = [
             "id" => $ns . "_metaNotifications",
             "title" => WikiIocLangManager::getLang('notification_form_title'),
             "content" => [
@@ -255,7 +262,8 @@ abstract class PageAction extends DokuAction
 
             "type" => "request_form" // aixó no se si es necessari
         ];
-
+        
+//        return $response['meta'];
     }
 
 }

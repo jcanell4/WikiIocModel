@@ -64,43 +64,6 @@ class SavePageAction extends RawPageAction {
 
         $this->lockStruct = $this->updateLock();
         $this->_save();
-
-//        if ($ACT == DW_ACT_SAVE) {
-//            $ret = act_save($ACT);
-//            lock($ID);
-//        } else {
-//            $ret = $ACT;
-//        }
-//
-////        $ret='edit';
-//
-//        switch ($ret) {
-//            case 'edit':
-//                throw new WordBlockedException($ID);
-//
-//            case 'conflict':
-//                throw new DateConflictSavingException($ID);
-//
-//            case 'denied':
-//                throw new InsufficientPermissionToCreatePageException($ID);
-//        }
-
-//        // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
-//        //$this->draftQuery->removePartialDraft($this->params['id']);
-//
-//        // Eliminem el fitxer d'esborranys parcials. ALERTA[Xavi] aquesta comprovació no s'hauria de fer! s'ha de mirar com restructurar el SavePartialPageAction perquè no es faci aquesta crida
-//
-//        if (!isset($this->params[PageKeys::KEY_SECTION_ID])){ // TODO[Xavi] Fix temporal
-//            $this->getModel()->removePartialDraft();
-//        }
-//
-//
-//        
-//        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
-//        $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
-//                                $this->params[PageKeys::KEY_TEXT].
-//                                $this->params[PageKeys::KEY_SUF] )
-//                          == NULL );
     }
 
     /**

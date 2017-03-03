@@ -25,7 +25,7 @@ if (!defined('DW_ACT_DRAFTDEL')) {
  *
  * @author josep
  */
-class CancelEditPageAction extends PageAction implements ResourceUnlockerInterface
+class CancelEditPageAction extends RenderedPageAction implements ResourceUnlockerInterface
 {
     //protected $draftQuery;
 
@@ -60,8 +60,7 @@ class CancelEditPageAction extends PageAction implements ResourceUnlockerInterfa
             return $response;
         }
 
-//    $response['structure']  = $this->getModel()->getData();
-        $response = $this->getModel()->getData();
+        $response = parent::responseProcess();
 
         if ($this->params[PageKeys::DISCARD_CHANGES]) {
             $response['structure']['discard_changes'] = $this->params[PageKeys::DISCARD_CHANGES];
@@ -77,13 +76,6 @@ class CancelEditPageAction extends PageAction implements ResourceUnlockerInterfa
             }
             $response ['info'] = $this->addInfoToInfo($response['info'], $this->generateInfo("warning", WikiIocLangManager::getLang('auto_cancelled'), $response['structure']['id']));
         }
-        
-        
-
-        $response['meta'] = $this->getMetaTocResponse();
-        $response['revs'] = $this->getRevisionList();
-
-
         return $response;
     }
 
