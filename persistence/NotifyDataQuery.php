@@ -21,6 +21,7 @@ class NotifyDataQuery extends DataQuery
     const SENDER_ID = 'sender_id';
     const DATA = 'data';
     const TYPE = 'type'; // ALERT, MESSAGE, DIALOG
+    const READ = 'read';
 
     const TYPE_ALERT = 'alert';
     const TYPE_MESSAGE = 'message';
@@ -30,6 +31,7 @@ class NotifyDataQuery extends DataQuery
 
     const DEFAULT_USER = 'SYSTEM';
     const TYPE_WARNING = 'warning';
+
 
     // TODO[Xavi] Segons la configuració del servidor (conf wikiiocmodel) es farà servir un sistema de timers o de websockets
 
@@ -55,7 +57,7 @@ class NotifyDataQuery extends DataQuery
      * @param null $senderId
      * @return array
      */
-    public function generateNotification(array $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
+    public function generateNotification(array $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL, $read = false)
     {
 
         $notification = [];
@@ -68,6 +70,8 @@ class NotifyDataQuery extends DataQuery
         $notification[self::TYPE] = $type;
         $notification[self::DATA] = $notificationData;
 
+        $notification[self::READ] = $read;
+
 
         // Si no s'ha especificat el sender s'atribueix al sistema
         if ($senderId === NULL) {
@@ -77,6 +81,44 @@ class NotifyDataQuery extends DataQuery
         }
 
         return $notification;
+    }
+
+    public function update($notificationId, $blackboardId , $dataForUpdate) {
+
+
+        $this->loadBlackboard($blackboardId);
+
+        $notificationIndex = $this->searchNotificationIndexInBlackboard($notificationId, $this->blackboard[$blackboardId]);
+
+        $notification = $this->blackboard[$blackboardId][$notificationIndex];
+        $notification = array_replace($notification, $dataForUpdate);
+
+        $this->blackboard[$blackboardId][$notificationIndex] = $notification;
+
+        $this->saveBlackboard($blackboardId);
+    }
+
+    public function delete ($notificationId, $blackboardOwnerId) {
+        $this->loadBlackboard($blackboardOwnerId);
+        $notificationIndex = $this->searchNotificationIndexInBlackboard($notificationId, $this->blackboard[$blackboardOwnerId]);
+
+        array_splice($this->blackboard[$blackboardOwnerId], $notificationIndex, 1);
+//        unset($this->blackboard[$blackboardOwnerId][$notificationIndex]);
+        $this->saveBlackboard($blackboardOwnerId);
+    }
+
+
+
+    private function searchNotificationIndexInBlackboard($id, $blackboard) {
+
+        for ($i=0, $len = count($blackboard); $i<$len; $i++) {
+            if ($blackboard[$i][self::NOTIFICATION_ID] == $id) {
+                return $i;
+            }
+        }
+
+        return null;
+
     }
 
     public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
@@ -100,7 +142,7 @@ class NotifyDataQuery extends DataQuery
         $messages = $this->getBlackboard($userId);// Alerta[Xavi] PHP copia els arrays per valor, i no per referència
 
         if ($deleteContent) {
-            $this->delete($userId);
+            $this->deleteBlackboard($userId);
         }
 
 // ALERTA[Xavi] codi de prova, per generar un avís del sistema que expira en 20 segons
@@ -190,7 +232,7 @@ class NotifyDataQuery extends DataQuery
             io_saveFile($filename, serialize($blackboard));
         } else {
             // No hi ha res, l'esborrem
-            $this->delete($userId);
+            $this->deleteBlackboard($userId);
 
         }
     }
@@ -198,7 +240,7 @@ class NotifyDataQuery extends DataQuery
     // ALERTA[Xavi] el que es retorna es una copia del array, així que els canvis no afectan al cache
     private function getBlackboard($userId)
     {
-        if (!$this->blackboard[$userId]) {
+        if (!isset($this->blackboard[$userId])) {
             // Carreguem el blackboard
             $this->loadBlackboard($userId);
         }
@@ -206,7 +248,7 @@ class NotifyDataQuery extends DataQuery
         return $this->blackboard[$userId];
     }
 
-    public function delete($userId)
+    public function deleteBlackboard($userId)
     {
         // Eliminem el contingut del cache
         unset ($this->blackboard[$userId]);

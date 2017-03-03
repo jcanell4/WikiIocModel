@@ -55,4 +55,13 @@ class WebsocketNotifyModel extends DokuNotifyModel
     }
 
 
+    public function update($notificationId, $blackboardId, $updatedData)
+    {
+        // TODO: Implement update() method.
+    }
+
+    public function delete($notificationId, $blackboardId)
+    {
+        // TODO: Implement delete() method.
+    }
 }

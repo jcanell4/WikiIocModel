@@ -30,6 +30,8 @@ class NotifyAction extends AbstractWikiAction
     const DO_ADDMESS = "add_message";
     const DO_GET = "get";
     const DO_CLOSE = "close";
+    const DO_UPDATE = "update";
+    const DO_DELETE = "delete";
 
     /*
      * NO CAL. Ho deixo per il·lustrar com mentenir constants amb un únic orígen de dades, sense necessitat de conèixer la seva classe.
@@ -121,6 +123,15 @@ class NotifyAction extends AbstractWikiAction
             case self::DO_CLOSE: // Elimina totes les notificacions pendents pel usuari loginat, cridat al fer logout, close()
                 $response['notifications'][] = $this->close();
                 break;
+
+            case self ::DO_UPDATE:
+                $response['notifications'][] = $this->update();
+                break;
+
+            case self ::DO_DELETE:
+                $response['notifications'][] = $this->delete();
+                break;
+
 
             default:
                 // TODO[Xavi] Canviar la excepció per una propia, per determinar el codi
@@ -221,6 +232,44 @@ class NotifyAction extends AbstractWikiAction
     {
         // ALERTA[Xavi] No s'utilitza
     }
+
+
+    public function update() {
+        if ($this->params['blackboardId']) {
+            $blackboardId = $this->params['blackboardId'];
+        } else {
+            $blackboardId = $this->getCurrentUser();
+        }
+
+        $response['params'] = [];
+
+        $this->dokuNotifyModel->update($this->params['notificationId'], $blackboardId, $this->params['changes']);
+
+        $response['action'] = 'notification_updated';
+        $response['params']['notifications'] = $this->dokuNotifyModel->popNotifications($blackboardId);
+
+        return $response;
+
+    }
+
+    public function delete() {
+        if ($this->params['blackboardId']) {
+            $blackboardId = $this->params['blackboardId'];
+        } else {
+            $blackboardId = $this->getCurrentUser();
+        }
+
+        $response['params'] = [];
+
+        $this->dokuNotifyModel->delete($this->params['notificationId'], $blackboardId);
+
+        $response['action'] = 'notification_deleted';
+        $response['params']['notifications'] = $this->dokuNotifyModel->popNotifications($blackboardId);
+
+        return $response;
+    }
+
+
 
     public function popNotifications()
     {

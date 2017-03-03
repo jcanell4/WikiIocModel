@@ -52,4 +52,7 @@ abstract class DokuNotifyModel extends AbstractWikiDataModel
 
     public abstract function close($userId);
 
+    public abstract function update($notificationId, $blackboardId, $updatedData);
+
+    public abstract function delete($notificationId, $blackboardId);
 }

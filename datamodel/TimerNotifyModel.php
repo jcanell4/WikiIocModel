@@ -75,15 +75,25 @@ class TimerNotifyModel extends DokuNotifyModel
         // l'enviament de forma immediata. El mètode  popNotifications, a més de retornar el contingut, elimina també
         // la pissarra consultada.
 
-        return $this->dataQuery->get($userId);
+        return $this->dataQuery->get($userId, false);
     }
 
     public function close($userId)
     {
         // Tanca la sessió i el sistema (per exemple els sockets)
-        // TODO[Xavi] Tancar la sessió
-        $this->dataQuery->delete($userId);
+        // ALERTA[Xavi] Tancar la sessió? No es fa servir
+
     }
 
+
+    public function update($notificationId, $blackboardId, $updatedData)
+    {
+        $this->dataQuery->update($notificationId, $blackboardId, $updatedData);
+    }
+
+    public function delete($notificationId, $blackboardId)
+    {
+        $this->dataQuery->delete($notificationId, $blackboardId);
+    }
 
 }
