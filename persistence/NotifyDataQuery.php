@@ -27,15 +27,15 @@ class NotifyDataQuery extends DataQuery
 
     const TYPE_ALERT = 'alert';
     const TYPE_MESSAGE = 'message';
+    const TYPE_WARNING = 'system';
     const TYPE_DIALOG = 'dialog';
     const TYPE_RELEASED = 'released';
     const TYPE_CANCELED_BY_REMOTE_AGENT = 'canceled_by_remote_agent';
 
     const DEFAULT_USER = 'SYSTEM';
-    const TYPE_WARNING = 'system';
 
-    const MAILBOX_RECEIVED = 'received';
-    const MAILBOX_SEND = 'send';
+    const MAILBOX_RECEIVED = 'inbox';
+    const MAILBOX_SEND = 'outbox';
     const MAILBOX_SYSTEM = 'system';
 
 
