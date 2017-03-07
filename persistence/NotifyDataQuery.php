@@ -22,6 +22,8 @@ class NotifyDataQuery extends DataQuery
     const DATA = 'data';
     const TYPE = 'type'; // ALERT, MESSAGE, DIALOG
     const READ = 'read';
+    const MAILBOX = 'mailbox';
+    const TIMESTAMP = 'timestamp';
 
     const TYPE_ALERT = 'alert';
     const TYPE_MESSAGE = 'message';
@@ -30,7 +32,12 @@ class NotifyDataQuery extends DataQuery
     const TYPE_CANCELED_BY_REMOTE_AGENT = 'canceled_by_remote_agent';
 
     const DEFAULT_USER = 'SYSTEM';
-    const TYPE_WARNING = 'warning';
+    const TYPE_WARNING = 'system';
+
+    const MAILBOX_RECEIVED = 'received';
+    const MAILBOX_SEND = 'send';
+    const MAILBOX_SYSTEM= 'system';
+
 
 
     // TODO[Xavi] Segons la configuració del servidor (conf wikiiocmodel) es farà servir un sistema de timers o de websockets
@@ -57,20 +64,25 @@ class NotifyDataQuery extends DataQuery
      * @param null $senderId
      * @return array
      */
-    public function generateNotification(array $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL, $read = false)
+    public function generateNotification(array $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL, $read = false, $mailbox = self::MAILBOX_RECEIVED)
     {
 
         $notification = [];
+
+        $now = new DateTime(); // id
+        $timestamp =$now->getTimestamp();
+
         if($id===NULL){
-            $now = new DateTime(); // id
-            $id = $now->getTimestamp();
+            $id = $timestamp;
         }
 
-        $notification[self::NOTIFICATION_ID] = $id;
+        $notification[self::TIMESTAMP] = $timestamp;
+        $notification[self::NOTIFICATION_ID] = $id . '_' . $mailbox;
         $notification[self::TYPE] = $type;
         $notification[self::DATA] = $notificationData;
 
         $notification[self::READ] = $read;
+        $notification[self::MAILBOX] = $mailbox;
 
 
         // Si no s'ha especificat el sender s'atribueix al sistema
@@ -121,12 +133,12 @@ class NotifyDataQuery extends DataQuery
 
     }
 
-    public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
+    public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL, $mailbox, $read = false)
     {
 
 
         // Generar la notificació
-        $message = $this->generateNotification($notificationData, $type, $id, $senderId);
+        $message = $this->generateNotification($notificationData, $type, $id, $senderId, $read, $mailbox);
 
 
         $this->loadBlackboard($receiverId);
@@ -136,13 +148,17 @@ class NotifyDataQuery extends DataQuery
         $this->saveBlackboard($receiverId);
     }
 
-    public function get($userId, $deleteContent = TRUE)
+    public function get($userId, $since = 0, $deleteContent = TRUE)
     {
 
         $messages = $this->getBlackboard($userId);// Alerta[Xavi] PHP copia els arrays per valor, i no per referència
 
         if ($deleteContent) {
             $this->deleteBlackboard($userId);
+        }
+
+        if ($since>0) {
+            $messages = $this->getMessagesSince($messages, $since);
         }
 
 // ALERTA[Xavi] codi de prova, per generar un avís del sistema que expira en 20 segons
@@ -160,7 +176,21 @@ class NotifyDataQuery extends DataQuery
 
         $systemGlobalMessages = $this->getSystemGlobalMessages();
 
+
+
         return array_merge($messages, $systemGlobalMessages);
+    }
+
+    private function getMessagesSince($messages, $since) {
+        $filteresMessages = [];
+
+        for ($i=0; $i<count($messages); $i++) {
+            if ($messages[$i][self::TIMESTAMP]>$since) {
+                $filteresMessages[] = $messages[$i];
+            }
+        }
+
+        return $filteresMessages;
     }
 
     private function getSystemGlobalMessages()
@@ -189,7 +219,7 @@ class NotifyDataQuery extends DataQuery
                     $id = hash('md5', $title . $message);
                     $notificationData = ['type' => $type, 'id' => $id, 'title' => $title, 'text' => $message];
                     $sender = WikiGlobalConfig::getConf('system_warning_user', $plugin);
-                    $notifications[] = $this->generateNotification($notificationData, self::TYPE_WARNING, $id, $sender);
+                    $notifications[] = $this->generateNotification($notificationData, self::TYPE_WARNING, $id, $sender, false, self::MAILBOX_SYSTEM);
                 }
             }
 

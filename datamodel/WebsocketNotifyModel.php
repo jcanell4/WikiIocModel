@@ -34,17 +34,17 @@ class WebsocketNotifyModel extends DokuNotifyModel
         return $init;
     }
 
-    public function notifyMessageToFrom($text, $receiverId, $senderId = NULL)
+    public function notifyMessageToFrom($text, $receiverId, $senderId = NULL, $mailbox, $read = false)
     {
         throw new UnavailableMethodExecutionException("DokuNotifyModel#notifyToFrom");
     }
 
-    public function notifyTo($data, $receiverId, $type, $id=NULL)
+    public function notifyTo($data, $receiverId, $type, $id=NULL, $mailbox)
     {
         throw new UnavailableMethodExecutionException("DokuNotifyModel#notifyToFrom");
     }
 
-    public function popNotifications($userId)
+    public function popNotifications($userId, $since)
     {
         throw new UnavailableMethodExecutionException("WebsocketNotifyModel#popNotifications");
     }

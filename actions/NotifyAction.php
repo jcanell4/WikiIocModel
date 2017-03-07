@@ -47,11 +47,13 @@ class NotifyAction extends AbstractWikiAction
 
     protected $dokuNotifyModel;
     protected $params;
+    protected $isAdmin;
 
-    public function __construct($persistenceEngine)
+    public function __construct($persistenceEngine, $isAdmin)
     {
         $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
         $this->dokuNotifyModel = WikiIocModelManager::getNotifyModel($type, $persistenceEngine);
+        $this->isAdmin = $isAdmin;
        
         /*
         $notifyClass = $persistenceEngine->getNotifyDataQueryClass();
@@ -159,29 +161,12 @@ class NotifyAction extends AbstractWikiAction
     {
         global $auth;
 
-
-//        $data = $this->params['message'];
-//        $docId = $this->params['id'];
-
-
         $senderId = $this->getCurrentUser();
         $senderUser = $auth->getUserData($senderId);
 
-
-
-
-
-//        $receiverId = $this->params['to'];
-//        $receiverUser = $auth->getUserData($receiverId);
-//
-//        // TODO[Xavi] Si no existeix l'usuari llençar excepció
-//
-//        if (!$receiverUser) {
-//            throw new UnknownUserException($receiverId);
-//        }
-
-
         $receivers = $this->getReceivers($this->params['to']);
+
+        $notification = null;
 
         foreach ($receivers as $receiver) {
             $notification = $this->buildMessage($this->params['message'], $senderId, $docId = $this->params['id']);
@@ -190,47 +175,52 @@ class NotifyAction extends AbstractWikiAction
                 $this->sendNotificationByEmail($senderUser, $receiver, $notification['title'], $notification['content']['text']);
             }
 
-            $this->dokuNotifyModel->notifyMessageToFrom($notification['content'], $receiver['id'], $senderId);
+            $this->dokuNotifyModel->notifyMessageToFrom($notification['content'], $senderId, null, NotifyDataQuery::MAILBOX_RECEIVED);
 
         }
 
         //TODO[Xavi] Afegir aquest missatge a la bustia d'enviats i afegir aquest com a params.
+
+
+        $senderNotification = $notification = $this->buildSendMessage($this->params['message'], $senderId, $this->getReceiversIdAsString($receivers), $docId = $this->params['id']);
+        $this->dokuNotifyModel->notifyMessageToFrom($senderNotification ['content'], $senderId, null, NotifyDataQuery::MAILBOX_SEND, true);
+
+
+
+
+
         $response['params'] = '';
         $response['action'] = 'notification_send';
 
-//        $notification = $this->getNotification($data, $senderId, $docId);
-
-
-//        if (is_string($data)) {
-//
-//            if ($docId) {
-//                $title = sprintf(WikiIocLangManager::getLang("title_message_notification_with_id"), $senderId, $docId);
-//                $message = sprintf(WikiIocLangManager::getLang("doc_message"), wl($docId,'',true), $docId) .  "\n\n" . $data;
-//            } else {
-//                $title = sprintf(WikiIocLangManager::getLang("title_message_notification"), $senderId);
-//                $message = $data;
-//            }
-//
-//            $message = [
-//                'type' => isset($this->params['type']) ? $this->params['type'] : 'info',
-//                'id' => $docId . '_' . $senderId,
-//                'title' => $title,
-//                'text' => p_render('xhtml', p_get_instructions($message), $info)
-//            ];
-//        } else {
-//            $message = $data;
-//            $title = $data['title'];
-//        }
-
-//        if ($this->params['send_email']) {
-//
-//            $this->sendNotificationByEmail($senderUser, $receiverUser, $title, $message['text']);
-//        }
-//
-//        $response['params'] = $this->dokuNotifyModel->notifyMessageToFrom($message, $receiverId, $message, $senderId);
-//        $response['action'] = 'notification_send';
 
         return $response;
+    }
+
+    private function buildSendMessage($data, $sender, $receivers, $docId) {
+
+
+        $message = $this->buildMessage($data, $sender, $docId);
+
+        $this->addReceiversToMessage($message, $receivers);
+
+        return $message;
+    }
+
+    private function getReceiversIdAsString($receivers) {
+        $filteredReceivers = [];
+
+        for ($i=0; $i<count($receivers); $i++) {
+            $filteredReceivers[] = $receivers[$i]['id'];
+        }
+
+        return implode(', ', $filteredReceivers);
+    }
+
+    private function addReceiversToMessage(&$message, $receivers) {
+        $extraContent = "\n\n" . sprintf(WikiIocLangManager::getLang("message_notification_receivers"), $receivers);
+        $message['content']['text'] .= p_render('xhtml', p_get_instructions($extraContent), $info);
+
+        return $message;
     }
 
     private function buildMessage($data, $senderId, $docId) {
@@ -243,6 +233,7 @@ class NotifyAction extends AbstractWikiAction
                 $title = sprintf(WikiIocLangManager::getLang("title_message_notification"), $senderId);
                 $message = $data;
             }
+
 
             $content = [
                 'type' => isset($this->params['type']) ? $this->params['type'] : 'info',
@@ -257,6 +248,7 @@ class NotifyAction extends AbstractWikiAction
 
         return ['title' => $title, 'content'=>$content];
     }
+
 
     private function getReceivers($receiversString) {
         global $auth;
@@ -284,11 +276,6 @@ class NotifyAction extends AbstractWikiAction
         return $receiversUsers;
     }
 
-    private function sendNotificationToUser() {
-
-    }
-
-
     public function sendNotificationByEmail($senderUser, $receiverUser, $subject, $message) {
         $subject = sprintf(WikiIocLangManager::getLang("notificaction_email_subject"), $subject);
 //            mail_send($receiverUser['mail'], $subject, $message['text'], $senderUser['mail'] );
@@ -304,7 +291,6 @@ class NotifyAction extends AbstractWikiAction
         $mail->send();
     }
 
-    // ALERTA[Xavi] això no es correcte, però tampoc s'està utilitzant
     public function notifyTo()
     {
         // ALERTA[Xavi] No s'utilitza
@@ -312,7 +298,7 @@ class NotifyAction extends AbstractWikiAction
 
 
     public function update() {
-        if ($this->params['blackboardId']) {
+        if ($this->params['blackboardId'] && $this->isAdmin) {
             $blackboardId = $this->params['blackboardId'];
         } else {
             $blackboardId = $this->getCurrentUser();
@@ -330,7 +316,7 @@ class NotifyAction extends AbstractWikiAction
     }
 
     public function delete() {
-        if ($this->params['blackboardId']) {
+        if ($this->params['blackboardId'] && $this->isAdmin) {
             $blackboardId = $this->params['blackboardId'];
         } else {
             $blackboardId = $this->getCurrentUser();
@@ -352,7 +338,7 @@ class NotifyAction extends AbstractWikiAction
     {
         $userId = $this->getCurrentUser();
         $response['params'] = [];
-        $response['params']['notifications'] = $this->dokuNotifyModel->popNotifications($userId);
+        $response['params']['notifications'] = $this->dokuNotifyModel->popNotifications($userId, $this->params['since']);
         $response['action'] = 'notification_received';
 
         return $response;

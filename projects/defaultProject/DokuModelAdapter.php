@@ -3195,10 +3195,10 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $toc;
     }
 
-    // ALERTA[Xavi] Afegit pel notifier
-    public function notify($params) // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
+    // ALERTA[Xavi] $secure : si és true s'ha cridat des d'un client d'admin
+    public function notify($params, $isAdmin = false) // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
     {
-        $action = new NotifyAction($this->persistenceEngine);
+        $action = new NotifyAction($this->persistenceEngine, $isAdmin);
         $contentData = $action->get($params);
         return $contentData;
     }

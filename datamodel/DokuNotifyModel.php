@@ -44,11 +44,11 @@ abstract class DokuNotifyModel extends AbstractWikiDataModel
 
     public abstract function init();
 
-    public abstract function notifyMessageToFrom($text, $receiverId, $senderId = NULL);
+    public abstract function notifyMessageToFrom($text, $receiverId, $senderId = NULL, $mailbox, $read = false);
     
-    public abstract function notifyTo($data, $receiverId, $type, $id=NULL);
+    public abstract function notifyTo($data, $receiverId, $type, $id=NULL, $mailbox);
 
-    public abstract function popNotifications($userId);
+    public abstract function popNotifications($userId, $since);
 
     public abstract function close($userId);
 
