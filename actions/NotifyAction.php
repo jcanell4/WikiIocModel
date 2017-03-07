@@ -33,6 +33,8 @@ class NotifyAction extends AbstractWikiAction
     const DO_UPDATE = "update";
     const DO_DELETE = "delete";
 
+    const DEFAULT_MESSAGE_TYPE = 'info';
+
     /*
      * NO CAL. Ho deixo per il·lustrar com mentenir constants amb un únic orígen de dades, sense necessitat de conèixer la seva classe.
      
@@ -169,20 +171,20 @@ class NotifyAction extends AbstractWikiAction
         $notification = null;
 
         foreach ($receivers as $receiver) {
-            $notification = $this->buildMessage($this->params['message'], $senderId, $docId = $this->params['id']);
+            $notification = $this->buildMessage($this->params['message'], $senderId, $docId = $this->params['id'], $this->params['type']);
 
             if ($this->params['send_email']) {
                 $this->sendNotificationByEmail($senderUser, $receiver, $notification['title'], $notification['content']['text']);
             }
 
-            $this->dokuNotifyModel->notifyMessageToFrom($notification['content'], $senderId, null, NotifyDataQuery::MAILBOX_RECEIVED);
+            $this->dokuNotifyModel->notifyMessageToFrom($notification['content'], $receiver['id'], $senderId, NotifyDataQuery::MAILBOX_RECEIVED);
 
         }
 
         //TODO[Xavi] Afegir aquest missatge a la bustia d'enviats i afegir aquest com a params.
 
 
-        $senderNotification = $notification = $this->buildSendMessage($this->params['message'], $senderId, $this->getReceiversIdAsString($receivers), $docId = $this->params['id']);
+        $senderNotification = $this->buildSendMessage($this->params['message'], $senderId, $this->getReceiversIdAsString($receivers), $this->params['id']);
         $this->dokuNotifyModel->notifyMessageToFrom($senderNotification ['content'], $senderId, null, NotifyDataQuery::MAILBOX_SEND, true);
 
 
@@ -223,7 +225,7 @@ class NotifyAction extends AbstractWikiAction
         return $message;
     }
 
-    private function buildMessage($data, $senderId, $docId) {
+    private function buildMessage($data, $senderId, $docId, $type = self::DEFAULT_MESSAGE_TYPE) {
         if (is_string($data)) {
 
             if ($docId) {
@@ -236,7 +238,7 @@ class NotifyAction extends AbstractWikiAction
 
 
             $content = [
-                'type' => isset($this->params['type']) ? $this->params['type'] : 'info',
+                'type' => $type,
                 'id' => $docId . '_' . $senderId,
                 'title' => $title,
                 'text' => p_render('xhtml', p_get_instructions($message), $info)

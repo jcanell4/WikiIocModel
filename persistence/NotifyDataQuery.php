@@ -36,8 +36,7 @@ class NotifyDataQuery extends DataQuery
 
     const MAILBOX_RECEIVED = 'received';
     const MAILBOX_SEND = 'send';
-    const MAILBOX_SYSTEM= 'system';
-
+    const MAILBOX_SYSTEM = 'system';
 
 
     // TODO[Xavi] Segons la configuració del servidor (conf wikiiocmodel) es farà servir un sistema de timers o de websockets
@@ -52,7 +51,7 @@ class NotifyDataQuery extends DataQuery
         return $fileName;
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE)
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject = FALSE, $hiddenProjects = FALSE, $root = FALSE)
     {
         throw new UnavailableMethodExecutionException("NotifyDataQuery#getNsTree");
     }
@@ -64,15 +63,15 @@ class NotifyDataQuery extends DataQuery
      * @param null $senderId
      * @return array
      */
-    public function generateNotification(array $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL, $read = false, $mailbox = self::MAILBOX_RECEIVED)
+    public function generateNotification(array $notificationData, $type = self::TYPE_MESSAGE, $id = NULL, $senderId = NULL, $read = false, $mailbox = self::MAILBOX_RECEIVED)
     {
 
         $notification = [];
 
         $now = new DateTime(); // id
-        $timestamp =$now->getTimestamp();
+        $timestamp = $now->getTimestamp();
 
-        if($id===NULL){
+        if ($id === NULL) {
             $id = $timestamp;
         }
 
@@ -95,7 +94,8 @@ class NotifyDataQuery extends DataQuery
         return $notification;
     }
 
-    public function update($notificationId, $blackboardId , $dataForUpdate) {
+    public function update($notificationId, $blackboardId, $dataForUpdate)
+    {
 
 
         $this->loadBlackboard($blackboardId);
@@ -110,7 +110,8 @@ class NotifyDataQuery extends DataQuery
         $this->saveBlackboard($blackboardId);
     }
 
-    public function delete ($notificationId, $blackboardOwnerId) {
+    public function delete($notificationId, $blackboardOwnerId)
+    {
         $this->loadBlackboard($blackboardOwnerId);
         $notificationIndex = $this->searchNotificationIndexInBlackboard($notificationId, $this->blackboard[$blackboardOwnerId]);
 
@@ -120,10 +121,10 @@ class NotifyDataQuery extends DataQuery
     }
 
 
+    private function searchNotificationIndexInBlackboard($id, $blackboard)
+    {
 
-    private function searchNotificationIndexInBlackboard($id, $blackboard) {
-
-        for ($i=0, $len = count($blackboard); $i<$len; $i++) {
+        for ($i = 0, $len = count($blackboard); $i < $len; $i++) {
             if ($blackboard[$i][self::NOTIFICATION_ID] == $id) {
                 return $i;
             }
@@ -133,7 +134,7 @@ class NotifyDataQuery extends DataQuery
 
     }
 
-    public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL, $mailbox, $read = false)
+    public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id = NULL, $senderId = NULL, $mailbox, $read = false)
     {
 
 
@@ -157,7 +158,8 @@ class NotifyDataQuery extends DataQuery
             $this->deleteBlackboard($userId);
         }
 
-        if ($since>0) {
+
+        if ($since > 0) {
             $messages = $this->getMessagesSince($messages, $since);
         }
 
@@ -177,16 +179,18 @@ class NotifyDataQuery extends DataQuery
         $systemGlobalMessages = $this->getSystemGlobalMessages();
 
 
-
         return array_merge($messages, $systemGlobalMessages);
     }
 
-    private function getMessagesSince($messages, $since) {
+    private function getMessagesSince($messages, $since)
+    {
         $filteresMessages = [];
 
-        for ($i=0; $i<count($messages); $i++) {
-            if ($messages[$i][self::TIMESTAMP]>$since) {
+        for ($i = count($messages)-1; $i >= 0; $i--) {
+            if ($messages[$i][self::TIMESTAMP] > $since) {
                 $filteresMessages[] = $messages[$i];
+            } else {
+                break; // totes les notificacions anteriors son més antigues, no cal continuar cercant
             }
         }
 
@@ -211,8 +215,8 @@ class NotifyDataQuery extends DataQuery
 
                 if ($startDate <= $today && $endDate > $today) {
                     $title = WikiGlobalConfig::getConf('system_warning_title', $plugin);
-                    if (strlen($title)==0) {
-                        $title  = WikiIocLangManager::getLang('system_warning_default_title', $plugin);
+                    if (strlen($title) == 0) {
+                        $title = WikiIocLangManager::getLang('system_warning_default_title', $plugin);
                     }
 
                     $message = WikiGlobalConfig::getConf('system_warning_message', $plugin);
@@ -230,7 +234,6 @@ class NotifyDataQuery extends DataQuery
 //        return $this->getBlackboard(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'));
 
     }
-
 
 
     private function loadBlackboard($userId)
@@ -290,9 +293,10 @@ class NotifyDataQuery extends DataQuery
         @unlink($filename);
     }
 
-    private function _notifyFN($user) {
+    private function _notifyFN($user)
+    {
         $dir = WikiGlobalConfig::getConf("notificationdir");
-        return $dir.'/'.md5(cleanID($user)).'.blackboard';
+        return $dir . '/' . md5(cleanID($user)) . '.blackboard';
     }
 }
 
