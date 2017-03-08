@@ -55,7 +55,13 @@ class TimerNotifyModel extends DokuNotifyModel
 
         // L'afegim al blackboard del destinatari ($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
 
-        $this->dataQuery->add($receiverId, $data, 'message', NULL, $senderId, $mailbox, $read); // TODO[Xavi] S'ha de canviar per una constant
+        $notification= $this->dataQuery->generateNotification($data, 'message', null, $senderId, $read, $mailbox);
+
+        $this->dataQuery->add($receiverId, $notification);
+
+        return $notification;
+
+//        return $this->dataQuery->add($receiverId, $data, 'message', NULL, $senderId, $mailbox, $read); // TODO[Xavi] S'ha de canviar per una constant
     }
 
     public function notifyTo($data, $receiverId, $type, $id=NULL, $mailbox)
@@ -65,7 +71,7 @@ class TimerNotifyModel extends DokuNotifyModel
         // s'emmagatzema a la pissarra de l'usuari receiverId.
 
         // L'afegim al blackboard del destinatari ($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
-        $this->dataQuery->add($receiverId, $data, $type, $id, $mailbox); // TODO[Xavi] S'ha de canviar per una constant
+        return $this->dataQuery->add($receiverId, $data, $type, $id, $mailbox); // TODO[Xavi] S'ha de canviar per una constant
     }
 
     public function popNotifications($userId, $since = 0)
@@ -88,12 +94,12 @@ class TimerNotifyModel extends DokuNotifyModel
 
     public function update($notificationId, $blackboardId, $updatedData)
     {
-        $this->dataQuery->update($notificationId, $blackboardId, $updatedData);
+        return $this->dataQuery->update($notificationId, $blackboardId, $updatedData);
     }
 
     public function delete($notificationId, $blackboardId)
     {
-        $this->dataQuery->delete($notificationId, $blackboardId);
+        return $this->dataQuery->delete($notificationId, $blackboardId);
     }
 
 }

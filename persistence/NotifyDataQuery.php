@@ -134,18 +134,11 @@ class NotifyDataQuery extends DataQuery
 
     }
 
-    public function add($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id = NULL, $senderId = NULL, $mailbox, $read = false)
-    {
-
-
-        // Generar la notificació
-        $message = $this->generateNotification($notificationData, $type, $id, $senderId, $read, $mailbox);
+    public function add($receiverId, $notification) {
 
 
         $this->loadBlackboard($receiverId);
-
-        $this->blackboard[$receiverId][] = $message;
-
+        $this->blackboard[$receiverId][] = $notification;
         $this->saveBlackboard($receiverId);
     }
 

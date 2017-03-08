@@ -85,6 +85,8 @@ $lang['title_message_notification'] = 'Missatge de %s';
 $lang['title_message_notification_with_id'] = 'Missatge de %s (document %s)';
 $lang['doc_message'] = 'Missatge referent a: [[%s|%s]].';
 $lang['message_notification_receivers'] = '**Destinataris**: %s';
+$lang['notifation_send_success'] = 'Notificación enviada amb èxit. Destinataris: %s';
+
 
 $lang['notification_form_title'] = 'Enviar notificacions';
 $lang['notification_form_to'] = 'Destinatari';

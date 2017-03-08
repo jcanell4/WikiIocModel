@@ -184,29 +184,22 @@ class NotifyAction extends AbstractWikiAction
         //TODO[Xavi] Afegir aquest missatge a la bustia d'enviats i afegir aquest com a params.
 
 
-        $senderNotification = $this->buildSendMessage($this->params['message'], $senderId, $this->getReceiversIdAsString($receivers), $this->params['id']);
-        $this->dokuNotifyModel->notifyMessageToFrom($senderNotification ['content'], $senderId, null, NotifyDataQuery::MAILBOX_SEND, true);
+        $receiversList = $this->getReceiversIdAsString($receivers);
+        $message = $this->buildMessage($this->params['message'], $senderId, $this->params['id'], null, $receiversList);
+        $notification = $this->dokuNotifyModel->notifyMessageToFrom($message ['content'], $senderId, null, NotifyDataQuery::MAILBOX_SEND, true);
 
 
 
 
-
-        $response['params'] = '';
-        $response['action'] = 'notification_send';
+        $response['info'] = $this->generateInfo('success', sprintf(WikiIocLangManager::getLang("notifation_send_success"), $receiversList));
+        $response['params']['notification'] = $notification;
+        $response['action'] = 'notification_sent';
 
 
         return $response;
     }
 
-    private function buildSendMessage($data, $sender, $receivers, $docId) {
 
-
-        $message = $this->buildMessage($data, $sender, $docId);
-
-        $this->addReceiversToMessage($message, $receivers);
-
-        return $message;
-    }
 
     private function getReceiversIdAsString($receivers) {
         $filteredReceivers = [];
@@ -218,24 +211,18 @@ class NotifyAction extends AbstractWikiAction
         return implode(', ', $filteredReceivers);
     }
 
-    private function addReceiversToMessage(&$message, $receivers) {
-        $extraContent = "\n\n" . sprintf(WikiIocLangManager::getLang("message_notification_receivers"), $receivers);
-        $message['content']['text'] .= p_render('xhtml', p_get_instructions($extraContent), $info);
 
-        return $message;
-    }
-
-    private function buildMessage($data, $senderId, $docId, $type = self::DEFAULT_MESSAGE_TYPE) {
+    private function buildMessage($data, $senderId, $docId, $type = self::DEFAULT_MESSAGE_TYPE, $receivers) {
         if (is_string($data)) {
 
-            if ($docId) {
+
+
                 $title = sprintf(WikiIocLangManager::getLang("title_message_notification_with_id"), $senderId, $docId);
                 $message = sprintf(WikiIocLangManager::getLang("doc_message"), wl($docId,'',true), $docId) .  "\n\n" . $data;
-            } else {
-                $title = sprintf(WikiIocLangManager::getLang("title_message_notification"), $senderId);
-                $message = $data;
-            }
 
+            if ($receivers) {
+                $message = sprintf(WikiIocLangManager::getLang("message_notification_receivers"), $receivers) . "\n\n" . $message;
+            }
 
             $content = [
                 'type' => $type,
@@ -250,6 +237,7 @@ class NotifyAction extends AbstractWikiAction
 
         return ['title' => $title, 'content'=>$content];
     }
+
 
 
     private function getReceivers($receiversString) {
