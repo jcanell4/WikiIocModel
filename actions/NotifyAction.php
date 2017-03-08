@@ -108,16 +108,11 @@ class NotifyAction extends AbstractWikiAction
                 }
                 break;
 
-            // ALERTA[Xavi] Aquesta opció no s'utilitza i no està implementada
-//            case self::DO_ADD: // El usuari idUser envia una notificació, notifyToFrom().
-//                $response['notifications'][] = $this->notifyTo();
-//
-//                break;
-
             case self::DO_ADDMESS:
-                //TODO[Xavi] Casella confirmar correu
-                //TODO[Xavi]Casella notificar canvi (el missatge inclou document id)
-                $response = $this->notifyMessageToFrom();
+                $notifyResponse = $this->notifyMessageToFrom();
+                $response['notifications'][] = $notifyResponse['notifications'];
+                $response['info'] = $notifyResponse['info'];
+
                 break;
 
             case self::DO_GET: // Obtenir totes les notificacions pel idUser, cridat periodicament pel timer, popNotifications()
@@ -154,11 +149,9 @@ class NotifyAction extends AbstractWikiAction
     }
 
     protected function generateAboutDocument($id) {
-        // TODO[Xavi] Localitzar el missatge
         return sprintf(WikiIocLangManager::getLang("doc_message"), $id);
     }
 
-    // ALERTA[Xavi] això no es correcte, però tampoc s'està utilitzant
     public function notifyMessageToFrom()
     {
         global $auth;
@@ -181,20 +174,14 @@ class NotifyAction extends AbstractWikiAction
 
         }
 
-        //TODO[Xavi] Afegir aquest missatge a la bustia d'enviats i afegir aquest com a params.
-
-
         $receiversList = $this->getReceiversIdAsString($receivers);
         $message = $this->buildMessage($this->params['message'], $senderId, $this->params['id'], null, $receiversList);
         $notification = $this->dokuNotifyModel->notifyMessageToFrom($message ['content'], $senderId, null, NotifyDataQuery::MAILBOX_SEND, true);
 
 
-
-
         $response['info'] = $this->generateInfo('success', sprintf(WikiIocLangManager::getLang("notifation_send_success"), $receiversList));
-        $response['params']['notification'] = $notification;
-        $response['action'] = 'notification_sent';
-
+        $response['notifications']['params']['notification'] = $notification;
+        $response['notifications']['action'] = 'notification_sent';
 
         return $response;
     }
@@ -266,17 +253,13 @@ class NotifyAction extends AbstractWikiAction
         return $receiversUsers;
     }
 
-    public function sendNotificationByEmail($senderUser, $receiverUser, $subject, $message) {
+    private function sendNotificationByEmail($senderUser, $receiverUser, $subject, $message) {
         $subject = sprintf(WikiIocLangManager::getLang("notificaction_email_subject"), $subject);
-//            mail_send($receiverUser['mail'], $subject, $message['text'], $senderUser['mail'] );
-
-        // TODO[Xavi] L'enllaç ha d'incloure la URL completa
 
         $mail = new MailerIOC();
         $mail->to($receiverUser['id'] . ' <' . $receiverUser['mail'] . '>');
         $mail->subject($subject);
         $mail->setBody($message);
-//            $mail->setBody($message['text']);
         $mail->from($senderUser['mail']);
         $mail->send();
     }
@@ -343,10 +326,9 @@ class NotifyAction extends AbstractWikiAction
         return $response;
     }
 
-    public function getCurrentUser()
+    private function getCurrentUser()
     {
         return $_SERVER['REMOTE_USER'];
-//        return WikiIocInfoManager::getInfo('userinfo')['name']; // Aquest no concorda amb el id desat al lock de la wiki
     }
 
     public function get(/*Array*/
