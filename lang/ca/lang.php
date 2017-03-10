@@ -52,14 +52,18 @@ $lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari
         . "Activem la notificació?";
 
 $lang['tab_shortcuts'] = "Dreceres";
+$lang['changes_type_filter'] = "Filtre dels canvis recents";
+$lang['changes_navigation'] = "Paginació dels canvis recents";
+$lang['recent_controls'] = "Controls dels canvis recents";
+$lang['recent_list_loaded'] = "Llista dels canvis recents carregada";
+$lang['recent_list'] = "canvis recents";
 
 // Avisos del sistema
 $lang['system_warning_default_title'] = 'Avís del sistema';
 
 // Plantilles
-$lang['template:shortcuts'] = "Nou document de dreceres.\n\n"
+$lang['plantilles:user:dreceres'] = "Nou document de dreceres.\n\n"
     . "Per afegir dreceres a documents o espais de noms, afegir enllaços al document o a l'espai de noms, seguint la sintaxi wiki. Per exemple:\n\n"
-    . "[[wiki:user:|El meu espai]]\n\n"
     . "[[wiki:navigation|Drecera a la documentació de la wiki]]";
 //Excepciones del proyecto 'defaultProject'
 $lang['pageExist'] = 'The page %s already exists';

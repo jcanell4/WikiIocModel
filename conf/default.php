@@ -9,6 +9,7 @@
 $conf['userpage_allowed']           = 1;
 $conf['userpage_ns']                =":wiki:user:";
 $conf['userpage_discuss_ns']        =":talk:wiki:user:";
+$conf['template_shortcuts_ns']      ="plantilles:usuaris:dreceres";
 
 //$conf['notifier_type'] = 'websocket'; // 'ajax' o 'websocket'
 $conf['notifier_type'] = 'ajax'; // 'ajax' o 'websocket'

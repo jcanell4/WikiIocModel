@@ -138,77 +138,9 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 
         $response["lockInfo"] = $this->lockStruct["info"];
 
-        //$pageToSend = $this->cleanResponse($this->_getCodePage());
-
-        //$resp = $this->getContentPage($pageToSend["content"]);
-//        $resp['meta'] = $pageToSend['meta'];
-
-
-        /* ALERTA[Josep] Ja no serveix. Ara arriba l'estat amb la resposta de getModel()->rawData().
-        // ALERTA[Xavi] Nova gestió del lock
-        $resp[PageKeys::KEY_LOCK_STATE] = $this->requireResource();
-         */
-
         $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
 
-
-//        $infoType = 'info';
-//        if ($resp[PageKeys::KEY_LOCK_STATE]===100) {// Substituida la coprovació pel nou sistema, 200 es l'estat bloquejat
-//            $infoType = 'error';
-//            $pageToSend['info'] = WikiIocLangManager::getLang('lockedby') . ' ' . WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
-//        }
-//        $resp['info'] = self::generateInfo($infoType, $pageToSend['info']);
-//        $resp[WikiIocInfoManager::KEY_LOCKED] = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
-
-
-        // només tenim en compte el temps del full draft local, perquè no es pot reconstruir el document localment
-
-//        $fullLastSavedDraftTime = $this->dokuPageModel->getFullDraftDate();
-//        $structuredLastSavedDraftTime = $this->dokuPageModel->getStructuredDraftDate();
-//        $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
-//
-//        // Només pot existir un dels dos, i el draft que arriba aquí ja es el complet si existeix algun dels dos
-//        $savedDraftTime = max($fullLastSavedDraftTime, $structuredLastSavedDraftTime);
-//
-//        if ($savedDraftTime > -1 && $fullLastLocalDraftTime < $savedDraftTime) {
-//            // El desat es més recent, no cal fer res
-//            $resp['draftType'] = DokuPageModel::FULL_DRAFT; // ALERTA[Xavi] El valor no es fa servir per a res en especial
-//        } else if ($fullLastLocalDraftTime > 0) {
-//            $resp['local'] = true;
-//            $resp['draftType'] = DokuPageModel::LOCAL_FULL_DRAFT;  // ALERTA[Xavi] El valor no es fa servir per a res en especial
-//        }
-
-
-        /*if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] === 'true') {
-
-            $resp[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
-            $resp['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
-
-        } else if ($this->params[PageKeys::KEY_RECOVER_DRAFT] != NULL) {
-
-            // S'ha seleccionat si volem recuperar o no l'esborrany
-            $resp['recover_draft'] = $this->params[PageKeys::KEY_RECOVER_DRAFT];
-
-
-            if ($this->params[PageKeys::KEY_RECOVER_DRAFT] == 'true') {
-                $info = $this->generateInfo("warning", WikiIocLangManager::getLang('draft_editing'));
-
-                if (array_key_exists('info', $resp)) {
-                    $info = $this->addInfoToInfo($resp['info'], $info);
-                }
-
-                $resp["info"] = $info;
-            }
-
-        } else if (isset($resp['draftType'])) {
-            // Mostrar el dialog que es mostrava al command
-//            $this->getModel()->getDraftDialog($this->params);
-            $resp['show_draft_dialog'] = TRUE;
-        }*/
-
-
-        $response['meta'][] = $this->getNotificationsMetaToResponse($response, $response['ns']);
-
+        $this->addNotificationsMetaToResponse($response, $response['ns']);
 
         return $response;
     }

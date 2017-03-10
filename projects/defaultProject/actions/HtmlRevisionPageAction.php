@@ -56,7 +56,8 @@ class HtmlRevisionPageAction extends HtmlPageAction{
         }
 
         // TODO: afegir el 'meta' que correspongui
-        $response['meta'] = $this->getMetaTocResponse();
+//        $response['meta'] = $this->addMetaTocResponse();
+        $this->addMetaTocResponse($response);
 
         // TODO: afegir les revisions
         $response['revs'] = $this->getRevisionList();

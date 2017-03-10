@@ -20,13 +20,14 @@ require_once DOKU_PLUGIN."wikiiocmodel/WikiIocModelExceptions.php";
 abstract class DokuAction extends AbstractWikiAction{
     protected $defaultDo;
     protected $params;
+    protected $response;
+
     private $preResponseTmp = array(); //EL format d'aquestes dades és un hashArray on la clau indica el tipus i el valor el contingut. La clau 
                                        //pot ser qualsevol de les que es processaràn després com a resposta en el responseHandler. Per exemple 
                                        //title, content, info, meta, etc. A més hi ha la possibilitat d'afegir contingut html a la resposta
     private $postResponseTmp= array(); //EL format d'aquestes dades és un hashArray on la clau indica el tipus i el valor el contingut. La clau 
                                        //pot ser qualsevol de les que es processaràn després com a resposta en el responseHandler. Per exemple 
                                        //title, content, info, meta, etc.
-    private $response;
     
     private $renderer = FALSE;
     private $addContentIsAllowed=FALSE; //Per defecte no deixem afegir contingut HTML a la renderització

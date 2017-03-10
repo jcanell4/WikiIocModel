@@ -32,7 +32,7 @@ if (!defined('DW_DEFAULT_PAGE')) {
  *
  * @author josep
  */
-class HtmlPageAction extends PageAction{
+class HtmlPageAction extends RenderedPageAction{
     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
@@ -67,9 +67,8 @@ class HtmlPageAction extends PageAction{
     protected function responseProcess(){  
 //        $response = array();
         
-//        $response['structure'] = $this->getModel()->getData();
-        $response = $this->getModel()->getData();
-
+        $response = parent::responseProcess();
+        
         // TODO: afegir el 'info' que correspongui
 
         // Si no s'ha especificat cap altre missatge mostrem el de carrega
@@ -78,15 +77,6 @@ class HtmlPageAction extends PageAction{
         }else {
             $this->addInfoToInfo($response['info'], $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded'), $this->params[PageKeys::KEY_ID]));
         }
-
-        // TODO: afegir el 'meta' que correspongui
-        $response['meta'] = $this->getMetaTocResponse()['meta'];
-
-        // TODO: afegir les revisions
-        $response['revs'] = $this->getRevisionList();
-
-        $ns = isset($response['ns']) ? $response['ns'] : $response['structure']['ns'];
-        $response['meta'][] = $this->getNotificationsMetaToResponse($response, $ns);
 
         return $response;
     }
