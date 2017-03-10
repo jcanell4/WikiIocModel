@@ -52,6 +52,11 @@ $lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari
         . "Activem la notificació?";
 
 $lang['tab_shortcuts'] = "Dreceres";
+$lang['changes_type_filter'] = "Filtre dels canvis recents";
+$lang['changes_navigation'] = "Paginació dels canvis recents";
+$lang['recent_controls'] = "Controls dels canvis recents";
+$lang['recent_list_loaded'] = "Llista dels canvis recents carregada";
+$lang['recent_list'] = "canvis recents";
 
 // Avisos del sistema
 $lang['system_warning_default_title'] = 'Avís del sistema';
