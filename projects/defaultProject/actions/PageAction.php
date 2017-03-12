@@ -254,13 +254,7 @@ abstract class PageAction extends DokuAction
                         'value' => '',
                         'label' => WikiIocLangManager::getLang('notification_form_message'), // Optional
                         'properties' => ['required'] // Optional
-                    ],
-	                [
-		                'type' => 'button',
-		                'name' => 'life',
-		                'value' => 42,
-		                'label' => "Test Button",
-	                ],
+                    ]
 
                 ],
                 'send_button' => WikiIocLangManager::getLang('notification_form_button_send')
