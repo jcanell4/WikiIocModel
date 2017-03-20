@@ -167,7 +167,7 @@ class NotifyAction extends AbstractWikiAction
             $notification = $this->buildMessage($this->params['message'], $senderId, $docId = $this->params['id'], $this->params['type']);
 
             if ($this->params['send_email']) {
-                $this->sendNotificationByEmail($senderUser, $receiver, $notification['title'], $notification['content']['text']);
+                $this->sendNotificationByEmail($senderUser, $receiver, $notification['title'], $notification['content']['textMail']);
             }
 
             $this->dokuNotifyModel->notifyMessageToFrom($notification['content'], $receiver['id'], $senderId, NotifyDataQuery::MAILBOX_RECEIVED);
@@ -206,16 +206,19 @@ class NotifyAction extends AbstractWikiAction
 
                 $title = sprintf(WikiIocLangManager::getLang("title_message_notification_with_id"), $senderId, $docId);
                 $message = sprintf(WikiIocLangManager::getLang("doc_message"), wl($docId,'',true), $docId) .  "\n\n" . $data;
+                $textMail = sprintf(WikiIocLangManager::getLang("mail_message"), DOKU_URL, $docId) .  "\n\n" . $data;
 
             if ($receivers) {
                 $message = sprintf(WikiIocLangManager::getLang("message_notification_receivers"), $receivers) . "\n\n" . $message;
+                $textMail = sprintf(WikiIocLangManager::getLang("message_notification_receivers"), $receivers) . "\n\n" . $textMail;
             }
 
             $content = [
                 'type' => $type,
                 'id' => $docId . '_' . $senderId,
                 'title' => $title,
-                'text' => p_render('xhtml', p_get_instructions($message), $info)
+                'text' => p_render('xhtml', p_get_instructions($message), $info),
+                'textMail' => p_render('xhtml', p_get_instructions($textMail), $info)
             ];
         } else {
             $title = $data['title'];
@@ -259,7 +262,7 @@ class NotifyAction extends AbstractWikiAction
         $mail = new MailerIOC();
         $mail->to($receiverUser['id'] . ' <' . $receiverUser['mail'] . '>');
         $mail->subject($subject);
-        $mail->setBody($message);
+        $mail->setBody(preg_replace("/\n/", "", $message));
         $mail->from($senderUser['mail']);
         $mail->send();
     }
