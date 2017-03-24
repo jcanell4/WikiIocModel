@@ -110,7 +110,7 @@ abstract class PageAction extends DokuAction
         if(!isset($response['meta'])){
             $response['meta']=array();
         }
-        $mEvt = new Doku_Event('WIOC_ADD_META', $meta);
+        $mEvt = new Doku_Event('WIOC_ADD_META', $response['meta']);
         if ($mEvt->advise_before()) {
             $toc = $this->getModel()->getMetaToc();
             $metaId = \str_replace(":", "_", $this->params[PageKeys::KEY_ID]) . '_toc';
