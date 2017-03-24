@@ -1,6 +1,8 @@
 <?php
 
 
+
+
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
@@ -28,7 +30,6 @@ if (!defined('DW_ACT_DELDRAFT')) define('DW_ACT_DELDRAFT', "draftdel");
 class DraftPageAction extends PageAction
 {
     protected $engine;
-    private $response;
 
     public function __construct(/*BasicPersistenceEngine*/ $engine)
     {
