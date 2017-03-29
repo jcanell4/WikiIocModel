@@ -201,6 +201,7 @@ abstract class PageAction extends DokuAction
             $response['meta']=array();
         }
         $ns = isset($response['ns']) ? $response['ns'] : $response['structure']['ns'];
+        $rev = isset($response['rev']) ? $response['rev'] : $response['structure']['rev'];
         
         $response['meta'][] = [
             "id" => $ns . "_metaNotifications",
@@ -209,11 +210,11 @@ abstract class PageAction extends DokuAction
                 'action' => 'lib/plugins/ajaxcommand/ajax.php',
                 'method' => 'post',
                 'fields' => [
-                    [
-                        'type' => 'hidden',
-                        'name' => 'sectok',
-                        'value' => getSecurityToken(),
-                    ],
+//                    [
+//                        'type' => 'hidden',
+//                        'name' => 'sectok',
+//                        'value' => getSecurityToken(),
+//                    ],
                     [
                         'type' => 'hidden',
                         'name' => 'call',
@@ -242,6 +243,11 @@ abstract class PageAction extends DokuAction
                         'value' => $ns,
                         'label' => sprintf(WikiIocLangManager::getLang('notification_form_check_add_id'), $response['id']), // Optional
                         'properties' => ['checked'] // Optional
+                    ],
+                    [
+                        'type' => 'hidden',
+                        'name' => 'rev',
+                        'value' => $rev,
                     ],
                     [
                         'type' => 'checkbox',
