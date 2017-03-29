@@ -77,6 +77,9 @@ class SavePageAction extends RawPageAction {
         global $TEXT;
         global $ID;
 
+        $suffix = isset($this->params[PageKeys::KEY_REV]) ? PageAction::REVISION_SUFFIX : '';
+
+
         if ($this->deleted) {
             $response['deleted'] = TRUE;
             $type = 'success';
@@ -90,18 +93,21 @@ class SavePageAction extends RawPageAction {
             $response = ['code' => $this->code, 'info' => WikiIocLangManager::getLang('saved')];
 
             //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg <-- [Xavi] el nom del formulari ara es dinamic, canvia per cada document
-            $response['formId'] = 'form_' . WikiPageSystemManager::getContainerIdFromPageId($ID);
+
+
+
+            $response['formId'] = 'form_' . WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
             $response['inputs'] = [
                 'date' => @filemtime(wikiFN($ID)),
                 'changecheck' => md5($TEXT)
             ];
             $type = 'success';
             $duration = 15;
-            $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
+            $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]) . $suffix;
         }
         
         $response["lockInfo"] = $this->lockStruct["info"];
-        $response['info'] = $this->generateInfo($type, $response['info'], $id, $duration);
+        $response['info'] = $this->generateInfo($type, $response['info'], $id . $suffix, $duration);
 
 
 

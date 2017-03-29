@@ -76,6 +76,11 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
             }
             $response ['info'] = $this->addInfoToInfo($response['info'], $this->generateInfo("warning", WikiIocLangManager::getLang('auto_cancelled'), $response['structure']['id']));
         }
+
+        if (isset($this->params[PageKeys::KEY_REV])) {
+            $response['structure']['id'] .= PageAction::REVISION_SUFFIX;
+        }
+
         return $response;
     }
 
@@ -87,6 +92,7 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
             $this->clearPartialDraft();
         }
 
+        // ALERTA[Xavi] Cal comprovar si es desbloqueja quan es cancel·la un document en readonly
         $this->leaveResource(TRUE);
         //unlock($this->params[PageKeys::KEY_ID]);
 

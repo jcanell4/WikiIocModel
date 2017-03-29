@@ -28,6 +28,8 @@ abstract class PageAction extends DokuAction
     protected $resourceLocker;
     protected $persistenceEngine;
 
+    const REVISION_SUFFIX= '-rev-';
+
     public function __construct($persistenceEngine)
     {
         $this->persistenceEngine = $persistenceEngine;
@@ -265,5 +267,16 @@ abstract class PageAction extends DokuAction
         
 //        return $response['meta'];
     }
+
+    protected function addRevisionSuffixIdToArray(&$elements) {
+        for ($i=0, $len = count($elements); $i<$len; $i++) {
+
+            if ($elements[$i]['id'] && substr($elements[$i]['id'], -5) != self::REVISION_SUFFIX) {
+                $elements[$i]['id'] .= self::REVISION_SUFFIX;
+            }
+        }
+    }
+
+
 
 }
