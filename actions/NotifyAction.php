@@ -164,7 +164,7 @@ class NotifyAction extends AbstractWikiAction
         $notification = null;
 
         foreach ($receivers as $receiver) {
-            $notification = $this->buildMessage($this->params['message'], $senderId, $docId = $this->params['id'], $this->params['type']);
+            $notification = $this->buildMessage($this->params['message'], $senderId, $docId = $this->params['id'], $this->params['type'], $receiver['id'], $this->params['rev']);
 
             if ($this->params['send_email']) {
                 $this->sendNotificationByEmail($senderUser, $receiver, $notification['title'], $notification['content']['textMail']);
@@ -175,7 +175,7 @@ class NotifyAction extends AbstractWikiAction
         }
 
         $receiversList = $this->getReceiversIdAsString($receivers);
-        $message = $this->buildMessage($this->params['message'], $senderId, $this->params['id'], null, $receiversList);
+        $message = $this->buildMessage($this->params['message'], $senderId, $this->params['id'], null, $receiversList, $this->params['rev']);
         $notification = $this->dokuNotifyModel->notifyMessageToFrom($message ['content'], $senderId, null, NotifyDataQuery::MAILBOX_SEND, true);
 
 
@@ -199,14 +199,19 @@ class NotifyAction extends AbstractWikiAction
     }
 
 
-    private function buildMessage($data, $senderId, $docId, $type = self::DEFAULT_MESSAGE_TYPE, $receivers) {
+    private function buildMessage($data, $senderId, $docId, $type = self::DEFAULT_MESSAGE_TYPE, $receivers, $rev = null) {
         if (is_string($data)) {
 
 
+            $title = sprintf(WikiIocLangManager::getLang("title_message_notification_with_id"), $senderId, $docId);
 
-                $title = sprintf(WikiIocLangManager::getLang("title_message_notification_with_id"), $senderId, $docId);
-                $message = sprintf(WikiIocLangManager::getLang("doc_message"), wl($docId,'',true), $docId) .  "\n\n" . $data;
-                $textMail = sprintf(WikiIocLangManager::getLang("mail_message"), DOKU_URL, $docId) .  "\n\n" . $data;
+            if ($rev) {
+                $message = sprintf(WikiIocLangManager::getLang("doc_message_with_rev"), wl($docId, ['rev'=>$rev], true), $docId , $rev) . "\n\n" . $data;
+            } else {
+                $message = sprintf(WikiIocLangManager::getLang("doc_message"), wl($docId, '', true), $docId) . "\n\n" . $data;
+            }
+
+            $textMail = sprintf(WikiIocLangManager::getLang("mail_message"), DOKU_URL, $docId) .  "\n\n" . $data;
 
             if ($receivers) {
                 $message = sprintf(WikiIocLangManager::getLang("message_notification_receivers"), $receivers) . "\n\n" . $message;

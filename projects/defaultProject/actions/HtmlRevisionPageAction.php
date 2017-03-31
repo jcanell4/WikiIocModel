@@ -44,7 +44,12 @@ class HtmlRevisionPageAction extends HtmlPageAction{
 //        $response['structure'] = $this->getModel()->getData();
         $response = $this->getModel()->getData();
 
-        $revisionInfo = WikiIocLangManager::getXhtml('showrev'); 
+        $revisionInfo = WikiIocLangManager::getXhtml('showrev');
+
+        // ALERTA[Xavi] Canvis per fer servir una pestanya per revisions
+        $response['structure']['id'] .= PageAction::REVISION_SUFFIX;
+
+        // ALERTA[Xavi] Fi Canvis
 
         $response['structure']['html'] = str_replace($revisionInfo, '', $response['structure']['html']);
 
@@ -55,13 +60,22 @@ class HtmlRevisionPageAction extends HtmlPageAction{
             $this->addInfoToInfo($response['info'], $this->generateInfo("info", strip_tags($revisionInfo)));
         }
 
-        // TODO: afegir el 'meta' que correspongui
 //        $response['meta'] = $this->addMetaTocResponse();
         $this->addMetaTocResponse($response);
 
-        // TODO: afegir les revisions
+
+
+
         $response['revs'] = $this->getRevisionList();
-        
+
+        $this->addNotificationsMetaToResponse($response, $response['ns']);
+
+        // Corregim els ids de les metas per indicar que és una revisió
+        $this->addRevisionSuffixIdToArray($response['meta']);
+
+
         return $response;
     }
+
+
 }

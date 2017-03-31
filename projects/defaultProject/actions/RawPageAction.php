@@ -101,6 +101,11 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
     protected function responseProcess()
     {
 
+
+
+
+
+
         //Casos
         // 1) Ja s'ha recuperat el draft local
         if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]) {
@@ -138,9 +143,23 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 
         $response["lockInfo"] = $this->lockStruct["info"];
 
+        // ALERTA: Control d'edició per revisions
+
+        if ($response['rev']) {
+            $response['id'] .= PageAction::REVISION_SUFFIX;
+        }
+
+        // ALERTA: Es bloqueja correctament??
         $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
 
+
+
         $this->addNotificationsMetaToResponse($response, $response['ns']);
+
+        // Corregim els ids de les metas per indicar que és una revisió
+        if ($response['rev']) {
+            $this->addRevisionSuffixIdToArray($response['meta']);
+        }
 
         return $response;
     }

@@ -28,6 +28,8 @@ abstract class PageAction extends DokuAction
     protected $resourceLocker;
     protected $persistenceEngine;
 
+    const REVISION_SUFFIX= '-rev-';
+
     public function __construct($persistenceEngine)
     {
         $this->persistenceEngine = $persistenceEngine;
@@ -199,6 +201,7 @@ abstract class PageAction extends DokuAction
             $response['meta']=array();
         }
         $ns = isset($response['ns']) ? $response['ns'] : $response['structure']['ns'];
+        $rev = isset($response['rev']) ? $response['rev'] : $response['structure']['rev'];
         
         $response['meta'][] = [
             "id" => $ns . "_metaNotifications",
@@ -207,11 +210,11 @@ abstract class PageAction extends DokuAction
                 'action' => 'lib/plugins/ajaxcommand/ajax.php',
                 'method' => 'post',
                 'fields' => [
-                    [
-                        'type' => 'hidden',
-                        'name' => 'sectok',
-                        'value' => getSecurityToken(),
-                    ],
+//                    [
+//                        'type' => 'hidden',
+//                        'name' => 'sectok',
+//                        'value' => getSecurityToken(),
+//                    ],
                     [
                         'type' => 'hidden',
                         'name' => 'call',
@@ -242,6 +245,11 @@ abstract class PageAction extends DokuAction
                         'properties' => ['checked'] // Optional
                     ],
                     [
+                        'type' => 'hidden',
+                        'name' => 'rev',
+                        'value' => $rev,
+                    ],
+                    [
                         'type' => 'checkbox',
                         'name' => 'send_email',
                         'value' => true,
@@ -265,5 +273,16 @@ abstract class PageAction extends DokuAction
         
 //        return $response['meta'];
     }
+
+    protected function addRevisionSuffixIdToArray(&$elements) {
+        for ($i=0, $len = count($elements); $i<$len; $i++) {
+
+            if ($elements[$i]['id'] && substr($elements[$i]['id'], -5) != self::REVISION_SUFFIX) {
+                $elements[$i]['id'] .= self::REVISION_SUFFIX;
+            }
+        }
+    }
+
+
 
 }
