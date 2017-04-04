@@ -79,35 +79,44 @@ class SavePageAction extends RawPageAction {
 
         $suffix = isset($this->params[PageKeys::KEY_REV]) ? PageAction::REVISION_SUFFIX : '';
 
+        $response['code'] = $this->code;
 
         if ($this->deleted) {
             $response['deleted'] = TRUE;
             $type = 'success';
-            $response['info'] = sprintf(WikiIocLangManager::getLang('deleted'), $this->params[PageKeys::KEY_ID]);
-            $response['code'] = $this->code;
-            $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
+            $message = sprintf(WikiIocLangManager::getLang('deleted'), $this->params[PageKeys::KEY_ID]);
             $duration = NULL;
             
         }
         else {
-            $response = ['code' => $this->code, 'info' => WikiIocLangManager::getLang('saved')];
+            $message = WikiIocLangManager::getLang('saved');
 
-            //TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg <-- [Xavi] el nom del formulari ara es dinamic, canvia per cada document
+            if (isset($this->params[PageKeys::KEY_REV])) {
+                $response['reload']['id'] = WikiPageSystemManager::getContainerIdFromPageId($ID);
+                $response['reload']['call'] = 'edit';
+                $response['close']['id'] = WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
+            } else {
+                $response['formId'] = 'form_' . WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
+                $response['inputs'] = [
+                    'date' => @filemtime(wikiFN($ID)),
+                    'changecheck' => md5($TEXT)
+                ];
+            }
 
-
-
-            $response['formId'] = 'form_' . WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
-            $response['inputs'] = [
-                'date' => @filemtime(wikiFN($ID)),
-                'changecheck' => md5($TEXT)
-            ];
             $type = 'success';
             $duration = 15;
-            $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]) . $suffix;
+
         }
-        
+
         $response["lockInfo"] = $this->lockStruct["info"];
-        $response['info'] = $this->generateInfo($type, $response['info'], $id . $suffix, $duration);
+
+
+
+        $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]) . $suffix;
+
+        $response['info'] = $this->generateInfo($type, $message, $id . $suffix, $duration);
+
+
 
 
 
