@@ -110,6 +110,11 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         // 1) Ja s'ha recuperat el draft local
         if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]) {
             $response = $this->_getLocalDraftResponse();
+
+            // ALERTA[Xavi] Afegit per enviar el contingut actual i determinar si hi ha canvis a l'esborrany
+            $response['content'] = $this->getModel()->getRawData()['content'];
+
+
         } else if($this->lockState()==ST_LOCKED_BEFORE){
             //-1 L'usuari te obert el document en una altra sessio
             $response = $this->_getSelfLockedDialog($this->getModel()->getRawData());
@@ -117,6 +122,10 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
             // 2) Es demana recuperar el draft
             if ($this->params[PageKeys::KEY_RECOVER_DRAFT]) {
                 $response = $this->_getDraftResponse();
+                // ALERTA[Xavi] Afegit per enviar el contingut actual i determinar si hi ha canvis a l'esborrany
+                $response['content'] = $this->getModel()->getRawData()['content'];
+
+
             } else { //
                 $rawData = $this->getModel()->getRawData();
                 $rawData["draftType"] = $this->_getDraftType($rawData["draftType"]);

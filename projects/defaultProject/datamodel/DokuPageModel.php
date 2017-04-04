@@ -492,6 +492,7 @@ class DokuPageModel extends WikiRenderizableDataModel
     public function replaceContentForChunk(&$structure, $chunkId, $content)
     {
         $index = $structure['dictionary'][$chunkId];
+        $structure['chunks'][$index]['text']['originalContent'] = $structure['chunks'][$index]['text']['editing'];
         $structure['chunks'][$index]['text']['editing'] = $content;
     }
 

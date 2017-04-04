@@ -112,6 +112,11 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             $response = $this->_getLocalDraftResponse($data);
 
+            // ALERTA[Xavi] Afegit per enviar el contingut actual i determinar si hi ha canvis a l'esborrany
+            //$response['content'] = ???;
+
+
+
         } else if($this->lockState()==ST_LOCKED_BEFORE){
             //-1 L'usuari te obert el document en una altra sessio
 
@@ -128,6 +133,9 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
             if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === TRUE) {
 
                 $response = $this->_getDraftResponse($data);
+                // ALERTA[Xavi] Afegit per enviar el contingut actual i determinar si hi ha canvis a l'esborrany
+                //$response['content'] = ???;
+
 
                 // 2.2) Es troba desbloquejat?
             } else if (!$data['structure']['locked']) { //
