@@ -77,7 +77,7 @@ class SavePageAction extends RawPageAction {
         global $TEXT;
         global $ID;
 
-        $suffix = isset($this->params[PageKeys::KEY_REV]) ? PageAction::REVISION_SUFFIX : '';
+        $suffix = $this->params[PageKeys::KEY_REV] ? PageAction::REVISION_SUFFIX : '';
 
         $response['code'] = $this->code;
 
@@ -91,7 +91,7 @@ class SavePageAction extends RawPageAction {
         else {
             $message = WikiIocLangManager::getLang('saved');
 
-            if (isset($this->params[PageKeys::KEY_REV])) {
+            if ($this->params[PageKeys::KEY_REV]) {
                 $response['reload']['id'] = WikiPageSystemManager::getContainerIdFromPageId($ID);
                 $response['reload']['call'] = 'edit';
                 $response['close']['id'] = WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
