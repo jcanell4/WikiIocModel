@@ -111,3 +111,8 @@ $lang['projectLabelForm']['descripció'] = 'descripció del projecte';
 
 $lang['projectGroup']['main'] = 'Grup principal del projecte';
 $lang['projectGroup']['admin'] = 'Dades de l\'administració del projecte';
+
+$lang['cancel_editing_with_changes'] = 'S\'han produït canvis al document. Vols tancar-lo?';
+$lang['save_or_discard_dialog_message'] = 'Vols desar els canvis abans de cancel·lar?';
+$lang['save_or_discard_dialog_dont_save'] = 'No desar';
+$lang['save_or_discard_dialog_save'] = 'Desar';
