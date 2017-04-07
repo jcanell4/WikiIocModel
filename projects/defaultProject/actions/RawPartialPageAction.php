@@ -408,7 +408,9 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
     private function _getSelfLockedDialog($data)
     {
-        $resp = $this->_getDialogOrDocumentResponse($data);
+//        $resp = $this->_getDialogOrDocumentResponse($data); // ALERTA[Xavi] Això provoca un bucle infinit de demanar dialegs!
+        $resp = $this->_getDocumentResponse($data);
+
         $resp["structure"]["locked_before"]=true;
 //        $resp['structure']['locked'] = true;
 
