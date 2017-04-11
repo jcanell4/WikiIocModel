@@ -95,8 +95,10 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
             $this->clearPartialDraft();
         }
 
-        // ALERTA[Xavi] Cal comprovar si es desbloqueja quan es cancel·la un document en readonly
-        $this->leaveResource(TRUE);
+
+        $unlock = isset($this->params[PageKeys::KEY_UNLOCK]) ? $this->params[PageKeys::KEY_UNLOCK] : TRUE;
+
+        $this->leaveResource($unlock);
         //unlock($this->params[PageKeys::KEY_ID]);
 
         if (!WikiIocInfoManager::getInfo("exists")) {

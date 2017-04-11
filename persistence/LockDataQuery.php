@@ -162,13 +162,14 @@ class LockDataQuery extends DataQuery
     public function xUnlock($id, $unlock = FALSE)
     {
 
-        $this->notifyRequirers($id);
-
-        if ($unlock) {
-            $this->unlock($id);
+        if (!$unlock) {
+            return;
         }
 
+        $this->notifyRequirers($id);
+        $this->unlock($id);
         $this->removeExtendedFile($id);
+
     }
 
     /**
