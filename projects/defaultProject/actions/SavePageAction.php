@@ -91,10 +91,16 @@ class SavePageAction extends RawPageAction {
         else {
             $message = WikiIocLangManager::getLang('saved');
 
-            if ($this->params[PageKeys::KEY_REV]) {
-                $response['reload']['id'] = WikiPageSystemManager::getContainerIdFromPageId($ID);
-                $response['reload']['call'] = 'edit';
+            if ($this->params[PageKeys::KEY_REV]) {//
                 $response['close']['id'] = WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
+
+                if ($this->params[PageKeys::KEY_RELOAD]) {
+                    $response['reload']['id'] = $ID;
+                    $response['reload']['call'] = 'edit';
+                } else {
+                    $response['reload']['id'] = $ID;
+                    $response['reload']['call'] = 'page';
+                }
             } else {
                 $response['formId'] = 'form_' . WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
                 $response['inputs'] = [
