@@ -79,6 +79,9 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
 
         if (isset($this->params[PageKeys::KEY_REV])) {
             $response['structure']['id'] .= PageAction::REVISION_SUFFIX;
+
+            // Corregim els ids de les metas per indicar que és una revisió
+                $this->addRevisionSuffixIdToArray($response['meta']);
         }
 
         return $response;
