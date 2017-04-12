@@ -230,12 +230,27 @@ abstract class PageAction extends DokuAction
                         'name' => 'type',
                         'value' => 'warning',
                     ],
+//                    [
+//                        'type' => 'text',
+//                        'name' => 'to',
+//                        'value' => '',
+//                        'label' => WikiIocLangManager::getLang('notification_form_to'), // Optional
+//                        'properties' => ['required'] // Optional
+//                    ],
                     [
-                        'type' => 'text',
+                        //ALERTA[Xavi] Dades de prova, això haurà d'arribar d'algun lloc!
+                        'type' => 'amd',
+                        'data' => [
+                            ['name' => 'Xavier Garcia', 'userId' => 'admin'],
+                            ['name' => 'Josep Cañellas', 'userId' => 'admin2'],
+                            ['name' => 'Joan Ramon', 'userId' => 'aaa'],
+                            ['name' => 'Alicia Vila', 'userId' => 'bbb'],
+                            ['name' => 'Josep LLadonosa', 'userId' => 'ccc'],
+                        ],
+                        'class' => 'IocFilteredList',
                         'name' => 'to',
                         'value' => '',
                         'label' => WikiIocLangManager::getLang('notification_form_to'), // Optional
-                        'properties' => ['required'] // Optional
                     ],
                     [
                         'type' => 'checkbox',
