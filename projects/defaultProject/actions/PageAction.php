@@ -238,18 +238,24 @@ abstract class PageAction extends DokuAction
 //                        'properties' => ['required'] // Optional
 //                    ],
                     [
-                        //ALERTA[Xavi] Dades de prova, això haurà d'arribar d'algun lloc!
+
                         'type' => 'amd',
                         'data' => [
-                            ['name' => 'Xavier Garcia', 'username' => 'admin'],
-                            ['name' => 'Josep Cañellas', 'username' => 'admin2'],
-                            ['name' => 'Joan Ramon', 'username' => 'aaa'],
-                            ['name' => 'Alicia Vila', 'username' => 'bbb'],
-                            ['name' => 'Josep LLadonosa', 'username' => 'ccc'],
+                            //ALERTA[Xavi] Dades de prova, això haurà d'arribar d'algun lloc!
+                            'data' =>[
+                                ['name' => 'Xavier Garcia', 'username' => 'admin'],
+                                ['name' => 'Josep Cañellas', 'username' => 'admin2'],
+                                ['name' => 'Joan Ramon', 'username' => 'aaa'],
+                                ['name' => 'Alicia Vila', 'username' => 'bbb'],
+                                ['name' => 'Josep LLadonosa', 'username' => 'ccc'],
+                            ],
+                            'buttonLabel' => WikiIocLangManager::getLang('search'),
+                            'fieldName' => 'to',
+                            'searchDataUrl' => ''
                         ],
                         'class' => 'IocFilteredList',
-                        'name' => 'to',
-                        'value' => '',
+//                        'name' => 'to',
+//                        'value' => '',
                         'label' => WikiIocLangManager::getLang('notification_form_to'), // Optional
                     ],
                     [

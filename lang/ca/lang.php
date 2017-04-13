@@ -111,3 +111,5 @@ $lang['projectLabelForm']['descripció'] = 'descripció del projecte';
 
 $lang['projectGroup']['main'] = 'Grup principal del projecte';
 $lang['projectGroup']['admin'] = 'Dades de l\'administració del projecte';
+
+$lang['search'] = 'Cercar';
