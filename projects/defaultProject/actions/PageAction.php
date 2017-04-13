@@ -241,11 +241,11 @@ abstract class PageAction extends DokuAction
                         //ALERTA[Xavi] Dades de prova, això haurà d'arribar d'algun lloc!
                         'type' => 'amd',
                         'data' => [
-                            ['name' => 'Xavier Garcia', 'userId' => 'admin'],
-                            ['name' => 'Josep Cañellas', 'userId' => 'admin2'],
-                            ['name' => 'Joan Ramon', 'userId' => 'aaa'],
-                            ['name' => 'Alicia Vila', 'userId' => 'bbb'],
-                            ['name' => 'Josep LLadonosa', 'userId' => 'ccc'],
+                            ['name' => 'Xavier Garcia', 'username' => 'admin'],
+                            ['name' => 'Josep Cañellas', 'username' => 'admin2'],
+                            ['name' => 'Joan Ramon', 'username' => 'aaa'],
+                            ['name' => 'Alicia Vila', 'username' => 'bbb'],
+                            ['name' => 'Josep LLadonosa', 'username' => 'ccc'],
                         ],
                         'class' => 'IocFilteredList',
                         'name' => 'to',
