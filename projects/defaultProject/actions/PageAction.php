@@ -251,7 +251,8 @@ abstract class PageAction extends DokuAction
                             ],
                             'buttonLabel' => WikiIocLangManager::getLang('search'),
                             'fieldName' => 'to',
-                            'searchDataUrl' => ''
+                            'searchDataUrl' => 'testUsersQuery.json',
+                            'token' => getSecurityToken()
                         ],
                         'class' => 'IocFilteredList',
 //                        'name' => 'to',
