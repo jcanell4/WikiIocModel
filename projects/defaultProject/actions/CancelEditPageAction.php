@@ -96,9 +96,13 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
         }
 
 
-        $unlock = isset($this->params[PageKeys::KEY_UNLOCK]) ? $this->params[PageKeys::KEY_UNLOCK] : TRUE;
+        $unlockDocument = isset($this->params[PageKeys::KEY_UNLOCK]) ? $this->params[PageKeys::KEY_UNLOCK] : TRUE;
 
-        $this->leaveResource($unlock);
+        if ($unlockDocument) {
+            $this->leaveResource(TRUE);
+        }
+
+
         //unlock($this->params[PageKeys::KEY_ID]);
 
         if (!WikiIocInfoManager::getInfo("exists")) {
