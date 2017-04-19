@@ -91,7 +91,12 @@ class SavePageAction extends RawPageAction {
         else {
             $message = WikiIocLangManager::getLang('saved');
 
-            if ($this->params[PageKeys::KEY_REV]) {//
+            if ($this->params[PageKeys::KEY_CANCEL]) {
+
+                $response['code'] = "cancel_document"; // ALERTA[Xavi] Hi ha algun lloc on es puguin consultar els codis creats?
+                $response['cancel_params'] = ['id' => $ID, 'call' => 'cancel', 'discard_changes' => true, /*, 'do' => 'cancel'*/];
+
+            } else if ($this->params[PageKeys::KEY_REV]) {
                 $response['close']['id'] = WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
 
                 if ($this->params[PageKeys::KEY_RELOAD]) {
