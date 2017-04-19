@@ -93,7 +93,9 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
 
-        $this->lockStruct = $this->requireResource(TRUE);
+        if (!$this->params[PageKeys::KEY_REV]) {
+            $this->lockStruct = $this->requireResource(TRUE);
+        }
     }
 
     /**
