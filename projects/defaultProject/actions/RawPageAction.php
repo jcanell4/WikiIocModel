@@ -89,7 +89,11 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
 
-        $this->lockStruct = $this->requireResource(TRUE);
+        // ALERTA[Xavi] Les revisions no bloquejen el document
+        if (!$this->params[PageKeys::KEY_REV]) {
+            $this->lockStruct = $this->requireResource(TRUE);
+        }
+
     }
 
     /**
@@ -155,11 +159,15 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         // ALERTA: Control d'edició per revisions
 
         if ($response['rev']) {
+            // ALERTA[Xavi] Les revisións no bloquejan el document. Per altra banda afegeixen un suffix al id per diferenciar-se del document original
             $response['id'] .= PageAction::REVISION_SUFFIX;
+        } else {
+            // ALERTA: Es bloqueja correctament??
+            $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
         }
 
-        // ALERTA: Es bloqueja correctament??
-        $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
+
+
 
 
 

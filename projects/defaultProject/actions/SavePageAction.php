@@ -97,7 +97,7 @@ class SavePageAction extends RawPageAction {
                 $response['cancel_params'] = ['id' => $ID, 'call' => 'cancel', 'discard_changes' => true, /*, 'do' => 'cancel'*/];
 
             } else if ($this->params[PageKeys::KEY_REV]) {
-                $response['close']['id'] = WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
+//                $response['close']['id'] = WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
 
                 if ($this->params[PageKeys::KEY_RELOAD]) {
                     $response['reload']['id'] = $ID;
@@ -142,8 +142,9 @@ class SavePageAction extends RawPageAction {
             throw new WordBlockedException();
         }
         //conflict check
-        if($this->params[PageKeys::KEY_DATE] != 0 
-                && WikiIocInfoManager::getInfo('meta')['date']['modified'] > $this->params[PageKeys::KEY_DATE] ){
+        if($this->params[PageKeys::KEY_DATE] !== 'revert' // ALERTA[Xavi] els revert ignoren la data del document
+            && $this->params[PageKeys::KEY_DATE] != 0
+            && WikiIocInfoManager::getInfo('meta')['date']['modified'] > $this->params[PageKeys::KEY_DATE] ){
             //return 'conflict';
             throw new DateConflictSavingException();
         }
