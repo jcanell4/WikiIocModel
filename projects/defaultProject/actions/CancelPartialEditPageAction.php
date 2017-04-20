@@ -36,8 +36,8 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
 
         $unlock = isset($this->params[PageKeys::KEY_UNLOCK]) ? $this->params[PageKeys::KEY_UNLOCK] : TRUE;
 
-        if (count($this->params[PageKeys::KEY_EDITING_CHUNKS])==0 && $unlock) {
-            $this->leaveResource($unlock);
+        if (count($this->params[PageKeys::KEY_EDITING_CHUNKS])==0 || $unlock) {
+            $this->leaveResource(TRUE);
 //            unlock($this->params[PageKeys::KEY_ID]);
         }
 

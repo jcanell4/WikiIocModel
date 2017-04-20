@@ -30,8 +30,8 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 {
     //protected $draftQuery;
 
-    protected $engine;
-    private $lockStruct;
+//    protected $engine;
+    protected $lockStruct;
 
     public function __construct(/*BasicPersistenceEngine*/
         $engine)
@@ -39,7 +39,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         parent::__construct($engine);
         //$this->draftQuery = $engine->createDraftDataQuery();
         $this->defaultDo = DW_ACT_EDIT;
-        $this->engine = $engine;
+//        $this->engine = $engine;
         //Indica que la resposta es renderitza i caldrà llançar l'esdeveniment quan calgui
         $this->setRenderer(TRUE);
     }
@@ -415,7 +415,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
         return $resp;
     }
 
-    private function lockState()
+    protected function lockState()
     {
         return $this->lockStruct["state"];
     }

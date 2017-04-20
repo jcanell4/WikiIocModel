@@ -31,12 +31,19 @@ class SavePageAction extends RawPageAction {
 
     protected $deleted = FALSE;
     private $code = 0;
-     private $lockStruct;
     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
         $this->defaultDo = DW_ACT_SAVE;
     }
+    
+    protected function startProcess(){
+        if($this->params[PageKeys::KEY_DO] === "revert"){
+            $this->defaultDo = $this->params[PageKeys::KEY_DO];
+        }
+        parent::startProcess();
+    }
+
 
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la
@@ -63,7 +70,12 @@ class SavePageAction extends RawPageAction {
         }
 
         $this->lockStruct = $this->updateLock();
-        $this->_save();
+        if($this->lockState() === self::LOCKED){
+            $this->_save();
+            if($this->params[PageKeys::KEY_DO]==='revert'){
+                $this->resourceLocker->leaveResource(TRUE);
+            }
+        }
     }
 
     /**
@@ -142,7 +154,7 @@ class SavePageAction extends RawPageAction {
             throw new WordBlockedException();
         }
         //conflict check
-        if($this->params[PageKeys::KEY_DATE] !== 'revert' // ALERTA[Xavi] els revert ignoren la data del document
+        if($this->params[PageKeys::KEY_DO] !== 'revert' // ALERTA[Xavi] els revert ignoren la data del document
             && $this->params[PageKeys::KEY_DATE] != 0
             && WikiIocInfoManager::getInfo('meta')['date']['modified'] > $this->params[PageKeys::KEY_DATE] ){
             //return 'conflict';

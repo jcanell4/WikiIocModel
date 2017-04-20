@@ -23,8 +23,6 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
  */
 class SavePartialPageAction extends SavePageAction
 {
-    private $lockStruct;
-
     public function __construct(/*BasicPersistenceEngine*/
         $engine)
     {
@@ -57,7 +55,7 @@ class SavePartialPageAction extends SavePageAction
         $response = array_merge($response = parent::responseProcess(), $this->getModel()->getData());
 
 
-        if ($response['code'] = "cancel_document") {
+        if ($response['code'] == "cancel_document") {
 
             $response['cancel_params'] = [
                 'id' => $response["structure"]["ns"],
