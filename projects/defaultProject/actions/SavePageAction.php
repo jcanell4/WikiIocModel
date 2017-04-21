@@ -121,7 +121,7 @@ class SavePageAction extends RawPageAction {
             } else {
                 $response['formId'] = 'form_' . WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
                 $response['inputs'] = [
-                    'date' => @filemtime(wikiFN($ID)),
+                    'date' => WikiIocInfoManager::getInfo("meta")["date"]["modified"],
                     'changecheck' => md5($TEXT)
                 ];
             }
@@ -156,7 +156,7 @@ class SavePageAction extends RawPageAction {
         //conflict check
         if($this->params[PageKeys::KEY_DO] !== 'revert' // ALERTA[Xavi] els revert ignoren la data del document
             && $this->params[PageKeys::KEY_DATE] != 0
-            && WikiIocInfoManager::getInfo('meta')['date']['modified'] > $this->params[PageKeys::KEY_DATE] ){
+            && WikiIocInfoManager::getInfo("meta")["date"]["modified"] > $this->params[PageKeys::KEY_DATE] ){
             //return 'conflict';
             throw new DateConflictSavingException();
         }
