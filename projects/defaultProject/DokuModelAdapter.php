@@ -2190,7 +2190,7 @@ class DokuModelAdapter extends BasicModelAdapter {
             "type" => 'diff'
         ];
 
-        $response['info'] = $this->generateInfo("info", $lang['diff_loaded']);
+        $response['info'] = $this->generateInfo("info", $lang['diff_loaded'], $response['id']);
 
         $meta = [
             ($this->getCommonPage($response['id'] . '_switch_diff_mode ',
