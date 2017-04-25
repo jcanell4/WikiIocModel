@@ -117,3 +117,4 @@ $lang['save_or_discard_dialog_title'] = 'Desar abans de cancel·lar';
 $lang['save_or_discard_dialog_message'] = 'Vols desar els canvis abans de cancel·lar?';
 $lang['save_or_discard_dialog_dont_save'] = 'No desar';
 $lang['save_or_discard_dialog_save'] = 'Desar';
+$lang['search'] = 'Cercar';

@@ -13,7 +13,7 @@ class PagePermissionManager {
      * Obtiene la lista de usuarios, grupos o todos, que tienen, como mínimo, permiso $permis sobre la página $id
      * @param $type: 'users', 'groups', 'all'
      */
-    public function getListUsersPagePermission($id, $permis=AUTH_CREATE, $type='users') {
+    public static function getListUsersPagePermission($id, $permis=AUTH_CREATE, $type='users') {
         $acl_class = new admin_plugin_acl();
         $acl_class->handle();
         $acl = self::get_acl();
@@ -49,7 +49,7 @@ class PagePermissionManager {
      * @param $cadena es la parte del nombre que se busca
      * @return array[username=>[array['username'=>username, 'firstname'=>firstname, 'lastname'=>lastname]]
      */
-    public function getUserList($filter, $start=0, $pagesize=100) {
+    public static function getUserList($filter, $start=0, $pagesize=100) {
         global $auth;
         $au = & $auth;
         $user_list = $au->retrieveUsers($start, $pagesize+1, array('username_name'=>$filter));

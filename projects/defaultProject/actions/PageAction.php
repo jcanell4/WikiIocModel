@@ -16,6 +16,7 @@ require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php"
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/datamodel/DokuPageModel.php";
 require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLocker.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php";
 
 /**
  * Description of PageAction
@@ -203,6 +204,8 @@ abstract class PageAction extends DokuAction
         $ns = isset($response['ns']) ? $response['ns'] : $response['structure']['ns'];
         $rev = isset($response['rev']) ? $response['rev'] : $response['structure']['rev'];
         
+        $list = PagePermissionManager::getListUsersPagePermission($ns, AUTH_EDIT);
+        
         $response['meta'][] = [
             "id" => $ns . "_metaNotifications",
             "title" => WikiIocLangManager::getLang('notification_form_title'),
@@ -230,12 +233,34 @@ abstract class PageAction extends DokuAction
                         'name' => 'type',
                         'value' => 'warning',
                     ],
+//                    [
+//                        'type' => 'text',
+//                        'name' => 'to',
+//                        'value' => '',
+//                        'label' => WikiIocLangManager::getLang('notification_form_to'), // Optional
+//                        'properties' => ['required'] // Optional
+//                    ],
                     [
-                        'type' => 'text',
-                        'name' => 'to',
-                        'value' => '',
+
+                        'type' => 'amd',
+                        'data' => [
+                            //ALERTA[Xavi] Dades de prova, això haurà d'arribar d'algun lloc!
+                            'data' =>[
+                                ['name' => 'Xavier Garcia', 'username' => 'admin'],
+                                ['name' => 'Josep Cañellas', 'username' => 'admin2'],
+                                ['name' => 'Joan Ramon', 'username' => 'aaa'],
+                                ['name' => 'Alicia Vila', 'username' => 'bbb'],
+                                ['name' => 'Josep LLadonosa', 'username' => 'ccc'],
+                            ],
+                            'buttonLabel' => WikiIocLangManager::getLang('search'),
+                            'fieldName' => 'to',
+                            'searchDataUrl' => 'lib/plugins/ajaxcommand/ajax.php?call=user_list',
+                            'token' => getSecurityToken()
+                        ],
+                        'class' => 'IocFilteredList',
+//                        'name' => 'to',
+//                        'value' => '',
                         'label' => WikiIocLangManager::getLang('notification_form_to'), // Optional
-                        'properties' => ['required'] // Optional
                     ],
                     [
                         'type' => 'checkbox',
