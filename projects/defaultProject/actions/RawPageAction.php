@@ -66,7 +66,9 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 
         if (!$this->params[PageKeys::KEY_DATE]) {
             global $DATE;
-            $DATE = $this->params[PageKeys::KEY_DATE] = @filemtime(wikiFN($this->params[PageKeys::KEY_ID]));
+//            $DATE = $this->params[PageKeys::KEY_DATE] = @filemtime(wikiFN($this->params[PageKeys::KEY_ID]));
+            $DATE = $this->params[PageKeys::KEY_DATE] = WikiIocInfoManager::getInfo("meta")["date"]["modified"];
+
         }
     }
 

@@ -197,6 +197,20 @@ abstract class PageAction extends DokuAction
     }
 
 
+    private function generateUsernameNamePair(&$list) {
+        global $auth;
+
+        $newList = [];
+
+        foreach ($list as $username) {
+
+            $name = $auth->getUserData($username)['name'];
+            $newList[] = ['username' => $username, 'name' => $name];
+        }
+
+        return $newList;
+    }
+
     protected function addNotificationsMetaToResponse(&$response) {
         if(!isset($response['meta'])){
             $response['meta']=array();
@@ -205,6 +219,9 @@ abstract class PageAction extends DokuAction
         $rev = isset($response['rev']) ? $response['rev'] : $response['structure']['rev'];
         
         $list = PagePermissionManager::getListUsersPagePermission($ns, AUTH_EDIT);
+
+        $list = $this->generateUsernameNamePair($list);
+
         
         $response['meta'][] = [
             "id" => $ns . "_metaNotifications",
@@ -245,13 +262,15 @@ abstract class PageAction extends DokuAction
                         'type' => 'amd',
                         'data' => [
                             //ALERTA[Xavi] Dades de prova, això haurà d'arribar d'algun lloc!
-                            'data' =>[
+                            'data' => $list,
+
+                            /*[
                                 ['name' => 'Xavier Garcia', 'username' => 'admin'],
                                 ['name' => 'Josep Cañellas', 'username' => 'admin2'],
                                 ['name' => 'Joan Ramon', 'username' => 'aaa'],
                                 ['name' => 'Alicia Vila', 'username' => 'bbb'],
                                 ['name' => 'Josep LLadonosa', 'username' => 'ccc'],
-                            ],
+                            ],*/
                             'buttonLabel' => WikiIocLangManager::getLang('search'),
                             'fieldName' => 'to',
                             'searchDataUrl' => 'lib/plugins/ajaxcommand/ajax.php?call=user_list',

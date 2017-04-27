@@ -36,6 +36,6 @@ class UserListAction  extends AbstractWikiAction{
                 //error;
                 throw new IncorrectParametersException();
         }
-        return $ret;
+        return $ret['values'];
     }
 }
