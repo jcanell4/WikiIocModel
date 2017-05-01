@@ -205,7 +205,7 @@ abstract class PageAction extends DokuAction
         foreach ($list as $username) {
 
             $name = $auth->getUserData($username)['name'];
-            $newList[] = ['username' => $username, 'name' => $name];
+            $newList[] = ['username' => $username, 'name' => $name===null?"":$name];
         }
 
         return $newList;
@@ -221,7 +221,7 @@ abstract class PageAction extends DokuAction
         $list = PagePermissionManager::getListUsersPagePermission($ns, AUTH_EDIT);
 
         $list = $this->generateUsernameNamePair($list);
-
+        
         
         $response['meta'][] = [
             "id" => $ns . "_metaNotifications",

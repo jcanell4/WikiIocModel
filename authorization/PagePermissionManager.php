@@ -14,11 +14,28 @@ class PagePermissionManager {
      * @param $type: 'users', 'groups', 'all'
      */
     public static function getListUsersPagePermission($id, $permis=AUTH_CREATE, $type='users') {
+        global $auth;
         $acl_class = new admin_plugin_acl();
         $acl_class->handle();
         $acl = self::get_acl();
-
+        
+        
         $ret = array();
+        $superusers = WikiGlobalConfig::getConf("superuser").','.WikiGlobalConfig::getConf("manager");
+        $ret = array_map("trim", explode(",", $superusers));
+        
+        foreach ($ret as $key => $value){
+            if($value[0]==="@"){
+                unset($ret[$key]);
+            }
+        }
+        
+        $arrayAdminsFromDb = $auth->retrieveUsers(0, 100, ["grps" => array('admin', 'manager')]);
+        
+        foreach ($arrayAdminsFromDb as $key => $info){
+            $ret[] = $key;
+        }
+        
         $camins = explode(":", $id);
         for ($c = count($camins)-1; $c >= 0; $c--) {
             $camí = implode(":", $camins);
