@@ -31,6 +31,7 @@ class SavePageAction extends RawPageAction {
 
     protected $deleted = FALSE;
     private $code = 0;
+    protected $subAction;
     
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
@@ -38,9 +39,7 @@ class SavePageAction extends RawPageAction {
     }
     
     protected function startProcess(){
-        if($this->params[PageKeys::KEY_DO] === "revert"){
-            $this->defaultDo = $this->params[PageKeys::KEY_DO];
-        }
+        $this->subAction = $this->params[PageKeys::KEY_DO];
         parent::startProcess();
     }
 
@@ -72,7 +71,7 @@ class SavePageAction extends RawPageAction {
         $this->lockStruct = $this->updateLock();
         if($this->lockState() === self::LOCKED){
             $this->_save();
-            if($this->params[PageKeys::KEY_DO]==='revert'){
+            if($this->subAction==='save_rev'){
                 $this->resourceLocker->leaveResource(TRUE);
             }
         }
@@ -154,7 +153,7 @@ class SavePageAction extends RawPageAction {
             throw new WordBlockedException();
         }
         //conflict check
-        if($this->params[PageKeys::KEY_DO] !== 'revert' // ALERTA[Xavi] els revert ignoren la data del document
+        if($this->subAction !== 'save_rev' // ALERTA[Xavi] els revert ignoren la data del document
             && $this->params[PageKeys::KEY_DATE] != 0
             && WikiIocInfoManager::getInfo("meta")["date"]["modified"] > $this->params[PageKeys::KEY_DATE] ){
             //return 'conflict';
