@@ -2364,7 +2364,7 @@ class DokuModelAdapter extends BasicModelAdapter {
      * Retorna l'ERROR de permisos de la imatge
      */
     private function startMediaDetails($pdo, $pImage) {
-        global $ID, $AUTH, $IMG, $ERROR, $SRC, $REV;
+        global $ID, $AUTH, $IMG, $ERROR, $SRC, $REV, $INPUT;
 
         $ret = $ERROR = 0;
         $this->params['action'] = $pdo;
@@ -2382,6 +2382,10 @@ class DokuModelAdapter extends BasicModelAdapter {
                 $ret = $ERROR = 401;
             }
         }
+        
+        if(!$this->params['ns'] && !$this->params['img']){
+            $INPUT->set('img', $IMG);
+        }
 
         if ($ret != 0) {
             return $ret;
@@ -2392,9 +2396,9 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         //detect revision
         $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("rev"); //$INFO comes from the DokuWiki core
-        if ($this->params['rev'] < 1) {
-            $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("lastmod");
-        }
+//        if ($this->params['rev'] < 1) {
+//            $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("lastmod");
+//        }
 
         $this->triggerStartEvents();
         return $ret;
