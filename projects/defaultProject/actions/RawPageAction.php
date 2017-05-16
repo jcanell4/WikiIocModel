@@ -70,6 +70,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
             $DATE = $this->params[PageKeys::KEY_DATE] = WikiIocInfoManager::getInfo("meta")["date"]["modified"];
 
         }
+
     }
 
 

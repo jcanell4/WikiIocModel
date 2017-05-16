@@ -32,15 +32,21 @@ class SavePageAction extends RawPageAction {
     protected $deleted = FALSE;
     private $code = 0;
     protected $subAction;
-    
+
     public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
         $this->defaultDo = DW_ACT_SAVE;
     }
-    
+
     protected function startProcess(){
         $this->subAction = $this->params[PageKeys::KEY_DO];
         parent::startProcess();
+
+        // ALERTA[Xavi] Alguns dels params passats no es troben al $this->params
+        if (isset($_REQUEST['keep_draft'])) {
+            $this->params['keep_draft'] = $_REQUEST['keep_draft']==="true";
+        }
+
     }
 
 
@@ -53,18 +59,18 @@ class SavePageAction extends RawPageAction {
     protected function runProcess(){
         global $ACT;
         $ID=  $this->params[PageKeys::KEY_ID];
-        
+
         if($this->params[PageKeys::KEY_DO]==DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($ID, 'pageNotFound');
         }
 
         $ACT = act_permcheck($ACT);
-        
+
         if($ACT==="denied"){
             throw new InsufficientPermissionToCreatePageException($ID);
         }
-        
-        if($this->checklock()==ST_LOCKED){        
+
+        if($this->checklock()==ST_LOCKED){
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
 
@@ -97,15 +103,30 @@ class SavePageAction extends RawPageAction {
             $type = 'success';
             $message = sprintf(WikiIocLangManager::getLang('deleted'), $this->params[PageKeys::KEY_ID]);
             $duration = NULL;
-            
+
         }
         else {
             $message = WikiIocLangManager::getLang('saved');
 
-            if ($this->params[PageKeys::KEY_CANCEL]) {
+            if ($this->params[PageKeys::KEY_CANCEL_ALL]) {
 
-                $response['code'] = "cancel_document"; // ALERTA[Xavi] Hi ha algun lloc on es puguin consultar els codis creats?
-                $response['cancel_params'] = ['id' => $ID, 'call' => 'cancel', 'discard_changes' => true, /*, 'do' => 'cancel'*/];
+                $response['code'] = "cancel_document";
+                $response['cancel_params'] = [
+                    'id' => str_replace(":", "_", $this->params[PageKeys::KEY_ID]),
+                    'data'  => [/*'discard_changes' => true*/],
+                    'event' => 'cancel'];
+                $response['cancel_params']['event'] = 'cancel';
+
+                if ($this->params['close']) {
+                    $response['cancel_params']['data']['close'] =$this->params['close'];
+                    $response['cancel_params']['data']['no_response'] = true;
+                }
+
+
+                if (isset($this->params['keep_draft'])) {
+                    $response['cancel_params']['data']['keep_draft'] =$this->params['keep_draft'];
+                }
+
 
             } else if ($this->params[PageKeys::KEY_REV]) {
 //                $response['close']['id'] = WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
@@ -144,7 +165,7 @@ class SavePageAction extends RawPageAction {
 
         return $response;
     }
-    
+
     private function _save(){
         //spam check
         if(checkwordblock()) {
@@ -164,9 +185,9 @@ class SavePageAction extends RawPageAction {
         //saveWikiText($ID,con($PRE,$TEXT,$SUF,1),$SUM,$INPUT->bool('minor')); //use pretty mode for con
         $this->dokuPageModel->setData(array(
             "text" => con($this->params[PageKeys::KEY_PRE],
-                                $this->params[PageKeys::KEY_TEXT], 
-                                $this->params[PageKeys::KEY_SUF], 1), 
-            "summary" => $this->params[PageKeys::KEY_SUM], 
+                                $this->params[PageKeys::KEY_TEXT],
+                                $this->params[PageKeys::KEY_SUF], 1),
+            "summary" => $this->params[PageKeys::KEY_SUM],
             "minor" =>  $this->params[PageKeys::KEY_MINOR]));
 
         //delete draft
@@ -186,7 +207,7 @@ class SavePageAction extends RawPageAction {
         $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
                                 $this->params[PageKeys::KEY_TEXT].
                                 $this->params[PageKeys::KEY_SUF] )
-                          == NULL );            
+                          == NULL );
     }
 
 }

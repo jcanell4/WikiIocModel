@@ -34,7 +34,7 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
             $this->getModel()->removeChunkDraft($this->params[PageKeys::KEY_SECTION_ID]);
         }
 
-        $unlock = isset($this->params[PageKeys::KEY_UNLOCK]) ? $this->params[PageKeys::KEY_UNLOCK] : TRUE;
+        $unlock = isset($this->params[PageKeys::KEY_UNLOCK]) ? $this->params[PageKeys::KEY_UNLOCK] : FALSE; // ALERTA[Xavi] Canviat a false, si no sempre s'alliberà
 
         if (count($this->params[PageKeys::KEY_EDITING_CHUNKS])==0 || $unlock) {
             $this->leaveResource(TRUE);
