@@ -305,7 +305,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface/*, Res
 //        trigger_event('TPL_ACT_RENDER', $ACT, array($this, 'onCodeRender'));
 //        $html_output = ob_get_clean();
 //        ob_start();
-//        trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
+//        trigger_event('TPL_CONTENT_PLAY', $html_output, 'ptln');
 //        $html_output = ob_get_clean();
 //
 //        return $html_output;

@@ -48,6 +48,11 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
         //$response['structure'] = $this->getStructuredDocument(null, $pid, NULL, $editing_chunks);
         $response = $this->getModel()->getData();
         $response['structure']['cancel'] = [$this->params[PageKeys::KEY_SECTION_ID]];
+
+        if ($this->params[PageKeys::DISCARD_CHANGES]) {
+            $response['structure']['discard_changes_partial'] =$this->params[PageKeys::DISCARD_CHANGES];
+        }
+
         if($this->params[PageKeys::KEY_TO_REQUIRE]){
                 // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou 
 //                $response['meta'] = $this->addMetaTocResponse();

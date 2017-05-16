@@ -175,6 +175,10 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
             }
         }
 
+//        if ($this->params([PageKeys::DISCARD_CHANGES])) {
+//            $response['structured']['discard_changes'] = $this->params([PageKeys::DISCARD_CHANGES]);
+//        }
+
         $response["lockInfo"] = $this->lockStruct["info"];
 
         $ns = isset($response['ns']) ? $response['ns'] : $response['structure']['ns'];
