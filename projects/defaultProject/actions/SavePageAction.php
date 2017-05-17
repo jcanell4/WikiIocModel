@@ -108,12 +108,12 @@ class SavePageAction extends RawPageAction {
         else {
             $message = WikiIocLangManager::getLang('saved');
 
-            if ($this->params[PageKeys::KEY_CANCEL_ALL]) {
+            if ($this->params[PageKeys::KEY_CANCEL_ALL] || $this->params[PageKeys::KEY_CANCEL]) {
 
                 $response['code'] = "cancel_document";
                 $response['cancel_params'] = [
                     'id' => str_replace(":", "_", $this->params[PageKeys::KEY_ID]),
-                    'dataToSend'  => [/*'discard_changes' => true*/],
+                    'dataToSend'  => ['discardChanges' => true],
                     'event' => 'cancel'];
                 $response['cancel_params']['event'] = 'cancel';
 
