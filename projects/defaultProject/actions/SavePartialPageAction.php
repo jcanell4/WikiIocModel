@@ -55,7 +55,7 @@ class SavePartialPageAction extends SavePageAction
         $response = array_merge($response = parent::responseProcess(), $this->getModel()->getData());
 
 
-        if ($response['code'] == "cancel_document") {
+//        if ($response['code'] == "cancel_document") {
 
             // ALERTA[Xavi] Arriben dades de SavePageAction! En aquest cas ens interesa el ID (amb les _ )
             // Els params del $response['cancel_params'] es generan al SavePageAction
@@ -68,7 +68,7 @@ class SavePartialPageAction extends SavePageAction
 //                'discard_changes' => true,
 //                'section_id' => $this->params[PageKeys::KEY_SECTION_ID],
 //                'editing_chunks' => $this->params[PageKeys::KEY_IN_EDITING_CHUNKS],
-                /*, 'do' => 'cancel_partial'*/
+            /*, 'do' => 'cancel_partial'*/
 
 //                eventManager.fireEvent(eventManager.eventName.CANCEL, {
 //             id: this.ns,
@@ -92,9 +92,34 @@ class SavePartialPageAction extends SavePageAction
 //            }
 
 
+//        } else {
+
+            if ($this->params[pageKeys::KEY_CANCEL]) {
+
+//                $response['code'] = "cancel_document";
+                $response['cancel_params'] = [
+                    'id' => str_replace(":", "_", $this->params[PageKeys::KEY_ID]),
+                    'dataToSend' => ['discard_changes' => true],
+                    'event' => 'cancel_partial',
+                    'chunk' => $this->params[PageKeys::KEY_SECTION_ID]
+
+                ];
+                $response['cancel_params']['event'] = 'cancel_partial';
+
+                // ALERTA[Xavi] No es pot tancar en una edició parcial individual
+//                if ($this->params['close']) {
+//                    $response['cancel_params']['data']['close'] =$this->params['close'];
+//                    $response['cancel_params']['data']['no_response'] = true;
+//                }
 
 
-        } else {
+                if (isset($this->params['keep_draft'])) {
+                    $response['cancel_params']['dataToSend']['keep_draft'] = $this->params['keep_draft'];
+                }
+
+
+//
+            }
             // TODO: afegir el 'info' que correspongui
             if (!$response['info']) {
                 $response['info'] = $this->generateInfo(
@@ -109,7 +134,8 @@ class SavePartialPageAction extends SavePageAction
 
             $response['revs'] = $this->getRevisionList();
             $response["lockInfo"] = $this->lockStruct["info"];
-        }
+//        }
+
 
         return $response;
     }

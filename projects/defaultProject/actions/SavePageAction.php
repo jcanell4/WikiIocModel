@@ -113,18 +113,18 @@ class SavePageAction extends RawPageAction {
                 $response['code'] = "cancel_document";
                 $response['cancel_params'] = [
                     'id' => str_replace(":", "_", $this->params[PageKeys::KEY_ID]),
-                    'data'  => [/*'discard_changes' => true*/],
+                    'dataToSend'  => [/*'discard_changes' => true*/],
                     'event' => 'cancel'];
                 $response['cancel_params']['event'] = 'cancel';
 
                 if ($this->params['close']) {
-                    $response['cancel_params']['data']['close'] =$this->params['close'];
-                    $response['cancel_params']['data']['no_response'] = true;
+                    $response['cancel_params']['dataToSend']['close'] =$this->params['close'];
+                    $response['cancel_params']['dataToSend']['no_response'] = true;
                 }
 
 
                 if (isset($this->params['keep_draft'])) {
-                    $response['cancel_params']['data']['keep_draft'] =$this->params['keep_draft'];
+                    $response['cancel_params']['dataToSend']['keep_draft'] = $this->params['keep_draft'];
                 }
 
 
