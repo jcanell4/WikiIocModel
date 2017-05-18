@@ -27,7 +27,7 @@ class WikiIocModelManager {
         return new DokuModelManager();
     }
 
-    public static function getNotifyModel($type, $persistenceEngine) {
+    public static function getNotifyModel($type, $persistenceEngine=NULL) {
         switch ($type) {
             case 'ajax':
                 return new TimerNotifyModel($persistenceEngine);

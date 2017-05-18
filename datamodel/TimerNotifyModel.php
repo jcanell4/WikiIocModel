@@ -71,7 +71,8 @@ class TimerNotifyModel extends DokuNotifyModel
         // s'emmagatzema a la pissarra de l'usuari receiverId.
 
         // L'afegim al blackboard del destinatari ($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
-        return $this->dataQuery->add($receiverId, $data, $type, $id, $mailbox); // TODO[Xavi] S'ha de canviar per una constant
+        $notification= $this->dataQuery->generateNotification($data, $type, $id, $senderId, FALSE, $mailbox);
+        return $this->dataQuery->add($receiverId, $notification); // TODO[Xavi] S'ha de canviar per una constant
     }
 
     public function popNotifications($userId, $since = 0)

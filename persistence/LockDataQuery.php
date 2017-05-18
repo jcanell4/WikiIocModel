@@ -6,8 +6,9 @@ if (!defined('DOKU_PLUGIN')) {
 
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
-require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
+require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelManager.php");
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
 
 
 if (!defined('ST_UNLOCKED')) {
@@ -39,11 +40,13 @@ class LockDataQuery extends DataQuery
     const LOCAL_LOCKED_BEFORE = ST_LOCAL_LOCKED_BEFORE; // El recurs està bloquejat per l'usuari actual usant la sessió actual
 
 
-    protected $notifyDataQuery;
+//    protected $notifyDataQuery;
+    protected $notifyModel;
 
     public function __construct()
     {
-        $this->notifyDataQuery = new NotifyDataQuery();
+        $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
+        $this->notifyModel = WikiIocModelManager::getNotifyModel($type);
     }
 
     public function getFileName($id, $especParams = NULL)
@@ -300,12 +303,12 @@ class LockDataQuery extends DataQuery
     
     private function addRequirementNotification($lockerId, $docId, $requirers)
     {
-        $class_ = get_class($this->notifyDataQuery);
+        $class_ = $this->notifyModel->getConstClass();
         $message = array(
             "text" => sprintf(WikiIocLangManager::getLang('documentRequired'), $requirers, $docId),
             "timestamp" => date( "d-m-Y H:i:s" ),
         );
-        $this->notifyDataQuery->add($lockerId, $message, $class_::TYPE_MESSAGE, str_replace(":", "_",$lockerId.$docId."requirement"));
+        $this->notifyModel->notifyTo($message, $lockerId, $class_::TYPE_MESSAGE, str_replace(":", "_",$lockerId.$docId."requirement"), $class_::MAILBOX_RECEIVED);
     }
 
     /**
@@ -396,22 +399,22 @@ class LockDataQuery extends DataQuery
 
     private function addUnlockedNotification($requirerId, $docId)
     {
-        $class_ = get_class($this->notifyDataQuery);
+        $class_ = $this->notifyModel->getConstClass();
         $message = array(
             "text" => sprintf(WikiIocLangManager::getLang('documentUnlocked'), $docId),
             "timestamp" => date( "d-m-Y H:i:s" ),
         );
-        $this->notifyDataQuery->add($requirerId, $message, $class_::TYPE_MESSAGE, str_replace(":", "_", $requirerId.$docId."release"));
+        $this->notifyModel->notifyTo($message, $requirerId, $class_::TYPE_MESSAGE, str_replace(":", "_", $requirerId.$docId."release"), $class_::MAILBOX_RECEIVED);
     }
 
     private function addUnrequirementNotification($lockerId, $docId)
     {
-        $class_ = get_class($this->notifyDataQuery);
+        $class_ = $this->notifyModel->getConstClass();
         $message = array(
             "text" => sprintf(WikiIocLangManager::getLang('documentUnrequired'), $docId),
             "timestamp" => date( "d-m-Y H:i:s" ),
         );
-        $this->notifyDataQuery->add($lockerId, $message, $class_::TYPE_MESSAGE, str_replace(":", "_", $lockerId.$docId."requirement"));
+        $this->notifyModel->notifyTo($lockerId, $message, $class_::TYPE_MESSAGE, str_replace(":", "_", $lockerId.$docId."requirement"), $class_::MAILBOX_RECEIVED);
     }
 
 

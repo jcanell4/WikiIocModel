@@ -19,15 +19,31 @@ require_once(DOKU_INC . 'inc/common.php');
  */
 abstract class DokuNotifyModel extends AbstractWikiDataModel
 {
+    const TYPE_ALERT = 'alert';
+    const TYPE_MESSAGE = 'message';
+    const TYPE_WARNING = 'system';
+    const TYPE_DIALOG = 'dialog';
+    const TYPE_RELEASED = 'released';
+    const TYPE_CANCELED_BY_REMOTE_AGENT = 'canceled_by_remote_agent';
+    
+    const MAILBOX_RECEIVED = 'inbox';
+    const MAILBOX_SEND = 'outbox';
+    const MAILBOX_SYSTEM = 'system';
+
 
     protected $type = 'abstract';
     protected /*NotifyDataQuery*/ $dataQuery;
 
-    public function __construct($persistenceEngine)
+    public function __construct($persistenceEngine=NULL)
     {
         parent::__construct($persistenceEngine);
         // TODO[Xavi] Segons la configuració del wikiioc model farem servir el NotifyDataQuery o el WebSocketConnection
-        $this->dataQuery = $persistenceEngine->createNotifyDataQuery();
+        if($persistenceEngine){
+            $this->dataQuery = $persistenceEngine->createNotifyDataQuery();
+        }else{
+            require_once DOKU_PLUGIN . "wikiiocmodel/persistence/NotifyDataQuery.php";
+            $this->dataQuery = new NotifyDataQuery();
+        }
     }
 
     public function getData()
@@ -55,4 +71,8 @@ abstract class DokuNotifyModel extends AbstractWikiDataModel
     public abstract function update($notificationId, $blackboardId, $updatedData);
 
     public abstract function delete($notificationId, $blackboardId);
+    
+    public function getConstClass(){
+        return get_class($this->dataQuery);
+    }
 }
