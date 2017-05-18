@@ -64,3 +64,12 @@ $conf['projects']['defaultProject']['templates'][15]['name']="continguts";
 $conf['projects']['defaultProject']['templates'][15]['path']="plantilles:sensecommon:cicle:m99:u1:a1:continguts";
 $conf['projects']['defaultProject']['templates'][16]['name']="exercicis";
 $conf['projects']['defaultProject']['templates'][16]['path']="plantilles:sensecommon:cicle:m99:u1:a1:exercicis";
+
+$conf['projects']['defaultProject']['templates'][16]['name']="exercicis_formació";
+$conf['projects']['defaultProject']['templates'][16]['path']="formacio:brevert:exercicis";
+$conf['projects']['defaultProject']['templates'][16]['name']="full_de_pràctiques";
+$conf['projects']['defaultProject']['templates'][16]['path']="formacio:brevert:full_de_practiques";
+$conf['projects']['defaultProject']['templates'][16]['name']="guia";
+$conf['projects']['defaultProject']['templates'][16]['path']="formacio:brevert:guia";
+$conf['projects']['defaultProject']['templates'][16]['name']="revisions";
+$conf['projects']['defaultProject']['templates'][16]['path']="formacio:brevert:revisions";
