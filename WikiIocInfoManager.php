@@ -104,15 +104,28 @@ class WikiIocInfoManager {
         if ($params['date'])
             $DATE = $params['date'];
 
-        if ($params['ns'])
-            $NS = $params['ns'];
-        
         if ($params['do'] === 'media') {
             if ($params['id'] && !$params['ns']) {
-                $NS = $params['ns'] = $params['id'];
+                $params['ns'] = $params['id'];
             }
             $IMG = $params['image'];
         }
+        
+        if($params['media']){
+            $IMG = $params['image'] = $params['media'];
+            if(!$params['id']){
+                $params['ns']=  getNS($params[image]);
+                $params['id']= $params['ns'].":*";
+            }
+        }
+        
+        if ($params['ns']){
+            $NS = $params['ns'];
+        }else if($params['id']){
+            $NS = $params['ns'] =getNS($params['id']);
+        }
+        
+
         self::$infoLoaded = FALSE;
         self::$mediaInfoLoaded = FALSE;
     }
