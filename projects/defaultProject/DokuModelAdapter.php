@@ -2183,12 +2183,18 @@ class DokuModelAdapter extends BasicModelAdapter {
         }
 
         $response = [
-            'id' => \str_replace(":", "_", $ID),
+            'id' =>  \str_replace(":", "_", $ID) . '_diff',
             'ns' => $ID,
-            "title" => $ID,
-            "content" => $this->clearDiff($content),
-            "type" => 'diff'
+            'title' => $ID,
+            'content' => $this->clearDiff($content),
+            'type' => 'diff',
+            'rev1' => $rev1
         ];
+
+        if ($rev2) {
+            $response['rev1'] = $rev2[0];
+            $response['rev2'] = $rev2[1];
+        }
 
         $response['info'] = $this->generateInfo("info", $lang['diff_loaded'], $response['id']);
 
