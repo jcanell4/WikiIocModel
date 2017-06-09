@@ -129,7 +129,7 @@ class PageDataQuery extends DataQuery {
     }
     
      public function getRevisionList($id){
-        $revisions = getRevisions($id, -1, 50);
+        $revisions = getRevisions($id, -1, 200);
 
         $ret = [];
 
