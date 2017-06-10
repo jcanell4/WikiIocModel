@@ -37,9 +37,15 @@ class CommandAuthorization extends AbstractCommandAuthorization {
     }
 
     /* pendent de convertir a private quan no l'utilitzi ajax.php(duplicat) ni login_command */
-    public function isUserAuthenticated() {
+    public function isUserAuthenticated($userId) {
         global $_SERVER;
-        return $_SERVER['REMOTE_USER'] ? TRUE : FALSE;
+
+        if ($userId) {
+            return $_SERVER['REMOTE_USER'] === $userId;
+        } else {
+            return $_SERVER['REMOTE_USER'] ? TRUE : FALSE;
+        }
+
     }
     
     /**
