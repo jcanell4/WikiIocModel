@@ -1,19 +1,19 @@
 <?php
 /**
  * CommandAuthorization: define la clase de autorizaciones de los comandos del proyecto "documentation"
- *
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
-define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
+define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
+define('WIKI_IOC_PROJECTS', DOKU_PLUGIN."wikiiocmodel/projects/");
 
-require_once (DOKU_INC . 'inc/common.php');
-require_once (DOKU_INC . 'inc/auth.php');
-require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
-require_once (WIKI_IOC_MODEL . 'AbstractCommandAuthorization.php');
-require_once (WIKI_IOC_PROJECTS . 'documentation/DocumentationModelExceptions.php');
-require_once (WIKI_IOC_PROJECTS . 'documentation/authorization/Permission.php');
+require_once(DOKU_INC."inc/common.php");
+require_once(DOKU_INC."inc/auth.php");
+require_once(DOKU_PLUGIN."ajaxcommand/defkeys/ProjectKeys.php");
+require_once(DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php");
+require_once(DOKU_PLUGIN."wikiiocmodel/AbstractCommandAuthorization.php");
+require_once(WIKI_IOC_PROJECTS."documentation/DocumentationModelExceptions.php");
+require_once(WIKI_IOC_PROJECTS."documentation/authorization/Permission.php");
 
 class CommandAuthorization extends AbstractCommandAuthorization {
 
@@ -29,11 +29,16 @@ class CommandAuthorization extends AbstractCommandAuthorization {
 
     public function setPermission($command) {
         parent::setPermission($command);
-        $this->permission->setIdPage($command->getParams('id'));
+        $this->permission->setIdPage($command->getParams(ProjectKeys::KEY_ID));
         $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
-        $this->permission->setAuthor($command->getKeyDataProject('autor'));
-        $this->permission->setResponsable($command->getKeyDataProject('responsable'));
+        $this->permission->setAuthor($command->getKeyDataProject(Permission::ROL_AUTOR));
+        $this->permission->setResponsable($command->getKeyDataProject(Permission::ROL_RESPONSABLE));
+        if ($this->isResponsable()) {
+            $this->permission->setRol(Permission::ROL_RESPONSABLE);
+        }else if ($this->isAuthor()) {
+            $this->permission->setRol(Permission::ROL_AUTOR);
+        }
     }
 
     /* pendent de convertir a private quan no l'utilitzi ajax.php(duplicat) ni login_command */
@@ -41,7 +46,7 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         global $_SERVER;
         return $_SERVER['REMOTE_USER'] ? TRUE : FALSE;
     }
-    
+
     /**
      * Comproba si el token de seguretat està verificat, fent servir una funció de la DokuWiki.
      * @return bool
@@ -59,7 +64,7 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         global $_SERVER;
         return ($this->permission->getResponsable() === $_SERVER['REMOTE_USER']);
     }
-    
+
     public function isUserGroup($grups=array()) {
         $ret = FALSE;
         $userGrups = $this->permission->getUserGroups();

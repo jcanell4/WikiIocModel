@@ -9,11 +9,9 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderAbstract.php');
 class MetaDataRender extends \MetaDataRenderAbstract {
 
     /**
-     * Purpose:
      * @param $metaDataEntityWrapper -> Entities array
      */
     public function render($metaDataEntityWrapper) {
-
         $objAux = json_decode($metaDataEntityWrapper[0]->getArrayFromModel(), true);
         $structure = json_decode($objAux['metaDataStructure'], true);
         $types = json_decode($objAux['metaDataTypesDefinition'], true);
@@ -28,29 +26,51 @@ class MetaDataRender extends \MetaDataRenderAbstract {
 
     protected function flatten($values) {
         $flat = [];
-        foreach ($values as $key => $value) {
-            if (getType($value['value']) === 'array') { 
-                // Si es un array s'ha d'aplanar
-                $newFlat = $this->flatten($value['value']);
+        foreach ($values as $key => $item) {
+            if (is_array($item['value'])) {
+                //si es un array s'ha d'aplanar
+                //$flat[$item['id']] = ($item['value']==NULL) ? "" : $this->flatten($item['value']);
+                //$newFlat = ($item['value']==NULL) ? array($item['id']=>"") : $this->flatten($item['value']);
+                $newFlat = $this->flatten($item['value']);
                 $flat = array_merge($flat, $newFlat);
-            } else if ($value['value']) {
-                // Es una fulla
-                $flat[$value['id']] = $value['value'];
+            }else if (isset($item['value']) && $item['id']) {
+                //és una fulla
+                $flat[$item['id']] = $item['value'];
+            }else if (is_array($item)) {
+                //$k = key($item);
+                //$flat[$key] = ($item==NULL) ? "" : $this->flatten($item);
+                $new2Flat = ($item==NULL) ? "" : $this->flatten($item);
+                $flat = array_merge($flat, $new2Flat);
+            }else if (gettype($item) === "string") {
+                //és una fulla
+                $flat[$key] = $item;
             }
         }
-
         return $flat;
     }
 
     protected function initParser($values, $structure, $types) {
+        $values = $this->defaultFillParser($values, $structure, $types);
+        $tree = $this->parser($values, $structure, $types);
+        return $tree;
+    }
+
+    protected function defaultFillParser($values, $structure, $types) {
         //Añade al array de campos de valores los campos de la estructura que le falten
         foreach ($structure as $k => $v) {
             if (!isset($values[$k])) {
-                $values[$k] = '';
+                if ($v['type']==='string') {
+                    $values[$k] = '';
+                }
+                else if ($v['type']==='array') {
+                    $values[$k] = array();
+                }
+                else {
+                    $values[$k] = $this->defaultFillParser(array(), $types[$k]['keys'], $types);
+                }
             }
         }
-        $tree = $this->parser($values, $structure, $types);
-        return $tree;
+        return $values;
     }
 
     protected function parser($values, $structure, $definitionTypes) {
@@ -61,12 +81,12 @@ class MetaDataRender extends \MetaDataRenderAbstract {
             $prefix = $key;
 
             // Si $value es un array fem un parse (branca)
-            if ($structure[$key]['tipus'] === 'array') {
+            if ($structure[$key]['type'] === 'array') {
                 $tree[$key] = $structure[$key];
                 $tree[$key]['value'] = $this->parseArray($structure[$key]['itemsType'], $value, $definitionTypes, $prefix);
-            } else if ($value['tipus'] === 'object') {
-                // TODO[Xavi]
-                $tree[$key]['value'] = $this->parseObject($structure[$key]['itemsType'], $value, $definitionTypes, $prefix);
+            } else if ($structure[$key]['type'] === 'object') {
+                $tree[$key] = $structure[$key];
+                $tree[$key]['value'] = $this->parseObject($structure[$key]['typeDef'], $value, $definitionTypes, $prefix);
             } else {
                 // Si no ho és ho afegim a la estructura (fulla)
                 $tree[$key] = $structure[$key];
@@ -82,15 +102,15 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         $item = null;
 
         for ($i = 0, $len = count($values); $i < $len; $i++) {
-            $newPrefix = $prefix . '_' . $type . '_' . $i;
+//            $newPrefix = $prefix . "#" . $type . "#" . $i;
+            $newPrefix = $prefix . "#" . $i;
 
             if ($definitionTypes[$type]) {
                 $item = $definitionTypes[$type];
-                if ($item['tipus'] === 'array') {
+                if ($item['type'] === 'array') {
                     $item['value'] = $this->parseArray($item['itemsType'], $values[$i], $definitionTypes, $newPrefix);
 
-                } else if ($item['tipus'] === 'object') {
-                    // TODO[Xavi]
+                } else if ($item['type'] === 'object') {
                     $item['value'] = $this->parseObject($item['keys'], $values[$i], $definitionTypes, $newPrefix);
                     // Ja s'han fusionat les keys i els valors, no cal passar les keys
                     unset($item['keys']);
@@ -109,14 +129,13 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         return $tree;
     }
 
-    protected function parseObject($keys, $values, $definitionTypes, $prefix) {
+    protected function parseObject($type, $values, $definitionTypes, $prefix) {
         $tree = [];
         $item = null;
+        $keys = $definitionTypes[$type]['keys'];
 
         foreach ($keys as $key => $value) {
-            $newPrefix = $prefix . '_' . $key;
-            // Es recorren les propietats
-
+            $newPrefix = $prefix . "#" . $key;
             $definition = $definitionTypes[$value['tipus']];
 
             if ($definition) {
@@ -126,15 +145,9 @@ class MetaDataRender extends \MetaDataRenderAbstract {
                 $item = $value;
             }
 
-            // El valor si existeix s'obtè de $values
-//            if ($values[$key]) {
-//                $item['value'] = $values[$key]; // TODO: Si és un array o objecte s'ha de fer servir el parser, no assingar el valor directament
-//            }
-
-            if ($item['tipus'] === 'array') {
+            if ($item['type'] === 'array') {
                 $item['value'] = $this->parseArray($item['itemsType'], $values[$key], $definitionTypes, $newPrefix);
             } else if ($item['tipus'] === 'object') {
-                // TODO[Xavi]
                 $item['value'] = $this->parseObject($item['keys'], $value, $definitionTypes, $newPrefix);
             } else {
                 $item['value'] = $values[$key];

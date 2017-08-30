@@ -60,8 +60,6 @@ class TimerNotifyModel extends DokuNotifyModel
         $this->dataQuery->add($receiverId, $notification);
 
         return $notification;
-
-//        return $this->dataQuery->add($receiverId, $data, 'message', NULL, $senderId, $mailbox, $read); // TODO[Xavi] S'ha de canviar per una constant
     }
 
     public function notifyTo($data, $receiverId, $type, $id=NULL, $mailbox)

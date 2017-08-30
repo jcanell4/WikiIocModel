@@ -62,25 +62,25 @@ $lang['recent_list'] = "canvis recents";
 $lang['system_warning_default_title'] = 'Avís del sistema';
 
 // Plantilles
-$lang['plantilles:user:dreceres'] = "Nou document de dreceres.\n\n"
+$lang['plantilles:user:dreceres'] = "Nou document de dreceres.\n\n"  //$lang['template:shortcuts'] = "Nou document de dreceres.\n\n"
     . "Per afegir dreceres a documents o espais de noms, afegir enllaços al document o a l'espai de noms, seguint la sintaxi wiki. Per exemple:\n\n"
+    . "[[wiki:user:nom_d_usuari|El meu espai]]\n\n"
     . "[[wiki:navigation|Drecera a la documentació de la wiki]]";
 //Excepciones del proyecto 'defaultProject'
 $lang['pageExist'] = 'The page %s already exists';
 $lang['commandAuthorizationNotFound'] = 'Command authorization not found';
 $lang['cantCreatePageInProject'] = 'No pots crear una pàgina en aquest projecte';
 $lang[''] = '';
-$lang[''] = '';
-$lang[''] = '';
 
 //Excepciones del proyecto 'documentation'
+$lang['projectException']['projectAlreadyGenerated'] = 'El projecte %s ja està generat. No es pot tornar a generar.';
 $lang['projectException']['projectExist'] = 'The project %s already exist';
 $lang['projectException']['projectNotExist'] = 'The project %s not already exist';
 $lang['projectException']['unknown'] = 'Unknown project exception';
 $lang['projectException']['userNotAuthorized'] = 'Vosté no té permís a %s';
 $lang['projectException']['authorNotVerified'] = 'Vosté no té permís a %s';
 $lang['projectException']['responsableNotVerified'] = 'Vosté no té permís a %s';
-$lang['projectException']['insufficientPermissionToEditProject'] = 'Vosté no té permís per editar aquest projecte %s';
+$lang['projectException']['insufficientPermissionToEditProject'] = 'Vosté no té permís per editar el projecte %s';
 $lang['projectException']['insufficientPermissionToCreateProject'] = 'Vosté no té permís per crear el projecte %s aquí';
 $lang['projectException']['insufficientPermissionToDeleteProject'] = 'Vosté no té permís per eliminar el projecte %s';
 $lang['projectException']['insufficientPermissionToGenerateProject'] = 'Vosté no té permís per generar el projecte %s';

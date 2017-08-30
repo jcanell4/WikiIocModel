@@ -5,42 +5,46 @@ include_once 'ProjectMetadataAction.php';
 class CreateProjectMetaDataAction extends ProjectMetadataAction {
 
     /**
-     * Crea una estructura de directorios para el nuevo proyecto (tipo de proyecto) 
+     * Crea una estructura de directorios para el nuevo proyecto (tipo de proyecto)
      * a partir del archivo de configuración configMain.json
-     * @param type $paramsArr
+     * @param array $paramsArr : parámetros recibidos por el ajaxCall
      */
     public function get($paramsArr = array()) {
-        
-        $this->projectModel->init($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
-        
-        //sólo se ejecuta si no existe el proyecto
-        if (!$this->projectModel->existProject($paramsArr[ProjectKeys::KEY_ID])) {
-            //obtiene las claves de la estructura de los metadatos del proyecto
-            //$metaDataValues = $this->projectModel->getMetaDataDefKeys($paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
+        $id = $paramsArr[ProjectKeys::KEY_ID];
+        $projectType = $paramsArr[ProjectKeys::KEY_PROJECT_TYPE];
 
-            //asigna los valores por defecto a los campos definidos en configMain.json
+        $this->projectModel->init($id, $projectType);
+
+        //sólo se ejecuta si no existe el proyecto
+        if (!$this->projectModel->existProject($id)) {
+            //obtiene las claves de la estructura de los metadatos del proyecto
+            $metaDataKeys = $this->projectModel->getMetaDataDefKeys($projectType);
+            foreach ($metaDataKeys as $key => $value) {
+                if ($value['default']) $metaDataValues[$key] = $value['default'];
+            }
+            //asigna valores por defecto a algunos campos definidos en configMain.json
+            $metaDataValues['nsproject'] = $id;
             $metaDataValues["responsable"] = $_SERVER['REMOTE_USER'];
-            $metaDataValues['titol'] = $paramsArr[ProjectKeys::KEY_ID];
             $metaDataValues['autor'] = $_SERVER['REMOTE_USER'];
-            $metaDataValues['plantilla'] = "plantilles:projects:continguts";
-            $metaDataValues['descripcio'] = "descripció del projecte";
+            $metaDataValues['fitxercontinguts'] = $id.":".array_pop(explode(":", $metaDataValues['plantilla']));
 
             $metaData = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
-                ProjectKeys::KEY_PROJECT_TYPE => $paramsArr[ProjectKeys::KEY_PROJECT_TYPE], // Opcional
-                ProjectKeys::KEY_METADATA_SUBSET => self::defaultSubSet,
-                ProjectKeys::KEY_ID_RESOURCE => $paramsArr[ProjectKeys::KEY_ID], 
-                ProjectKeys::KEY_FILTER => $paramsArr[ProjectKeys::KEY_FILTER], // Opcional
+                ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET,
+                ProjectKeys::KEY_ID_RESOURCE => $id,
+                ProjectKeys::KEY_PROJECT_TYPE => $projectType,                  // opcional
+                ProjectKeys::KEY_FILTER => $paramsArr[ProjectKeys::KEY_FILTER], // opcional
                 ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
             ];
 
-            $this->projectModel->setData($metaData);            //crea la estructura y el contenido en 'mdprojects/'
-            $this->projectModel->createDataDir($paramsArr[ProjectKeys::KEY_ID]);    //crea el directori del projecte a 'data/pages/'
-            $ret = $this->projectModel->getData();              //obtiene la estructura y el contenido del proyecto
-            $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_created'), $paramsArr[ProjectKeys::KEY_ID]);    //añade info para la zona de mensajes
+            $this->projectModel->setData($metaData);    //crea la estructura y el contenido en 'mdprojects/'
+            $this->projectModel->createDataDir($id);    //crea el directori del projecte a 'data/pages/'
+            $ret = $this->projectModel->getData();      //obtiene la estructura y el contenido del proyecto
+            $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_created'), $id);    //añade info para la zona de mensajes
+            $ret[ProjectKeys::KEY_ID] = $this->idToRequestId($id);
         }
         if (!$ret)
-            throw new ProjectExistException($paramsArr[ProjectKeys::KEY_ID]);
+            throw new ProjectExistException($id);
         else
             return $ret;
     }

@@ -1,30 +1,23 @@
 <?php
+/**
+ * Description of CancelPartialEditPageAction
+ * @author josep
+ */
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
-
-require_once (DOKU_INC . 'inc/common.php');
+require_once (DOKU_INC.'inc/common.php');
+require_once DOKU_PLUGIN."ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/CancelEditPageAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
-require_once DOKU_PLUGIN."ajaxcommand/requestparams/PageKeys.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
+require_once DOKU_PLUGIN."wikiiocmodel/ResourceUnlockerInterface.php";
+require_once DOKU_PLUGIN."wikiiocmodel/ResourceLockerInterface.php";
 
-/**
- * Description of CancelPartialEditPageAction
- *
- * @author josep
- */
-class CancelPartialEditPageAction extends CancelEditPageAction implements ResourceLockerInterface, ResourceUnlockerInterface{
+class CancelPartialEditPageAction extends CancelEditPageAction implements ResourceLockerInterface, ResourceUnlockerInterface {
 
-
-    public function __construct(/*BasicPersistenceEngine*/ $engine) {
+    public function __construct(BasicPersistenceEngine $engine) {
         parent::__construct($engine);
     }
 
@@ -42,7 +35,7 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
         }
 
     }
-    
+
     protected function responseProcess() {
 //        $response = array();
         //$response['structure'] = $this->getStructuredDocument(null, $pid, NULL, $editing_chunks);
@@ -58,7 +51,7 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
 //                $response['meta'] = $this->addMetaTocResponse();
                 $this->addMetaTocResponse($response);
                 // TODO: afegir les revisions
-                $response['revs'] = $this->getRevisionList();            
+                $response['revs'] = $this->getRevisionList();
         }
         $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('chunk_closed'), $this->params[PageKeys::KEY_ID]);
         return $response;

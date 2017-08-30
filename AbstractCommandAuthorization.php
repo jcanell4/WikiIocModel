@@ -15,13 +15,13 @@ abstract class AbstractCommandAuthorization implements AuthorizationKeys{
     protected $errorAuth = array(
                               self::ERROR_KEY => TRUE
                              ,self::EXCEPTION_KEY => ''
-                             ,self::ERROR_PARAMS_KEY => ''
+                             ,self::ERROR_PARAMS_KEY => NULL
                            );
     /**
      * getPermissionInstance: Devuelve una nueva instancia de la clase Permission
      */
     abstract protected function getPermissionInstance();
-    
+
     public function __construct() {}
 
     /**
@@ -31,12 +31,12 @@ abstract class AbstractCommandAuthorization implements AuthorizationKeys{
     public function canRun() {
         $this->errorAuth[self::ERROR_KEY] = FALSE;
         $this->errorAuth[self::EXCEPTION_KEY] =  '';
-        $this->errorAuth[self::EXCEPTION_KEY] = '';
-        
+        $this->errorAuth[self::ERROR_PARAMS_KEY] = NULL;
+
         if ($this->permission->getAuthenticatedUsersOnly()) {
             if (($this->errorAuth[self::ERROR_KEY] = !$this->permission->getSecurityTokenVerified())){
                 $this->errorAuth[self::EXCEPTION_KEY] = 'AuthorizationNotTokenVerified';
-            } else { 
+            } else {
                 if (($this->errorAuth[self::ERROR_KEY] = !$this->permission->getUserAuthenticated())) {
                     $this->errorAuth[self::EXCEPTION_KEY] = 'AuthorizationNotUserAuthenticated';
                 } else {
@@ -48,7 +48,7 @@ abstract class AbstractCommandAuthorization implements AuthorizationKeys{
         }
         return !$this->errorAuth[self::ERROR_KEY];
     }
-    
+
     public function getPermission() {
         return $this->permission;
     }
@@ -56,7 +56,7 @@ abstract class AbstractCommandAuthorization implements AuthorizationKeys{
     public function getAuthorizationError($key) {
         return $this->errorAuth[$key];
     }
-    
+
     public function setPermission($command) {
         WikiIocInfoManager::setIsMediaAction($command->getNeedMediaInfo());
         WikiIocInfoManager::setParams($command->getParams());
@@ -67,7 +67,7 @@ abstract class AbstractCommandAuthorization implements AuthorizationKeys{
 
     private function _createPermission($command) {
         $this->permission = $this->getPermissionInstance();
-    
+
         $this->permission->setPermissionFor($command->getPermissionFor());
         $this->permission->setAuthenticatedUsersOnly($command->getAuthenticatedUsersOnly());
         $this->permission->setSecurityTokenVerified($this->isSecurityTokenVerified());

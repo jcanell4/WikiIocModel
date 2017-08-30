@@ -11,11 +11,15 @@ require_once (WIKI_IOC_MODEL . 'WikiIocLangManager.php');
 require_once (DOKU_INC . 'inc/inc_ioc/Logger.php');
 
 abstract class WikiIocModelException extends Exception {
-    public function __construct($codeMessage, $code, $previous=NULL, $target=NULL) {
-        $message = WikiIocLangManager::getLang($codeMessage);
-        if ($message == NULL) {
-            $message = $codeMessage;
-        }
+    public function __construct($codeMessage, $code, $previous=NULL, $target=NULL, $codeProject=NULL) {
+        if ($codeProject !== NULL)
+            $mess = WikiIocLangManager::getLang($codeProject);
+        else
+            $mess = WikiIocLangManager::getLang($codeMessage);
+
+        $message = (is_array($mess)) ? $mess[$codeMessage] : $mess;
+        if ($message === NULL) $message = $codeMessage;
+
         if ($target) {
             $message = sprintf($message, $target);
         }
@@ -76,12 +80,24 @@ class UnexpectedLockCodeException extends WikiIocModelException {
     }
 }
 
+class UnknownUserException extends WikiIocModelException {
+    public function __construct($user, $codeMessage='UnknownUser', $code=9026, $previous=NULL) {
+        parent::__construct($codeMessage, $code, $previous, $user);
+    }
+}
+
+class IncorrectParametersException extends WikiIocModelException {
+    public function __construct($user, $codeMessage='IncorrectParameters', $code=9027, $previous=NULL) {
+        parent::__construct($codeMessage, $code, $previous, $user);
+    }
+}
+
 /**
  * Excepciones propias de los proyectos
  */
 abstract class WikiIocProjectException extends WikiIocModelException {
-    public function __construct($codeMessage, $code, $target=NULL) {
-        parent::__construct($codeMessage, $code, NULL, $target);
+    public function __construct($codeMessage, $code, $target=NULL, $previous=NULL, $project=NULL) {
+        parent::__construct($codeMessage, $code, $previous, $target, $project);
     }
 }
 
@@ -124,17 +140,5 @@ class InsufficientPermissionToDeleteResourceException extends WikiIocProjectExce
 class UnknownPojectTypeException extends WikiIocProjectException {
     public function __construct($page, $codeMessage='UnknownPojectType', $code=7007) {
         parent::__construct($codeMessage, $code, $page);
-    }
-}
-
-class UnknownUserException extends WikiIocModelException {
-    public function __construct($user, $codeMessage='UnknownUser', $code=9021, $previous=NULL) {
-        parent::__construct($codeMessage, $code, $previous, $user);
-    }
-}
-
-class IncorrectParametersException extends WikiIocModelException {
-    public function __construct($user, $codeMessage='IncorrectParameters', $code=9022, $previous=NULL) {
-        parent::__construct($codeMessage, $code, $previous, $user);
     }
 }

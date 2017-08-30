@@ -1,21 +1,29 @@
 <?php
 /**
- * Description of AbstractWikiAction
- *
+ * AbstractWikiAction
  * @author josep
  */
-
 if (!defined("DOKU_INC")) die();
 
 abstract class AbstractWikiAction {
-    
+
+    protected $modelManager;
+
     public abstract function get(/*Array*/ $paramsArr=array());
-    
+
+    public function init($modelManager = NULL) {
+        $this->modelManager = $modelManager;
+    }
+
+    public function getModelManager() {
+        return $this->modelManager;
+    }
+
     /**
      * Genera un element amb la informació correctament formatada i afegeix el timestamp. Si no s'especifica el id
      * s'assignarà el id del document que s'estigui gestionant actualment.
      *
-     * Per generar un info associat al esdeveniment global s'ha de passar el id com a buit, es a dir
+     * Per generar un info associat al esdeveniment global s'ha de passar el id com a buit
      *
      * @param string          $type     - tipus de missatge
      * @param string|string[] $message  - Missatge o missatges associats amb aquesta informació
@@ -26,7 +34,7 @@ abstract class AbstractWikiAction {
      */
     public static function generateInfo( $type, $message, $id='', $duration = - 1 ) {
             return [
-                    "id"        => str_replace(':', '_', $id),  //netejar l'ID i posar : a _
+                    "id"        => str_replace(':', '_', $id),
                     "type"      => $type,
                     "message"   => $message,
                     "duration"  => $duration,
@@ -63,28 +71,22 @@ abstract class AbstractWikiAction {
             $messageStack = [ ];
 
             if ( is_string( $infoA ['message'] ) ) {
-
                     $messageStack[] = $infoA['message'];
 
             } else if ( is_array( $infoA['message'] ) ) {
-
                     $messageStack = $infoA['message'];
-
             }
 
             if ( is_string( $infoB ['message'] ) ) {
-
                     $messageStack[] = $infoB['message'];
 
             } else if ( is_array( $infoB['message'] ) ) {
-
                     $messageStack = array_merge($messageStack, $infoB['message']);
-
             }
 
             $info['message'] = $messageStack;
 
             return $info;
     }
-    
+
 }

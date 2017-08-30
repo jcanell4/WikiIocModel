@@ -1,5 +1,8 @@
 <?php
 if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+include_once (DOKU_PLUGIN . "wikiiocmodel/projects/documentation/actions/ProjectMetadataAction.php");
+require_once (DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php");
 
 class GenerateProjectMetaDataAction extends ProjectMetadataAction {
 
@@ -8,29 +11,24 @@ class GenerateProjectMetaDataAction extends ProjectMetadataAction {
      * @param type $paramsArr
      */
     public function get($paramsArr = array()) {
-        
-        $id = $paramsArr[ProjectKeys::KEY_ID];
-        $projectType = $paramsArr[ProjectKeys::KEY_PROJECT_TYPE];
-        
-        $this->projectModel->init($id, $projectType);
-        
+
+        $this->projectModel->init($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
+
         //sólo se ejecuta si existe el proyecto
-        if ($this->projectModel->existProject($id)) {
-            
-            $isGenerated = $this->projectModel->isProjectGenerated($id, $projectType);
-            if ($isGenerated) {
-                $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_already_generated'), $id);  //añade info para la zona de mensajes
+        if ($this->projectModel->existProject($paramsArr[ProjectKeys::KEY_ID])) {
+
+            if ($this->projectModel->isProjectGenerated($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE])) {
+                $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('projectAlreadyGenerated'), $paramsArr[ProjectKeys::KEY_ID]);  //añade info para la zona de mensajes
+                throw new ProjectExistException($paramsArr[ProjectKeys::KEY_ID], 'projectAlreadyGenerated');
             } else {
-                $ret = $this->projectModel->getData();   //obtiene la estructura y el contenido del proyecto
-                $plantilla = $ret['projectMetaData']['values']["plantilla"];
-                $destino = "$id:".end(explode(":", $plantilla));
-                $this->projectModel->generateProject($id, $destino, $projectType, $plantilla);  //crea el contenido del proyecto en 'pages/'
-                $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_generated'), $id);  //añade info para la zona de mensajes
+                $ret = $this->projectModel->generateProject($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);  //crea el contenido del proyecto en 'pages/'
+                $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_generated'), $paramsArr[ProjectKeys::KEY_ID]);  //añade info para la zona de mensajes
+                $ret[ProjectKeys::KEY_ID] = $this->idToRequestId($paramsArr[ProjectKeys::KEY_ID]);
             }
         }
-        
+
         if (!$ret)
-            throw new ProjectNotExistException($id);
+            throw new ProjectNotExistException($paramsArr[ProjectKeys::KEY_ID]);
         else
             return $ret;
     }

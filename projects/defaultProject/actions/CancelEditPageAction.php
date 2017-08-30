@@ -1,43 +1,28 @@
 <?php
-
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+/**
+ * Description of CancelEditPageAction
+ * @author josep
+ */
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once(DOKU_INC . 'inc/common.php');
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
 
-if (!defined('DW_ACT_DRAFTDEL')) {
-    define('DW_ACT_DRAFTDEL', "draftdel");
-}
+if (!defined('DW_ACT_DRAFTDEL')) define('DW_ACT_DRAFTDEL', "draftdel");
 
-/**
- * Description of CancelEditPageAction
- *
- * @author josep
- */
-class CancelEditPageAction extends RenderedPageAction implements ResourceUnlockerInterface
-{
-    //protected $draftQuery;
-
+class CancelEditPageAction extends RenderedPageAction implements ResourceUnlockerInterface {
     protected $resourceLocker;
 
-    public function __construct(/*BasicPersistenceEngine*/
-        $engine)
-    {
+    public function __construct(BasicPersistenceEngine $engine) {
         parent::__construct($engine);
-        //$this->draftQuery = $engine->createDraftDataQuery();
         $this->defaultDo = DW_ACT_DRAFTDEL;
-
     }
 
     protected function startProcess()

@@ -1,49 +1,35 @@
 <?php
-
 /**
- * Component: Project / MetaData
- * Status: @@Development
- * Purposes:
- * - Entity objects supplier
+ * MetaDataEntityFactory
  * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
  */
-if (!defined("DOKU_INC"))
-    die();
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined('DOKU_INC')) die();
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
 
-require_once( DOKU_INC . 'inc/JSON.php' );
-require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataExceptions.php');
-require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/metadataconfig/MetaDataDaoConfig.php');
+require_once (DOKU_INC . "inc/JSON.php");
+require_once (WIKI_IOC_MODEL . "metadata/MetaDataExceptions.php");
+require_once (WIKI_IOC_MODEL . "metadata/metadataconfig/MetaDataDaoConfig.php");
 
 class MetaDataEntityFactory {
 
     /**
-     * Purpose:
-     * - Call DaoConfig to obtain MetaDataEntity ns and return an object from this
-     * @param String projectType, String metaDataSubset
-     * Restrictions:
-     * - mandatory $projectType, $metaDataSubSet
-     * - DaoConfig returns null, Exception ClassEntityNotFound 5080
+     * Call DaoConfig to obtain MetaDataEntity ns and return an object from this
+     * @param string $projectType, $metaDataSubset
      * @return MetaDataEntity object (from ns returned by MetaDataDaoConfig)
      */
-    public static function getObject($projectType, $metaDataSubSet,$persistence) {
+    public static function getObject($projectType, $metaDataSubSet, $persistence) {
 
-        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet,$persistence);
+        $classesNameSpaces = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet, $persistence);
         $encoder = new JSON();
-        $arrayConfigPre = $encoder->decode($jSONArray, true);
-        if (!isset($arrayConfigPre->MetaDataEntity) || $arrayConfigPre->MetaDataEntity == '' || $arrayConfigPre->MetaDataEntity == null) {
+        $objClassesNameSpaces = $encoder->decode($classesNameSpaces);
+        if (!isset($objClassesNameSpaces->MetaDataEntity) || $objClassesNameSpaces->MetaDataEntity == NULL) {
             throw new ClassEntityNotFound();
         }
-        require_once (DOKU_PLUGIN . 'wikiiocmodel/projects/' . $arrayConfigPre->MetaDataEntity . '/metadata/MetaDataEntity.php');
-        $fully_qualified_name = $arrayConfigPre->MetaDataEntity . '\\' . "MetaDataEntity";
-        //getMetaDataStructure($projectType, $metaDataSubset, $persistence, $configSubSet = null)
+        require_once (WIKI_IOC_MODEL . "projects/" . $objClassesNameSpaces->MetaDataEntity . "/metadata/MetaDataEntity.php");
+        $fully_qualified_name = $objClassesNameSpaces->MetaDataEntity . "\\MetaDataEntity";
 
-        // ALERTA[Xavi] Modificat, he afegit un segon paràmetre amb la definicions dels tipus: Opció alternativa, cridar al setter en lloc de passar-lo al constructor
         return new $fully_qualified_name(MetaDataDaoConfig::getMetaDataStructure($projectType, $metaDataSubSet, $persistence),
-            MetaDataDaoConfig::getMetaDataTypesDefinition($projectType, $metaDataSubSet, $persistence));
-        //return new MetaDataEntity();
+                                         MetaDataDaoConfig::getMetaDataTypesDefinition($projectType, $metaDataSubSet, $persistence));
     }
 
 }

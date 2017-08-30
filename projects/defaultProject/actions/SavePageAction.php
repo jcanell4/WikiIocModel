@@ -1,11 +1,10 @@
 <?php
-
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+/**
+ * Description of SavePageAction
+ * @author Xavier García <xaviergaro.dev@gmail.com>
+ */
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_INC . 'inc/actions.php');
@@ -15,25 +14,18 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/ResponseParameterKeys.php";
 
+if (!defined('DW_ACT_SAVE')) define('DW_ACT_SAVE', "save");
 
-if (!defined('DW_ACT_SAVE')) {
-    define('DW_ACT_SAVE', "save");
-}
-
-/**
- * Description of AdminTaskAction
- *
- * @author Xavier García <xaviergaro.dev@gmail.com>
- */
 class SavePageAction extends RawPageAction {
 
     protected $deleted = FALSE;
     private $code = 0;
     protected $subAction;
 
-    public function __construct(/*BasicPersistenceEngine*/ $engine) {
+    public function __construct(BasicPersistenceEngine $engine) {
         parent::__construct($engine);
         $this->defaultDo = DW_ACT_SAVE;
     }
@@ -61,7 +53,7 @@ class SavePageAction extends RawPageAction {
         $ID=  $this->params[PageKeys::KEY_ID];
 
         if($this->params[PageKeys::KEY_DO]==DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($ID, 'pageNotFound');
+            throw new PageNotFoundException($ID);
         }
 
         $ACT = act_permcheck($ACT);
@@ -159,10 +151,6 @@ class SavePageAction extends RawPageAction {
 
         $response['info'] = $this->generateInfo($type, $message, $id . $suffix, $duration);
 
-
-
-
-
         return $response;
     }
 
@@ -184,11 +172,12 @@ class SavePageAction extends RawPageAction {
         //save it
         //saveWikiText($ID,con($PRE,$TEXT,$SUF,1),$SUM,$INPUT->bool('minor')); //use pretty mode for con
         $this->dokuPageModel->setData(array(
-            "text" => con($this->params[PageKeys::KEY_PRE],
-                                $this->params[PageKeys::KEY_TEXT],
-                                $this->params[PageKeys::KEY_SUF], 1),
-            "summary" => $this->params[PageKeys::KEY_SUM],
-            "minor" =>  $this->params[PageKeys::KEY_MINOR]));
+                                        ResponseParameterKeys::TEXT => con($this->params[PageKeys::KEY_PRE],
+                                                                      $this->params[PageKeys::KEY_WIKITEXT],
+                                                                      $this->params[PageKeys::KEY_SUF], 1),
+                                        PageKeys::KEY_SUM      => $this->params[PageKeys::KEY_SUM],
+                                        PageKeys::KEY_MINOR    => $this->params[PageKeys::KEY_MINOR])
+                                     );
 
         //delete draft
 //        act_draftdel($act);
@@ -205,7 +194,7 @@ class SavePageAction extends RawPageAction {
 
         // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
         $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
-                                $this->params[PageKeys::KEY_TEXT].
+                                $this->params[PageKeys::KEY_WIKITEXT].
                                 $this->params[PageKeys::KEY_SUF] )
                           == NULL );
     }

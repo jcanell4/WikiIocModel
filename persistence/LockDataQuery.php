@@ -47,6 +47,7 @@ class LockDataQuery extends DataQuery
     {
         $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
         $this->notifyModel = WikiIocModelManager::getNotifyModel($type);
+//	 $this->notifyDataQuery = new NotifyDataQuery();
     }
 
     public function getFileName($id, $especParams = NULL)
@@ -159,7 +160,6 @@ class LockDataQuery extends DataQuery
      * demanada la petició de bloqueig (cua de peticions) per indicar que s'ha alliberat el bloqueig i que si ho
      * desitja pot tornar a fer la petició.
      *
-     *
      * @param String $id
      * @param bool $unlock
      *      ALERTA[Xavi] $unlock = TRUE: elimina el fitxer de bloqueig de la wiki i l'extended.
@@ -167,10 +167,13 @@ class LockDataQuery extends DataQuery
      */
     public function xUnlock($id, $unlock = FALSE)
     {
+
         $this->notifyRequirers($id);
+
         if ($unlock) {
             $this->unlock($id);
         }
+
         $this->removeExtendedFile($id);
     }
 

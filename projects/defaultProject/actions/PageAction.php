@@ -1,38 +1,31 @@
 <?php
-
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+/**
+ * Description of PageAction
+ * @author josep
+ */
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+if (!defined('WIKI_IOC_DEFAULT_PROJECT')) define('WIKI_IOC_DEFAULT_PROJECT', DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/');
 
 require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/LockManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/datamodel/DokuPageModel.php";
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLocker.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php";
+require_once WIKI_IOC_DEFAULT_PROJECT . "DokuAction.php";
+require_once WIKI_IOC_DEFAULT_PROJECT . "datamodel/DokuPageModel.php";
 
-/**
- * Description of PageAction
- *
- * @author josep
- */
-abstract class PageAction extends DokuAction
-{
+abstract class PageAction extends DokuAction {
     protected $dokuPageModel;
     protected $resourceLocker;
     protected $persistenceEngine;
 
     const REVISION_SUFFIX= '-rev-';
 
-    public function __construct($persistenceEngine)
-    {
+    public function __construct($persistenceEngine) {
         $this->persistenceEngine = $persistenceEngine;
         $this->dokuPageModel = new DokuPageModel($persistenceEngine);
         $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
@@ -85,9 +78,9 @@ abstract class PageAction extends DokuAction
                 = cleanText(substr($this->params[PageKeys::KEY_PRE], 0, -1));
         }
         if ($this->params['text']) {
-            $TEXT = $this->params[PageKeys::KEY_TEXT] = $this->params['text'] = cleanText($this->params['text']);
-        } elseif ($this->params[PageKeys::KEY_TEXT]) {
-            $TEXT = $this->params[PageKeys::KEY_TEXT] = $this->params['text'] = cleanText($this->params[PageKeys::KEY_TEXT]);
+            $TEXT = $this->params[PageKeys::KEY_WIKITEXT] = $this->params['text'] = cleanText($this->params['text']);
+        } elseif ($this->params[PageKeys::KEY_WIKITEXT]) {
+            $TEXT = $this->params[PageKeys::KEY_WIKITEXT] = $this->params['text'] = cleanText($this->params[PageKeys::KEY_WIKITEXT]);
         }
         if ($this->params[PageKeys::KEY_SUF]) {
             $SUF = $this->params[PageKeys::KEY_SUF] = cleanText($this->params[PageKeys::KEY_SUF]);
@@ -99,8 +92,7 @@ abstract class PageAction extends DokuAction
         $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], NULL, NULL, $this->params[PageKeys::KEY_REV]);
     }
 
-    protected function getModel()
-    {
+    protected function getModel() {
         return $this->dokuPageModel;
     }
 
@@ -139,43 +131,7 @@ abstract class PageAction extends DokuAction
         return $ret;
     }
 
-//    public function lock()
-//    {
-//
-//        $pid = $this->params[PageKeys::KEY_ID];
-//        $cleanId = WikiPageSystemManager::getContainerIdFromPageId($pid);
-//
-//        //$lockManager = new LockManager($this);
-//        $lockManager = new LockManager();
-//        $locker = $lockManager->lock($pid);
-//
-//        if ($locker === false) {
-//
-//            $info = $this->generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-//            $response = ['id' => $cleanId , 'timeout' => WikiGlobalConfig::getConf('locktime'), 'info' => $info];
-//
-//        } else {
-//
-//            $response = ['id' => $cleanId , 'timeout' => -1, 'info' => $this->generateInfo('error', WikiIocLangManager::getLang('lockedby') . ' ' . $locker)];
-//        }
-//
-//        return $response;
-//    }
-
-//    public function unlock()
-//    {
-////        $lockManager = new LockManager();
-////        $lockManager->unlock($this->params[PageKeys::KEY_ID]);
-//        $this->resourceLocker->unlock();
-//        
-//        $info = $this->generateInfo('success', "S'ha alliberat el bloqueig");
-//        $response['info'] = $info; // TODO[Xavi] Localitzar el missatge
-//
-//        return $response;
-//    }
-
-    public function checklock()
-    {
+    public function checklock() {
         return $this->resourceLocker->checklock();
     }
 
@@ -183,16 +139,12 @@ abstract class PageAction extends DokuAction
         return $this->resourceLocker->updateLock();
     }
 
-    protected function clearFullDraft()
-    {
+    protected function clearFullDraft() {
         WikiIocInfoManager::setInfo('draft', $this->getModel()->getDraftFileName());
         act_draftdel($this->params[PageKeys::KEY_DO]);
-
     }
 
-
-    protected function clearPartialDraft()
-    {
+    protected function clearPartialDraft() {
         $this->getModel()->removePartialDraft();
     }
 

@@ -28,7 +28,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/BasicModelAdapter.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocInfoManager.php');
 require_once(DOKU_PLUGIN . 'ownInit/WikiGlobalConfig.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/PermissionPageForUserManager.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/authorization/PermissionPageForUserManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelExceptions.php');
 
 require_once(DOKU_PLUGIN . 'acl/admin.php');
@@ -54,7 +54,7 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/actions/NotifyAction.php');
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
-require_once(DOKU_PLUGIN . 'ajaxcommand/requestparams/PageKeys.php');
+require_once(DOKU_PLUGIN . 'ajaxcommand/defkeys/PageKeys.php');
 
 if (!defined('DW_DEFAULT_PAGE'))      define('DW_DEFAULT_PAGE', "start");
 if (!defined('DW_ACT_SHOW'))          define('DW_ACT_SHOW', "show");
@@ -125,18 +125,15 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $action->get();
     }
 
-    public function getShortcutsTaskList($user_id)
-    {
+    public function getShortcutsTaskList($user_id) {
         $action = new ShortcutsTaskListAction($this->persistenceEngine);
 //        $user = WikiIocInfoManager::getInfo("userinfo");
 
         if (!$user_id) {
-            throw new Exception("No es troba capusuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
+            throw new Exception("No es troba cap usuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
         } else {
-            $params = ['id' => 'wiki:user:' . $user_id . ':dreceres']; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
+            $params = ['id' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$user_id.':'.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')]; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
         }
-
-
 
         return $action->get($params);
     }
@@ -147,111 +144,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         $this->params[$element] = $value;
     }
 
-//    // ës la crida principal de la comanda new_page -->> Ha ido a parar a DokuPageModel
-//    public function createPage($pars)
-//    {
-//        $action = new CreatePageAction($this->persistenceEngine);
-//        return $action->get($pars);
-//    }
-
-
-    /**
-     * Crida principal de la comanda page
-     *
-     * @param string $pid - id del document
-     * @param string $prev - revisió del document
-     * @return array - array amb la informació de la resposta
-     * @throws InsufficientPermissionToViewPageException
-     * @throws PageNotFoundException
-     */
-    public function getHtmlPage($pars)
-    {
-        if (!$pars[PageKeys::KEY_REV]) {
-//            return $this->getPartialPage($pid, $prev, null, null, null);
-            $action = new HtmlPageAction($this->persistenceEngine);
-            $response = $action->get($pars);
-        }else{
-            $action = new HtmlRevisionPageAction($this->persistenceEngine);
-            $response = $action->get($pars);
-        }
-        
-        return $response;
-
-//        $this->startPageProcess(DW_ACT_SHOW, $pid, $prev, null, null);
-//
-//        if (!WikiIocInfoManager::getInfo("exists")) {
-//            throw new PageNotFoundException($id, $lang['pageNotFound']);
-//        }
-//        if (!WikiIocInfoManager::getInfo("perm")) {
-//            throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
-//        }
-//
-//        $this->doFormatedPartialPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-//        $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
-//        $revisionInfo = p_locale_xhtml('showrev'); //[ALERTA Josep] Cal crear una classe WikiMessageManager (similar a WikiInfoManager) que es pugui fer servir en comptes de la variable global $lang
-//        $response['structure']['html'] = str_replace($revisionInfo, '', $response['structure']['html']);
-//
-//        // Si no s'ha especificat cap altre missatge mostrem el de carrega
-//        if (!$response['info']) {
-//            $response['info'] = $this->generateInfo("warning", strip_tags($revisionInfo));
-//        } else {
-//            $this->addInfoToInfo($response['warning'], $this->generateInfo("info", strip_tags($revisionInfo)));
-//        }
-//
-//        // TODO: afegir el 'meta' que correspongui
-//        $response['meta'] = $this->getMetaResponse($pid);
-//
-//        // TODO: afegir les revisions
-//        $response['revs'] = $this->getRevisions($pid);
-//
-//        return $response;
-    }
-    
-
-    /**
-     * Crida principal de la comanda edit i de la comanda raw_code
-     * @global type $lang
-     * @param type $pid
-     * @param type $prev
-     * @param type $prange
-     * @param type $psum
-     * @param type $recover
-     * @return type
-     * @throws PageNotFoundException
-     * @throws InsufficientPermissionToEditPageException
-     */
-    public function editPage($params){ // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
-        if($params["refresh"]){
-            return $this->refreshEdition($params);            
-        }else{
-            return $this->getCodePage($params);
-        }
-    }
-
-    /**
-     * @param type $params
-     * @return type
-     * @throws PageNotFoundException
-     * @throws InsufficientPermissionToEditPageException
-     */
-    public function refreshEdition($params)
-    {
-        $action = new RefreshEditionAction($this->persistenceEngine);
-        $contentData = $action->get($params);
-        return $contentData;
-    }
-    /**
-     * @param type $params
-     * @return type
-     * @throws PageNotFoundException
-     * @throws InsufficientPermissionToEditPageException
-     */
-    public function getCodePage($params) // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
-    {
-        $action = new RawPageAction($this->persistenceEngine);
-        $contentData = $action->get($params);
-        return $contentData;
-    }
 
     /**
      * Crida principal de la comanda cancel
@@ -1657,7 +1549,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         global $DEL;
 
         $DEL  = $this->params['delete'] = $pImage;
-        
+
         $ret = $this->startMediaManager($pdo, $pImage, $pFromId, $prev);
          if ($pImage) {
             if ($AUTH < AUTH_DELETE) {
@@ -1731,7 +1623,7 @@ class DokuModelAdapter extends BasicModelAdapter {
 
     private function doDeleteMediaManagerPreProcess(){
         global $DEL;
-        
+
         $content = "";
         if ($this->runBeforePreprocess($content)) {
             $res = 0;
@@ -1742,7 +1634,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         $this->runAfterPreprocess($content);
         return $res;
     }
-    
+
     private function doMediaManagerPreProcess() {
         global $ACT;
 
@@ -2146,7 +2038,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         //desactivem aquesta crida perquè es tracta d'una crida AJAX i no es pot modificar la capçalera
 //		$headers[] = 'Content-Type:application/json; charset=utf-8';
 //
-//		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );		
+//		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );
 
         $this->startUpLang();
 
@@ -2759,7 +2651,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, $prange, $psum);
         
          if (!WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($id, $lang['pageNotFound']);
+            throw new PageNotFoundException($id]);
         }
         if (!WikiIocInfoManager::getInfo("perm")) {
             throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!

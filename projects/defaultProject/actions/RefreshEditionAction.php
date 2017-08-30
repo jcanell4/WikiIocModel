@@ -1,16 +1,18 @@
 <?php
-
-
+/**
+ * Description of RefreshEditionAction
+ * @author josep
+ */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
 
 if (!defined('DW_ACT_LOCK')) define('DW_ACT_LOCK', "lock");
@@ -18,22 +20,12 @@ if (!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
 if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
 if (!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
 
-/**
- * Description of RawPageAction
- *
- * @author josep
- */
-class RefreshEditionAction extends PageAction implements ResourceLockerInterface/*, ResourceUnlockerInterface*/
-{
-    //protected $draftQuery;
-
+class RefreshEditionAction extends PageAction implements ResourceLockerInterface /*,ResourceUnlockerInterface*/ {
     protected $engine;
     private $lockStruct;
 
-    public function __construct(/*BasicPersistenceEngine*/$engine)
-    {
+    public function __construct(BasicPersistenceEngine $engine) {
         parent::__construct($engine);
-        //$this->draftQuery = $engine->createDraftDataQuery();
         $this->defaultDo = DW_ACT_LOCK;
         $this->engine = $engine;
     }
@@ -47,7 +39,7 @@ class RefreshEditionAction extends PageAction implements ResourceLockerInterface
     protected function runProcess()
     {
         if (!WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS)) {
-            throw new PageNotFoundException($this->params[PageKeys::KEY_ID], 'pageNotFound');
+            throw new PageNotFoundException($this->params[PageKeys::KEY_ID]);
         }
 
         $ACT = act_permcheck(DW_ACT_EDIT);
