@@ -13,7 +13,7 @@ require_once (DOKU_PLUGIN . "ajaxcommand/defkeys/ProjectKeys.php");
 require_once (WIKI_IOC_MODEL . "datamodel/AbstractWikiDataModel.php");
 require_once (WIKI_IOC_MODEL . "datamodel/DokuPageModel.php");
 require_once (WIKI_IOC_MODEL . "metadata/MetaDataService.php");
-require_once (WIKI_IOC_MODEL . "authorization/PermissionPageForUserManager.php");
+require_once (WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
 
 class ProjectModel extends AbstractWikiDataModel {
 
@@ -143,15 +143,15 @@ class ProjectModel extends AbstractWikiDataModel {
         $this->projectMetaDataQuery->setProjectGenerated($id, $projectType);
 
         //3a. Otorga, al Autor, permisos sobre el directorio de proyecto
-        PermissionPageForUserManager::updatePagePermission($id.":*", $ret['projectMetaData']['values']["autor"], AUTH_UPLOAD);
+        PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']['values']["autor"], AUTH_UPLOAD);
 
         //3b. Otorga, al Responsable, permisos sobre el directorio de proyecto
         if ($ret['projectMetaData']['values']["autor"] !== $ret['projectMetaData']['values']["responsable"])
-            PermissionPageForUserManager::updatePagePermission($id.":*", $ret['projectMetaData']['values']["responsable"], AUTH_UPLOAD);
+            PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']['values']["responsable"], AUTH_UPLOAD);
 
         //4a. Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
         $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$ret['projectMetaData']['values']["autor"].":";
-        PermissionPageForUserManager::updatePagePermission($ns."*", $ret['projectMetaData']['values']["autor"], AUTH_DELETE, TRUE);
+        PagePermissionManager::updatePagePermission($ns."*", $ret['projectMetaData']['values']["autor"], AUTH_DELETE, TRUE);
         //4b. Incluye la página del proyecto en el archivo de atajos del Autor
         $params = [
              'id' => $id
@@ -176,7 +176,7 @@ class ProjectModel extends AbstractWikiDataModel {
         if ($parArr['old_autor'] !== $parArr['new_autor']) {
             if ($parArr['old_autor'] !== $parArr['old_responsable']) {
                 //Elimina ACL de old_autor sobre la página del proyecto
-                $ret = PermissionPageForUserManager::deletePermissionPageForUser($project_ns, $parArr['old_autor']);
+                $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $parArr['old_autor']);
                 if (!$ret) $retError[] = "Error en eliminar permissos a '${parArr['old_autor']}' sobre '$project_ns'";
             }
             //Elimina el acceso a la página del proyecto en el archivo dreceres de de old_autor
@@ -184,12 +184,12 @@ class ProjectModel extends AbstractWikiDataModel {
             $this->removeProjectPageFromUserShortcut($old_usershortcut, $parArr['link_page']);
 
             //Crea ACL para new_autor sobre la página del proyecto
-            $ret = PermissionPageForUserManager::updatePagePermission($project_ns, $parArr['new_autor'], AUTH_UPLOAD, TRUE);
+            $ret = PagePermissionManager::updatePagePermission($project_ns, $parArr['new_autor'], AUTH_UPLOAD, TRUE);
             if (!$ret) $retError[] = "Error en assignar permissos a '${parArr['new_autor']}' sobre '$project_ns'";
 
             //Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
             $ns = $parArr['userpage_ns'].$parArr['new_autor'].":";
-            PermissionPageForUserManager::updatePagePermission($ns."*", $parArr['new_autor'], AUTH_DELETE, TRUE);
+            PagePermissionManager::updatePagePermission($ns."*", $parArr['new_autor'], AUTH_DELETE, TRUE);
             //Escribe un acceso a la página del proyecto en el archivo de atajos de de new_autor
             $params = [
                  'id' => $parArr['id']
@@ -204,11 +204,11 @@ class ProjectModel extends AbstractWikiDataModel {
         if ($parArr['old_responsable'] !== $parArr['new_responsable']) {
             if ($parArr['old_autor'] !== $parArr['old_responsable']) {
                 //Elimina ACL de old_responsable sobre la página del proyecto
-                $ret = PermissionPageForUserManager::deletePermissionPageForUser($project_ns, $parArr['old_responsable']);
+                $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $parArr['old_responsable']);
                 if (!$ret) $retError[] = "Error en eliminar permissos a '${parArr['old_responsable']}' sobre '$project_ns'";
             }
             //Crea ACL para new_responsable sobre la página del proyecto
-            $ret = PermissionPageForUserManager::updatePagePermission($project_ns, $parArr['new_responsable'], AUTH_UPLOAD, TRUE);
+            $ret = PagePermissionManager::updatePagePermission($project_ns, $parArr['new_responsable'], AUTH_UPLOAD, TRUE);
             if (!$ret) $retError[] = "Error en assignar permissos a '${parArr['new_responsable']}' sobre '$project_ns'";
         }
 

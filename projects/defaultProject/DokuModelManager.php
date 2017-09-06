@@ -22,7 +22,7 @@ class DokuModelManager extends WikiIocModelManager{
     static $defDirClass = array (
                 //'Action' =>         Está inactivo porque los ficheros de estas clases no están en directorios ajenos a este proyecto.
                 //'Authorization' =>  Si algún fichero de clase está fuera del directorio de proyecto, éste es el lugar adecuado para indicarlo
-                'Model' => array(self::MOD."datamodel")
+                //'Model' => array(self::MOD."datamodel/") En este caso el modelo se encuentra directamente en el directorio datamodel de wikiiocmodel, y no es necesario especificar la ruta, pues se coge por defecto.
            );
     static $defMainClass = array(
                 'DokuModelAdapter'     => self::DEF."DokuModelAdapter.php",

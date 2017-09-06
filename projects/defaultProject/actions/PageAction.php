@@ -16,7 +16,7 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLocker.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php";
 require_once WIKI_IOC_DEFAULT_PROJECT . "DokuAction.php";
-require_once WIKI_IOC_DEFAULT_PROJECT . "datamodel/DokuPageModel.php";
+//require_once WIKI_IOC_DEFAULT_PROJECT . "datamodel/DokuPageModel.php";
 
 abstract class PageAction extends DokuAction {
     protected $dokuPageModel;

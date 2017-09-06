@@ -91,7 +91,7 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
         //unlock($this->params[PageKeys::KEY_ID]);
 
         if (!WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($this->params[PageKeys::KEY_ID], 'pageNotFound');
+            throw new PageNotFoundException($this->params[PageKeys::KEY_ID]);
         }
 
         if ($this->params[PageKeys::KEY_REV]) {

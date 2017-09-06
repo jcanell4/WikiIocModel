@@ -1,6 +1,6 @@
 <?php
 /**
- * PermissionPageForUserManager: Gestión de permisos, de los usuarios sobre las páginas, en el fichero acl.auth.php
+ * PagePermissionManager: Gestión de permisos, de los usuarios sobre las páginas, en el fichero acl.auth.php
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC') ) die();
@@ -90,18 +90,6 @@ class PagePermissionManager{
         if (!$user) $user = $_SERVER['REMOTE_USER'];
 	$info = $auth->getUserData($user);
         $permis = auth_aclcheck($page, $user, $info['grps']);
-	/* $permis = auth_quickaclcheck( $page );  //hace referencia al usuario de la sesión actual
-	// este bucle obtiene el mismo resultado que auth_quickaclcheck()
-	$acl_class = new admin_plugin_acl();
-	$acl_class->handle();
-	$permis = NULL;
-	$sub_page = $page;
-	while (!$permis && $sub_page) {
-		$acl_class->ns = $sub_page;
-		$permis = $acl_class->_get_exact_perm();
-		$sub_page = substr($sub_page, 0, strrpos($sub_page, ':'));
-	}
-	*/
 	return $permis;
     }
 
@@ -145,11 +133,6 @@ class PagePermissionManager{
             $user = WikiIocInfoManager::getInfo('client');
             $page = $permission->getIdPage();
             $ns = substr($page, 0, strrpos($page, ":")) . ':*';
-//            if ( !self::existPageUser($ns, $user) ) {
-//                // La pàgina de l'usuari no existeix en el fitxer de permissos
-//                $ret = self::setPermissionPageForUser($ns, $user, AUTH_DELETE, TRUE);
-//                WikiIocInfoManager::setInfo('perm', $ret);
-//            }
             $ret = self::updatePagePermission($ns, $user, AUTH_DELETE);
             if ($ret) WikiIocInfoManager::setInfo('perm', $ret);
         }
@@ -192,5 +175,25 @@ class PagePermissionManager{
         $acl_class->handle();
         return $acl_class->acl[$page][$user];
     }
+    
+    /**
+     * Get current ACL settings as multidim array
+     * @author Andreas Gohr <andi@splitbrain.org>
+     * @culpable Rafael Claver
+     */
+    private static function get_acl(){
+        global $AUTH_ACL;
+        $acl_config = array();
 
+        foreach($AUTH_ACL as $line){
+            $line = trim(preg_replace('/#.*$/','',$line));  //ignore comments
+            if ($line) {
+                $acl = preg_split('/[ \t]+/',$line);        //0 is pagename, 1 is user, 2 is acl
+                $acl[1] = rawurldecode($acl[1]);
+                $acl_config[$acl[0]][$acl[1]] = $acl[2];
+            }
+        }
+        ksort($acl_config);
+        return $acl_config;
+    }
 }
