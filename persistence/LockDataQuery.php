@@ -417,7 +417,7 @@ class LockDataQuery extends DataQuery
             "text" => sprintf(WikiIocLangManager::getLang('documentUnrequired'), $docId),
             "timestamp" => date( "d-m-Y H:i:s" ),
         );
-        $this->notifyModel->notifyTo($lockerId, $message, $class_::TYPE_MESSAGE, str_replace(":", "_", $lockerId.$docId."requirement"), $class_::MAILBOX_RECEIVED);
+        $this->notifyModel->notifyTo($message, $lockerId, $class_::TYPE_MESSAGE, str_replace(":", "_", $lockerId.$docId."requirement"), $class_::MAILBOX_RECEIVED);
     }
 
 

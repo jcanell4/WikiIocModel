@@ -41,6 +41,7 @@ class CreatePageAction extends SavePageAction {
             throw new PageAlreadyExistsException($this->params[PageKeys::KEY_ID], 'pageExists');
         }
         parent::runProcess();
+        $this->resourceLocker->leaveResource(TRUE);
     }
 
     protected function startProcess() {
@@ -62,6 +63,8 @@ class CreatePageAction extends SavePageAction {
             }else {
                 $this->params[PageKeys::KEY_WIKITEXT] = cleanText(WikiIocLangManager::getLang('createDefaultText'));
             }
+            $this->params[PageKeys::KEY_WIKITEXT] = str_replace(":%nom_d_usuari%", ":".$this->params['user_id']
+                                                                                , $this->params[PageKeys::KEY_WIKITEXT]);
             $TEXT = $this->params[PageKeys::KEY_WIKITEXT];
         }
     }
