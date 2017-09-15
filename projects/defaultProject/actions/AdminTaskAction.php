@@ -227,6 +227,7 @@ class AdminTaskAction extends DokuAction{
     }
 
     private function getAdminTaskHtml() {
+        global $ACT;
         ob_start();
         trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_admin" );
         $html_output = ob_get_clean();

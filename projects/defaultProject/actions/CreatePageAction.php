@@ -24,9 +24,9 @@ class CreatePageAction extends SavePageAction {
     }
 
     protected function responseProcess() {
-        
+
         $response = RenderedPageAction::staticResponseProcess($this);
-        
+
         if (!$response['info']) {
             $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
             $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('document_created'), $id);
@@ -41,6 +41,7 @@ class CreatePageAction extends SavePageAction {
             throw new PageAlreadyExistsException($this->params[PageKeys::KEY_ID], 'pageExists');
         }
         parent::runProcess();
+        $this->resourceLocker->leaveResource(TRUE);
     }
 
     protected function startProcess() {
@@ -62,6 +63,7 @@ class CreatePageAction extends SavePageAction {
             }else {
                 $this->params[PageKeys::KEY_WIKITEXT] = cleanText(WikiIocLangManager::getLang('createDefaultText'));
             }
+            $this->params[PageKeys::KEY_WIKITEXT] = str_replace(":%nom_d_usuari%", ":".$this->params['user_id'], $this->params[PageKeys::KEY_WIKITEXT]);
             $TEXT = $this->params[PageKeys::KEY_WIKITEXT];
         }
     }

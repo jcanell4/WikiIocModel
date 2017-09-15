@@ -4,6 +4,8 @@
  *
  * @author Joseo Cañellas<jcanell4@ioc.cat>
  */
+require_once (DOKU_INC . 'lib/plugins/ajaxcommand/defkeys/GlobalKeys.php');
+
 const PAG_DEFAULT = "createDefaultText";
 const PAG_SAVED = "saved";
 const PAG_DELETED = "deleted";
@@ -62,9 +64,9 @@ $lang['recent_list'] = "canvis recents";
 $lang['system_warning_default_title'] = 'Avís del sistema';
 
 // Plantilles
-$lang['plantilles:user:dreceres'] = "Nou document de dreceres.\n\n"  //$lang['template:shortcuts'] = "Nou document de dreceres.\n\n"
+$lang[GlobalKeys::TEMPLATE_SHORTCUTS_NS] = "Nou document de dreceres.\n\n"  //$lang['template:shortcuts'] = "Nou document de dreceres.\n\n"
     . "Per afegir dreceres a documents o espais de noms, afegir enllaços al document o a l'espai de noms, seguint la sintaxi wiki. Per exemple:\n\n"
-    . "[[wiki:user:nom_d_usuari|El meu espai]]\n\n"
+    . "[[wiki:user:%nom_d_usuari%:index|El meu espai]]\n\n"
     . "[[wiki:navigation|Drecera a la documentació de la wiki]]";
 //Excepciones del proyecto 'defaultProject'
 $lang['pageExist'] = 'The page %s already exists';

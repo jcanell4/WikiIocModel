@@ -15,7 +15,6 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
-require_once DOKU_PLUGIN . "ajaxcommand/defkeys/ResponseParameterKeys.php";
 
 if (!defined('DW_ACT_SAVE')) define('DW_ACT_SAVE', "save");
 
@@ -69,7 +68,7 @@ class SavePageAction extends RawPageAction {
         $this->lockStruct = $this->updateLock();
         if($this->lockState() === self::LOCKED){
             $this->_save();
-            if($this->subAction==='save_rev'){
+            if ($this->subAction==='save_rev'){
                 $this->resourceLocker->leaveResource(TRUE);
             }
         }
@@ -172,7 +171,7 @@ class SavePageAction extends RawPageAction {
         //save it
         //saveWikiText($ID,con($PRE,$TEXT,$SUF,1),$SUM,$INPUT->bool('minor')); //use pretty mode for con
         $this->dokuPageModel->setData(array(
-                                        ResponseParameterKeys::TEXT => con($this->params[PageKeys::KEY_PRE],
+                                        PageKeys::KEY_WIKITEXT => con($this->params[PageKeys::KEY_PRE],
                                                                       $this->params[PageKeys::KEY_WIKITEXT],
                                                                       $this->params[PageKeys::KEY_SUF], 1),
                                         PageKeys::KEY_SUM      => $this->params[PageKeys::KEY_SUM],
