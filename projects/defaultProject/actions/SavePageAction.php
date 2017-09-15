@@ -68,7 +68,7 @@ class SavePageAction extends RawPageAction {
         $this->lockStruct = $this->updateLock();
         if($this->lockState() === self::LOCKED){
             $this->_save();
-            if ($this->subAction==='save_rev'){
+            if($this->subAction==='save_rev' || $this->deleted){
                 $this->resourceLocker->leaveResource(TRUE);
             }
         }
@@ -191,7 +191,7 @@ class SavePageAction extends RawPageAction {
             $this->getModel()->removePartialDraft();
         }
 
-        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted
+        // Si s'ha eliminat el contingut de la pàgina, ho indiquem a l'atribut $deleted i desbloquegem la pàgina
         $this->deleted = (trim( $this->params[PageKeys::KEY_PRE].
                                 $this->params[PageKeys::KEY_WIKITEXT].
                                 $this->params[PageKeys::KEY_SUF] )
