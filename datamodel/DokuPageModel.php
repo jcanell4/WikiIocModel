@@ -185,7 +185,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
         $structuredDraft = $this->draftDataQuery->getStructured($this->id);
         $chunks = self::getAllChunksWithText($this->id, $this->pageDataQuery)['chunks'];
-        $draftContent .= $structuredDraft['pre'] . "\n";
+        $draftContent .= $structuredDraft['pre'] /*. "\n"*/;
 
         for ($i = 0; $i < count($chunks); $i++) {
             if (array_key_exists($chunks[$i]['header_id'], $structuredDraft)) {
@@ -193,7 +193,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
             } else {
                 $draftContent .= $chunks[$i]['text']['editing'];
             }
-            $draftContent .= "\n";
+//            $draftContent .= "\n";
         }
 
         $draft['content'] = $draftContent;
