@@ -18,7 +18,7 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
     }
 
     public function canRun() {
-        if ( parent::canRun() ) { 
+        if ( parent::canRun() ) {
             if (!$this->permission->getIsMyOwnNs()) {
                 $exception = $this->getPermissionException($this->permission);
                 if ($exception) {
@@ -30,7 +30,7 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
         }
         return !$this->errorAuth[self::ERROR_KEY];
     }
-    
+
     public function setPermission($command) {
         parent::setPermission($command);
         $this->permission->setResourceExist(WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS));
@@ -49,6 +49,6 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
                 );
         return $ret;
     }
-    
+
     protected abstract function getPermissionException();
 }

@@ -60,8 +60,6 @@ class TimerNotifyModel extends DokuNotifyModel
         $this->dataQuery->add($receiverId, $notification);
 
         return $notification;
-
-//        return $this->dataQuery->add($receiverId, $data, 'message', NULL, $senderId, $mailbox, $read); // TODO[Xavi] S'ha de canviar per una constant
     }
 
     public function notifyTo($data, $receiverId, $type, $id=NULL, $mailbox)
@@ -72,7 +70,7 @@ class TimerNotifyModel extends DokuNotifyModel
 
         // L'afegim al blackboard del destinatari ($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
         $notification= $this->dataQuery->generateNotification($data, $type, $id, $senderId, FALSE, $mailbox);
-        return $this->dataQuery->add($receiverId, $notification); // TODO[Xavi] S'ha de canviar per una constant
+        return $this->dataQuery->add($receiverId, $notification, TRUE); 
     }
 
     public function popNotifications($userId, $since = 0)
@@ -81,7 +79,9 @@ class TimerNotifyModel extends DokuNotifyModel
         // pissarra de l'usuari actiu. En el cas de WebSockets, no es cridarà mai, ja que el mètode notifyToFrom fa
         // l'enviament de forma immediata. El mètode  popNotifications, a més de retornar el contingut, elimina també
         // la pissarra consultada.
-
+        if($since==NULL){
+            $since=0;
+        }
         return $this->dataQuery->get($userId, $since, false);
     }
 

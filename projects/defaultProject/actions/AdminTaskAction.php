@@ -1,23 +1,16 @@
 <?php
 
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once (DOKU_INC . 'inc/pluginutils.php');
 require_once (DOKU_INC . 'inc/actions.php');
-require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuAction.php";
-require_once(DOKU_PLUGIN.'ajaxcommand/requestparams/AdminKeys.php');
+require_once (DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php");
+require_once (DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php");
+require_once (DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuAction.php");
+require_once (DOKU_PLUGIN.'ajaxcommand/defkeys/AdminKeys.php');
 
-
-if (!defined('DW_ACT_EXPORT_ADMIN')) {
-    define('DW_ACT_EXPORT_ADMIN', "admin");
-}
+if (!defined('DW_ACT_EXPORT_ADMIN')) define('DW_ACT_EXPORT_ADMIN', "admin");
 
 /**
  * Description of AdminTaskAction
@@ -26,17 +19,17 @@ if (!defined('DW_ACT_EXPORT_ADMIN')) {
  */
 class AdminTaskAction extends DokuAction{
     private $dataTmp;
-    
+
     public function __construct() {
         $this->defaultDo = DW_ACT_EXPORT_ADMIN;
     }
-    
+
     /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la 
-     * sobrescriptura permet fer assignacions a les variables globals de la 
+     * És un mètode per sobrescriure. Per defecte no fa res, però la
+     * sobrescriptura permet fer assignacions a les variables globals de la
      * wiki a partir dels valors de DokuAction#params.
      */
-    protected function startProcess(){        
+    protected function startProcess(){
 		global $ACT;
 		global $_REQUEST;
 		global $ID;
@@ -56,10 +49,10 @@ class AdminTaskAction extends DokuAction{
                         $_REQUEST[AdminKeys::KEY_PAGE] = $this->params[AdminKeys::KEY_TASK];
                 }
     }
-    
+
     /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la 
-     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles 
+     * És un mètode per sobrescriure. Per defecte no fa res, però la
+     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
      * dades  intermèdies que siguin necessàries per generar la resposta final:
      * DokuAction#responseProcess.
      */
@@ -75,7 +68,7 @@ class AdminTaskAction extends DokuAction{
                 if ( in_array( $_REQUEST['page'], $pluginlist ) ) {
                         // attempt to load the plugin
                         if ( $plugin =& plugin_load( 'admin', $_REQUEST['page'] ) !== NULL ) {
-                                if ( $plugin->forAdminOnly() 
+                                if ( $plugin->forAdminOnly()
                                             && !WikiIocInfoManager::getInfo('isadmin') ) {
                                         // a manager tried to load a plugin that's for admins only
                                         unset( $_REQUEST['page'] );
@@ -102,14 +95,14 @@ class AdminTaskAction extends DokuAction{
         // check permissions again - the action may have changed
         $ACT = act_permcheck( $ACT );
     }
-    
+
     /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la 
-     * sobrescriptura permet generar la resposta a enviar al client. Aquest 
-     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut 
+     * És un mètode per sobrescriure. Per defecte no fa res, però la
+     * sobrescriptura permet generar la resposta a enviar al client. Aquest
+     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
      * DokuAction#response.
      */
-    protected function responseProcess(){        
+    protected function responseProcess(){
         $response=array();
 
         $id         = "admin_" . $this->params[AdminKeys::KEY_TASK];
@@ -119,7 +112,7 @@ class AdminTaskAction extends DokuAction{
                 $response   = $this->getCommonPage( $id, $this->params[AdminKeys::KEY_TASK], $pageToSend );
         }
         $response["needRefresh"] = $this->dataTmp["needRefresh"];
-        
+
         // Informació a pantalla
         $info_time_visible = 5;
         switch ( $_REQUEST['page'] ) {
@@ -129,7 +122,7 @@ class AdminTaskAction extends DokuAction{
                                         $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $id, $info_time_visible );
                                 } else {
 
-                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' 
+                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"'
                                                                                         . \WikiIocLangManager::getLang('button_desa') . '"', $id, $info_time_visible );
                                 }
                         }
@@ -146,7 +139,7 @@ class AdminTaskAction extends DokuAction{
                                         if ( is_array( $fn[ key( $fn ) ] ) ) {
                                                 $fn = $fn[ key( $fn ) ];
                                         }
-                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' 
+                                        $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"'
                                                                                             . $fn[ key( $fn ) ] . '"', $id, $info_time_visible );
                         }
                         break;
@@ -200,17 +193,17 @@ class AdminTaskAction extends DokuAction{
                                                 $param = \WikiIocLangManager::getLang('button_filter_user');
                                                 break;
                                 }
-                                $response['info']   = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' 
+                                $response['info']   = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"'
                                                                                                 . $param . '"', $id, $info_time_visible );
                                 $response['iframe'] = TRUE;
                         }
                         break;
                 case "revert":
                         if ( isset( $_REQUEST['revert'] ) ) {
-                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') 
+                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked')
                                                                 . '"' . \WikiIocLangManager::getLang('button_revert') . '"', $id, $info_time_visible );
                         } else if ( isset( $_REQUEST['filter'] ) ) {
-                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"' 
+                                $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('button_clicked') . '"'
                                                                         . \WikiIocLangManager::getLang('button_cercar') . '"', $id, $info_time_visible );
                         } else {
                                 $response['info'] = self::generateInfo( "info", \WikiIocLangManager::getLang('admin_task_loaded'), $id, $info_time_visible );
@@ -232,8 +225,9 @@ class AdminTaskAction extends DokuAction{
 
         return $response;
     }
-    
+
     private function getAdminTaskHtml() {
+        global $ACT;
         ob_start();
         trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_admin" );
         $html_output = ob_get_clean();

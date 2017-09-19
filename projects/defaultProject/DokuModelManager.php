@@ -7,31 +7,32 @@
  */
 if (!defined('DOKU_INC')) die();
 define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
-define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
 
 require_once(WIKI_IOC_MODEL . 'WikiIocModelManager.php');
-require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');  
+require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 //Los siguientes includes son para Clases específicas y exclusivas de este proyecto
-require_once(WIKI_IOC_PROJECTS . 'defaultProject/DokuModelAdapter.php');
-require_once(WIKI_IOC_PROJECTS . 'defaultProject/DokuModelExceptions.php');
+require_once(WIKI_IOC_PROJECT . 'DokuModelAdapter.php');
+require_once(WIKI_IOC_PROJECT . 'DokuModelExceptions.php');
 
 class DokuModelManager extends WikiIocModelManager{
-    
-    const DEF = WIKI_IOC_PROJECTS . 'defaultProject/';
+
+    const MOD = WIKI_IOC_MODEL;
+    const DEF = WIKI_IOC_PROJECT;
     static $defDirClass = array (
-                //"Action" =>           Los ficheros de estas clases no están en directorios ajenos a este proyecto.
-                //,"Authorization" =>   Si algún fichero está fuera del directorio de proyecto, 
-                //,"Model" =>           este es el lugar adecuado para indicarlo
+                //'Action' =>         Está inactivo porque los ficheros de estas clases no están en directorios ajenos a este proyecto.
+                //'Authorization' =>  Si algún fichero de clase está fuera del directorio de proyecto, éste es el lugar adecuado para indicarlo
+                //'Model' => array(self::MOD."datamodel/") En este caso el modelo se encuentra directamente en el directorio datamodel de wikiiocmodel, y no es necesario especificar la ruta, pues se coge por defecto.
            );
     static $defMainClass = array(
-                "DokuModelAdapter" => self::DEF."DokuModelAdapter.php",
-                "FactoryAuthorization" => self::DEF."authorization/FactoryAuthorization.php"
+                'DokuModelAdapter'     => self::DEF."DokuModelAdapter.php",
+                'FactoryAuthorization' => self::DEF."authorization/FactoryAuthorization.php"
            );
-    
+
     public function __construct() {}
 
     public function getAuthorizationManager($str_command) {
-        $factory = \FactoryAuthorization::Instance();
+        $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
         return $factory->createAuthorizationManager($str_command);
     }
 

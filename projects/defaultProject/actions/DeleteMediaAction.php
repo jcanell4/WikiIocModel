@@ -1,42 +1,33 @@
 <?php
-
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
-
-require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN."ajaxcommand/requestparams/MediaKeys.php";
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/MediaAction.php";
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/datamodel/DokuMediaModel.php";
-require_once(DOKU_PLUGIN.'wikiiocmodel/projects/defaultProject/DokuModelExceptions.php');
-require_once DOKU_INC."inc/media.php";
-
-
 /**
  * Description of DeleteMediaAction
- *
  * @author josep
  */
-class DeleteMediaAction extends MediaAction{
-      private $actionReturn;
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
-    
-      public function __construct(/* BasicPersistenceEngine */ $engine) {
-//        $this->defaultDo = DW_ACT_MEDIA_UPLOAD;
+require_once DOKU_INC."inc/media.php";
+require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
+require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
+require_once DOKU_PLUGIN."ajaxcommand/defkeys/MediaKeys.php";
+require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/MediaAction.php";
+require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/datamodel/DokuMediaModel.php";
+require_once DOKU_PLUGIN.'wikiiocmodel/projects/defaultProject/DokuModelExceptions.php';
+require_once DOKU_INC."inc/media.php";  //revisar si cal.
+
+class DeleteMediaAction extends MediaAction{
+
+    private $actionReturn;
+
+    public function __construct(BasicPersistenceEngine $engine) {
         parent::__construct($engine);
     }
-    
 
     protected function responseProcess(){
         global $JSINFO, $lang;
-        
-        
+
         $this->actionReturn;
-        
+
         if ($this->actionReturn & DOKU_MEDIA_DELETED) {
             $ret = array(
                 "content" => $this->mediaManagerFileList(),      //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
@@ -52,7 +43,7 @@ class DeleteMediaAction extends MediaAction{
                 "result" => $this->actionReturn
             );
             $JSINFO = array('id' => "media", 'namespace' => $this->params[MediaKeys::KEY_NS]);
-            
+
 //            $msg = sprintf($lang['deletesucc'], noNS($DEL));
 //            msg($msg,1);
         } elseif ($this->actionReturn & DOKU_MEDIA_INUSE) {
@@ -73,7 +64,7 @@ class DeleteMediaAction extends MediaAction{
         return $ret;
     }
 
-    protected function runProcess() {             
+    protected function runProcess() {
         if (auth_quickaclcheck( getNS( $this->params[MediaKeys::KEY_IMAGE_ID] ) . ":*" )< AUTH_DELETE) {
             throw new HttpErrorCodeException("Access denied", 401);
         }
@@ -86,11 +77,11 @@ class DeleteMediaAction extends MediaAction{
     protected function initModel() {
         $this->dokuModel->init($this->params[MediaKeys::KEY_IMAGE_ID], $this->params[MediaKeys::KEY_REV], $this->params[MediaKeys::KEY_META], $this->params[PageKeys::KEY_ID], $this->params[MediaKeys::KEY_NS_TARGET]);
     }
-    
+
     function mediaManagerFileList(){
         global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT, $AUTH;
         $fullscreen = TRUE;
-        
+
         ob_start();
 
         $rev = '';
@@ -128,7 +119,7 @@ class DeleteMediaAction extends MediaAction{
         echo '</div>' . NL;
         echo '</div>' . NL;
         echo '</div>' . NL;
-        
+
         return ob_get_clean();
     }
 

@@ -16,13 +16,8 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocModelManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/PageKeys.php";
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 
-/**
- * Description of PageAction
- *
- * @author josep
- */
 class NotifyAction extends AbstractWikiAction
 {
     const DO_INIT = "init";
@@ -37,7 +32,7 @@ class NotifyAction extends AbstractWikiAction
 
     /*
      * NO CAL. Ho deixo per il·lustrar com mentenir constants amb un únic orígen de dades, sense necessitat de conèixer la seva classe.
-     
+
     static $TYPE_ALERT;
     static $TYPE_MESSAGE;
     static $TYPE_DIALOG;
@@ -59,7 +54,7 @@ class NotifyAction extends AbstractWikiAction
        
         /*
         $notifyClass = $persistenceEngine->getNotifyDataQueryClass();
-        
+
         self::$TYPE_ALERT = $notifyClass::TYPE_ALERT;
         self::$TYPE_MESSAGE = $notifyClass::TYPE_MESSAGE;
         self::$TYPE_DIALOG = $notifyClass::TYPE_DIALOG;

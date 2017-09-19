@@ -8,11 +8,10 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/documentation/datamodel/ProjectModel.php";
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/ProjectKeys.php";
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/ProjectKeys.php";
 
-class ProjectMetadataAction extends AbstractWikiAction {
-    
-    const defaultSubSet = 'main';
+abstract class ProjectMetadataAction extends AbstractWikiAction {
+
     protected $persistenceEngine;
     protected $projectModel;
 
@@ -21,6 +20,9 @@ class ProjectMetadataAction extends AbstractWikiAction {
         $this->projectModel = new ProjectModel($persistenceEngine);
     }
 
-    public function get( $paramsArr=array() ) {}
-    
+    protected function idToRequestId($requestId) {
+        $id = str_replace(":", "_", $requestId);
+        return $id;
+    }
+
 }

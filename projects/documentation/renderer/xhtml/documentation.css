@@ -1,0 +1,34 @@
+@import url("../../../../renderer/basic.css") screen;
+
+/* --- html styles -------------------------------------------*/
+.dokuwiki h1, .dokuwiki h2, .dokuwiki h3, .dokuwiki h4, .dokuwiki h5{
+  clear:left;
+  width:73%;
+}
+.ioctextl, .iocexample, .iocimportant, .iocquote, .iocfigure, .ioctable, .iocaccounting{
+  width:73% !important;
+}
+
+div.level1, div.level2, div.level3, div.level4{
+  float:none !important;
+}
+
+.level1 p, .level2 p, .level3 p, .level4 p, .level5 p, .level1 ol, .level2 ol, .level3 ol, .level4 ol, .level5 ol, .level1 ul, .level2 ul, .level3 ul, .level4 ul, .level5 ul{
+  width:73% !important;
+}
+
+/* --- footnotes ------------------------------------------- */
+div.dokuwiki div.footnotes {
+  clear: both;
+  border-top: 1px solid #8cacbb;
+  padding-left: 1em;
+  margin-top: 1em;
+}
+
+div.dokuwiki div.fn {
+  font-size: 90%;
+}
+
+div.dokuwiki a.fn_bot {
+  font-weight: bold;
+}

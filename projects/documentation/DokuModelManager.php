@@ -1,7 +1,7 @@
 <?php
 /**
  * DokuModelManager:
- * - proporciona autorizaciones y ModelWrapper
+ * - proporciona acceso a las Autorizaciones, ModelWrapper y Renderer del proyecto
  * - define las rutas de las clases y las clases por defecto necesarias para este proyecto
  * @author Rafael Claver
  */
@@ -17,25 +17,32 @@ require_once(WIKI_IOC_MODEL . 'BasicModelAdapter.php');
 require_once(WIKI_IOC_PROJECTS . 'documentation/DocumentationModelExceptions.php');
 
 class DokuModelManager extends WikiIocModelManager{
-    
-    const DEF = WIKI_IOC_MODEL;
+
+    const MOD = WIKI_IOC_MODEL;
+    const DEF = WIKI_IOC_PROJECTS . 'defaultProject/';
     const PRJ = WIKI_IOC_PROJECTS . 'documentation/';
-    
+
     static $defDirClass = array (
-                //"Authorization" => array(self::PRJ."authorization")
-                //,"Action" => se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
-                //,"Model" =>  se anula porque los ficheros de esta clase NO están en un directorio ajeno a este proyecto
+               'Authorization' => array(self::DEF."authorization/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
+               'Action'        => array(self::DEF."actions/", self::DEF."actions/extra/"),
+               'Model'         => array(self::MOD."datamodel"),
+               'Renderer'      => array(self::PRJ."renderer")
            );
     static $defMainClass = array(
-                "DokuModelAdapter" => self::DEF."BasicModelAdapter.php",
-                "FactoryAuthorization" => self::PRJ."authorization/FactoryAuthorization.php"
+               'DokuModelAdapter'     => self::MOD."BasicModelAdapter.php",
+               'FactoryAuthorization' => self::PRJ."authorization/FactoryAuthorization.php",
+               'FactoryRenderer'      => self::PRJ."renderer/FactoryRenderer.php"
            );
 
     public function __construct() {}
 
     public function getAuthorizationManager($str_command) {
-        $factory = \FactoryAuthorization::Instance();
+        $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
         return $factory->createAuthorizationManager($str_command);
+    }
+
+    public function getRendererManager() {
+        return \FactoryRenderer::Instance(self::$defDirClass['Renderer']);
     }
 
     public function getModelWrapperManager() {

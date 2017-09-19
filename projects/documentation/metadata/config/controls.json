@@ -1,0 +1,77 @@
+{
+    "trifids": {
+        "class": "WikiIocButton",
+        "parms": { 
+            "DOM": {
+               "id": "trifids",
+               "title": "trifids",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportPdfIcon'",
+               "urlBase": "'lib/plugins/ajaxcommand/ajax.php?call=view'",
+               "disableOnSend": true
+            }
+        },
+
+        "scripts": {
+            "getFunctions": {
+                "path": "trifidsGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action":"'form'"
+                }
+            }
+        }
+
+    },
+    "lampreas": {
+        "class": "WikiIocButton",
+        "parms": {
+            "DOM": {
+               "id": "lampreas",
+               "title": "lampreas",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportHtmlIcon'",
+               "urlBase": "'lib/plugins/ajaxcommand/ajax.php?call=projectrender'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+       
+        "scripts": {
+            "getFunctions": {
+                "path": "lampreasGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action":"'form'"
+                }
+            }
+        }
+    }
+}

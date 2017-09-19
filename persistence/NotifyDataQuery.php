@@ -134,11 +134,20 @@ class NotifyDataQuery extends DataQuery
 
     }
 
-    public function add($receiverId, $notification) {
+    public function add($receiverId, $notification, $replaceById=FALSE) {
 
 
         $this->loadBlackboard($receiverId);
-        $this->blackboard[$receiverId][] = $notification;
+        if($replaceById){
+            $pos = $this->searchNotificationIndexInBlackboard($notification[self::NOTIFICATION_ID], $this->blackboard[$receiverId]);
+            if($pos!==NULL){
+                $this->blackboard[$receiverId][$pos] = $notification;
+            }else{
+                $this->blackboard[$receiverId][] = $notification;
+            }
+        }else{
+            $this->blackboard[$receiverId][] = $notification;
+        }
         $this->saveBlackboard($receiverId);
     }
 
@@ -152,9 +161,12 @@ class NotifyDataQuery extends DataQuery
         }
 
 
-        if ($since > 0) {
+//        if ($since > 0) {
             $messages = $this->getMessagesSince($messages, $since);
-        }
+//        }else{
+//            $messages = array_unshift($messages, "");
+//            $messages = array_shift($messages);
+//        }
 
 // ALERTA[Xavi] codi de prova, per generar un avís del sistema que expira en 20 segons
 //        $this->delete(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel')); // ALERTA[Xavi] Això només s'ha de descomentar per esborrar la pissara completament
@@ -174,7 +186,7 @@ class NotifyDataQuery extends DataQuery
 
         return array_merge($messages, $systemGlobalMessages);
     }
-
+    
     private function getMessagesSince($messages, $since)
     {
         $filteresMessages = [];
@@ -182,7 +194,7 @@ class NotifyDataQuery extends DataQuery
         for ($i = count($messages)-1; $i >= 0; $i--) {
             if ($messages[$i][self::TIMESTAMP] > $since) {
                 $filteresMessages[] = $messages[$i];
-            } else {
+            } elseif($messages[$i]!=NULL) {
                 break; // totes les notificacions anteriors son més antigues, no cal continuar cercant
             }
         }

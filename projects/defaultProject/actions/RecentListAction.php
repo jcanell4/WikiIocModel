@@ -6,7 +6,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once DOKU_INC . "inc/changelog.php";
 require_once DOKU_INC . "inc/html.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/RequestParameterKeys.php";
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/RequestParameterKeys.php";
 
 /*
  * To change this license header, choose License Headers in Project Properties.

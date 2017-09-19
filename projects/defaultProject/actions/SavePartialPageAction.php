@@ -21,82 +21,34 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
  *
  * @author josep
  */
-class SavePartialPageAction extends SavePageAction
-{
-    public function __construct(/*BasicPersistenceEngine*/
-        $engine)
-    {
+class SavePartialPageAction extends SavePageAction{
+     
+    public function __construct(/*BasicPersistenceEngine*/ $engine) {
         parent::__construct($engine);
         $this->defaultDo = DW_ACT_SAVE;
     }
-
-    protected function startProcess()
-    {
+    
+    protected function startProcess() {
         parent::startProcess();
         // $editing=NULL, $selected=NULL, $rev = null)
-        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID],
-            $this->params[PageKeys::KEY_EDITING_CHUNKS],
-            $this->params[PageKeys::KEY_SECTION_ID],
-            $this->params[PageKeys::KEY_REV]);
+        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], 
+                $this->params[PageKeys::KEY_EDITING_CHUNKS],
+                $this->params[PageKeys::KEY_SECTION_ID],
+                $this->params[PageKeys::KEY_REV]);     
     }
 
-    protected function runProcess()
-    {
+    protected function runProcess() {
         parent::runProcess();
         $this->getModel()->removeChunkDraft($this->params[PageKeys::KEY_SECTION_ID]);
-//        $this->updateLock();
         $this->lockStruct = $this->updateLock();
     }
 
-    protected function responseProcess()
-    {
-//        $response =  parent::responseProcess();
-        //$response['structure'] = $this->getStructuredDocument($selected, $pid, $prev, $editing_chunks);
-        $response = array_merge($response = parent::responseProcess(), $this->getModel()->getData());
+    protected function responseProcess(){
 
-
-//        if ($response['code'] == "cancel_document") {
-
-            // ALERTA[Xavi] Arriben dades de SavePageAction! En aquest cas ens interesa el ID (amb les _ )
-            // Els params del $response['cancel_params'] es generan al SavePageAction
-
-
-//            $response['cancel_params']['id'] = $response["structure"]["id"];
-
-
-//                'call' => 'cancel_partial',
-//                'discard_changes' => true,
-//                'section_id' => $this->params[PageKeys::KEY_SECTION_ID],
-//                'editing_chunks' => $this->params[PageKeys::KEY_IN_EDITING_CHUNKS],
-            /*, 'do' => 'cancel_partial'*/
-
-//                eventManager.fireEvent(eventManager.eventName.CANCEL, {
-//             id: this.ns,
-//             name: eventManager.eventName.CANCEL,
-//             // dataToSend: "cancel=true"
-//         }, this.id);
-
-
-//            if ($this->params['cancel_all'] === true) {
-
-//                $response['cancel_params']['call'] = 'cancel';
-//            } else {
-//                $response['cancel_params']['event'] = 'cancel_partial';
-////                $response['cancel_params']['call'] = 'cancel_partial';
-//            }
-
-//            $response['cancel_params']['event'] = 'cancel';
-//            if ($this->params['close']) {
-//                $response['cancel_params']['data']['close'] =$this->params['close'];
-//                $response['cancel_params']['data']['no_response'] = true;
-//            }
-
-
-//        } else {
+           $response = array_merge($response =  parent::responseProcess(), $this->getModel()->getData());
 
             if ($this->params[pageKeys::KEY_CANCEL]) {
 
-//                $response['code'] = "cancel_document";
                 $response['cancel_params'] = [
                     'id' => str_replace(":", "_", $this->params[PageKeys::KEY_ID]),
                     'dataToSend' => ['discard_changes' => true],
@@ -106,19 +58,9 @@ class SavePartialPageAction extends SavePageAction
                 ];
                 $response['cancel_params']['event'] = 'cancel_partial';
 
-                // ALERTA[Xavi] No es pot tancar en una edició parcial individual
-//                if ($this->params['close']) {
-//                    $response['cancel_params']['data']['close'] =$this->params['close'];
-//                    $response['cancel_params']['data']['no_response'] = true;
-//                }
-
-
                 if (isset($this->params['keep_draft'])) {
                     $response['cancel_params']['dataToSend']['keep_draft'] = $this->params['keep_draft'];
                 }
-
-
-//
             }
             // TODO: afegir el 'info' que correspongui
             if (!$response['info']) {
@@ -134,9 +76,7 @@ class SavePartialPageAction extends SavePageAction
 
             $response['revs'] = $this->getRevisionList();
             $response["lockInfo"] = $this->lockStruct["info"];
-//        }
 
-
-        return $response;
+            return $response;
     }
 }

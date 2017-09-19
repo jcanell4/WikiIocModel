@@ -1,8 +1,8 @@
 <?php
 /**
- * CreateProjectAuthorization: Extensión clase Autorización para los comandos 
+ * CreateProjectAuthorization: Extensión clase Autorización para los comandos
  * que precisan una autorización mínima de AUTH_CREATE y que el usuario sea del grupo "admin" o "projectmanager"
- * 
+ *
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
@@ -27,6 +27,6 @@ class CreateProjectAuthorization extends CommandAuthorization {
                 }
             }
         }
-        return !$this->errorAuth['error'];        
+        return !$this->errorAuth['error'];
     }
 }

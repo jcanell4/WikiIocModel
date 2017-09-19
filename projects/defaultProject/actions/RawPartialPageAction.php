@@ -1,55 +1,38 @@
 <?php
-
-
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+/**
+ * Description of RawPartialPageAction
+ * @author josep
+ */
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+if (!defined('WIKI_IOC_DEFAULT_PROJECT')) define('WIKI_IOC_DEFAULT_PROJECT', DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/');
 
 require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/template.php');
 require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
-require_once(DOKU_PLUGIN . 'ajaxcommand/requestparams/PageKeys.php');
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
+require_once WIKI_IOC_DEFAULT_PROJECT . "actions/PageAction.php";
+require_once WIKI_IOC_DEFAULT_PROJECT . "DokuModelExceptions.php";
 
-if (!defined('DW_ACT_EDIT')) {
-    define('DW_ACT_EDIT', "edit");
-}
+if (!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
+if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
+if (!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
 
-if (!defined('DW_ACT_DENIED')) {
-    define('DW_ACT_DENIED', "denied");
-}
-
-if (!defined('DW_DEFAULT_PAGE')) {
-    define('DW_DEFAULT_PAGE', "start");
-}
-
-/**
- * Description of RawPageAction
- *
- * @author josep
- */
 class RawPartialPageAction extends PageAction implements ResourceLockerInterface, ResourceUnlockerInterface
 {
     private $lockStruct;
 
-    public function __construct(/*BasicPersistenceEngine*/
-        $engine)
-    {
+    public function __construct(BasicPersistenceEngine $engine) {
         parent::__construct($engine);
         $this->defaultDo = DW_ACT_EDIT;
     }
 
-    protected function startProcess()
-    {
+    protected function startProcess() {
         parent::startProcess();
 
         // TODO[Xavi] Actualitzar al client les crides dels esborranys per fer servir el KEY_DO
@@ -84,7 +67,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
     protected function runProcess()
     {
         if (!WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS)) {
-            throw new PageNotFoundException($this->params[PageKeys::KEY_ID], 'pageNotFound');
+            throw new PageNotFoundException($this->params[PageKeys::KEY_ID]);
         }
 
         $ACT = act_permcheck($this->defaultDo);
@@ -114,11 +97,6 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             $response = $this->_getLocalDraftResponse($data);
 
-            // ALERTA[Xavi] Afegit per enviar el contingut actual i determinar si hi ha canvis a l'esborrany
-            //$response['content'] = ???;
-
-
-
         } else if($this->lockState()==ST_LOCKED_BEFORE){
             //-1 L'usuari te obert el document en una altra sessio
 
@@ -135,9 +113,6 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
             if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === TRUE) {
 
                 $response = $this->_getDraftResponse($data);
-                // ALERTA[Xavi] Afegit per enviar el contingut actual i determinar si hi ha canvis a l'esborrany
-                //$response['content'] = ???;
-
 
                 // 2.2) Es troba desbloquejat?
             } else if (!$data['structure']['locked']) { //
@@ -150,7 +125,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
                     // 2.2.1) Es generarà el dialog de draft pertinent, o el document si no hi ha cap draft per enviar
                    $response = $this->_getDialogOrDocumentResponse($data);
-                    
+
                    if($this->params[PageKeys::KEY_TO_REQUIRE]){
                         // TODO: afegir el 'meta' que correspongui perquè si ve del requiring dialog, el content tool es crerà de nou 
 //                       $response['meta'][] = $this->addMetaTocResponse();
@@ -174,10 +149,6 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             }
         }
-
-//        if ($this->params([PageKeys::DISCARD_CHANGES])) {
-//            $response['structured']['discard_changes'] = $this->params([PageKeys::DISCARD_CHANGES]);
-//        }
 
         $response["lockInfo"] = $this->lockStruct["info"];
 
@@ -329,7 +300,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
                 $fullLastSavedDraftTime = $this->dokuPageModel->getFullDraftDate();
                 if ($fullLastLocalDraftTime > $fullLastSavedDraftTime) { // local es més recent
                     $draftInfo ['local'] = true;
-                    $draftInfo ['draftType'] = DokuPageModel::LOCAL_FULL_DRAFT;
+                    $draftInfo ['draftType'] = PageKeys::LOCAL_FULL_DRAFT;
                 }
 
                 // ALERTA[Xavi] QUE FEM: Igual que l'anterior però amb STRUCTURED LOCAL
@@ -340,7 +311,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
                 if ($structuredLastLocalDraftTime > $structuredLastSavedDraftTime) { // local es més recent
                     $draftInfo ['local'] = true;
-                    $draftInfo ['draftType'] = DokuPageModel::LOCAL_PARTIAL_DRAFT;
+                    $draftInfo ['draftType'] = PageKeys::LOCAL_PARTIAL_DRAFT;
                 }
             }
 
@@ -362,12 +333,9 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         return $response;
     }
 
-    private function _getDocumentResponse($data)
-    {
+    private function _getDocumentResponse($data) {
         $response = $data;
         $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
-
-
         return $response;
     }
 
@@ -376,23 +344,22 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         $draftInfo = $this->_getDraftInfo($data);
 
         switch ($draftInfo['draftType']) {
-
             // Conflicte de drafts
-            case DokuPageModel::LOCAL_FULL_DRAFT:
-            case DokuPageModel::FULL_DRAFT:
+            case PageKeys::LOCAL_FULL_DRAFT:
+            case PageKeys::FULL_DRAFT:
                 // Conflict
                 $response = $this->_getConflictDialogResponse($data);
                 break;
 
             // Existeix un draft parcial
-            case DokuPageModel::LOCAL_PARTIAL_DRAFT:
-            case DokuPageModel::PARTIAL_DRAFT:
+            case PageKeys::LOCAL_PARTIAL_DRAFT:
+            case PageKeys::PARTIAL_DRAFT:
                 $response = $this->_getDraftDialogResponse($data);
                 $response['local'] = $draftInfo['local'];
                 break;
 
             // No hi ha draft, es mostrarà el document
-            case DokuPageModel::NO_DRAFT:
+            case PageKeys::NO_DRAFT:
                 $response = $this->_getDocumentResponse($data);
                 break;
 
@@ -415,8 +382,6 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
     private function _getSelfLockedDialog($data)
     {
         $resp = $this->_getDialogOrDocumentResponse($data);
-//        $resp = $this->_getDocumentResponse($data);
-
         $resp["structure"]["locked_before"]=true;
 //        $resp['structure']['locked'] = true;
 

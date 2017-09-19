@@ -17,6 +17,6 @@ abstract class AbstractPermissionPageForUserManager {
 
     abstract static function deletePermissionPageForUser( $page, $user );
     
-    abstract static function updatePermission( $permission );
+    abstract static function updatePagePermission( $permission );
 
 }

@@ -1,11 +1,10 @@
 <?php
-
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+/**
+ * Description of MediaAction
+ * @author josep
+ */
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
@@ -13,13 +12,8 @@ require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/datamodel/DokuMediaModel.php";
-require_once DOKU_PLUGIN . "ajaxcommand/requestparams/MediaKeys.php";
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/MediaKeys.php";
 
-/**
- * Description of PageAction
- *
- * @author josep
- */
 abstract class MediaAction extends DokuAction
 {
     protected $dokuModel;
@@ -37,7 +31,7 @@ abstract class MediaAction extends DokuAction
      * wiki a partir dels valors de DokuAction#params.
      */
     abstract protected function initModel();
-    
+
     protected function startProcess()
     {
         global $ID;
@@ -58,11 +52,11 @@ abstract class MediaAction extends DokuAction
             $this->params[MediaKeys::KEY_FROM_ID] = $this->params[MediaKeys::KEY_ID];
         }
         $ID = $this->params[MediaKeys::KEY_ID];
-        
+
         if ($this->params[MediaKeys::KEY_REV]) {
             $REV = $this->params[MediaKeys::KEY_REV];
         }
-        
+
         if($this->params[MediaKeys::KEY_IMAGE_ID]){
             $IMG = $this->params[MediaKeys::KEY_IMG_ID] = $this->params[MediaKeys::KEY_IMAGE_ID];
             $SRC = mediaFN($this->params[MediaKeys::KEY_IMAGE_ID]);
@@ -70,26 +64,26 @@ abstract class MediaAction extends DokuAction
             $IMG = $this->params[MediaKeys::KEY_IMAGE_ID] = $this->params[MediaKeys::KEY_IMG_ID];
             $SRC = mediaFN($this->params[MediaKeys::KEY_IMAGE_ID]);
         }
-        
+
         if($this->params[MediaKeys::KEY_DELETE]){
             $DEL = $this->params[MediaKeys::KEY_DELETE];
             if(!$this->params[MediaKeys::KEY_IMAGE_ID]){
                 $IMG = $this->params[MediaKeys::KEY_IMG_ID] = $this->params[MediaKeys::KEY_IMAGE_ID]=$this->params[MediaKeys::KEY_DELETE];
             }
-        }else if($this->params[MediaKeys::KEY_MEDIA_DO] 
+        }else if($this->params[MediaKeys::KEY_MEDIA_DO]
                 && $this->params[MediaKeys::KEY_MEDIA_DO]=  MediaKeys::KEY_DELETE
                 && $this->params[MediaKeys::KEY_IMAGE_ID]){
             $DEL = $this->params[MediaKeys::KEY_IMAGE_ID];
         }
-        
+
         if($this->params[MediaKeys::KEY_MEDIA_ID] && !$this->params[MediaKeys::KEY_MEDIA_NAME]){
             $this->params[MediaKeys::KEY_MEDIA_NAME] = $this->params[MediaKeys::KEY_MEDIA_ID];
         }elseif($this->params[MediaKeys::KEY_MEDIA_NAME] && !$this->params[MediaKeys::KEY_MEDIA_ID]){
             $this->params[MediaKeys::KEY_MEDIA_ID] = $this->params[MediaKeys::KEY_MEDIA_NAME];
         }
-        
+
         $this->initModel();
-        
+
         $NS = $this->params[MediaKeys::KEY_NS] = $this->dokuModel->getNS();
     }
 
@@ -108,7 +102,7 @@ abstract class MediaAction extends DokuAction
 //        unset($mEvt);
 //        return $ret;
 //    }
-    
+
     function mediaManagerFileList(){
         $content = "";
 //        global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT, $AUTH;
@@ -153,9 +147,9 @@ abstract class MediaAction extends DokuAction
         $content .= '</div>' . NL;
         $content .= '</div>' . NL;
         $content .= '</div>' . NL;
-        
+
         return $content;
     }
 
-    
+
 }
