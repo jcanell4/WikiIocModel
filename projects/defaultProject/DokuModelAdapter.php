@@ -1942,47 +1942,8 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $loginname;
     }
 
-    public function getRevisions($id)
-    {
-        //[TODO Josep] Normalitzar: start do get ...
-        global $ID;
-        global $ACT;
 
-        // START
-        // Només definim les variables que es passen per paràmetre, la resta les ignorem
 
-        $ACT = 'revisions';
-
-        $this->triggerStartEvents();
-        session_write_close();
-
-        $content = "";
-        if ($this->runBeforePreprocess($content)) {
-            act_permcheck($ACT);
-        }
-
-        $this->runAfterPreprocess($content);
-
-        $this->startUpLang();
-
-        // DO real
-
-        $revisions = getRevisions($ID, -1, 50);
-
-        $ret = [];
-
-        foreach ($revisions as $revision) {
-            $ret[$revision] = getRevisionInfo($ID, $revision);
-            $ret[$revision]['date'] = $this->extractDateFromRevision($ret[$revision]['date']);
-            //unset ($ret[$revision]['id']);
-        }
-        $ret['current'] = @filemtime(wikiFN($ID));
-        $ret['docId'] = $ID;
-
-        $this->triggerEndEvents();
-
-        return $ret;
-    }
 
     /**
      * Extreu la data a partir del nombre de revisió
@@ -2894,6 +2855,8 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $response;
     }
 
+
+
 //    public function checklock($pid)
 //    {
 //        //[ALERTA JOSEP] Cal passar checklock a LockDataQuery i fer la crida des d'allà
@@ -2904,6 +2867,61 @@ class DokuModelAdapter extends BasicModelAdapter {
     {
         $action = new DraftPageAction($this->persistenceEngine);
         $ret = $action->get($params);
+        return $ret;
+    }
+
+    public function getRevisionsList($params) {
+        $action = new RevisionsListAction($this->persistenceEngine);
+        $ret = $action->get($params);
+        return $ret;
+    }
+
+    /**
+     * S'ha de fer servir getRevisionsList en lloc d'aquest
+     *
+     * @deprecated
+     * @param $id
+     * @return array
+     */
+    public function getRevisions($id)
+    {
+        //[TODO Josep] Normalitzar: start do get ...
+        global $ID;
+        global $ACT;
+
+        // START
+        // Només definim les variables que es passen per paràmetre, la resta les ignorem
+
+        $ACT = 'revisions';
+
+        $this->triggerStartEvents();
+        session_write_close();
+
+        $content = "";
+        if ($this->runBeforePreprocess($content)) {
+            act_permcheck($ACT);
+        }
+
+        $this->runAfterPreprocess($content);
+
+        $this->startUpLang();
+
+        // DO real
+
+        $revisions = getRevisions($ID, -1, 50);
+
+        $ret = [];
+
+        foreach ($revisions as $revision) {
+            $ret[$revision] = getRevisionInfo($ID, $revision);
+            $ret[$revision]['date'] = $this->extractDateFromRevision($ret[$revision]['date']);
+            //unset ($ret[$revision]['id']);
+        }
+        $ret['current'] = @filemtime(wikiFN($ID));
+        $ret['docId'] = $ID;
+
+        $this->triggerEndEvents();
+
         return $ret;
     }
 

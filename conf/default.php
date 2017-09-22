@@ -70,3 +70,6 @@ $conf['projects']['defaultProject']['templates'][19]['name']="formacio_guia";
 $conf['projects']['defaultProject']['templates'][19]['path']="formacio:brevert:guia";
 $conf['projects']['defaultProject']['templates'][20]['name']="formacio_revisions";
 $conf['projects']['defaultProject']['templates'][20]['path']="formacio:brevert:revisions";
+
+// Revisions
+$conf['revision-lines-per-page'] = 50;

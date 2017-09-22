@@ -128,17 +128,31 @@ class PageDataQuery extends DataQuery {
         return $instructions;
     }
     
-     public function getRevisionList($id){
-        $revisions = getRevisions($id, -1, 200);
+     public function getRevisionList($id, $offset = -1){
+        $amount = WikiGlobalConfig::getConf('revision-lines-per-page', 'wikiiocmodel');
+
+        $revisions = getRevisions($id, $offset, $amount + 1 );
 
         $ret = [];
+
+         if (count($revisions)>$amount) {
+             $ret['show_more_button'] = true;
+             array_pop($revisions);
+         }
 
         foreach ($revisions as $revision) {
             $ret[$revision] = getRevisionInfo($id, $revision);
             $ret[$revision]['date'] =  WikiPageSystemManager::extractDateFromRevision($ret[$revision]['date']);
         }
+
+
+
         $ret['current'] = @filemtime(wikiFN($id));
         $ret['docId'] = $id;
+        $ret['position'] = $offset;
+        $ret['amount'] = $amount;
+
+
         return $ret;
     }
 }
