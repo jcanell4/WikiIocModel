@@ -45,24 +45,17 @@ class HtmlPageAction extends RenderedPageAction{
         }
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet generar la resposta a enviar al client. Aquest
-     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
-     * DokuAction#response.
-     */
     protected function responseProcess(){
-//        $response = array();
-        
         $response = parent::responseProcess();
-        
-        // TODO: afegir el 'info' que correspongui
 
-        // Si no s'ha especificat cap altre missatge mostrem el de carrega
+        $key_msg = ($response['draftType']=="full") ? "draft_found" : (($response['draftType']=="structured") ? "partial_draft_found" : "document_loaded");
+        $msg = $this->generateInfo("info", WikiIocLangManager::getLang($key_msg), $this->params[PageKeys::KEY_ID]);
+
+        // Si no s'ha especificat cap altre missatge mostrem el de càrrega
         if (!$response['info']) {
-            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded'), $this->params[PageKeys::KEY_ID]);
+            $response['info'] = $msg;
         }else {
-            $this->addInfoToInfo($response['info'], $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded'), $this->params[PageKeys::KEY_ID]));
+            $response['info'] = $this->addInfoToInfo($response['info'], $msg);
         }
 
         return $response;
