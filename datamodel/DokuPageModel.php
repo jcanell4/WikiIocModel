@@ -130,8 +130,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
         return $toc;
     }
 
-    public function getRevisionList() {
-        return $this->pageDataQuery->getRevisionList($this->id);
+    public function getRevisionList($offset = -1) {
+        return $this->pageDataQuery->getRevisionList($this->id, $offset);
     }
 
     public function getPageDataQuery() {

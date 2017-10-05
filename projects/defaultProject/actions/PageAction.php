@@ -124,7 +124,7 @@ abstract class PageAction extends DokuAction {
         $extra = array();
         $mEvt = new Doku_Event('WIOC_ADD_META_REVISION_LIST', $extra);
         if ($mEvt->advise_before()) {
-            $ret = $this->getModel()->getRevisionList();
+            $ret = $this->getModel()->getRevisionList($this->params[PageKeys::KEY_OFFSET]);
         }
         $mEvt->advise_after();
         unset($mEvt);
