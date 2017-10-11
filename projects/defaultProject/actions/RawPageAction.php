@@ -116,7 +116,8 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
                 // ALERTA[Xavi] Afegit per enviar el contingut actual i determinar si hi ha canvis a l'esborrany
                 $response['content'] = $this->getModel()->getRawData()['content'];
             } else { //
-                $rawData = $this->getModel()->getRawData();
+                //WARNING [Rafa] getRawData() debería devolver LOCAL_FULL_DRAFT o LOCAL_PARTIAL_DRAFT
+                $rawData = $this->getModel()->getRawData(); //recoge los datos del almacenamiento local del cliente
                 $rawData["draftType"] = $this->_getDraftType($rawData["draftType"]);
                 // 3) No hi ha draft
                 if ($rawData["draftType"] == PageKeys::NO_DRAFT
@@ -142,7 +143,6 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
         $response["lockInfo"] = $this->lockStruct["info"];
 
         // ALERTA: Control d'edició per revisions
-
         if ($response['rev']) {
             // ALERTA[Xavi] Les revisións no bloquejan el document. Per altra banda afegeixen un suffix al id per diferenciar-se del document original
             $response['id'] .= PageAction::REVISION_SUFFIX;
@@ -448,6 +448,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
         }
         $fullLastSavedDraftTime = $this->dokuPageModel->getFullDraftDate();
         $structuredLastSavedDraftTime = $this->dokuPageModel->getStructuredDraftDate();
+        //WARNING [Rafa] Está preguntando por FULL_LAST_LOCAL_DRAFT_TIME pero puede estar recibiendo STRUCTURED_LAST_LOCAL_DRAFT_TIME
         $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
 
         // Només pot existir un dels dos, i el draft que arriba aquí ja es el complet si existeix algun dels dos

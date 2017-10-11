@@ -68,8 +68,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
     public function getViewData() {
         $ret['structure'] = self::getStructuredDocument($this->pageDataQuery, $this->id,
             $this->editing, $this->selected,
-            $this->rev);
-        if ($this->draftDataQuery->hasAny($this->id)) {
+            $this->rev);    //recoge el documeto original y lo estructura
+        if ($this->draftDataQuery->hasAny($this->id)) { //recoge, si existe, el borrador full o structured del servidor
             $ret['draftType'] = PageKeys::FULL_DRAFT;
             $ret['draft'] = $this->getDraftAsFull();
         }
@@ -328,7 +328,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
         }
     }
 
-    
+
     // Només son editables parcialment les seccions de nivell 1, 2 i 3
     private static function getChunks($pageDataQuery, $id, $rev = NULL) {
         $instructions = $pageDataQuery->getInstructions($id, $rev);

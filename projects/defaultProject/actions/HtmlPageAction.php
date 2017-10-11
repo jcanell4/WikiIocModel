@@ -48,12 +48,11 @@ class HtmlPageAction extends RenderedPageAction{
     protected function responseProcess(){
         $response = parent::responseProcess();
 
-        $key_msg = ($response['draftType']=="full") ? "draft_found" : (($response['draftType']=="structured") ? "partial_draft_found" : "document_loaded");
+        $key_msg = ($response['draftType']=="full") ? "load_and_draft_found" : (($response['draftType']=="structured") ? "load_and_partial_draft_found" : "document_loaded");
         $msg = $this->generateInfo("info", WikiIocLangManager::getLang($key_msg), $this->params[PageKeys::KEY_ID]);
 
-        // Si no s'ha especificat cap altre missatge mostrem el de càrrega
         if (!$response['info']) {
-            $response['info'] = $msg;
+            $response['info'] = $msg;   //Si no s'ha especificat cap altre missatge mostrem el de càrrega
         }else {
             $response['info'] = $this->addInfoToInfo($response['info'], $msg);
         }
