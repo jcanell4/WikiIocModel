@@ -1,0 +1,101 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10, 
+        "rows_row": 1
+    },
+    "groups": {
+        "main": {
+            "parent": "",
+            "label": "Principal",
+            "n_columns": 5,
+            "n_rows": 4,
+            "frame": true
+        },
+        "dades": {
+            "parent": "",
+            "label": "Dades generals",
+            "n_columns": 7,
+            "n_rows": 4,
+            "frame": true
+        },
+        "jaja": {
+            "parent": "",
+            "label": "jaja_tats",
+            "n_columns": 6,
+            "n_rows": 1,
+            "frame": false
+        },
+        "admin": {
+            "parent": "dades",
+            "label": "dades d'administració",
+            "n_columns": 10,
+            "n_rows": 1,
+            "frame": true
+        },
+        "moduls": {
+            "parent": "",
+            "label": "moduls",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true
+        },
+        "unitats": {
+            "parent": "moduls",
+            "label": "unitats",
+            "n_columns": 6,
+            "n_rows": 1,
+            "frame": true
+        },
+        "apartats": {
+            "parent": "unitats",
+            "label": "apartats",
+            "n_columns": 6,
+            "n_rows": 1,
+            "frame": false
+        }
+    },
+    "fields": {
+        "nsproject": {
+          "type": "hidden",
+          "props": {"readonly":true}
+        },
+        "responsable": {
+          "n_columns": 6,
+          "group": "admin",
+          "props": {"required":true}
+        },
+        "autor": {
+          "n_columns": 6,
+          "group": "admin",
+          "props": {"required":true}
+        },
+        "titol": {
+          "mandatory": true,
+          "props": {"required":true}
+        },
+        "plantilla": {
+          "n_columns": 5,
+          "group": "dades",
+          "props": {"readonly":true}
+        },
+        "fitxercontinguts": {
+          "label": "ruta de l'arxiu de continguts",
+          "n_columns": 5,
+          "group": "dades",
+          "props": {"readonly":true}
+        },
+        "descripcio": {
+          "n_columns": 7
+        },
+        "unitat#title": {
+          "n_columns": 6,
+          "group": "unitats"
+        },
+        "unitat#autor": {
+          "n_columns": 6,
+          "group": "unitats"
+        }
+    }
+}

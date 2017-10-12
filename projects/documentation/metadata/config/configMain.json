@@ -13,20 +13,15 @@
             "main": "meta.mdpr",
             "mainType": {
                 "type": "object",
-                "typeDef": "material"
+                "typeDef": "document"
             },
             "typesDefinition": {
-                "material": {
+                "document": {
                     "type": "object",
                     "keys": {
                         "autor": {
                             "type": "string",
                             "mandatory": true
-                        },
-                        "blocs": {
-                            "type": "array",
-                            "mandatory": false,
-                            "itemsType": "bloc"
                         },
                         "descripcio": {
                             "type": "string",
@@ -55,46 +50,6 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "Dades generals del projecte"
-                        },
-                        "unitat":{
-                            "type": "object",
-                            "typeDef": "unitat"
-                        }
-                    }
-                },
-                "bloc": {
-                    "type": "array",
-                    "itemsType": "unitat"
-                },
-                "unitat": {
-                    "type": "object",
-                    "keys": {
-                        "title": {
-                            "type": "string",
-                            "mandatory": false
-                        },
-                        "autor": {
-                            "type": "string",
-                            "mandatory": false
-                        },
-                        "apartats": {
-                            "type": "array",
-                            "mandatory": true,
-                            "itemsType": "apartat"
-                        }
-                    }
-                },
-                "apartat": {
-                    "type": "object",
-                    "keys": {
-                        "title": {
-                            "type": "string",
-                            "mandatory": false
-                        },
-                        "autor": {
-                            "type": "string",
-                            "mandatory": false,
-                            "inherit": true
                         }
                     }
                 }

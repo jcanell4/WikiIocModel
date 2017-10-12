@@ -10,22 +10,15 @@
             "parent": "",
             "label": "Principal",
             "n_columns": 5,
-            "n_rows": 4,
+            "n_rows": 5,
             "frame": true
         },
         "dades": {
             "parent": "",
             "label": "Dades generals",
             "n_columns": 7,
-            "n_rows": 4,
+            "n_rows": 5,
             "frame": true
-        },
-        "jaja": {
-            "parent": "",
-            "label": "jaja_tats",
-            "n_columns": 6,
-            "n_rows": 1,
-            "frame": false
         },
         "admin": {
             "parent": "dades",
@@ -34,26 +27,12 @@
             "n_rows": 1,
             "frame": true
         },
-        "moduls": {
+        "files": {
             "parent": "",
-            "label": "moduls",
+            "label": "fitxers del projecte",
             "n_columns": 12,
             "n_rows": 1,
             "frame": true
-        },
-        "unitats": {
-            "parent": "moduls",
-            "label": "unitats",
-            "n_columns": 6,
-            "n_rows": 1,
-            "frame": true
-        },
-        "apartats": {
-            "parent": "unitats",
-            "label": "apartats",
-            "n_columns": 6,
-            "n_rows": 1,
-            "frame": false
         }
     },
     "fields": {
@@ -77,25 +56,17 @@
         },
         "plantilla": {
           "n_columns": 5,
-          "group": "dades",
+          "group": "files",
           "props": {"readonly":true}
         },
         "fitxercontinguts": {
           "label": "ruta de l'arxiu de continguts",
           "n_columns": 5,
-          "group": "dades",
+          "group": "files",
           "props": {"readonly":true}
         },
         "descripcio": {
           "n_columns": 7
-        },
-        "unitat#title": {
-          "n_columns": 6,
-          "group": "unitats"
-        },
-        "unitat#autor": {
-          "n_columns": 6,
-          "group": "unitats"
         }
     }
 }

@@ -19,14 +19,14 @@ class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAct
     function register(Doku_Event_Handler $controller) {
         $controller->register_hook('ADD_TPL_CONTROLS', "AFTER", $this, "addWikiIocButtons", array());
         $controller->register_hook('ADD_TPL_CONTROL_SCRIPTS', "AFTER", $this, "addControlScripts", array());
-        $controller->register_hook('CALLING_EXTRA_COMMANDS', "AFTER", $this, "addCommands", array());        
+//        $controller->register_hook('CALLING_EXTRA_COMMANDS', "AFTER", $this, "addCommands", array());        
     }
 
-    function addCommands(Doku_Event &$event, $param) {
-        $event->data["projectrender"] = array(
-            "callFile" => WIKI_IOC_MODEL."projects/documentation/command/projectrender_command.php"
-        );
-    }
+//    function addCommands(Doku_Event &$event, $param) {
+//        $event->data["renderer"] = array(
+//            "callFile" => WIKI_IOC_MODEL."projects/documentation/command/projectrender_command.php"
+//        );
+//    }
 
 
     function addControlScripts(Doku_Event &$event, $param) {

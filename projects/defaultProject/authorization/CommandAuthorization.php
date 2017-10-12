@@ -10,7 +10,6 @@ define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
 
 require_once (DOKU_INC . 'inc/common.php');
 require_once (DOKU_INC . 'inc/auth.php');
-require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 require_once (WIKI_IOC_MODEL . 'AbstractCommandAuthorization.php');
 require_once (WIKI_IOC_PROJECTS . 'defaultProject/DokuModelExceptions.php');
 require_once (WIKI_IOC_PROJECTS . 'defaultProject/authorization/Permission.php');

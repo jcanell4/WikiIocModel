@@ -1,8 +1,8 @@
 {
     "typesDefinition": {
-        "material": {
+        "document": {
             "render": {
-                "typeDef":"material",
+                "typeDef":"document",
                 "class": "render_material",
                 "fields": ["titol","autor","responsable","fitxercontinguts"]
             },

@@ -14,7 +14,6 @@ if (!defined('DW_ACT_SAVE')) {
 
 require_once DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePageAction.php';
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
 
 /**
  * Description of SavePartialPageAction

@@ -8,7 +8,6 @@
 if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
 
-require_once (WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 require_once (WIKI_IOC_MODEL . 'projects/defaultProject/authorization/CommandAuthorization.php');
 
 abstract class PageCommandAuthorization extends CommandAuthorization {

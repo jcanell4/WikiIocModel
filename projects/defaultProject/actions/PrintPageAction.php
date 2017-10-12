@@ -10,9 +10,6 @@ if (!defined('DOKU_PLUGIN')) {
 }
 
 //require common
-require_once(DOKU_PLUGIN . 'ownInit/WikiGlobalConfig.php');
-require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 
 class PrintPageAction extends PageAction{

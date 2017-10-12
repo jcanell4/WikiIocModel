@@ -10,10 +10,7 @@ if (!defined('WIKI_IOC_DEFAULT_PROJECT')) define('WIKI_IOC_DEFAULT_PROJECT', DOK
 require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/template.php');
-require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
 require_once WIKI_IOC_DEFAULT_PROJECT . "actions/PageAction.php";

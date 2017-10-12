@@ -5,9 +5,9 @@ if (!defined('DOKU_PLUGIN')) {
 }
 
 require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
-require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
+//require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
-require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
+//require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 
 /**
  * Description of NotifyDataQuery

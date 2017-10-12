@@ -8,9 +8,9 @@ require_once (DOKU_INC . 'inc/io.php');
 require_once (DOKU_INC . 'inc/confutils.php');
 require_once (DOKU_INC . 'inc/media.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
-require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
-require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
+//require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
+//require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
+//require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 
 
 /**
