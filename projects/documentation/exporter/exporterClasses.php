@@ -6,18 +6,24 @@
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
-require_once DOKU_INC."inc/parser/xhtml.php";
-require_once DOKU_PLUGIN."iocexportl/lib/renderlib.php";
 
 abstract class AbstractRenderer {
 
     protected $factory;
     protected $extra_data;
     protected $RUTA_RENDERER;
+    protected $log = FALSE;
+    
+    protected $mode;
+    protected $tmp_dir;
+    protected $latex_images = array();
+    protected $media_files = array();
+    protected $graphviz_images = array();
 
     public function __construct($factory) {
         $this->factory = $factory;
         $this->RUTA_RENDERER = dirname(realpath(__FILE__));
+        $this->mode = $factory->getMode();
     }
 
     public function init($extra) {
@@ -39,24 +45,6 @@ abstract class AbstractRenderer {
                 $vacio &= empty($value);
         }
         return $vacio;
-    }
-}
-
-class renderField extends AbstractRenderer {
-
-    public function process($data) {
-        $ret = "<label>$this->extra_data:</label>&nbsp;<span>$data</span>";
-        return $ret;
-    }
-}
-
-class renderFile extends AbstractRenderer {
-
-    public function process($data) {
-        $text = io_readFile(wikiFN($data));
-        $instructions = get_latex_instructions($text);
-        $html = p_latex_render('docxhtml', $instructions, $info);
-        return $html;
     }
 }
 
@@ -105,17 +93,6 @@ class renderObject extends renderComposite {
      */
     public function process($data) {
         $this->data = $data;
-        $ret = $this->process_header();
-        $ret.= $this->process_body();
-        $ret.= $this->process_footer();
-        return $ret;
-    }
-
-    public function process_header() {
-        $ret = "<div>\n";
-        return $ret;
-    }
-    public function process_body() {
         $campos = $this->getRenderFields();
         foreach ($campos as $keyField) {
             $typedefKeyField = $this->getTypedefKeyField($keyField);
@@ -127,10 +104,6 @@ class renderObject extends renderComposite {
             $arrayDeDatosParaLaPlantilla[$keyField] = $render->process($dataField);
         }
         $ret = $this->cocinandoLaPlantillaConDatos($arrayDeDatosParaLaPlantilla);
-        return $ret;
-    }
-    public function process_footer() {
-        $ret = "</div>\n";
         return $ret;
     }
 
@@ -173,39 +146,5 @@ class renderArray extends renderComposite {
     }
     protected function getFilter() {
         return $this->getRenderDef('render')['filter'];
-    }
-}
-
-class render_material extends renderObject {
-
-    public function process_body() {
-        $campos = $this->getRenderFields();
-        foreach ($campos as $keyField) {
-            $typedefKeyField = $this->getTypedefKeyField($keyField);
-            $renderKeyField = $this->getRenderKeyField($keyField);
-            $render = $this->createRender($typedefKeyField, $renderKeyField);
-
-            $dataField = $this->getDataField($keyField);
-            $render->init($keyField);
-            $arrayDeDatosParaLaPlantilla[$keyField] = $render->process($dataField);
-        }
-        $ret = $this->cocinandoLaPlantillaConDatos($arrayDeDatosParaLaPlantilla);
-        return $ret;
-    }
-
-    public function cocinandoLaPlantillaConDatos($param) {
-        /*
-        if (is_array($param))
-            foreach ($param as $key => $value)
-                $ret .= (is_array($value)) ? $this->cocinandoLaPlantillaConDatos($value)."\n" : $value."\n";
-        else
-            $ret = $param;
-        return $ret;
-        */
-        $tmplt = $this->loadTemplateFile('xhtml/renderDocument.html');
-        $aSearch = array('@DIV_ID@','@TITLE_VALUE@','@AUTOR_VALUE@','@RESPONSABLE_VALUE@','@CONTINGUTS_VALUE@');
-        $aReplace = array_merge(array("id_div_document"), $param);
-        $document = str_replace($aSearch, $aReplace, $tmplt);
-        return $document;
     }
 }

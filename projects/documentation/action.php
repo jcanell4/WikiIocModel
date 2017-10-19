@@ -6,6 +6,7 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
 require_once (WIKI_IOC_MODEL . 'WikiIocPluginAction.php');
+require_once (DOKU_INC . 'inc/pageutils.php');
 
 class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAction {
     private $viewArray;
@@ -19,6 +20,8 @@ class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAct
     function register(Doku_Event_Handler $controller) {
         $controller->register_hook('ADD_TPL_CONTROLS', "AFTER", $this, "addWikiIocButtons", array());
         $controller->register_hook('ADD_TPL_CONTROL_SCRIPTS', "AFTER", $this, "addControlScripts", array());
+        $controller->register_hook('WIOC_PROCESS_RESPONSE_project', "AFTER", $this, "setExtraMeta", array());
+        
 //        $controller->register_hook('CALLING_EXTRA_COMMANDS', "AFTER", $this, "addCommands", array());        
     }
 
@@ -27,6 +30,22 @@ class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAct
 //            "callFile" => WIKI_IOC_MODEL."projects/documentation/command/projectrender_command.php"
 //        );
 //    }
+
+    function setExtraMeta(&$event, $param){
+        $result['id']=str_replace(':','_',getID());
+        $result['ns']=getID();
+        if(class_exists("ProjectExportAction", TRUE)){
+            $html = ProjectExportAction::get_html_metadata($result) ;
+        }
+        
+        $event->data["ajaxCmdResponseGenerator"]->addExtraMetadata(
+                    $result['id'],
+                    $result['id']."_iocexportxhtml",
+                    WikiIocLangManager::getLang("metadata_export_title"),
+                    $html
+                    );
+        return TRUE;
+    }
 
 
     function addControlScripts(Doku_Event &$event, $param) {

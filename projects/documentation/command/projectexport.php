@@ -12,15 +12,16 @@ require_once(DOKU_COMMAND . 'JsonGenerator.php');
 require_once(DOKU_COMMAND . 'abstract_command_class.php');
 require_once(DOKU_PLUGIN . 'iocexportl/action.php');
 
-class command_plugin_wikiiocmodel_projects_documentation_projectrender extends abstract_command_class {
+class command_plugin_wikiiocmodel_projects_documentation_projectexport extends abstract_command_class {
 //class projectrenderer extends abstract_command_class {
 
     public function __construct() {
         parent::__construct();
         $this->types['id'] = abstract_command_class::T_STRING;
         $this->types['projectType'] = abstract_command_class::T_STRING;
-        $this->types['renderType'] = abstract_command_class::T_STRING;
-        $this->types['specificRender'] = abstract_command_class::T_STRING;
+        $this->types['mode'] = abstract_command_class::T_STRING;
+//        $this->types['renderType'] = abstract_command_class::T_STRING;
+//        $this->types['specificRender'] = abstract_command_class::T_STRING;
 
         //$defaultValues = ['do' => 'wikiiocmodel_projects_documentation_projectrenderer'];
         //$this->setParameters($defaultValues);
@@ -38,25 +39,26 @@ class command_plugin_wikiiocmodel_projects_documentation_projectrender extends a
     }
 
     protected function process() {
-        $action = new ProjectRendererAction(str_replace("_", ":", $this->params['id']));
-        $content = $action->init();
+        $params=array(
+            "id" => $this->params['id'],
+            "ns" => str_replace("_", ":", $this->params['id']),
+            "projectType" => $this->params["projectType"],
+            "mode" => $this->params["mode"]
+        );
+        $action = $this->modelManager->getActionInstance("ProjectExportAction", $this->modelManager->getExporterManager());
+        $action->init($params);
+        $content = $action->process();
         $projectId = $action->getProjectID();
-        return array('projectId' => $projectId, 'content' => $content);
+        return array('projectId' => $projectId, 'meta' => $content);
     }
 
     protected function getDefaultResponse($response, &$ret) {
         if ($response) {
             $response['projectType'] = $this->params['projectType'];
-            $response['renderType'] = $this->params['renderType'];
-            $response['specificRender'] = $this->params['specificRender'];
-
-            $response[action_plugin_iocexportl::DATA_PAGEID] = $this->params['id'];
-            $response[action_plugin_iocexportl::DATA_IOCLANGUAGE] = $this->params['ioclanguage'];
-            $response[action_plugin_iocexportl::DATA_IS_ZIP_RADIO_CHECKED] = $this->params['mode']==="zip";
-            $meta = action_plugin_iocexportl::getform_html_from_data($response);
+            $meta = $response["meta"];
 
             $pageId = $this->params['id'];
-            $ret->addExtraMetadata($pageId, $pageId."_iocexportxhtml", WikiIocLangManager::getLang("metadata_export_title"),$meta);
+            $ret->addExtraMetadata($pageId, $pageId."_iocexportxhtml", WikiIocLangManager::getLang("metadata_export_title"), $meta);
         }else {
             $ret->addError(1000, "EXPORTACIÓ NO REALITZADA");
         }

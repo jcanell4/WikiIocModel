@@ -92,6 +92,13 @@ class IncorrectParametersException extends WikiIocModelException {
     }
 }
 
+class ClassNotFoundException extends WikiIocModelException {
+    public function __construct($class, $codeMessage='ClassNotFound', $code=9028, $previous=NULL) {
+        parent::__construct($codeMessage, $code, $previous, $class);
+    }
+}
+
+
 /**
  * Excepciones propias de los proyectos
  */

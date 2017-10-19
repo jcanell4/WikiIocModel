@@ -11,7 +11,7 @@ if (!defined('DOKU_TAB')) define ('DOKU_TAB',"\t");
 require_once DOKU_INC."inc/parser/renderer.php";
 require_once DOKU_INC."inc/html.php";
 
-class basic_xhtml extends Doku_Renderer {
+class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
 
     var $doc = '';        // will contain the whole document
     var $toc = array();   // will contain the Table of Contents

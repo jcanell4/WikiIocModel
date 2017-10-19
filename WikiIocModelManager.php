@@ -11,7 +11,7 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins
 require_once WIKI_IOC_MODEL . "datamodel/TimerNotifyModel.php";
 require_once WIKI_IOC_MODEL . "datamodel/WebsocketNotifyModel.php";
 
-class WikiIocModelManager {
+abstract class WikiIocModelManager {
 
     public static function Instance($type){
         if ($type) {
@@ -38,5 +38,24 @@ class WikiIocModelManager {
             default:
                 throw new UnknownTypeParamException($type);
         }
+    }
+    
+    public abstract function getProjectDir();
+    
+    public function getActionInstance($className, $params=NULL){
+        $classPath = WIKI_IOC_MODEL."actions/".$className.".php";
+        if(!@file_exists($classPath)){
+            $classPath = $this->getProjectDir()."actions/".$className.".php";
+            if(!@file_exists($classPath)){
+                throw new ClassNotFoundException($className);
+            }
+        }
+        require_once $classPath;
+        if($params){
+            $instance = new $className($params);
+        }else{
+            $instance = new $className;
+        }
+        return $instance;
     }
 }

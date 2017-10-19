@@ -134,7 +134,7 @@ class ProjectModel extends AbstractWikiDataModel {
         //0. Obtiene los datos del proyecto
         $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
         $plantilla = $ret['projectMetaData']['values']["plantilla"];
-        $ret['projectMetaData']['values']["destino"] = $destino = "$id:".end(explode(":", $plantilla));
+        $ret['projectMetaData']['values']["fitxercontinguts"] = $destino = "$id:".end(explode(":", $plantilla));
 
         //1. Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");

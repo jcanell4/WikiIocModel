@@ -5,12 +5,12 @@ require([
     ], function (registry, on) {
        
         var lampreasButton = registry.byId('lampreas');
-       /*
+       
         var fOnClick=function(){
             var id = this.dispatcher.getGlobalState().getCurrentId();
-            registry.byId("zonaMetaInfo").selectChild(id + "_wikiiocmodel");
+            registry.byId("zonaMetaInfo").selectChild(id + "_iocexportxhtml");
             this.setStandbyId(id + "_wikiiocmodel");
-        };*/
+        };
 
         var fGetQuery=function(){
             var id = this.dispatcher.getGlobalState().getCurrentId();

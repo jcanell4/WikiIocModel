@@ -31,7 +31,7 @@ class DokuModelManager extends WikiIocModelManager{
     static $defMainClass = array(
                'DokuModelAdapter'     => self::MOD."BasicModelAdapter.php",
                'FactoryAuthorization' => self::PRJ."authorization/FactoryAuthorization.php",
-               'FactoryRenderer'      => self::PRJ."renderer/FactoryRenderer.php"
+               'FactoryExporter'      => self::PRJ."export/FactoryExporter.php"
            );
 
     public function __construct() {}
@@ -41,19 +41,24 @@ class DokuModelManager extends WikiIocModelManager{
         return $factory->createAuthorizationManager($str_command);
     }
 
-    public function getRendererManager() {
-        return \FactoryRenderer::Instance(self::$defDirClass['Renderer']);
+    public function getExporterManager() {
+//        return \FactoryRenderer::Instance(self::$defDirClass['Renderer']);
+        return new \FactoryExporter();
     }
 
     public function getModelWrapperManager() {
         return (new \BasicModelAdapter())->init(new \BasicPersistenceEngine());
     }
-
+    
     public static function getDefaultDirClass($name) {
         return self::$defDirClass[$name];
     }
 
     public static function getDefaultMainClass() {
         return self::$defMainClass;
+    }
+
+    public function getProjectDir() {
+        return self::PRJ;
     }
 }

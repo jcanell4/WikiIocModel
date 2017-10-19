@@ -23,15 +23,15 @@
             },
             "updateHandler": {
                 "permissions": [
-                   "isadmin",
-                   "ismanager",
-                   "isprojectmanager"
+                   "_isadmin",
+                   "_ismanager",
+                   "_isprojectmanager"
                 ],
                 "rols": [
-                   "responsable"
+                   "_responsable"
                 ],
                 "conditions": {
-                    "page.action":"'form'"
+                    "page.action":"'_form'"
                 }
             }
         }
@@ -50,7 +50,7 @@
                "autoSize": true,
                "visible": false,
                "iconClass": "'iocExportHtmlIcon'",
-               "urlBase": "'lib/plugins/ajaxcommand/ajax.php?call=projectrender'",
+               "urlBase": "'lib/plugins/ajaxcommand/ajax.php?call=projectexport'",
                "standbyId": "'bodyContent'",
                "disableOnSend": true
             }
@@ -63,7 +63,8 @@
             "updateHandler": {
                 "permissions": [
                    "isadmin",
-                   "ismanager"
+                   "ismanager",
+                   "isprojectmanager"
                 ],
                 "rols": [
                    "responsable"

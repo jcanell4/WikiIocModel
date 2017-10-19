@@ -47,4 +47,8 @@ class DokuModelManager extends WikiIocModelManager{
     public static function getDefaultMainClass() {
         return self::$defMainClass;
     }
+
+    public function getProjectDir() {
+        return self::DEF;
+    }
 }
