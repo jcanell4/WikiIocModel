@@ -20,7 +20,7 @@ class UserListAction  extends AbstractWikiAction{
     const BY_PAGE_PERMSION = "byPagePermision";
     const BY_NAME = "byName";
     
-    public function get($paramsArr = array()) {
+    public function responseProcess($paramsArr = array()) {
         $ret = null;
         switch ($paramsArr[PageKeys::KEY_DO]){
             case self::OF_A_PROJECT:

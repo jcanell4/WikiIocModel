@@ -9,7 +9,12 @@ abstract class AbstractWikiAction {
 
     protected $modelManager;
 
-    public abstract function get(/*Array*/ $paramsArr=array());
+    public function get(/*Array*/$paramsArr = array()){
+        $this->params = $paramsArr;
+        $this->triggerStartEvents();
+        return $this->responseProcess();
+        $this->triggerEndEvents();
+    }
 
     public function init($modelManager = NULL) {
         $this->modelManager = $modelManager;
@@ -89,4 +94,21 @@ abstract class AbstractWikiAction {
             return $info;
     }
 
+    protected function triggerStartEvents() {
+        $tmp= array(); //NO DATA
+        trigger_event( 'WIOC_AJAX_COMMAND_STARTED', $tmp);
+        if(!empty($tmp)){
+            $this->preResponseTmp[] = $tmp;
+        }
+    }
+
+    protected function triggerEndEvents() {
+        $tmp = array(); //NO DATA
+        trigger_event( 'WIOC_AJAX_COMMAND_DONE', $tmp );
+        if(!empty($tmp)){
+            $this->postResponseTmp[] = $tmp;
+        }
+    }    
+    
+    protected abstract function responseProcess();
 }

@@ -5,7 +5,7 @@ include_once (DOKU_PLUGIN . 'wikiiocmodel/projects/documentation/actions/Project
 
 class GetProjectMetaDataAction extends ProjectMetadataAction {
 
-    public function get($paramsArr = array()) {
+    public function responseProcess($paramsArr = array()) {
         $id = $paramsArr[ProjectKeys::KEY_ID];
         $projectType = $paramsArr[ProjectKeys::KEY_PROJECT_TYPE];
 

@@ -172,7 +172,6 @@ abstract class DokuAction extends AbstractWikiAction{
      * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut 
      * DokuAction#response.
      */
-    protected abstract function responseProcess();
     
     private function start($paramsArr){        
         $this->params = $paramsArr;
@@ -180,22 +179,6 @@ abstract class DokuAction extends AbstractWikiAction{
         WikiIocInfoManager::loadInfo();
         WikiIocLangManager::load();
         $this->triggerStartEvents();
-    }
-    
-    private function triggerStartEvents() {
-        $tmp= array(); //NO DATA
-        trigger_event( 'WIOC_AJAX_COMMAND_STARTED', $tmp);
-        if(!empty($tmp)){
-            $this->preResponseTmp[] = $tmp;
-        }
-    }
-
-    private function triggerEndEvents() {
-        $tmp = array(); //NO DATA
-        trigger_event( 'WIOC_AJAX_COMMAND_DONE', $tmp );
-        if(!empty($tmp)){
-            $this->postResponseTmp[] = $tmp;
-        }
     }
     
     private function run() {

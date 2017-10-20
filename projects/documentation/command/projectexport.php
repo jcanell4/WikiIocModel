@@ -47,7 +47,7 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
         );
         $action = $this->modelManager->getActionInstance("ProjectExportAction", $this->modelManager->getExporterManager());
         $action->init($params);
-        $content = $action->process();
+        $content = $action->get();
         $projectId = $action->getProjectID();
         return array('projectId' => $projectId, 'meta' => $content);
     }

@@ -12,7 +12,7 @@ if (!defined('EXPORT_TMP')) define('EXPORT_TMP',DOKU_PLUGIN.'tmp/latex/');
 define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/documentation/");
 require_once WIKI_IOC_MODEL."persistence/ProjectMetaDataQuery.php";
 
-class ProjectExportAction{
+class ProjectExportAction  extends AbstractWikiAction{
     const PATH_RENDERER = WIKI_IOC_PROJECT."renderer/";
     const PATH_CONFIG_FILE = WIKI_IOC_PROJECT."metadata/config/";
     const CONFIG_TYPE_FILENAME = "configMain.json";
@@ -48,7 +48,7 @@ class ProjectExportAction{
         $this->dataArray = $this->getProjectDataFile($projectfilepath, ProjectKeys::VAL_DEFAULTSUBSET);            
     }
 
-    public function process() {
+    public function responseProcess() {
         $ret = array();
         //$fRenderer = new FactoryRenderer($this->typesDefinition, $this->renderArray);
         $fRenderer = $this->factoryRender;

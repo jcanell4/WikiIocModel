@@ -14,7 +14,7 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
      * @param array $paramsArr [dataProject[], extraProject[]]
      * @return array con la estructura y los valores del proyecto
      */
-    public function get($paramsArr=array()) {
+    public function responseProcess($paramsArr=array()) {
         $dataProject = $paramsArr['dataProject'];
         $extraProject = $paramsArr['extraProject'];
         $this->projectModel->init($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE]);

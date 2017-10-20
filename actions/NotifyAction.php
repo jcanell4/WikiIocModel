@@ -333,12 +333,4 @@ class NotifyAction extends AbstractWikiAction
     {
         return $_SERVER['REMOTE_USER'];
     }
-
-    public function get(/*Array*/
-        $paramsArr = array())
-    {
-        $this->params = $paramsArr;
-        return $this->responseProcess();
-
-    }
 }
