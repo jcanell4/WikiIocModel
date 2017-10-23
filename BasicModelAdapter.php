@@ -24,11 +24,4 @@ class BasicModelAdapter implements WikiIocModel {
     public function getPersistenceEngine() {
         return $this->persistenceEngine;
     }
-    
-    public function getJsInfo(){
-        global $JSINFO;
-        WikiIocInfoManager::loadInfo();
-        return $JSINFO;
-    }
-
 }

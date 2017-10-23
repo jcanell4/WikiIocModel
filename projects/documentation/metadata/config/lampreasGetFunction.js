@@ -9,7 +9,7 @@ require([
         var fOnClick=function(){
             var id = this.dispatcher.getGlobalState().getCurrentId();
             registry.byId("zonaMetaInfo").selectChild(id + "_iocexportxhtml");
-            this.setStandbyId(id + "_wikiiocmodel");
+            this.setStandbyId(id + "_iocexportxhtml");
         };
 
         var fGetQuery=function(){
@@ -22,6 +22,6 @@ require([
         if (lampreasButton){
             lampreasButton.getQuery=fGetQuery;
             lampreasButton.set("hasTimer", true);
-//            on(lampreasButton, "click", fOnClick);
+            lampreasButton.onClick =fOnClick;
         }
 });

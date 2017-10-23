@@ -130,4 +130,9 @@ class WikiIocInfoManager {
         self::$mediaInfoLoaded = FALSE;
     }
 
+    public static function getJsInfo(){
+        global $JSINFO;
+        self::loadInfo();
+        return $JSINFO;
+    }
 }
