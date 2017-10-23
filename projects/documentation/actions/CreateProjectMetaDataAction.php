@@ -9,7 +9,8 @@ class CreateProjectMetaDataAction extends ProjectMetadataAction {
      * a partir del archivo de configuración configMain.json
      * @param array $paramsArr : parámetros recibidos por el ajaxCall
      */
-    public function responseProcess($paramsArr = array()) {
+    public function responseProcess() {
+        $paramsArr = $this->params;
         $id = $paramsArr[ProjectKeys::KEY_ID];
         $projectType = $paramsArr[ProjectKeys::KEY_PROJECT_TYPE];
 

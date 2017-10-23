@@ -21,7 +21,7 @@ class ListProjectsAction extends AbstractWikiAction {
     /**
      * Retorna un JSON que conté la llista de tipus de projectes
      */
-    public function responseProcess($paramsArr = array()) {
+    public function responseProcess() {
         $listProjectTypes = $this->dataquery->getListProjectTypes();
         foreach ($listProjectTypes as $pTypes) {
             $aList[] = ['id' => "id_$pTypes", 'name' => $pTypes];

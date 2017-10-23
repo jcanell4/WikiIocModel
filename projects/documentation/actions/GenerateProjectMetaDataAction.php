@@ -10,7 +10,8 @@ class GenerateProjectMetaDataAction extends ProjectMetadataAction {
      * Crea los archivos necesarios definidos en la estructura del proyecto
      * @param type $paramsArr
      */
-    public function responseProcess($paramsArr = array()) {
+    public function responseProcess() {
+        $paramsArr = $this->params;
 
         $this->projectModel->init($paramsArr[ProjectKeys::KEY_ID], $paramsArr[ProjectKeys::KEY_PROJECT_TYPE]);
 

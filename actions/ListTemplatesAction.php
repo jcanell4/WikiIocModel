@@ -15,7 +15,7 @@ class ListTemplatesAction extends AbstractWikiAction {
      * Retorna un array que conté la llista de plantilles de documents
      * @return json
      */
-    public function responseProcess($paramsArr = array()) {
+    public function responseProcess() {
         include (DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
         return json_encode($conf['projects']['defaultProject']['templates']);
     }
