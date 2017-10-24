@@ -11,7 +11,7 @@ if(!defined('DOKU_PLUGIN_LATEX_TMP')) define('DOKU_PLUGIN_LATEX_TMP',DOKU_PLUGIN
 require_once DOKU_INC.'inc/parser/renderer.php';
 require_once(DOKU_PLUGIN.'iocexportl/lib/renderlib.php');
 
-class basic_latex extends Doku_Renderer {
+class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
 
     static $convert = FALSE;    //convert images to $imgext
     static $imgext = '.pdf';    //Format to convert images
