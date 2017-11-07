@@ -120,12 +120,7 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
             $this->doc .= '</div>'.DOKU_LF;
         }
 
-        // Prepare the TOC
-        global $conf;
-        if ($this->info['toc'] && is_array($this->toc) && $conf['tocminheads'] && count($this->toc) >= $conf['tocminheads']){
-            global $TOC;
-            $TOC = $this->toc;
-        }
+        $this->info["tocItems"] = $this->toc;
 
         // make sure there are no empty paragraphs
         $this->doc = preg_replace('#<p>\s*</p>#', '', $this->doc);
