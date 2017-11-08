@@ -7,13 +7,13 @@
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/documentation/");
 if (!defined('EXPORT_TMP')) define('EXPORT_TMP',DOKU_PLUGIN.'tmp/latex/');
 
-define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/documentation/");
 require_once WIKI_IOC_MODEL."persistence/ProjectMetaDataQuery.php";
 
 class ProjectExportAction  extends AbstractWikiAction{
-    const PATH_RENDERER = WIKI_IOC_PROJECT."renderer/";
+    const PATH_RENDERER = WIKI_IOC_PROJECT."exporter/";
     const PATH_CONFIG_FILE = WIKI_IOC_PROJECT."metadata/config/";
     const CONFIG_TYPE_FILENAME = "configMain.json";
     const CONFIG_RENDER_FILENAME = "configRender.json";
@@ -22,11 +22,11 @@ class ProjectExportAction  extends AbstractWikiAction{
     protected $projectNS = NULL;
     protected $mainTypeName = NULL;
     protected $dataArray = array();
-    protected $renderArray = array();
+    protected $typesRender = array();
     protected $typesDefinition = array();
     protected $mode;
     protected $factoryRender;
-   
+
     public function __construct($factory=NULL){
         $this->factoryRender = $factory;
     }
@@ -38,27 +38,35 @@ class ProjectExportAction  extends AbstractWikiAction{
         $this->mode = $params['mode'];
         $this->projectID = $params['id'];
         $this->projectNS = $params['ns'];
-        $this->renderArray = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
-        $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE)[0];
+        $this->typesRender = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
+            $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE)[0];
         $this->mainTypeName = $cfgArray['mainType']['typeDef'];
         $this->typesDefinition = $cfgArray['typesDefinition'];
-        $projectfilename = $cfgArray[ProjectKeys::VAL_DEFAULTSUBSET];
-        $idResoucePath = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $this->projectNS);
-        $projectfilepath = "$idResoucePath/".self::PROJECT_TYPE."/$projectfilename";
-        $this->dataArray = $this->getProjectDataFile($projectfilepath, ProjectKeys::VAL_DEFAULTSUBSET);            
+            $projectfilename = $cfgArray[ProjectKeys::VAL_DEFAULTSUBSET];
+            $idResoucePath = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $this->projectNS);
+            $projectfilepath = "$idResoucePath/".self::PROJECT_TYPE."/$projectfilename";
+        $this->dataArray = $this->getProjectDataFile($projectfilepath, ProjectKeys::VAL_DEFAULTSUBSET);
     }
 
     public function responseProcess() {
         $ret = array();
-        //$fRenderer = new FactoryRenderer($this->typesDefinition, $this->renderArray);
         $fRenderer = $this->factoryRender;
-        $fRenderer->init($this->mode, $this->typesDefinition, $this->renderArray);
-        $render = $fRenderer->createRender($this->typesDefinition[$this->mainTypeName], $this->renderArray[$this->mainTypeName], array("id"=> $this->projectID));
+        $fRenderer->init($this->mode, $this->typesDefinition, $this->typesRender);
+        $render = $fRenderer->createRender($this->typesDefinition[$this->mainTypeName], $this->typesRender[$this->mainTypeName], array("id"=> $this->projectID));
         $result = $render->process($this->dataArray);
         $result['id'] = $this->projectID;
         $result['ns'] = $this->projectNS;
-        $ret = self::get_html_metadata($result);
-        
+
+        switch ($this->mode) {
+            case 'pdf' :
+                $ret = $result;
+                break;
+            case 'xhtml':
+                $ret = self::get_html_metadata($result);
+                break;
+            default:
+                throw new Exception("ProjectExportAction: mode incorrecte.");
+        }
         return $ret;
     }
     /**
@@ -96,49 +104,33 @@ class ProjectExportAction  extends AbstractWikiAction{
     public function getProjectID() {
         return $this->projectID;
     }
-    
-//    private function _writeRenderedData($text){
-//            $error = '';
-//
-//            $filename = preg_replace('/:/', '/', $this->projectID);
-//            $dest = dirname($filename);
-//            if (!file_exists(WikiGlobalConfig::getConf('mediadir').'/'.$dest)){
-//                mkdir(WikiGlobalConfig::getConf('mediadir').'/'.$dest, 0755, TRUE);
-//            }
-//            $fop = fopen(WikiGlobalConfig::getConf('mediadir').'/'.$filename, "w");
-//            fwrite($fop, $text);
-//            fclose($fop);
-//            return $filename;
-//    }
-    
+
     public static function get_html_metadata($result){
-        if($result['error']){
+        if ($result['error']) {
 
         }else{
-            if($result["zipFile"]){
+            if ($result["zipFile"]) {
                 self::copyZip($result);
             }
-            if(@file_exists(WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $result['ns']) .'/'.$result["zipName"])){
+            if (@file_exists(WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $result['ns']) .'/'.$result["zipName"])) {
                 $formId = "form_rend_".$result['id']; //str_replace(":", "_", $this->projectID); //Id del node que conté la pàgina
                 $ext = ".zip";
 
                 $filename = str_replace(':','_',basename($result['ns'])).$ext;
-
                 $media_path = "lib/exe/fetch.php?media=".$result['ns'].":".$filename;
 
                 $ret = '<span id="exportacio">';
-
-                $ret .= '<a class="media mediafile  mf_zip" href="'.$media_path.'">'.$filename.'</a>';
-                $ret .= '</span>';
+                $ret.= '<a class="media mediafile  mf_zip" href="'.$media_path.'">'.$filename.'</a>';
+                $ret.= '</span>';
             }else{
                 $ret = '<span id="exportacio">';
-                $ret .= '<p class="media mediafile  mf_zip">No hi ha cap exportació feta</p>';
-                $ret .= '</span>';                            
+                $ret.= '<p class="media mediafile  mf_zip">No hi ha cap exportació feta</p>';
+                $ret.= '</span>';
             }
         }
         return $ret;
     }
-    
+
      private static function copyZip($result){
         $dest = preg_replace('/:/', '/', $result['ns']);
         if (!file_exists(WikiGlobalConfig::getConf('mediadir').'/'.$dest)){

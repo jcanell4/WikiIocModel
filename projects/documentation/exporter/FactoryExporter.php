@@ -15,7 +15,7 @@ class FactoryExporter {
      * @param array $typesRender : array con todos los tipos del archivo configRender.json
      */
     public function init($mode, $typesDefinition, $typesRender) {
-        $this->mode = $mode;                
+        $this->mode = $mode;
         $this->typesDefinition = $typesDefinition;
         $this->typesRender = $typesRender;
     }
@@ -32,7 +32,7 @@ class FactoryExporter {
         require_once $path."/exporterClasses.php";
         require_once $path."/".$this->mode."/exporterClasses.php";
         if(@file_exists($path."/".$this->mode."/".$class."/exporterClasses.php")){
-            require_once $path."/".$this->mode."/".$class."/exporterClasses.php";    
+            require_once $path."/".$this->mode."/".$class."/exporterClasses.php";
         }
 
         $class = $this->validateClass($class, $typedef['type']);
@@ -51,7 +51,7 @@ class FactoryExporter {
                 case "object": $render = new $class($this, $typedef, $renderdef); break;
                 case "file":   $render = new $class($this); break;
                 default:       $render = new $class($this); break;
-            }            
+            }
         }
         return $render;
     }
@@ -59,34 +59,33 @@ class FactoryExporter {
     public function getMode() {
         return $this->mode;
     }
-    
+
     public function getTypesDefinition($key = NULL) {
         return ($key === NULL) ? $this->typesDefinition : $this->typesDefinition[$key];
     }
-    
+
     public function getTypesRender($key = NULL) {
         return ($key === NULL) ? $this->typesRender : $this->typesRender[$key];
     }
-    
+
+    public function getDocumentClass() {
+        return $this->getKeyRenderClass($this->getTypesRender('document'));
+    }
+
     private function validateClass($class, $tipo) {
         if ($class !== NULL && !class_exists($class, TRUE)) {
             //throw new ErrorException("La clase no existe");
         }
         if ($class === NULL || !class_exists($class, TRUE)) {
-//            $itemsType = $this->getTypesDefinition('itemsType'); //Si és un array cerca el tipus que correspon als seus items
-//            $renderdef = $this->getTypesRender($itemsType);
-//            $class = $this->getKeyRenderClass($renderdef);  
-//            if ($class === NULL) {
-                $class = $this->defaultRenderClass($tipo); //render por defecto del tipo definido en configMain.json
-//            }
+            $class = $this->defaultRenderClass($tipo); //render por defecto del tipo definido en configMain.json
         }
         return $class;
     }
-    
+
     private function getKeyRenderClass($renderdef) { //devuelve el nombre de la clase render
         return $renderdef['render']['class'];
     }
-    
+
     /**
      * Establece la clase por defecto para cada tipo
      * @param string $tipo : tipo de objeto (string, array, object, number, etc.)

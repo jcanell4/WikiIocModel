@@ -7,7 +7,7 @@
  */
 if(!defined('DOKU_INC')) die();
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
-if(!defined('DOKU_PLUGIN_LATEX_TMP')) define('DOKU_PLUGIN_LATEX_TMP',DOKU_PLUGIN.'tmp/latex/');
+if (!defined('EXPORT_TMP')) define('EXPORT_TMP', DOKU_PLUGIN."tmp/latex/");
 require_once DOKU_INC.'inc/parser/renderer.php';
 require_once(DOKU_PLUGIN.'iocexportl/lib/renderlib.php');
 
@@ -56,7 +56,6 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
      * Initialize the rendering
      */
     function document_start() {
-        global $USERINFO;
         global $conf;
 
 	$this->id = getID();
@@ -64,30 +63,15 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
 	$exportallowed = (isset($conf['plugin']['iocexportl']['allowexport']) && $conf['plugin']['iocexportl']['allowexport']);
         if (!$exportallowed && !auth_isadmin()) die;
 
-        if (!isset($_SESSION['tmp_dir'])){
-            $this->tmp_dir = rand();
-        }else{
-            $this->tmp_dir = $_SESSION['tmp_dir'];
-        }
-        if (!file_exists(DOKU_PLUGIN_LATEX_TMP.$this->tmp_dir)){
-            mkdir(DOKU_PLUGIN_LATEX_TMP.$this->tmp_dir, 0775, TRUE);
-            mkdir(DOKU_PLUGIN_LATEX_TMP.$this->tmp_dir.'/media', 0775, TRUE);
-        }
-        if ($_SESSION['fpd']){
-            $filename = 'backgroundfpd';
-        } else {
-            if ($_SESSION['u0']){
-                $filename = 'backgroundu0';
-            }else{
-                $filename = 'background';
-            }
-        }
-        if ($_SESSION['double_cicle']){
-            $filename .= 'dc';
-        }
-        if(!file_exists(DOKU_PLUGIN_LATEX_TMP.$this->tmp_dir.'/media/'.$filename.'.pdf')){
-            copy(DOKU_PLUGIN.'iocexportl/templates/'.$filename.'.pdf', DOKU_PLUGIN_LATEX_TMP.$this->tmp_dir.'/media/'.$filename.'.pdf');
-        }
+//        if (!isset($_SESSION['tmp_dir'])){
+//            $this->tmp_dir = realpath(EXPORT_TMP)."/".rand();
+//        }else{
+//            $this->tmp_dir = $_SESSION['tmp_dir'];
+//        }
+//        if (!file_exists($this->tmp_dir)){
+//            mkdir($this->tmp_dir, 0775, TRUE);
+//            mkdir($this->tmp_dir.'/media', 0775, TRUE);
+//        }
         //Global variables
         $this->_initialize_globals();
     }
@@ -166,7 +150,7 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
 
     function smiley($smiley) {
         $img = DOKU_INC . 'lib/images/smileys/'. $this->smileys[$smiley];
-        $img_aux = $this->_image_convert($img, DOKU_PLUGIN_LATEX_TMP.$this->tmp_dir.'/media');
+        $img_aux = $this->_image_convert($img, $this->tmp_dir.'/media');
         $this->doc .= '\includegraphics[height=1em, width=1em]{media/'.basename($img_aux).'}';
     }
 
@@ -243,9 +227,9 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
         $figure = (!$this->table && $_SESSION['figure'] && !$_SESSION['video_url'] && !$_SESSION['u0']);
 
         if (self::$convert || $_SESSION['draft'] || $external){
-            $img_aux = $this->_image_convert($src, DOKU_PLUGIN_LATEX_TMP.$this->tmp_dir.'/media');
+            $img_aux = $this->_image_convert($src, $this->tmp_dir.'/media');
         }else{
-            $img_aux = tempnam(DOKU_PLUGIN_LATEX_TMP . $this->tmp_dir . '/media', 'ltx');
+            $img_aux = tempnam($this->tmp_dir . '/media', 'ltx');
             $ext = pathinfo($src,PATHINFO_EXTENSION);
             if (file_exists($src)){
                 copy($src, "$img_aux.$ext");
@@ -986,7 +970,7 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
         global $conf;
         list($ext,$mime) = mimetype($src);
         if (substr($mime,0,5) == 'image'){
-            $tmp_name = tempnam(DOKU_PLUGIN_LATEX_TMP.$this->tmp_dir.'/media', 'ext');
+            $tmp_name = tempnam($this->tmp_dir.'/media', 'ext');
             $client = new DokuHTTPClient;
             $img = $client->get($src);
             if (!$img) {

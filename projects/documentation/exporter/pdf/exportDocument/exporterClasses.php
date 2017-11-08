@@ -1,62 +1,305 @@
 <?php
 /**
- * renderDocument: clase que renderiza grupos de elementos
- */
+ * exportDocument: clase que renderiza grupos de elementos
+ * @culpable Rafael Claver
+*/
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
-define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL."projects/documentation/");
-require_once WIKI_IOC_PROJECT."renderer/AbstractRenderer.php";
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
+//if (!defined('EXPORT_TMP')) define('EXPORT_TMP', DOKU_PLUGIN."tmp/latex/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
+require_once WIKI_IOC_MODEL."projects/documentation/exporter/exporterClasses.php";
 
-class renderDocument extends MainRender {
-    
-    public function __construct($params, $factory, $typedef, $renderdef) {
+class exportDocument extends MainRender {
+
+    public function __construct($factory, $typedef, $renderdef, $params) {
         parent::__construct($factory, $typedef, $renderdef);
         $this->initParams($params);
     }
-    
+
     public function initParams($params=NULL){
-        if($params){
+        parent::initParams();
+        if ($params) {
             $this->id = $params['id'];
-            $this->lang = (!isset($params['ioclanguage']))?'ca':strtolower($params['ioclanguage']);
-            $this->lang = preg_replace('/\n/', '', $lang);
+            $this->lang = (!isset($params['ioclanguage'])) ? "CA" : trim(strtoupper($params['ioclanguage']));
             $this->log = isset($params['log']);
         }
-        parent::initParams();
+        $aParam = ['id' => $this->id,
+                   'lang' => $this->lang,
+                   'ioclanguage' => $params['ioclanguage'],
+                   'log' => $this->log
+                  ];
+        $cfg = cfgExporter::Instance($aParam);
+        $this->tmp_dir = $cfg->get('tmp_dir');
     }
 
-    public function process($data) {
+    public function cocinandoLaPlantillaConDatos($data) {
         @set_time_limit(240);
-
         $this->time_start = microtime(TRUE);
+        $output_filename = str_replace(":", "_", $this->id);
+//        $this->tmp_dir = realpath(EXPORT_TMP)."/".rand();
 
-        $output_filename = str_replace(':','_',$this->id);
-
-        $this->export_html = TRUE;
-        $tmp_dir = rand();
-        $this->tmp_dir = $tmp_dir;
-        $this->latex_images = array();
-        $this->media_files = array();
-        $this->graphviz_images = array();
-        if (!file_exists(DOKU_PLUGIN.'tmp/latex/'.$tmp_dir)){
-            mkdir(DOKU_PLUGIN.'tmp/latex/'.$tmp_dir, 0775, TRUE);
+        if (!file_exists($this->tmp_dir)) mkdir($this->tmp_dir, 0775, TRUE);
+        if (!file_exists($this->tmp_dir."/media")) mkdir($this->tmp_dir."/media", 0775, TRUE);
+        $frontCover = "frontCoverDoc.ltx";
+        $tocPage = "tocPageDoc.ltx";
+        $background = "bgCoverDoc.pdf";
+        $latex = $this->renderHeader($data);
+        $latex.= $this->renderCoverPage($data, $frontCover, $background);
+        $latex.= $this->renderTocPage($data, $tocPage);
+        $latex.= $data['fitxercontinguts'];
+        if (file_exists($this->path_templates."/footer.ltx")){
+            $latex .= io_readFile($this->path_templates."/footer.ltx");
         }
 
-        /*
-        //get all pages and activitites
-        $data = $this->getData();
-        */
-         $zip = new ZipArchive;
-        $res = $zip->open(DOKU_IOCEXPORTL_LATEX_TMP.$tmp_dir.'/'.$output_filename.'.zip', ZipArchive::CREATE);
+        $result = array();
+        if ($this->mode === 'zip'){
+            $this->createZip($output_filename, $this->tmp_dir, $latex, $result);
+        }else{
+            $this->createLatex($output_filename, $this->tmp_dir, $latex, $result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Render frontpage
+     * @param array $data
+     */
+    private function renderTocPage($data, $tocPage) {
+        $latex = "";
+        if (file_exists($this->path_templates."/$tocPage")) {
+            $latex = io_readFile($this->path_templates."/$tocPage");
+            if ($latex) {
+                $titol = $this->clean_accent_chars($data['titol']);
+                $aSearch = array("@DOC_TITOL@", "@DOC_CREDITS@");
+                $aReplace = array($titol, "crèdits: p2 Team");
+                $latex = str_replace($aSearch, $aReplace, $latex);
+            }
+        }
+        return $latex;
+    }
+
+    private function renderCoverPage($data, $frontCover, $background=NULL){
+        $latex = "";
+        if (file_exists($this->path_templates."/$frontCover")) {
+            $latex = io_readFile($this->path_templates."/$frontCover");
+            if ($latex) {
+                $titol = $this->clean_accent_chars($data['titol']);
+                $autor = implode('\\\\\\\\', explode(",", $data['autor']));
+                $aSearch = array("@DOC_BACKGROUND@", "@DOC_TITOL@", "@DOC_AUTOR@");
+                $aReplace = array("media/$background", $titol, $autor);
+                $latex = str_replace($aSearch, $aReplace, $latex);
+                if ($background) {
+                    $this->copyToTmp("{$this->path_templates}/$background", "media/$background");
+                }
+            }
+        }
+        return $latex;
+    }
+
+    private function renderHeader($data) {
+        $latex = "";
+        if (file_exists("{$this->path_templates}/header.ltx")) {
+            $latex = io_readFile("{$this->path_templates}/header.ltx");
+            if ($latex) {
+                $qrcode = ($_SESSION['qrcode']) ? '\usepackage{pst-barcode,auto-pst-pdf}' : '';
+                $titol = trim(wordwrap($this->clean_accent_chars($data['titol']), 77, '\break '));
+                $aSearch = array("@IOCLANGUAGE@", "@IOCQRCODE@", "@IOCLANGCONTINUE@", "@DOC_TITOL@", "@DOC_CREDITS@");
+                $aReplace = array($this->lang, $qrcode, $this->ioclangcontinue[$this->ioclang], $titol, "crèdits: p2 Team");
+                $latex = str_replace($aSearch, $aReplace, $latex);
+            }
+        }
+        return $latex;
+    }
+
+    private function copyToTmp($source, $dest){
+        return copy($source, $this->tmp_dir."/$dest");
+    }
+
+    /**
+     * Replace all reserved symbols
+     * @param string $text
+     */
+    function clean_accent_chars($text){
+        $source_char = array('á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ò', 'ï', 'ü', 'ñ', 'ç','Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ò', 'Ï', 'Ü', 'Ñ', 'Ç','\\\\');
+        $replace_char = array("\'{a}", "\'{e}", "\'{i}", "\'{o}", "\'{u}", "\`{a}", "\`{e}", "\`{o}", '\"{i}', '\"{u}', '\~{n}', '\c{c}', "\'{A}", "\'{E}", "\'{I}", "\'{O}", "\'{U}", "\`{A}", "\`{E}", "\`{O}", '\"{I}', '\"{U}', '\~{N}', '\c{C}','\break ');
+        return str_replace($source_char, $replace_char, $text);
+    }
+
+    /**
+     * Compile latex document to create a pdf file
+     * @param string $filename, $path, $text
+     */
+    private function createLatex($filename, $path, &$text, &$result){
+        io_saveFile("$path/$filename.tex", $text);
+
+        $shell_escape = ($_SESSION['qrcode']) ? "-shell-escape" : "";
+        @exec("cd $path && pdflatex -draftmode $shell_escape -halt-on-error $filename.tex", $sortida, $return);
+        if ($return === 0){
+            //One more to calculate correctly size tables
+            @exec("cd $path && pdflatex -draftmode $shell_escape -halt-on-error $filename.tex" , $sortida, $return);
+            if ($_SESSION['onemoreparsing']){
+                @exec("cd $path && pdflatex -draftmode $shell_escape -halt-on-error $filename.tex" , $sortida, $return);
+            }
+            @exec("cd $path && pdflatex $shell_escape -halt-on-error $filename.tex" , $sortida, $return);
+        }
+        //si pdflatex no está instalado localmente, probaremos ejecutarlo en otro servidor con una conexión ssh remota
+        else {
+            $sshpass = "sshpass -p XB4bwaFX";
+            $ssh = "ssh -p2111 wikidev@wikidev.ioc.cat";
+            $scp = "scp -P2111 -r";
+            $rdir = "/home/wikidev/rafatmp/latex/";
+            $f_local = "$path/*";
+            $f_remote = "wikidev@wikidev.ioc.cat:$rdir";
+            //Verifica la existencia de los directorios del servidor remoto
+            @exec("$sshpass $ssh mkdir $rdir", $sortida, $return);
+            @exec("$sshpass $ssh mkdir $rdir/media", $sortida, $return);
+            //Copia el contenido del directorio latex temporal local al servidor remoto
+            @exec("$sshpass $scp $f_local $f_remote", $sortida, $return);
+            if ($return === 0) {
+                $pdflatex = "pdflatex -draftmode $shell_escape -halt-on-error $filename.tex";
+                //ejecuta el conversor latex en el servidor remoto
+                @exec("$sshpass $ssh \"cd $rdir && $pdflatex\"", $sortida, $return);
+                if ($return === 0) {
+                    @exec("$sshpass $ssh \"cd $rdir && $pdflatex\"", $sortida, $return);
+                    if ($_SESSION['onemoreparsing']) {
+                        @exec("$sshpass $ssh \"cd $rdir && $pdflatex\"", $sortida, $return);
+                    }
+                    $pdflatex = "pdflatex $shell_escape -halt-on-error $filename.tex";
+                    @exec("$sshpass $ssh \"cd $rdir && $pdflatex\"", $sortida, $return);
+                }
+            }
+            //Copiar el PDF generado en el servidor remoto a la ubicación correcta en el servidor local
+            if ($return === 0) {
+                $destino = "home/rafael/nb-projectes/dokuwiki_30/data/media/iocdocs/p2/";
+                $destino = mediaFN(str_replace("_", ":", $this->id));
+                @exec("$sshpass scp -P2111 $f_remote$filename.pdf $destino", $sortida, $return);
+            }
+        }
+
+        if ($return !== 0){
+            $this->getLogError($path, $filename, $result);
+        }else{
+            $this->returnData($path, $filename.'.pdf', 'pdf', $result);
+        }
+    }
+
+    /**
+     * Returns pdf/zip file info
+     * @param string $path, $filename, $type
+     */
+    private function returnData($path, $filename, $type, &$result=NULL){
+        global $conf;
+
+        if (file_exists($path.'/'.$filename)){
+            $error = '';
+            //Return pdf number pages
+            if ($type === 'pdf'){
+                $num_pages = @exec("pdfinfo $path/$filename | awk '/Pages/ {print $2}'");
+            }
+            $filesize = filesize_h(filesize("$path/$filename"));
+            $dest = dirname(str_replace(":", "/", $this->id));
+            if (!file_exists($conf['mediadir'].'/'.$dest)){
+                mkdir($conf['mediadir'].'/'.$dest, 0755, TRUE);
+            }
+            $filename_dest = ($this->log || $this->permissionToExport) ? $filename : basename($filename, '.'.$type).'_draft.'.$type;
+            //Replace log extension to txt, and show where error is
+            if ($type === 'log'){
+                $filename_dest = preg_replace('/\.log$/', '.txt', $filename_dest, 1);
+                $error = io_grep($path.'/'.$filename, '/^!/', 1);
+                $line = io_grep($path.'/'.$filename, '/^l.\d+/', 1);
+                preg_match('/\d+/', $line[0], $matches);
+                $error = preg_replace('/!/', '('.$matches[0].') ', $error);
+            }
+            copy($path.'/'.$filename, $conf['mediadir'].'/'.$dest .'/'.$filename_dest);
+            $dest = preg_replace('/\//', ':', $dest);
+            $time_end = microtime(TRUE);
+            $time = round($time_end - $this->time_start, 2);
+            setlocale(LC_TIME, 'ca_ES.utf8');
+            $dateFile = strftime("%e %B %Y %T", filemtime($path.'/'.$filename));
+            if ($this->log){
+                if ($type === 'log'){
+                    $num_pages = 'E';
+                }
+                $result = array('time' => $dateFile, 'path' => $dest.':'.$filename_dest, 'pages' => $num_pages, 'size' => $filesize);
+            }else{
+                if ($type === 'pdf'){
+                    $result = array($type, $this->media_path.$dest.':'.$filename_dest.'&time='.gettimeofday(TRUE), $filename_dest, $filesize, $num_pages, $time, $dateFile, $this->formByColumns);
+                }else{
+                    $result = array($type, $this->media_path.$dest.':'.$filename_dest.'&time='.gettimeofday(TRUE), $filename_dest, $filesize, $time, $error, $dateFile, $this->formByColumns);
+                }
+            }
+        }else{
+            $dateFile = strftime("%e %B %Y %T", filemtime($path.'/'.$filename));
+            $fname_dest = preg_replace('/\.log$/', '.txt', $filename, 1);
+            $fsize = filesize_h(filesize("$path/$filename"));
+            $result = array('time' => $dateFile, 'path' => $this->id.":".$fname_dest, 'pages' => "E", 'size' => $fsize, 'description'=> "Error en la creació del arixu: $fname_dest");
+        }
+        return $result;
+    }
+
+    /**
+     * Returns log file on latex compilation
+     * @param string $path, $filename
+     */
+    private function getLogError($path, $filename, &$return=array()){
+        $output = array();
+
+        if($this->log || auth_isadmin()){
+            $result = $this->returnData($path, $filename.'.log', 'log', $return);
+        }else{
+            @exec('tail -n 20 '.$path.'/'.$filename.'.log;', $output);
+            io_saveFile($path.'/'.filename.'.log', implode(DOKU_LF, $output));
+            $result = $this->returnData($path, $filename.'.log', 'log', $return);
+        }
+        return $result;
+    }
+
+    /**
+     * Create a zip file with tex file and all media files
+     * @param string $filename, $path, $text
+     */
+    private function createZip($filename, $path, &$text){
+
+        $zip = new ZipArchive;
+        $res = $zip->open($path.'/'.$filename.'.zip', ZipArchive::CREATE);
         if ($res === TRUE) {
-            
+            $zip->addFromString($filename.'.tex', $text);
+            $zip->addEmptyDir('media');
+            $files = array();
+            $this->getFiles($path.'/media', $files);
+            foreach($files as $f){
+                $zip->addFile($f, 'media/'.basename($f));
+            }
+            $zip->close();
+            $this->returnData($path, $filename.'.zip', 'zip');
+        }else{
+            $this->getLogError($filename);
         }
-        
-        
-        
-        $tmplt = $this->loadTemplateFile('xhtml/renderDocument.html');
-        $aSearch = array('@DIV_ID@','@TITLE_VALUE@','@AUTOR_VALUE@','@RESPONSABLE_VALUE@','@CONTINGUTS_VALUE@');
-        $aReplace = array_merge(array("id_div_document"), $data);
-        $document = str_replace($aSearch, $aReplace, $tmplt);
-        return $document;
+    }
+
+    /**
+     * Fill files var with all media files stored on directory var
+     * @param string $directory, $files
+     */
+    private function getFiles($directory, &$files){
+        if (!file_exists($directory) || !is_dir($directory) || !is_readable($directory)) {
+            return FALSE;
+        } else {
+            $directoryHandle = opendir($directory);
+            while ($contents = readdir($directoryHandle)) {
+                if ($contents != '.' && $contents != '..') {
+                    //Extensions allowed
+                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg/', $contents)){
+                        $path = $directory . "/" . $contents;
+                        if (!is_dir($path)) {
+                            array_push($files, $path);
+                        }
+                    }
+                }
+            }
+            closedir($directoryHandle);
+            return TRUE;
+        }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * AbstractRenderer: clases de procesos, establecidas en el fichero de configuración,
+ * AbstractRenderer_restos: clases de procesos, establecidas en el fichero de configuración,
  *                  correspondientes a los tipos de datos del proyecto
  * @culpable Rafael Claver
  */
@@ -8,7 +8,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
 
-class AbstractRenderer {
+class AbstractRenderer_restos {
 
     /**
      * Ejecuta los renders definidos en el elemento process
@@ -42,7 +42,7 @@ class AbstractRenderer {
     }
 }
 
-class render_Composite extends AbstractRenderer {
+class render_Composite extends AbstractRenderer_restos {
 
     protected $main_type;
     protected $render_type;
@@ -145,7 +145,7 @@ class render_apartat extends render_Object {
     }
 }
 
-class render_Field extends AbstractRenderer {
+class render_Field extends AbstractRenderer_restos {
 
     protected $flds_render = array();
     protected $flds_data = array();
@@ -169,7 +169,7 @@ class render_title extends render_Field {
 class render_autoria extends render_Field {
 }
 
-class renderComposite extends AbstractRenderer {
+class renderComposite extends AbstractRenderer_restos {
 
     protected $typesDefinition = array();
 

@@ -1,13 +1,12 @@
 <?php
 /**
- * AbstractRenderer: clases de procesos, establecidas en el fichero de configuración,
+ * exporterClasses: clases de procesos, establecidas en el fichero de configuración,
  *                  correspondientes a los tipos de datos del proyecto
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
 require_once DOKU_INC."inc/parserutils.php";
-//require_once DOKU_PLUGIN."iocexportl/lib/renderlib.php";
 
 class MainRender extends renderObject {
     protected $id;
@@ -19,18 +18,16 @@ class MainRender extends renderObject {
     protected $media_path = 'lib/exe/fetch.php?media=';
     protected $menu_html = '';
     protected $tree_names = array();
-    protected $web_folder = 'WebContent'; 
+    protected $web_folder = 'WebContent';
     protected $initialized = FALSE;
     protected $export_html = TRUE;
 
-    
+
     public function initParams(){
         if (!file_exists($this->langDir.$this->lang.'.conf')){
-            $lang = 'ca';
+            $this->lang = 'ca';
         }
-        $this->aLang =  confToHash($this->langDir.$this->lang.'.conf');
-//        $_SESSION['IOCSHOW'] = $this->aLang['show'];
-//        $_SESSION['IOCSOLUTION'] = $this->aLang['solution'];
+        $this->aLang = confToHash($this->langDir.$this->lang.'.conf');
         $this->initialized=TRUE;
     }
 }
@@ -38,7 +35,6 @@ class MainRender extends renderObject {
 class renderField extends AbstractRenderer {
 
     public function process($data) {
-//        $ret = "<label>$this->extra_data:</label>&nbsp;<span>$data</span>";
         $ret = "<span>$data</span>";
         return $ret;
     }
@@ -57,13 +53,13 @@ class renderFile extends AbstractRenderer {
         $_SESSION['media_files'] = &$this->media_files;
         $_SESSION['graphviz_images'] = &$this->graphviz_images;
 
-        
+
         $text = io_readFile(wikiFN($data));
         $instructions = p_get_instructions($text);
         $renderData = array();
         $html = p_render('wikiiocmodel_basicxhtml', $instructions, $renderData);
 
-        if($startedHere){
+        if ($startedHere) {
             session_destroy();
         }
 

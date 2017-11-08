@@ -12,7 +12,8 @@
                "autoSize": true,
                "visible": false,
                "iconClass": "'iocExportPdfIcon'",
-               "urlBase": "'lib/plugins/ajaxcommand/ajax.php?call=view'",
+               "urlBase": "'lib/plugins/ajaxcommand/ajax.php?call=projectexport'",
+               "standbyId": "'bodyContent'",
                "disableOnSend": true
             }
         },
@@ -23,15 +24,15 @@
             },
             "updateHandler": {
                 "permissions": [
-                   "_isadmin",
-                   "_ismanager",
-                   "_isprojectmanager"
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
                 ],
                 "rols": [
-                   "_responsable"
+                   "responsable"
                 ],
                 "conditions": {
-                    "page.action":"'_form'"
+                    "page.action":"'form'"
                 }
             }
         }

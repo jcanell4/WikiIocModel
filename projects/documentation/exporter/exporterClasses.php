@@ -1,19 +1,19 @@
 <?php
 /**
- * AbstractRenderer: clases de procesos, establecidas en el fichero de configuración,
+ * exporterClasses: clases de procesos, establecidas en el fichero de configuración,
  *                  correspondientes a los tipos de datos del proyecto
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
+if (!defined('EXPORT_TMP')) define('EXPORT_TMP', DOKU_PLUGIN."tmp/latex/");
 
 abstract class AbstractRenderer {
-
     protected $factory;
     protected $extra_data;
     protected $RUTA_RENDERER;
     protected $log = FALSE;
-    
+
     protected $mode;
     protected $tmp_dir;
     protected $latex_images = array();
@@ -24,6 +24,7 @@ abstract class AbstractRenderer {
         $this->factory = $factory;
         $this->RUTA_RENDERER = dirname(realpath(__FILE__));
         $this->mode = $factory->getMode();
+        //$this->tmp_dir = realpath(EXPORT_TMP)."/".rand();
     }
 
     public function init($extra) {
@@ -48,6 +49,29 @@ abstract class AbstractRenderer {
     }
 }
 
+class cfgExporter {
+    protected $params=array();
+
+    public static function Instance($params=array()) {
+        static $inst = NULL;
+        if ($inst === NULL) $inst = new cfgExporter($params);
+        return $inst;
+    }
+    /**
+     * El constructor es privat perquè es un Singleton, s'ha de fer servir cfgExporter::Instance($params)
+     */
+    private function __construct($params=array()) {
+        $this->params['tmp_dir'] = realpath(EXPORT_TMP)."/".rand();;
+        foreach ($params as $key => $value) {
+            $this->params[$key] = $value;
+        }
+    }
+
+    public function get($key=NULL) {
+        return ($key) ? $this->params[$key] : $this->params;
+    }
+}
+
 abstract class renderComposite extends AbstractRenderer {
     protected $typedef = array();
     protected $renderdef = array();
@@ -62,7 +86,8 @@ abstract class renderComposite extends AbstractRenderer {
     }
 
     public function createRender($typedef=NULL, $renderdef=NULL) {
-        return $this->factory->createRender($typedef, $renderdef);
+        $params = cfgExporter::get();
+        return $this->factory->createRender($typedef, $renderdef, $params);
     }
     public function getTypesDefinition($key = NULL) {
         return $this->factory->getTypesDefinition($key);
@@ -110,9 +135,11 @@ class renderObject extends renderComposite {
     public function getRenderFields() { //devuelve el array de campos establecidos para el render
         return $this->getRenderDef('render')['fields'];
     }
+
     public function getDataField($key = NULL) {
         return ($key === NULL) ? $this->data : $this->data[$key];
     }
+
     public function cocinandoLaPlantillaConDatos($param) {
         if (is_array($param)) {
             foreach ($param as $value) {
