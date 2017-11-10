@@ -10,21 +10,20 @@ if (!defined('EXPORT_TMP')) define('EXPORT_TMP', DOKU_PLUGIN."tmp/latex/");
 
 abstract class AbstractRenderer {
     protected $factory;
+    protected $cfgExport;
     protected $extra_data;
     protected $RUTA_RENDERER;
-    protected $log = FALSE;
-
     protected $mode;
-    protected $tmp_dir;
-    protected $latex_images = array();
-    protected $media_files = array();
-    protected $graphviz_images = array();
 
-    public function __construct($factory) {
+    public function __construct($factory, $cfgExport=NULL) {
         $this->factory = $factory;
         $this->RUTA_RENDERER = dirname(realpath(__FILE__));
         $this->mode = $factory->getMode();
-        //$this->tmp_dir = realpath(EXPORT_TMP)."/".rand();
+        if ($cfgExport){
+            $this->cfgExport = $cfgExport;
+        }else{
+            $this->cfgExport = new cfgExporter();
+        }
     }
 
     public function init($extra) {
@@ -40,35 +39,25 @@ abstract class AbstractRenderer {
     public function isEmptyArray($param) {
         $vacio = TRUE;
         foreach ($param as $value) {
-            if (is_array($value))
-                $vacio &= $this->isEmptyArray($value);
-            else
-                $vacio &= empty($value);
+            $vacio &= (is_array($value)) ? $this->isEmptyArray($value) : empty($value);
         }
         return $vacio;
     }
 }
 
 class cfgExporter {
-    protected $params=array();
+    public $id;
+    public $langDir;        //directori amb cadenes traduïdes
+    public $alang;          //cadenes traduïdes
+    public $lang = 'ca';    //idioma amb el que es treballa
+    public $tmp_dir;
+    public $latex_images = array();
+    public $media_files = array();
+    public $graphviz_images = array();
+    public $toc = NULL;
 
-    public static function Instance($params=array()) {
-        static $inst = NULL;
-        if ($inst === NULL) $inst = new cfgExporter($params);
-        return $inst;
-    }
-    /**
-     * El constructor es privat perquè es un Singleton, s'ha de fer servir cfgExporter::Instance($params)
-     */
-    private function __construct($params=array()) {
-        $this->params['tmp_dir'] = realpath(EXPORT_TMP)."/".rand();;
-        foreach ($params as $key => $value) {
-            $this->params[$key] = $value;
-        }
-    }
-
-    public function get($key=NULL) {
-        return ($key) ? $this->params[$key] : $this->params;
+    public function __construct() {
+        $this->tmp_dir = realpath(EXPORT_TMP)."/".rand();;
     }
 }
 
@@ -79,15 +68,14 @@ abstract class renderComposite extends AbstractRenderer {
      * @param array $typedef : tipo (objeto en configMain.json) correspondiente al campo actual en $data
      * @param array $renderdef : tipo (objeto en configRender.json) correspondiente al campo actual en $data
      */
-    public function __construct($factory, $typedef, $renderdef) {
-        parent::__construct($factory);
+    public function __construct($factory, $typedef, $renderdef, $cfgExport) {
+        parent::__construct($factory, $cfgExport);
         $this->typedef = $typedef;
         $this->renderdef = $renderdef;
     }
 
     public function createRender($typedef=NULL, $renderdef=NULL) {
-        $params = cfgExporter::get();
-        return $this->factory->createRender($typedef, $renderdef, $params);
+        return $this->factory->createRender($typedef, $renderdef, $this->cfgExport);
     }
     public function getTypesDefinition($key = NULL) {
         return $this->factory->getTypesDefinition($key);

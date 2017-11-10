@@ -5,44 +5,37 @@
 */
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
-//if (!defined('EXPORT_TMP')) define('EXPORT_TMP', DOKU_PLUGIN."tmp/latex/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
 require_once WIKI_IOC_MODEL."projects/documentation/exporter/exporterClasses.php";
 
 class exportDocument extends MainRender {
 
     public function __construct($factory, $typedef, $renderdef, $params) {
-        parent::__construct($factory, $typedef, $renderdef);
+        parent::__construct($factory, $typedef, $renderdef, $params);
         $this->initParams($params);
     }
 
     public function initParams($params=NULL){
         parent::initParams();
         if ($params) {
-            $this->id = $params['id'];
-            $this->lang = (!isset($params['ioclanguage'])) ? "CA" : trim(strtoupper($params['ioclanguage']));
+            $this->cfgExport->id = $params['id'];
+            $this->cfgExport->lang = (!isset($params['ioclanguage'])) ? "CA" : trim(strtoupper($params['ioclanguage']));
             $this->log = isset($params['log']);
         }
-        $aParam = ['id' => $this->id,
-                   'lang' => $this->lang,
-                   'ioclanguage' => $params['ioclanguage'],
-                   'log' => $this->log
-                  ];
-        $cfg = cfgExporter::Instance($aParam);
-        $this->tmp_dir = $cfg->get('tmp_dir');
     }
 
     public function cocinandoLaPlantillaConDatos($data) {
         @set_time_limit(240);
         $this->time_start = microtime(TRUE);
-        $output_filename = str_replace(":", "_", $this->id);
-//        $this->tmp_dir = realpath(EXPORT_TMP)."/".rand();
+        $output_filename = str_replace(":", "_", $this->cfgExport->id);
 
-        if (!file_exists($this->tmp_dir)) mkdir($this->tmp_dir, 0775, TRUE);
-        if (!file_exists($this->tmp_dir."/media")) mkdir($this->tmp_dir."/media", 0775, TRUE);
+        if (!file_exists($this->cfgExport->tmp_dir)) mkdir($this->cfgExport->tmp_dir, 0775, TRUE);
+        if (!file_exists($this->cfgExport->tmp_dir."/media")) mkdir($this->cfgExport->tmp_dir."/media", 0775, TRUE);
+
         $frontCover = "frontCoverDoc.ltx";
         $tocPage = "tocPageDoc.ltx";
         $background = "bgCoverDoc.pdf";
+
         $latex = $this->renderHeader($data);
         $latex.= $this->renderCoverPage($data, $frontCover, $background);
         $latex.= $this->renderTocPage($data, $tocPage);
@@ -53,9 +46,9 @@ class exportDocument extends MainRender {
 
         $result = array();
         if ($this->mode === 'zip'){
-            $this->createZip($output_filename, $this->tmp_dir, $latex, $result);
+            $this->createZip($output_filename, $this->cfgExport->tmp_dir, $latex, $result);
         }else{
-            $this->createLatex($output_filename, $this->tmp_dir, $latex, $result);
+            $this->createLatex($output_filename, $this->cfgExport->tmp_dir, $latex, $result);
         }
 
         return $result;
@@ -105,7 +98,7 @@ class exportDocument extends MainRender {
                 $qrcode = ($_SESSION['qrcode']) ? '\usepackage{pst-barcode,auto-pst-pdf}' : '';
                 $titol = trim(wordwrap($this->clean_accent_chars($data['titol']), 77, '\break '));
                 $aSearch = array("@IOCLANGUAGE@", "@IOCQRCODE@", "@IOCLANGCONTINUE@", "@DOC_TITOL@", "@DOC_CREDITS@");
-                $aReplace = array($this->lang, $qrcode, $this->ioclangcontinue[$this->ioclang], $titol, "crèdits: p2 Team");
+                $aReplace = array($this->cfgExport->lang, $qrcode, $this->ioclangcontinue[$this->cfgExport->lang], $titol, "crèdits: p2 Team");
                 $latex = str_replace($aSearch, $aReplace, $latex);
             }
         }
@@ -113,7 +106,7 @@ class exportDocument extends MainRender {
     }
 
     private function copyToTmp($source, $dest){
-        return copy($source, $this->tmp_dir."/$dest");
+        return copy($source, $this->cfgExport->tmp_dir."/$dest");
     }
 
     /**
@@ -145,36 +138,9 @@ class exportDocument extends MainRender {
         }
         //si pdflatex no está instalado localmente, probaremos ejecutarlo en otro servidor con una conexión ssh remota
         else {
-            $sshpass = "sshpass -p XB4bwaFX";
-            $ssh = "ssh -p2111 wikidev@wikidev.ioc.cat";
-            $scp = "scp -P2111 -r";
-            $rdir = "/home/wikidev/rafatmp/latex/";
-            $f_local = "$path/*";
-            $f_remote = "wikidev@wikidev.ioc.cat:$rdir";
-            //Verifica la existencia de los directorios del servidor remoto
-            @exec("$sshpass $ssh mkdir $rdir", $sortida, $return);
-            @exec("$sshpass $ssh mkdir $rdir/media", $sortida, $return);
-            //Copia el contenido del directorio latex temporal local al servidor remoto
-            @exec("$sshpass $scp $f_local $f_remote", $sortida, $return);
-            if ($return === 0) {
-                $pdflatex = "pdflatex -draftmode $shell_escape -halt-on-error $filename.tex";
-                //ejecuta el conversor latex en el servidor remoto
-                @exec("$sshpass $ssh \"cd $rdir && $pdflatex\"", $sortida, $return);
-                if ($return === 0) {
-                    @exec("$sshpass $ssh \"cd $rdir && $pdflatex\"", $sortida, $return);
-                    if ($_SESSION['onemoreparsing']) {
-                        @exec("$sshpass $ssh \"cd $rdir && $pdflatex\"", $sortida, $return);
-                    }
-                    $pdflatex = "pdflatex $shell_escape -halt-on-error $filename.tex";
-                    @exec("$sshpass $ssh \"cd $rdir && $pdflatex\"", $sortida, $return);
-                }
-            }
-            //Copiar el PDF generado en el servidor remoto a la ubicación correcta en el servidor local
-            if ($return === 0) {
-                $destino = "home/rafael/nb-projectes/dokuwiki_30/data/media/iocdocs/p2/";
-                $destino = mediaFN(str_replace("_", ":", $this->id));
-                @exec("$sshpass scp -P2111 $f_remote$filename.pdf $destino", $sortida, $return);
-            }
+            $destino = mediaFN(str_replace("_", ":", $this->cfgExport->id));
+            $moreparsing = ($_SESSION['onemoreparsing']) ? 1 : 0;
+            @exec("/home/rafael/nb-projectes/sh/remoteSSHexport.sh $path $filename $destino $moreparsing $shell_escape", $sortida, $return);
         }
 
         if ($return !== 0){
@@ -198,7 +164,7 @@ class exportDocument extends MainRender {
                 $num_pages = @exec("pdfinfo $path/$filename | awk '/Pages/ {print $2}'");
             }
             $filesize = filesize_h(filesize("$path/$filename"));
-            $dest = dirname(str_replace(":", "/", $this->id));
+            $dest = dirname(str_replace(":", "/", $this->cfgExport->id));
             if (!file_exists($conf['mediadir'].'/'.$dest)){
                 mkdir($conf['mediadir'].'/'.$dest, 0755, TRUE);
             }
@@ -233,7 +199,7 @@ class exportDocument extends MainRender {
             $dateFile = strftime("%e %B %Y %T", filemtime($path.'/'.$filename));
             $fname_dest = preg_replace('/\.log$/', '.txt', $filename, 1);
             $fsize = filesize_h(filesize("$path/$filename"));
-            $result = array('time' => $dateFile, 'path' => $this->id.":".$fname_dest, 'pages' => "E", 'size' => $fsize, 'description'=> "Error en la creació del arixu: $fname_dest");
+            $result = array('time' => $dateFile, 'path' => $this->cfgExport->id.":".$fname_dest, 'pages' => "E", 'size' => $fsize, 'description'=> "Error en la creació del arixu: $fname_dest");
         }
         return $result;
     }

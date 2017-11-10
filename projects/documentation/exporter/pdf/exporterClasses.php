@@ -13,11 +13,8 @@ require_once WIKI_IOC_PROJECT."exporter/exporterClasses.php";
 
 class MainRender extends renderObject {
 
-    protected $id;
-    protected $lang;
     protected $ioclangcontinue;
     protected $path_templates;
-    protected $coverImage;
 
     public function __construct($factory, $typedef, $renderdef) {
         parent::__construct($factory, $typedef, $renderdef);
@@ -50,11 +47,10 @@ class renderFile extends AbstractRenderer {
             $startedHere = true;
         }
         $_SESSION['export_latex'] = $this->export_latex;
-        $_SESSION['tmp_dir'] = $this->tmp_dir;
-        $_SESSION['latex_images'] = &$this->latex_images;
-        $_SESSION['media_files'] = &$this->media_files;
-        $_SESSION['graphviz_images'] = &$this->graphviz_images;
-
+        $_SESSION['tmp_dir'] = $this->cfgExport->tmp_dir;
+        $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
+        $_SESSION['media_files'] = &$this->cfgExport->media_files;
+        $_SESSION['graphviz_images'] = &$this->cfgExport->graphviz_images;
 
         $text = io_readFile(wikiFN($data));
         $instructions = p_get_instructions($text);
