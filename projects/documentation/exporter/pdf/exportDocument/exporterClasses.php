@@ -136,7 +136,7 @@ class exportDocument extends MainRender {
             }
             @exec("cd $path && pdflatex $shell_escape -halt-on-error $filename.tex" , $sortida, $return);
         }
-        //si pdflatex no está instalado localmente, probaremos ejecutarlo en otro servidor con una conexión ssh remota
+        //Si pdflatex no está instalado localmente, probaremos ejecutarlo en otro servidor con una conexión ssh remota
         else {
             $destino = mediaFN(str_replace("_", ":", $this->cfgExport->id));
             $moreparsing = ($_SESSION['onemoreparsing']) ? 1 : 0;
