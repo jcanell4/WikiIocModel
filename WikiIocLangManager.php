@@ -93,12 +93,14 @@ class WikiIocLangManager {
     }
 
     private static function startUpPluginLang($plugin) {
+        $idioma = WikiGlobalConfig::getConf("lang");
+        
         $lang = array();
         $path = DOKU_PLUGIN . $plugin."/lang/";
         // don't include once, in case several plugin components require the same language file
         @include($path."en/lang.php");
-        if ($conf['lang'] != 'en')
-            @include($path.$conf['lang']."/lang.php");
+        if ($idioma != 'en')
+            @include($path.$idioma."/lang.php");
 
         self::$pluginLangLoaded[$plugin] = $lang;
     }
