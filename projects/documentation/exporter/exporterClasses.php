@@ -48,7 +48,7 @@ abstract class AbstractRenderer {
 class cfgExporter {
     public $id;
     public $langDir;        //directori amb cadenes traduïdes
-    public $alang;          //cadenes traduïdes
+    public $aLang;          //cadenes traduïdes
     public $lang = 'ca';    //idioma amb el que es treballa
     public $tmp_dir;
     public $latex_images = array();

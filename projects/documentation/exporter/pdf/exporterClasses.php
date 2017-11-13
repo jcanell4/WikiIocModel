@@ -24,18 +24,27 @@ class MainRender extends renderObject {
         $this->ioclangcontinue = array('CA'=>'continuació', 'DE'=>'fortsetzung', 'EN'=>'continued','ES'=>'continuación','FR'=>'suite','IT'=>'continua');
         $this->path_templates = IOC_DOCU_LATEX_TEMPLATES.$this->factory->getDocumentClass()."/templates";
     }
+
+    /**
+     * Replace all reserved symbols
+     * @param string $text
+     */
+    public function clean_accent_chars($text){
+        $source_char = array('á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ò', 'ï', 'ü', 'ñ', 'ç','Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ò', 'Ï', 'Ü', 'Ñ', 'Ç','\\\\');
+        $replace_char = array("\'{a}", "\'{e}", "\'{i}", "\'{o}", "\'{u}", "\`{a}", "\`{e}", "\`{o}", '\"{i}', '\"{u}', '\~{n}', '\c{c}', "\'{A}", "\'{E}", "\'{I}", "\'{O}", "\'{U}", "\`{A}", "\`{E}", "\`{O}", '\"{I}', '\"{U}', '\~{N}', '\c{C}','\break ');
+        return str_replace($source_char, $replace_char, $text);
+    }
 }
 
 class renderField extends AbstractRenderer {
     public function process($data) {
-        $ret = "$data";
-        return $ret;
+        return MainRender::clean_accent_chars($data);
     }
 }
 
 class render_title extends renderField {
     public function process($data) {
-        $ret = "$data";
+        $ret = parent::process($data);
         return $ret;
     }
 }
@@ -46,7 +55,6 @@ class renderFile extends AbstractRenderer {
             session_start();
             $startedHere = true;
         }
-        $_SESSION['export_latex'] = $this->export_latex;
         $_SESSION['tmp_dir'] = $this->cfgExport->tmp_dir;
         $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
         $_SESSION['media_files'] = &$this->cfgExport->media_files;
