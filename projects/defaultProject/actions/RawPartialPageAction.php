@@ -107,18 +107,21 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         } else {
 
             // 2.1) Es demana recuperar el draft?
-            if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === TRUE) {
+            /*if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === TRUE) {
 
-                $response = $this->_getDraftResponse($data);
+                $response = $this->_getDraftResponse($data); // ALERTA[Xavi] Els drafts sempre es recuperaran localment, això ja no s'ha de cridar mai
 
                 // 2.2) Es troba desbloquejat?
-            } else if (!$data['structure']['locked']) { //
+            } else */if (!$data['structure']['locked']) { //
 
                 if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === FALSE) {
 
                     // 2.2.1) S'ha especificat recuperar el document
                     $response = $this->_getDocumentResponse($data);
                 } else {
+
+
+
 
                     // 2.2.1) Es generarà el dialog de draft pertinent, o el document si no hi ha cap draft per enviar
                    $response = $this->_getDialogOrDocumentResponse($data);
@@ -362,7 +365,15 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             default:
                 throw new UnknownTypeParamException($draftInfo['draftType']);
+
+
         }
+
+        if ($draftInfo['draftType'] === PageKeys::FULL_DRAFT || $draftInfo['draftType'] === PageKeys::PARTIAL_DRAFT) {
+            // TODO: Afegir a la resposta els esborranys remots per actualitzar els locals (
+                    $response['update_drafts'][$draftInfo['draftType']] = $data['draft'];
+        }
+
 
         return $response;
     }

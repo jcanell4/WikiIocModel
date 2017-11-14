@@ -22,11 +22,11 @@ class DraftManager
 
         switch ($type) {
             case 'structured':
-                return self::generateStructuredDraft($draft['content'], $draft['id']);
+                return self::generateStructuredDraft($draft['content'], $draft['id'], $draft['date']);
                 break;
 
             case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
-                return self::saveFullDraft($draft['content'], $draft['id']);
+                return self::saveFullDraft($draft['content'], $draft['id'], $draft['date']);
                 break;
 
             default:
@@ -63,10 +63,10 @@ class DraftManager
         }
     }
 
-    private static function generateStructuredDraft($draft, $id)
+    private static function generateStructuredDraft($draft, $id, $date)
     {
 
-        $time = time();
+
         $newDraft = [];
 
         $draftFile = self::getStructuredDraftFilename($id);
@@ -98,9 +98,9 @@ class DraftManager
 
             ) {
 
-                $chunk['date'] = $time;
+                $chunk['date'] = $date;
                 $chunk['content'] = $draft[$chunk[$header]];
-                $newDraft[$header] = ['content' => $draft[$header], 'date' => $time];
+                $newDraft[$header] = ['content' => $draft[$header], 'date' => $date];
                 unset($draft[$header]);
 
             } else {
@@ -109,7 +109,7 @@ class DraftManager
         }
 
         foreach ($draft as $header => $content) {
-            $newDraft[$header] = ['content' => $content, 'date' => $time];
+            $newDraft[$header] = ['content' => $content, 'date' => $date];
         }
 
         // Guardem el draft si hi ha cap chunk
@@ -367,13 +367,13 @@ class DraftManager
      * @param $draft
      * @param $id
      */
-    public static function saveFullDraft($draft, $id)
+    public static function saveFullDraft($draft, $id, $date)
     {
         $aux = ['id' => $id,
             'prefix' => '',
             'text' => $draft,
             'suffix' => '',
-            'date' => isset($draft["date"])?$draft["date"]:time(), // TODO[Xavi] Posar la data
+            'date' => $date,/*isset($draft["date"])?$draft["date"]:time(), // TODO[Xavi] Posar la data*/
             'client' => WikiIocInfoManager::getInfo("client")
         ];
 
