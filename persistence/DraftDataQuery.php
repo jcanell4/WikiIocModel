@@ -32,7 +32,7 @@ class DraftDataQuery extends DataQuery
         return $this->getFilename($id) . '.structured';
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE)
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject = FALSE, $hiddenProjects = FALSE, $root = FALSE)
     {
         throw new UnavailableMethodExecutionException("DraftDataQuery#getNsTree");
     }
@@ -76,11 +76,11 @@ class DraftDataQuery extends DataQuery
         if (@file_exists($draftFile)) {
             $oldDraft = $this->getStructured($id);
 
-            if (array_key_exists($chunkId, $oldDraft)) {
-                unset($oldDraft[$chunkId]);
+            if (array_key_exists($chunkId, $oldDraft['content'])) {
+                unset($oldDraft['content'][$chunkId]);
             }
 
-            if (count($oldDraft) > 0) {
+            if (count($oldDraft['content']) > 0) {
                 io_saveFile($draftFile, serialize($oldDraft));
 
             } else {
@@ -103,6 +103,21 @@ class DraftDataQuery extends DataQuery
         return $draft;
     }
 
+
+    public function getAll($id)
+    {
+        $drafts = [];
+
+        if ($this->hasFull($id)) {
+            $drafts['full'] = $this->getFull($id);
+        }
+
+        if ($this->hasStructured($id)) {
+            $drafts['structured'] = $this->getStructured($id);
+        }
+
+        return $drafts;
+    }
 
     public function hasFull($id)
     {
@@ -137,8 +152,12 @@ class DraftDataQuery extends DataQuery
         if ($this->hasStructured($id)) {
             $draft = unserialize(io_readFile($draftFile, FALSE));
 
-            if ($draft[$header]) {
-                return $draft[$header];
+            if ($draft['content'][$header]) {
+                return [
+                    'content' => $draft['content'][$header],
+                    'date' => $draft['date']
+                ];
+
             }
 
         }
@@ -147,7 +166,7 @@ class DraftDataQuery extends DataQuery
     }
 
 
-    /*** AIXÒ VE DE DraftManager.php ***/
+    /*** AIXÒ VE DE DraftManager.php ***/ // ALERTA[Xavi] No es crida aquí, es fa servir directament la versió del DraftManager
     private function saveDraft($draft)
     {
 
@@ -196,7 +215,7 @@ class DraftDataQuery extends DataQuery
                 $chunk['content'] = $draft[$chunk[$header]];
                 $newDraft[$header] = ['content' => $draft[$header], 'date' => $time];
                 unset($draft[$header]);
-                
+
             } else {
                 $newDraft[$header] = $chunk;
             }
@@ -207,7 +226,7 @@ class DraftDataQuery extends DataQuery
             $newDraft[$header] = ['content' => $content, 'date' => $time];
         }
 
-                // Guardem el draft si hi ha cap chunk
+        // Guardem el draft si hi ha cap chunk
         if (count($newDraft) > 0) {
             io_saveFile($draftFile, serialize($newDraft));
             $this->removeFull($id);
@@ -326,29 +345,33 @@ class DraftDataQuery extends DataQuery
         }
     }
 
-        // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
     public function getFullDraftDate($id)
     {
         $draftFile = $this->getFullFileName($id);
         return @file_exists($draftFile) ? @filemtime($draftFile) : -1;
     }
-    // TODO[Xavi] Arreglar, això retorna la data del fitxer, però a la estructura es troba la data del chunk
+
+
     public function getStructuredDraftDate($id, $chunkId)
     {
-        $date = -1;
+//        $date = -1;
         $draft = $this->getStructured($id);
-        // Tenim el diccionari? Al chunk es troba la data en que es va guardar?
-        if ($draft[$chunkId]) {
-            $date = $draft[$chunkId]['date'];
-        } else if (!$chunkId && count($draft) > 0) {
-            // Si no hi ha cap seleccionat retornem la data més recent
-            foreach ($draft as $content) {
-                if ($content['date'] > $date) {
-                    $date = $content['date'];
-                }
-            }
-        }
-        return $date;
+
+        return $draft['date'];
+
+//        // Tenim el diccionari? Al chunk es troba la data en que es va guardar?
+//        if ($draft[$chunkId]) {
+//            $date = $draft[$chunkId]['date'];
+//        } else if (!$chunkId && count($draft) > 0) {
+//            // Si no hi ha cap seleccionat retornem la data més recent
+//            foreach ($draft as $content) {
+//                if ($content['date'] > $date) {
+//                    $date = $content['date'];
+//                }
+//            }
+//        }
+//        return $date;
     }
 
 }

@@ -107,12 +107,12 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         } else {
 
             // 2.1) Es demana recuperar el draft?
-            /*if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === TRUE) {
+            if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === TRUE) {
 
-                $response = $this->_getDraftResponse($data); // ALERTA[Xavi] Els drafts sempre es recuperaran localment, això ja no s'ha de cridar mai
+                $response = $this->_getDraftResponse($data); // ALERTA[Xavi] Els drafts sempre es recuperaran localment, això ja no s'haurà de cridar mai
 
                 // 2.2) Es troba desbloquejat?
-            } else */if (!$data['structure']['locked']) { //
+            } else if (!$data['structure']['locked']) { //
 
                 if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === FALSE) {
 

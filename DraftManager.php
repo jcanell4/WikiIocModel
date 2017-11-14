@@ -80,36 +80,22 @@ class DraftManager
 
         // Recorrem la llista de headers de old drafts
 
+        $newDraft['date'] = $date;
+
         foreach ($oldDraft as $header => $chunk) {
-            $content1 = $draft[$header]['content'];
-            $content2 = $chunk['content'];
-            $iguals = $content1 == $content2;
 
-
-//            if (!$draft[$header]['content']) {
-            //TODO[Xavi] Encara que no es passi una secció en particular no vol dir que s'hagi d'esborrar, si no solament es guarda el chunk seleccionat
-            //
-//                continue;
-
-//            } else
-            if (array_key_exists($header, $draft)
-
-                && $chunk['content'] != $draft[$header]['content']
-
-            ) {
-
-                $chunk['date'] = $date;
+            if (array_key_exists($header, $draft) && $chunk != $draft[$header]) {
                 $chunk['content'] = $draft[$chunk[$header]];
-                $newDraft[$header] = ['content' => $draft[$header], 'date' => $date];
+                $newDraft['content'][$header] = $draft[$header];
                 unset($draft[$header]);
 
             } else {
-                $newDraft[$header] = $chunk;
+                $newDraft['content'][$header] = $chunk;
             }
         }
 
         foreach ($draft as $header => $content) {
-            $newDraft[$header] = ['content' => $content, 'date' => $date];
+            $newDraft['content'][$header] = $content;
         }
 
         // Guardem el draft si hi ha cap chunk
