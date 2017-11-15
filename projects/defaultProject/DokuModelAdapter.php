@@ -2399,7 +2399,7 @@ class DokuModelAdapter extends BasicModelAdapter {
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private static function getHtmlForDocument($id, $rev = null)
     {
-        $html = self::p_wiki_xhtml($id, $rev, true);
+        $html = p_wiki_xhtml($id, $rev, true);
 
         return $html;
     }

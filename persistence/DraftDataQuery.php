@@ -109,13 +109,21 @@ class DraftDataQuery extends DataQuery
     {
         $drafts = [];
 
-        if ($this->hasFull($id)) {
-            $drafts['full'] = $this->getFull($id);
-        }
-
         if ($this->hasStructured($id)) {
             $drafts['structured'] = $this->getStructured($id);
         }
+
+        $hasFull = $this->hasFull($id);
+
+        if ($hasFull) {
+            $drafts['full'] = $this->getFull($id);
+        }
+
+        // Si no hi ha draft full, o la data del draft estructurat es més recent, s'envia el draft reestructurat
+        if ($this->hasStructured($id) && (!$hasFull || $drafts['full']['date'] < $drafts['structured']['date'])) {
+            $drafts['full'] = $this->getFullDraftFromPartials($id);
+        }
+
 
         return $drafts;
     }
@@ -193,7 +201,9 @@ class DraftDataQuery extends DataQuery
     private function generateStructured($draft, $id)
     {
 
-        $time = time();
+//        $time = time();
+        $time = $draft['date'];
+
         $newDraft = [];
 
         $draftFile = $this->getStructuredFilename($id);
@@ -266,16 +276,17 @@ class DraftDataQuery extends DataQuery
     }
 
 
-//    private static function getStructuredDraft($id){
-//        $draftFile = self::getStructuredFilename($id);
-//        $draft = [];
-//
-//        if (@file_exists($draftFile)) {
-//            $draft = unserialize(io_readFile($draftFile, FALSE));
-//        }
-//
-//        return $draft;
-//    }
+    private function getStructuredDraft($id)
+    {
+        $draftFile = $this->getStructuredFilename($id);
+        $draft = [];
+
+        if (@file_exists($draftFile)) {
+            $draft = unserialize(io_readFile($draftFile, FALSE));
+        }
+
+        return $draft;
+    }
 
 //    private static function removeStructuredDraft($id, $header_id){
 //        $draftFile = $this->getStructuredFilename($id);
@@ -350,29 +361,56 @@ class DraftDataQuery extends DataQuery
     public function getFullDraftDate($id)
     {
         $draftFile = $this->getFullFileName($id);
-        return @file_exists($draftFile) ? @filemtime($draftFile) : -1;
+        if (@file_exists($draftFile)) {
+            $draft = unserialize(io_readFile($draftFile, FALSE));
+            return $draft['date'];
+        } else {
+            return -1;
+        }
+
+//        return @file_exists($draftFile) ? @filemtime($draftFile) : -1;
     }
 
 
-    public function getStructuredDraftDate($id, $chunkId)
+    public function getStructuredDraftDate($id)
     {
-//        $date = -1;
         $draft = $this->getStructured($id);
 
         return $draft['date'];
 
-//        // Tenim el diccionari? Al chunk es troba la data en que es va guardar?
-//        if ($draft[$chunkId]) {
-//            $date = $draft[$chunkId]['date'];
-//        } else if (!$chunkId && count($draft) > 0) {
-//            // Si no hi ha cap seleccionat retornem la data més recent
-//            foreach ($draft as $content) {
-//                if ($content['date'] > $date) {
-//                    $date = $content['date'];
-//                }
-//            }
-//        }
-//        return $date;
+    }
+
+    private function getFullDraftFromPartials($id)
+    {
+        //ALERTA! La versió que es feia servir es la que es troba al DokuPageModel!
+
+        $draftContent = '';
+
+        $structuredDraft = $this->getStructuredDraft($id);
+        $chunks = DokuModelAdapter::getAllChunksWithText($id)['chunks']; //TODO[Xavi] Això es força complicat de refactoritzar perquè crida una pila de mètodes al dokumodel
+//        $chunks = [];
+
+        $draftContent .= $structuredDraft['pre'] /*. "\n"*/;
+
+        for ($i = 0; $i < count($chunks); $i++) {
+            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft['content'])) {
+                // Substituim el contingut pel del draft
+                $header = $chunks[$i]['header_id'];
+                $draftContent .= $structuredDraft['content'][$header];
+            } else {
+                // Deixem el text original
+                $draftContent .= $chunks[$i]['text']['editing'];
+            }
+//            $draftContent .= "\n";
+        }
+
+        $draft['content'] = $draftContent;
+
+        $draft['date'] = $structuredDraft['date'];
+
+//        $draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime(self::getStructuredDraftFilename($id)));
+
+        return $draft;
     }
 
 }

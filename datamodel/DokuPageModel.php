@@ -410,6 +410,6 @@ class DokuPageModel extends WikiRenderizableDataModel {
     }
 
     public function getAllDrafts() {
-        return $this->draftDataQuery->getAll($this->id);
+        return $this->draftDataQuery->getAll($this->id, $this->pageDataQuery);
     }
 }

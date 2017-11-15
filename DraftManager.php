@@ -73,7 +73,7 @@ class DraftManager
 
         if (@file_exists($draftFile)) {
             // Obrim el draft actual si existeix
-            $oldDraft = self::getStructuredDraft($id);
+            $oldDraft = self::getStructuredDraft($id)['content'];
         } else {
             $oldDraft = [];
         }
@@ -243,6 +243,7 @@ class DraftManager
 
         $draftFile = self::getDraftFilename($id);
         $cleanedDraft = NULL;
+        $draft = [];
 
         // Si el draft es més antic que el document actual esborrem el draft
         if (@file_exists($draftFile)) {
@@ -254,9 +255,9 @@ class DraftManager
             }
         }
 
-        $draftDate = WikiPageSystemManager::extractDateFromRevision(@filemtime($draftFile));
+//        $draftDate = WikiPageSystemManager::extractDateFromRevision(@filemtime($draftFile));
 
-        return ['content' => $cleanedDraft, 'date' => $draftDate];
+        return ['content' => $cleanedDraft, 'date' => $draft['date']];
     }
 
     public static function generateFullDraft($id)
@@ -292,31 +293,33 @@ class DraftManager
         return $content;
     }
 
-    private static function getFullDraftFromPartials($id)
-    {
-        $draftContent = '';
-
-        $structuredDraft = self::getStructuredDraft($id);
-        $chunks = DokuModelAdapter::getAllChunksWithText($id)['chunks']; //TODO[Xavi] Això es força complicat de refactoritzar perquè crida una pila de mètodes al dokumodel
-//        $chunks = [];
-
-        $draftContent .= $structuredDraft['pre'] . "\n";
-
-        for ($i = 0; $i < count($chunks); $i++) {
-            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft)) {
-                $draftContent .= $structuredDraft[$chunks[$i]['header_id']]['content'];
-            } else {
-                $draftContent .= $chunks[$i]['text']['editing'];
-            }
-            $draftContent .= "\n";
-        }
-
-        $draft['content'] = $draftContent;
-
-        $draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime(self::getStructuredDraftFilename($id)));
-
-        return $draft;
-    }
+//    private static function getFullDraftFromPartials($id)
+//    {
+//        $draftContent = '';
+//
+//        $structuredDraft = self::getStructuredDraft($id);
+//        $chunks = DokuModelAdapter::getAllChunksWithText($id)['chunks']; //TODO[Xavi] Això es força complicat de refactoritzar perquè crida una pila de mètodes al dokumodel
+////        $chunks = [];
+//
+//        $draftContent .= $structuredDraft['pre'] . "\n";
+//
+//        for ($i = 0; $i < count($chunks); $i++) {
+//            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft)) {
+//                $draftContent .= $structuredDraft[$chunks[$i]['header_id']]['content'];
+//            } else {
+//                $draftContent .= $chunks[$i]['text']['editing'];
+//            }
+//            $draftContent .= "\n";
+//        }
+//
+//        $draft['content'] = $draftContent;
+//
+//        $draft['date'] = $structuredDraft['date'];
+//
+////        $draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime(self::getStructuredDraftFilename($id)));
+//
+//        return $draft;
+//    }
 
     /**
      * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
