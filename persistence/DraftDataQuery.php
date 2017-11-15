@@ -42,6 +42,7 @@ class DraftDataQuery extends DataQuery
 //        $id = WikiPageSystemManager::cleanIDForFiles($id);
         $draftFile = $this->getFilename($id);
         $cleanedDraft = NULL;
+        $draft = [];
 
         // Si el draft es més antic que el document actual esborrem el draft
         if ($this->hasFull($id)) {
@@ -54,9 +55,9 @@ class DraftDataQuery extends DataQuery
 //            }
         }
 
-        $draftDate = WikiPageSystemManager::extractDateFromRevision(@filemtime($draftFile));
+//        $draftDate = WikiPageSystemManager::extractDateFromRevision(@filemtime($draftFile));
 
-        return ['content' => $cleanedDraft, 'date' => $draftDate];
+        return ['content' => $cleanedDraft, 'date' => $draft['date']];
     }
 
     public function removeStructured($id)

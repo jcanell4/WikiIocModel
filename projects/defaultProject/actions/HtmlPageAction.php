@@ -73,7 +73,6 @@ class HtmlPageAction extends RenderedPageAction{
             $response['drafts'] = $drafts;
         }
 
-
         return $response;
     }
 }
