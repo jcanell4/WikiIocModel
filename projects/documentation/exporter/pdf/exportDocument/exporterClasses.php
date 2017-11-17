@@ -11,7 +11,7 @@ require_once WIKI_IOC_MODEL."projects/documentation/exporter/exporterClasses.php
 class exportDocument extends MainRender {
 
     public function __construct($factory, $typedef, $renderdef, $params) {
-        parent::__construct($factory, $typedef, $renderdef, $params);
+        parent::__construct($factory, $typedef, $renderdef);
         $this->initParams($params);
     }
 
@@ -240,11 +240,11 @@ class exportDocument extends MainRender {
         if (!file_exists($directory) || !is_dir($directory) || !is_readable($directory)) {
             return FALSE;
         } else {
-            $directoryHandle = opendir($directory);
-            while ($contents = readdir($directoryHandle)) {
+            $dh = opendir($directory);
+            while ($contents = readdir($dh)) {
                 if ($contents != '.' && $contents != '..') {
                     //Extensions allowed
-                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg/', $contents)){
+                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg|.*?\.gif/', $contents)){
                         $path = $directory . "/" . $contents;
                         if (!is_dir($path)) {
                             array_push($files, $path);
@@ -252,7 +252,7 @@ class exportDocument extends MainRender {
                     }
                 }
             }
-            closedir($directoryHandle);
+            closedir($dh);
             return TRUE;
         }
     }

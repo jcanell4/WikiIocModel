@@ -50,6 +50,10 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "Dades generals del projecte"
+                        },
+                        "media_address": {
+                            "type": "string",
+                            "default": "../media"
                         }
                     }
                 }

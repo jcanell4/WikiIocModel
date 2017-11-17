@@ -15,15 +15,12 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
 
     var $doc = '';        // will contain the whole document
     var $toc = array();   // will contain the Table of Contents
-
     var $sectionedits = array(); // A stack of section edit data
-
     var $headers = array();
     var $footnotes = array();
     var $lastlevel = 0;
     var $node = array(0,0,0,0,0);
     var $store = '';
-
     var $_counter   = array(); // used as global counter, introduced for table classes
     var $_codeblock = 0;       // counts the code and file blocks, used to provide download links
 
@@ -33,9 +30,7 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
      * Esta función construye el renderer a partir de las parámetros de configuración recibidos
      * @param array $params
      */
-    public function init($params) {
-
-    }
+    public function init($params) {}
 
     /**
      * Register a new edit section range
@@ -69,7 +64,7 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
     }
 
     function getFormat(){
-        return 'xhtml';
+        return 'iocxhtml';
     }
 
     function document_start() {
@@ -408,7 +403,6 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
 
     /**
      * Use GeSHi to highlight language syntax in code and file blocks
-     *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
     function _highlight($type, $text, $language=null, $filename=null) {
@@ -452,14 +446,9 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
     }
 
     function acronym($acronym) {
-
         if ( array_key_exists($acronym, $this->acronyms) ) {
-
             $title = $this->_xmlEntities($this->acronyms[$acronym]);
-
-            $this->doc .= '<abbr title="'.$title
-                .'">'.$this->_xmlEntities($acronym).'</abbr>';
-
+            $this->doc .= '<abbr title="'.$title .'">'.$this->_xmlEntities($acronym).'</abbr>';
         } else {
             $this->doc .= $this->_xmlEntities($acronym);
         }
@@ -467,25 +456,12 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
 
     function smiley($smiley) {
         if ( array_key_exists($smiley, $this->smileys) ) {
-            $title = $this->_xmlEntities($this->smileys[$smiley]);
-            $this->doc .= '<img src="'.DOKU_BASE.'lib/images/smileys/'.$this->smileys[$smiley].
-                '" class="icon" alt="'.
-                    $this->_xmlEntities($smiley).'" />';
+            $this->doc .= '<img src="'.DOKU_BASE.'lib/images/smileys/'.$this->_xmlEntities($this->smileys[$smiley]).
+                '" class="icon" alt="'.$this->_xmlEntities($smiley).'" />';
         } else {
             $this->doc .= $this->_xmlEntities($smiley);
         }
     }
-
-    /*
-    * not used
-    function wordblock($word) {
-        if ( array_key_exists($word, $this->badwords) ) {
-            $this->doc .= '** BLEEP **';
-        } else {
-            $this->doc .= $this->_xmlEntities($word);
-        }
-    }
-    */
 
     function entity($entity) {
         if ( array_key_exists($entity, $this->entities) ) {
@@ -765,28 +741,27 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
         $this->doc .= $this->_formatLink($link);
     }
 
-    function internalmedia ($src, $title=null, $align=null, $width=null,
-                            $height=null, $cache=null, $linking=null) {
+    function internalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
         global $ID;
-        list($src,$hash) = explode('#',$src,2);
-        resolve_mediaid(getNS($ID),$src, $exists);
+        list($src, $hash) = explode('#', $src,2);
+        resolve_mediaid(getNS($ID), $src, $exists);
 
         $noLink = false;
         $render = ($linking == 'linkonly') ? false : true;
         $link = $this->_getMediaLinkConf($src, $title, $align, $width, $height, $cache, $render);
 
-        list($ext,$mime,$dl) = mimetype($src,false);
+        list($ext, $mime, $dl) = mimetype($src, false);
         if (substr($mime,0,5) == 'image' && $render){
-            $link['url'] = ml($src,array('id'=>$ID,'cache'=>$cache),($linking=='direct'));
+            $link['url'] = ml($src,array('id'=>$ID, 'cache'=>$cache), ($linking=='direct'));
         }elseif ($mime == 'application/x-shockwave-flash' && $render){
-            // don't link flash movies
-            $noLink = true;
+            $noLink = true; //don't link flash movies
         }else{
             // add file icons
             $class = preg_replace('/[^_\-a-z0-9]+/i','_',$ext);
             $link['class'] .= ' mediafile mf_'.$class;
-            $link['url'] = ml($src,array('id'=>$ID,'cache'=>$cache),true);
-            if ($exists) $link['title'] .= ' (' . filesize_h(filesize(mediaFN($src))).')';
+            $link['url'] = ml($src,array('id'=>$ID, 'cache'=>$cache), true);
+            if ($exists)
+                $link['title'] .= ' (' . filesize_h(filesize(mediaFN($src))).')';
         }
 
         if ($hash) $link['url'] .= '#'.$hash;
@@ -795,10 +770,14 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
         if (!$exists) {
             $link['class'] .= ' wikilink2';
         }
-
+        /* LOS ARCHIVOS PARA LA EXPORTACIÓN NO NECESITAN INCLUIR 'LINK' A LAS IMÁGENES
         //output formatted
-        if ($linking == 'nolink' || $noLink) $this->doc .= $link['name'];
-        else $this->doc .= $this->_formatLink($link);
+        if ($linking == 'nolink' || $noLink)
+            $this->doc .= $link['name'];
+        else
+            $this->doc .= $this->_formatLink($link);
+         */
+        $this->doc .= $link['name'];
     }
 
     function externalmedia ($src, $title=null, $align=null, $width=null,
@@ -1025,15 +1004,13 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
 
     /**
      * Renders internal and external media
-     *
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _media ($src, $title=null, $align=null, $width=null,
-                      $height=null, $cache=null, $render = true) {
-
+    function _media ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $render = true) {
         $ret = '';
+        array_push($_SESSION['media_files'], $src);
 
-        list($ext,$mime,$dl) = mimetype($src);
+        list($ext, $mime, $dl) = mimetype($src);
         if (substr($mime,0,5) == 'image'){
             // first get the $title
             if (!is_null($title)) {
@@ -1041,11 +1018,11 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
             }elseif ($ext == 'jpg' || $ext == 'jpeg'){
                 //try to use the caption from IPTC/EXIF
                 require_once(DOKU_INC.'inc/JpegMeta.php');
-                $jpeg =new JpegMeta(mediaFN($src));
-                if ($jpeg !== false) $cap = $jpeg->getTitle();
-                if ($cap){
+                $jpeg = new JpegMeta(mediaFN($src));
+                if ($jpeg !== false)
+                    $cap = $jpeg->getTitle();
+                if ($cap)
                     $title = $this->_xmlEntities($cap);
-                }
             }
             if (!$render) {
                 // if the picture is not supposed to be rendered
@@ -1057,7 +1034,7 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
                 return $title;
             }
             //add image tag
-            $ret .= '<img src="'.ml($src,array('w'=>$width,'h'=>$height,'cache'=>$cache)).'"';
+            $ret .= '<img src="img/'.basename(str_replace(':', '/', $src)).'"';
             $ret .= ' class="media'.$align.'"';
 
             if ($title) {

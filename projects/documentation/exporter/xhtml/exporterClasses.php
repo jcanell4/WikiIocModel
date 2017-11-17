@@ -48,6 +48,8 @@ class renderFile extends AbstractRenderer {
         $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
         $_SESSION['media_files'] = &$this->cfgExport->media_files;
         $_SESSION['graphviz_images'] = &$this->cfgExport->graphviz_images;
+        $_SESSION['gif_images'] = &$this->cfgExport->gif_images;
+        $_SESSION['alternateAddress'] = TRUE;
 
         $text = io_readFile(wikiFN($data));
         $instructions = p_get_instructions($text);
