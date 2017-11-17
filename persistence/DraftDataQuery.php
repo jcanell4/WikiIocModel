@@ -32,7 +32,7 @@ class DraftDataQuery extends DataQuery
         return $this->getFilename($id) . '.structured';
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE)
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject = FALSE, $hiddenProjects = FALSE, $root = FALSE)
     {
         throw new UnavailableMethodExecutionException("DraftDataQuery#getNsTree");
     }
@@ -42,6 +42,7 @@ class DraftDataQuery extends DataQuery
 //        $id = WikiPageSystemManager::cleanIDForFiles($id);
         $draftFile = $this->getFilename($id);
         $cleanedDraft = NULL;
+        $draft = [];
 
         // Si el draft es més antic que el document actual esborrem el draft
         if ($this->hasFull($id)) {
@@ -54,9 +55,9 @@ class DraftDataQuery extends DataQuery
 //            }
         }
 
-        $draftDate = WikiPageSystemManager::extractDateFromRevision(@filemtime($draftFile));
+//        $draftDate = WikiPageSystemManager::extractDateFromRevision(@filemtime($draftFile));
 
-        return ['content' => $cleanedDraft, 'date' => $draftDate];
+        return ['content' => $cleanedDraft, 'date' => $draft['date']];
     }
 
     public function removeStructured($id)
@@ -76,11 +77,11 @@ class DraftDataQuery extends DataQuery
         if (@file_exists($draftFile)) {
             $oldDraft = $this->getStructured($id);
 
-            if (array_key_exists($chunkId, $oldDraft)) {
-                unset($oldDraft[$chunkId]);
+            if (array_key_exists($chunkId, $oldDraft['content'])) {
+                unset($oldDraft['content'][$chunkId]);
             }
 
-            if (count($oldDraft) > 0) {
+            if (count($oldDraft['content']) > 0) {
                 io_saveFile($draftFile, serialize($oldDraft));
 
             } else {
@@ -103,6 +104,29 @@ class DraftDataQuery extends DataQuery
         return $draft;
     }
 
+
+    public function getAll($id)
+    {
+        $drafts = [];
+
+        if ($this->hasStructured($id)) {
+            $drafts['structured'] = $this->getStructured($id);
+        }
+
+        $hasFull = $this->hasFull($id);
+
+        if ($hasFull) {
+            $drafts['full'] = $this->getFull($id);
+        }
+
+        // Si no hi ha draft full, o la data del draft estructurat es més recent, s'envia el draft reestructurat
+        if ($this->hasStructured($id) && (!$hasFull || $drafts['full']['date'] < $drafts['structured']['date'])) {
+            $drafts['full'] = $this->getFullDraftFromPartials($id);
+        }
+
+
+        return $drafts;
+    }
 
     public function hasFull($id)
     {
@@ -137,8 +161,12 @@ class DraftDataQuery extends DataQuery
         if ($this->hasStructured($id)) {
             $draft = unserialize(io_readFile($draftFile, FALSE));
 
-            if ($draft[$header]) {
-                return $draft[$header];
+            if ($draft['content'][$header]) {
+                return [
+                    'content' => $draft['content'][$header],
+                    'date' => $draft['date']
+                ];
+
             }
 
         }
@@ -147,7 +175,7 @@ class DraftDataQuery extends DataQuery
     }
 
 
-    /*** AIXÒ VE DE DraftManager.php ***/
+    /*** AIXÒ VE DE DraftManager.php ***/ // ALERTA[Xavi] No es crida aquí, es fa servir directament la versió del DraftManager
     private function saveDraft($draft)
     {
 
@@ -173,7 +201,9 @@ class DraftDataQuery extends DataQuery
     private function generateStructured($draft, $id)
     {
 
-        $time = time();
+//        $time = time();
+        $time = $draft['date'];
+
         $newDraft = [];
 
         $draftFile = $this->getStructuredFilename($id);
@@ -196,7 +226,7 @@ class DraftDataQuery extends DataQuery
                 $chunk['content'] = $draft[$chunk[$header]];
                 $newDraft[$header] = ['content' => $draft[$header], 'date' => $time];
                 unset($draft[$header]);
-                
+
             } else {
                 $newDraft[$header] = $chunk;
             }
@@ -207,7 +237,7 @@ class DraftDataQuery extends DataQuery
             $newDraft[$header] = ['content' => $content, 'date' => $time];
         }
 
-                // Guardem el draft si hi ha cap chunk
+        // Guardem el draft si hi ha cap chunk
         if (count($newDraft) > 0) {
             io_saveFile($draftFile, serialize($newDraft));
             $this->removeFull($id);
@@ -246,16 +276,17 @@ class DraftDataQuery extends DataQuery
     }
 
 
-//    private static function getStructuredDraft($id){
-//        $draftFile = self::getStructuredFilename($id);
-//        $draft = [];
-//
-//        if (@file_exists($draftFile)) {
-//            $draft = unserialize(io_readFile($draftFile, FALSE));
-//        }
-//
-//        return $draft;
-//    }
+    private function getStructuredDraft($id)
+    {
+        $draftFile = $this->getStructuredFilename($id);
+        $draft = [];
+
+        if (@file_exists($draftFile)) {
+            $draft = unserialize(io_readFile($draftFile, FALSE));
+        }
+
+        return $draft;
+    }
 
 //    private static function removeStructuredDraft($id, $header_id){
 //        $draftFile = $this->getStructuredFilename($id);
@@ -326,29 +357,60 @@ class DraftDataQuery extends DataQuery
         }
     }
 
-        // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
+    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
     public function getFullDraftDate($id)
     {
         $draftFile = $this->getFullFileName($id);
-        return @file_exists($draftFile) ? @filemtime($draftFile) : -1;
-    }
-    // TODO[Xavi] Arreglar, això retorna la data del fitxer, però a la estructura es troba la data del chunk
-    public function getStructuredDraftDate($id, $chunkId)
-    {
-        $date = -1;
-        $draft = $this->getStructured($id);
-        // Tenim el diccionari? Al chunk es troba la data en que es va guardar?
-        if ($draft[$chunkId]) {
-            $date = $draft[$chunkId]['date'];
-        } else if (!$chunkId && count($draft) > 0) {
-            // Si no hi ha cap seleccionat retornem la data més recent
-            foreach ($draft as $content) {
-                if ($content['date'] > $date) {
-                    $date = $content['date'];
-                }
-            }
+        if (@file_exists($draftFile)) {
+            $draft = unserialize(io_readFile($draftFile, FALSE));
+            return $draft['date'];
+        } else {
+            return -1;
         }
-        return $date;
+
+//        return @file_exists($draftFile) ? @filemtime($draftFile) : -1;
+    }
+
+
+    public function getStructuredDraftDate($id)
+    {
+        $draft = $this->getStructured($id);
+
+        return $draft['date'];
+
+    }
+
+    private function getFullDraftFromPartials($id)
+    {
+        //ALERTA! La versió que es feia servir es la que es troba al DokuPageModel!
+
+        $draftContent = '';
+
+        $structuredDraft = $this->getStructuredDraft($id);
+        $chunks = DokuModelAdapter::getAllChunksWithText($id)['chunks']; //TODO[Xavi] Això es força complicat de refactoritzar perquè crida una pila de mètodes al dokumodel
+//        $chunks = [];
+
+        $draftContent .= $structuredDraft['pre'] /*. "\n"*/;
+
+        for ($i = 0; $i < count($chunks); $i++) {
+            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft['content'])) {
+                // Substituim el contingut pel del draft
+                $header = $chunks[$i]['header_id'];
+                $draftContent .= $structuredDraft['content'][$header];
+            } else {
+                // Deixem el text original
+                $draftContent .= $chunks[$i]['text']['editing'];
+            }
+//            $draftContent .= "\n";
+        }
+
+        $draft['content'] = $draftContent;
+
+        $draft['date'] = $structuredDraft['date'];
+
+//        $draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime(self::getStructuredDraftFilename($id)));
+
+        return $draft;
     }
 
 }

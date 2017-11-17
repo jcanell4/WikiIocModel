@@ -188,8 +188,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
         $draftContent .= $structuredDraft['pre'] /*. "\n"*/;
 
         for ($i = 0; $i < count($chunks); $i++) {
-            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft)) {
-                $draftContent .= $structuredDraft[$chunks[$i]['header_id']]['content'];
+            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft['content'])) {
+                $draftContent .= $structuredDraft['content'][$chunks[$i]['header_id']];
             } else {
                 $draftContent .= $chunks[$i]['text']['editing'];
             }
@@ -300,13 +300,13 @@ class DokuPageModel extends WikiRenderizableDataModel {
             return false;
         }
 
-        $draft = $this->draftDataQuery->getStructured($id);
+        $draft = $this->draftDataQuery->getStructured($id)['content'];
 
         for ($i = 0; $i < count($document['chunks']); $i++) {
             if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
                 	&& $document['chunks'][$i]['header_id'] == $selected) {
                 // Si el contingut del draft i el propi es igual, l'eliminem
-                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]['content']) {
+                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]) {
                     $this->removeStructuredDraft($id, $selected);
                 } else {
                     return true;
@@ -407,5 +407,9 @@ class DokuPageModel extends WikiRenderizableDataModel {
     public function pageExists() {
         $filename = $this->pageDataQuery->getFileName($this->id);
         return file_exists($filename);
+    }
+
+    public function getAllDrafts() {
+        return $this->draftDataQuery->getAll($this->id, $this->pageDataQuery);
     }
 }

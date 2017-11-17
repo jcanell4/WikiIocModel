@@ -22,11 +22,11 @@ class DraftManager
 
         switch ($type) {
             case 'structured':
-                return self::generateStructuredDraft($draft['content'], $draft['id']);
+                return self::generateStructuredDraft($draft['content'], $draft['id'], $draft['date']);
                 break;
 
             case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
-                return self::saveFullDraft($draft['content'], $draft['id']);
+                return self::saveFullDraft($draft['content'], $draft['id'], $draft['date']);
                 break;
 
             default:
@@ -63,53 +63,39 @@ class DraftManager
         }
     }
 
-    private static function generateStructuredDraft($draft, $id)
+    private static function generateStructuredDraft($draft, $id, $date)
     {
 
-        $time = time();
+
         $newDraft = [];
 
         $draftFile = self::getStructuredDraftFilename($id);
 
         if (@file_exists($draftFile)) {
             // Obrim el draft actual si existeix
-            $oldDraft = self::getStructuredDraft($id);
+            $oldDraft = self::getStructuredDraft($id)['content'];
         } else {
             $oldDraft = [];
         }
 
         // Recorrem la llista de headers de old drafts
 
+        $newDraft['date'] = $date;
+
         foreach ($oldDraft as $header => $chunk) {
-            $content1 = $draft[$header]['content'];
-            $content2 = $chunk['content'];
-            $iguals = $content1 == $content2;
 
-
-//            if (!$draft[$header]['content']) {
-            //TODO[Xavi] Encara que no es passi una secció en particular no vol dir que s'hagi d'esborrar, si no solament es guarda el chunk seleccionat
-            //
-//                continue;
-
-//            } else
-            if (array_key_exists($header, $draft)
-
-                && $chunk['content'] != $draft[$header]['content']
-
-            ) {
-
-                $chunk['date'] = $time;
+            if (array_key_exists($header, $draft) && $chunk != $draft[$header]) {
                 $chunk['content'] = $draft[$chunk[$header]];
-                $newDraft[$header] = ['content' => $draft[$header], 'date' => $time];
+                $newDraft['content'][$header] = $draft[$header];
                 unset($draft[$header]);
 
             } else {
-                $newDraft[$header] = $chunk;
+                $newDraft['content'][$header] = $chunk;
             }
         }
 
         foreach ($draft as $header => $content) {
-            $newDraft[$header] = ['content' => $content, 'date' => $time];
+            $newDraft['content'][$header] = $content;
         }
 
         // Guardem el draft si hi ha cap chunk
@@ -257,6 +243,7 @@ class DraftManager
 
         $draftFile = self::getDraftFilename($id);
         $cleanedDraft = NULL;
+        $draft = [];
 
         // Si el draft es més antic que el document actual esborrem el draft
         if (@file_exists($draftFile)) {
@@ -268,9 +255,9 @@ class DraftManager
             }
         }
 
-        $draftDate = WikiPageSystemManager::extractDateFromRevision(@filemtime($draftFile));
+//        $draftDate = WikiPageSystemManager::extractDateFromRevision(@filemtime($draftFile));
 
-        return ['content' => $cleanedDraft, 'date' => $draftDate];
+        return ['content' => $cleanedDraft, 'date' => $draft['date']];
     }
 
     public static function generateFullDraft($id)
@@ -306,31 +293,33 @@ class DraftManager
         return $content;
     }
 
-    private static function getFullDraftFromPartials($id)
-    {
-        $draftContent = '';
-
-        $structuredDraft = self::getStructuredDraft($id);
-        $chunks = DokuModelAdapter::getAllChunksWithText($id)['chunks']; //TODO[Xavi] Això es força complicat de refactoritzar perquè crida una pila de mètodes al dokumodel
-//        $chunks = [];
-
-        $draftContent .= $structuredDraft['pre'] . "\n";
-
-        for ($i = 0; $i < count($chunks); $i++) {
-            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft)) {
-                $draftContent .= $structuredDraft[$chunks[$i]['header_id']]['content'];
-            } else {
-                $draftContent .= $chunks[$i]['text']['editing'];
-            }
-            $draftContent .= "\n";
-        }
-
-        $draft['content'] = $draftContent;
-
-        $draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime(self::getStructuredDraftFilename($id)));
-
-        return $draft;
-    }
+//    private static function getFullDraftFromPartials($id)
+//    {
+//        $draftContent = '';
+//
+//        $structuredDraft = self::getStructuredDraft($id);
+//        $chunks = DokuModelAdapter::getAllChunksWithText($id)['chunks']; //TODO[Xavi] Això es força complicat de refactoritzar perquè crida una pila de mètodes al dokumodel
+////        $chunks = [];
+//
+//        $draftContent .= $structuredDraft['pre'] . "\n";
+//
+//        for ($i = 0; $i < count($chunks); $i++) {
+//            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft)) {
+//                $draftContent .= $structuredDraft[$chunks[$i]['header_id']]['content'];
+//            } else {
+//                $draftContent .= $chunks[$i]['text']['editing'];
+//            }
+//            $draftContent .= "\n";
+//        }
+//
+//        $draft['content'] = $draftContent;
+//
+//        $draft['date'] = $structuredDraft['date'];
+//
+////        $draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime(self::getStructuredDraftFilename($id)));
+//
+//        return $draft;
+//    }
 
     /**
      * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
@@ -367,13 +356,13 @@ class DraftManager
      * @param $draft
      * @param $id
      */
-    public static function saveFullDraft($draft, $id)
+    public static function saveFullDraft($draft, $id, $date)
     {
         $aux = ['id' => $id,
             'prefix' => '',
             'text' => $draft,
             'suffix' => '',
-            'date' => isset($draft["date"])?$draft["date"]:time(), // TODO[Xavi] Posar la data
+            'date' => $date,/*isset($draft["date"])?$draft["date"]:time(), // TODO[Xavi] Posar la data*/
             'client' => WikiIocInfoManager::getInfo("client")
         ];
 

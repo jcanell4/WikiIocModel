@@ -68,6 +68,7 @@ class DraftPageAction extends PageAction {
         if($this->params[PageKeys::KEY_DO]===DW_ACT_SAVEDRAFT){
             $lockInfo = $this->updateLock()["info"];
             $draft =json_decode($this->params['draft'], true);
+            $draft['date'] = $this->params['date'];
             $this->response = DraftManager::saveDraft($draft);// TODO[Xavi] Això hurà de contenir la info
             $this->response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
             $this->response["lockInfo"] = $lockInfo;

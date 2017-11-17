@@ -445,7 +445,8 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
         }
         $fullLastSavedDraftTime = $this->dokuPageModel->getFullDraftDate();
         $structuredLastSavedDraftTime = $this->dokuPageModel->getStructuredDraftDate();
-        $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
+//        $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
+        $fullLastLocalDraftTime = $this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME];
 
         // Només pot existir un dels dos, i el draft que arriba aquí ja es el complet si existeix algun dels dos
         $savedDraftTime = max($fullLastSavedDraftTime, $structuredLastSavedDraftTime);
