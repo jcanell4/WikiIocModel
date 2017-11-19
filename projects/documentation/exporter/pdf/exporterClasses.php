@@ -8,7 +8,6 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
 define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL."projects/documentation/");
-if (!defined('IOC_DOCU_LATEX_TEMPLATES')) define('IOC_DOCU_LATEX_TEMPLATES', WIKI_IOC_PROJECT."exporter/pdf/");
 require_once WIKI_IOC_PROJECT."exporter/exporterClasses.php";
 
 class MainRender extends renderObject {
@@ -22,20 +21,29 @@ class MainRender extends renderObject {
 
     public function initParams(){
         $this->ioclangcontinue = array('CA'=>'continuació', 'DE'=>'fortsetzung', 'EN'=>'continued','ES'=>'continuación','FR'=>'suite','IT'=>'continua');
-        $this->path_templates = IOC_DOCU_LATEX_TEMPLATES.$this->factory->getDocumentClass()."/templates";
+        $this->path_templates = WIKI_IOC_PROJECT."exporter/pdf/".$this->factory->getDocumentClass()."/templates";
+    }
+
+    /**
+     * Replace all reserved symbols
+     * @param string $text
+     */
+    public function clean_accent_chars($text){
+        $source_char = array('á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ò', 'ï', 'ü', 'ñ', 'ç','Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ò', 'Ï', 'Ü', 'Ñ', 'Ç','\\\\');
+        $replace_char = array("\'{a}", "\'{e}", "\'{i}", "\'{o}", "\'{u}", "\`{a}", "\`{e}", "\`{o}", '\"{i}', '\"{u}', '\~{n}', '\c{c}', "\'{A}", "\'{E}", "\'{I}", "\'{O}", "\'{U}", "\`{A}", "\`{E}", "\`{O}", '\"{I}', '\"{U}', '\~{N}', '\c{C}','\break ');
+        return str_replace($source_char, $replace_char, $text);
     }
 }
 
 class renderField extends AbstractRenderer {
     public function process($data) {
-        $ret = "$data";
-        return $ret;
+        return MainRender::clean_accent_chars($data);
     }
 }
 
 class render_title extends renderField {
     public function process($data) {
-        $ret = "$data";
+        $ret = parent::process($data);
         return $ret;
     }
 }
@@ -46,11 +54,11 @@ class renderFile extends AbstractRenderer {
             session_start();
             $startedHere = true;
         }
-        $_SESSION['export_latex'] = $this->export_latex;
         $_SESSION['tmp_dir'] = $this->cfgExport->tmp_dir;
         $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
         $_SESSION['media_files'] = &$this->cfgExport->media_files;
         $_SESSION['graphviz_images'] = &$this->cfgExport->graphviz_images;
+        $_SESSION['gif_images'] = &$this->cfgExport->gif_images;
 
         $text = io_readFile(wikiFN($data));
         $instructions = p_get_instructions($text);

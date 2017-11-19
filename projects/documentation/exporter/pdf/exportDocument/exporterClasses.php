@@ -11,7 +11,7 @@ require_once WIKI_IOC_MODEL."projects/documentation/exporter/exporterClasses.php
 class exportDocument extends MainRender {
 
     public function __construct($factory, $typedef, $renderdef, $params) {
-        parent::__construct($factory, $typedef, $renderdef, $params);
+        parent::__construct($factory, $typedef, $renderdef);
         $this->initParams($params);
     }
 
@@ -63,9 +63,8 @@ class exportDocument extends MainRender {
         if (file_exists($this->path_templates."/$tocPage")) {
             $latex = io_readFile($this->path_templates."/$tocPage");
             if ($latex) {
-                $titol = $this->clean_accent_chars($data['titol']);
                 $aSearch = array("@DOC_TITOL@", "@DOC_CREDITS@");
-                $aReplace = array($titol, "crèdits: p2 Team");
+                $aReplace = array($data['titol'], "crèdits: p2 Team");
                 $latex = str_replace($aSearch, $aReplace, $latex);
             }
         }
@@ -77,10 +76,9 @@ class exportDocument extends MainRender {
         if (file_exists($this->path_templates."/$frontCover")) {
             $latex = io_readFile($this->path_templates."/$frontCover");
             if ($latex) {
-                $titol = $this->clean_accent_chars($data['titol']);
                 $autor = implode('\\\\\\\\', explode(",", $data['autor']));
                 $aSearch = array("@DOC_BACKGROUND@", "@DOC_TITOL@", "@DOC_AUTOR@");
-                $aReplace = array("media/$background", $titol, $autor);
+                $aReplace = array("media/$background", $data['titol'], $autor);
                 $latex = str_replace($aSearch, $aReplace, $latex);
                 if ($background) {
                     $this->copyToTmp("{$this->path_templates}/$background", "media/$background");
@@ -96,7 +94,7 @@ class exportDocument extends MainRender {
             $latex = io_readFile("{$this->path_templates}/header.ltx");
             if ($latex) {
                 $qrcode = ($_SESSION['qrcode']) ? '\usepackage{pst-barcode,auto-pst-pdf}' : '';
-                $titol = trim(wordwrap($this->clean_accent_chars($data['titol']), 77, '\break '));
+                $titol = trim(wordwrap($data['titol']), 77, '\break ');
                 $aSearch = array("@IOCLANGUAGE@", "@IOCQRCODE@", "@IOCLANGCONTINUE@", "@DOC_TITOL@", "@DOC_CREDITS@");
                 $aReplace = array($this->cfgExport->lang, $qrcode, $this->ioclangcontinue[$this->cfgExport->lang], $titol, "crèdits: p2 Team");
                 $latex = str_replace($aSearch, $aReplace, $latex);
@@ -107,16 +105,6 @@ class exportDocument extends MainRender {
 
     private function copyToTmp($source, $dest){
         return copy($source, $this->cfgExport->tmp_dir."/$dest");
-    }
-
-    /**
-     * Replace all reserved symbols
-     * @param string $text
-     */
-    function clean_accent_chars($text){
-        $source_char = array('á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ò', 'ï', 'ü', 'ñ', 'ç','Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ò', 'Ï', 'Ü', 'Ñ', 'Ç','\\\\');
-        $replace_char = array("\'{a}", "\'{e}", "\'{i}", "\'{o}", "\'{u}", "\`{a}", "\`{e}", "\`{o}", '\"{i}', '\"{u}', '\~{n}', '\c{c}', "\'{A}", "\'{E}", "\'{I}", "\'{O}", "\'{U}", "\`{A}", "\`{E}", "\`{O}", '\"{I}', '\"{U}', '\~{N}', '\c{C}','\break ');
-        return str_replace($source_char, $replace_char, $text);
     }
 
     /**
@@ -136,7 +124,7 @@ class exportDocument extends MainRender {
             }
             @exec("cd $path && pdflatex $shell_escape -halt-on-error $filename.tex" , $sortida, $return);
         }
-        //si pdflatex no está instalado localmente, probaremos ejecutarlo en otro servidor con una conexión ssh remota
+        //Si pdflatex no está instalado localmente, probaremos ejecutarlo en otro servidor con una conexión ssh remota
         else {
             $destino = mediaFN(str_replace("_", ":", $this->cfgExport->id));
             $moreparsing = ($_SESSION['onemoreparsing']) ? 1 : 0;
@@ -214,9 +202,9 @@ class exportDocument extends MainRender {
         if($this->log || auth_isadmin()){
             $result = $this->returnData($path, $filename.'.log', 'log', $return);
         }else{
-            @exec('tail -n 20 '.$path.'/'.$filename.'.log;', $output);
-            io_saveFile($path.'/'.filename.'.log', implode(DOKU_LF, $output));
-            $result = $this->returnData($path, $filename.'.log', 'log', $return);
+            @exec("tail -n 20 $path/$filename.log;", $output);
+            io_saveFile("$path/filename.log", implode(DOKU_LF, $output));
+            $result = $this->returnData($path, "$filename.log", "log", $return);
         }
         return $result;
     }
@@ -228,7 +216,7 @@ class exportDocument extends MainRender {
     private function createZip($filename, $path, &$text){
 
         $zip = new ZipArchive;
-        $res = $zip->open($path.'/'.$filename.'.zip', ZipArchive::CREATE);
+        $res = $zip->open("$path/$filename.zip", ZipArchive::CREATE);
         if ($res === TRUE) {
             $zip->addFromString($filename.'.tex', $text);
             $zip->addEmptyDir('media');
@@ -252,11 +240,11 @@ class exportDocument extends MainRender {
         if (!file_exists($directory) || !is_dir($directory) || !is_readable($directory)) {
             return FALSE;
         } else {
-            $directoryHandle = opendir($directory);
-            while ($contents = readdir($directoryHandle)) {
+            $dh = opendir($directory);
+            while ($contents = readdir($dh)) {
                 if ($contents != '.' && $contents != '..') {
                     //Extensions allowed
-                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg/', $contents)){
+                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg|.*?\.gif/', $contents)){
                         $path = $directory . "/" . $contents;
                         if (!is_dir($path)) {
                             array_push($files, $path);
@@ -264,7 +252,7 @@ class exportDocument extends MainRender {
                     }
                 }
             }
-            closedir($directoryHandle);
+            closedir($dh);
             return TRUE;
         }
     }

@@ -54,19 +54,24 @@
           "mandatory": true,
           "props": {"required":true}
         },
+        "descripcio": {
+          "n_columns": 7
+        },
         "plantilla": {
-          "n_columns": 5,
+          "n_columns": 4,
           "group": "files",
           "props": {"readonly":true}
         },
         "fitxercontinguts": {
           "label": "ruta de l'arxiu de continguts",
-          "n_columns": 5,
+          "n_columns": 4,
           "group": "files",
           "props": {"readonly":true}
         },
-        "descripcio": {
-          "n_columns": 7
+        "media_address": {
+          "label": "ruta del directori media",
+          "n_columns": 4,
+          "group": "files"
         }
     }
 }

@@ -62,16 +62,6 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
         //Check whether user can export
 	$exportallowed = (isset($conf['plugin']['iocexportl']['allowexport']) && $conf['plugin']['iocexportl']['allowexport']);
         if (!$exportallowed && !auth_isadmin()) die;
-
-//        if (!isset($_SESSION['tmp_dir'])){
-//            $this->tmp_dir = realpath(EXPORT_TMP)."/".rand();
-//        }else{
-//            $this->tmp_dir = $_SESSION['tmp_dir'];
-//        }
-//        if (!file_exists($this->tmp_dir)){
-//            mkdir($this->tmp_dir, 0775, TRUE);
-//            mkdir($this->tmp_dir.'/media', 0775, TRUE);
-//        }
         //Global variables
         $this->_initialize_globals();
     }

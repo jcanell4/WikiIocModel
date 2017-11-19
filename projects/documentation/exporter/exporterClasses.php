@@ -12,12 +12,12 @@ abstract class AbstractRenderer {
     protected $factory;
     protected $cfgExport;
     protected $extra_data;
-    protected $RUTA_RENDERER;
+    protected $rendererPath;
     protected $mode;
 
     public function __construct($factory, $cfgExport=NULL) {
         $this->factory = $factory;
-        $this->RUTA_RENDERER = dirname(realpath(__FILE__));
+        $this->rendererPath = dirname(realpath(__FILE__));
         $this->mode = $factory->getMode();
         if ($cfgExport){
             $this->cfgExport = $cfgExport;
@@ -31,7 +31,7 @@ abstract class AbstractRenderer {
     }
 
     public function loadTemplateFile($file) {
-        $tmplt = @file_get_contents("{$this->RUTA_RENDERER}/$file");
+        $tmplt = @file_get_contents("{$this->rendererPath}/$file");
         if ($tmplt == FALSE) throw new Exception("Error en la lectura de l'arxiu de plantilla: $file");
         return $tmplt;
     }
@@ -48,12 +48,13 @@ abstract class AbstractRenderer {
 class cfgExporter {
     public $id;
     public $langDir;        //directori amb cadenes traduïdes
-    public $alang;          //cadenes traduïdes
+    public $aLang;          //cadenes traduïdes
     public $lang = 'ca';    //idioma amb el que es treballa
     public $tmp_dir;
     public $latex_images = array();
     public $media_files = array();
     public $graphviz_images = array();
+    public $gif_images = array();
     public $toc = NULL;
 
     public function __construct() {
