@@ -289,7 +289,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
         // Si l'esborrany estructurad local es més recent que l'esborrany complet local, ignorem l'esborrany local complet
         // ALERTA[Xavi] QUE FEM: Descartar la data del esborrany complet local si el parcial es més recent
-        if ($structuredLastLocalDraftTime > $fullLastLocalDraftTime) {
+        if ($structuredLastLocalDraftTime >= $fullLastLocalDraftTime) {
             $fullLastLocalDraftTime = null;
         }
 

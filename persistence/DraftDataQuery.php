@@ -187,7 +187,7 @@ class DraftDataQuery extends DataQuery
 
         if (@file_exists($draftFile)) {
             // Obrim el draft actual si existeix
-            $oldDraft = $this->getStructured($id);
+            $oldDraft = $this->getStructured($id)['content'];
         } else {
             $oldDraft = [];
         }
