@@ -1413,19 +1413,19 @@ class DokuModelAdapter extends BasicModelAdapter {
 //        return DraftManager::getDraftFilename($id);
 //    }
 
-    /**
-     * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
-     * esborrat.
-     *
-     * @param $id - id del document
-     *
-     * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
-     */
-    public function hasDraft($id)
-    {
-        $draftManager = new DraftManager($this);
-        return $draftManager->hasDraft($id);
-    }
+//    /**
+//     * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
+//     * esborrat.
+//     *
+//     * @param $id - id del document
+//     *
+//     * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
+//     */
+//    public function hasDraft($id)
+//    {
+//        $draftManager = new DraftManager($this);
+//        return $draftManager->hasDraft($id);
+//    }
 
     /**
      * Neteja una id passada per argument per poder fer-la servir amb els fitxers i si no es passa l'argument
@@ -2399,7 +2399,7 @@ class DokuModelAdapter extends BasicModelAdapter {
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private static function getHtmlForDocument($id, $rev = null)
     {
-        $html = self::p_wiki_xhtml($id, $rev, true);
+        $html = p_wiki_xhtml($id, $rev, true);
 
         return $html;
     }
@@ -2925,15 +2925,15 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $ret;
     }
 
-    public function saveDraft($draft)
-    {
-        return DraftManager::saveDraft($draft);
-    }
-
-    public function removeDraft($draft)
-    {
-        return DraftManager::removeDraft($draft);
-    }
+//    public function saveDraft($draft)
+//    {
+//        return DraftManager::saveDraft($draft);
+//    }
+//
+//    public function removeDraft($draft)
+//    {
+//        return DraftManager::removeDraft($draft);
+//    }
 
 //    public function getStructuredDraft($id)
 //    {

@@ -69,6 +69,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
         $ret['structure'] = self::getStructuredDocument($this->pageDataQuery, $this->id,
             $this->editing, $this->selected,
             $this->rev);
+        //TODO [Josep] Comprovar si això es pot eliminar (ara el draft es recupera a HtmlAction)
         if ($this->draftDataQuery->hasAny($this->id)) {
             $ret['draftType'] = PageKeys::FULL_DRAFT;
             $ret['draft'] = $this->getDraftAsFull();
@@ -188,8 +189,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
         $draftContent .= $structuredDraft['pre'] /*. "\n"*/;
 
         for ($i = 0; $i < count($chunks); $i++) {
-            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft)) {
-                $draftContent .= $structuredDraft[$chunks[$i]['header_id']]['content'];
+            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft['content'])) {
+                $draftContent .= $structuredDraft['content'][$chunks[$i]['header_id']];
             } else {
                 $draftContent .= $chunks[$i]['text']['editing'];
             }
@@ -197,7 +198,8 @@ class DokuPageModel extends WikiRenderizableDataModel {
         }
 
         $draft['content'] = $draftContent;
-        $draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime($this->draftDataQuery->getStructuredFilename($this->id)));
+        $draft['date'] = $structuredDraft['date'];
+        //$draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime($this->draftDataQuery->getStructuredFilename($this->id)));
 
         return $draft;
     }
@@ -300,13 +302,13 @@ class DokuPageModel extends WikiRenderizableDataModel {
             return false;
         }
 
-        $draft = $this->draftDataQuery->getStructured($id);
+        $draft = $this->draftDataQuery->getStructured($id)['content'];
 
         for ($i = 0; $i < count($document['chunks']); $i++) {
             if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
                 	&& $document['chunks'][$i]['header_id'] == $selected) {
                 // Si el contingut del draft i el propi es igual, l'eliminem
-                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]['content']) {
+                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]) {
                     $this->removeStructuredDraft($id, $selected);
                 } else {
                     return true;
@@ -408,4 +410,83 @@ class DokuPageModel extends WikiRenderizableDataModel {
         $filename = $this->pageDataQuery->getFileName($this->id);
         return file_exists($filename);
     }
+
+    public function getAllDrafts() {
+        $drafts = [];
+        $hasStructured = $this->hasStructuredDraft();
+        
+        if ($hasStructured) {
+            $drafts['structured'] = $this->getStructuredDraft();
+        }
+
+        $hasFull = $this->hasFullDraft();
+
+        if ($hasFull) {
+            $drafts['full'] = $this->getFullDraft();
+        }
+
+        // Si no hi ha draft full, o la data del draft estructurat es més recent, s'envia el draft reestructurat
+        if ($hasStructured && (!$hasFull || $drafts['full']['date'] < $drafts['structured']['date'])) {
+            $drafts['full'] = $this->getFullDraftFromPartials();
+        }
+
+
+        return $drafts;
+    }
+    
+    private function hasFullDraft(){
+        return $this->draftDataQuery->hasFull($this->id);
+    }
+
+    private function hasStructuredDraft(){
+        return $this->draftDataQuery->hasStructured($this->id);
+    }
+
+    private function getStructuredDraft(){
+        return $this->draftDataQuery->getStructured($this->id);
+    }
+
+    public function removeDraft($draft) {
+
+        $type = $draft['type'];
+
+        switch ($type) {
+            case 'structured':
+                if(isset($draft["section_id"])){
+                    return $this->removeChunkDraft($draft["section_id"]);
+                }else{
+                    return $this->removePartialDraft();                    
+                }
+                break;
+
+            case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
+                return $this->removeFullDraft();
+                break;
+
+            default:
+                // error o no draft
+                break;
+        }
+    }
+
+    public function saveDraft($draft)
+    {
+        $type = $draft['type'];
+
+        switch ($type) {
+            case 'structured':
+                $this->draftDataQuery->generateStructured($draft['content'], $draft['id']);
+                break;
+
+            case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
+                $this->draftDataQuery->saveFullDraft($draft['content'], $draft['id']);
+                break;
+
+            default:
+                // error o no draft
+                break;
+        }
+    }
+
+
 }

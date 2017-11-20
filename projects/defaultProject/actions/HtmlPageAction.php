@@ -65,6 +65,14 @@ class HtmlPageAction extends RenderedPageAction{
             $this->addInfoToInfo($response['info'], $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded'), $this->params[PageKeys::KEY_ID]));
         }
 
+        // TODO: Afegir els drafts des del responseprocess del pare?
+
+        $drafts = $this->dokuPageModel->getAllDrafts();
+
+        if (count($drafts)>0) {
+            $response['drafts'] = $drafts;
+        }
+
         return $response;
     }
 }

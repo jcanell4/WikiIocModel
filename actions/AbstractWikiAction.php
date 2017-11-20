@@ -9,11 +9,12 @@ abstract class AbstractWikiAction {
 
     protected $modelManager;
 
-    public function get(/*Array*/$paramsArr = array()){
+    public function get($paramsArr = array()){
         $this->params = $paramsArr;
         $this->triggerStartEvents();
-        return $this->responseProcess();
+        $ret = $this->responseProcess();
         $this->triggerEndEvents();
+        return $ret;
     }
 
     public function init($modelManager = NULL) {
@@ -108,7 +109,7 @@ abstract class AbstractWikiAction {
         if(!empty($tmp)){
             $this->postResponseTmp[] = $tmp;
         }
-    }    
-    
+    }
+
     protected abstract function responseProcess();
 }

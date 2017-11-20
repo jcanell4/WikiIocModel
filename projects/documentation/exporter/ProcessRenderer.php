@@ -9,14 +9,14 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
 define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/documentation/");
 require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
-//require_once WIKI_IOC_MODEL."renderer/AbstractFactoryRenderer.php";
+//require_once WIKI_IOC_MODEL."exporter/AbstractFactoryRenderer.php";
 require_once WIKI_IOC_MODEL."persistence/ProjectMetaDataQuery.php";
-require_once WIKI_IOC_PROJECT."renderer/FactoryRenderer.php";
-require_once WIKI_IOC_PROJECT."renderer/AbstractRenderer.php";
+require_once WIKI_IOC_PROJECT."exporter/FactoryRenderer.php";
+require_once WIKI_IOC_PROJECT."exporter/exporterClasses.php";
 
 class ProcessRenderer extends AbstractRenderer {
 
-    const PATH_RENDERER = WIKI_IOC_PROJECT."renderer/";
+    const PATH_RENDERER = WIKI_IOC_PROJECT."exporter/";
     const PATH_CONFIG_FILE = WIKI_IOC_PROJECT."metadata/config/";
     const CONFIG_TYPE_FILENAME = "configMain.json";
     const CONFIG_RENDER_FILENAME = "configRender.json";
@@ -25,12 +25,12 @@ class ProcessRenderer extends AbstractRenderer {
     protected $projectID = NULL;
     protected $mainTypeName = NULL;
     protected $dataArray = array();
-    protected $renderArray = array();
+    protected $typesRender = array();
     protected $typesDefinition = array();
 
     public function __construct($projectID=NULL) {
         $this->projectID = $projectID;
-        $this->renderArray = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
+        $this->typesRender = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
         $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE)[0];
         $this->mainTypeName = $cfgArray['mainType']['typeDef'];
         $this->typesDefinition = $cfgArray['typesDefinition'];
@@ -48,8 +48,8 @@ class ProcessRenderer extends AbstractRenderer {
      * del archivo de configuración del proyecto
      */
     public function init() {
-        $fRenderer = new FactoryRenderer($this->typesDefinition, $this->renderArray);
-        $render = $fRenderer->createRender($this->typesDefinition[$this->mainTypeName], $this->renderArray[$this->mainTypeName]);
+        $fRenderer = new FactoryRenderer($this->typesDefinition, $this->typesRender);
+        $render = $fRenderer->createRender($this->typesDefinition[$this->mainTypeName], $this->typesRender[$this->mainTypeName]);
         $ret = $render->process($this->dataArray);
         return $ret;
     }

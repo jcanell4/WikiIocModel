@@ -1,46 +1,38 @@
 <?php
 /**
- * AbstractRenderer: clases de procesos, establecidas en el fichero de configuración,
+ * exporterClasses: clases de procesos, establecidas en el fichero de configuración,
  *                  correspondientes a los tipos de datos del proyecto
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
 require_once DOKU_INC."inc/parserutils.php";
-//require_once DOKU_PLUGIN."iocexportl/lib/renderlib.php";
 
 class MainRender extends renderObject {
-    protected $id;
-    protected $langDir;
-    protected $lang = 'ca';
-    protected $aLang;
     protected $max_menu;
     protected $max_navmenu;
     protected $media_path = 'lib/exe/fetch.php?media=';
     protected $menu_html = '';
     protected $tree_names = array();
-    protected $web_folder = 'WebContent'; 
+    protected $web_folder = 'WebContent';
     protected $initialized = FALSE;
     protected $export_html = TRUE;
 
-    
+
     public function initParams(){
-        if (!file_exists($this->langDir.$this->lang.'.conf')){
-            $lang = 'ca';
+        $langFile = $this->cfgExport->langDir.$this->cfgExport->lang.'.conf';
+        if (!file_exists($langFile)){
+            $this->cfgExport->lang = 'ca';
         }
-        $this->aLang =  confToHash($this->langDir.$this->lang.'.conf');
-//        $_SESSION['IOCSHOW'] = $this->aLang['show'];
-//        $_SESSION['IOCSOLUTION'] = $this->aLang['solution'];
-        $this->initialized=TRUE;
+        $this->cfgExport->aLang = confToHash($langFile);
+        $this->initialized = TRUE;
     }
 }
 
 class renderField extends AbstractRenderer {
 
     public function process($data) {
-//        $ret = "<label>$this->extra_data:</label>&nbsp;<span>$data</span>";
-        $ret = "<span>$data</span>";
-        return $ret;
+        return htmlentities($data, ENT_QUOTES);
     }
 }
 
@@ -52,20 +44,19 @@ class renderFile extends AbstractRenderer {
             $startedHere = true;
         }
         $_SESSION['export_html'] = $this->export_html;
-        $_SESSION['tmp_dir'] = $this->tmp_dir;
-        $_SESSION['latex_images'] = &$this->latex_images;
-        $_SESSION['media_files'] = &$this->media_files;
-        $_SESSION['graphviz_images'] = &$this->graphviz_images;
+        $_SESSION['tmp_dir'] = $this->cfgExport->tmp_dir;
+        $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
+        $_SESSION['media_files'] = &$this->cfgExport->media_files;
+        $_SESSION['graphviz_images'] = &$this->cfgExport->graphviz_images;
+        $_SESSION['gif_images'] = &$this->cfgExport->gif_images;
+        $_SESSION['alternateAddress'] = TRUE;
 
-        
         $text = io_readFile(wikiFN($data));
         $instructions = p_get_instructions($text);
         $renderData = array();
         $html = p_render('wikiiocmodel_basicxhtml', $instructions, $renderData);
-
-        if($startedHere){
-            session_destroy();
-        }
+        $this->cfgExport->toc = $renderData["tocItems"];
+        if ($startedHere) session_destroy();
 
         return $html;
     }

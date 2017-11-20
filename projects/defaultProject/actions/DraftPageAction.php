@@ -23,13 +23,12 @@ if (!defined('DW_ACT_SAVEDRAFT')) define('DW_ACT_SAVEDRAFT', "preview");
 if (!defined('DW_ACT_DELDRAFT')) define('DW_ACT_DELDRAFT', "draftdel");
 
 class DraftPageAction extends PageAction {
-    protected $engine;
+    private static $infoDuration = 15;
 
     public function __construct(BasicPersistenceEngine $engine) {
         parent::__construct($engine);
         //$this->draftQuery = $engine->createDraftDataQuery();
         $this->defaultDo = DW_ACT_SAVEDRAFT;
-        $this->engine = $engine;
     }
 
     protected function startProcess() {
@@ -68,11 +67,19 @@ class DraftPageAction extends PageAction {
         if($this->params[PageKeys::KEY_DO]===DW_ACT_SAVEDRAFT){
             $lockInfo = $this->updateLock()["info"];
             $draft =json_decode($this->params['draft'], true);
-            $this->response = DraftManager::saveDraft($draft);// TODO[Xavi] Això hurà de contenir la info
+            $draft['date'] = $this->params['date'];
+            //$this->response = DraftManager::saveDraft($draft);// TODO[Xavi] Això hurà de contenir la info
+            $this->getModel()->saveDraft($draft);
             $this->response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+            if($draft['type']==="full"){
+                $this->response = ['info' => self::generateInfo('info', 'Desat esborrany complet', $this->response['id'], self::$infoDuration)];//TODO [Josep] internacionalitzar!
+            }else{
+                $this->response = ['info' => self::generateInfo('info', 'Desat esborrany parcial', $this->response['id'], self::$infoDuration)];//TODO [Josep] internacionalitzar!
+            }                
             $this->response["lockInfo"] = $lockInfo;
         }else if($this->params[PageKeys::KEY_DO]===DW_ACT_DELDRAFT){
-            $this->response = DraftManager::removeDraft($this->params);// TODO[Xavi] Això hurà de contenir la info
+            //$this->response = DraftManager::removeDraft($this->params);// TODO[Xavi] Això hurà de contenir la info
+            $this->getModel()->removeDraft($this->params);
             $this->response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
         }else{
             throw new UnexpectedValueException("Unexpected value '".$this->params["do"]."', for parameter 'do'");
