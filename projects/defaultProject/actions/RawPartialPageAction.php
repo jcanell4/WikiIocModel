@@ -284,8 +284,8 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         $draftInfo['local'] = false;
 
         // ALERTA[Xavi] QUE FEM: Calcular la data dels esborranys locals
-        $fullLastLocalDraftTime = intval(substr($this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME], 0, 10));
-        $structuredLastLocalDraftTime = intval(substr($this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME], 0, 10));
+        $fullLastLocalDraftTime = $this->params[PageKeys::FULL_LAST_LOCAL_DRAFT_TIME];
+        $structuredLastLocalDraftTime = $this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME];
 
         // Si l'esborrany estructurad local es més recent que l'esborrany complet local, ignorem l'esborrany local complet
         // ALERTA[Xavi] QUE FEM: Descartar la data del esborrany complet local si el parcial es més recent

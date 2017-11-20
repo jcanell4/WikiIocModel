@@ -194,7 +194,7 @@ class DraftDataQuery extends DataQuery
 
         // Recorrem la llista de headers de old drafts
 
-                foreach ($oldDraft as $header => $chunk) {
+        foreach ($oldDraft as $header => $chunk) {
 
             if (array_key_exists($header, $draft) && $chunk != $draft[$header]) {
                 $chunk['content'] = $draft[$chunk[$header]];
