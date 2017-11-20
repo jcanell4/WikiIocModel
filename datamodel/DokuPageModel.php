@@ -475,11 +475,13 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
         switch ($type) {
             case 'structured':
-                $this->draftDataQuery->generateStructured($draft['content'], $draft['id']);
+//                $this->draftDataQuery->generateStructured($draft['content'], $draft['id'], $draft['date']);
+                $this->draftDataQuery->generateStructured($draft['content'], $draft['id'], $draft['date']);
                 break;
 
             case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
-                $this->draftDataQuery->saveFullDraft($draft['content'], $draft['id']);
+//                $this->draftDataQuery->saveFullDraft($draft['content'], $draft['id'], $draft['date']);
+                $this->draftDataQuery->saveFullDraft($draft['content'], $draft['id'], $draft['date']);
                 break;
 
             default:

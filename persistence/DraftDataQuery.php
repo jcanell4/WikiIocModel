@@ -175,13 +175,13 @@ class DraftDataQuery extends DataQuery
     }
     
     
-    private function generateStructured($draft, $id)
+    public function generateStructured($draft, $id, $date)
     {
 
 //        $time = time();
-        $time = $draft['date'];
 
         $newDraft = [];
+        $newDraft['date'] = $date;
 
         $draftFile = $this->getStructuredFilename($id);
 
@@ -194,24 +194,25 @@ class DraftDataQuery extends DataQuery
 
         // Recorrem la llista de headers de old drafts
 
-        foreach ($oldDraft as $header => $chunk) {
+                foreach ($oldDraft as $header => $chunk) {
 
-            if (array_key_exists($header, $draft)
-                && $chunk['content'] != $draft[$header]['content']
-            ) {
-                $chunk['date'] = $time;
+            if (array_key_exists($header, $draft) && $chunk != $draft[$header]) {
                 $chunk['content'] = $draft[$chunk[$header]];
-                $newDraft[$header] = ['content' => $draft[$header], 'date' => $time];
+                $newDraft['content'][$header] = $draft[$header];
                 unset($draft[$header]);
 
             } else {
-                $newDraft[$header] = $chunk;
+                $newDraft['content'][$header] = $chunk;
             }
+        }
+
+        foreach ($draft as $header => $content) {
+            $newDraft['content'][$header] = $content;
         }
 
 
         foreach ($draft as $header => $content) {
-            $newDraft[$header] = ['content' => $content, 'date' => $time];
+            $newDraft['content'][$header] = $content;
         }
 
         // Guardem el draft si hi ha cap chunk
@@ -231,13 +232,13 @@ class DraftDataQuery extends DataQuery
      * @param $draft
      * @param $id
      */
-    public function saveFullDraft($draft, $id)
+    public function saveFullDraft($draft, $id, $date)
     {
         $aux = ['id' => $id,
             'prefix' => '',
             'text' => $draft,
             'suffix' => '',
-            'date' => time(), // TODO[Xavi] Posar la data
+            'date' => $date,
             'client' => WikiIocInfoManager::getInfo('client')
         ];
 
