@@ -104,30 +104,6 @@ class DraftDataQuery extends DataQuery
         return $draft;
     }
 
-
-    public function getAll($id)
-    {
-        $drafts = [];
-
-        if ($this->hasStructured($id)) {
-            $drafts['structured'] = $this->getStructured($id);
-        }
-
-        $hasFull = $this->hasFull($id);
-
-        if ($hasFull) {
-            $drafts['full'] = $this->getFull($id);
-        }
-
-        // Si no hi ha draft full, o la data del draft estructurat es més recent, s'envia el draft reestructurat
-        if ($this->hasStructured($id) && (!$hasFull || $drafts['full']['date'] < $drafts['structured']['date'])) {
-            $drafts['full'] = $this->getFullDraftFromPartials($id);
-        }
-
-
-        return $drafts;
-    }
-
     public function hasFull($id)
     {
         $draftFile = $this->getFullFileName($id);
