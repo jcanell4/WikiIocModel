@@ -104,30 +104,6 @@ class DraftDataQuery extends DataQuery
         return $draft;
     }
 
-
-    public function getAll($id)
-    {
-        $drafts = [];
-
-        if ($this->hasStructured($id)) {
-            $drafts['structured'] = $this->getStructured($id);
-        }
-
-        $hasFull = $this->hasFull($id);
-
-        if ($hasFull) {
-            $drafts['full'] = $this->getFull($id);
-        }
-
-        // Si no hi ha draft full, o la data del draft estructurat es més recent, s'envia el draft reestructurat
-        if ($this->hasStructured($id) && (!$hasFull || $drafts['full']['date'] < $drafts['structured']['date'])) {
-            $drafts['full'] = $this->getFullDraftFromPartials($id);
-        }
-
-
-        return $drafts;
-    }
-
     public function hasFull($id)
     {
         $draftFile = $this->getFullFileName($id);
@@ -175,19 +151,19 @@ class DraftDataQuery extends DataQuery
     }
     
     
-    private function generateStructured($draft, $id)
+    public function generateStructured($draft, $id, $date)
     {
 
 //        $time = time();
-        $time = $draft['date'];
 
         $newDraft = [];
+        $newDraft['date'] = $date;
 
         $draftFile = $this->getStructuredFilename($id);
 
         if (@file_exists($draftFile)) {
             // Obrim el draft actual si existeix
-            $oldDraft = $this->getStructured($id);
+            $oldDraft = $this->getStructured($id)['content'];
         } else {
             $oldDraft = [];
         }
@@ -196,22 +172,23 @@ class DraftDataQuery extends DataQuery
 
         foreach ($oldDraft as $header => $chunk) {
 
-            if (array_key_exists($header, $draft)
-                && $chunk['content'] != $draft[$header]['content']
-            ) {
-                $chunk['date'] = $time;
+            if (array_key_exists($header, $draft) && $chunk != $draft[$header]) {
                 $chunk['content'] = $draft[$chunk[$header]];
-                $newDraft[$header] = ['content' => $draft[$header], 'date' => $time];
+                $newDraft['content'][$header] = $draft[$header];
                 unset($draft[$header]);
 
             } else {
-                $newDraft[$header] = $chunk;
+                $newDraft['content'][$header] = $chunk;
             }
+        }
+
+        foreach ($draft as $header => $content) {
+            $newDraft['content'][$header] = $content;
         }
 
 
         foreach ($draft as $header => $content) {
-            $newDraft[$header] = ['content' => $content, 'date' => $time];
+            $newDraft['content'][$header] = $content;
         }
 
         // Guardem el draft si hi ha cap chunk
@@ -231,13 +208,13 @@ class DraftDataQuery extends DataQuery
      * @param $draft
      * @param $id
      */
-    public function saveFullDraft($draft, $id)
+    public function saveFullDraft($draft, $id, $date)
     {
         $aux = ['id' => $id,
             'prefix' => '',
             'text' => $draft,
             'suffix' => '',
-            'date' => time(), // TODO[Xavi] Posar la data
+            'date' => $date,
             'client' => WikiIocInfoManager::getInfo('client')
         ];
 
