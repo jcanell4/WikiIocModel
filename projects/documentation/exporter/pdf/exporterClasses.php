@@ -7,6 +7,7 @@
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
+require_once(DOKU_PLUGIN.'iocexportl/lib/renderlib.php');
 define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL."projects/documentation/");
 require_once WIKI_IOC_PROJECT."exporter/exporterClasses.php";
 
@@ -55,18 +56,13 @@ class renderFile extends AbstractRenderer {
             $startedHere = true;
         }
         $_SESSION['tmp_dir'] = $this->cfgExport->tmp_dir;
-        $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
-        $_SESSION['media_files'] = &$this->cfgExport->media_files;
-        $_SESSION['graphviz_images'] = &$this->cfgExport->graphviz_images;
-        $_SESSION['gif_images'] = &$this->cfgExport->gif_images;
 
         $text = io_readFile(wikiFN($data));
-        $instructions = p_get_instructions($text);
-        $renderData = array();
-        $latex = p_render('wikiiocmodel_basiclatex', $instructions, $renderData);
+        $info = array();
+        $instructions = get_latex_instructions($text);
+        $latex = p_latex_render('wikiiocmodel_basiclatex', $instructions, $info);
 
         if ($startedHere) session_destroy();
-
         return $latex;
     }
 }

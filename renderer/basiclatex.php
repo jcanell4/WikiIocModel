@@ -1,7 +1,6 @@
 <?php
 /**
  * LaTeX Plugin: Export content to LaTeX
- *
  * @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author  Marc Català <mcatala@ioc.cat>
  */
@@ -32,13 +31,11 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
     var $tableheader_end = FALSE;
     var $tmp_dir = 0;           //Value of temp dir
 
-
     /**
      * Esta función construye el renderer a partir de las parámetros de configuración recibidos
      * @param array $params
      */
     public function init($params) {
-
     }
 
     /**
@@ -122,14 +119,13 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
     function label_document() { //For links
         if (isset($this->info['current_file_id'])) {
             $cleanid = $this->info['current_file_id'];
-        }
-        else {
+        }else {
             $cleanid = noNS(cleanID($this->info['current_id'], TRUE));
         }
         $this->doc .= "\label{" . md5($cleanid) . "}";
         if (isset($this->info['current_file_id'])){
             $this->doc .= "%%Start: $cleanid => " . $this->info['current_file_id'].DOKU_LF;
-        } else {
+        }else {
             $this->doc .= "%%Start: $cleanid  => " . wikiFN($cleanid).DOKU_LF;
         }
     }
@@ -154,8 +150,14 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
         return $imgdest.self::$imgext;
     }
 
-    function _latexAddImage($src, $width = NULL, $height = NULL, $align = NULL, $title = NULL, $linking = NULL, $external = FALSE){
+    function _latexAddImage($src, $width=NULL, $height=NULL, $align=NULL, $title=NULL, $linking=NULL, $external=FALSE){
+
+        if (!$this->tmp_dir) $this->tmp_dir = $_SESSION['tmp_dir'];
+        if (!file_exists($this->tmp_dir)) mkdir($this->tmp_dir, 0775, TRUE);
+        if (!file_exists($this->tmp_dir."/media")) mkdir($this->tmp_dir."/media", 0775, TRUE);
+
         $max_width_elem = '.9\linewidth';
+
         if ($_SESSION['figure']){
             $title = $_SESSION['figtitle'];
             $title = preg_replace('/<verd>|<\/verd>/', '', $title);
@@ -168,25 +170,19 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
             $footer = $_SESSION['figfooter'];
         }
         // make sure width and height are available
-        if (!$width && !$height) {
-            if (file_exists($src)) {
-                $info  = getimagesize($src);
-                $width  = $info[0];
-            }
-        }else{
-            if (file_exists($src)) {
-                $info  = getimagesize($src);
+        if (file_exists($src)) {
+            $info = getimagesize($src);
+            if (!$width && !$height) {
+                $width = $info[0];
+            }else{
                 $ratio = $info[0]/$info[1];
-                if(!$width){
+                if (!$width){
                     $width = round($height * $ratio, 0);
                 }
             }
         }
-        if (!$_SESSION['u0']){
-            $align = 'centering';
-        }else{//Unit 0
-            $align = 'flushleft';
-        }
+        $align = ($_SESSION['u0']) ? "flushleft" : "centering";
+
         if (!$this->table && !$_SESSION['figure'] && !$_SESSION['video_url'] && $_SESSION['iocelem'] !== 'textl'){
             if ($width < 133){
                 $max_width = '[width='.$width.'px]';
@@ -204,9 +200,9 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
                 $max_width = '[width='.$max_width_elem.']';
                 $img_width = $max_width_elem;
              }else{
-                 $max_width = '[width='.$width.'px]';
-                 $img_width = $width;
-                 $max_width_elem = FALSE;
+                $max_width = '[width='.$width.'px]';
+                $img_width = $width;
+                $max_width_elem = FALSE;
              }
         }else{
             $max_width = '[width='.$width.'px]';
@@ -268,10 +264,10 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
                     $title_width = $max_width_elem;
                 }
                 $this->doc .= '\parbox[t]{'.$title_width.'}{\caption{'.trim($this->_xmlEntities($title));
-				if (!empty($_SESSION['figlabel'])){
-	                $this->doc .= '\label{'.$_SESSION['figlabel'].'}';
-				}
-				$this->doc .= '}}\\\\\vspace{2mm}'.DOKU_LF;
+		if (!empty($_SESSION['figlabel'])){
+	            $this->doc .= '\label{'.$_SESSION['figlabel'].'}';
+		}
+		$this->doc .= '}}\\\\\vspace{2mm}'.DOKU_LF;
             }
             //Inside table, images will be centered vertically
             if ($this->table && $width > self::$img_max_table){
@@ -289,7 +285,7 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
                 $this->doc .= '}';
 
             }
-			//Close href
+            //Close href
             if (!is_null($linking) && $linking !== 'details'){
                 $this->doc .= '}';
                 if (!$_SESSION['video_url']){
@@ -309,17 +305,17 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
                     }else{
                        $hspace = '\textwidth';
                     }
-					$vspace = '\vspace{-2mm}';
-					$align = '\raggedleft';
+                    $vspace = '\vspace{-2mm}';
+                    $align = '\raggedleft';
                 }elseif($_SESSION['iocelem']){
-                        //textboxsize .05
-                        $hspace = '.9\linewidth';
-                        $vspace = '\vspace{-6mm}';
-                        $align = '\raggedleft';
+                    //textboxsize .05
+                    $hspace = '.9\linewidth';
+                    $vspace = '\vspace{-6mm}';
+                    $align = '\raggedleft';
                 }else{
                     $hspace = '\marginparwidth';
-					$vspace = '\vspace{-4mm}';
-					$align = '\iocalignment';
+                    $vspace = '\vspace{-4mm}';
+                    $align = '\iocalignment';
                 }
                 $this->doc .=  '\raisebox{\height}{\parbox[t]{'.$hspace.'}{'.$align.'\footerspacingline\textsf{\tiny'.$vspace.trim($this->_xmlEntities($footer)).'}}}';
             }
@@ -933,16 +929,14 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
         }
     }
 
-    function internalmedia ($src, $title=null, $align=null, $width=null,
-                            $height=null, $cache=null, $linking=null) {
-        global $conf;
-        resolve_mediaid(getNS($this->id),$src, $exists);
-        list($ext,$mime) = mimetype($src);
+    function internalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
+        resolve_mediaid(getNS($this->id), $src, $exists);
+        list($ext, $mime) = mimetype($src);
         $type = substr($mime,0,5);
-        if($type === 'image'){
+        if ($type === 'image'){
             $file = mediaFN($src);
             $this->_latexAddImage($file, $width, $height, $align, $title, $linking);
-        }elseif($type === 'appli' && !$_SESSION['u0']){
+        }elseif($type === 'appli'){
             if (preg_match('/\.pdf$/', $src)){
                 $_SESSION['qrcode'] = TRUE;
                 $src = $this->_xmlEntities(DOKU_URL.'lib/exe/fetch.php?media='.$src);
@@ -955,10 +949,8 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
         }
     }
 
-    function externalmedia ($src, $title=NULL, $align=NULL, $width=NULL,
-                            $height=NULL, $cache=NULL, $linking=NULL) {
-        global $conf;
-        list($ext,$mime) = mimetype($src);
+    function externalmedia ($src, $title=NULL, $align=NULL, $width=NULL, $height=NULL, $cache=NULL, $linking=NULL) {
+        list($ext, $mime) = mimetype($src);
         if (substr($mime,0,5) == 'image'){
             $tmp_name = tempnam($this->tmp_dir.'/media', 'ext');
             $client = new DokuHTTPClient;
@@ -1009,7 +1001,6 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
      * Add external link
      */
     function externallink($url, $title = NULL) {
-        //$url = $this->_xmlEntities($url);
         //Escape # only inside iocelem
         if ($_SESSION['iocelem']){
             $url = preg_replace('/(#|%)/','\\\\$1', $url);
@@ -1032,7 +1023,6 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
 
     /**
      * Just print local links
-     *
      * @fixme add image handling
      */
     function locallink($hash, $name = NULL){
@@ -1047,16 +1037,14 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
 
     /**
      * Just print WindowsShare links
-     *
      * @fixme add image handling
      */
     function windowssharelink($url, $name = NULL) {
-        $this->unformatted('[['.$link.'|'.$title.']]');
+        $this->unformatted('[['.$url.'|'.$name.']]');
     }
 
     /**
      * Just print email links
-     *
      * @fixme add image handling
      */
     function emaillink($address, $name = NULL) {
@@ -1065,7 +1053,6 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
 
     /**
      * Construct a title and handle images in titles
-     *
      * @author Harry Fuecks <hfuecks@gmail.com>
      */
     function _getLinkTitle($title, $default, & $isImage, $id=null) {

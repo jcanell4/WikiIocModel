@@ -126,19 +126,24 @@ class exportDocument extends MainRender {
         //Attach media files
         foreach($this->cfgExport->media_files as $f){
             resolve_mediaid(getNS($f), $f, $exists);
-            if ($exists) $zip->addFile(mediaFN($f), 'media/'.basename(mediaFN($f)));
+            if ($exists) {
+                //eliminamos el primer nivel del ns
+                $arr = explode(":", $f);
+                array_shift($arr);
+                $zip->addFile(mediaFN($f), 'html/img/'.implode("/", $arr));
+            }
         }
         $this->cfgExport->media_files = array();
 
         //Attach latex files
         foreach($this->cfgExport->latex_images as $f){
-            if (file_exists($f)) $zip->addFile($f, 'media/'.basename($f));
+            if (file_exists($f)) $zip->addFile($f, 'html/img/'.basename($f));
         }
         $this->cfgExport->latex_images = array();
 
         //Attach graphviz files
         foreach($this->cfgExport->graphviz_images as $f){
-            if (file_exists($f)) $zip->addFile($f, 'media/'.basename($f));
+            if (file_exists($f)) $zip->addFile($f, 'html/img/'.basename($f));
         }
         $this->cfgExport->graphviz_images = array();
 
