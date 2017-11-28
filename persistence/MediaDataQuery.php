@@ -8,10 +8,6 @@ require_once (DOKU_INC . 'inc/io.php');
 require_once (DOKU_INC . 'inc/confutils.php');
 require_once (DOKU_INC . 'inc/media.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
-//require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
-//require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
-//require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-
 
 /**
  * Description of MediaDataQuery
@@ -31,23 +27,23 @@ class MediaDataQuery extends DataQuery{
     public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE) {
         $base = WikiGlobalConfig::getConf('mediadir');
 
-        return $this->getNsTreeFromBase( $base, $currentNode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects, $root);        
+        return $this->getNsTreeFromBase( $base, $currentNode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects, $root);
     }
-    
+
     public function save($id, $filePathSource, $overWrite = TRUE ) {
         $ns = $this->getNs($id);
         $imageId = $this->getIdWithoutNs($id);
         return $this->_saveImage(
                     $ns, $imageId, $filePathSource, $overWrite, "move_uploaded_file"
-            );        
+            );
     }
-    
+
     public function delete($id) {
-        return $this->_deleteImage($id);        
+        return $this->_deleteImage($id);
     }
-    
+
         /**
-     * És la crida pincipal de la comanda save_unlinked_image. 
+     * És la crida pincipal de la comanda save_unlinked_image.
      * Guarda un fitxer de tipus media pujat des del client
      * @param string $nsTarget
      * @param string $idTarget
@@ -56,9 +52,9 @@ class MediaDataQuery extends DataQuery{
      *
      * @return int
      */
-    //[ALERTA Josep] Es trasllada a BasicPersistenceManager        
-    //[TODO Josep] Aquí cal crear una crida normalitzada que en processar 
-    //l'acció cridi a aquesta funció traslladada a la classe encarregada 
+    //[ALERTA Josep] Es trasllada a BasicPersistenceManager
+    //[TODO Josep] Aquí cal crear una crida normalitzada que en processar
+    //l'acció cridi a aquesta funció traslladada a la classe encarregada
     //de la persistencia.
     public function upload( $nsTarget, $idTarget, $filePathSource, $overWrite = FALSE ) {
             return $this->_saveImage(
@@ -99,7 +95,7 @@ class MediaDataQuery extends DataQuery{
         $ret = media_delete($idImge, $auth);
         return $ret;
     }
-    
+
     /**
      * @param string   $nsTarget
      * @param string   $idTarget

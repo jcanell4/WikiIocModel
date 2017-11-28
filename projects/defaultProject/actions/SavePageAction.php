@@ -34,9 +34,7 @@ class SavePageAction extends RawPageAction {
         if (isset($_REQUEST['keep_draft'])) {
             $this->params['keep_draft'] = $_REQUEST['keep_draft']==="true";
         }
-
     }
-
 
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la
@@ -77,8 +75,7 @@ class SavePageAction extends RawPageAction {
      * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
      * DokuAction#response.
      */
-    protected function responseProcess()
-    {
+    protected function responseProcess() {
         global $TEXT;
         global $ID;
 
@@ -128,10 +125,9 @@ class SavePageAction extends RawPageAction {
                 }
             } else {
                 $response['formId'] = 'form_' . WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
-                $response['inputs'] = [
-                    'date' => WikiIocInfoManager::getInfo("meta")["date"]["modified"],
-                    'changecheck' => md5($TEXT)
-                ];
+                $response['inputs'] = ['date' => WikiIocInfoManager::getInfo("meta")["date"]["modified"],
+                                       PageKeys::CHANGE_CHECK => md5($TEXT)
+                                      ];
             }
 
             $type = 'success';
@@ -140,8 +136,6 @@ class SavePageAction extends RawPageAction {
         }
 
         $response["lockInfo"] = $this->lockStruct["info"];
-
-
 
         $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]) . $suffix;
 
@@ -152,9 +146,7 @@ class SavePageAction extends RawPageAction {
 
     private function _save(){
         //spam check
-        if(checkwordblock()) {
-//            msg($lang['wordblock'], -1);
-//            return 'edit';
+        if (checkwordblock()) {
             throw new WordBlockedException();
         }
         //conflict check
@@ -176,7 +168,6 @@ class SavePageAction extends RawPageAction {
                                      );
 
         //delete draft
-//        act_draftdel($act);
         $this->dokuPageModel->removeFullDraft();
 
         // Esborrem el draft parcial perquè aquest NO l'elimina la wiki automàticament
