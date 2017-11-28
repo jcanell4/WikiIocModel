@@ -26,8 +26,6 @@ require_once(DOKU_INC . 'inc/JpegMeta.php');
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/BasicModelAdapter.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/WikiIocInfoManager.php');
-//require_once(DOKU_PLUGIN . 'ownInit/WikiGlobalConfig.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/authorization/PagePermissionManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelExceptions.php');
 
@@ -36,20 +34,6 @@ require_once(DOKU_PLUGIN . 'acl/admin.php');
 // TODO[Xavi] Afegit per mi per extreure la funcionalitat dels locks a una altra classe
 require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/AdminTaskListAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RefreshEditionAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPageAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/RawPartialPageAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/HtmlPageAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/HtmlRevisionPageAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePageAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePartialPageAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CreatePageAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelEditPageAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/CancelPartialEditPageAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/UploadMediaAction.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/DraftPageAction.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/actions/NotifyAction.php');
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
@@ -68,30 +52,6 @@ if (!defined('DW_ACT_MEDIA_DETAIL'))  define('DW_ACT_MEDIA_DETAIL', "media_detai
 if (!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
 if (!defined('DW_ACT_EXPORT_ADMIN'))  define('DW_ACT_EXPORT_ADMIN', "admin");
 if (!defined('DW_ACT_MEDIA_DETAILS')) define('DW_ACT_MEDIA_DETAILS', "mediadetails");
-
-//    const DW_ACT_BACKLINK="backlink";
-//    const DW_ACT_REVISIONS="revisions";
-//    const DW_ACT_DIFF="diff";
-//    const DW_ACT_SUBSCRIBE="subscribe";
-//    const DW_ACT_UNSUBSCRIBE="unsubscribe";
-//    const DW_ACT_SUBSCRIBENS="subscribens";
-//    const DW_ACT_UNSUBSCRIBENS="unsubscribens";
-//    const DW_ACT_INDEX="index";
-//    const DW_ACT_RECENT="recent";
-//    const DW_ACT_SEARCH="search";
-//    const DW_ACT_EXPORT_RAW="export_raw";
-//    const DW_ACT_EXPORT_XHTML="export_xhtml";
-//    const DW_ACT_EXPORT_XHTMLBODY="export_xhtmlbody";
-//    const DW_ACT_CHECK="check";
-//    const DW_ACT_INDEX="register";
-//    const DW_ACT_LOGIN="login";
-//    const DW_ACT_LOGOUT="logout";
-//    const DW_ACT_EXPORT_PROFILE="profile";
-//    const DW_ACT_EXPORT_RESENDPWD="resendpwd";
-//    const DW_ACT_DRAFT="draft";
-//    const DW_ACT_WORDBLOCK="wordblock";
-//    const DW_ACT_CONFLICT="conflict";
-//    const DW_ACT_CANCEL="cancel";
 
 /**
  * Class DokuModelAdapter
@@ -127,7 +87,6 @@ class DokuModelAdapter extends BasicModelAdapter {
 
     public function getShortcutsTaskList($user_id) {
         $action = new ShortcutsTaskListAction($this->persistenceEngine);
-//        $user = WikiIocInfoManager::getInfo("userinfo");
 
         if (!$user_id) {
             throw new Exception("No es troba cap usuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
@@ -139,8 +98,7 @@ class DokuModelAdapter extends BasicModelAdapter {
     }
 
     //JOSEP: ALERTA! cal mirar si es fa servir i eliminar en cas negatiu.
-    public function setParams($element, $value)
-    {
+    public function setParams($element, $value) {
         $this->params[$element] = $value;
     }
 
@@ -158,18 +116,6 @@ class DokuModelAdapter extends BasicModelAdapter {
     public function cancelEdition($pars){
         $action = new CancelEditPageAction($this->persistenceEngine);
         return $action->get($pars);
-//        global $lang;
-//
-//        $this->startPageProcess(DW_ACT_DRAFTDEL, $pid, $prev);
-//        $this->doCancelEditPreprocess($pid, $keep_draft);    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-//
-//        $response = $this->getFormatedPageResponse();
-//        $response ['info'] = $this->generateInfo("warning", $lang['edition_cancelled']);
-//        $response['structure'] = $this->getStructuredDocument(null, $pid, $prev);
-//        $response['meta'] = $this->getMetaResponse($pid);
-//        $response['revs'] = $this->getRevisions($pid);
-//
-//        return $response;
     }
 
     /**
@@ -178,99 +124,12 @@ class DokuModelAdapter extends BasicModelAdapter {
      * @return array|void
      */
     //[ALERTA Josep] Es queda aquí.
-//	public function saveEdition(
-//		$pid, $prev = NULL, $prange = NULL,
-//		$pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL
-//	) {
-
-    public function saveEdition($params)
-    {
+    public function saveEdition($params) {
         $action = new SavePageAction($this->persistenceEngine);
-        // Remove partialDraft
-//        $this->clearPartialDraft($params['id']); // TODO[Xavi] Aquí o al SavePageAction? importa si es abans del $response?
-
         $ret = $action->get($params);
         return $ret;
-
-//	$this->startPageProcess(
-//		DW_ACT_SAVE, $pid, $prev, $prange, $psum, $pdate, $ppre, $ptext, $psuf
-//	);
-//	$code = $this->doSavePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-//      $response = $this->getSaveInfoResponse($code);
-//      return $response;
     }
 
-//    public function getMediaFileName($id, $rev = '')
-//    {
-//        $dataQuery = $this->persistenceEngine->createMediaDataQuery();
-//        return $dataQuery->getFileName($id, array("rev" => $rev));
-//    }
-
-//    /**
-//     * Obté l'identificador de la pàgina sense el seu espai de noms
-//     * @param type $id
-//     * @return type
-//     */
-//    public function getIdWithoutNs($id)
-//    {
-//        $dataQuery = $this->persistenceEngine->createPageDataQuery();
-//        return $dataQuery->getIdWithoutNs($id);
-//    }
-
-//    /**
-//     * Obté la llista de medias que estan en una espai de noms
-//     * @param type $ns
-//     * @return array
-//     */
-//    public function getMediaList($ns)
-//    {
-//        $dataQuery = $this->persistenceEngine->createMediaDataQuery();
-//        return $dataQuery->getFileList($ns);
-//    }
-
-//    /**
-//     *
-//     * @param type $id
-//     * @param type $rev
-//     * @return type
-//     */
-//    public function getPageFileName($id, $rev = '')
-//    {
-//        $dataQuery = $this->persistenceEngine->createPageDataQuery();
-//        return $dataQuery->getFileName($id, array("rev" => $rev));
-//    }
-
-//    /**
-//     * Obté un link al media identificat per $image, $rev
-//     * @param string $image //abans era $id. $id no s'utilitzava
-//     * @param bool $rev
-//     * @param bool $meta
-//     *
-//     * @return string
-//     */
-//    //[ALERTA Josep] Es deixa aquí la funció tot i que el codi es trasllada 
-//    //a WikiDataSystemUtility
-//    public function getMediaUrl($image, $rev = FALSE, $meta = FALSE)
-//    {
-//        $size = media_image_preview_size($image, $rev, $meta);
-//        if ($size) {
-//            $more = array();
-//            if ($rev) {
-//                $more['rev'] = $rev;
-//            } else {
-//                $t = @filemtime(mediaFN($image));
-//                $more['t'] = $t;
-//            }
-//            $more['w'] = $size[0];
-//            $more['h'] = $size[1];
-//            $src = ml($image, $more);
-//        } else {
-//            $src = ml($image, "", TRUE);
-//        }
-//
-//        return $src;
-//    }
-//
     /**
      * És la crida pincipal de la comanda save_unlinked_image.
      * Guarda un fitxer de tipus media pujat des del client
@@ -368,256 +227,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         return WikiIocLangManager::getLang($id);
     }
 
-//    /**
-//     * Crea el directori on ubicar el fitxer referenciat per $filePath després
-//     * d'extreure'n el nom del fitxer. Aquesta funció no crea directoris recursivamnent.
-//     *
-//     * @param type $filePath
-//     */
-//    public function makeFileDir($filePath)
-//    {
-//        io_makeFileDir($filePath);
-//    }
-//
-//    public function tplIncDir()
-//    {
-//        global $conf;
-//        if (is_callable('tpl_incdir')) {
-//            $ret = tpl_incdir();
-//        } else {
-//            $ret = DOKU_INC . 'lib/tpl/' . $conf['template'] . '/';
-//        }
-//
-//        return $ret;
-//    }
-
-    // configuration methods
-//    /**
-//     * tpl_getConf($id)
-//     *
-//     * use this function to access template configuration variables
-//     */
-//    public function tplConf($id)
-//    {
-//        return tpl_getConf($id);
-//    }
-
-//    //[Alerta Josep] Es trasllada a PermissionManager
-//    private function setUserPagePermission($page, $user, $acl_level)
-//    {
-//        global $conf;
-//        include_once(DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
-//        $pageuser = ":" . substr($page, 0, strrpos($page, ":"));
-//        $userpage = substr($pageuser, strrpos($pageuser, ":") + 1);
-//        $ret = FALSE;
-//        if (WikiIocInfoManager::getInfo('isadmin')
-//            || WikiIocInfoManager::getInfo('ismanager')
-//            || (WikiIocInfoManager::getInfo('namespace')
-//                == substr($page, 0, strrpos($page, ":"))
-//                && $userpage == $user
-//                && $conf['userpage_allowed'] === 1
-//                && ($pageuser == $conf['userpage_ns'] . $user ||
-//                    $pageuser == $conf['userpage_discuss_ns'] . $user)
-//            )
-//        ) {
-//            $ret = $this->establir_permis($page, $user, $acl_level, TRUE);
-//            WikiIocInfoManager::setInfo('perm', $ret);
-//        }
-//        return $ret;
-//    }
-//
-//    /**
-//     * administració de permisos
-//     *
-//     * @param $page y $user son obligatorios
-//     */
-//    //[Alerta Josep] Es trasllada a PermissionManager
-//    private function obtenir_permis($page, $user)
-//    {
-////		$acl_class = new admin_plugin_acl();
-////		$acl_class->handle();
-////		$acl_class->who = $user;
-//        $permis = auth_quickaclcheck($page);
-//
-//        /* este bucle obtiene el mismo resultado que auth_quickaclcheck()
-//		$permis = NULL;
-//		$sub_page = $page;
-//		while (!$permis && $sub_page) {
-//			$acl_class->ns = $sub_page;
-//			$permis = $acl_class->_get_exact_perm();
-//			$sub_page = substr($sub_page,0,strrpos($sub_page,':'));
-//		}
-//		*/
-//
-//        return $permis;
-//    }
-//
-//    /**
-//     * @param bool $force : true : indica que s'ha d'establir el permís estricte
-//     *                      false: si existeix algún permís, no es modifica
-//     */
-//    //[Alerta Josep] Es trasllada a PermissionManager
-//    private function establir_permis($page, $user, $acl_level, $force = FALSE)
-//    {
-//        $acl_class = new admin_plugin_acl();
-//        $acl_class->handle();
-//        $acl_class->who = $user;
-//        $permis_actual = auth_quickaclcheck($page);
-//
-//        if ($force || $acl_level > $permis_actual) {
-//            $ret = $acl_class->_acl_add($page, $user, $acl_level);
-//            if ($ret) {
-//                if (strpos($page, '*') === FALSE) {
-//                    if ($acl_level > AUTH_EDIT) {
-//                        $permis_actual = AUTH_EDIT;
-//                    }
-//                } else {
-//                    $permis_actual = $acl_level;
-//                }
-//            }
-//        }
-//
-//        return $permis_actual;
-//    }
-//
-//    //[Alerta Josep] Es trasllada a PermissionManager
-//    private function eliminar_permis($page, $user)
-//    {
-//        $acl_class = new admin_plugin_acl();
-//        //$acl_class->handle();
-//        //$acl_class->who = $user;
-//        if ($page && $user) {
-//            $ret = $acl_class->_acl_del($page, $user);
-//        }
-//
-//        return $ret;
-//    }
-
-//    /**
-//     * Retorna si s'ha trobat la cadena que es cerca al principi de la cadena on es busca.
-//     *
-//     * @param string $haystack cadena on buscar
-//     * @param string $needle cadena per buscar
-//     *
-//     * @return bool true si la cadena comença com la cadena passada per argument o la cadena a buscar es buida, i false
-//     * en cas contrari
-//     */
-//    private function starsWith($haystack, $needle)
-//    {
-//        return $needle === "" || strpos($haystack, $needle) === 0;
-//    }
-
-//    /**
-//     * Retorna si s'ha trobat la cadena que es cerca al final de la cadena on es busca.
-//     *
-//     * @param string $haystack cadena on buscar
-//     * @param string $needle cadena per buscar
-//     *
-//     * @return bool true si la cadena acaba com la cadena passada per argument o la cadena a buscar es buida, i false
-//     * en cas contrari
-//     */
-//    private function endsWith($haystack, $needle)
-//    {
-//        return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
-//    }
-
-//
-//	/**
-//	 * Inicia tractament per obtenir la llista de gestions d'administració
-//	 */
-//	private function startAdminTaskProcess( $ptask = NULL, $pid = NULL ) {
-//		global $ACT;
-//		global $_REQUEST;
-//		global $ID;
-//		global $conf;
-//
-//		// Agafem l'index de la configuració
-//		if ( ! isset( $pid ) ) {
-//			$pid = $conf['start'];
-//		}
-//
-//		$ID = $this->params['id'] = $pid;
-//		$ACT = $this->params['do'] = DW_ACT_EXPORT_ADMIN;
-//
-//		WikiIocInfoManager::loadInfo();
-//		$this->startUpLang();
-//		if ( $ptask ) {
-//			if ( ! $_REQUEST['page'] || $_REQUEST['page'] != $ptask ) {
-//				$_REQUEST['page'] = $ptask;
-//			}
-//			$this->params['task'] = $ptask;
-//		}
-//
-//		$this->triggerStartEvents();
-//	}
-
-//    /**
-//     * Inicia tractament d'una pàgina de la dokuwiki
-//     */
-//    private function startCreateProcess(
-//        $pdo, $pid = NULL, $prev = NULL, $prange = NULL,
-//        $psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL,
-//        $psuf = NULL
-//    )
-//    {
-//        global $TEXT, $lang;
-//        $this->startPageProcess($pdo, $pid, $prev, $prange, $psum, $pdate, $ppre, $ptext, $psuf);
-//        if (!$ptext) {
-//            $TEXT = $this->params['text'] = cleanText($lang['createDefaultText']);
-//        }
-//    }
-
-//    /**
-//     * Inicia tractament d'una pàgina de la dokuwiki
-//     */
-//    private function startPageProcess( // TODO[Xavi] No es pot eliminar perquè es cridat pel CreateProcess
-//        $pdo, $pid = NULL, $prev = NULL, $prange = NULL,
-//        $psum = NULL, $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL
-//    )
-//    {
-//        global $ID;
-//        global $ACT;
-//        global $REV;
-//        global $RANGE;
-//        global $DATE;
-//        global $PRE;
-//        global $TEXT;
-//        global $SUF;
-//        global $SUM;
-//
-//        $ACT = $this->params['do'] = $pdo;
-//        $ACT = act_clean($ACT);
-//
-//        if (!$pid) {
-//            $pid = DW_DEFAULT_PAGE;
-//        }
-//        $ID = $this->params['id'] = $pid;
-//        if ($prev) {
-//            $REV = $this->params['rev'] = $prev;
-//        }
-//        if ($prange) {
-//            $RANGE = $this->params['range'] = $prange;
-//        }
-//        if ($pdate) {
-//            $DATE = $this->params['date'] = $pdate;
-//        }
-//        if ($ppre) {
-//            $PRE = $this->params['pre'] = cleanText(substr($ppre, 0, -1));
-//        }
-//        if ($ptext) {
-//            $TEXT = $this->params['text'] = cleanText($ptext);
-//        }
-//        if ($psuf) {
-//            $SUF = $this->params['suf'] = cleanText($psuf);
-//        }
-//        if ($psum) {
-//            $SUM = $this->params['sum'] = $psum;
-//        }
-//
-//        WikiIocInfoManager::loadInfo();
-//        $this->startUpLang();
-//        $this->triggerStartEvents();
-//    }
 
     /**
      * Inicia tractament d'una pàgina de la dokuwiki
@@ -716,17 +325,12 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $ret;
     }
 
-    private function triggerStartEvents()
-    {
-//      $tmp = array(); //NO DATA
-//	trigger_event( 'DOKUWIKI_STARTED', $tmp );
+    private function triggerStartEvents() {
         trigger_event('WIOC_AJAX_COMMAND_STARTED', $this->dataTmp);
     }
 
-    private function triggerEndEvents()
-    {
+    private function triggerEndEvents() {
         $tmp = array(); //NO DATA
-//		trigger_event( 'DOKUWIKI_DONE', $tmp );
         trigger_event('WIOC_AJAX_COMMAND_DONE', $tmp);
     }
 
@@ -759,43 +363,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         $this->langStartedUp = true;
     }
 
-//    /**
-//     * Realitza el per-procés d'una pàgina de la dokuwiki en format HTML.
-//     * Permet afegir etiquetes HTML al contingut final durant la fase de
-//     * preprocés
-//     *
-//     * @return string
-//     */
-//    private function doFormatedPartialPagePreProcess()
-//    {
-//        $content = "";
-//        if ($this->runBeforePreprocess($content)) {
-//            //unlock( $this->params['id'] ); //try to unlock
-//        }
-//        $this->runAfterPreprocess($content);
-//
-//        return $content;
-//    }
-
-
-//    /**
-//     * Realitza el per-procés d'una pàgina de la dokuwiki en format HTML.
-//     * Permet afegir etiquetes HTML al contingut final durant la fase de
-//     * preprocés
-//     *
-//     * @return string
-//     */
-//    private function doFormatedPagePreProcess()
-//    {
-//        $content = "";
-//        if ($this->runBeforePreprocess($content)) {
-//            unlock($this->params['id']); //try to unlock
-//        }
-//        $this->runAfterPreprocess($content);
-//
-//        return $content;
-//    }
-
     /**
      * Realitza el per-procés per recuperar el detall d'una imatge de la dokuwiki.
      * Permet afegir etiquetes HTML al contingut final durant la fase de
@@ -819,341 +386,8 @@ class DokuModelAdapter extends BasicModelAdapter {
         ob_start();
         include WikiGlobalConfig::tplIncDir() . "inc_detail.php";
         $content = ob_get_clean();
-//        $content = preg_replace(
-//            '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i',
-//            '$1<div class="dokuwiki">$2$4</div>$6', $toc
-//        );
-
         return $content;
     }
-
-//    // TODO[Xavi] Reactivada perquè es continua cridant (Al fer un save es crida aquesta)
-//    private function doEditPagePreProcess()
-//    {
-//        global $ACT;
-//
-//        $content = "";
-//        if ($this->runBeforePreprocess($content)) {
-//            $ACT = act_edit($ACT);
-//            $ACT = act_permcheck($ACT);
-//        }
-//        $this->runAfterPreprocess($content);
-//
-//        return $content;
-//    }
-
-//	private function doAdminTaskPreProcess() {
-//		global $ACT;
-//		global $conf;
-//		global $ID;
-//
-//		$content = "";
-//		if ( $this->runBeforePreprocess( $content ) ) {
-//			$ACT = act_permcheck( $ACT );
-//			//handle admin tasks
-//			// retrieve admin plugin name from $_REQUEST['page']
-//			if ( ! empty( $_REQUEST['page'] ) ) {
-//				$pluginlist = plugin_list( 'admin' );
-//				if ( in_array( $_REQUEST['page'], $pluginlist ) ) {
-//					// attempt to load the plugin
-//					if ( $plugin =& plugin_load( 'admin', $_REQUEST['page'] ) !== NULL ) {
-//						if ( $plugin->forAdminOnly() 
-//                                                            && !WikiIocInfoManager::getInfo('isadmin') ) {
-//							// a manager tried to load a plugin that's for admins only
-//							unset( $_REQUEST['page'] );
-//							msg( 'For admins only', - 1 );
-//						} else {
-//							if ( is_callable( array( $plugin, "preventRefresh" ) ) ) {
-//								$allowedRefresh = $plugin->preventRefresh();
-//							}
-//							$plugin->handle();
-//							$this->dataTmp["needRefresh"] = is_callable( array( $plugin, "isRefreshNeeded" ) );
-//							if ( $this->dataTmp["needRefresh"] ) {
-//								$this->dataTmp["needRefresh"] = $plugin->isRefreshNeeded();
-//							}
-//							$this->dataTmp["title"] = $plugin->getMenuText( $conf['lang'] );
-//							if ( isset( $allowedRefresh )
-//							     && is_callable( array( $plugin, "setAllowedRefresh" ) )
-//							) {
-//								$plugin->setAllowedRefresh( $allowedRefresh );
-//							}
-//						}
-//					}
-//				}
-//			}
-//			// check permissions again - the action may have changed
-//			$ACT = act_permcheck( $ACT );
-//		}
-//		$this->runAfterPreprocess( $content );
-//
-//		return $content;
-//	}
-
-//	private function doAdminTaskListPreProcess() {
-//		global $ACT;
-//
-//		$content = "";
-//		if ( $this->runBeforePreprocess( $content ) ) {
-//			$ACT = act_permcheck( $ACT );
-//		}
-//		$this->runAfterPreprocess( $content );
-//
-//		return $content;
-//	}
-
-//    private function doCreatePreProcess()
-//    {
-//        if (WikiIocInfoManager::getInfo("exists")) {
-//            throw new PageAlreadyExistsException($pid, $lang['pageExists']);
-//        }
-//
-//        $permis_actual = $this->obtenir_permis($pid, $_SERVER['REMOTE_USER']);
-//        if ($permis_actual < AUTH_CREATE) {
-//            //se pide el permiso para el directorio (no para la página)
-//            $permis_actual = $this->setUserPagePermission(getNS($pid) . ':*'
-//                , WikiIocInfoManager::getInfo('client'), AUTH_DELETE);
-//        }
-//        if ($permis_actual >= AUTH_CREATE) {
-//            $code = $this->doSavePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-//        } else {
-//            throw new InsufficientPermissionToCreatePageException($pid); //TODO [Josep] cal internacionalitzar el missage per defecte
-//        }
-//    }
-
-//    private function doSavePreProcess()
-//    {
-//        global $ACT;
-//
-//        $code = 0;
-//        $ACT = act_permcheck($ACT);
-//
-//        if ($ACT == $this->params['do']) {
-//            $ret = act_save($ACT);
-//        } else {
-//            $ret = $ACT;
-//        }
-//        if ($ret === 'edit') {
-//            $code = 1004;
-//        } else if ($ret === 'conflict') {
-//            $code = 1003;
-//        } else if ($ret === 'denied') {
-//            $code = 1005;
-//        }
-//        if ($code == 0) {
-//            $ACT = $this->params['do'] = DW_ACT_EDIT;
-//            $this->doEditPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-//        } else {
-//            //S'han trobat conflictes i no s'ha pogut guardar
-//            //TODO[Josep] de moment tornem a la versió original, però cal
-//            //TODO[Xavi] Això ja no es necessari perque no ha de passar mai, el frontend et tanca automàticament la edició
-//            // Necessitem access:
-//            //      al draft (o contingut document que s'ha volgut guardar!)
-//            //      el document guardat
-//
-//            //cercar una solució més operativa com ara emmagatzemar un esborrany
-//            //per tal que l'usuari pugui comparar i acceptar canvis
-//            $ACT = $this->params['do'] = DW_ACT_SHOW;
-//            $this->doFormatedPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-//        }
-//
-//        return $code;
-//    }
-
-//    private function doCancelEditPreProcess($id, $keep_draft = FALSE)
-//    {
-//        // Si es passa keep_draft = true no s'esborra
-//        if (!$keep_draft) {
-//            $this->clearFullDraft($id);
-//            $this->clearPartialDraft($id);
-//        }
-//
-//        $this->doFormatedPagePreProcess();    //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-//    }
-//
-//    private function getFormatedPageResponse()
-//    {
-//        global $lang;
-//        $pageToSend = $this->getFormatedPage();
-//
-//        $response = $this->getContentPage($pageToSend);
-//
-//        return $response;
-//    }
-//
-//    private function getAdminTaskResponse()
-//    {
-//        if (!$this->dataTmp["needRefresh"]) {
-//            $pageToSend = $this->getAdminTaskHtml();
-//            $id = "admin_" . $this->params["task"];
-//            $ret = $this->getAdminTaskPage($id, $this->params["task"], $pageToSend);
-//        }
-//        $ret["needRefresh"] = $this->dataTmp["needRefresh"];
-//
-//        return $ret;
-//    }
-//
-//    private function getAdminTaskHtml()
-//    {
-//        global $conf;
-//
-//        ob_start();
-//        trigger_event('TPL_ACT_RENDER', $ACT, "tpl_admin");
-//        $html_output = ob_get_clean();
-//        ob_start();
-//        trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
-//        $html_output = ob_get_clean();
-//
-//        return $html_output;
-//    }
-
-//	public function getAdminTaskListResponse() {
-//		$pageToSend  = $this->getAdminTaskListHtml();
-//		$containerId = cfgIdConstants::ZONA_NAVEGACIO;
-//
-//		return $this->getAdminTaskListPage( $containerId, $pageToSend );
-//	}
-//
-//	private function getAdminTaskListHtml() {
-//		global $conf;
-//
-//		ob_start();
-//		trigger_event( 'TPL_ACT_RENDER', $ACT );
-//
-//		// build menu of admin functions from the plugins that handle them
-//		$pluginlist = plugin_list( 'admin' );
-//		$menu       = array();
-//		foreach ( $pluginlist as $p ) {
-//			if ( $obj =& plugin_load( 'admin', $p ) === NULL ) {
-//				continue;
-//			}
-//
-//			// check permissions
-//			if ( $obj->forAdminOnly() && !WikiIocInfoManager::getInfo('isadmin')) {
-//				continue;
-//			}
-//
-//			$menu[ $p ] = array(
-//				'plugin' => $p,
-//				'prompt' => $obj->getMenuText( $conf['lang'] ),
-//				'sort'   => $obj->getMenuSort()
-//			);
-//		}
-//
-//		// Admin Tasks
-//		if ( count( $menu ) ) {
-//			usort( $menu, 'p_sort_modes' );
-//			// output the menu
-//			ptln( '<div class="clearer"></div>' );
-//			print p_locale_xhtml( 'adminplugins' );
-//			ptln( '<ul>' );
-//			foreach ( $menu as $item ) {
-//				if ( ! $item['prompt'] ) {
-//					continue;
-//				}
-//				ptln( '  <li><div class="li"><a href="' . DOKU_BASE . DOKU_SCRIPT . '?'
-//				      . 'do=admin&amp;page=' . $item['plugin'] . '">' . $item['prompt']
-//				      . '</a></div></li>' );
-//			}
-//			ptln( '</ul>' );
-//		}
-//
-//                $html_output = ob_get_clean();
-//                ob_start();
-//		trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
-//                $html_output = ob_get_clean();
-//
-//
-//		return $html_output;
-//	}
-
-//	private function getCodePageResponse() {
-//		global $lang;
-//
-//		$pageToSend = $this->cleanResponse( $this->_getCodePage() );
-//
-//		$resp         = $this->getContentPage( $pageToSend["content"] );
-//		$resp['meta'] = $pageToSend['meta'];
-//
-//		$infoType = 'info';
-//
-//		if ( WikiIocInfoManager::getInfo('locked')) {
-//			$infoType           = 'error';
-//			$pageToSend['info'] = $lang['lockedby'] . ' ' 
-//                                        . WikiIocInfoManager::getInfo('locked');
-//		}
-//
-//		$resp['info']   = $this->generateInfo( $infoType, $pageToSend['info'] );
-//		$resp['locked'] = WikiIocInfoManager::getInfo('locked');
-//
-//		return $resp;
-//	}
-
-//	private function cleanResponse( $text ) {
-//		global $lang;
-//
-//		$pattern = "/^(?:(?!<div class=\"editBox\").)*/s";// Captura tot el contingut abans del div que contindrá l'editor
-//
-//		preg_match( $pattern, $text, $match );
-//		$info = $match[0];
-//
-//		$text = preg_replace( $pattern, "", $text );
-//
-//		// Eliminem les etiquetes no desitgades
-//		$pattern = "/<div id=\"size__ctl\".*?<\/div>\\s*/s";
-//		$text    = preg_replace( $pattern, "", $text );
-//
-//		// Eliminem les etiquetes no desitgades
-//		$pattern = "/<div class=\"editButtons\".*?<\/div>\\s*/s";
-//		$text    = preg_replace( $pattern, "", $text );
-//
-//		// Copiem el license
-//		$pattern = "/<div class=\"license\".*?<\/div>\\s*/s";
-//		preg_match( $pattern, $text, $match );
-//		$license = $match[0];
-//
-//		// Eliminem la etiqueta
-//		$text = preg_replace( $pattern, "", $text );
-//
-//		// Copiem el wiki__editbar
-//		$pattern = "/<div id=\"wiki__editbar\".*?<\/div>\\s*<\/div>\\s*/s";
-//		preg_match( $pattern, $text, $match );
-//		$meta = $match[0];
-//
-//		// Eliminem la etiqueta
-//		$text = preg_replace( $pattern, "", $text );
-//
-//		// Capturem el id del formulari
-//		$pattern = "/<form id=\"(.*?)\"/";
-//		//$form = "dw__editform";
-//		preg_match( $pattern, $text, $match );
-//		$form = $match[1];
-//
-//		// Afegim el id del formulari als inputs
-//		$pattern = "/<input/";
-//		$replace = "<input form=\"" . $form . "\"";
-//		$meta    = preg_replace( $pattern, $replace, $meta );
-//
-//		// Netegem el valor
-//		$pattern = "/value=\"string\"/";
-//		$replace = "value=\"\"";
-//		$meta    = preg_replace( $pattern, $replace, $meta );
-//
-//		$response["content"] = $text;
-//		$response["info"]    = [ $info ];
-//
-//		if ( $license ) {
-//			$response["info"][] = $license;
-//		}
-//
-//		$metaId           = str_replace( ":", "_", $this->params['id'] ) . '_metaEditForm';
-//		$response["meta"] = [
-//			( $this->getCommonPage( $metaId,
-//			                        $lang['metaEditForm'],
-//			                        $meta ) + [ 'type' => 'summary' ] )
-//		];
-//
-//		return $response;
-//	}
 
     /**
      * Genera un element amb la informació correctament formatada i afegeix el timestamp. Si no s'especifica el id
@@ -1237,44 +471,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $info;
     }
 
-//	private function getSaveInfoResponse( $code ) {
-//		global $lang;
-//		global $TEXT;
-//		global $ID;
-//
-//		$duration = - 1;
-//
-//		if ( $code == 1004 ) {
-//			$ret         = array();
-//			$ret["code"] = $code;
-//			$ret["info"] = $lang['wordblock'];
-//			$ret["page"] = $this->getFormatedPageResponse();
-//			$type        = "error";
-//		} elseif ( $code == 1003 ) {
-//			$ret         = array();
-//			$ret["code"] = $code;
-//			$ret["info"] = $lang['conflictsSaving']; //conflict
-//			$ret["page"] = $this->getFormatedPageResponse();
-//			$type        = "error";
-//		} else {
-//			$ret = array( "code" => $code, "info" => $lang["saved"] );
-//			//TODO[Josep] Cal canviar els literals per referencies dinàmiques del maincfg
-//			//      dw__editform, date i changecheck
-//			$ret["formId"] = "dw__editform";
-//			$ret["inputs"] = array(
-//				"date"        => @filemtime( wikiFN( $ID ) ),
-//				"changecheck" => md5( $TEXT )
-//			);
-//			$type          = 'success';
-//			$duration      = 10;
-//		}
-//
-//		// TODO[Xavi] PROVES, En cas d'exit el missatge només ha de durar 10s
-//		$ret["info"] = $this->generateInfo( $type, $ret["info"], NULL, $duration );
-//
-//		return $ret;
-//	}
-
     /**
      * TODO[Xavi] només genera la meta pel TOC
      *
@@ -1335,37 +531,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         unset($this->ppEvt);
     }
 
-//    private function getContentPage($pageToSend)
-//    {
-//        global $REV;
-//        global $lang;
-//
-//        $pageTitle = tpl_pagetitle($this->params['id'], TRUE);
-//
-//        $pattern = '/^.*Aquesta és una revisió.*<hr \/>\\n\\n/mis';
-//        $count = 0;
-//        $info = NULL;
-//        $pageToSend = preg_replace($pattern, '', $pageToSend, -1, $count);
-//
-//        if ($count > 0) {
-//            $info = $this->generateInfo("warning", $lang['document_revision_loaded'] . ' <b>' . $this->extractDateFromRevision($REV, self::$SHORT_FORMAT) . '</b>');
-//        }
-//
-//        $id = $this->params['id'];
-//        $contentData = array(
-//            'id' => str_replace(":", "_", $id),
-//            'ns' => $id,
-//            'title' => $pageTitle,
-//            'content' => $pageToSend,
-//            'rev' => $REV,
-//            'info' => $info,
-//            'type' => 'html',
-//            'draft' => $this->generateFullDraft($id)
-//        );
-//
-//        return $contentData;
-//    }
-
     /**
      * Retorna una resposta amb les dades per mostrar un dialog de selecció esborrany-document.
      *
@@ -1399,64 +564,18 @@ class DokuModelAdapter extends BasicModelAdapter {
     }
 
 
-    ////_______________________________________________________________________________________________________________
-
-//    /**
-//     * Retorna el nom del fitxer de esborran corresponent al document i usuari actual
-//     *
-//     * @param string $id - id del document
-//     *
-//     * @return string
-//     */
-//    public function getDraftFilename($id)
-//    {
-//        return DraftManager::getDraftFilename($id);
-//    }
-
-//    /**
-//     * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
-//     * esborrat.
-//     *
-//     * @param $id - id del document
-//     *
-//     * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
-//     */
-//    public function hasDraft($id)
-//    {
-//        $draftManager = new DraftManager($this);
-//        return $draftManager->hasDraft($id);
-//    }
-
     /**
      * Neteja una id passada per argument per poder fer-la servir amb els fitxers i si no es passa l'argument
      * intenta obtenir-la dels paràmetres.
-     *
      * @param string $id - id a netejar
-     *
      * @return mixed
      */
-
-    private function getContainerIdFromPageId($id = NULL)
-    {
+    private function getContainerIdFromPageId($id = NULL) {
         if ($id == NULL) {
             $id = $this->params['id'];
         }
-
         return WikiPageSystemManager::getContainerIdFromPageId($id);
     }
-
-
-//    private function getAdminTaskListPage($id, $toSend){
-//        global $lang;
-//
-//        return $this->getCommonPage($id, $lang['btn_admin'], $toSend);
-//    }
-
-//	private function getAdminTaskPage( $id, $task, $toSend ) {
-//		//TO DO [JOSEP] Pasar el títol correcte segons idiaoma. Cal extreure'l de
-//		//plugin(admin)->getMenuText($language);
-//		return $this->getCommonPage( $id, $task, $toSend );
-//	}
 
     private function getCommonPage($id, $title, $content)
     {
@@ -1468,33 +587,6 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         return $contentData;
     }
-
-//    private function getFormatedPage()
-//    {
-//        global $ACT;
-//
-//        ob_start();
-//        trigger_event('TPL_ACT_RENDER', $ACT, array($this, 'onFormatRender'));
-//        $html_output = ob_get_clean();
-//        ob_start();
-//        trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
-//        $html_output = ob_get_clean();
-//
-//        return $html_output;
-//    }
-
-
-//	private function _getCodePage() {
-//		global $ACT;
-//		ob_start();
-//		trigger_event( 'TPL_ACT_RENDER', $ACT, array($this, 'onCodeRender') );
-//		$html_output = ob_get_clean();
-//                ob_start();
-//		trigger_event('TPL_CONTENT_DISPLAY', $html_output, 'ptln');
-//                $html_output = ob_get_clean();
-//
-//		return $html_output;
-//	}
 
     public function deleteMediaManager($paramsArr){
        $action = new DeleteMediaAction($this->persistenceEngine);
@@ -1954,11 +1046,7 @@ class DokuModelAdapter extends BasicModelAdapter {
      * @return string - Data formatada
      *
      */
-    public function extractDateFromRevision($revision, $mode = NULL)
-    {
-//            if(!$mode){
-//                $mode = WikiPageSystemManager::$DEFAULT_FORMAT;
-//            }
+    public function extractDateFromRevision($revision, $mode = NULL) {
         return WikiPageSystemManager::extractDateFromRevision($revision, $mode);
     }
 
@@ -1979,45 +1067,15 @@ class DokuModelAdapter extends BasicModelAdapter {
         $ACT = 'diff';
 
         $this->triggerStartEvents();
-//		$tmp = [ ];
-//		trigger_event( 'DOKUWIKI_START', $tmp );
         session_write_close();
 
-//		$evt = new Doku_Event( 'ACTION_ACT_PREPROCESS', $ACT );
-//		if ( $evt->advise_before() ) {
-//			act_permcheck( $ACT );
-//			unlock( $ID );
-//		}
-//		$evt->advise_after();
-//		unset( $evt );
         $content = "";
         if ($this->runBeforePreprocess($content)) {
             act_permcheck($ACT);
             unlock($ID);
         }
 
-        //desactivem aquesta crida perquè es tracta d'una crida AJAX i no es pot modificar la capçalera
-//		$headers[] = 'Content-Type:application/json; charset=utf-8';
-//
-//		trigger_event( 'ACTION_HEADERS_SEND', $headers, 'act_sendheaders' );
-
         $this->startUpLang();
-
-        //descativem aquesta crida perquè les revisions no es retornen
-        //rederitzades sinó que es rendaritzen al client
-        //trigger_event( 'TPL_ACT_RENDER', $ACT, "tpl_content_core");
-
-        // En aquest punt es on es generaria el codi HTML
-
-        //descativem aquesta crida perquè des del dokumodeladapter el
-        //display ja està fet i no servidria de res tornar a llançar
-        //aquest esdeveniment.
-//		$temp = [ ];
-//		trigger_event( 'TPL_CONTENT_DISPLAY', $temp );
-
-        // DO real
-
-        //side_by_side
 
         if ($INPUT->ref('difftype')) {
             $difftype = $INPUT->ref('difftype');
@@ -2061,8 +1119,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         $response["meta"] = ['id' => $response['id'], 'meta' => $meta];
 
         $this->triggerEndEvents();
-//		$temp = [ ];
-//		trigger_event( 'DOKUWIKI_DONE', $temp );
 
         return $response;
     }
@@ -2241,7 +1297,7 @@ class DokuModelAdapter extends BasicModelAdapter {
                 $ret = $ERROR = 401;
             }
         }
-        
+
         if(!$this->params['ns'] && !$this->params['img']){
             $INPUT->set('img', $IMG);
         }
@@ -2255,9 +1311,6 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         //detect revision
         $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("rev"); //$INFO comes from the DokuWiki core
-//        if ($this->params['rev'] < 1) {
-//            $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("lastmod");
-//        }
 
         $this->triggerStartEvents();
         return $ret;
@@ -2389,9 +1442,7 @@ class DokuModelAdapter extends BasicModelAdapter {
     private static function getInstructionsForDocument($id, $rev = null)
     {
         $file = wikiFN($id, $rev);
-        //[ALERTA JOSEP] CAL FER SERVIR p_cached_instructions. A més caldria traslladar aquesta funció a PageDataQuery i cridar el mètode adient de PagedataQuery des d'aquí. 
-//        $cache = new cache_instructions($id, $file); // TODO[Xavi] Això fa falta?
-//        $instructions = unserialize(io_readFile($cache->cache));
+        //[ALERTA JOSEP] CAL FER SERVIR p_cached_instructions. A més caldria traslladar aquesta funció a PageDataQuery i cridar el mètode adient de PagedataQuery des d'aquí.
         $instructions = p_cached_instructions($file, FALSE, $id);
         return $instructions;
     }
@@ -2508,35 +1559,6 @@ class DokuModelAdapter extends BasicModelAdapter {
 
     }
 
-//    // Hi ha draft pel chunk a editar?
-//    private function thereIsStructuredDraftFor($id, $document, $selected = null)
-//    {
-//        if (!$selected) {
-//            return false;
-//        }
-//
-//        $draft = $this->getStructuredDraft($id);
-//
-//        for ($i = 0; $i < count($document['chunks']); $i++) {
-//            if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
-//                && $document['chunks'][$i]['header_id'] == $selected
-//            ) {
-//
-//                // Si el contingut del draft i el propi es igual, l'eliminem
-//                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]['content']) {
-//                    $this->removeStructuredDraft($id, $selected);
-//                } else {
-//                    return true;
-//                }
-//
-//            }
-//
-//        }
-//
-//        return false;
-//    }
-
-
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private function addPreToChunks(&$chunks, $id)
     {
@@ -2602,73 +1624,9 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $sections;
     }
 
-/*
-    // Només la pàgina actual pot ser editada parcialment
-    public function getPartialPage($pid, $prev = NULL, $prange, $psum, $psection)
-    {
-        global $lang;
-
-        //$this->startPageProcess(DW_ACT_EDIT, $pid, NULL, $prange, $psum); EDIT?
-        $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, $prange, $psum);
-        
-         if (!WikiIocInfoManager::getInfo("exists")) {
-            throw new PageNotFoundException($id]);
-        }
-        if (!WikiIocInfoManager::getInfo("perm")) {
-            throw new InsufficientPermissionToViewPageException($id); //TODO [Josep] Internacionalització missatge per defecte!
-        }
-
-        $this->doFormatedPartialPagePreProcess();   
-
-        $response['structure'] = $this->getStructuredDocument($psection, $pid, NULL);
-
-        // TODO: afegir el 'info' que correspongui
-
-        // Si no s'ha especificat cap altre missatge mostrem el de carrega
-        if (!$response['info']) {
-            $response['info'] = $this->generateInfo("info", $lang['document_loaded']);
-        }
-
-        // TODO: afegir el 'meta' que correspongui
-        $response['meta'] = $this->getMetaResponse($pid);
-
-        // TODO: afegir les revisions
-        $response['revs'] = $this->getRevisions($pid);
-
-        return $response;
-    }
-*/
-
     public function cancelPartialEdition($params){
         $action = new CancelPartialEditPageAction($this->persistenceEngine);
         return $action->get($params);
-        
-//    public function cancelPartialEdition($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks = NULL, $keep_draft = false)
-//    {
-//        global $lang;
-//
-//        $this->startPageProcess(DW_ACT_SHOW, $pid, null, NULL, $psum);
-//
-//        $response['structure'] = $this->getStructuredDocument(null, $pid, NULL, $editing_chunks);
-//        $response['structure']['cancel'] = [$selected];
-//
-//        if (!$keep_draft) {
-//            $this->removeStructuredDraft($pid, $selected);
-//        }
-//
-//        // TODO: afegir el 'info' que correspongui
-//        if (!$response['info']) {
-//            $response['info'] = $this->generateInfo("info", $lang['chunk_closed']);
-//        }
-//
-//        // TODO: afegir el 'meta' que correspongui
-////        $response['meta'] = $this->getMetaResponse( $pid ); // No cal, ja ha de ser actualitzat
-//
-//        // TODO: Sí s'afegeix la meta, s'ha d'afegir també els 'revs' perquè s'esborren!
-////        $response['revs'] = $this->getRevisions($pid); // No cal, ja ha de ser actualitzat
-//
-//
-//        return $response;
     }
 
     // TODO[Xavi] normalitzar params
@@ -2676,145 +1634,12 @@ class DokuModelAdapter extends BasicModelAdapter {
     public function savePartialEdition($params){
         $action = new SavePartialPageAction($this->persistenceEngine);
         return $action->get($params);
-//    public function savePartialEdition(
-//        $pid, $prev = NULL, $prange = NULL,
-//        $pdate = NULL, $ppre = NULL, $ptext = NULL, $psuf = NULL, $psum = NULL, $selected, $editing_chunks = NULL
-//    )
-//    {
-//        global $lang;
-//
-////        $response = $this->saveEdition($pid, NULL, $prange, $pdate, $ppre, $ptext, $psuf, $psum);
-//        $response = $this->saveEdition(['id' => $pid, 'range' => $prange, 'date' => $pdate, 'pre' => $ppre, 'text' => $ptext, 'suf' => $psuf, 'sum' =>$psum]);
-//
-//
-//        $response['structure'] = $this->getStructuredDocument($selected, $pid, $prev, $editing_chunks);
-//
-//        // TODO: afegir el 'info' que correspongui
-//        if (!$response['info']) {
-////            $response['info'] = $this->generateInfo("info", $lang['document_saved']); // TODO[Xavi] Aquesta info s'afegeix en algún lloc, s'ha de moure aquí i fe la localització
-//        }
-//
-//        // TODO: afegir el 'meta' que correspongui
-//        $response['meta'] = $this->getMetaResponse($pid);
-//
-//
-//        // TODO: afegir les 'revs' que correspongui
-//        $response['revs'] = $this->getRevisions($pid);
-//
-//        $this->removeStructuredDraft($pid, $selected);
-//
-//        $this->lock($pid);
-//
-//        return $response;
     }
 
-//    public function getPartialEdit($pid, $prev = NULL, $psum = NULL, $selected, $editing_chunks, $recoverDraft = null){
     public function getPartialEdit($paramsArr){
         $action = new RawPartialPageAction($this->persistenceEngine);
         return $action->get($paramsArr);
-//        global $lang;
-//
-//        $this->startPageProcess(DW_ACT_SHOW, $pid, NULL, NULL, $psum);
-//        $response['structure'] = $this->getStructuredDocument($selected, $pid, null, $editing_chunks, $recoverDraft);
-//
-//
-//        // TODO[Xavi] si es troba una draft per la edició, no es retornarà la resposta edit_html
-//        // TODO[Xavi] aquí s'haura d'afegir la comprovació de que no s'ha passat el paràmetre recover draft
-//
-//        // TODO[Xavi] La diferencia en aquest if es que aquest primer bloc es pel draft parcial
-//
-//        if ($this->thereIsStructuredDraftFor($pid, $response['structure'], $selected) && $recoverDraft === null) {
-//            $response['show_draft_dialog'] = true;
-//            $response['content'] = $this->getChunkFromStructureById($response['structure'], $selected);
-//            $response['draft'] = $this->getStructuredDraftForHeader($pid, $selected);
-//            if ($response['draft']['content'] === $response['content']['editing']) {
-//                $this->removeStructuredDraft($pid, $selected);
-//                unset($response['draft']);
-//                $response['show_draft_dialog'] = false;
-//            }
-//
-//
-//            $response['original_call'] = $this->generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum);
-//            $response['info'] = $this->generateInfo('warning', $lang['partial_draft_found']);
-//        }
-//
-//
-//        // Trobat draft de document complet
-//        if ($this->existsFullDraft($pid)) {
-//            $response['original_call'] = $this->generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum);
-//            $response['id'] = $pid;
-//            $response['full_draft'] = true;
-//            $response['info'] = $this->generateInfo('warning', $lang['draft_found']);
-//
-//            // Es recupera l'esborrany
-//        } else if ($recoverDraft === true) {
-//
-//            $draftContent = $this->getStructuredDraftForHeader($pid, $selected);
-////            $response['structure'] = $this->setContentForChunkByHeader($response['structure'], $selected, $draftContent);
-//            $this->setContentForChunkByHeader($response['structure'], $selected, $draftContent);
-//            $response['info'] = $this->generateInfo('warning', $lang['draft_editing']);
-//
-//
-//        } else {
-//
-//
-//            $locked = $this->lock($pid);
-//
-//            if ($locked['timeout'] < 0) {
-//                $response['info'] = $locked['info'];
-//            } else {
-//                $response['info'] = $this->generateInfo('success', $lang['chunk_editing'] . $pid . ':' . $selected);
-//            }
-//
-//        }
-//
-//
-//        // TODO: afegir el 'meta' que correspongui
-//
-//        // TODO: Sí s'afegeix la meta, s'ha d'afegir també els 'revs' perquè s'esborren!
-//
-//        return $response;
     }
-
-//    private function generateOriginalCall($selected, $editing_chunks, $prev, $pid, $psum)
-//    {
-//        $originalCall = [];
-//
-//        $originalCall['section_id'] = $selected;
-//        $originalCall['editing_chunks'] = implode(',', $editing_chunks); // TODO[Xavi] s'ha de convertir en string
-//        $originalCall['rev'] = $prev;
-//        $originalCall['range'] = '-'; // TODO[Xavi] Això sembla que no es necessari
-//        $originalCall['target'] = 'section';
-//        $originalCall['id'] = $this->cleanIDForFiles($pid);
-//        $originalCall['ns'] = $pid;
-//        $originalCall['summary'] = $psum; // TODO[Xavi] Comprovar si es correcte, ha de ser un array
-//
-//        return $originalCall;
-//    }
-//
-//    private function setContentForChunkByHeader(&$structure, $selected, $content)
-//    {
-//        for ($i = 0; $i < count($structure['chunks']); $i++) {
-//            if ($structure['chunks'][$i]['header_id'] == $selected) {
-//                $structure['chunks'][$i]['text']['editing'] = $content['content'];
-//                break;
-//            }
-//        }
-//        return $structure;
-//    }
-//
-//
-//    private function getChunkFromStructureById($structure, $selected)
-//    {
-//        $chunks = $structure['chunks'];
-//        foreach ($chunks as $chunk) {
-//            if ($chunk['header_id'] == $selected) {
-//                return $chunk['text'];
-//            }
-//        }
-//        return null;
-//    }
-//
 
     //És la crida principal de la comanda lock
     public function lock($pid)
@@ -2855,14 +1680,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $response;
     }
 
-
-
-//    public function checklock($pid)
-//    {
-//        //[ALERTA JOSEP] Cal passar checklock a LockDataQuery i fer la crida des d'allà
-//        return checklock($this->cleanIDForFiles($pid));
-//    }
-
     public function draft($params)
     {
         $action = new DraftPageAction($this->persistenceEngine);
@@ -2891,7 +1708,6 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         // START
         // Només definim les variables que es passen per paràmetre, la resta les ignorem
-
         $ACT = 'revisions';
 
         $this->triggerStartEvents();
@@ -2907,7 +1723,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         $this->startUpLang();
 
         // DO real
-
         $revisions = getRevisions($ID, -1, 50);
 
         $ret = [];
@@ -2925,178 +1740,11 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $ret;
     }
 
-//    public function saveDraft($draft)
-//    {
-//        return DraftManager::saveDraft($draft);
-//    }
-//
-//    public function removeDraft($draft)
-//    {
-//        return DraftManager::removeDraft($draft);
-//    }
-
-//    public function getStructuredDraft($id)
-//    {
-//        return DraftManager::getStructuredDraft($id);
-//    }
-
-//    public function removeStructuredDraft($id, $header_id)
-//    {
-//        DraftManager::removeStructuredDraft($id, $header_id);
-//    }
-
-//    /**
-//     * Retorna cert si existeix un draft o fals en cas contrari. Si es troba un draft però es més antic que el document
-//     * corresponent aquest draft s'esborra.
-//     *
-//     * @param {string} $id id del document a comprovar
-//     * @return bool
-//     */
-//    public function existsFullDraft($id)
-//    {
-//        return DraftManager::existsFullDraft($id);
-//    }
-
-//    public function existsPartialDraft($id)
-//    {
-//        return DraftManager::existsPartialDraft($id);
-//    }
-
-//    public function clearFullDraft($id)
-//    {
-//        global $ACT, $ID;
-//
-//        $ID = $id;
-//
-//        WikiIocInfoManager::setInfo('draft', $this->getDraftFilename($id));
-//        $ACT = act_draftdel($ACT);
-//
-//    }
-
-//    public function clearPartialDraft($id)
-//    {
-//        DraftManager::removeStructuredDraftAll($id);
-//    }
-
-//    public function getStructuredDraftForHeader($id, $header)
-//    {
-//        return DraftManager::getStructuredDraftForHeader($id, $header);
-//    }
-
-//    /**
-//     * Retorna el contingut del esborrany pel document passat com argument si existeix i es vàlid. En cas de trobar
-//     * un esborrany antic es esborrat automàticament.
-//     *
-//     * @param string $id - id del document
-//     *
-//     * @return array - Hash amb dos valors per el contingut i la data respectivament.
-//     */
-//    public function generateFullDraft($id)
-//    {
-//        return DraftManager::generateFullDraft($id);
-//    }
-
     public function logoff(){
         auth_logoff(TRUE);
         WikiIocInfoManager::setInfo('isadmin', FALSE);
         WikiIocInfoManager::setInfo('ismanager', FALSE);
     }
-
-//    /**
-//     * Mostra una pàgina de la DokuWiki.
-//     * TODO[Xavi] no es fa res amb l'argument
-//     *
-//     * Based on "html_show" function written by Andreas Gohr
-//     *
-//     * @param string $data
-//     */
-//    function onFormatRender($data)
-//    {
-//        if ($this->params['rev']) {
-//            $secedit = false;
-//        } else {
-//            $secedit = true;
-//        }
-//
-//        //	html_show();
-//        //if ($REV) print p_locale_xhtml('showrev');
-//        $html = p_wiki_xhtml($this->params['id'],
-//            $this->params['rev'],
-//            true);
-//        $html = html_secedit($html, $secedit);
-//        //if($INFO['prependTOC']) $html = tpl_toc(true).$html;
-//        $html = html_hilight($html, $HIGH);
-//        echo $html;
-//    }
-
-//    /**
-//     * Returns the parsed Wikitext in XHTML for the given id and revision.
-//     *
-//     * If $excuse is true an explanation is returned if the file
-//     * wasn't found
-//     *
-//     * @author Andreas Gohr <andi@splitbrain.org>
-//     */
-//
-//    //[ALERTA Josep] CAL revisar per fer servir el PageDataQuery!
-//    // TODO[Xavi] Convertida en static (temporalment?) necessaria per reconstruir els drafts a partir de parcials
-//    static function p_wiki_xhtml($id, $rev = '', $excuse = true)
-//    {
-//        $file = wikiFN($id, $rev);
-//        $ret = '';
-//
-//        //ensure $id is in global $ID (needed for parsing)
-//        global $ID;
-//        $keep = $ID;
-//        $ID = $id;
-//
-//        if ($rev) {
-//            if (@file_exists($file)) {
-//                $ret = p_render('xhtml', p_get_instructions(io_readWikiPage($file, $id, $rev)), $info); //no caching on old revisions
-//            } elseif ($excuse) {
-//                $ret = p_locale_xhtml('norev');
-//            }
-//        } else {
-//            if (@file_exists($file)) {
-//                $ret = p_cached_output($file, 'xhtml', $id);
-//            } elseif ($excuse) {
-//                $ret = p_locale_xhtml('newpage');
-//            }
-//        }
-//
-//        //restore ID (just in case)
-//        $ID = $keep;
-//
-//        return $ret;
-//    }
-//
-
-
-//    /**
-//     * Segons el valor de $data activa la edició del document('edit' i 'recover'), la previsualització ('preview') o mostra
-//     * el missatge de denegat ('denied').
-//     *
-//     * @param string $data els valors admessos son 'edit', 'recover', 'preview' i 'denied'
-//     */
-//    function onCodeRender( $data ) {
-//            global $TEXT;
-//
-//            switch ( $data ) {
-//                    case 'locked':
-//                    case 'edit':
-//                    case 'recover':
-//                            html_edit();
-//                            break;
-//                    case 'preview':
-//                            html_edit();
-//                            html_show( $TEXT );
-//                            break;
-//                    case 'denied':
-//                            print p_locale_xhtml( 'denied' );
-//                            break;
-//            }
-//    }
-
 
     /**
      * Retorna la taula de continguts modificada amb la nostra cadena.

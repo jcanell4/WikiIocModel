@@ -28,7 +28,7 @@ class CommandAuthorization extends AbstractCommandAuthorization {
 
     public function setPermission($command) {
         parent::setPermission($command);
-        $this->permission->setIdPage($command->getParams(ProjectKeys::KEY_ID));
+        $this->permission->setIdPage($command->getParams(AjaxKeys::KEY_ID));
         $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
         $this->permission->setAuthor($command->getKeyDataProject(Permission::ROL_AUTOR));

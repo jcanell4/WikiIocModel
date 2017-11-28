@@ -42,7 +42,7 @@ class CloseAllTabsAction extends DokuExtraAction {
         $duration = self::KEY_LONG_DURATION;
         
         // Array de parámetros del comando de la acción
-        $cmdParams = array('urlBase' => 'lib/plugins/ajaxcommand/ajax.php?call=close');
+        $cmdParams = array('urlBase' => 'ajax.php?call=close');
                 
         // Contrucción del array con los parámetros que tipifican esta acción
         $action = array('type' => $actionType

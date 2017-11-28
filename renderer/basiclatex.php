@@ -186,7 +186,6 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
 
             //pendiente de revisión para establecer la necesidad de su existencia
             //$this->table, $_SESSION['figure'], $_SESSION['video_url'], $_SESSION['iocelem']
-
             if (!$this->table && !$_SESSION['figure'] && !$_SESSION['video_url'] && $_SESSION['iocelem'] !== 'textl'){
                 if ($width && $width < 133){
                     $max_width = '[width='.$width.'px]';
@@ -215,19 +214,19 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
                 $img_width = $width;
             }
 
+            //pendiente de revisión para establecer la necesidad de su existencia
             $imgb = (!$icon && !$this->table && !$_SESSION['figure'] && !$_SESSION['iocelem'] && !$_SESSION['video_url'] && !$_SESSION['u0']);
             $figure = (!$this->table && $_SESSION['figure'] && !$_SESSION['video_url'] && !$_SESSION['u0']);
 
             if (self::$convert || $_SESSION['draft'] || $external){
                 $img_aux = $this->_image_convert($src, $this->tmp_dir.'/media');
             }else{
-                $img_aux = tempnam($this->tmp_dir . '/media', 'ltx');
                 $ext = pathinfo($src, PATHINFO_EXTENSION);
-                copy($src, "$img_aux.$ext");
+                $img_aux = $this->copyToTemp("{$this->tmp_dir}/media", $src, $ext);
             }
 
             if (file_exists("$img_aux.$ext")){
-                if ($imgb){
+                if ($imgb){ //pendiente de revisión para establecer la necesidad de su existencia
                     $offset = '';
                     //Extract offset
                     if ($title){
@@ -244,7 +243,8 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
                         }
                     }
                     $this->doc .= '\imgB'.$offset.'{';
-                }elseif ($figure){
+                }
+                elseif ($figure){  //pendiente de revisión para establecer la necesidad de su existencia
                     if ($_SESSION['figlarge']){
                         $this->doc .= '\checkoddpage\ifthenelse{\boolean{oddpage}}{\hspace*{0mm}}{\hspace*{-\marginparwidth}\hspace*{-10mm}}'.DOKU_LF;
                         if ($img_width) {
@@ -258,15 +258,17 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
                 if (!is_null($linking) && $linking !== 'details'){
                     $this->doc .= '\href{'.$linking.'}{';
                 }
-                if ($_SESSION['figure']){
+                if ($_SESSION['figure']){   //pendiente de revisión para establecer la necesidad de su existencia
                     $this->doc .= '\\' . $align . DOKU_LF;
                 }
-                $hspace = 0; //align text and image
 
+                //align text and image
+                $hspace = 0;
                 //Create title with label
-                $title_width = ($img_width)?$img_width.'px':'\textwidth';
+                $title_width = ($img_width) ? $img_width.'px' : '\textwidth';
 
                 if ($_SESSION['figure']){
+                    //pendiente de revisión para establecer la necesidad de su existencia
                     if ($_SESSION['iocelem'] && $max_width_elem){
                         $title_width = $max_width_elem;
                     }
@@ -350,6 +352,25 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
             //$this->doc .= '\textcolor{red}{\textbf{No file name supplied.}}';
             throw new Exception("_latexAddImage: Actual instruction from p_latex_render no file name supplied.");
         }
+    }
+
+    /**
+     * Copia un archivo origen, a un directorio temporal especificado, con un nuevo nombre único
+     * @param string $dir Directorio de destino
+     * @param string $src Ruta absoluta del fichero origen
+     * @param string $ext Extensión del nuevo nombre del archivo en el directorio de destino
+     */
+    public function copyToTemp($dir, $src, $ext=NULL) {
+        $result = FALSE;
+        while (!$result) {
+            if (($name = tempnam($dir, "ltx"))) {
+                if (rename($name, "$name.$ext")) {
+                    $result = copy($src, "$name.$ext");
+                }
+            }
+            if (!$result) unlink($name);
+        }
+        return $name;
     }
 
     function render_TOC() {

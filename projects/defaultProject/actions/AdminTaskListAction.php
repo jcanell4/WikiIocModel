@@ -1,33 +1,22 @@
 <?php
-
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once (DOKU_INC . 'inc/pluginutils.php');
 require_once (DOKU_INC . 'inc/actions.php');
-//require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
-//require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
-//require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/AdminTaskAction.php";
 require_once WikiGlobalConfig::tplIncDir()."conf/cfgIdConstants.php";
 
-
-
 /**
  * Description of AdminTaskListAction
- *
  * @author josep
  */
 class AdminTaskListAction extends AdminTaskAction {
     private $pageToSend;
-    
+
     /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la 
-     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles 
+     * És un mètode per sobrescriure. Per defecte no fa res, però la
+     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
      * dades  intermèdies que siguin necessàries per generar la resposta final:
      * DokuAction#responseProcess.
      */
@@ -35,18 +24,18 @@ class AdminTaskListAction extends AdminTaskAction {
         $ACT = act_permcheck( $ACT );
         $this->pageToSend = $this->getAdminTaskListHtml();
     }
-    
+
     /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la 
-     * sobrescriptura permet generar la resposta a enviar al client. Aquest 
-     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut 
+     * És un mètode per sobrescriure. Per defecte no fa res, però la
+     * sobrescriptura permet generar la resposta a enviar al client. Aquest
+     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
      * DokuAction#response.
      */
-    protected function responseProcess(){ 
+    protected function responseProcess(){
         $ret = $this->getCommonPage($id, WikiIocLangManager::getLang('btn_admin'), $this->pageToSend);
         return $ret;
     }
-    
+
     private function getAdminTaskListHtml() {
             global $conf;
 

@@ -6,11 +6,6 @@
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if (!defined('DOKU_COMMAND')) define('DOKU_COMMAND', DOKU_PLUGIN . "ajaxcommand/");
-
-require_once(DOKU_COMMAND . 'AjaxCmdResponseGenerator.php');
-require_once(DOKU_COMMAND . 'abstract_command_class.php');
 
 class command_plugin_wikiiocmodel_projects_documentation_pdfexemple extends abstract_command_class {
 
@@ -18,11 +13,11 @@ class command_plugin_wikiiocmodel_projects_documentation_pdfexemple extends abst
 
     public function __construct() {
         parent::__construct();
-        $this->types['id'] = abstract_command_class::T_STRING;
-        $this->types['rev'] = abstract_command_class::T_STRING;
-        $this->types['range'] = abstract_command_class::T_STRING;
-        $this->types['summary'] = abstract_command_class::T_STRING;
-        $this->types['do'] = abstract_command_class::T_STRING;
+        $this->types[AjaxKeys::KEY_ID] = self::T_STRING;
+        $this->types[AjaxKeys::KEY_DO] = self::T_STRING;
+        $this->types['rev'] = self::T_STRING;
+        $this->types['range'] = self::T_STRING;
+        $this->types['summary'] = self::T_STRING;
 
         $defaultValues = ['do' => 'wikiiocmodel_projects_documentation_pdfexemple'];
         $this->setParameters($defaultValues);
@@ -41,6 +36,6 @@ class command_plugin_wikiiocmodel_projects_documentation_pdfexemple extends abst
     }
 
     protected function getDefaultResponse($response, &$ret) {
-        $ret->addAlert("UUUEEEE!");
+        $ret->addAlert("UuuuuuEEEE!");
     }
 }
