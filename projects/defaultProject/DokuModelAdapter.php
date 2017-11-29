@@ -23,6 +23,7 @@ require_once(DOKU_INC . 'inc/io.php');
 require_once(DOKU_INC . 'inc/JSON.php');
 require_once(DOKU_INC . 'inc/JpegMeta.php');
 
+if (!defined('DOKU_TPL_INCDIR')) define('DOKU_TPL_INCDIR', tpl_incdir());
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/BasicModelAdapter.php');
@@ -344,15 +345,15 @@ class DokuModelAdapter extends BasicModelAdapter {
         }
 
         //get needed language array
-        include WikiGlobalConfig::tplIncDir() . "lang/en/lang.php";
+        include DOKU_TPL_INCDIR . "lang/en/lang.php";
         //overwrite English language values with available translations
         if (!empty($conf["lang"]) &&
             $conf["lang"] !== "en" &&
-            file_exists(WikiGlobalConfig::tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php")
+            file_exists(DOKU_TPL_INCDIR . "/lang/" . $conf["lang"] . "/lang.php")
         ) {
             //get language file (partially translated language files are no problem
             //cause non translated stuff is still existing as English array value)
-            include WikiGlobalConfig::tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php";
+            include DOKU_TPL_INCDIR . "/lang/" . $conf["lang"] . "/lang.php";
         }
         if (!empty($conf["lang"]) &&
             $conf["lang"] !== "en" &&
@@ -384,7 +385,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         global $lang;
 
         ob_start();
-        include WikiGlobalConfig::tplIncDir() . "inc_detail.php";
+        include DOKU_TPL_INCDIR . "inc_detail.php";
         $content = ob_get_clean();
         return $content;
     }

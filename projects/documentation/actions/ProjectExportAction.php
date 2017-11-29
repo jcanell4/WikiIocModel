@@ -59,7 +59,7 @@ class ProjectExportAction  extends AbstractWikiAction{
 
         switch ($this->mode) {
             case 'pdf' :
-                $ret = $result;
+                $ret = self::get_html_metadata($result, ".pdf");
                 break;
             case 'xhtml':
                 $ret = self::get_html_metadata($result);
@@ -105,22 +105,20 @@ class ProjectExportAction  extends AbstractWikiAction{
         return $this->projectID;
     }
 
-    public static function get_html_metadata($result){
+    public static function get_html_metadata($result, $ext=".zip"){
         if ($result['error']) {
-
+            throw new Exception ("Error");
         }else{
             if ($result["zipFile"]) {
                 self::copyZip($result);
             }
-            if (@file_exists(WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $result['ns']) .'/'.$result["zipName"])) {
-                $formId = "form_rend_".$result['id']; //str_replace(":", "_", $this->projectID); //Id del node que conté la pàgina
-                $ext = ".zip";
-
+            $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $result['ns']) .'/'.$result["zipName"];
+            if (@file_exists($file)) {
                 $filename = str_replace(':','_',basename($result['ns'])).$ext;
                 $media_path = "lib/exe/fetch.php?media=".$result['ns'].":".$filename;
 
                 $ret = '<span id="exportacio">';
-                $ret.= '<a class="media mediafile  mf_zip" href="'.$media_path.'">'.$filename.'</a>';
+                $ret.= '<a class="media mediafile mf_zip" href="'.$media_path.'" target="_blank">'.$filename.'</a>';
                 $ret.= '</span>';
             }else{
                 $ret = '<span id="exportacio">';

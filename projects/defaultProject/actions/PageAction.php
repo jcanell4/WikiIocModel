@@ -176,7 +176,7 @@ abstract class PageAction extends DokuAction {
             "id" => $ns . "_metaNotifications",
             "title" => WikiIocLangManager::getLang('notification_form_title'),
             "content" => [
-                'action' => 'ajax.php',
+                'action' => 'lib/exe/ioc_ajax.php',
                 'method' => 'post',
                 'fields' => [
 //                    [
@@ -222,7 +222,7 @@ abstract class PageAction extends DokuAction {
                             ],*/
                             'buttonLabel' => WikiIocLangManager::getLang('search'),
                             'fieldName' => 'to',
-                            'searchDataUrl' => 'ajax.php?call=user_list',
+                            'searchDataUrl' => 'lib/exe/ioc_ajax.php?call=user_list',
                             'token' => getSecurityToken()
                         ],
                         'class' => 'IocFilteredList',
