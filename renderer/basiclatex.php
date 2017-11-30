@@ -349,8 +349,8 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
                 $this->doc .= '\textcolor{red}{\textbf{File '. $this->_xmlEntities(basename($src)).' does not exist.}}';
             }
         }else{
-            //$this->doc .= '\textcolor{red}{\textbf{No file name supplied.}}';
-            throw new Exception("_latexAddImage: Actual instruction from p_latex_render no file name supplied.");
+            $this->doc .= '\textcolor{red}{\textbf{No file name supplied.}}';
+            throw new Exception("basiclatex::_latexAddImage: Actual instruction from p_latex_render, no file name supplied from.");
         }
     }
 

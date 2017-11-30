@@ -56,6 +56,7 @@ class cfgExporter {
     public $graphviz_images = array();
     public $gif_images = array();
     public $toc = NULL;
+    public $permissionToExport = TRUE;
 
     public function __construct() {
         $this->tmp_dir = realpath(EXPORT_TMP)."/".rand();;
