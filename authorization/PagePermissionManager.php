@@ -4,9 +4,6 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC') ) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
-
-//require_once(WIKI_IOC_MODEL . 'WikiIocInfoManager.php');
 
 class PagePermissionManager{
 
@@ -19,24 +16,24 @@ class PagePermissionManager{
         $acl_class = new admin_plugin_acl();
         $acl_class->handle();
         $acl = self::get_acl();
-        
-        
+
+
         $ret = array();
         $superusers = WikiGlobalConfig::getConf("superuser").','.WikiGlobalConfig::getConf("manager");
         $ret = array_map("trim", explode(",", $superusers));
-        
+
         foreach ($ret as $key => $value){
             if($value[0]==="@"){
                 unset($ret[$key]);
             }
         }
-        
+
         $arrayAdminsFromDb = $auth->retrieveUsers(0, 100, ["grps" => array('admin', 'manager')]);
-        
+
         foreach ($arrayAdminsFromDb as $key => $info){
             $ret[] = $key;
         }
-        
+
         $camins = explode(":", $id);
         for ($c = count($camins)-1; $c >= 0; $c--) {
             $camí = implode(":", $camins);
@@ -81,7 +78,7 @@ class PagePermissionManager{
         $ret['values'] = $ul;
         return $ret;
     }
-    
+
     /**
      * @return int : valor del permiso actual del usuario $user sobre la página $page
      */
@@ -175,7 +172,7 @@ class PagePermissionManager{
         $acl_class->handle();
         return $acl_class->acl[$page][$user];
     }
-    
+
     /**
      * Get current ACL settings as multidim array
      * @author Andreas Gohr <andi@splitbrain.org>

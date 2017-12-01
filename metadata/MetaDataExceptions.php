@@ -1,16 +1,11 @@
 <?php
-
 /**
  * Component: Project / MetaData
- * Status: @@Development
  * Purposes:
  * - File to contain all Exceptions types in Project / Metadata
  * @author Miguel Àngel Lozano Márquez <mlozan54@ioc.cat>
  */
-if (!defined('DOKU_INC'))
-    die();
-
-require_once DOKU_INC . 'lib/plugins/wikiiocmodel/WikiIocModelExceptions.php';
+if (!defined('DOKU_INC')) die();
 
 class MalFormedJSON extends WikiIocModelException {
 

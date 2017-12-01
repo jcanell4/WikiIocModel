@@ -9,7 +9,6 @@ if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
 if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
 
-require_once(WIKI_IOC_MODEL . 'WikiIocModelManager.php');
 require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 require_once(WIKI_IOC_MODEL . 'metadata/MetaDataService.php');
 //Las siguientes includes son para Clases específicas y exclusivas de este proyecto
@@ -49,7 +48,7 @@ class DokuModelManager extends WikiIocModelManager{
     public function getModelWrapperManager() {
         return (new \BasicModelAdapter())->init(new \BasicPersistenceEngine());
     }
-    
+
     public static function getDefaultDirClass($name) {
         return self::$defDirClass[$name];
     }

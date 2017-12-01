@@ -5,15 +5,12 @@
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if (!defined('WIKI_IOC_DEFAULT_PROJECT')) define('WIKI_IOC_DEFAULT_PROJECT', DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/');
 
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/LockManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLocker.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php";
-require_once WIKI_IOC_DEFAULT_PROJECT . "DokuAction.php";
-//require_once WIKI_IOC_DEFAULT_PROJECT . "datamodel/DokuPageModel.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
 
 abstract class PageAction extends DokuAction {
     protected $dokuPageModel;
@@ -166,12 +163,12 @@ abstract class PageAction extends DokuAction {
         }
         $ns = isset($response['ns']) ? $response['ns'] : $response['structure']['ns'];
         $rev = isset($response['rev']) ? $response['rev'] : $response['structure']['rev'];
-        
+
         $list = PagePermissionManager::getListUsersPagePermission($ns, AUTH_EDIT);
 
         $list = $this->generateUsernameNamePair($list);
-        
-        
+
+
         $response['meta'][] = [
             "id" => $ns . "_metaNotifications",
             "title" => WikiIocLangManager::getLang('notification_form_title'),
@@ -263,7 +260,7 @@ abstract class PageAction extends DokuAction {
 
             "type" => "request_form" // aixó no se si es necessari
         ];
-        
+
 //        return $response['meta'];
     }
 
