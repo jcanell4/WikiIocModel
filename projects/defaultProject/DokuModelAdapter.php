@@ -345,15 +345,15 @@ class DokuModelAdapter extends BasicModelAdapter {
         }
 
         //get needed language array
-        include DOKU_TPL_INCDIR . "lang/en/lang.php";
+        include WikiGlobalConfig::tplIncDir() . "lang/en/lang.php";
         //overwrite English language values with available translations
         if (!empty($conf["lang"]) &&
             $conf["lang"] !== "en" &&
-            file_exists(DOKU_TPL_INCDIR . "/lang/" . $conf["lang"] . "/lang.php")
+            file_exists(WikiGlobalConfig::tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php")
         ) {
             //get language file (partially translated language files are no problem
             //cause non translated stuff is still existing as English array value)
-            include DOKU_TPL_INCDIR . "/lang/" . $conf["lang"] . "/lang.php";
+            include WikiGlobalConfig::tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php";
         }
         if (!empty($conf["lang"]) &&
             $conf["lang"] !== "en" &&
@@ -385,7 +385,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         global $lang;
 
         ob_start();
-        include DOKU_TPL_INCDIR . "inc_detail.php";
+        include WikiGlobalConfig::tplIncDir() . "inc_detail.php";
         $content = ob_get_clean();
         return $content;
     }
