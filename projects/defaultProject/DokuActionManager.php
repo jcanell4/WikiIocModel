@@ -3,7 +3,6 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', DOKU_PLUGIN . 'wikiiocmodel/projects/');
 
-require_once DOKU_PLUGIN . "wikiiocmodel/AbstractActionManager.php";
 require_once WIKI_IOC_PROJECTS . "defaultProject/DokuExtraAction.php";
 
 /**
@@ -11,7 +10,7 @@ require_once WIKI_IOC_PROJECTS . "defaultProject/DokuExtraAction.php";
  * @author culpable Rafa
  */
 abstract class DokuActionManager extends AbstractActionManager{
-    
+
     const EXTRA_ACTIONS = WIKI_IOC_PROJECTS . 'defaultProject/actions/extra/';
 
     /**
@@ -33,11 +32,11 @@ abstract class DokuActionManager extends AbstractActionManager{
         }
         return $actions;
     }
-    
+
     public static function getURLUpdateViewHandler() {
         return DOKU_URL . self::EXTRA_ACTIONS . 'UpdateViewHandler.js';
     }
-    
+
     /**
      * Construye un JSON que contiene el array de las configuraciones de los controles
      * @return JSON
@@ -45,11 +44,11 @@ abstract class DokuActionManager extends AbstractActionManager{
     public static function getJSONActions() {
         $arr_actions = self::getActions();
         foreach ($arr_actions as $key => $arrAction) {
-            if ($arrAction['level'] == DokuExtraAction::KEY_USUAL_INTERVENTION) 
+            if ($arrAction['level'] == DokuExtraAction::KEY_USUAL_INTERVENTION)
                 $arrJson['button'][$key] = $arrAction;
-            elseif ($arrAction['level'] == DokuExtraAction::KEY_HIGH_IMPORTANT_INTERVENTION) 
+            elseif ($arrAction['level'] == DokuExtraAction::KEY_HIGH_IMPORTANT_INTERVENTION)
                 $arrJson['menu'][$key] = $arrAction;
-            else 
+            else
                 $arrJson['other'][$key] = $arrAction; //El tipo es poco importante
         }
         $arrJson['url'] = self::getURLUpdateViewHandler();
@@ -64,7 +63,7 @@ abstract class DokuActionManager extends AbstractActionManager{
         $ret = array('actions'=> self::getActions(), 'url'=> self::getURLUpdateViewHandler());
         return $ret;
     }
-    
+
     /**
      * Carrega en memòria els arxius del directori "actions/extra" i
      * omple un array amb la llista de classes
@@ -82,8 +81,8 @@ abstract class DokuActionManager extends AbstractActionManager{
             }
             closedir($rdir);
         }
-        sort($fileClasses, SORT_LOCALE_STRING); 
+        sort($fileClasses, SORT_LOCALE_STRING);
         return $fileClasses;
     }
-    
+
  }

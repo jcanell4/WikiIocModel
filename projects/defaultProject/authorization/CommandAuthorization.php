@@ -10,7 +10,6 @@ define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
 
 require_once (DOKU_INC . 'inc/common.php');
 require_once (DOKU_INC . 'inc/auth.php');
-require_once (WIKI_IOC_MODEL . 'AbstractCommandAuthorization.php');
 require_once (WIKI_IOC_PROJECTS . 'defaultProject/DokuModelExceptions.php');
 require_once (WIKI_IOC_PROJECTS . 'defaultProject/authorization/Permission.php');
 
@@ -46,7 +45,7 @@ class CommandAuthorization extends AbstractCommandAuthorization {
         }
 
     }
-    
+
     /**
      * Comproba si el token de seguretat està verificat, fent servir una funció de la DokuWiki.
      * @return bool

@@ -1,32 +1,6 @@
 <?php
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
 
-require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
-//require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
-require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelManager.php");
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
-//require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/NotifyDataQuery.php');
-
-
-if (!defined('ST_UNLOCKED')) {
-    define('ST_UNLOCKED', 100);
-}
-
-if (!defined('ST_LOCKED')) {
-    define('ST_LOCKED', 200);
-}
-
-
-if (!defined('ST_LOCKED_BEFORE')) {
-    define('ST_LOCKED_BEFORE', 400);
-}
-
-if (!defined('ST_LOCAL_LOCKED_BEFORE')) {
-    define('ST_LOCAL_LOCKED_BEFORE', 800);
-}
 /**
  * Description of LockDataQuery
  *
@@ -34,20 +8,17 @@ if (!defined('ST_LOCAL_LOCKED_BEFORE')) {
  */
 class LockDataQuery extends DataQuery
 {
-    const UNLOCKED = ST_UNLOCKED; // El recurs no es troba bloquejat per ningú
-    const LOCKED = ST_LOCKED;  // El recurs es troba bloquejat per un altre usuari
-    const LOCKED_BEFORE = ST_LOCKED_BEFORE; // El recurs està bloquejat per l'usuari actual
-    const LOCAL_LOCKED_BEFORE = ST_LOCAL_LOCKED_BEFORE; // El recurs està bloquejat per l'usuari actual usant la sessió actual
+    const UNLOCKED = 100; // El recurs no es troba bloquejat per ningú
+    const LOCKED = 200;  // El recurs es troba bloquejat per un altre usuari
+    const LOCKED_BEFORE = 400; // El recurs està bloquejat per l'usuari actual
+    const LOCAL_LOCKED_BEFORE = 800; // El recurs està bloquejat per l'usuari actual usant la sessió actual
 
-
-//    protected $notifyDataQuery;
     protected $notifyModel;
 
     public function __construct()
     {
         $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
         $this->notifyModel = WikiIocModelManager::getNotifyModel($type);
-//	 $this->notifyDataQuery = new NotifyDataQuery();
     }
 
     public function getFileName($id, $especParams = NULL)
@@ -85,7 +56,7 @@ class LockDataQuery extends DataQuery
         }else{
             $ret = $this->readExtendedFile($id);
         }
-        
+
         return $ret;
     }
 
@@ -95,10 +66,10 @@ class LockDataQuery extends DataQuery
         $extendedFile = $this->getFileName($id, "extended");
         $ret = unserialize(io_readFile($extendedFile, FALSE));
         $ret["locker"]["time"] = filemtime($file);
-        
+
         return $ret;
     }
-    
+
     private function createExtendedFile($id)
     {
 
@@ -108,7 +79,7 @@ class LockDataQuery extends DataQuery
         $extended['requirers'] = [];
 
         io_saveFile($this->getFileName($id, 'extended'), serialize($extended));
-        
+
         return $extended;
     }
 
@@ -134,7 +105,7 @@ class LockDataQuery extends DataQuery
         $lockFilename = $this->getFileName($id);
         $lockFilenameExtended = $this->getFileName($id, 'extended');
         $locked = $this->clearLockIfNeeded($id);
-        
+
         if ($locked) {
             if (@file_exists($lockFilenameExtended)) {
                 // S'ha d'actualitzar
@@ -148,9 +119,9 @@ class LockDataQuery extends DataQuery
 
         } else{
             // ALERTA[Xavi] El document no està bloquejat, aquest cas no s'hauria de donar mai
-            
+
         }
-        
+
         return $extended;
     }
 
@@ -303,7 +274,7 @@ class LockDataQuery extends DataQuery
 
         return $extended; // Test, per afegir breakpoint
     }
-    
+
     private function addRequirementNotification($lockerId, $docId, $requirers)
     {
         $class_ = $this->notifyModel->getConstClass();
@@ -383,7 +354,7 @@ class LockDataQuery extends DataQuery
                 if(count($extended['requirers'])==0){
                  //avisar al locker que ja no es demana
                     $this->addUnrequirementNotification($extended['locker']['user'], $id);
-                }            
+                }
             }
         }
     }

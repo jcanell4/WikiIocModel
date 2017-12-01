@@ -1,16 +1,10 @@
 <?php
-if (!defined("DOKU_INC")) {
-    die();
-}
+if (!defined("DOKU_INC")) die();
+
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied" );
 
 require_once DOKU_PLUGIN."wikiiocmodel/actions/AbstractWikiAction.php";
-//require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
-//require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-require_once DOKU_PLUGIN."wikiiocmodel/WikiIocModelExceptions.php";
-
-//namespace ioc_dokuwiki;
 
 /**
  * Description of DokuAction
@@ -22,32 +16,32 @@ abstract class DokuAction extends AbstractWikiAction{
     protected $params;
     protected $response;
 
-    private $preResponseTmp = array(); //EL format d'aquestes dades és un hashArray on la clau indica el tipus i el valor el contingut. La clau 
-                                       //pot ser qualsevol de les que es processaràn després com a resposta en el responseHandler. Per exemple 
+    private $preResponseTmp = array(); //EL format d'aquestes dades és un hashArray on la clau indica el tipus i el valor el contingut. La clau
+                                       //pot ser qualsevol de les que es processaràn després com a resposta en el responseHandler. Per exemple
                                        //title, content, info, meta, etc. A més hi ha la possibilitat d'afegir contingut html a la resposta
-    private $postResponseTmp= array(); //EL format d'aquestes dades és un hashArray on la clau indica el tipus i el valor el contingut. La clau 
-                                       //pot ser qualsevol de les que es processaràn després com a resposta en el responseHandler. Per exemple 
+    private $postResponseTmp= array(); //EL format d'aquestes dades és un hashArray on la clau indica el tipus i el valor el contingut. La clau
+                                       //pot ser qualsevol de les que es processaràn després com a resposta en el responseHandler. Per exemple
                                        //title, content, info, meta, etc.
-    
+
     private $renderer = FALSE;
     private $addContentIsAllowed=FALSE; //Per defecte no deixem afegir contingut HTML a la renderització
-    
+
     /**
-     * 
+     *
      * @param Array $paramsArr
      */
     public function get(/*Array*/ $paramsArr=array()){
         global $MSG;
         $this->response="";
-        
+
         $this->start($paramsArr);
         $this->run();
         $response = $this->getResponse();
-        
+
         if ($this->isDenied()) {
             throw new HttpErrorCodeException('accessdenied', 403);
         }
-        
+
         foreach ($this->preResponseTmp as $preResponseTmp) {
             if(is_string($preResponseTmp) && $this->addContentIsAllowed){
                 if(!$response["before.content"])
@@ -72,7 +66,7 @@ abstract class DokuAction extends AbstractWikiAction{
                             }
                         }else{
                             $response["info"] = self::generateInfo($MSG['lvl'], $MSG['msg']);
-                        }                    
+                        }
                     }else{
                         if(isset($response[$key])){
                             if(is_string($response[$key])){
@@ -87,9 +81,9 @@ abstract class DokuAction extends AbstractWikiAction{
                         }
                     }
                 }
-            }    
+            }
         }
-        
+
         foreach ($this->postResponseTmp as $postResponseTmp) {
             if(is_string($postResponseTmp) && $this->addContentIsAllowed){
                 if(!$response["after.content"])
@@ -114,7 +108,7 @@ abstract class DokuAction extends AbstractWikiAction{
                             }
                         }else{
                             $response["info"] = self::generateInfo($MSG['lvl'], $MSG['msg']);
-                        }                    
+                        }
                     }else{
                         if(isset($response[$key])){
                             if(is_string($response[$key])){
@@ -128,7 +122,7 @@ abstract class DokuAction extends AbstractWikiAction{
                             $response[$key] = $value;
                         }
                     }
-                }     
+                }
             }
         }
         if(isset($MSG)){
@@ -145,49 +139,49 @@ abstract class DokuAction extends AbstractWikiAction{
             }
             unset($GLOBALS['MSG']);
         }
-        
+
         $this->triggerEndEvents();
-        
+
         return $response;
     }
-    
+
     /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la 
-     * sobrescriptura permet fer assignacions a les variables globals de la 
+     * És un mètode per sobrescriure. Per defecte no fa res, però la
+     * sobrescriptura permet fer assignacions a les variables globals de la
      * wiki a partir dels valors de DokuAction#params.
      */
     protected abstract function startProcess();
-    
+
     /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la 
-     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles 
+     * És un mètode per sobrescriure. Per defecte no fa res, però la
+     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
      * dades  intermèdies que siguin necessàries per generar la resposta final:
      * DokuAction#responseProcess.
      */
     protected abstract function runProcess();
-    
+
     /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la 
-     * sobrescriptura permet generar la resposta a enviar al client. Aquest 
-     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut 
+     * És un mètode per sobrescriure. Per defecte no fa res, però la
+     * sobrescriptura permet generar la resposta a enviar al client. Aquest
+     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
      * DokuAction#response.
      */
-    
-    private function start($paramsArr){        
+
+    private function start($paramsArr){
         $this->params = $paramsArr;
 	$this->startProcess();
         WikiIocInfoManager::loadInfo();
         WikiIocLangManager::load();
         $this->triggerStartEvents();
     }
-    
+
     private function run() {
         if ( $this->runBeforePreprocess() ) {
-            $this->runProcess();            
+            $this->runProcess();
         }
         $this->runAfterPreprocess();
     }
-    
+
     private function runBeforePreprocess() {
         global $ACT;
         $content = "";
@@ -202,7 +196,7 @@ abstract class DokuAction extends AbstractWikiAction{
         if(!empty($content)){
             $this->preResponseTmp[] = $content;
         }
-        
+
         return $brun;
     }
 
@@ -217,7 +211,7 @@ abstract class DokuAction extends AbstractWikiAction{
             $this->preResponseTmp[] = $content;
         }
     }
-    
+
     private function getResponse(){
         if($this->isRenderer()){
             $evt = new Doku_Event('TPL_ACT_RENDER', $this->params[PageKeys::KEY_DO]);
@@ -225,7 +219,7 @@ abstract class DokuAction extends AbstractWikiAction{
             if($evt->advise_before()){
                 $pre_output = ob_get_clean();
                 $response = $this->responseProcess();
-            }else{    
+            }else{
                 $pre_output = ob_get_clean();
             }
             ob_start();
@@ -233,8 +227,8 @@ abstract class DokuAction extends AbstractWikiAction{
             $post_output = ob_get_clean();
             ob_start();
             trigger_event('TPL_CONTENT_DISPLAY', $post_output, 'ptln');
-            $post_output = ob_get_clean();   
-            if(!empty($pre_output)) 
+            $post_output = ob_get_clean();
+            if(!empty($pre_output))
                 $this->preResponseTmp[] = $pre_output;
             if(!empty($post_output))
                 $this->postResponseTmp[] = $post_output;
@@ -245,7 +239,7 @@ abstract class DokuAction extends AbstractWikiAction{
             if(!$response){
                 $response = $this->response;
             }else{
-                
+
             }
         }
         return $response;
@@ -267,13 +261,13 @@ abstract class DokuAction extends AbstractWikiAction{
 	global $ACT;
 	return $ACT == DW_ACT_DENIED;
     }
-    
+
     protected function setRenderer($val){
         $this->renderer=$val;
     }
-    
+
     protected function isRenderer(){
         return $this->renderer;
     }
-    
+
 }

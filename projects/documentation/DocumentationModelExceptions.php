@@ -5,10 +5,6 @@
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
-
-require_once(WIKI_IOC_MODEL . 'WikiIocModelExceptions.php');
-require_once(WIKI_IOC_MODEL . 'WikiIocLangManager.php');
 
 class ProjectExistException extends WikiIocProjectException {
     public function __construct($page, $message='projectExist', $code=7201) {

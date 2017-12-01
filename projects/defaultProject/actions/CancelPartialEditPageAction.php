@@ -8,12 +8,8 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once (DOKU_INC.'inc/common.php');
 require_once DOKU_PLUGIN."ajaxcommand/defkeys/PageKeys.php";
-//require_once DOKU_PLUGIN."wikiiocmodel/WikiIocInfoManager.php";
-//require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/CancelEditPageAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
-require_once DOKU_PLUGIN."wikiiocmodel/ResourceUnlockerInterface.php";
-require_once DOKU_PLUGIN."wikiiocmodel/ResourceLockerInterface.php";
 
 class CancelPartialEditPageAction extends CancelEditPageAction implements ResourceLockerInterface, ResourceUnlockerInterface {
 
@@ -47,7 +43,7 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
         }
 
         if($this->params[PageKeys::KEY_TO_REQUIRE]){
-                // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou 
+                // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou
 //                $response['meta'] = $this->addMetaTocResponse();
                 $this->addMetaTocResponse($response);
                 // TODO: afegir les revisions

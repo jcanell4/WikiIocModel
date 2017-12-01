@@ -1,11 +1,7 @@
 <?php
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
-require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
-//require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
 
 /**
@@ -149,8 +145,8 @@ class DraftDataQuery extends DataQuery
 
         return null;
     }
-    
-    
+
+
     public function generateStructured($draft, $id, $date)
     {
 
@@ -244,7 +240,7 @@ class DraftDataQuery extends DataQuery
 
 //    private static function removeStructuredDraft($id, $header_id){
 //        $draftFile = $this->getStructuredFilename($id);
-//        
+//
 //        if (@file_exists($draftFile)) {
 //            $oldDraft = $this->getStructured($id);
 //

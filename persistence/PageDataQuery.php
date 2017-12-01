@@ -1,22 +1,15 @@
 <?php
-
 if (! defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
-
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once (DOKU_INC . 'inc/common.php');
 require_once (DOKU_INC . 'inc/changelog.php');
-require_once(DOKU_INC . 'inc/template.php');
+require_once (DOKU_INC . 'inc/template.php');
 require_once (DOKU_INC . 'inc/pageutils.php');
 require_once (DOKU_INC . 'inc/parserutils.php');
 require_once (DOKU_INC . 'inc/io.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
-require_once DOKU_PLUGIN."ownInit/WikiGlobalConfig.php";
-require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
-
 
 /**
  * Description of PageDataQuery
@@ -24,7 +17,7 @@ require_once DOKU_PLUGIN."wikiiocmodel/WikiIocLangManager.php";
  * @author josep
  */
 class PageDataQuery extends DataQuery {
-    
+
     public function getFileName($id, $specparams=NULL) {
         $clean=true;
         $rev = "";
@@ -34,7 +27,7 @@ class PageDataQuery extends DataQuery {
             }
             if($specparams["rev"]){
                 $rev=$specparams["rev"];
-            }            
+            }
         }else{
             $rev = $specparams;
         }
@@ -54,8 +47,8 @@ class PageDataQuery extends DataQuery {
 
             return $this->getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects, $root);
     }
-        
-    
+
+
     public function getMetaFiles($id){
         return metaFiles($id);
     }
@@ -63,22 +56,22 @@ class PageDataQuery extends DataQuery {
     public function save($id, $text, $summary, $minor = false){
         saveWikiText($id, $text, $summary, $minor);
     }
-    
+
     public function getHtml($id, $rev = null){
         $html = $this->p_wiki_xhtml($id, $rev, true);
 
         return $html;
-        
+
     }
-    
+
     public function getRaw($id, $rev=NULL){
         return rawWiki($id, $rev);
     }
-    
+
     public function getRawSlices($id, $range="", $rev=""){
         return rawWikiSlices($range, $id, $rev);
     }
-    
+
     public function getToc($id){
         global $ACT;
         $act_aux = $ACT;
@@ -117,7 +110,7 @@ class PageDataQuery extends DataQuery {
 
        return $ret;
     }
-   
+
     public function getInstructions($id, $rev=NULL){
         $file = $this->getFileName($id);
         if(!$rev){
@@ -127,7 +120,7 @@ class PageDataQuery extends DataQuery {
         }
         return $instructions;
     }
-    
+
      public function getRevisionList($id, $offset = -1){
         $amount = WikiGlobalConfig::getConf('revision-lines-per-page', 'wikiiocmodel');
 
