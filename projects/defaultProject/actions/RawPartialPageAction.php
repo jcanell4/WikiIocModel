@@ -90,7 +90,9 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         $data = $this->getModel()->getData(TRUE);
 
         // 0) Si ja hi ha un chunk en edició, s'han d'ignorar els drafts FULL: comprovem si s'ha passat la data de de l'structured
-        $ignoreDrafts = count($this->params[PageKeys::KEY_EDITING_CHUNKS])>1 && !isset($this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME]);
+        $ignoreDrafts = count($this->params[PageKeys::KEY_EDITING_CHUNKS])>1
+            && !isset($this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME])
+                && !isset($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]);
 
         // 1) Ja s'ha recuperat el draft local
         if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] && !$ignoreDrafts) {
