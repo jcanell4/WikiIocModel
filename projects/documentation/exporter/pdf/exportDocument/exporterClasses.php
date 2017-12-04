@@ -45,7 +45,7 @@ class exportDocument extends MainRender {
         }
 
         $result = array();
-        if ($this->mode === 'zip'){
+        if ($this->mode === 'zip' || $this->filetype === 'zip'){
             $this->createZip($output_filename, $this->cfgExport->tmp_dir, $latex);
         }else{
             $this->createLatex($output_filename, $this->cfgExport->tmp_dir, $latex, $result);
@@ -128,7 +128,7 @@ class exportDocument extends MainRender {
         else {
             $destino = mediaFN(str_replace("_", ":", $this->cfgExport->id));
             $moreparsing = ($_SESSION['onemoreparsing']) ? 1 : 0;
-            @exec("/home/rafael/nb-projectes/sh/remoteSSHexport.sh $path $filename $destino $moreparsing $shell_escape", $sortida, $return);
+            @exec(DOKU_INC."../sh/remoteSSHexport.sh $path $filename $destino $moreparsing $shell_escape", $sortida, $return);
         }
 
         if ($return !== 0){

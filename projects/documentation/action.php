@@ -27,15 +27,15 @@ class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAct
      * Rellena de información una pestaña de la zona de MetaInformación
      */
     function setExtraMeta(&$event, $param) {
-        $result['id'] = str_replace(':','_',getID());
         $result['ns'] = getID();
-        if(class_exists("ProjectExportAction", TRUE)){
+        $result['id'] = str_replace(':', '_', $result['ns']);
+        if (class_exists("ProjectExportAction", TRUE)){
             $html = ProjectExportAction::get_html_metadata($result) ;
         }
 
         $event->data["ajaxCmdResponseGenerator"]->addExtraMetadata(
                     $result['id'],
-                    $result['id']."_iocexportxhtml",
+                    $result['id']."_iocexport",
                     WikiIocLangManager::getLang("metadata_export_title"),
                     $html
                     );

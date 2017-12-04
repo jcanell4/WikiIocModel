@@ -14,11 +14,13 @@ abstract class AbstractRenderer {
     protected $extra_data;
     protected $rendererPath;
     protected $mode;
+    protected $filetype;
 
     public function __construct($factory, $cfgExport=NULL) {
         $this->factory = $factory;
         $this->rendererPath = dirname(realpath(__FILE__));
         $this->mode = $factory->getMode();
+        $this->filetype = $factory->getFileType();
         if ($cfgExport){
             $this->cfgExport = $cfgExport;
         }else{
@@ -48,7 +50,7 @@ abstract class AbstractRenderer {
 class cfgExporter {
     public $id;
     public $langDir;        //directori amb cadenes traduïdes
-    public $aLang;          //cadenes traduïdes
+    public $aLang = array();//cadenes traduïdes
     public $lang = 'ca';    //idioma amb el que es treballa
     public $tmp_dir;
     public $latex_images = array();

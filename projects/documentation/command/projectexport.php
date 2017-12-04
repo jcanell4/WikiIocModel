@@ -27,10 +27,11 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
     }
 
     protected function process() {
-        $params = array(AjaxKeys::KEY_ID => $this->params[AjaxKeys::KEY_ID],
-                        AjaxKeys::KEY_NS => str_replace("_", ":", $this->params[AjaxKeys::KEY_ID]),
+        $params = array(AjaxKeys::KEY_ID       => $this->params[AjaxKeys::KEY_ID],
+                        AjaxKeys::KEY_NS       => str_replace("_", ":", $this->params[AjaxKeys::KEY_ID]),
                         AjaxKeys::PROJECT_TYPE => $this->params[AjaxKeys::PROJECT_TYPE],
-                        "mode"        => $this->params['mode']
+                        "mode"     => $this->params['mode'],
+                        "filetype" => $this->params['filetype']
                   );
         $action = $this->modelManager->getActionInstance("ProjectExportAction", $this->modelManager->getExporterManager());
         $action->init($params);
@@ -44,7 +45,7 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
             $response[AjaxKeys::PROJECT_TYPE] = $this->params[AjaxKeys::PROJECT_TYPE];
             $meta = $response["meta"];
             $pageId = $this->params[AjaxKeys::KEY_ID];
-            $ret->addExtraMetadata($pageId, $pageId."_iocexport".$this->params['mode'], WikiIocLangManager::getLang("metadata_export_title"), $meta);
+            $ret->addExtraMetadata($pageId, $pageId."_iocexport", WikiIocLangManager::getLang("metadata_export_title"), $meta);
         }else {
             $ret->addError(1000, "EXPORTACIÓ NO REALITZADA");
         }
