@@ -5,11 +5,8 @@
  * @author josep
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
-
-//require common
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+if (!defined('DOKU_TPL_INCDIR')) define('DOKU_TPL_INCDIR', tpl_incdir());
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 
 class PrintPageAction extends PageAction{
@@ -23,7 +20,7 @@ class PrintPageAction extends PageAction{
     protected function responseProcess(){
         $ret = array();
         ob_start();
-        include WikiGlobalConfig::tplIncDir().'print.php';
+        include DOKU_TPL_INCDIR.'print.php';
         $ret['html'] = ob_get_clean();
         return $ret;
     }
@@ -33,8 +30,8 @@ class PrintPageAction extends PageAction{
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID], 'pageNotFound');
         }
         if (!WikiIocInfoManager::getInfo("perm")) {
-            throw new InsufficientPermissionToViewPageException($this->params[PageKeys::KEY_ID]); 
-        }        
+            throw new InsufficientPermissionToViewPageException($this->params[PageKeys::KEY_ID]);
+        }
     }
 
 }

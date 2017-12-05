@@ -1,16 +1,11 @@
 <?php
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+
 require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/AbstractWikiDataModel.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php";
 require_once DOKU_INC . "inc/media.php";
 require_once(DOKU_INC . 'inc/pageutils.php');
 require_once(DOKU_INC . 'inc/common.php');
-
 
 /**
  * Description of DokuNotifyModel
@@ -25,7 +20,7 @@ abstract class DokuNotifyModel extends AbstractWikiDataModel
     const TYPE_DIALOG = 'dialog';
     const TYPE_RELEASED = 'released';
     const TYPE_CANCELED_BY_REMOTE_AGENT = 'canceled_by_remote_agent';
-    
+
     const MAILBOX_RECEIVED = 'inbox';
     const MAILBOX_SEND = 'outbox';
     const MAILBOX_SYSTEM = 'system';
@@ -61,7 +56,7 @@ abstract class DokuNotifyModel extends AbstractWikiDataModel
     public abstract function init();
 
     public abstract function notifyMessageToFrom($text, $receiverId, $senderId = NULL, $mailbox, $read = false);
-    
+
     public abstract function notifyTo($data, $receiverId, $type, $id=NULL, $mailbox);
 
     public abstract function popNotifications($userId, $since);
@@ -71,7 +66,7 @@ abstract class DokuNotifyModel extends AbstractWikiDataModel
     public abstract function update($notificationId, $blackboardId, $updatedData);
 
     public abstract function delete($notificationId, $blackboardId);
-    
+
     public function getConstClass(){
         return get_class($this->dataQuery);
     }

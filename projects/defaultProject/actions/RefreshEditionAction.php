@@ -10,7 +10,6 @@ require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
 
 if (!defined('DW_ACT_LOCK')) define('DW_ACT_LOCK', "lock");
 if (!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
@@ -60,7 +59,7 @@ class RefreshEditionAction extends PageAction implements ResourceLockerInterface
             //[JOSEP] AIXÒ NO HAURIA DE PASSAR MAI!
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
-        
+
         $response["codeType"]=0;
         return $response;
     }

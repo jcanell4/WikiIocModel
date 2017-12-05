@@ -5,16 +5,13 @@
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if (!defined('WIKI_IOC_DEFAULT_PROJECT')) define('WIKI_IOC_DEFAULT_PROJECT', DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/');
 
 require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/template.php');
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
-require_once WIKI_IOC_DEFAULT_PROJECT . "actions/PageAction.php";
-require_once WIKI_IOC_DEFAULT_PROJECT . "DokuModelExceptions.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 
 if (!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
 if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
@@ -89,8 +86,13 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         $response = [];
         $data = $this->getModel()->getData(TRUE);
 
+        // 0) Si ja hi ha un chunk en edició, s'han d'ignorar els drafts FULL: comprovem si s'ha passat la data de de l'structured
+        $ignoreDrafts = count($this->params[PageKeys::KEY_EDITING_CHUNKS])>1
+            && !isset($this->params[PageKeys::STRUCTURED_LAST_LOCAL_DRAFT_TIME])
+                && !isset($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]);
+
         // 1) Ja s'ha recuperat el draft local
-        if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]) {
+        if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] && !$ignoreDrafts) {
 
             $response = $this->_getLocalDraftResponse($data);
 
@@ -107,14 +109,14 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         } else {
 
             // 2.1) Es demana recuperar el draft?
-            if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === TRUE) {
+            if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === TRUE && !$ignoreDrafts) {
 
                 $response = $this->_getDraftResponse($data); // ALERTA[Xavi] Els drafts sempre es recuperaran localment, això ja no s'haurà de cridar mai
 
                 // 2.2) Es troba desbloquejat?
             } else if (!$data['structure']['locked']) { //
 
-                if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === FALSE) {
+                if ($this->params[PageKeys::KEY_RECOVER_DRAFT] === FALSE || $ignoreDrafts) {
 
                     // 2.2.1) S'ha especificat recuperar el document
                     $response = $this->_getDocumentResponse($data);
@@ -127,7 +129,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
                    $response = $this->_getDialogOrDocumentResponse($data);
 
                    if($this->params[PageKeys::KEY_TO_REQUIRE]){
-                        // TODO: afegir el 'meta' que correspongui perquè si ve del requiring dialog, el content tool es crerà de nou 
+                        // TODO: afegir el 'meta' que correspongui perquè si ve del requiring dialog, el content tool es crerà de nou
 //                       $response['meta'][] = $this->addMetaTocResponse();
                        $this->addMetaTocResponse($response);
                         // TODO: afegir les revisions
@@ -141,7 +143,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
                 // TODO[Xavi]El document està bloquejat
                 //  No es pot editar. Cal esperar que s'acabi el bloqueig
                  $response = $this->_getWaitingUnlockDialog($data); // <-- acció equivalent al RawPageAction
-                // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou 
+                // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou
 //                $response['meta'][] = $this->addMetaTocResponse();
                 $this->addMetaTocResponse($response);
                 // TODO: afegir les revisions

@@ -9,15 +9,8 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php");
 require_once(DOKU_PLUGIN . "wikiiocmodel/datamodel/WikiRenderizableDataModel.php");
-require_once(DOKU_PLUGIN . "wikiiocmodel/ResourceLocker.php");
 
 class DokuPageModel extends WikiRenderizableDataModel {
-    //const NO_DRAFT = "none";
-    //const PARTIAL_DRAFT = "partial";
-    //const FULL_DRAFT = "full";
-
-    //const LOCAL_PARTIAL_DRAFT = "local_partial";
-    //const LOCAL_FULL_DRAFT = "local_full";
 
     protected $id;
     protected $selected;
@@ -330,7 +323,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
         }
     }
 
-    
+
     // Només son editables parcialment les seccions de nivell 1, 2 i 3
     private static function getChunks($pageDataQuery, $id, $rev = NULL) {
         $instructions = $pageDataQuery->getInstructions($id, $rev);
@@ -414,7 +407,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
     public function getAllDrafts() {
         $drafts = [];
         $hasStructured = $this->hasStructuredDraft();
-        
+
         if ($hasStructured) {
             $drafts['structured'] = $this->getStructuredDraft();
         }
@@ -433,7 +426,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
         return $drafts;
     }
-    
+
     private function hasFullDraft(){
         return $this->draftDataQuery->hasFull($this->id);
     }
@@ -455,7 +448,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
                 if(isset($draft["section_id"])){
                     return $this->removeChunkDraft($draft["section_id"]);
                 }else{
-                    return $this->removePartialDraft();                    
+                    return $this->removePartialDraft();
                 }
                 break;
 

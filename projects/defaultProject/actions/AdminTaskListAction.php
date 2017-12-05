@@ -1,11 +1,12 @@
 <?php
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+if (!defined('DOKU_TPL_INCDIR')) define('DOKU_TPL_INCDIR', tpl_incdir());
 
-require_once (DOKU_INC . 'inc/pluginutils.php');
-require_once (DOKU_INC . 'inc/actions.php');
+require_once DOKU_INC . 'inc/pluginutils.php';
+require_once DOKU_INC . 'inc/actions.php';
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/AdminTaskAction.php";
-require_once WikiGlobalConfig::tplIncDir()."conf/cfgIdConstants.php";
+require_once DOKU_TPL_INCDIR . "conf/cfgIdConstants.php";
 
 /**
  * Description of AdminTaskListAction
