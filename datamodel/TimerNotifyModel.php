@@ -1,17 +1,12 @@
 <?php
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+
 require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/AbstractWikiDataModel.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/DokuNotifyModel.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php";
 require_once DOKU_INC . "inc/media.php";
 require_once(DOKU_INC . 'inc/pageutils.php');
 require_once(DOKU_INC . 'inc/common.php');
-
 
 /**
  * Description of TimerLockModel
@@ -70,7 +65,7 @@ class TimerNotifyModel extends DokuNotifyModel
 
         // L'afegim al blackboard del destinatari ($receiverId, $notificationData, $type = self::TYPE_MESSAGE, $id=NULL, $senderId = NULL)
         $notification= $this->dataQuery->generateNotification($data, $type, $id, $senderId, FALSE, $mailbox);
-        return $this->dataQuery->add($receiverId, $notification, TRUE); 
+        return $this->dataQuery->add($receiverId, $notification, TRUE);
     }
 
     public function popNotifications($userId, $since = 0)

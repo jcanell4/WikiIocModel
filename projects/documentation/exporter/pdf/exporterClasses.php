@@ -56,6 +56,11 @@ class renderFile extends AbstractRenderer {
             $startedHere = true;
         }
         $_SESSION['tmp_dir'] = $this->cfgExport->tmp_dir;
+        //las siguientes variables están pendientes de revisión para establecer la necesidad de su existencia
+        $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
+        $_SESSION['media_files'] = &$this->cfgExport->media_files;
+        $_SESSION['graphviz_images'] = &$this->cfgExport->graphviz_images;
+        $_SESSION['gif_images'] = &$this->cfgExport->gif_images;
 
         $text = io_readFile(wikiFN($data));
         $info = array();

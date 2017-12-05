@@ -23,8 +23,11 @@ class MainRender extends renderObject {
         $langFile = $this->cfgExport->langDir.$this->cfgExport->lang.'.conf';
         if (!file_exists($langFile)){
             $this->cfgExport->lang = 'ca';
+            $langFile = $this->cfgExport->langDir.$this->cfgExport->lang.'.conf';
         }
-        $this->cfgExport->aLang = confToHash($langFile);
+        if (file_exists($langFile)) {
+            $this->cfgExport->aLang = confToHash($langFile);
+        }
         $this->initialized = TRUE;
     }
 }

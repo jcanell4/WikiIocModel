@@ -1,15 +1,14 @@
 require([
         "dijit/registry",
-        "dojo/on",
         "dojo/domReady!"
-    ], function (registry, on) {
+    ], function (registry) {
        
         var lampreasButton = registry.byId('lampreas');
        
         var fOnClick=function(){
             var id = this.dispatcher.getGlobalState().getCurrentId();
-            registry.byId("zonaMetaInfo").selectChild(id + "_iocexportxhtml");
-            this.setStandbyId(id + "_iocexportxhtml");
+            registry.byId("zonaMetaInfo").selectChild(id + "_iocexport");
+            this.setStandbyId(id + "_iocexport");
         };
 
         var fGetQuery=function(){

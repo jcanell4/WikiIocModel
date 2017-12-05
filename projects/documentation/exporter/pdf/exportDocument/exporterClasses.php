@@ -45,8 +45,8 @@ class exportDocument extends MainRender {
         }
 
         $result = array();
-        if ($this->mode === 'zip'){
-            $this->createZip($output_filename, $this->cfgExport->tmp_dir, $latex, $result);
+        if ($this->mode === 'zip' || $this->filetype === 'zip'){
+            $this->createZip($output_filename, $this->cfgExport->tmp_dir, $latex);
         }else{
             $this->createLatex($output_filename, $this->cfgExport->tmp_dir, $latex, $result);
         }
@@ -128,13 +128,13 @@ class exportDocument extends MainRender {
         else {
             $destino = mediaFN(str_replace("_", ":", $this->cfgExport->id));
             $moreparsing = ($_SESSION['onemoreparsing']) ? 1 : 0;
-            @exec("/home/rafael/nb-projectes/sh/remoteSSHexport.sh $path $filename $destino $moreparsing $shell_escape", $sortida, $return);
+            @exec(DOKU_INC."../sh/remoteSSHexport.sh $path $filename $destino $moreparsing $shell_escape", $sortida, $return);
         }
 
         if ($return !== 0){
             $this->getLogError($path, $filename, $result);
         }else{
-            $this->returnData($path, $filename.'.pdf', 'pdf', $result);
+            $this->returnData($path, "$filename.pdf", "pdf", $result);
         }
     }
 
@@ -143,44 +143,42 @@ class exportDocument extends MainRender {
      * @param string $path, $filename, $type
      */
     private function returnData($path, $filename, $type, &$result=NULL){
-        global $conf;
 
-        if (file_exists($path.'/'.$filename)){
+        if (file_exists("$path/$filename")){
             $error = '';
             //Return pdf number pages
             if ($type === 'pdf'){
                 $num_pages = @exec("pdfinfo $path/$filename | awk '/Pages/ {print $2}'");
             }
             $filesize = filesize_h(filesize("$path/$filename"));
-            $dest = dirname(str_replace(":", "/", $this->cfgExport->id));
-            if (!file_exists($conf['mediadir'].'/'.$dest)){
-                mkdir($conf['mediadir'].'/'.$dest, 0755, TRUE);
-            }
-            $filename_dest = ($this->log || $this->permissionToExport) ? $filename : basename($filename, '.'.$type).'_draft.'.$type;
+            $ns = str_replace("_", ":", $this->cfgExport->id);
+            $mediadir = mediaFN($ns);
+            if (!file_exists($mediadir)) mkdir($mediadir, 0755, TRUE);
+
+            $filename_dest = ($this->log || $this->cfgExport->permissionToExport) ? $filename : basename($filename, ".$type")."_draft.$type";
             //Replace log extension to txt, and show where error is
             if ($type === 'log'){
                 $filename_dest = preg_replace('/\.log$/', '.txt', $filename_dest, 1);
-                $error = io_grep($path.'/'.$filename, '/^!/', 1);
-                $line = io_grep($path.'/'.$filename, '/^l.\d+/', 1);
+                $error = io_grep("$path/$filename", '/^!/', 1);
+                $line = io_grep("$path/$filename", '/^l.\d+/', 1);
                 preg_match('/\d+/', $line[0], $matches);
                 $error = preg_replace('/!/', '('.$matches[0].') ', $error);
             }
-            copy($path.'/'.$filename, $conf['mediadir'].'/'.$dest .'/'.$filename_dest);
-            $dest = preg_replace('/\//', ':', $dest);
+            copy("$path/$filename", "$mediadir/$filename_dest");
+
             $time_end = microtime(TRUE);
             $time = round($time_end - $this->time_start, 2);
             setlocale(LC_TIME, 'ca_ES.utf8');
-            $dateFile = strftime("%e %B %Y %T", filemtime($path.'/'.$filename));
+            $dateFile = strftime("%e %B %Y %T", filemtime("$path/$filename"));
+
             if ($this->log){
-                if ($type === 'log'){
-                    $num_pages = 'E';
-                }
-                $result = array('time' => $dateFile, 'path' => $dest.':'.$filename_dest, 'pages' => $num_pages, 'size' => $filesize);
+                if ($type === 'log') $num_pages = 'E';
+                $result = array('time'=>$dateFile, 'path'=>"$ns:$filename_dest", 'pages'=>$num_pages, 'size'=>$filesize);
             }else{
                 if ($type === 'pdf'){
-                    $result = array($type, $this->media_path.$dest.':'.$filename_dest.'&time='.gettimeofday(TRUE), $filename_dest, $filesize, $num_pages, $time, $dateFile, $this->formByColumns);
+                    $result = array($type, "$ns:$filename_dest&time=".gettimeofday(TRUE), $filename_dest, $filesize, $num_pages, $time, $dateFile);
                 }else{
-                    $result = array($type, $this->media_path.$dest.':'.$filename_dest.'&time='.gettimeofday(TRUE), $filename_dest, $filesize, $time, $error, $dateFile, $this->formByColumns);
+                    $result = array($type, "$ns:$filename_dest&time=".gettimeofday(TRUE), $filename_dest, $filesize, $time, $error, $dateFile);
                 }
             }
         }else{
@@ -199,8 +197,8 @@ class exportDocument extends MainRender {
     private function getLogError($path, $filename, &$return=array()){
         $output = array();
 
-        if($this->log || auth_isadmin()){
-            $result = $this->returnData($path, $filename.'.log', 'log', $return);
+        if ($this->log || auth_isadmin()){
+            $result = $this->returnData($path, "$filename.log", 'log', $return);
         }else{
             @exec("tail -n 20 $path/$filename.log;", $output);
             io_saveFile("$path/filename.log", implode(DOKU_LF, $output));
@@ -213,23 +211,31 @@ class exportDocument extends MainRender {
      * Create a zip file with tex file and all media files
      * @param string $filename, $path, $text
      */
-    private function createZip($filename, $path, &$text){
+    private function createZip($filename, $path, $text){
 
         $zip = new ZipArchive;
         $res = $zip->open("$path/$filename.zip", ZipArchive::CREATE);
         if ($res === TRUE) {
-            $zip->addFromString($filename.'.tex', $text);
+            $zip->addFromString("$filename.tex", $text);
             $zip->addEmptyDir('media');
             $files = array();
-            $this->getFiles($path.'/media', $files);
-            foreach($files as $f){
-                $zip->addFile($f, 'media/'.basename($f));
+            if ($this->getFiles("$path/media", $files)) {
+                foreach($files as $f){
+                    $zip->addFile($f, 'media/'.basename($f));
+                }
+                $zip->close();
+                $result = $this->returnData($path, "$filename.zip", 'zip');
+            }else {
+                $res = FALSE;
             }
-            $zip->close();
-            $this->returnData($path, $filename.'.zip', 'zip');
-        }else{
-            $this->getLogError($filename);
         }
+
+        if ($res !== TRUE) {
+            $zip->close();
+            $result = $this->getLogError($filename);
+        }
+
+        return $result;
     }
 
     /**

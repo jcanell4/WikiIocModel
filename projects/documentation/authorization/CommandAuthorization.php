@@ -10,7 +10,6 @@ define('WIKI_IOC_PROJECTS', DOKU_PLUGIN."wikiiocmodel/projects/");
 require_once(DOKU_INC."inc/common.php");
 require_once(DOKU_INC."inc/auth.php");
 require_once(DOKU_PLUGIN."ajaxcommand/defkeys/ProjectKeys.php");
-require_once(DOKU_PLUGIN."wikiiocmodel/AbstractCommandAuthorization.php");
 require_once(WIKI_IOC_PROJECTS."documentation/DocumentationModelExceptions.php");
 require_once(WIKI_IOC_PROJECTS."documentation/authorization/Permission.php");
 
@@ -28,7 +27,7 @@ class CommandAuthorization extends AbstractCommandAuthorization {
 
     public function setPermission($command) {
         parent::setPermission($command);
-        $this->permission->setIdPage($command->getParams(ProjectKeys::KEY_ID));
+        $this->permission->setIdPage($command->getParams(AjaxKeys::KEY_ID));
         $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
         $this->permission->setAuthor($command->getKeyDataProject(Permission::ROL_AUTOR));

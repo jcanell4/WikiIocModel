@@ -1,17 +1,10 @@
 <?php
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
-
-require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocModelExceptions.php");
-//require_once(DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php");
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
-//require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 
 /**
  * Description of NotifyDataQuery
- *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
 class NotifyDataQuery extends DataQuery
@@ -38,21 +31,15 @@ class NotifyDataQuery extends DataQuery
     const MAILBOX_SEND = 'outbox';
     const MAILBOX_SYSTEM = 'system';
 
-
     // TODO[Xavi] Segons la configuració del servidor (conf wikiiocmodel) es farà servir un sistema de timers o de websockets
-
     private $blackboard = []; // Creem un cache per guardar els blackboards carregats
 
-    public function getFileName($userId, $especParams = NULL)
-    {
-//        $fileName = getCacheName($userId, '.blackboard');
+    public function getFileName($userId, $especParams = NULL) {
         $fileName = $this->_notifyFN($userId);
-
         return $fileName;
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject = FALSE, $hiddenProjects = FALSE, $root = FALSE)
-    {
+    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject = FALSE, $hiddenProjects = FALSE, $root = FALSE) {
         throw new UnavailableMethodExecutionException("NotifyDataQuery#getNsTree");
     }
 
@@ -63,8 +50,7 @@ class NotifyDataQuery extends DataQuery
      * @param null $senderId
      * @return array
      */
-    public function generateNotification(array $notificationData, $type = self::TYPE_MESSAGE, $id = NULL, $senderId = NULL, $read = false, $mailbox = self::MAILBOX_RECEIVED)
-    {
+    public function generateNotification(array $notificationData, $type = self::TYPE_MESSAGE, $id = NULL, $senderId = NULL, $read = false, $mailbox = self::MAILBOX_RECEIVED) {
 
         $notification = [];
 
@@ -94,9 +80,7 @@ class NotifyDataQuery extends DataQuery
         return $notification;
     }
 
-    public function update($notificationId, $blackboardId, $dataForUpdate)
-    {
-
+    public function update($notificationId, $blackboardId, $dataForUpdate) {
 
         $this->loadBlackboard($blackboardId);
 
@@ -121,21 +105,17 @@ class NotifyDataQuery extends DataQuery
     }
 
 
-    private function searchNotificationIndexInBlackboard($id, $blackboard)
-    {
+    private function searchNotificationIndexInBlackboard($id, $blackboard)  {
 
         for ($i = 0, $len = count($blackboard); $i < $len; $i++) {
             if ($blackboard[$i][self::NOTIFICATION_ID] == $id) {
                 return $i;
             }
         }
-
         return null;
-
     }
 
     public function add($receiverId, $notification, $replaceById=FALSE) {
-
 
         $this->loadBlackboard($receiverId);
         if($replaceById){
@@ -151,22 +131,14 @@ class NotifyDataQuery extends DataQuery
         $this->saveBlackboard($receiverId);
     }
 
-    public function get($userId, $since = 0, $deleteContent = TRUE)
-    {
+    public function get($userId, $since = 0, $deleteContent = TRUE) {
 
         $messages = $this->getBlackboard($userId);// Alerta[Xavi] PHP copia els arrays per valor, i no per referència
 
         if ($deleteContent) {
             $this->deleteBlackboard($userId);
         }
-
-
-//        if ($since > 0) {
-            $messages = $this->getMessagesSince($messages, $since);
-//        }else{
-//            $messages = array_unshift($messages, "");
-//            $messages = array_shift($messages);
-//        }
+        $messages = $this->getMessagesSince($messages, $since);
 
 // ALERTA[Xavi] codi de prova, per generar un avís del sistema que expira en 20 segons
 //        $this->delete(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel')); // ALERTA[Xavi] Això només s'ha de descomentar per esborrar la pissara completament
@@ -178,17 +150,14 @@ class NotifyDataQuery extends DataQuery
 //            /*id de l'alerta?*/null,
 //            WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'),
 //            (new DateTime())->getTimeStamp()+20);
-
         // FI del codi de prova
 
         $systemGlobalMessages = $this->getSystemGlobalMessages();
 
-
         return array_merge($messages, $systemGlobalMessages);
     }
-    
-    private function getMessagesSince($messages, $since)
-    {
+
+    private function getMessagesSince($messages, $since) {
         $filteresMessages = [];
 
         for ($i = count($messages)-1; $i >= 0; $i--) {
@@ -233,11 +202,7 @@ class NotifyDataQuery extends DataQuery
             }
 
         }
-
         return $notifications;
-
-//        return $this->getBlackboard(WikiGlobalConfig::getConf('system_warning_user', 'wikiiocmodel'));
-
     }
 
 

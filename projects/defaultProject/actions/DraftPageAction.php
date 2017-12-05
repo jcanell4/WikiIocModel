@@ -9,15 +9,10 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/template.php');
-//require_once DOKU_PLUGIN . "ownInit/WikiGlobalConfig.php";
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
-//require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocInfoManager.php";
-//require_once DOKU_PLUGIN . "wikiiocmodel/WikiIocLangManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/ResourceUnlockerInterface.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/ResourceLockerInterface.php";
 
 if (!defined('DW_ACT_SAVEDRAFT')) define('DW_ACT_SAVEDRAFT', "preview");
 if (!defined('DW_ACT_DELDRAFT')) define('DW_ACT_DELDRAFT', "draftdel");
@@ -75,7 +70,7 @@ class DraftPageAction extends PageAction {
                 $this->response = ['info' => self::generateInfo('info', 'Desat esborrany complet', $this->response['id'], self::$infoDuration)];//TODO [Josep] internacionalitzar!
             }else{
                 $this->response = ['info' => self::generateInfo('info', 'Desat esborrany parcial', $this->response['id'], self::$infoDuration)];//TODO [Josep] internacionalitzar!
-            }                
+            }
             $this->response["lockInfo"] = $lockInfo;
         }else if($this->params[PageKeys::KEY_DO]===DW_ACT_DELDRAFT){
             //$this->response = DraftManager::removeDraft($this->params);// TODO[Xavi] Això hurà de contenir la info

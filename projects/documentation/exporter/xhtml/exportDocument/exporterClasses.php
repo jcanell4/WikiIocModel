@@ -36,8 +36,8 @@ class exportDocument extends MainRender {
         $pathTemplate = "xhtml/exportDocument/templates";
 
         $zip = new ZipArchive;
-        $zipPath = $this->cfgExport->tmp_dir."/$output_filename.zip";
-        $res = $zip->open($zipPath, ZipArchive::CREATE);
+        $zipFile = $this->cfgExport->tmp_dir."/$output_filename.zip";
+        $res = $zip->open($zipFile, ZipArchive::CREATE);
 
         if ($res === TRUE) {
             $document = $this->replaceInTemplate($data, "$pathTemplate/index.html");
@@ -51,16 +51,21 @@ class exportDocument extends MainRender {
                 $this->addFilesToZip($zip, $pathTemplate, "html/", "img");
                 $this->attachMediaFiles($zip);
 
-                $result["zipFile"] = $zipPath;
+                $result["zipFile"] = $zipFile;
                 $result["zipName"] = "$output_filename.zip";
                 $result["info"] = "fitxer {$result['zipName']} creat correctement";
             }else{
+                $result['error'] = true;
+                $result['info'] = $this->cfgExport->aLang['nozipfile'];
                 throw new Exception ("Error en la creació del fitxer zip");
             }
-            $zip->close();
+            if (!$zip->close()) {
+                $result['error'] = true;
+                $result['info'] = $this->cfgExport->aLang['nozipfile'];
+            }
         }else{
             $result['error'] = true;
-            $result['info'] = $this->cfgExport->lang['nozipfile'];
+            $result['info'] = $this->cfgExport->aLang['nozipfile'];
         }
         return $result;
     }

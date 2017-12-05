@@ -7,17 +7,19 @@ if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
 
 class FactoryExporter {
-    protected $mode;
+    protected $mode;     //modelo de comando que genera la acción [html | pdf]
+    protected $filetype; //tipo de fichero que se desea generar [zip | pdf]
     protected $typesDefinition = array();
     protected $typesRender = array();
     /**
      * @param array $typesDefinition : array con todos los tipos (clave 'typesDefinition') del archivo configMain.json
      * @param array $typesRender : array con todos los tipos del archivo configRender.json
      */
-    public function init($mode, $typesDefinition, $typesRender) {
-        $this->mode = $mode;
-        $this->typesDefinition = $typesDefinition;
-        $this->typesRender = $typesRender;
+    public function init($params=array()) {
+        $this->mode            = $params['mode'];
+        $this->filetype        = $params['filetype'];
+        $this->typesDefinition = $params['typesDefinition'];
+        $this->typesRender     = $params['typesRender'];
     }
 
     /**
@@ -58,6 +60,10 @@ class FactoryExporter {
 
     public function getMode() {
         return $this->mode;
+    }
+
+    public function getFileType() {
+        return $this->filetype;
     }
 
     public function getTypesDefinition($key = NULL) {

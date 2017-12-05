@@ -13,8 +13,8 @@ require_once (DOKU_PLUGIN . 'ajaxcommand/defkeys/ProjectKeys.php');
 
 abstract class DataQuery {
     const K_PROJECTTYPE  = ProjectKeys::KEY_PROJECT_TYPE;
-    const K_ID           = ProjectKeys::KEY_ID;
-    const K_NS           = ProjectKeys::KEY_NS;
+    const K_ID           = AjaxKeys::KEY_ID;
+    const K_NS           = AjaxKeys::KEY_NS;
     const K_NAME         = "name";
     const K_NSPROJECT    = "nsproject";
     const K_TYPE         = "type";

@@ -151,195 +151,226 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
     }
 
     function _latexAddImage($src, $width=NULL, $height=NULL, $align=NULL, $title=NULL, $linking=NULL, $external=FALSE){
-
-        if (!$this->tmp_dir) $this->tmp_dir = $_SESSION['tmp_dir'];
-        if (!file_exists($this->tmp_dir)) mkdir($this->tmp_dir, 0775, TRUE);
-        if (!file_exists($this->tmp_dir."/media")) mkdir($this->tmp_dir."/media", 0775, TRUE);
-
-        $max_width_elem = '.9\linewidth';
-
-        if ($_SESSION['figure']){
-            $title = $_SESSION['figtitle'];
-            $title = preg_replace('/<verd>|<\/verd>/', '', $title);
-        }
-        $figure = FALSE;
-        $footer = '';
-        $icon = FALSE;
-        $imgb = FALSE;
-        if (!empty($_SESSION['figfooter'])){
-            $footer = $_SESSION['figfooter'];
-        }
-        // make sure width and height are available
         if (file_exists($src)) {
+            if (!$this->tmp_dir) $this->tmp_dir = $_SESSION['tmp_dir'];
+            if (!file_exists($this->tmp_dir)) mkdir($this->tmp_dir, 0775, TRUE);
+            if (!file_exists($this->tmp_dir."/media")) mkdir($this->tmp_dir."/media", 0775, TRUE);
+
+            $max_width_elem = '.9\linewidth';
+
+            //pendiente de revisión para establecer la necesidad de su existencia
+            if ($_SESSION['figure']){
+                $title = $_SESSION['figtitle'];
+                $title = preg_replace('/<verd>|<\/verd>/', '', $title);
+            }
+            $figure = FALSE;
+            $footer = '';
+            $icon = FALSE;
+            $imgb = FALSE;
+
+            //pendiente de revisión para establecer la necesidad de su existencia
+            if (!empty($_SESSION['figfooter'])){
+                $footer = $_SESSION['figfooter'];
+            }
+
+            // make sure width and height are available
             $info = getimagesize($src);
             if (!$width && !$height) {
                 $width = $info[0];
-            }else{
-                $ratio = $info[0]/$info[1];
-                if (!$width){
-                    $width = round($height * $ratio, 0);
-                }
+            }elseif(!$width){
+                $width = round($height * $info[0]/$info[1], 0);
             }
-        }
-        $align = ($_SESSION['u0']) ? "flushleft" : "centering";
 
-        if (!$this->table && !$_SESSION['figure'] && !$_SESSION['video_url'] && $_SESSION['iocelem'] !== 'textl'){
-            if ($width < 133){
-                $max_width = '[width='.$width.'px]';
-                $icon = ($width < 49 && $height < 49);
+            //pendiente de revisión para establecer la necesidad de su existencia
+            $align = ($_SESSION['u0']) ? "flushleft" : "centering";
+
+            //pendiente de revisión para establecer la necesidad de su existencia
+            //$this->table, $_SESSION['figure'], $_SESSION['video_url'], $_SESSION['iocelem']
+            if (!$this->table && !$_SESSION['figure'] && !$_SESSION['video_url'] && $_SESSION['iocelem'] !== 'textl'){
+                if ($width && $width < 133){
+                    $max_width = '[width='.$width.'px]';
+                    $icon = ($width < 49 && $height < 49);
+                }else{
+                    $max_width = '[width=35mm]';
+                }
+                $img_width = FALSE;
+
+            //pendiente de revisión para establecer la necesidad de su existencia
+            }elseif (!$this->table && $width > self::$p_width && !$_SESSION['iocelem']){
+                $max_width = '[width=\textwidth]';
+                $img_width = FALSE;
+            }elseif ($_SESSION['iocelem']){
+                 //Check wheter image fits on iocelem
+                 if ($width >= (.9 * self::$p_width)){
+                    $max_width = '[width='.$max_width_elem.']';
+                    $img_width = $max_width_elem;
+                 }else{
+                    $max_width = '[width='.$width.'px]';
+                    $img_width = $width;
+                    $max_width_elem = FALSE;
+                 }
             }else{
-                $max_width = '[width=35mm]';
-            }
-            $img_width = FALSE;
-        }elseif (!$this->table && $width > self::$p_width && !$_SESSION['iocelem']){
-            $max_width = '[width=\textwidth]';
-            $img_width = FALSE;
-        }elseif ($_SESSION['iocelem']){
-             //Check wheter image fits on iocelem
-             if ($width >= (.9 * self::$p_width)){
-                $max_width = '[width='.$max_width_elem.']';
-                $img_width = $max_width_elem;
-             }else{
                 $max_width = '[width='.$width.'px]';
                 $img_width = $width;
-                $max_width_elem = FALSE;
-             }
-        }else{
-            $max_width = '[width='.$width.'px]';
-            $img_width = $width;
-        }
-
-        $imgb = (!$icon && !$this->table && !$_SESSION['figure'] && !$_SESSION['iocelem'] && !$_SESSION['video_url'] && !$_SESSION['u0']);
-        $figure = (!$this->table && $_SESSION['figure'] && !$_SESSION['video_url'] && !$_SESSION['u0']);
-
-        if (self::$convert || $_SESSION['draft'] || $external){
-            $img_aux = $this->_image_convert($src, $this->tmp_dir.'/media');
-        }else{
-            $img_aux = tempnam($this->tmp_dir . '/media', 'ltx');
-            $ext = pathinfo($src,PATHINFO_EXTENSION);
-            if (file_exists($src)){
-                copy($src, "$img_aux.$ext");
             }
-        }
-        if (file_exists($img_aux)){
-            if ($imgb){
-                $offset = '';
-                //Extract offset
-                if ($title){
-                    preg_match('/(.*?)(\/([^\/]*$))/', $title, $data);
-                    if (!empty($data)){
-                        if(!empty($data[3]) &&  is_numeric($data[3])){
-                            $offset = '['.trim($data[3]).'mm]';
-                            $footer = $data[1];
+
+            //pendiente de revisión para establecer la necesidad de su existencia
+            $imgb = (!$icon && !$this->table && !$_SESSION['figure'] && !$_SESSION['iocelem'] && !$_SESSION['video_url'] && !$_SESSION['u0']);
+            $figure = (!$this->table && $_SESSION['figure'] && !$_SESSION['video_url'] && !$_SESSION['u0']);
+
+            if (self::$convert || $_SESSION['draft'] || $external){
+                $img_aux = $this->_image_convert($src, $this->tmp_dir.'/media');
+            }else{
+                $ext = pathinfo($src, PATHINFO_EXTENSION);
+                $img_aux = $this->copyToTemp("{$this->tmp_dir}/media", $src, $ext);
+            }
+
+            if (file_exists("$img_aux.$ext")){
+                if ($imgb){ //pendiente de revisión para establecer la necesidad de su existencia
+                    $offset = '';
+                    //Extract offset
+                    if ($title){
+                        preg_match('/(.*?)(\/([^\/]*$))/', $title, $data);
+                        if (!empty($data)){
+                            if(!empty($data[3]) &&  is_numeric($data[3])){
+                                $offset = '['.trim($data[3]).'mm]';
+                                $footer = $data[1];
+                            }else{
+                                $footer = $title;
+                            }
                         }else{
                             $footer = $title;
                         }
-                    }else{
-                        $footer = $title;
                     }
+                    $this->doc .= '\imgB'.$offset.'{';
                 }
-                $this->doc .= '\imgB'.$offset.'{';
-            }elseif ($figure){
-                if ($_SESSION['figlarge']){
-                    $this->doc .= '\checkoddpage\ifthenelse{\boolean{oddpage}}{\hspace*{0mm}}{\hspace*{-\marginparwidth}\hspace*{-10mm}}'.DOKU_LF;
-                    if ($img_width) {
-                        $this->doc .= '\begin{center}';
+                elseif ($figure){  //pendiente de revisión para establecer la necesidad de su existencia
+                    if ($_SESSION['figlarge']){
+                        $this->doc .= '\checkoddpage\ifthenelse{\boolean{oddpage}}{\hspace*{0mm}}{\hspace*{-\marginparwidth}\hspace*{-10mm}}'.DOKU_LF;
+                        if ($img_width) {
+                            $this->doc .= '\begin{center}';
+                        }
+                        $this->doc .= '\begin{minipage}[c]{\textwidth+\marginparwidth+\marginparsep}'. DOKU_LF;
                     }
-                    $this->doc .= '\begin{minipage}[c]{\textwidth+\marginparwidth+\marginparsep}'. DOKU_LF;
+                    $this->doc .= '\begin{figure}[H]'.DOKU_LF;
                 }
-                $this->doc .= '\begin{figure}[H]'.DOKU_LF;
-            }
-            if (!is_null($linking) && $linking !== 'details'){
-                $this->doc .= '\href{'.$linking.'}{';
-            }
-            if ($_SESSION['figure']){
-                $this->doc .= '\\' . $align . DOKU_LF;
-            }
-            $hspace = 0;//Align text and image
-            //Create title with label
 
-            $title_width = ($img_width)?$img_width.'px':'\textwidth';
-            if ($_SESSION['figure']){
-                if ($_SESSION['iocelem'] && $max_width_elem){
-                    $title_width = $max_width_elem;
+                if (!is_null($linking) && $linking !== 'details'){
+                    $this->doc .= '\href{'.$linking.'}{';
                 }
-                $this->doc .= '\parbox[t]{'.$title_width.'}{\caption{'.trim($this->_xmlEntities($title));
-		if (!empty($_SESSION['figlabel'])){
-	            $this->doc .= '\label{'.$_SESSION['figlabel'].'}';
-		}
-		$this->doc .= '}}\\\\\vspace{2mm}'.DOKU_LF;
-            }
-            //Inside table, images will be centered vertically
-            if ($this->table && $width > self::$img_max_table){
-                $this->doc .= '\resizebox{\linewidth}{!}{';
-            }
-            //Image is smaller than page size
-            if ($_SESSION['figure'] && $img_width){
-                $this->doc .= '\begin{center}'.DOKU_LF;
-            }
-            $this->doc .= '\includegraphics'.$max_width.'{media/'.basename($img_aux).'}';
-            if ($_SESSION['figure'] && $img_width){
-                $this->doc .= '\end{center}'.DOKU_LF;
-            }
-            if ($this->table && $width > self::$img_max_table){
-                $this->doc .= '}';
+                if ($_SESSION['figure']){   //pendiente de revisión para establecer la necesidad de su existencia
+                    $this->doc .= '\\' . $align . DOKU_LF;
+                }
 
-            }
-            //Close href
-            if (!is_null($linking) && $linking !== 'details'){
-                $this->doc .= '}';
-                if (!$_SESSION['video_url']){
-                    $this->doc .= DOKU_LF;
-                }
-            }
-            if (!$_SESSION['video_url'] && !empty($footer)){
-                $this->doc .= DOKU_LF;
-            }
-            //Check whether footer exists
-            if ($footer) {
+                //align text and image
+                $hspace = 0;
+                //Create title with label
+                $title_width = ($img_width) ? $img_width.'px' : '\textwidth';
+
                 if ($_SESSION['figure']){
-                    if ($img_width && !$_SESSION['iocelem']){
-                        $hspace = ($img_width + $hspace).'pt';
-                    }elseif($_SESSION['iocelem']){
-                        $hspace = ($max_width_elem)?$max_width_elem:$img_width.'px';
-                    }else{
-                       $hspace = '\textwidth';
+                    //pendiente de revisión para establecer la necesidad de su existencia
+                    if ($_SESSION['iocelem'] && $max_width_elem){
+                        $title_width = $max_width_elem;
                     }
-                    $vspace = '\vspace{-2mm}';
-                    $align = '\raggedleft';
-                }elseif($_SESSION['iocelem']){
-                    //textboxsize .05
-                    $hspace = '.9\linewidth';
-                    $vspace = '\vspace{-6mm}';
-                    $align = '\raggedleft';
-                }else{
-                    $hspace = '\marginparwidth';
-                    $vspace = '\vspace{-4mm}';
-                    $align = '\iocalignment';
+                    $this->doc .= '\parbox[t]{'.$title_width.'}{\caption{'.trim($this->_xmlEntities($title));
+                    if (!empty($_SESSION['figlabel'])){
+                        $this->doc .= '\label{'.$_SESSION['figlabel'].'}';
+                    }
+                    $this->doc .= '}}\\\\\vspace{2mm}'.DOKU_LF;
                 }
-                $this->doc .=  '\raisebox{\height}{\parbox[t]{'.$hspace.'}{'.$align.'\footerspacingline\textsf{\tiny'.$vspace.trim($this->_xmlEntities($footer)).'}}}';
-            }
-            if ($figure){
-                $this->doc .= '\end{figure}';
-                if ($_SESSION['figlarge']){
-                    $this->doc .= '\end{minipage}'. DOKU_LF;
-                    if ($img_width) {
-                        $this->doc .= '\end{center}'. DOKU_LF;
+                //Inside table, images will be centered vertically
+                if ($this->table && $width > self::$img_max_table){
+                    $this->doc .= '\resizebox{\linewidth}{!}{';
+                }
+                //Image is smaller than page size
+                if ($_SESSION['figure'] && $img_width){
+                    $this->doc .= '\begin{center}'.DOKU_LF;
+                }
+                $this->doc .= '\includegraphics'.$max_width.'{media/'.basename($img_aux).'}';
+                if ($_SESSION['figure'] && $img_width){
+                    $this->doc .= '\end{center}'.DOKU_LF;
+                }
+                if ($this->table && $width > self::$img_max_table){
+                    $this->doc .= '}';
+                }
+                //Close href
+                if (!is_null($linking) && $linking !== 'details'){
+                    $this->doc .= '}';
+                    if (!$_SESSION['video_url']){
+                        $this->doc .= DOKU_LF;
                     }
                 }
-            }elseif ($imgb){
-                if (!empty($footer)){
+                if (!$_SESSION['video_url'] && !empty($footer)){
                     $this->doc .= DOKU_LF;
                 }
-                $this->doc .= '}' . DOKU_LF;
+                //Check whether footer exists
+                if ($footer) {
+                    if ($_SESSION['figure']){
+                        if ($img_width && !$_SESSION['iocelem']){
+                            $hspace = ($img_width + $hspace).'pt';
+                        }elseif($_SESSION['iocelem']){
+                            $hspace = ($max_width_elem)?$max_width_elem:$img_width.'px';
+                        }else{
+                           $hspace = '\textwidth';
+                        }
+                        $vspace = '\vspace{-2mm}';
+                        $align = '\raggedleft';
+                    }elseif($_SESSION['iocelem']){
+                        //textboxsize .05
+                        $hspace = '.9\linewidth';
+                        $vspace = '\vspace{-6mm}';
+                        $align = '\raggedleft';
+                    }else{
+                        $hspace = '\marginparwidth';
+                        $vspace = '\vspace{-4mm}';
+                        $align = '\iocalignment';
+                    }
+                    $this->doc .=  '\raisebox{\height}{\parbox[t]{'.$hspace.'}{'.$align.'\footerspacingline\textsf{\tiny'.$vspace.trim($this->_xmlEntities($footer)).'}}}';
+                }
+                if ($figure){
+                    $this->doc .= '\end{figure}';
+                    if ($_SESSION['figlarge']){
+                        $this->doc .= '\end{minipage}'. DOKU_LF;
+                        if ($img_width) {
+                            $this->doc .= '\end{center}'. DOKU_LF;
+                        }
+                    }
+                }elseif ($imgb){
+                    if (!empty($footer)){
+                        $this->doc .= DOKU_LF;
+                    }
+                    $this->doc .= '}' . DOKU_LF;
+                }
+                if ($_SESSION['iocelem'] && !$_SESSION['figure']){
+                    $this->doc .= '\vspace{1ex}' . DOKU_LF;
+                }
+                $this->endimg = TRUE;
+            }else{
+                $this->doc .= '\textcolor{red}{\textbf{File '. $this->_xmlEntities(basename($src)).' does not exist.}}';
             }
-            if ($_SESSION['iocelem'] && !$_SESSION['figure']){
-                $this->doc .= '\vspace{1ex}' . DOKU_LF;
-            }
-            $this->endimg = TRUE;
         }else{
-            $this->doc .= '\textcolor{red}{\textbf{File '. $this->_xmlEntities(basename($src)).' does not exist.}}';
+            $this->doc .= '\textcolor{red}{\textbf{No file name supplied.}}';
+            throw new Exception("basiclatex::_latexAddImage: Actual instruction from p_latex_render, no file name supplied from.");
         }
+    }
+
+    /**
+     * Copia un archivo origen, a un directorio temporal especificado, con un nuevo nombre único
+     * @param string $dir Directorio de destino
+     * @param string $src Ruta absoluta del fichero origen
+     * @param string $ext Extensión del nuevo nombre del archivo en el directorio de destino
+     */
+    public function copyToTemp($dir, $src, $ext=NULL) {
+        $result = FALSE;
+        while (!$result) {
+            if (($name = tempnam($dir, "ltx"))) {
+                if (rename($name, "$name.$ext")) {
+                    $result = copy($src, "$name.$ext");
+                }
+            }
+            if (!$result) unlink($name);
+        }
+        return $name;
     }
 
     function render_TOC() {

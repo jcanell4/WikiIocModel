@@ -7,11 +7,9 @@
  */
 if (!defined('DOKU_INC')) die();
 define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
-define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
-
-require_once(WIKI_IOC_MODEL . 'WikiIocModelManager.php');
 require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 //Los siguientes includes son para Clases específicas y exclusivas de este proyecto
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
 require_once(WIKI_IOC_PROJECT . 'DokuModelAdapter.php');
 require_once(WIKI_IOC_PROJECT . 'DokuModelExceptions.php');
 

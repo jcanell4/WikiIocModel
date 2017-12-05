@@ -56,7 +56,7 @@ class RecentListAction extends DokuAction{
     protected function startProcess() {
         global $ACT;
 
-        $ACT = $this->params[RequestParameterKeys::DO_KEY] = DW_ACT_RECENT;
+        $ACT = $this->params[RequestParameterKeys::KEY_DO] = DW_ACT_RECENT;
     }
     
     /**

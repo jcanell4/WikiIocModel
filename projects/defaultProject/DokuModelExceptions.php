@@ -5,10 +5,6 @@
  * @author Josep Cañellas <jcanell4@ioc.cat>
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
-
-require_once(WIKI_IOC_MODEL . 'WikiIocModelExceptions.php');
-require_once(WIKI_IOC_MODEL . 'WikiIocLangManager.php');
 require_once(DOKU_INC . 'inc/common.php');
 
 class PageNotFoundException extends WikiIocModelException {
@@ -62,8 +58,8 @@ class FailToUploadMediaException extends WikiIocModelException {
 class MaxSizeExcededToUploadMediaException extends WikiIocModelException {
     public function __construct($param='', $codeMessage = 'auth_UploadMedia', $code=7109, $previous=NULL) {
         if(!$codeMessage){
-            $codeMessage = sprintf(WikiIocLangManager::getLang('uploadsize'), 
-                    filesize_h(php_to_byte(ini_get('upload_max_filesize'))));            
+            $codeMessage = sprintf(WikiIocLangManager::getLang('uploadsize'),
+                    filesize_h(php_to_byte(ini_get('upload_max_filesize'))));
         }
         parent::__construct($codeMessage, $code, $previous, $param);
     }
