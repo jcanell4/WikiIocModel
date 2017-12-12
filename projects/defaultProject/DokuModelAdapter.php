@@ -66,35 +66,41 @@ class DokuModelAdapter extends BasicModelAdapter {
     protected $ppEvt;
 
     /**
+     * MOGUT a: admin_task_command
+     *****************************
      * Crida principal de la comanda admin_task.
-     * @param type $params de la comanda
      * @return Array
-     */
-    public function getAdminTask($params)
-    {
+     *//*
+    public function getAdminTask($params){
         $action = new AdminTaskAction();
         return $action->get($params);
-    }
+    }*/
 
     /**
+     * COPIAT a: 'admin_tab_command' encara que sembla ser que ningú utilitza la comanda 'admin_tab_command'
+     * També es cridat per la funció 'login()' de LoginResponseHandler
+     * però LoginResponseHandler funciona amb $command->modelWrapper
+     **************************************************************************
      * Crida principal de la comanda admin_tab i crida del LoginResponseHandler
      * @return type
      */
-    public function getAdminTaskList()
-    {
+    public function getAdminTaskList() {
         $action = new AdminTaskListAction();
         return $action->get();
     }
 
+    /**
+     * COPIAT a: 'shortcuts_tab_command' encara que sembla ser que ningú utilitza la comanda 'shortcuts_tab_command'
+     * També es cridat per LoginResponseHandler, New_pageResponseHandler, SaveResponseHandler i Save_partialResponseHandler
+     * però els Handler funcionen amb $command->modelWrapper
+     **************************************************************************/
     public function getShortcutsTaskList($user_id) {
         $action = new ShortcutsTaskListAction($this->persistenceEngine);
-
         if (!$user_id) {
             throw new Exception("No es troba cap usuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
         } else {
             $params = ['id' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$user_id.':'.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')]; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
         }
-
         return $action->get($params);
     }
 
@@ -103,51 +109,39 @@ class DokuModelAdapter extends BasicModelAdapter {
         $this->params[$element] = $value;
     }
 
-
     /**
+     * MOGUT a: cancel_command
+     *****************************
      * Crida principal de la comanda cancel
-     * @param type $pid
-     * @param type $prev
-     * @param bool|type $keep_draft
-     * @param bool $discard_changes si es cert es descartaran els canvis sense preguntar
-     * @return type
-     * @global type $lang
-     */
-    //[ALERTA Josep] Es queda aquí.
+     *//*
     public function cancelEdition($pars){
         $action = new CancelEditPageAction($this->persistenceEngine);
         return $action->get($pars);
-    }
+    }*/
 
     /**
      * Crida principal de la comanda save
-     * @param $params
-     * @return array|void
-     */
-    //[ALERTA Josep] Es queda aquí.
+     *//*
     public function saveEdition($params) {
         $action = new SavePageAction($this->persistenceEngine);
         $ret = $action->get($params);
         return $ret;
-    }
+    }*/
 
     /**
-     * És la crida pincipal de la comanda save_unlinked_image.
+     * MOGUT a save_unlinked_image_command
      * Guarda un fitxer de tipus media pujat des del client
      * @param string $nsTarget
      * @param string $idTarget
      * @param string $filePathSource
      * @param bool $overWrite
-     *
      * @return int
-     */
-    public function uploadImage($nsTarget, $idTarget, $filePathSource, $overWrite = FALSE)
-    {
-        /* UploadMediaAction*/
+     *//*
+    public function uploadImage($nsTarget, $idTarget, $filePathSource, $overWrite = FALSE)    {
         $action  = new UploadMediaAction($this->persistenceEngine);
         $res = $action->get(array('nsTarget' => $nsTarget, 'mediaName' => $idTarget, 'filePathSource' => $filePathSource, 'overWrite' => $overWrite));
         return $res["resultCode"];
-  }
+    }*/
 
   /**
  * És la crida principal de la comanda copy_image_to_project
@@ -222,11 +216,11 @@ class DokuModelAdapter extends BasicModelAdapter {
      * @global type $lang
      * @param type $id
      * @return type
-     */
+     *//*
     public function getGlobalMessage($id)
     {
         return WikiIocLangManager::getLang($id);
-    }
+    }*/
 
 
     /**
@@ -589,15 +583,21 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $contentData;
     }
 
+    /* MOGUT a: media_command i a mediadetails_command
+     *************************************************
     public function deleteMediaManager($paramsArr){
        $action = new DeleteMediaAction($this->persistenceEngine);
        return $action->get($paramsArr);
-    }
+    }*/
 
+    /* MOGUT a: media_command
+     ************************
     public function uploadMediaManager($paramsArr){
        $action = new UploadMediaAction($this->persistenceEngine);
        return $action->get($paramsArr);
     }
+    */
+
     /**
      * és la crida principal de la comanda media
      * Miguel Angel Lozano 12/12/2014
@@ -1625,12 +1625,13 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $sections;
     }
 
+    /* MOGUT a: cancel_partial_command
+     *********************************
     public function cancelPartialEdition($params){
         $action = new CancelPartialEditPageAction($this->persistenceEngine);
         return $action->get($params);
-    }
+    }*/
 
-    // TODO[Xavi] normalitzar params
     //CRIDAT Per la comanda save_partial
     public function savePartialEdition($params){
         $action = new SavePartialPageAction($this->persistenceEngine);
