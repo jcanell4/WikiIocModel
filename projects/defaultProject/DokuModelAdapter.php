@@ -1632,16 +1632,19 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $action->get($params);
     }*/
 
-    //CRIDAT Per la comanda save_partial
+    /* MOGUT a: save_partial_command
+     *********************************
     public function savePartialEdition($params){
         $action = new SavePartialPageAction($this->persistenceEngine);
         return $action->get($params);
-    }
+    }*/
 
+    /* MOGUT a: edit_partial_command
+     *********************************
     public function getPartialEdit($paramsArr){
         $action = new RawPartialPageAction($this->persistenceEngine);
         return $action->get($paramsArr);
-    }
+    }*/
 
     //És la crida principal de la comanda lock
     public function lock($pid)
@@ -1682,20 +1685,25 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $response;
     }
 
-    public function draft($params)
-    {
+    /* MOGUT a: draft_command
+     ************************
+    public function draft($params) {
         $action = new DraftPageAction($this->persistenceEngine);
         $ret = $action->get($params);
         return $ret;
-    }
+    }*/
 
+    /* 'revision_command' ha sido moodificado convenientemente para no tener que llamar a esta función
+     * Sin embargo, No se puede eliminar de aquí, puesto que, aparte de 'revision_command', también lo usa 'DiffResponseHandler'
+     */
     public function getRevisionsList($params) {
         $action = new RevisionsListAction($this->persistenceEngine);
         $ret = $action->get($params);
         return $ret;
     }
 
-    /**
+    /** SEMBLA SER QUE AQUESTA FUNCIÓ NO S'UTILITZA
+     *
      * S'ha de fer servir getRevisionsList en lloc d'aquest
      *
      * @deprecated
@@ -1765,12 +1773,15 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $toc;
     }
 
+    /**
+     * MOGUT a: login_command i notify_command
+     *****************************************
     // ALERTA[Xavi] $secure : si és true s'ha cridat des d'un client d'admin
     public function notify($params, $isAdmin = false) // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
     {
         $action = new NotifyAction($this->persistenceEngine, $isAdmin);
         $contentData = $action->get($params);
         return $contentData;
-    }
+    }*/
 }
 
