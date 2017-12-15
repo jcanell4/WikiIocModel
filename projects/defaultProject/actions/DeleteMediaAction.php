@@ -16,12 +16,12 @@ class DeleteMediaAction extends MediaAction{
 
     private $actionReturn;
 
-    public function __construct(BasicPersistenceEngine $engine) {
-        parent::__construct($engine);
+    public function init($modelManager) {
+        parent::init($modelManager);
     }
 
     protected function responseProcess(){
-        global $JSINFO, $lang;
+        global $JSINFO, $lang, $conf;
 
         $this->actionReturn;
 
@@ -40,23 +40,20 @@ class DeleteMediaAction extends MediaAction{
                 "result" => $this->actionReturn
             );
             $JSINFO = array('id' => "media", 'namespace' => $this->params[MediaKeys::KEY_NS]);
-
-//            $msg = sprintf($lang['deletesucc'], noNS($DEL));
-//            msg($msg,1);
-        } elseif ($this->actionReturn & DOKU_MEDIA_INUSE) {
+        }
+        elseif ($this->actionReturn & DOKU_MEDIA_INUSE) {
             if(!$conf['refshow']) {
                 $ret =array(
                     "info" => sprintf($lang['mediainuse'], noNS($this->params[MediaKeys::KEY_IMAGE_ID])),
                     "result" => $this->actionReturn
                 );
-//                msg(sprintf($lang['mediainuse'],noNS($DEL)),0);
             }
-        } else {
+        }
+        else {
             $ret =array(
                 "info" => sprintf($lang['deletefail'], noNS($this->params[MediaKeys::KEY_IMAGE_ID])),
                 "result" => $this->actionReturn
             );
-//            msg(sprintf($lang['deletefail'],noNS($DEL)),-1);
         }
         return $ret;
     }
@@ -83,15 +80,9 @@ class DeleteMediaAction extends MediaAction{
 
         $rev = '';
         $image = cleanID($INPUT->str('image'));
-        if (isset($IMG)) {
-            $image = $IMG;
-        }
-        if (isset($JUMPTO)) {
-            $image = $JUMPTO;
-        }
-        if (isset($REV) && !$JUMPTO) {
-            $rev = $REV;
-        }
+        if (isset($IMG))    $image = $IMG;
+        if (isset($JUMPTO)) $image = $JUMPTO;
+        if (isset($REV) && !$JUMPTO) $rev = $REV;
 
         echo '<div id="mediamanager__page">' . NL;
         if ($NS == "") {
@@ -100,14 +91,13 @@ class DeleteMediaAction extends MediaAction{
             echo '<h1>Documents de ' . $NS . '</h1>';
         }
 
-
         echo '<div class="panel filelist ui-resizable">' . NL;
         echo '<div class="panelContent">' . NL;
+
         $do = $AUTH;
         $query = $_REQUEST['q'];
-        if (!$query) {
-            $query = '';
-        }
+        if (!$query) $query = '';
+
         if ($do == 'searchlist' || $query) {
             media_searchlist($query, $NS, $AUTH, TRUE, $_REQUEST['sort']);
         } else {
@@ -120,5 +110,4 @@ class DeleteMediaAction extends MediaAction{
         return ob_get_clean();
     }
 
-//put your code here
 }

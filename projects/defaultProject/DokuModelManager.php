@@ -1,13 +1,12 @@
 <?php
 /**
- * DokuModelManager: proporciona autorizaciones y ModelWrapper
- * - proporciona autorizaciones y ModelWrapper
+ * DokuModelManager:
+ * - proporciona acceso a las Autorizaciones y ModelAdapter del proyecto
  * - define las rutas de las clases y las clases por defecto necesarias para este proyecto
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
-require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
 //Los siguientes includes son para Clases específicas y exclusivas de este proyecto
 define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
 require_once(WIKI_IOC_PROJECT . 'DokuModelAdapter.php');
@@ -27,15 +26,16 @@ class DokuModelManager extends WikiIocModelManager{
                 'FactoryAuthorization' => self::DEF."authorization/FactoryAuthorization.php"
            );
 
-    public function __construct() {}
-
     public function getAuthorizationManager($str_command) {
         $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
         return $factory->createAuthorizationManager($str_command);
     }
 
-    public function getModelWrapperManager() {
-        return (new \DokuModelAdapter())->init(new \BasicPersistenceEngine());
+    public function getModelAdapterManager() {
+        //return (new \DokuModelAdapter())->init($this->getPersistenceEngine());
+	$dm = new DokuModelAdapter();
+	$dm->init($this->getPersistenceEngine());
+	return $dm;
     }
 
     public static function getDefaultDirClass($name) {

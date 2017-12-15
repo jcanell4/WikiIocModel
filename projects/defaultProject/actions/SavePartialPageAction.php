@@ -1,39 +1,27 @@
 <?php
-if (!defined("DOKU_INC")) {
-    die();
-}
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
-if (!defined('DW_ACT_CRATE')) {
-    define('DW_ACT_CREATE', "create");
-}
-if (!defined('DW_ACT_SAVE')) {
-    define('DW_ACT_SAVE', "save");
-}
-
-require_once DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePageAction.php';
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
-
 /**
  * Description of SavePartialPageAction
- *
  * @author josep
  */
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
+require_once DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/actions/SavePageAction.php';
+
 class SavePartialPageAction extends SavePageAction{
-     
-    public function __construct(/*BasicPersistenceEngine*/ $engine) {
-        parent::__construct($engine);
-        $this->defaultDo = DW_ACT_SAVE;
+
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_SAVE;
     }
-    
+
     protected function startProcess() {
         parent::startProcess();
-        // $editing=NULL, $selected=NULL, $rev = null)
-        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], 
+        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID],
                 $this->params[PageKeys::KEY_EDITING_CHUNKS],
                 $this->params[PageKeys::KEY_SECTION_ID],
-                $this->params[PageKeys::KEY_REV]);     
+                $this->params[PageKeys::KEY_REV]);
     }
 
     protected function runProcess() {

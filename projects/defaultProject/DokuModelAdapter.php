@@ -1,6 +1,5 @@
 <?php
 //namespace ioc_dokuwiki; //[TO DO Josep] Adaptar la classe a  l'espai de noms
-
 /**
  * Description of DokuModelAdapter
  *
@@ -10,7 +9,6 @@
  * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
  */
 if (!defined('DOKU_INC')) die();
-
 //require common
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/pageutils.php');
@@ -23,7 +21,7 @@ require_once(DOKU_INC . 'inc/io.php');
 require_once(DOKU_INC . 'inc/JSON.php');
 require_once(DOKU_INC . 'inc/JpegMeta.php');
 
-if (!defined('DOKU_TPL_INCDIR')) define('DOKU_TPL_INCDIR', tpl_incdir());
+if (!defined('DOKU_TPL_INCDIR')) define('DOKU_TPL_INCDIR', WikiGlobalConfig::tplIncDir());
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/BasicModelAdapter.php');
@@ -37,22 +35,9 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/actions/NotifyAction.php');
 
-require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
 require_once(DOKU_PLUGIN . 'ajaxcommand/defkeys/PageKeys.php');
-
-if (!defined('DW_DEFAULT_PAGE'))      define('DW_DEFAULT_PAGE', "start");
-if (!defined('DW_ACT_SHOW'))          define('DW_ACT_SHOW', "show");
-if (!defined('DW_ACT_DRAFTDEL'))      define('DW_ACT_DRAFTDEL', "draftdel");
-if (!defined('DW_ACT_SAVE'))          define('DW_ACT_SAVE', "save");
-if (!defined('DW_ACT_EDIT'))          define('DW_ACT_EDIT', "edit");
-if (!defined('DW_ACT_PREVIEW'))       define('DW_ACT_PREVIEW', "preview");
-if (!defined('DW_ACT_RECOVER'))       define('DW_ACT_RECOVER', "recover");
-if (!defined('DW_ACT_DENIED'))        define('DW_ACT_DENIED', "denied");
-if (!defined('DW_ACT_MEDIA_DETAIL'))  define('DW_ACT_MEDIA_DETAIL', "media_detail");
-if (!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
-if (!defined('DW_ACT_EXPORT_ADMIN'))  define('DW_ACT_EXPORT_ADMIN', "admin");
-if (!defined('DW_ACT_MEDIA_DETAILS')) define('DW_ACT_MEDIA_DETAILS', "mediadetails");
 
 /**
  * Class DokuModelAdapter
@@ -64,6 +49,12 @@ class DokuModelAdapter extends BasicModelAdapter {
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
+    //protected $modelManager;
+
+    //public function __construct($modelManager) {
+    //    parent::__construct();
+        //$this->modelManager = $modelManager;
+    //}
 
     /**
      * MOGUT a: admin_task_command
@@ -79,23 +70,23 @@ class DokuModelAdapter extends BasicModelAdapter {
     /**
      * COPIAT a: 'admin_tab_command' encara que sembla ser que ningú utilitza la comanda 'admin_tab_command'
      * També es cridat per la funció 'login()' de LoginResponseHandler
-     * però LoginResponseHandler funciona amb $command->modelWrapper
+     * però LoginResponseHandler funciona amb $command->modelAdapter
      **************************************************************************
      * Crida principal de la comanda admin_tab i crida del LoginResponseHandler
      * @return type
      */
     public function getAdminTaskList() {
-        $action = new AdminTaskListAction();
+        $action = $this->modelManager->getActionInstance("AdminTaskListAction");
         return $action->get();
     }
 
     /**
      * COPIAT a: 'shortcuts_tab_command' encara que sembla ser que ningú utilitza la comanda 'shortcuts_tab_command'
      * També es cridat per LoginResponseHandler, New_pageResponseHandler, SaveResponseHandler i Save_partialResponseHandler
-     * però els Handler funcionen amb $command->modelWrapper
+     * però els Handler funcionen amb $command->modelAdapter
      **************************************************************************/
     public function getShortcutsTaskList($user_id) {
-        $action = new ShortcutsTaskListAction($this->persistenceEngine);
+        $action = new ShortcutsTaskListAction(/*$this->persistenceEngine*/);
         if (!$user_id) {
             throw new Exception("No es troba cap usuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
         } else {
@@ -143,39 +134,31 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $res["resultCode"];
     }*/
 
-  /**
- * És la crida principal de la comanda copy_image_to_project
- * @param string $nsTarget
- * @param string $idTarget
- * @param string $filePathSource
- * @param bool $overWrite
- *
- * @return int
+    /**
+     * És la crida principal de la comanda copy_image_to_project
+     * @param string $nsTarget, $idTarget, $filePathSource
+     * @param bool $overWrite
+     *
+     * @return int
      */
-    public function saveImage($nsTarget, $idTarget, $filePathSource, $overWrite = FALSE)
-    {
+    public function saveImage($nsTarget, $idTarget, $filePathSource, $overWrite=FALSE) {
         /* MediaDataQuery*/
         $dataQuery = $this->persistenceEngine->createMediaDataQuery();
         return $dataQuery->copyImage($nsTarget, $idTarget, $filePathSource, $overWrite);
   }
 
-  /**
- * És la crida principal de la comanda get_image_detail. Obté un html
- * amb el detall d'una imatge.
- * @global type $lang
- * @param type $imageId
- * @param type $fromPage
- * @return string
- * @throws HttpErrorCodeException
+    /**
+     * És la crida principal de la comanda get_image_detail. Obté un html
+     * amb el detall d'una imatge.
+     * @return string
+     * @throws HttpErrorCodeException
      */
-    //[TODO Josep] Cal normalitzar
     public function getImageDetail($imageId, $fromPage = NULL)
     {
         global $lang;
-
         //[TODO Josep] Normalitzar: start do get ...
 
-        $error = $this->startMediaProcess(DW_ACT_MEDIA_DETAIL, $imageId, $fromPage);
+        $error = $this->startMediaProcess(PageKeys::DW_ACT_MEDIA_DETAIL, $imageId, $fromPage);
         if ($error == 401) {
             throw new HttpErrorCodeException("Access denied", $error);
         } else if ($error == 404) {
@@ -241,7 +224,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         $ret = $ERROR = 0;
 
         $this->params['action'] = $pdo;
-        if ($pdo === DW_ACT_MEDIA_DETAIL) {
+        if ($pdo === PageKeys::DW_ACT_MEDIA_DETAIL) {
             $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "detail";
         }
 
@@ -339,15 +322,15 @@ class DokuModelAdapter extends BasicModelAdapter {
         }
 
         //get needed language array
-        include WikiGlobalConfig::tplIncDir() . "lang/en/lang.php";
+        include DOKU_TPL_INCDIR . "lang/en/lang.php";
         //overwrite English language values with available translations
         if (!empty($conf["lang"]) &&
             $conf["lang"] !== "en" &&
-            file_exists(WikiGlobalConfig::tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php")
+            file_exists(DOKU_TPL_INCDIR . "/lang/" . $conf["lang"] . "/lang.php")
         ) {
             //get language file (partially translated language files are no problem
             //cause non translated stuff is still existing as English array value)
-            include WikiGlobalConfig::tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php";
+            include DOKU_TPL_INCDIR . "/lang/" . $conf["lang"] . "/lang.php";
         }
         if (!empty($conf["lang"]) &&
             $conf["lang"] !== "en" &&
@@ -379,7 +362,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         global $lang;
 
         ob_start();
-        include WikiGlobalConfig::tplIncDir() . "inc_detail.php";
+        include DOKU_TPL_INCDIR . "inc_detail.php";
         $content = ob_get_clean();
         return $content;
     }
@@ -606,7 +589,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         //[TODO Josep] Normalitzar: start do get ...
         global $lang, $NS, $INPUT, $JSINFO;
 
-        $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
+        $error = $this->startMediaManager(PageKeys::DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
         if ($error == 401) {
             throw new HttpErrorCodeException("Access denied", $error);
         } else if ($error == 404) {
@@ -667,7 +650,7 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         $this->params['action'] = $pdo;
 
-        if ($pdo === DW_ACT_MEDIA_MANAGER) {
+        if ($pdo === PageKeys::DW_ACT_MEDIA_MANAGER) {
             $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "media";
         }
 
@@ -714,6 +697,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $ret;
     }
 
+    //[Rafa] NO SE UTILIZA
     private function doDeleteMediaManagerPreProcess(){
         global $DEL;
 
@@ -1240,7 +1224,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         //[TODO Josep] Normalitzar: start do get ...
         global $NS, $JSINFO, $MSG, $INPUT;
 
-        $error = $this->startMediaDetails(DW_ACT_MEDIA_DETAILS, $image);
+        $error = $this->startMediaDetails(PageKeys::DW_ACT_MEDIA_DETAILS, $image);
         if ($error == 401) {
             throw new HttpErrorCodeException("Access denied", $error);
         } else if ($error == 404) {

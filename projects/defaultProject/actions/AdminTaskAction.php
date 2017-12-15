@@ -1,62 +1,47 @@
 <?php
-
+/**
+ * Description of AdminTaskAction
+ * @author josep
+ */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once (DOKU_INC . 'inc/pluginutils.php');
 require_once (DOKU_INC . 'inc/actions.php');
-require_once (DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuAction.php");
 require_once (DOKU_PLUGIN.'ajaxcommand/defkeys/AdminKeys.php');
+require_once (DOKU_PLUGIN.'ajaxcommand/defkeys/PageKeys.php');
+require_once (DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuAction.php");
 
-if (!defined('DW_ACT_EXPORT_ADMIN')) define('DW_ACT_EXPORT_ADMIN', "admin");
-
-/**
- * Description of AdminTaskAction
- *
- * @author josep
- */
 class AdminTaskAction extends DokuAction{
+
     private $dataTmp;
 
-    public function __construct() {
-        $this->defaultDo = DW_ACT_EXPORT_ADMIN;
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_EXPORT_ADMIN;
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet fer assignacions a les variables globals de la
-     * wiki a partir dels valors de DokuAction#params.
-     */
     protected function startProcess(){
-		global $ACT;
-		global $_REQUEST;
-		global $ID;
+        global $ACT, $ID, $_REQUEST;
 
-		// Agafem l'index de la configuració
-		if ( ! isset( $this->params[AdminKeys::KEY_ID]  ) ) {
-			$this->params[AdminKeys::KEY_ID]  = WikiIocInfoManager::getInfo('start');
-		}
+        // Agafem l'index de la configuració
+        if ( !isset( $this->params[AdminKeys::KEY_ID] ) ) {
+            $this->params[AdminKeys::KEY_ID]  = WikiIocInfoManager::getInfo('start');
+        }
 
-		$ID = $this->params[AdminKeys::KEY_ID];
-		$ACT = $this->params[AdminKeys::KEY_DO] = DW_ACT_EXPORT_ADMIN;
+        $ID = $this->params[AdminKeys::KEY_ID];
+        $ACT = $this->params[AdminKeys::KEY_DO] = PageKeys::DW_ACT_EXPORT_ADMIN;
 
-		if ( !$this->params[AdminKeys::KEY_TASK] ) {
-                    $this->params[AdminKeys::KEY_TASK]=  $this->params[AdminKeys::KEY_PAGE];
-		}
-                if ( ! $_REQUEST[AdminKeys::KEY_PAGE] || $_REQUEST[AdminKeys::KEY_PAGE] != $this->params[AdminKeys::KEY_TASK] ) {
-                        $_REQUEST[AdminKeys::KEY_PAGE] = $this->params[AdminKeys::KEY_TASK];
-                }
+        if ( !$this->params[AdminKeys::KEY_TASK] ) {
+            $this->params[AdminKeys::KEY_TASK]=  $this->params[AdminKeys::KEY_PAGE];
+        }
+        if ( !$_REQUEST[AdminKeys::KEY_PAGE] || $_REQUEST[AdminKeys::KEY_PAGE] != $this->params[AdminKeys::KEY_TASK] ) {
+            $_REQUEST[AdminKeys::KEY_PAGE] = $this->params[AdminKeys::KEY_TASK];
+        }
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
-     * dades  intermèdies que siguin necessàries per generar la resposta final:
-     * DokuAction#responseProcess.
-     */
     protected function runProcess(){
         global $ACT;
-        global $ID;
 
         $ACT = act_permcheck( $ACT );
         //handle admin tasks

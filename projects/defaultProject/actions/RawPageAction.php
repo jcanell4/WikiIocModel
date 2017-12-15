@@ -9,22 +9,16 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/template.php');
-require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 
-if (!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
-if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
-if (!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
-
 class RawPageAction extends PageAction implements ResourceLockerInterface /*,ResourceUnlockerInterface*/ {
-//    protected $engine;
+
     protected $lockStruct;
 
-    public function __construct(BasicPersistenceEngine $engine) {
-        parent::__construct($engine);
-        $this->defaultDo = DW_ACT_EDIT;
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_EDIT;
         //Indica que la resposta es renderitza i caldrà llançar l'esdeveniment quan calgui
         $this->setRenderer(TRUE);
     }
@@ -63,15 +57,14 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
      * dades  intermèdies que siguin necessàries per generar la resposta final:
      * DokuAction#responseProcess.
      */
-    protected function runProcess()
-    {
+    protected function runProcess() {
         if (!WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS)) {
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID]);
         }
 
         $ACT = act_permcheck($this->params[PageKeys::KEY_ID]);
 
-        if ($ACT == DW_ACT_DENIED) {
+        if ($ACT == PageKeys::DW_ACT_DENIED) {
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
 
@@ -88,9 +81,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
      * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
      * DokuAction#response.
      */
-    protected function responseProcess()
-    {
-
+    protected function responseProcess() {
         //Casos
         // 1) Ja s'ha recuperat el draft local
         if ($this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT]) {
@@ -144,11 +135,6 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
             // ALERTA: Es bloqueja correctament??
             $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
         }
-
-
-
-
-
 
         $this->addNotificationsMetaToResponse($response, $response['ns']);
 
@@ -249,11 +235,6 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
     {
         return $this->resourceLocker->requireResource($lock);
     }
-
-//    public function leaveResource($unlock = FALSE)
-//    {
-//        throw new UnavailableMethodExecutionException('CancelEditPageAction#leaveResource');
-//    }
 
     private function generateLockInfo($lockState, $mes)
     {

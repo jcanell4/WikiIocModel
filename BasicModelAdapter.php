@@ -13,14 +13,15 @@ class BasicModelAdapter implements WikiIocModel {
 
     public function __construct() {}
 
-    public function setParams($element, $value) {}
-
     public function init($persistenceEngine) {
         $this->persistenceEngine = $persistenceEngine;
         return $this;
     }
 
+    /** Esta función está ahora en la clase WikiIocModelManager */
     public function getPersistenceEngine() {
         return $this->persistenceEngine;
     }
+
+    public function setParams($element, $value) {}
 }

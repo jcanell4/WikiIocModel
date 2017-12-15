@@ -8,51 +8,32 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 
-if (!defined('DW_ACT_LOCK')) define('DW_ACT_LOCK', "lock");
-if (!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
-if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
-if (!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
-
-class RefreshEditionAction extends PageAction implements ResourceLockerInterface /*,ResourceUnlockerInterface*/ {
-    protected $engine;
+class RefreshEditionAction extends PageAction implements ResourceLockerInterface {
     private $lockStruct;
 
-    public function __construct(BasicPersistenceEngine $engine) {
-        parent::__construct($engine);
-        $this->defaultDo = DW_ACT_LOCK;
-        $this->engine = $engine;
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_LOCK;
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
-     * dades  intermèdies que siguin necessàries per generar la resposta final:
-     * DokuAction#responseProcess.
-     */
-    protected function runProcess()
-    {
+    protected function runProcess() {
+        global $ACT;
+
         if (!WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS)) {
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID]);
         }
 
-        $ACT = act_permcheck(DW_ACT_EDIT);
+        $ACT = act_permcheck(PageKeys::DW_ACT_EDIT);
 
-        if ($ACT == DW_ACT_DENIED) {
+        if ($ACT == PageKeys::DW_ACT_DENIED) {
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
 
         $this->lockStruct = $this->requireResource(TRUE);
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet generar la resposta a enviar al client. Aquest
-     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
-     * DokuAction#response.
-     */
     protected function responseProcess()
     {
         if($this->lockStruct["state"]!== ResourceLockerInterface::LOCKED){

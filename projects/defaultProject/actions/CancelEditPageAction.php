@@ -7,18 +7,14 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once(DOKU_INC . 'inc/common.php');
-require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
-
-if (!defined('DW_ACT_DRAFTDEL')) define('DW_ACT_DRAFTDEL', "draftdel");
 
 class CancelEditPageAction extends RenderedPageAction implements ResourceUnlockerInterface {
     protected $resourceLocker;
 
-    public function __construct(BasicPersistenceEngine $engine) {
-        parent::__construct($engine);
-        $this->defaultDo = DW_ACT_DRAFTDEL;
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_DRAFTDEL;
     }
 
     protected function startProcess()
@@ -27,8 +23,7 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
             $this->params[PageKeys::KEY_NO_RESPONSE] = TRUE;
         }
         if (!isset($this->params[PageKeys::KEY_KEEP_DRAFT])) {
-            //$this->params[PageKeys::KEY_KEEP_DRAFT] = false;
-            $this->params[PageKeys::KEY_KEEP_DRAFT] = TRUE; //[JOSEP] Alerta [Xavi]! si es maté a FALSE elimina el draft sempre per defecte!
+            $this->params[PageKeys::KEY_KEEP_DRAFT] = TRUE; //[JOSEP] Alerta [Xavi]! si es manté a FALSE elimina el draft sempre per defecte!
         }
         parent::startProcess();
         $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], $this->params[PageKeys::KEY_EDITING_CHUNKS], NULL, $this->params[PageKeys::KEY_REV]);
@@ -62,7 +57,7 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
             $response['structure']['id'] .= PageAction::REVISION_SUFFIX;
 
             // Corregim els ids de les metas per indicar que és una revisió
-                $this->addRevisionSuffixIdToArray($response['meta']);
+            $this->addRevisionSuffixIdToArray($response['meta']);
         }
 
         return $response;
@@ -76,15 +71,11 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
             $this->clearPartialDraft();
         }
 
-
         $unlockDocument = isset($this->params[PageKeys::KEY_UNLOCK]) ? $this->params[PageKeys::KEY_UNLOCK] : TRUE;
 
         if ($unlockDocument) {
             $this->leaveResource(TRUE);
         }
-
-
-        //unlock($this->params[PageKeys::KEY_ID]);
 
         if (!WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID]);

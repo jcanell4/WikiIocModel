@@ -1,7 +1,7 @@
 <?php
 /**
  * Obtiene la lista de tipos de proyecto, es decir, la lista de directorios de proyectos
- * 
+ *
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
@@ -9,15 +9,16 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
 
 class ListProjectsAction extends AbstractWikiAction {
-    
+
     private $persistenceEngine;
     private $dataquery;
-    
-    public function __construct($persistenceEngine) {
-        $this->persistenceEngine = $persistenceEngine;
-        $this->dataquery = $persistenceEngine->createProjectMetaDataQuery();
+
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->persistenceEngine = $modelManager->getPersistenceEngine();
+        $this->dataquery = $this->persistenceEngine->createProjectMetaDataQuery();
     }
-    
+
     /**
      * Retorna un JSON que conté la llista de tipus de projectes
      */
@@ -29,5 +30,5 @@ class ListProjectsAction extends AbstractWikiAction {
         $ret = json_encode($aList);
         return $ret;
     }
-    
+
 }

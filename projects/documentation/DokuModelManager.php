@@ -1,7 +1,7 @@
 <?php
 /**
  * DokuModelManager:
- * - proporciona acceso a las Autorizaciones, ModelWrapper y Renderer del proyecto
+ * - proporciona acceso a las Autorizaciones, ModelAdapter y Renderer del proyecto
  * - define las rutas de las clases y las clases por defecto necesarias para este proyecto
  * @author Rafael Claver
  */
@@ -9,10 +9,9 @@ if (!defined('DOKU_INC')) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
 if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
 
-require_once(WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 require_once(WIKI_IOC_MODEL . 'metadata/MetaDataService.php');
-//Las siguientes includes son para Clases específicas y exclusivas de este proyecto
 require_once(WIKI_IOC_MODEL . 'BasicModelAdapter.php');
+//Las siguientes includes son para Clases específicas y exclusivas de este proyecto
 require_once(WIKI_IOC_PROJECTS . 'documentation/DocumentationModelExceptions.php');
 
 class DokuModelManager extends WikiIocModelManager{
@@ -33,20 +32,20 @@ class DokuModelManager extends WikiIocModelManager{
                'FactoryExporter'      => self::PRJ."export/FactoryExporter.php"
            );
 
-    public function __construct() {}
-
     public function getAuthorizationManager($str_command) {
         $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
         return $factory->createAuthorizationManager($str_command);
     }
 
     public function getExporterManager() {
-//        return \FactoryRenderer::Instance(self::$defDirClass['Renderer']);
         return new \FactoryExporter();
     }
 
-    public function getModelWrapperManager() {
-        return (new \BasicModelAdapter())->init(new \BasicPersistenceEngine());
+    public function getModelAdapterManager() {
+        //return (new \BasicModelAdapter())->init($this->getPersistenceEngine());
+	$dm = new \BasicModelAdapter();
+	$dm->init($this->getPersistenceEngine());
+	return $dm;
     }
 
     public static function getDefaultDirClass($name) {

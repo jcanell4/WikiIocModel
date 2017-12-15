@@ -9,21 +9,14 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/template.php');
-require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 
-if (!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
-if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
-if (!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
-
-class RawPartialPageAction extends PageAction implements ResourceLockerInterface, ResourceUnlockerInterface
-{
+class RawPartialPageAction extends PageAction implements ResourceLockerInterface, ResourceUnlockerInterface {
     private $lockStruct;
 
-    public function __construct(BasicPersistenceEngine $engine) {
-        parent::__construct($engine);
-        $this->defaultDo = DW_ACT_EDIT;
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_EDIT;
     }
 
     protected function startProcess() {
@@ -50,23 +43,17 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         }
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
-     * dades  intermèdies que siguin necessàries per generar la resposta final:
-     * DokuAction#responseProcess.
-     *
-     * ALERTA[Xavi] Identic al RawPageAction#runProcess();
-     */
-    protected function runProcess()
-    {
+    // ALERTA[Xavi] Identic al RawPageAction#runProcess();
+    protected function runProcess() {
+        global $ACT;
+
         if (!WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS)) {
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID]);
         }
 
         $ACT = act_permcheck($this->defaultDo);
 
-        if ($ACT == DW_ACT_DENIED) {
+        if ($ACT == PageKeys::DW_ACT_DENIED) {
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
 
@@ -75,12 +62,6 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         }
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet generar la resposta a enviar al client. Aquest
-     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
-     * DokuAction#response.
-     */
     protected function responseProcess()
     {
         $response = [];

@@ -16,10 +16,10 @@ abstract class MediaAction extends DokuAction
     protected $dokuModel;
     protected $persistenceEngine;
 
-    public function __construct($persistenceEngine)
-    {
-        $this->persistenceEngine = $persistenceEngine;
-        $this->dokuModel = new DokuMediaModel($persistenceEngine);
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->persistenceEngine = $modelManager->getPersistenceEngine();
+        $this->dokuModel = new DokuMediaModel($this->persistenceEngine);
     }
 
    /**
@@ -29,15 +29,8 @@ abstract class MediaAction extends DokuAction
      */
     abstract protected function initModel();
 
-    protected function startProcess()
-    {
-        global $ID;
-        global $IMG;
-        global $REV;
-        global $ERROR;
-        global $SRC;
-        global $NS;
-        global $DEL;
+    protected function startProcess() {
+        global $ID, $IMG, $REV, $SRC, $NS, $DEL;
 
         if (!$this->params[MediaKeys::KEY_ID]) {
             if($this->params[MediaKeys::KEY_FROM_ID]){
@@ -88,29 +81,12 @@ abstract class MediaAction extends DokuAction
         return $this->dokuModel;
     }
 
-//    protected function getRevisionList()
-//    {
-//        $extra = array();
-//        $mEvt = new Doku_Event('WIOC_ADD_META_REVISION_LIST', $extra);
-//        if ($mEvt->advise_before()) {
-//            $ret = $this->getModel()->getRevisionList();
-//        }
-//        $mEvt->advise_after();
-//        unset($mEvt);
-//        return $ret;
-//    }
-
     function mediaManagerFileList(){
         $content = "";
-//        global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT, $AUTH;
         $fullscreen = TRUE;
-//        require_once DOKU_INC . 'lib/exe/mediamanager.php';
-
         $rev = '';
         $image = cleanID($this->params[MediaKeys::KEY_IMAGE_ID]);
-//        if (isset($JUMPTO)) {
-//            $image = $JUMPTO;
-//        }
+
         if (isset($this->params[MediaKeys::KEY_REV])) {
             $rev = $this->params[MediaKeys::KEY_REV];
         }else{
@@ -123,7 +99,6 @@ abstract class MediaAction extends DokuAction
         } else {
             $content .= '<h1>Documents de ' . $this->params[MediaKeys::KEY_NS] . '</h1>';
         }
-
 
         $content .= '<div class="panel filelist ui-resizable">' . NL;
         $content .= '<div class="panelContent">' . NL;
@@ -147,6 +122,5 @@ abstract class MediaAction extends DokuAction
 
         return $content;
     }
-
 
 }

@@ -7,14 +7,12 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once (DOKU_INC.'inc/common.php');
-require_once DOKU_PLUGIN."ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/CancelEditPageAction.php";
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 
 class CancelPartialEditPageAction extends CancelEditPageAction implements ResourceLockerInterface, ResourceUnlockerInterface {
 
-    public function __construct(BasicPersistenceEngine $engine) {
-        parent::__construct($engine);
+    public function init($modelManager) {
+        parent::init($modelManager);
     }
 
     protected function runProcess() {
@@ -27,14 +25,11 @@ class CancelPartialEditPageAction extends CancelEditPageAction implements Resour
 
         if (count($this->params[PageKeys::KEY_EDITING_CHUNKS])==0 || $unlock) {
             $this->leaveResource(TRUE);
-//            unlock($this->params[PageKeys::KEY_ID]);
         }
 
     }
 
     protected function responseProcess() {
-//        $response = array();
-        //$response['structure'] = $this->getStructuredDocument(null, $pid, NULL, $editing_chunks);
         $response = $this->getModel()->getData();
         $response['structure']['cancel'] = [$this->params[PageKeys::KEY_SECTION_ID]];
 

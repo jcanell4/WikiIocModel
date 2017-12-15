@@ -1,9 +1,8 @@
 <?php
 if (!defined("DOKU_INC")) die();
-
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied" );
 
+require_once DOKU_PLUGIN."ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN."wikiiocmodel/actions/AbstractWikiAction.php";
 
 /**
@@ -27,10 +26,9 @@ abstract class DokuAction extends AbstractWikiAction{
     private $addContentIsAllowed=FALSE; //Per defecte no deixem afegir contingut HTML a la renderització
 
     /**
-     *
      * @param Array $paramsArr
      */
-    public function get(/*Array*/ $paramsArr=array()){
+    public function get($paramsArr=array()){
         global $MSG;
         $this->response="";
 
@@ -259,7 +257,7 @@ abstract class DokuAction extends AbstractWikiAction{
 
     private function isDenied() {
 	global $ACT;
-	return $ACT == DW_ACT_DENIED;
+	return $ACT == PageKeys::DW_ACT_DENIED;
     }
 
     protected function setRenderer($val){

@@ -10,20 +10,16 @@ require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/template.php');
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
-require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
-
-if (!defined('DW_ACT_SAVE')) define('DW_ACT_SAVE', "save");
 
 class SavePageAction extends RawPageAction {
 
     protected $deleted = FALSE;
-    private $code = 0;
     protected $subAction;
+    private $code = 0;
 
-    public function __construct(BasicPersistenceEngine $engine) {
-        parent::__construct($engine);
-        $this->defaultDo = DW_ACT_SAVE;
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_SAVE;
     }
 
     protected function startProcess(){
@@ -36,17 +32,11 @@ class SavePageAction extends RawPageAction {
         }
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
-     * dades  intermèdies que siguin necessàries per generar la resposta final:
-     * DokuAction#responseProcess.
-     */
     protected function runProcess(){
         global $ACT;
         $ID=  $this->params[PageKeys::KEY_ID];
 
-        if($this->params[PageKeys::KEY_DO]==DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
+        if($this->params[PageKeys::KEY_DO]==PageKeys::DW_ACT_SAVE && !WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($ID);
         }
 
@@ -69,12 +59,6 @@ class SavePageAction extends RawPageAction {
         }
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet generar la resposta a enviar al client. Aquest
-     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
-     * DokuAction#response.
-     */
     protected function responseProcess() {
         global $TEXT;
         global $ID;
