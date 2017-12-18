@@ -18,7 +18,6 @@ class BasicModelAdapter implements WikiIocModel {
         return $this;
     }
 
-    /** Esta función está ahora en la clase WikiIocModelManager */
     public function getPersistenceEngine() {
         return $this->persistenceEngine;
     }

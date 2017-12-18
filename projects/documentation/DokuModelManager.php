@@ -14,7 +14,7 @@ require_once(WIKI_IOC_MODEL . 'BasicModelAdapter.php');
 //Las siguientes includes son para Clases específicas y exclusivas de este proyecto
 require_once(WIKI_IOC_PROJECTS . 'documentation/DocumentationModelExceptions.php');
 
-class DokuModelManager extends WikiIocModelManager{
+class DokuModelManager extends AbstractModelManager{
 
     const MOD = WIKI_IOC_MODEL;
     const DEF = WIKI_IOC_PROJECTS . 'defaultProject/';

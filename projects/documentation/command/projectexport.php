@@ -21,7 +21,7 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
         global $plugin_controller;
         $plugin_controller->setCurrentProject($this->params[AjaxKeys::PROJECT_TYPE]);
         if (!$modelManager) {
-            $modelManager = WikiIocModelManager::Instance($this->params[AjaxKeys::PROJECT_TYPE]);
+            $modelManager = AbstractModelManager::Instance($this->params[AjaxKeys::PROJECT_TYPE]);
         }
         $this->setModelManager($modelManager);
     }

@@ -49,12 +49,6 @@ class DokuModelAdapter extends BasicModelAdapter {
     protected $params;
     protected $dataTmp;
     protected $ppEvt;
-    //protected $modelManager;
-
-    //public function __construct($modelManager) {
-    //    parent::__construct();
-        //$this->modelManager = $modelManager;
-    //}
 
     /**
      * MOGUT a: admin_task_command
@@ -70,23 +64,21 @@ class DokuModelAdapter extends BasicModelAdapter {
     /**
      * COPIAT a: 'admin_tab_command' encara que sembla ser que ningú utilitza la comanda 'admin_tab_command'
      * També es cridat per la funció 'login()' de LoginResponseHandler
-     * però LoginResponseHandler funciona amb $command->modelAdapter
      **************************************************************************
      * Crida principal de la comanda admin_tab i crida del LoginResponseHandler
      * @return type
-     */
     public function getAdminTaskList() {
         $action = $this->modelManager->getActionInstance("AdminTaskListAction");
         return $action->get();
     }
+     */
 
     /**
      * COPIAT a: 'shortcuts_tab_command' encara que sembla ser que ningú utilitza la comanda 'shortcuts_tab_command'
      * També es cridat per LoginResponseHandler, New_pageResponseHandler, SaveResponseHandler i Save_partialResponseHandler
      * però els Handler funcionen amb $command->modelAdapter
-     **************************************************************************/
     public function getShortcutsTaskList($user_id) {
-        $action = new ShortcutsTaskListAction(/*$this->persistenceEngine*/);
+        $action = new ShortcutsTaskListAction($this->persistenceEngine);
         if (!$user_id) {
             throw new Exception("No es troba cap usuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
         } else {
@@ -94,11 +86,12 @@ class DokuModelAdapter extends BasicModelAdapter {
         }
         return $action->get($params);
     }
+     **************************************************************************/
 
-    //JOSEP: ALERTA! cal mirar si es fa servir i eliminar en cas negatiu.
+    /*NO es fa servir
     public function setParams($element, $value) {
         $this->params[$element] = $value;
-    }
+    }*/
 
     /**
      * MOGUT a: cancel_command
@@ -1678,18 +1671,15 @@ class DokuModelAdapter extends BasicModelAdapter {
     }*/
 
     /* 'revision_command' ha sido moodificado convenientemente para no tener que llamar a esta función
-     * Sin embargo, No se puede eliminar de aquí, puesto que, aparte de 'revision_command', también lo usa 'DiffResponseHandler'
-     */
+     * aparte de 'revision_command', también lo usa 'DiffResponseHandler'
     public function getRevisionsList($params) {
         $action = new RevisionsListAction($this->persistenceEngine);
         $ret = $action->get($params);
         return $ret;
-    }
+    }*/
 
     /** SEMBLA SER QUE AQUESTA FUNCIÓ NO S'UTILITZA
-     *
      * S'ha de fer servir getRevisionsList en lloc d'aquest
-     *
      * @deprecated
      * @param $id
      * @return array

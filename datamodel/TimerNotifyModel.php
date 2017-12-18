@@ -16,19 +16,13 @@ require_once(DOKU_INC . 'inc/common.php');
 class TimerNotifyModel extends DokuNotifyModel
 {
     protected $type = 'ajax';
+    protected $dataQuery;
 
-    protected /*NotifyDataQuery*/
-        $dataQuery;
-
-
-    public function getData()
-    {
-        // TODO: Implement getData() method.
+    public function getData() {
         throw new UnavailableMethodExecutionException("DokuNotifyModel#getData");
     }
 
-    public function setData($toSet)
-    {
+    public function setData($toSet) {
         // TODO: Implement setData() method.
         throw new UnavailableMethodExecutionException("DokuNotifyModel#setData");
     }

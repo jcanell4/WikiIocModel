@@ -12,7 +12,7 @@ define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/defaultProject/");
 require_once(WIKI_IOC_PROJECT . 'DokuModelAdapter.php');
 require_once(WIKI_IOC_PROJECT . 'DokuModelExceptions.php');
 
-class DokuModelManager extends WikiIocModelManager{
+class DokuModelManager extends AbstractModelManager{
 
     const MOD = WIKI_IOC_MODEL;
     const DEF = WIKI_IOC_PROJECT;

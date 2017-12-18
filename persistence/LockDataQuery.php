@@ -1,11 +1,11 @@
 <?php
-if (!defined('DOKU_INC')) die();
-
 /**
  * Description of LockDataQuery
- *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
+if (!defined('DOKU_INC')) die();
+require_once (DOKU_INC."lib/lib_ioc/wikiiocmodel/WikiIocModelManager.php");
+
 class LockDataQuery extends DataQuery
 {
     const UNLOCKED = 100; // El recurs no es troba bloquejat per ningú
@@ -15,10 +15,10 @@ class LockDataQuery extends DataQuery
 
     protected $notifyModel;
 
-    public function __construct()
-    {
+    public function __construct() {
         $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
-        $this->notifyModel = WikiIocModelManager::getNotifyModel($type);
+        $model = new WikiIocModelManager();
+        $this->notifyModel = $model->getNotifyModel($type);
     }
 
     public function getFileName($id, $especParams = NULL)
