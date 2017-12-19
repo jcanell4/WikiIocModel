@@ -7,7 +7,4 @@
  */
 interface WikiIocModel {
 
-//    public function init($persistenceEngine);
-//    public function getPersistenceEngine();
-
 }

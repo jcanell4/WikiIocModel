@@ -17,8 +17,8 @@ class LockDataQuery extends DataQuery
 
     public function __construct() {
         $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
-        $model = new WikiIocModelManager();
-        $this->notifyModel = $model->getNotifyModel($type);
+        $modelManager = new WikiIocModelManager();
+        $this->notifyModel = $modelManager->getNotifyModel($type);
     }
 
     public function getFileName($id, $especParams = NULL)

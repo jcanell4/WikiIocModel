@@ -33,7 +33,8 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
                         "mode"     => $this->params['mode'],
                         "filetype" => $this->params['filetype']
                   );
-        $action = $this->modelManager->getActionInstance("ProjectExportAction", $this->modelManager->getExporterManager());
+        $modelManager = $this->getModelManager();
+        $action = $modelManager->getActionInstance("ProjectExportAction", $modelManager->getExporterManager());
         $action->init($params);
         $content = $action->get();
         $projectId = $action->getProjectID();
