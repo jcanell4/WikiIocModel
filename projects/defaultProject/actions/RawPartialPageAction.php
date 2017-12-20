@@ -400,6 +400,21 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         // i es podrien perdre dades. També caldrà demanar si vol que l'avisin quan acabi el bloqueig
         return $resp;
     }
+    
+    protected function translateToDW($text){
+        $trans = new MarkDown2DikuWikiTranslator();
+        exec(DOKU_INC."../pandoc/convHtml2MdwFromText.sh \"$text\"", $return, $exit);
+        $text = implode ( "\n" , $return );
+        return $trans->getRenderedContent($trans->getInstructions($text));
+    }
+
+    protected function translateToHTML($text){
+        $trans = new DikuWiki2MarkDownTranslator();
+        $mdFormat=$trans->getRenderedContent($trans->getInstructions($text));
+        $retExec = exec(DOKU_INC."../pandoc/convMdw2HtmlFromText.sh \"$mdFormat\"", $return, $exit);
+        
+        return implode ( "\n" , $return );
+    }
 }
 
 
