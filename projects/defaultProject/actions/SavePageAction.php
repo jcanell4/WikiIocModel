@@ -143,7 +143,7 @@ class SavePageAction extends RawPageAction {
 
         return $response;
     }
-
+    
     private function _save(){
         //spam check
         if (checkwordblock()) {
@@ -159,10 +159,13 @@ class SavePageAction extends RawPageAction {
 
         //save it
         //saveWikiText($ID,con($PRE,$TEXT,$SUF,1),$SUM,$INPUT->bool('minor')); //use pretty mode for con
+        $toSave = con($this->params[PageKeys::KEY_PRE],$this->params[PageKeys::KEY_WIKITEXT],
+                                        $this->params[PageKeys::KEY_SUF], 1);
+        if($this->params["contentFormat"]===self::HTML_FORMAT){
+            $toSave = $this->translateToDW($toSave);
+        }
         $this->dokuPageModel->setData(array(
-                                        PageKeys::KEY_WIKITEXT => con($this->params[PageKeys::KEY_PRE],
-                                                                      $this->params[PageKeys::KEY_WIKITEXT],
-                                                                      $this->params[PageKeys::KEY_SUF], 1),
+                                        PageKeys::KEY_WIKITEXT => $toSave,
                                         PageKeys::KEY_SUM      => $this->params[PageKeys::KEY_SUM],
                                         PageKeys::KEY_MINOR    => $this->params[PageKeys::KEY_MINOR])
                                      );
