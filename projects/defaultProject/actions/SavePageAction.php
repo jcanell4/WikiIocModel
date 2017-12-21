@@ -56,7 +56,7 @@ class SavePageAction extends RawPageAction {
             throw new InsufficientPermissionToCreatePageException($ID);
         }
 
-        if($this->checklock()==ST_LOCKED){
+        if($this->checklock()== LockDataQuery::LOCKED){
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
 

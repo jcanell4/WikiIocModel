@@ -100,7 +100,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
             $response['content'] = $this->getModel()->getRawData()['content'];
 
 
-        } else if($this->lockState()==ST_LOCKED_BEFORE){
+        } else if($this->lockState()== LockDataQuery::LOCKED_BEFORE){
             //-1 L'usuari te obert el document en una altra sessio
             $response = $this->_getSelfLockedDialog($this->getModel()->getRawData());
         } else

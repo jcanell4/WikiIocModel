@@ -96,7 +96,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             $response = $this->_getLocalDraftResponse($data);
 
-        } else if($this->lockState()==ST_LOCKED_BEFORE){
+        } else if($this->lockState()==self::LOCKED_BEFORE){
             //-1 L'usuari te obert el document en una altra sessio
 
             // ALERTA[Xavi] Copiat de "bloquejat" el missatge enviat es l'únic que canvia.
