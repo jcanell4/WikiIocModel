@@ -54,8 +54,8 @@ class DraftPageAction extends PageAction {
         if ($ACT == DW_ACT_DENIED) {
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
-
-        if($this->checklock()==ST_LOCKED){
+        
+        if($this->checklock()== LockDataQuery::LOCKED){
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
 
@@ -73,7 +73,6 @@ class DraftPageAction extends PageAction {
             }
             $this->response["lockInfo"] = $lockInfo;
         }else if($this->params[PageKeys::KEY_DO]===DW_ACT_DELDRAFT){
-            //$this->response = DraftManager::removeDraft($this->params);// TODO[Xavi] Això hurà de contenir la info
             $this->getModel()->removeDraft($this->params);
             $this->response['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
         }else{
