@@ -12,6 +12,7 @@ class Permission extends AbstractPermission {
     private $resourceExist;
     private $overwriteRequired;
     private $isMyOwnNs;
+    private $isEmptyText;
 
     public function getInfoPerm() {
         return $this->info_perm;
@@ -47,5 +48,13 @@ class Permission extends AbstractPermission {
 
     public function setIsMyOwnNs($isMyOwnNs) {
         $this->isMyOwnNs = $isMyOwnNs;
+    }
+
+    public function getIsEmptyText() {
+        return $this->isEmptyText;
+    }
+
+    public function setIsEmptyText($isEmptyText) {
+        $this->isEmptyText = $isEmptyText;
     }
 }

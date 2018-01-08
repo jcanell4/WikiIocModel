@@ -47,11 +47,6 @@ class SavePageAction extends RawPageAction {
             throw new InsufficientPermissionToCreatePageException($ID);
         }
 
-        //Tal vez hay que obtener los permisos de otro sitio
-        if ($this->isEmptyText($this->params) && WikiIocInfoManager::getInfo("perm") < AUTH_DELETE) {
-            throw new InsufficientPermissionToDeletePageException($ID);
-        }
-
         if($this->checklock()== LockDataQuery::LOCKED){
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
@@ -167,6 +162,6 @@ class SavePageAction extends RawPageAction {
                      $param[PageKeys::KEY_WIKITEXT].
                      $param[PageKeys::KEY_SUF]
                     );
-        return ($text === NULL );
+        return ($text == NULL);
     }
 }
