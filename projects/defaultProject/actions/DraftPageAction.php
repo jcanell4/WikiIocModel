@@ -41,8 +41,8 @@ class DraftPageAction extends PageAction {
         if ($ACT == PageKeys::DW_ACT_DENIED) {
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
-
-        if ($this->checklock() == ST_LOCKED){
+        
+        if($this->checklock()== LockDataQuery::LOCKED){
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
 

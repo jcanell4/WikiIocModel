@@ -13,7 +13,10 @@ require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 
 class RawPageAction extends PageAction implements ResourceLockerInterface /*,ResourceUnlockerInterface*/ {
-
+    const HTML_FORMAT = "Dojo";
+    const DW_FORMAT = "ACE";
+    
+//    protected $engine;
     protected $lockStruct;
 
     public function init($modelManager) {
@@ -91,7 +94,7 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
             $response['content'] = $this->getModel()->getRawData()['content'];
 
 
-        } else if($this->lockState()==ST_LOCKED_BEFORE){
+        } else if($this->lockState()== LockDataQuery::LOCKED_BEFORE){
             //-1 L'usuari te obert el document en una altra sessio
             $response = $this->_getSelfLockedDialog($this->getModel()->getRawData());
         } else
@@ -220,6 +223,29 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
 
         return $response;
     }
+    
+    protected function translateToDW($text){
+        $trans = new MarkDown2DikuWikiTranslator();
+        exec("cd ".DOKU_INC."../pandoc; ./convHtml2MdwFromText.sh \"$text\"", $return, $exit);
+        if($exit!==0){
+            throw new SystemExecutionFailedException();
+        }
+        $text = implode ( "\n" , $return );
+        return $trans->getRenderedContent($trans->getInstructions($text));
+    }
+
+    protected function translateToHTML($text){
+        $trans = new DikuWiki2MarkDownTranslator();
+        $mdFormat=$trans->getRenderedContent($trans->getInstructions($text));
+        exec("cd ".DOKU_INC."../pandoc; ./convMdw2HtmlFromText.sh \"$mdFormat\"", $return, $exit);
+        if($exit!==0){
+            throw new SystemExecutionFailedException();
+        }
+        
+        return implode ( "\n" , $return );
+    }
+
+
 
     /**
      * Es tracta del mètode que hauran d'executar en iniciar el bloqueig. Per  defecte no bloqueja el recurs, perquè
@@ -338,6 +364,9 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
         $resp = $this->_getBaseDataToSend();
         $resp = array_merge($resp, $this->_getStructuredHtmlForm($rawData["content"]));
         $resp["content"] = $rawData["content"];
+        if($this->params["contentFormat"] === self::HTML_FORMAT){ //afegir la key del parars a la pageKeys
+            $resp["content"] = $this->translateToHTML($resp["content"]);
+        }
         $resp["locked"] = $rawData["locked"];
         return $resp;
     }

@@ -77,7 +77,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             $response = $this->_getLocalDraftResponse($data);
 
-        } else if($this->lockState()==ST_LOCKED_BEFORE){
+        } else if($this->lockState()==self::LOCKED_BEFORE){
             //-1 L'usuari te obert el document en una altra sessio
 
             // ALERTA[Xavi] Copiat de "bloquejat" el missatge enviat es l'únic que canvia.
@@ -380,6 +380,21 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         //Aquí caldrà avisar que no és possible editar l'esborrany perquè hi ha algú editant prèviament el document
         // i es podrien perdre dades. També caldrà demanar si vol que l'avisin quan acabi el bloqueig
         return $resp;
+    }
+    
+    protected function translateToDW($text){
+        $trans = new MarkDown2DikuWikiTranslator();
+        exec(DOKU_INC."../pandoc/convHtml2MdwFromText.sh \"$text\"", $return, $exit);
+        $text = implode ( "\n" , $return );
+        return $trans->getRenderedContent($trans->getInstructions($text));
+    }
+
+    protected function translateToHTML($text){
+        $trans = new DikuWiki2MarkDownTranslator();
+        $mdFormat=$trans->getRenderedContent($trans->getInstructions($text));
+        $retExec = exec(DOKU_INC."../pandoc/convMdw2HtmlFromText.sh \"$mdFormat\"", $return, $exit);
+        
+        return implode ( "\n" , $return );
     }
 }
 
