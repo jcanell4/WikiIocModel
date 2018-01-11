@@ -691,19 +691,19 @@ class DokuModelAdapter extends BasicModelAdapter {
     }
 
     //[Rafa] NO SE UTILIZA
-    private function doDeleteMediaManagerPreProcess(){
-        global $DEL;
-
-        $content = "";
-        if ($this->runBeforePreprocess($content)) {
-            $res = 0;
-            if(checkSecurityToken()) {
-                $res = media_delete($DEL,$AUTH);
-            }
-        }
-        $this->runAfterPreprocess($content);
-        return $res;
-    }
+//    private function doDeleteMediaManagerPreProcess(){
+//        global $DEL;
+//
+//        $content = "";
+//        if ($this->runBeforePreprocess($content)) {
+//            $res = 0;
+//            if(checkSecurityToken()) {
+//                $res = media_delete($DEL,$AUTH);
+//            }
+//        }
+//        $this->runAfterPreprocess($content);
+//        return $res;
+//    }
 
     private function doMediaManagerPreProcess() {
         global $ACT;
