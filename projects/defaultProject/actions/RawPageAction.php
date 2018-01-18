@@ -245,7 +245,12 @@ class RawPageAction extends PageAction implements ResourceLockerInterface /*,Res
             throw new SystemExecutionFailedException();
         }
         $text = implode ( "\n" , $return );
-        return $trans->getRenderedContent($trans->getInstructions($text));
+
+        $instructions= $trans->getInstructions($text);
+        $renderedContent = $trans->getRenderedContent($instructions);
+        return $renderedContent;
+
+//        return $trans->getRenderedContent($trans->getInstructions($text));
     }
 
     protected function translateToHTML($text){
