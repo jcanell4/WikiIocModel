@@ -11,7 +11,7 @@ require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/template.php');
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 
-class RawPartialPageAction extends PageAction implements ResourceLockerInterface, ResourceUnlockerInterface {
+class RawPartialPageAction extends PageAction {
     private $lockStruct;
 
     public function init($modelManager) {
@@ -156,31 +156,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         return $originalCall;
     }
 
-
-    /**
-     * Es tracta del mètode que hauran d'executar en iniciar el bloqueig. Per  defecte no bloqueja el recurs, perquè
-     * actualment el bloqueig es realitza internament a les funcions natives de la wiki. Malgrat tot, per a futurs
-     * projectes es contempla la possibilitat de fer el bloqueig directament aquí, si es passa el paràmetre amb valor
-     * TRUE. EL mètode comprova si algú està bloquejant ja el recurs i en funció d'això, retorna una constant amb el
-     * resultat obtingut de la petició.
-     *
-     * @param bool $lock
-     * @return int
-     */
-    public function requireResource($lock = FALSE)
-    {
-        return $this->resourceLocker->requireResource($lock);
-    }
-
-    public function leaveResource($unlock = FALSE)
-    {
-        throw new UnavailableMethodExecutionException('CancelEditPageAction#leaveResource');
-    }
-
-    // TODO[Xavi] copiat de RawPageAction
-    private function generateLockInfo($lockState, $mes)
-    {
-        $info = null;
+    private function generateLockInfo($lockState, $mes) {
         $infoType = 'message';
         $message = null;
 
@@ -207,14 +183,14 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             default:
                 throw new UnknownTypeParamException($lockState);
-
         }
+
         if ($mes && $message) {
             $message = $this->addInfoToInfo(self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]),
-                self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]));
-        } else if ($mes) {
-            $message = self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]);
-        } else{
+                                            self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]));
+        }elseif ($mes) {
+            $message = $mes;
+        }else {
             $message = self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]);
         }
         return $message;
@@ -381,7 +357,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         // i es podrien perdre dades. També caldrà demanar si vol que l'avisin quan acabi el bloqueig
         return $resp;
     }
-    
+
     protected function translateToDW($text){
         $trans = new MarkDown2DikuWikiTranslator();
         exec(DOKU_INC."../pandoc/convHtml2MdwFromText.sh \"$text\"", $return, $exit);
@@ -393,7 +369,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         $trans = new DikuWiki2MarkDownTranslator();
         $mdFormat=$trans->getRenderedContent($trans->getInstructions($text));
         $retExec = exec(DOKU_INC."../pandoc/convMdw2HtmlFromText.sh \"$mdFormat\"", $return, $exit);
-        
+
         return implode ( "\n" , $return );
     }
 }
