@@ -42,29 +42,27 @@ class SavePageAction extends RawPageAction {
         }
 
         $ACT = act_permcheck($ACT);
-        if ($ACT==="denied"){
+        if ($ACT === "denied"){
             throw new InsufficientPermissionToCreatePageException($this->params[PageKeys::KEY_ID]);
         }
 
-        if($this->checklock()== LockDataQuery::LOCKED){
+        if ($this->checklock() === LockDataQuery::LOCKED) {
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
 
         $this->lockStruct = $this->updateLock();
-        if ($this->lockState() === self::LOCKED){
+        if ($this->lockState() === self::LOCKED) {
             $this->_save();
-            if ($this->subAction=== PageKeys::DW_ACT_SAVE_REV || $this->deleted){
-                $this->resourceLocker->leaveResource(TRUE);
+            if ($this->subAction === PageKeys::DW_ACT_SAVE_REV || $this->deleted) {
+                $this->leaveResource(TRUE);
             }
         }
     }
 
     protected function responseProcess() {
-        global $TEXT;
-        global $ID;
+        global $TEXT, $ID;
 
         $suffix = $this->params[PageKeys::KEY_REV] ? PageAction::REVISION_SUFFIX : '';
-
         $response['code'] = $this->code;
 
         if ($this->deleted) {
@@ -72,7 +70,6 @@ class SavePageAction extends RawPageAction {
             $type = 'success';
             $message = sprintf(WikiIocLangManager::getLang('deleted'), $this->params[PageKeys::KEY_ID]);
             $duration = NULL;
-
         }
         else {
             $message = WikiIocLangManager::getLang('saved');
@@ -80,23 +77,21 @@ class SavePageAction extends RawPageAction {
             if ($this->params[PageKeys::KEY_CANCEL_ALL] || $this->params[PageKeys::KEY_CANCEL]) {
 
                 $response['code'] = "cancel_document";
-                $response['cancel_params'] = [
-                    'id' => str_replace(":", "_", $this->params[PageKeys::KEY_ID]),
-                    'dataToSend'  => ['discardChanges' => true],
-                    'event' => 'cancel'];
+                $response['cancel_params']['id'] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+                $response['cancel_params']['dataToSend'] = ['discardChanges' => true];
                 $response['cancel_params']['event'] = 'cancel';
 
                 if ($this->params['close']) {
-                    $response['cancel_params']['dataToSend']['close'] =$this->params['close'];
+                    $response['cancel_params']['dataToSend']['close'] = $this->params['close'];
                     $response['cancel_params']['dataToSend']['no_response'] = true;
                 }
-
 
                 if (isset($this->params['keep_draft'])) {
                     $response['cancel_params']['dataToSend']['keep_draft'] = $this->params['keep_draft'];
                 }
 
-            } else if ($this->params[PageKeys::KEY_REV]) {
+            } elseif ($this->params[PageKeys::KEY_REV]) {
+                $message = WikiIocLangManager::getLang('reverted');
 
                 if ($this->params[PageKeys::KEY_RELOAD]) {
                     $response['reload']['id'] = $ID;
@@ -107,28 +102,35 @@ class SavePageAction extends RawPageAction {
                 }
             } else {
                 $response['formId'] = 'form_' . WikiPageSystemManager::getContainerIdFromPageId($ID) . $suffix;
-                $response['inputs'] = ['date' => WikiIocInfoManager::getInfo("meta")["date"]["modified"],
-                                       PageKeys::CHANGE_CHECK => md5($TEXT)];
+                $response['inputs'] = ['date' => WikiIocInfoManager::getInfo("meta")['date']['modified'],
+                                       PageKeys::CHANGE_CHECK => md5($TEXT)
+                                      ];
             }
 
             $type = 'success';
             $duration = 15;
         }
 
-        $response["lockInfo"] = $this->lockStruct["info"];
-        $id = $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]) . $suffix;
-        $response['info'] = $this->generateInfo($type, $message, $id . $suffix, $duration);
+        $response['lockInfo'] = $this->lockStruct['info'];
+        $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
+        $response['info'] = $this->generateInfo($type, $message, $response[PageKeys::KEY_ID], $duration);
+
+        if ($this->params[PageKeys::KEY_REV]) {
+            //Codi per tancar la pestanya de la revisió
+            $response['close']['id'] = $response[PageKeys::KEY_ID].$suffix;
+            $response['close']['idToShow'] = $response[PageKeys::KEY_ID];
+        }
 
         return $response;
     }
-    
+
     private function _save(){
         //spam check
         if (checkwordblock()) {
             throw new WordBlockedException();
         }
         //conflict check
-        if ($this->subAction !== 'save_rev' // ALERTA[Xavi] els revert ignoren la data del document
+        if ($this->subAction !== PageKeys::DW_ACT_SAVE_REV // ALERTA[Xavi] els revert ignoren la data del document
             && $this->params[PageKeys::KEY_DATE] != 0
             && WikiIocInfoManager::getInfo("meta")["date"]["modified"] > $this->params[PageKeys::KEY_DATE] ){
             //return 'conflict';
@@ -137,9 +139,10 @@ class SavePageAction extends RawPageAction {
 
         //save it
         //saveWikiText($ID,con($PRE,$TEXT,$SUF,1),$SUM,$INPUT->bool('minor')); //use pretty mode for con
-        $toSave = con($this->params[PageKeys::KEY_PRE],$this->params[PageKeys::KEY_WIKITEXT],
-                                        $this->params[PageKeys::KEY_SUF], 1);
-        if($this->params["contentFormat"]===self::HTML_FORMAT){
+        $toSave = con($this->params[PageKeys::KEY_PRE],
+                      $this->params[PageKeys::KEY_WIKITEXT],
+                      $this->params[PageKeys::KEY_SUF], 1);
+        if ($this->params["contentFormat"] === self::HTML_FORMAT){
             $toSave = $this->translateToDW($toSave);
         }
         $this->dokuPageModel->setData(array(
