@@ -1,14 +1,13 @@
 <?php
-if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
-require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php";
-
 /**
  * Description of UserListAction
  *
  * @author josep
  */
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php";
+
 class UserListAction  extends AbstractWikiAction{
     const OF_A_PROJECT = "ofAProject";
     const BY_PAGE_PERMSION = "byPagePermision";
@@ -25,12 +24,13 @@ class UserListAction  extends AbstractWikiAction{
                 $ret = PagePermissionManager::getListUsersPagePermission($paramsArr[PageKeys::KEY_ID], AUTH_EDIT);
                 break;
             case self::BY_NAME:
-                $ret = PagePermissionManager::getUserList($paramsArr[PageKeys::KEY_FILTER]);
+                $ret = PagePermissionManager::getUserList($paramsArr[PageKeys::KEY_FILTER])['values'];
                 break;
             default :
                 //error;
                 throw new IncorrectParametersException();
         }
-        return $ret['values'];
+        return $ret;
     }
+
 }
