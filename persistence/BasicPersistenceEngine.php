@@ -48,7 +48,7 @@ class BasicPersistenceEngine {
         require_once(DOKU_PERSISTENCE . 'LockDataQuery.php');
         return new LockDataQuery();
     }
-    
+
     public function createProjectMetaDataQuery(){
         require_once(DOKU_PERSISTENCE . 'ProjectMetaDataQuery.php');
         return new ProjectMetaDataQuery();

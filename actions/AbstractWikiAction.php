@@ -9,16 +9,16 @@ abstract class AbstractWikiAction {
 
     protected $modelManager;
 
+    public function init($modelManager = NULL) {
+        $this->modelManager = $modelManager;
+    }
+
     public function get($paramsArr = array()){
         $this->params = $paramsArr;
         $this->triggerStartEvents();
         $ret = $this->responseProcess();
         $this->triggerEndEvents();
         return $ret;
-    }
-
-    public function init($modelManager = NULL) {
-        $this->modelManager = $modelManager;
     }
 
     public function getModelManager() {
@@ -38,61 +38,60 @@ abstract class AbstractWikiAction {
      *
      * @return array - array amb la configuració del item de informació
      */
-    public static function generateInfo( $type, $message, $id='', $duration = - 1 ) {
-            return [
-                    "id"        => str_replace(':', '_', $id),
-                    "type"      => $type,
-                    "message"   => $message,
-                    "duration"  => $duration,
-                    "timestamp" => date( "d-m-Y H:i:s" )
-            ];
+    public static function generateInfo($type, $message, $id='', $duration=-1) {
+        $ret = ["id"        => str_replace(':', '_', $id),
+                "type"      => $type,
+                "message"   => $message,
+                "duration"  => $duration,
+                "timestamp" => date("d-m-Y H:i:s")];
+        return $ret;
     }
 
     // En els casos en que hi hagi discrepancies i no hi haci cap preferencia es fa servir el valor de A
     protected function addInfoToInfo( $infoA, $infoB ) {
-            // Els tipus global de la info serà el de major gravetat: "debug" > "error" > "warning" > "info"
-            $info = [ ];
+        // Els tipus global de la info serà el de major gravetat: "debug" > "error" > "warning" > "info"
+        $info = [ ];
 
-            if ( $infoA['type'] == 'debug' || $infoB['type'] == 'debug' ) {
-                    $info['type'] = 'debug';
-            } else if ( $infoA['type'] == 'error' || $infoB['type'] == 'error' ) {
-                    $info['type'] = 'error';
-            } else if ( $infoA['type'] == 'warning' || $infoB['type'] == 'warning' ) {
-                    $info['type'] = 'warning';
-            } else {
-                    $info['type'] = $infoA['type'];
-            }
+        if ( $infoA['type'] == 'debug' || $infoB['type'] == 'debug' ) {
+            $info['type'] = 'debug';
+        } else if ( $infoA['type'] == 'error' || $infoB['type'] == 'error' ) {
+            $info['type'] = 'error';
+        } else if ( $infoA['type'] == 'warning' || $infoB['type'] == 'warning' ) {
+            $info['type'] = 'warning';
+        } else {
+            $info['type'] = $infoA['type'];
+        }
 
-            // Si algun dels dos te duració ilimitada, aquesta perdura
-            if ( $infoA['duration'] == - 1 || $infoB['duration'] == - 1 ) {
-                    $info['duration'] = -1;
-            } else {
-                    $info['duration'] = $infoA['duration'];
-            }
+        // Si algun dels dos te duració ilimitada, aquesta perdura
+        if ( $infoA['duration'] == - 1 || $infoB['duration'] == - 1 ) {
+            $info['duration'] = -1;
+        } else {
+            $info['duration'] = $infoA['duration'];
+        }
 
-            // El $id i el timestamp ha de ser el mateix per a tots dos
-            $info ['timestamp'] = $infoA['timestamp'];
-            $info ['id']        = $infoA['id'];
+        // El $id i el timestamp ha de ser el mateix per a tots dos
+        $info ['timestamp'] = $infoA['timestamp'];
+        $info ['id']        = $infoA['id'];
 
-            $messageStack = [ ];
+        $messageStack = [ ];
 
-            if ( is_string( $infoA ['message'] ) ) {
-                    $messageStack[] = $infoA['message'];
+        if ( is_string( $infoA ['message'] ) ) {
+            $messageStack[] = $infoA['message'];
 
-            } else if ( is_array( $infoA['message'] ) ) {
-                    $messageStack = $infoA['message'];
-            }
+        } else if ( is_array( $infoA['message'] ) ) {
+            $messageStack = $infoA['message'];
+        }
 
-            if ( is_string( $infoB ['message'] ) ) {
-                    $messageStack[] = $infoB['message'];
+        if ( is_string( $infoB ['message'] ) ) {
+            $messageStack[] = $infoB['message'];
 
-            } else if ( is_array( $infoB['message'] ) ) {
-                    $messageStack = array_merge($messageStack, $infoB['message']);
-            }
+        } else if ( is_array( $infoB['message'] ) ) {
+            $messageStack = array_merge($messageStack, $infoB['message']);
+        }
 
-            $info['message'] = $messageStack;
+        $info['message'] = $messageStack;
 
-            return $info;
+        return $info;
     }
 
     protected function triggerStartEvents() {

@@ -1,64 +1,47 @@
 <?php
-
+/**
+ * Description of RecentListAction
+ * @author josep
+ */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once DOKU_INC . "inc/changelog.php";
 require_once DOKU_INC . "inc/html.php";
+require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
-require_once DOKU_PLUGIN . "ajaxcommand/defkeys/RequestParameterKeys.php";
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-if (!defined('DW_ACT_RECENT')) {
-    define('DW_ACT_RECENT', "recent");
-}
-
-/**
- * Description of RecentListAction
- *
- * @author josep
- */
 class RecentListAction extends DokuAction{
     private $content;
-    
-    public function __construct() {
-        $this->defaultDo = DW_ACT_RECENT;
+
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_RECENT;
     }
 
     protected function responseProcess() {
-        $this->response =[ 
+        $this->response =[
             'id' => "recent_list",
             'title' => WikiIocLangManager::getLang("recent_list"),
             "content" => $this->content,
             'type' => "html"
-        ];        
+        ];
         return $this->response;
     }
 
     protected function runProcess() {
-//        ob_start();
-//        html_recent();
-//        $this->content= ob_get_clean();
-//        ob_start();
-//        $this->getRecentList();
-//        $this->content= ob_get_clean();
         $this->content = $this->getRecentList(
-                    $this->params[RequestParameterKeys::FIRST_KEY],
-                    $this->params[RequestParameterKeys::SHOW_CHANGES_KEY],
-                    $this->params[RequestParameterKeys::ID_KEY]
+                    $this->params[PageKeys::FIRST_KEY],
+                    $this->params[PageKeys::SHOW_CHANGES_KEY],
+                    $this->params[PageKeys::KEY_ID]
                 );
     }
 
     protected function startProcess() {
         global $ACT;
-
-        $ACT = $this->params[RequestParameterKeys::KEY_DO] = DW_ACT_RECENT;
+        $ACT = $this->params[PageKeys::KEY_DO] = PageKeys::DW_ACT_RECENT;
     }
-    
+
     /**
      * get recent changes
      *
@@ -70,7 +53,7 @@ class RecentListAction extends DokuAction{
      */
     private function getRecentList($first=0, $show_changes='both', $id=''){
         $ret = array();
-        
+
         /* we need to get one additionally log entry to be able to
          * decide if this is the last page or is there another one.
          * This is the cheapest solution to get this information.
@@ -96,7 +79,7 @@ class RecentListAction extends DokuAction{
             $hasNext = true;
             array_pop($recents); // remove extra log entry
         }
-        
+
         $ret['list'] = WikiIocLangManager::getXhtml('recent');
 
         if (getNS($id) != '')
@@ -111,7 +94,7 @@ class RecentListAction extends DokuAction{
             $ret['form_controls'] = '<div class="changeType">';
             $ret['form_controls'] .= '<fieldset>';
             $ret['form_controls'] .= '<legend>'.WikiIocLangManager::getLang('changes_type_filter').'</legend>';
-            
+
             $ret['form_controls'] .= form_listboxfield(form_makeListboxField(
                         'show_changes',
                         array(
@@ -208,7 +191,7 @@ class RecentListAction extends DokuAction{
             $form->addElement(form_makeCloseTag('li'));
         }
         $form->addElement(form_makeCloseTag('ul'));
-        
+
         $ret['form_controls'] .= form_opentag(form_makeOpenTag('div', array('class' => 'pagenav')));
         if($first >0 || $hasNext){
             $ret['form_controls'] .= '<fieldset>';
@@ -244,12 +227,12 @@ class RecentListAction extends DokuAction{
                             )));
             $ret['form_controls'] .= form_closetag(form_makeCloseTag('span'));
         }
-        
-        if($first >0 || $hasNext){        
+
+        if($first >0 || $hasNext){
             $ret['form_controls'] .= '</fieldset>';
             $ret['form_controls'] .= form_closetag(form_makeCloseTag('div'));
         }
-        
+
         $form->addElement(form_makeCloseTag('div'));
         $ret['list'] .= $form->getForm();
         return $ret;

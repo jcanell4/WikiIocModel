@@ -6,33 +6,22 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
-require_once (DOKU_INC . 'inc/common.php');
-require_once (DOKU_INC . 'inc/actions.php');
-require_once (DOKU_INC . 'inc/template.php');
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/PageAction.php";
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
-require_once DOKU_PLUGIN."ajaxcommand/defkeys/PageKeys.php";
-
-if (!defined('DW_ACT_SHOW')) define('DW_ACT_SHOW', "show");
-if (!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
+//require_once (DOKU_INC . 'inc/common.php');
+//require_once (DOKU_INC . 'inc/actions.php');
+//require_once (DOKU_INC . 'inc/template.php');
+require_once (DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/RenderedPageAction.php");
 
 class HtmlPageAction extends RenderedPageAction{
 
-    public function __construct(BasicPersistenceEngine $engine) {
-        parent::__construct($engine);
-        $this->defaultDo = DW_ACT_SHOW;
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_SHOW;
     }
 
     protected function startProcess() {
         parent::startProcess();
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
-     * dades  intermèdies que siguin necessàries per generar la resposta final:
-     * DokuAction#responseProcess.
-     */
     protected function runProcess(){
         if (!WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID]);
@@ -42,15 +31,7 @@ class HtmlPageAction extends RenderedPageAction{
         }
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet generar la resposta a enviar al client. Aquest
-     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
-     * DokuAction#response.
-     */
     protected function responseProcess(){
-//        $response = array();
-
         $response = parent::responseProcess();
 
         // TODO: afegir el 'info' que correspongui

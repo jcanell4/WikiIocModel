@@ -8,20 +8,18 @@
  * @author Rafael Claver
  */
 
-$_AuthorizationCfg = 
+$_AuthorizationCfg =
     array(
         '_default'              => 'admin'      /*Default case*/
 	,'cancel'		=> 'read'
 	,'cancel_partial'	=> 'read'
-	,'diff'			=> 'read'
-	,'new_page'		=> 'create'
-	,'page'			=> 'read'
-	,'revision'		=> 'write'
-	,'save'			=> 'write'
-	,'save_partial'		=> 'write'
-	,'draft'		=> 'write'
 	,'copy_image_to_project'=> 'upload'
+	,'diff'			=> 'read'
+	,'draft'		=> 'editing'
+	,'edit'			=> 'read'
 	,'get_image_detail'	=> 'read'
+	,'login'                => 'command'
+	,'lock'                 => 'read'
 	,'media'		=> 'read'
 	,'media_delete'		=> 'delete'
 	,'media_edit'		=> 'write'
@@ -30,17 +28,19 @@ $_AuthorizationCfg =
 	,'mediadetails_delete'	=> 'deleteMedia'
 	,'mediadetails_edit'	=> 'write'
 	,'mediadetails_upload'	=> 'upload'
-	,'login'                => 'command'
-	,'lock'                 => 'read'
+	,'new_page'		=> 'create'
+	,'page'			=> 'read'
+	,'revision'		=> 'write'
+	,'save'			=> 'write'
+	,'save_partial'		=> 'write'
 	,'unlock'               => 'read'
-        ,"_none"                => "command"
+	,'user_list'            => 'editing'
+        ,"_none"                => 'command'
     );
 
 /* Noms de commanda que ja ténen un fitxer d'autorització amb el seu nom
- * 
- * 	'edit'                          => 'edit' -> EditAuthorization.php
- * 	'edit_partial' ('edit')         => 'edit'
- * 
+ * 	'read'  => 'read' -> ReadAuthorization.php
+ *
  * Noms de comanda modificats amb el mètode getAuthorizationType()
- * 	'cancel_partial' ('cancel')	=> 'read'
+    * 	'edit'  => 'read'
  */

@@ -9,21 +9,14 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/template.php');
-require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 
-if (!defined('DW_ACT_EDIT')) define('DW_ACT_EDIT', "edit");
-if (!defined('DW_ACT_DENIED')) define('DW_ACT_DENIED', "denied");
-if (!defined('DW_DEFAULT_PAGE')) define('DW_DEFAULT_PAGE', "start");
-
-class RawPartialPageAction extends PageAction implements ResourceLockerInterface, ResourceUnlockerInterface
-{
+class RawPartialPageAction extends PageAction {
     private $lockStruct;
 
-    public function __construct(BasicPersistenceEngine $engine) {
-        parent::__construct($engine);
-        $this->defaultDo = DW_ACT_EDIT;
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_EDIT;
     }
 
     protected function startProcess() {
@@ -50,23 +43,17 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         }
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
-     * dades  intermèdies que siguin necessàries per generar la resposta final:
-     * DokuAction#responseProcess.
-     *
-     * ALERTA[Xavi] Identic al RawPageAction#runProcess();
-     */
-    protected function runProcess()
-    {
+    // ALERTA[Xavi] Identic al RawPageAction#runProcess();
+    protected function runProcess() {
+        global $ACT;
+
         if (!WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_EXISTS)) {
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID]);
         }
 
         $ACT = act_permcheck($this->defaultDo);
 
-        if ($ACT == DW_ACT_DENIED) {
+        if ($ACT == PageKeys::DW_ACT_DENIED) {
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
 
@@ -75,12 +62,6 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         }
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet generar la resposta a enviar al client. Aquest
-     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
-     * DokuAction#response.
-     */
     protected function responseProcess()
     {
         $response = [];
@@ -96,7 +77,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             $response = $this->_getLocalDraftResponse($data);
 
-        } else if($this->lockState()==ST_LOCKED_BEFORE){
+        } else if($this->lockState()==self::LOCKED_BEFORE){
             //-1 L'usuari te obert el document en una altra sessio
 
             // ALERTA[Xavi] Copiat de "bloquejat" el missatge enviat es l'únic que canvia.
@@ -175,31 +156,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         return $originalCall;
     }
 
-
-    /**
-     * Es tracta del mètode que hauran d'executar en iniciar el bloqueig. Per  defecte no bloqueja el recurs, perquè
-     * actualment el bloqueig es realitza internament a les funcions natives de la wiki. Malgrat tot, per a futurs
-     * projectes es contempla la possibilitat de fer el bloqueig directament aquí, si es passa el paràmetre amb valor
-     * TRUE. EL mètode comprova si algú està bloquejant ja el recurs i en funció d'això, retorna una constant amb el
-     * resultat obtingut de la petició.
-     *
-     * @param bool $lock
-     * @return int
-     */
-    public function requireResource($lock = FALSE)
-    {
-        return $this->resourceLocker->requireResource($lock);
-    }
-
-    public function leaveResource($unlock = FALSE)
-    {
-        throw new UnavailableMethodExecutionException('CancelEditPageAction#leaveResource');
-    }
-
-    // TODO[Xavi] copiat de RawPageAction
-    private function generateLockInfo($lockState, $mes)
-    {
-        $info = null;
+    private function generateLockInfo($lockState, $mes) {
         $infoType = 'message';
         $message = null;
 
@@ -226,14 +183,14 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
 
             default:
                 throw new UnknownTypeParamException($lockState);
-
         }
+
         if ($mes && $message) {
             $message = $this->addInfoToInfo(self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]),
-                self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]));
-        } else if ($mes) {
-            $message = self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]);
-        } else{
+                                            self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]));
+        }elseif ($mes) {
+            $message = $mes;
+        }else {
             $message = self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]);
         }
         return $message;
@@ -400,7 +357,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         // i es podrien perdre dades. També caldrà demanar si vol que l'avisin quan acabi el bloqueig
         return $resp;
     }
-    
+
     protected function translateToDW($text){
         $trans = new MarkDown2DikuWikiTranslator();
         exec(DOKU_INC."../pandoc/convHtml2MdwFromText.sh \"$text\"", $return, $exit);
@@ -412,7 +369,7 @@ class RawPartialPageAction extends PageAction implements ResourceLockerInterface
         $trans = new DikuWiki2MarkDownTranslator();
         $mdFormat=$trans->getRenderedContent($trans->getInstructions($text));
         $retExec = exec(DOKU_INC."../pandoc/convMdw2HtmlFromText.sh \"$mdFormat\"", $return, $exit);
-        
+
         return implode ( "\n" , $return );
     }
 }

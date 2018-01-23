@@ -10,16 +10,13 @@ require_once DOKU_PLUGIN."ajaxcommand/defkeys/MediaKeys.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/MediaAction.php";
 require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/datamodel/DokuMediaModel.php";
 
-//if (!defined('DW_ACT_MEDIA_UPLOAD')) define('DW_ACT_MEDIA_UPLOAD', "mediadetails");
-//if (!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
-
-class UploadMediaAction extends MediaAction{
+class UploadMediaAction extends MediaAction {
     private $actionReturn;
     private $fileName;
     private $warnings = array();
 
-    public function __construct($engine) {
-        parent::__construct($engine);
+    public function init($modelManager) {
+        parent::init($modelManager);
     }
 
     protected function startProcess() {
@@ -80,23 +77,20 @@ class UploadMediaAction extends MediaAction{
             }
         }
 
-
         $toSet = array(
             'filePathSource' => $this->params[MediaKeys::KEY_UPLOAD][MediaKeys::KEY_TMP_NAME],
             'overWrite' => $this->params[MediaKeys::KEY_OVERWRITE]
         );
         $this->actionReturn = $this->dokuModel->upLoadData($toSet);
-        /*
-         0 = OK
-     *      -1 = UNAUTHORIZED
-     *      -2 = OVER_WRITING_NOT_ALLOWED
-     *      -3 = OVER_WRITING_UNAUTHORIZED
-     *      -5 = FAILS
-     *      -4 = WRONG_PARAMS
-     *      -6 = BAD_CONTENT
-     *      -7 = SPAM_CONTENT
-     *      -8 = XSS_CONTENT
-         *
+        /* 0 = OK
+         *-1 = UNAUTHORIZED
+         *-2 = OVER_WRITING_NOT_ALLOWED
+         *-3 = OVER_WRITING_UNAUTHORIZED
+         *-5 = FAILS
+         *-4 = WRONG_PARAMS
+         *-6 = BAD_CONTENT
+         *-7 = SPAM_CONTENT
+         *-8 = XSS_CONTENT
          */
         //if($this->actionReturn) Falten les excepcions!
     }
@@ -109,5 +103,4 @@ class UploadMediaAction extends MediaAction{
         }
     }
 
-//put your code here
 }

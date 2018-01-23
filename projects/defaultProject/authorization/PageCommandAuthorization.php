@@ -23,7 +23,7 @@ abstract class PageCommandAuthorization extends CommandAuthorization {
                 if ($exception) {
                     $this->errorAuth[self::ERROR_KEY] = TRUE;
                     $this->errorAuth[self::EXCEPTION_KEY] = $exception;
-                    $this->errorAuth[self::ERROR_PARAMS_KEY] = $this->permission->getIdPage();
+                    $this->errorAuth[self::EXTRA_PARAM_KEY] = $this->permission->getIdPage();
                 }
             }
         }

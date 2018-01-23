@@ -27,7 +27,7 @@ abstract class DokuNotifyModel extends AbstractWikiDataModel
 
 
     protected $type = 'abstract';
-    protected /*NotifyDataQuery*/ $dataQuery;
+    protected $dataQuery;
 
     public function __construct($persistenceEngine=NULL)
     {
@@ -41,14 +41,12 @@ abstract class DokuNotifyModel extends AbstractWikiDataModel
         }
     }
 
-    public function getData()
-    {
+    public function getData() {
         // TODO: Implement getData() method.
         throw new UnavailableMethodExecutionException("DokuNotifyModel#getData");
     }
 
-    public function setData($toSet)
-    {
+    public function setData($toSet) {
         // TODO: Implement setData() method.
         throw new UnavailableMethodExecutionException("DokuNotifyModel#setData");
     }

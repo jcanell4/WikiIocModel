@@ -11,27 +11,26 @@ require_once DOKU_PLUGIN . "wikiiocmodel/LockManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 
-abstract class PageAction extends DokuAction {
+abstract class PageAction extends DokuAction implements ResourceLockerInterface,ResourceUnlockerInterface {
     protected $dokuPageModel;
     protected $resourceLocker;
     protected $persistenceEngine;
 
     const REVISION_SUFFIX= '-rev-';
 
-    public function __construct($persistenceEngine) {
-        $this->persistenceEngine = $persistenceEngine;
-        $this->dokuPageModel = new DokuPageModel($persistenceEngine);
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->persistenceEngine = $modelManager->getPersistenceEngine();
+        $this->dokuPageModel = new DokuPageModel($this->persistenceEngine);
         $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
     }
 
     /** @override */
-    public function get(/*Array*/
-        $paramsArr = array())
-    {
+    public function get($paramsArr = array()) {
         $this->resourceLocker->init($paramsArr);
         return parent::get($paramsArr);
-
     }
 
     /**
@@ -39,8 +38,7 @@ abstract class PageAction extends DokuAction {
      * sobrescriptura permet fer assignacions a les variables globals de la
      * wiki a partir dels valors de DokuAction#params.
      */
-    protected function startProcess()
-    {
+    protected function startProcess() {
         global $ID;
         global $ACT;
         global $REV;
@@ -82,7 +80,6 @@ abstract class PageAction extends DokuAction {
         if ($this->params[PageKeys::KEY_SUM]) {
             $SUM = $this->params['sum'] = $this->params[PageKeys::KEY_SUM];
         }
-//        $this->dokuPageModel->init($this->params[PageKeys::KEY_ID]);
         $this->dokuPageModel->init($this->params[PageKeys::KEY_ID], NULL, NULL, $this->params[PageKeys::KEY_REV]);
     }
 
@@ -90,14 +87,9 @@ abstract class PageAction extends DokuAction {
         return $this->dokuPageModel;
     }
 
-    public function addMetaTocResponse(&$response)
-    {
-//        $ret = array('id' => \str_replace(":", "_", $this->params[PageKeys::KEY_ID]));
-//        if (!$meta) {
-//            $meta = array();
-//        }
-        if(!isset($response['meta'])){
-            $response['meta']=array();
+    public function addMetaTocResponse(&$response) {
+        if (!isset($response['meta'])) {
+            $response['meta'] = array();
         }
         $mEvt = new Doku_Event('WIOC_ADD_META', $response['meta']);
         if ($mEvt->advise_before()) {
@@ -107,14 +99,9 @@ abstract class PageAction extends DokuAction {
         }
         $mEvt->advise_after();
         unset($mEvt);
-//        $ret['meta'] = $meta;
-//
-//        return $ret;
-//        return $meta;
     }
 
-    protected function getRevisionList()
-    {
+    protected function getRevisionList() {
         $extra = array();
         $mEvt = new Doku_Event('WIOC_ADD_META_REVISION_LIST', $extra);
         if ($mEvt->advise_before()) {
@@ -145,29 +132,24 @@ abstract class PageAction extends DokuAction {
 
     private function generateUsernameNamePair(&$list) {
         global $auth;
-
         $newList = [];
 
         foreach ($list as $username) {
-
             $name = $auth->getUserData($username)['name'];
             $newList[] = ['username' => $username, 'name' => $name===null?"":$name];
         }
-
         return $newList;
     }
 
     protected function addNotificationsMetaToResponse(&$response) {
-        if(!isset($response['meta'])){
-            $response['meta']=array();
+        if (!isset($response['meta'])) {
+            $response['meta'] = array();
         }
         $ns = isset($response['ns']) ? $response['ns'] : $response['structure']['ns'];
         $rev = isset($response['rev']) ? $response['rev'] : $response['structure']['rev'];
 
         $list = PagePermissionManager::getListUsersPagePermission($ns, AUTH_EDIT);
-
         $list = $this->generateUsernameNamePair($list);
-
 
         $response['meta'][] = [
             "id" => $ns . "_metaNotifications",
@@ -176,11 +158,6 @@ abstract class PageAction extends DokuAction {
                 'action' => 'lib/exe/ioc_ajax.php',
                 'method' => 'post',
                 'fields' => [
-//                    [
-//                        'type' => 'hidden',
-//                        'name' => 'sectok',
-//                        'value' => getSecurityToken(),
-//                    ],
                     [
                         'type' => 'hidden',
                         'name' => 'call',
@@ -196,35 +173,18 @@ abstract class PageAction extends DokuAction {
                         'name' => 'type',
                         'value' => 'warning',
                     ],
-//                    [
-//                        'type' => 'text',
-//                        'name' => 'to',
-//                        'value' => '',
-//                        'label' => WikiIocLangManager::getLang('notification_form_to'), // Optional
-//                        'properties' => ['required'] // Optional
-//                    ],
                     [
-
                         'type' => 'amd',
                         'data' => [
                             //ALERTA[Xavi] Dades de prova, això haurà d'arribar d'algun lloc!
+                            'ns' => $ns,
                             'data' => $list,
-
-                            /*[
-                                ['name' => 'Xavier Garcia', 'username' => 'admin'],
-                                ['name' => 'Josep Cañellas', 'username' => 'admin2'],
-                                ['name' => 'Joan Ramon', 'username' => 'aaa'],
-                                ['name' => 'Alicia Vila', 'username' => 'bbb'],
-                                ['name' => 'Josep LLadonosa', 'username' => 'ccc'],
-                            ],*/
                             'buttonLabel' => WikiIocLangManager::getLang('search'),
                             'fieldName' => 'to',
                             'searchDataUrl' => 'lib/exe/ioc_ajax.php?call=user_list',
                             'token' => getSecurityToken()
                         ],
                         'class' => 'IocFilteredList',
-//                        'name' => 'to',
-//                        'value' => '',
                         'label' => WikiIocLangManager::getLang('notification_form_to'), // Optional
                     ],
                     [
@@ -261,7 +221,6 @@ abstract class PageAction extends DokuAction {
             "type" => "request_form" // aixó no se si es necessari
         ];
 
-//        return $response['meta'];
     }
 
     protected function addRevisionSuffixIdToArray(&$elements) {
@@ -273,6 +232,32 @@ abstract class PageAction extends DokuAction {
         }
     }
 
+    /**
+     * Es tracta del mètode que hauran d'executar en iniciar el bloqueig. Per  defecte no bloqueja el recurs, perquè
+     * actualment el bloqueig es realitza internament a les funcions natives de la wiki. Malgrat tot, per a futurs
+     * projectes es contempla la possibilitat de fer el bloqueig directament aquí, si es passa el paràmetre amb valor
+     * TRUE. EL mètode comprova si algú està bloquejant ja el recurs i en funció d'això, retorna una constant amb el
+     * resultat obtingut de la petició.
+     *
+     * @param bool $lock
+     * @return int
+     */
+    public function requireResource($lock = FALSE) {
+        return $this->resourceLocker->requireResource($lock);
+    }
 
+   /**
+     * Es tracta del mètode que hauran d'executar en iniciar el desbloqueig o també quan l'usuari cancel·la la demanda
+     * de bloqueig. Per  defecte no es desbloqueja el recurs, perquè actualment el desbloqueig es realitza internament
+     * a les funcions natives de la wiki. Malgrat tot, per a futurs projectes es contempla la possibilitat de fer el
+     * desbloqueig directament aquí, si es passa el paràmetre amb valor TRUE. EL mètode retorna una constant amb el
+     * resultat obtingut de la petició.
+     *
+     * @param bool $unlock
+     * @return int
+     */
+    public function leaveResource($unlock = FALSE) {
+        return $this->resourceLocker->leaveResource($unlock);
+    }
 
 }

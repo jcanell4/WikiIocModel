@@ -13,8 +13,6 @@ class BasicModelAdapter implements WikiIocModel {
 
     public function __construct() {}
 
-    public function setParams($element, $value) {}
-
     public function init($persistenceEngine) {
         $this->persistenceEngine = $persistenceEngine;
         return $this;
@@ -23,4 +21,6 @@ class BasicModelAdapter implements WikiIocModel {
     public function getPersistenceEngine() {
         return $this->persistenceEngine;
     }
+
+    public function setParams($element, $value) {}
 }

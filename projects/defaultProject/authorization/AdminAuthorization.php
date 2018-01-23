@@ -17,7 +17,7 @@ class AdminAuthorization extends CommandAuthorization {
         if ( parent::canRun() && $this->permission->getInfoPerm() < AUTH_ADMIN) {
             $this->errorAuth[self::ERROR_KEY] = TRUE;
             $this->errorAuth[self::EXCEPTION_KEY] = 'AuthorizationNotCommandAllowed';
-            $this->errorAuth[self::ERROR_PARAMS_KEY] = $this->permission->getIdPage();
+            $this->errorAuth[self::EXTRA_PARAM_KEY] = $this->permission->getIdPage();
         }
         return !$this->errorAuth[self::ERROR_KEY];
     }

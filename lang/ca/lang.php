@@ -10,13 +10,12 @@ const PAG_DEFAULT = "createDefaultText";
 const PAG_SAVED = "saved";
 const PAG_DELETED = "deleted";
 
-//Setup VIM: ex: et ts=2 enc=utf-8 :
-
 $lang['createDefaultText'] = 'Pàgina creada per defecte';
 $lang['conflictsSaving'] = "Hi ha conflictes amb altres versions. No s'han pogut guardar els canvis";
 $lang['saved'] = "Els canvis s'han guardat correctament";
 $lang['section_saved'] = "S'han guardat els canvis de la secció %s";
 $lang['deleted'] = "La pàgina %s ha estat eliminada";
+$lang['reverted'] = "La reversió s'ha completat correctament";
 $lang['pageNotFound'] = "La pàgina %s no s'ha trobat";
 $lang['pageExists'] = "La pàgina %s ja existeix";
 $lang['metaEditForm'] = "Camps Edició";
@@ -64,7 +63,7 @@ $lang['recent_list'] = "canvis recents";
 $lang['system_warning_default_title'] = 'Avís del sistema';
 
 // Plantilles
-$lang[GlobalKeys::TEMPLATE_SHORTCUTS_NS] = "Nou document de dreceres.\n\n"  
+$lang[GlobalKeys::TEMPLATE_SHORTCUTS_NS] = "Nou document de dreceres.\n\n"
     . "Per afegir dreceres a documents o espais de noms, afegir enllaços al document o a l'espai de noms, seguint la sintaxi wiki. Per exemple:\n\n"
     . "[[wiki:user:%nom_d_usuari%|El meu espai]]\n\n"
     . "[[wiki:navigation|Drecera a la documentació de la wiki]]";

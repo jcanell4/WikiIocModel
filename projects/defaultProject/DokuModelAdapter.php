@@ -1,6 +1,5 @@
 <?php
 //namespace ioc_dokuwiki; //[TO DO Josep] Adaptar la classe a  l'espai de noms
-
 /**
  * Description of DokuModelAdapter
  *
@@ -10,7 +9,6 @@
  * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
  */
 if (!defined('DOKU_INC')) die();
-
 //require common
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/pageutils.php');
@@ -23,7 +21,7 @@ require_once(DOKU_INC . 'inc/io.php');
 require_once(DOKU_INC . 'inc/JSON.php');
 require_once(DOKU_INC . 'inc/JpegMeta.php');
 
-if (!defined('DOKU_TPL_INCDIR')) define('DOKU_TPL_INCDIR', tpl_incdir());
+if (!defined('DOKU_TPL_INCDIR')) define('DOKU_TPL_INCDIR', WikiGlobalConfig::tplIncDir());
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once(DOKU_PLUGIN . 'wikiiocmodel/BasicModelAdapter.php');
@@ -37,22 +35,9 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/actions/NotifyAction.php');
 
-require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/BasicPersistenceEngine.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php');
 require_once(DOKU_PLUGIN . 'ajaxcommand/defkeys/PageKeys.php');
-
-if (!defined('DW_DEFAULT_PAGE'))      define('DW_DEFAULT_PAGE', "start");
-if (!defined('DW_ACT_SHOW'))          define('DW_ACT_SHOW', "show");
-if (!defined('DW_ACT_DRAFTDEL'))      define('DW_ACT_DRAFTDEL', "draftdel");
-if (!defined('DW_ACT_SAVE'))          define('DW_ACT_SAVE', "save");
-if (!defined('DW_ACT_EDIT'))          define('DW_ACT_EDIT', "edit");
-if (!defined('DW_ACT_PREVIEW'))       define('DW_ACT_PREVIEW', "preview");
-if (!defined('DW_ACT_RECOVER'))       define('DW_ACT_RECOVER', "recover");
-if (!defined('DW_ACT_DENIED'))        define('DW_ACT_DENIED', "denied");
-if (!defined('DW_ACT_MEDIA_DETAIL'))  define('DW_ACT_MEDIA_DETAIL', "media_detail");
-if (!defined('DW_ACT_MEDIA_MANAGER')) define('DW_ACT_MEDIA_MANAGER', "media");
-if (!defined('DW_ACT_EXPORT_ADMIN'))  define('DW_ACT_EXPORT_ADMIN', "admin");
-if (!defined('DW_ACT_MEDIA_DETAILS')) define('DW_ACT_MEDIA_DETAILS', "mediadetails");
 
 /**
  * Class DokuModelAdapter
@@ -66,122 +51,107 @@ class DokuModelAdapter extends BasicModelAdapter {
     protected $ppEvt;
 
     /**
+     * MOGUT a: admin_task_command
+     *****************************
      * Crida principal de la comanda admin_task.
-     * @param type $params de la comanda
      * @return Array
-     */
-    public function getAdminTask($params)
-    {
+     *//*
+    public function getAdminTask($params){
         $action = new AdminTaskAction();
         return $action->get($params);
-    }
+    }*/
 
     /**
+     * COPIAT a: 'admin_tab_command' encara que sembla ser que ningú utilitza la comanda 'admin_tab_command'
+     * També es cridat per la funció 'login()' de LoginResponseHandler
+     **************************************************************************
      * Crida principal de la comanda admin_tab i crida del LoginResponseHandler
      * @return type
-     */
-    public function getAdminTaskList()
-    {
-        $action = new AdminTaskListAction();
+    public function getAdminTaskList() {
+        $action = $this->modelManager->getActionInstance("AdminTaskListAction");
         return $action->get();
     }
+     */
 
+    /**
+     * COPIAT a: 'shortcuts_tab_command' encara que sembla ser que ningú utilitza la comanda 'shortcuts_tab_command'
+     * També es cridat per LoginResponseHandler, New_pageResponseHandler, SaveResponseHandler i Save_partialResponseHandler
+     * però els Handler funcionen amb $command->modelAdapter
     public function getShortcutsTaskList($user_id) {
         $action = new ShortcutsTaskListAction($this->persistenceEngine);
-
         if (!$user_id) {
             throw new Exception("No es troba cap usuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
         } else {
             $params = ['id' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$user_id.':'.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')]; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
         }
-
         return $action->get($params);
     }
+     **************************************************************************/
 
-    //JOSEP: ALERTA! cal mirar si es fa servir i eliminar en cas negatiu.
+    /*NO es fa servir
     public function setParams($element, $value) {
         $this->params[$element] = $value;
-    }
-
+    }*/
 
     /**
+     * MOGUT a: cancel_command
+     *****************************
      * Crida principal de la comanda cancel
-     * @param type $pid
-     * @param type $prev
-     * @param bool|type $keep_draft
-     * @param bool $discard_changes si es cert es descartaran els canvis sense preguntar
-     * @return type
-     * @global type $lang
-     */
-    //[ALERTA Josep] Es queda aquí.
+     *//*
     public function cancelEdition($pars){
         $action = new CancelEditPageAction($this->persistenceEngine);
         return $action->get($pars);
-    }
+    }*/
 
     /**
      * Crida principal de la comanda save
-     * @param $params
-     * @return array|void
-     */
-    //[ALERTA Josep] Es queda aquí.
+     *//*
     public function saveEdition($params) {
         $action = new SavePageAction($this->persistenceEngine);
         $ret = $action->get($params);
         return $ret;
-    }
+    }*/
 
     /**
-     * És la crida pincipal de la comanda save_unlinked_image.
+     * MOGUT a save_unlinked_image_command
      * Guarda un fitxer de tipus media pujat des del client
      * @param string $nsTarget
      * @param string $idTarget
      * @param string $filePathSource
      * @param bool $overWrite
-     *
      * @return int
-     */
-    public function uploadImage($nsTarget, $idTarget, $filePathSource, $overWrite = FALSE)
-    {
-        /* UploadMediaAction*/
+     *//*
+    public function uploadImage($nsTarget, $idTarget, $filePathSource, $overWrite = FALSE)    {
         $action  = new UploadMediaAction($this->persistenceEngine);
         $res = $action->get(array('nsTarget' => $nsTarget, 'mediaName' => $idTarget, 'filePathSource' => $filePathSource, 'overWrite' => $overWrite));
         return $res["resultCode"];
-  }
+    }*/
 
-  /**
- * És la crida principal de la comanda copy_image_to_project
- * @param string $nsTarget
- * @param string $idTarget
- * @param string $filePathSource
- * @param bool $overWrite
- *
- * @return int
+    /**
+     * És la crida principal de la comanda copy_image_to_project
+     * @param string $nsTarget, $idTarget, $filePathSource
+     * @param bool $overWrite
+     *
+     * @return int
      */
-    public function saveImage($nsTarget, $idTarget, $filePathSource, $overWrite = FALSE)
-    {
+    public function saveImage($nsTarget, $idTarget, $filePathSource, $overWrite=FALSE) {
         /* MediaDataQuery*/
         $dataQuery = $this->persistenceEngine->createMediaDataQuery();
         return $dataQuery->copyImage($nsTarget, $idTarget, $filePathSource, $overWrite);
   }
 
-  /**
- * És la crida principal de la comanda get_image_detail. Obté un html
- * amb el detall d'una imatge.
- * @global type $lang
- * @param type $imageId
- * @param type $fromPage
- * @return string
- * @throws HttpErrorCodeException
+    /**
+     * És la crida principal de la comanda get_image_detail. Obté un html
+     * amb el detall d'una imatge.
+     * @return string
+     * @throws HttpErrorCodeException
      */
-    //[TODO Josep] Cal normalitzar
     public function getImageDetail($imageId, $fromPage = NULL)
     {
         global $lang;
-
         //[TODO Josep] Normalitzar: start do get ...
 
-        $error = $this->startMediaProcess(DW_ACT_MEDIA_DETAIL, $imageId, $fromPage);
+        $error = $this->startMediaProcess(PageKeys::DW_ACT_MEDIA_DETAIL, $imageId, $fromPage);
         if ($error == 401) {
             throw new HttpErrorCodeException("Access denied", $error);
         } else if ($error == 404) {
@@ -222,11 +192,11 @@ class DokuModelAdapter extends BasicModelAdapter {
      * @global type $lang
      * @param type $id
      * @return type
-     */
+     *//*
     public function getGlobalMessage($id)
     {
         return WikiIocLangManager::getLang($id);
-    }
+    }*/
 
 
     /**
@@ -247,7 +217,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         $ret = $ERROR = 0;
 
         $this->params['action'] = $pdo;
-        if ($pdo === DW_ACT_MEDIA_DETAIL) {
+        if ($pdo === PageKeys::DW_ACT_MEDIA_DETAIL) {
             $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "detail";
         }
 
@@ -345,15 +315,15 @@ class DokuModelAdapter extends BasicModelAdapter {
         }
 
         //get needed language array
-        include WikiGlobalConfig::tplIncDir() . "lang/en/lang.php";
+        include DOKU_TPL_INCDIR . "lang/en/lang.php";
         //overwrite English language values with available translations
         if (!empty($conf["lang"]) &&
             $conf["lang"] !== "en" &&
-            file_exists(WikiGlobalConfig::tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php")
+            file_exists(DOKU_TPL_INCDIR . "/lang/" . $conf["lang"] . "/lang.php")
         ) {
             //get language file (partially translated language files are no problem
             //cause non translated stuff is still existing as English array value)
-            include WikiGlobalConfig::tplIncDir() . "/lang/" . $conf["lang"] . "/lang.php";
+            include DOKU_TPL_INCDIR . "/lang/" . $conf["lang"] . "/lang.php";
         }
         if (!empty($conf["lang"]) &&
             $conf["lang"] !== "en" &&
@@ -385,7 +355,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         global $lang;
 
         ob_start();
-        include WikiGlobalConfig::tplIncDir() . "inc_detail.php";
+        include DOKU_TPL_INCDIR . "inc_detail.php";
         $content = ob_get_clean();
         return $content;
     }
@@ -589,15 +559,21 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $contentData;
     }
 
+    /* MOGUT a: media_command i a mediadetails_command
+     *************************************************
     public function deleteMediaManager($paramsArr){
        $action = new DeleteMediaAction($this->persistenceEngine);
        return $action->get($paramsArr);
-    }
+    }*/
 
+    /* MOGUT a: media_command
+     ************************
     public function uploadMediaManager($paramsArr){
        $action = new UploadMediaAction($this->persistenceEngine);
        return $action->get($paramsArr);
     }
+    */
+
     /**
      * és la crida principal de la comanda media
      * Miguel Angel Lozano 12/12/2014
@@ -606,7 +582,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         //[TODO Josep] Normalitzar: start do get ...
         global $lang, $NS, $INPUT, $JSINFO;
 
-        $error = $this->startMediaManager(DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
+        $error = $this->startMediaManager(PageKeys::DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
         if ($error == 401) {
             throw new HttpErrorCodeException("Access denied", $error);
         } else if ($error == 404) {
@@ -667,7 +643,7 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         $this->params['action'] = $pdo;
 
-        if ($pdo === DW_ACT_MEDIA_MANAGER) {
+        if ($pdo === PageKeys::DW_ACT_MEDIA_MANAGER) {
             $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "media";
         }
 
@@ -714,19 +690,20 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $ret;
     }
 
-    private function doDeleteMediaManagerPreProcess(){
-        global $DEL;
-
-        $content = "";
-        if ($this->runBeforePreprocess($content)) {
-            $res = 0;
-            if(checkSecurityToken()) {
-                $res = media_delete($DEL,$AUTH);
-            }
-        }
-        $this->runAfterPreprocess($content);
-        return $res;
-    }
+    //[Rafa] NO SE UTILIZA
+//    private function doDeleteMediaManagerPreProcess(){
+//        global $DEL;
+//
+//        $content = "";
+//        if ($this->runBeforePreprocess($content)) {
+//            $res = 0;
+//            if(checkSecurityToken()) {
+//                $res = media_delete($DEL,$AUTH);
+//            }
+//        }
+//        $this->runAfterPreprocess($content);
+//        return $res;
+//    }
 
     private function doMediaManagerPreProcess() {
         global $ACT;
@@ -1240,7 +1217,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         //[TODO Josep] Normalitzar: start do get ...
         global $NS, $JSINFO, $MSG, $INPUT;
 
-        $error = $this->startMediaDetails(DW_ACT_MEDIA_DETAILS, $image);
+        $error = $this->startMediaDetails(PageKeys::DW_ACT_MEDIA_DETAILS, $image);
         if ($error == 401) {
             throw new HttpErrorCodeException("Access denied", $error);
         } else if ($error == 404) {
@@ -1625,22 +1602,26 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $sections;
     }
 
+    /* MOGUT a: cancel_partial_command
+     *********************************
     public function cancelPartialEdition($params){
         $action = new CancelPartialEditPageAction($this->persistenceEngine);
         return $action->get($params);
-    }
+    }*/
 
-    // TODO[Xavi] normalitzar params
-    //CRIDAT Per la comanda save_partial
+    /* MOGUT a: save_partial_command
+     *********************************
     public function savePartialEdition($params){
         $action = new SavePartialPageAction($this->persistenceEngine);
         return $action->get($params);
-    }
+    }*/
 
+    /* MOGUT a: edit_partial_command
+     *********************************
     public function getPartialEdit($paramsArr){
         $action = new RawPartialPageAction($this->persistenceEngine);
         return $action->get($paramsArr);
-    }
+    }*/
 
     //És la crida principal de la comanda lock
     public function lock($pid)
@@ -1681,22 +1662,24 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $response;
     }
 
-    public function draft($params)
-    {
+    /* MOGUT a: draft_command
+     ************************
+    public function draft($params) {
         $action = new DraftPageAction($this->persistenceEngine);
         $ret = $action->get($params);
         return $ret;
-    }
+    }*/
 
+    /* 'revision_command' ha sido moodificado convenientemente para no tener que llamar a esta función
+     * aparte de 'revision_command', también lo usa 'DiffResponseHandler'
     public function getRevisionsList($params) {
         $action = new RevisionsListAction($this->persistenceEngine);
         $ret = $action->get($params);
         return $ret;
-    }
+    }*/
 
-    /**
+    /** SEMBLA SER QUE AQUESTA FUNCIÓ NO S'UTILITZA
      * S'ha de fer servir getRevisionsList en lloc d'aquest
-     *
      * @deprecated
      * @param $id
      * @return array
@@ -1764,12 +1747,15 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $toc;
     }
 
+    /**
+     * MOGUT a: login_command i notify_command
+     *****************************************
     // ALERTA[Xavi] $secure : si és true s'ha cridat des d'un client d'admin
     public function notify($params, $isAdmin = false) // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
     {
         $action = new NotifyAction($this->persistenceEngine, $isAdmin);
         $contentData = $action->get($params);
         return $contentData;
-    }
+    }*/
 }
 

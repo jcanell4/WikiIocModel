@@ -8,16 +8,12 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once (DOKU_INC.'inc/common.php');
 require_once (DOKU_PLUGIN.'wikiiocmodel/projects/defaultProject/actions/SavePageAction.php');
-require_once (DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/DokuModelExceptions.php");
-require_once (DOKU_PLUGIN."ajaxcommand/defkeys/PageKeys.php");
-
-if (!defined('DW_ACT_CRATE')) define('DW_ACT_CREATE', "create");
-if (!defined('DW_ACT_SAVE')) define('DW_ACT_SAVE', "save");
 
 class CreatePageAction extends SavePageAction {
-    public function __construct(BasicPersistenceEngine $engine) {
-        parent::__construct($engine);
-        $this->defaultDo = DW_ACT_CREATE;
+
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->defaultDo = PageKeys::DW_ACT_CREATE;
     }
 
     protected function responseProcess() {
@@ -29,7 +25,6 @@ class CreatePageAction extends SavePageAction {
             $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('document_created'), $id);
         }
 
-
         return $response;
     }
 
@@ -38,14 +33,15 @@ class CreatePageAction extends SavePageAction {
             throw new PageAlreadyExistsException($this->params[PageKeys::KEY_ID], 'pageExists');
         }
         parent::runProcess();
-        $this->resourceLocker->leaveResource(TRUE);
+        $this->leaveResource(TRUE);
     }
 
     protected function startProcess() {
-        global $TEXT;
-        global $ACT;
+        global $ACT, $TEXT;
+        
         parent::startProcess();
-        $ACT = DW_ACT_SAVE;
+        $ACT = PageKeys::DW_ACT_SAVE;
+
         if (!$this->params[PageKeys::KEY_WIKITEXT]) {
             if ($this->params[PageKeys::KEY_TEMPLATE]) {
                 //[TO DO] JOSEP: La forma aquí seria $this->getModel()->getRawTemplate(ID template) i getRawTemplate implementar-lo a PageDokuModel o potser a WikiRenderizableDataModel.
@@ -64,4 +60,5 @@ class CreatePageAction extends SavePageAction {
             $TEXT = $this->params[PageKeys::KEY_WIKITEXT];
         }
     }
+
 }

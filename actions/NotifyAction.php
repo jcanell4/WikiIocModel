@@ -1,5 +1,4 @@
 <?php
-
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
@@ -9,21 +8,19 @@ require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 
-class NotifyAction extends AbstractWikiAction
-{
-    const DO_INIT = "init";
-    const DO_ADD = "add";
+class NotifyAction extends AbstractWikiAction {
+    const DO_INIT    = "init";
+    const DO_ADD     = "add";
     const DO_ADDMESS = "add_message";
-    const DO_GET = "get";
-    const DO_CLOSE = "close";
-    const DO_UPDATE = "update";
-    const DO_DELETE = "delete";
+    const DO_GET     = "get";
+    const DO_CLOSE   = "close";
+    const DO_UPDATE  = "update";
+    const DO_DELETE  = "delete";
 
     const DEFAULT_MESSAGE_TYPE = 'info';
 
     /*
      * NO CAL. Ho deixo per il·lustrar com mentenir constants amb un únic orígen de dades, sense necessitat de conèixer la seva classe.
-
     static $TYPE_ALERT;
     static $TYPE_MESSAGE;
     static $TYPE_DIALOG;
@@ -37,15 +34,11 @@ class NotifyAction extends AbstractWikiAction
     protected $params;
     protected $isAdmin;
 
-    public function __construct($persistenceEngine, $isAdmin)
-    {
-        $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
-        $this->dokuNotifyModel = WikiIocModelManager::getNotifyModel($type, $persistenceEngine);
+    public function __construct($isAdmin) {
         $this->isAdmin = $isAdmin;
 
         /*
         $notifyClass = $persistenceEngine->getNotifyDataQueryClass();
-
         self::$TYPE_ALERT = $notifyClass::TYPE_ALERT;
         self::$TYPE_MESSAGE = $notifyClass::TYPE_MESSAGE;
         self::$TYPE_DIALOG = $notifyClass::TYPE_DIALOG;
@@ -56,41 +49,36 @@ class NotifyAction extends AbstractWikiAction
          */
     }
 
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet fer assignacions a les variables globals de la
-     * wiki a partir dels valors de DokuAction#params.
-     * // ALERTA[Xavi] Obligatori interficies DokuAction
-     */
-    protected function startProcess()
-    {
-
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
+        $this->dokuNotifyModel = $modelManager->getNotifyModel($type);
+        return $this->initParams();
     }
 
-    // ALERTA[Xavi] Obligatori interficies DokuAction
-    protected function runProcess()
-    {
-
+    private function initParams() {
+        $response['params'] = $this->dokuNotifyModel->init();
+        $response['action'] = 'init_notifier';
+        return $response;
     }
 
-    // ALERTA[Xavi] Obligatori interficies DokuAction
+    //Obligatori interficies DokuAction
+    protected function startProcess() {}
+    protected function runProcess() {}
+
     // Aquí es genera la resposta
-    protected function responseProcess()
-    {
+    protected function responseProcess() {
         $option = $this->params[PageKeys::KEY_DO];
-
         $response['notifications'] = [];
 
         switch ($option) {
-
             //TODO[Xavi] per fer proves només afegim una info amb el resultat, això ha de fer servir el propi notifier
             case self::DO_INIT: // Retorna la resposta que inicia el sistema de notificacions segons calgui: o el processNotifications o el processWebSocketClient
-                $notificationInit = $this->init();
+                $notificationInit = $this->initParams();
                 $response['notifications'][] = $notificationInit;
 
                 if ($notificationInit['params']['type'] == "ajax") {
                     $response['notifications'][] = $this->popNotifications();
-
                 }
                 break;
 
@@ -98,7 +86,6 @@ class NotifyAction extends AbstractWikiAction
                 $notifyResponse = $this->notifyMessageToFrom();
                 $response['notifications'][] = $notifyResponse['notifications'];
                 $response['info'] = $notifyResponse['info'];
-
                 break;
 
             case self::DO_GET: // Obtenir totes les notificacions pel idUser, cridat periodicament pel timer, popNotifications()
@@ -117,20 +104,11 @@ class NotifyAction extends AbstractWikiAction
                 $response['notifications'][] = $this->delete();
                 break;
 
-
             default:
                 // TODO[Xavi] Canviar la excepció per una propia, per determinar el codi
                 throw new UnavailableMethodExecutionException("NotifyAction#responseProcess");
         }
 
-
-        return $response;
-    }
-
-    public function init()
-    {
-        $response['params'] = $this->dokuNotifyModel->init();
-        $response['action'] = 'init_notifier';
         return $response;
     }
 

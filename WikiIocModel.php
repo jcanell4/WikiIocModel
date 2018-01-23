@@ -7,8 +7,4 @@
  */
 interface WikiIocModel {
 
-//    public function setParams($element, $value);
-//    public function init($persistenceEngine);
-//    public function getPersistenceEngine();
-    
 }
