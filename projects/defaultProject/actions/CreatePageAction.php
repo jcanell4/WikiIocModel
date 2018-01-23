@@ -33,14 +33,13 @@ class CreatePageAction extends SavePageAction {
             throw new PageAlreadyExistsException($this->params[PageKeys::KEY_ID], 'pageExists');
         }
         parent::runProcess();
-        $this->resourceLocker->leaveResource(TRUE);
+        $this->leaveResource(TRUE);
     }
 
     protected function startProcess() {
         global $ACT, $TEXT;
-
+        
         parent::startProcess();
-
         $ACT = PageKeys::DW_ACT_SAVE;
 
         if (!$this->params[PageKeys::KEY_WIKITEXT]) {
@@ -61,4 +60,5 @@ class CreatePageAction extends SavePageAction {
             $TEXT = $this->params[PageKeys::KEY_WIKITEXT];
         }
     }
+
 }

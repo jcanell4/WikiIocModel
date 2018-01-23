@@ -9,8 +9,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_INC . 'inc/common.php');
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
 
-class CancelEditPageAction extends RenderedPageAction implements ResourceUnlockerInterface {
-    protected $resourceLocker;
+class CancelEditPageAction extends RenderedPageAction {
 
     public function init($modelManager) {
         parent::init($modelManager);
@@ -46,8 +45,9 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
             $response ['info'] = $this->generateInfo("warning", WikiIocLangManager::getLang('edition_cancelled'), $response['structure']['id']);
         else
             $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('edition_closed'), $response['structure']['id']);
-        if($this->params[PageKeys::KEY_AUTO]){
-            if($this->params[PageKeys::KEY_KEEP_DRAFT]){
+
+        if ($this->params[PageKeys::KEY_AUTO]) {
+            if ($this->params[PageKeys::KEY_KEEP_DRAFT]) {
                 $response ['info'] = $this->addInfoToInfo($response['info'], $this->generateInfo("warning", WikiIocLangManager::getLang('draft_saved'), $response['structure']['id']));
             }
             $response ['info'] = $this->addInfoToInfo($response['info'], $this->generateInfo("warning", WikiIocLangManager::getLang('auto_cancelled'), $response['structure']['id']));
@@ -55,7 +55,6 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
 
         if (isset($this->params[PageKeys::KEY_REV])) {
             $response['structure']['id'] .= PageAction::REVISION_SUFFIX;
-
             // Corregim els ids de les metas per indicar que és una revisió
             $this->addRevisionSuffixIdToArray($response['meta']);
         }
@@ -63,8 +62,7 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
         return $response;
     }
 
-    protected function runProcess()
-    {
+    protected function runProcess() {
         // Si es passa keep_draft = true no s'esborra
         if (!$this->params[PageKeys::KEY_KEEP_DRAFT]) {
             $this->clearFullDraft();
@@ -80,25 +78,6 @@ class CancelEditPageAction extends RenderedPageAction implements ResourceUnlocke
         if (!WikiIocInfoManager::getInfo("exists")) {
             throw new PageNotFoundException($this->params[PageKeys::KEY_ID]);
         }
-
-        if ($this->params[PageKeys::KEY_REV]) {
-            $suffix = $this->params[PageKeys::KEY_REV] ? PageAction::REVISION_SUFFIX : '';
-            $response['close']['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]) . $suffix;
-        }
     }
 
-   /**
-     * Es tracta del mètode que hauran d'executar en iniciar el desbloqueig o també quan l'usuari cancel·la la demanda
-     * de bloqueig. Per  defecte no es desbloqueja el recurs, perquè actualment el desbloqueig es realitza internament
-     * a les funcions natives de la wiki. Malgrat tot, per a futurs projectes es contempla la possibilitat de fer el
-     * desbloqueig directament aquí, si es passa el paràmetre amb valor TRUE. EL mètode retorna una constant amb el
-     * resultat obtingut de la petició.
-     *
-     * @param bool $unlock
-     * @return int
-     */
-    public function leaveResource($unlock = FALSE)
-    {
-        return $this->resourceLocker->leaveResource($unlock);
-    }
 }

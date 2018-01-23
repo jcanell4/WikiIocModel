@@ -13,7 +13,7 @@ require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 
-abstract class PageAction extends DokuAction {
+abstract class PageAction extends DokuAction implements ResourceLockerInterface,ResourceUnlockerInterface {
     protected $dokuPageModel;
     protected $resourceLocker;
     protected $persistenceEngine;
@@ -174,10 +174,10 @@ abstract class PageAction extends DokuAction {
                         'value' => 'warning',
                     ],
                     [
-
                         'type' => 'amd',
                         'data' => [
                             //ALERTA[Xavi] Dades de prova, això haurà d'arribar d'algun lloc!
+                            'ns' => $ns,
                             'data' => $list,
                             'buttonLabel' => WikiIocLangManager::getLang('search'),
                             'fieldName' => 'to',
@@ -230,6 +230,34 @@ abstract class PageAction extends DokuAction {
                 $elements[$i]['id'] .= self::REVISION_SUFFIX;
             }
         }
+    }
+
+    /**
+     * Es tracta del mètode que hauran d'executar en iniciar el bloqueig. Per  defecte no bloqueja el recurs, perquè
+     * actualment el bloqueig es realitza internament a les funcions natives de la wiki. Malgrat tot, per a futurs
+     * projectes es contempla la possibilitat de fer el bloqueig directament aquí, si es passa el paràmetre amb valor
+     * TRUE. EL mètode comprova si algú està bloquejant ja el recurs i en funció d'això, retorna una constant amb el
+     * resultat obtingut de la petició.
+     *
+     * @param bool $lock
+     * @return int
+     */
+    public function requireResource($lock = FALSE) {
+        return $this->resourceLocker->requireResource($lock);
+    }
+
+   /**
+     * Es tracta del mètode que hauran d'executar en iniciar el desbloqueig o també quan l'usuari cancel·la la demanda
+     * de bloqueig. Per  defecte no es desbloqueja el recurs, perquè actualment el desbloqueig es realitza internament
+     * a les funcions natives de la wiki. Malgrat tot, per a futurs projectes es contempla la possibilitat de fer el
+     * desbloqueig directament aquí, si es passa el paràmetre amb valor TRUE. EL mètode retorna una constant amb el
+     * resultat obtingut de la petició.
+     *
+     * @param bool $unlock
+     * @return int
+     */
+    public function leaveResource($unlock = FALSE) {
+        return $this->resourceLocker->leaveResource($unlock);
     }
 
 }
