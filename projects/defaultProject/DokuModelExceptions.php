@@ -64,3 +64,15 @@ class MaxSizeExcededToUploadMediaException extends WikiIocModelException {
         parent::__construct($codeMessage, $code, $previous, $param);
     }
 }
+
+class InvalidUserException extends WikiIocModelException {
+    public function __construct($user, $message='Aquest usuari no és vàlid.', $code=7110, $previous=NULL) {
+        parent::__construct($message, $code, $previous, $user);
+    }
+}
+
+class IncorrectParamsException extends WikiIocModelException {
+    public function __construct($message='Paràmetres incorrectes.', $code=7110, $previous=NULL) {
+        parent::__construct($message, $code, $previous);
+    }
+}
