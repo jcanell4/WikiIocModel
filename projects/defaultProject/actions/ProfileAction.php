@@ -18,8 +18,8 @@ class ProfileAction extends DokuAction{
 
     public function init($modelManager) {
         parent::init($modelManager);
-        $this->params[AjaxKeys::KEY_DO] = AjaxKeys::KEY_PROFILE; //"admin";
-        $this->defaultDo = AjaxKeys::KEY_PROFILE;
+        $this->params[AjaxKeys::KEY_DO] = AjaxKeys::KEY_PROFILE;
+        //$this->defaultDo = AjaxKeys::KEY_PROFILE;
     }
 
     protected function startProcess(){
@@ -54,14 +54,12 @@ class ProfileAction extends DokuAction{
             if ($cmd === "modify") {
                 $this->usrdata = ['userid'  => $this->params['userid'],
                                   'username'=> $this->params['username'],
-                                  'usermail'=> $this->params['usermail'],
-                                  'oldpass' => $this->params['oldpass']
+                                  'usermail'=> $this->params['usermail']
                                  ];
             }else {
                 $this->usrdata = ['userid'  => WikiIocInfoManager::getInfo("client"),
                                   'username'=> WikiIocInfoManager::getInfo("userinfo")['name'],
-                                  'usermail'=> WikiIocInfoManager::getInfo("userinfo")['mail'],
-                                  'oldpass' => WikiIocInfoManager::getInfo("userinfo")['pass']
+                                  'usermail'=> WikiIocInfoManager::getInfo("userinfo")['mail']
                                  ];
             }
             $pageToSend = $this->getHtmlEditProfile();
@@ -72,7 +70,7 @@ class ProfileAction extends DokuAction{
                     $param = WikiIocLangManager::getLang('menu','usermanager');
                     break;
                 case "modify":
-                    $param = $fn[ key( $fn ) ];
+                    $param = WikiIocLangManager::getLang('update_ok','usermanager');
                     break;
             }
             $response['title']  = "El meu perfil";
@@ -94,14 +92,40 @@ class ProfileAction extends DokuAction{
         return $html_output;
     }
 
-    public function htmlModifyProfile(){
+    public function htmlModifyProfile() {
         print p_locale_xhtml('updateprofile');
         ptln("<div class='edit_user'>");
         ptln("<div class='level2'>");
+        $form = new FormInTableTwoColumn("dw__user_profile");
+        $form->addHidden( ['do' =>  "profile",
+                           'page' => "usermanager",
+                           'userid' => $this->usrdata['userid'],
+                           'userid_old' => $this->usrdata['userid']
+                          ] );
+        $form->addHeadElement("descripció","valor");
+        $form->addInput(
+                ['user_id' =>  array('type'=>"text", 'size'=>"50", 'value'=>$this->usrdata['userid'], 'attr'=>array('disabled'=>"disabled")),
+                 'username' =>  array('type'=>"text", 'size'=>"50", 'value'=>$this->usrdata['username']),
+                 'usermail' =>  array('type'=>"text", 'size'=>"50", 'value'=>$this->usrdata['usermail'])
+                ]);
+        $form->addHeadElement("Canvi de contrasenya");
+        $form->addInput(
+                ['oldpass' =>  array('type'=>"password", 'size'=>"30"),
+                 'userpass' =>  array('type'=>"password", 'size'=>"30"),
+                 'newpass' =>  array('type'=>"password", 'size'=>"30")
+                ]);
+        $htmlForm = $form->getFormTag();
+        $htmlForm.= $form->getHiddenInputs();
+        $htmlForm.= $form->getInitTable($form->getHeadElement(0));
+        $htmlForm.= $form->getInputElements(0);
+        $htmlForm.= $form->getTrSeparator();
+        $htmlForm.= $form->getHeadElement(1);
+        $htmlForm.= $form->getInputElements(1);
+
         ptln("<form id='dw__register' action=''>");
         ptln("<div class='no'>");
         ptln("<input name='do' type='hidden' value='profile'>");
-        ptln("<input name='save' type='hidden' value='1'>");
+        //ptln("<input name='save' type='hidden' value='1'>");
         ptln("<input name='page' type='hidden' value='usermanager'>");
         ptln("<input name='userid' type='hidden' value='{$this->usrdata['userid']}'>");
         ptln("<input name='userid_old' type='hidden' value='{$this->usrdata['userid']}'>");
@@ -125,8 +149,8 @@ class ProfileAction extends DokuAction{
         ptln("<td><label for='modify_oldpass'>".WikiIocLangManager::getLang('oldpass').": </label></td>");
         ptln("<td><input id='modify_oldpass' name='oldpass' class='edit' type='password' size='30' value=''></td>");
         ptln("</tr><tr>");
-        ptln("<td><label for='modify_pass'>".WikiIocLangManager::getLang('pass').": </label></td>");
-        ptln("<td><input id='modify_pass' name='pass' class='edit' type='password' size='30' value=''></td>");
+        ptln("<td><label for='modify_userpass'>".WikiIocLangManager::getLang('pass').": </label></td>");
+        ptln("<td><input id='modify_userpass' name='userpass' class='edit' type='password' size='30' value=''></td>");
         ptln("</tr><tr>");
         ptln("<td><label for='modify_newpass'>".WikiIocLangManager::getLang('newpass').": </label></td>");
         ptln("<td><input id='modify_newpass' name='newpass' class='edit' type='password' size='30' value=''></td>");
@@ -140,61 +164,179 @@ class ProfileAction extends DokuAction{
         ptln("</form>");
         ptln("</div>");
         ptln("</div>");
-
-//        global $INPUT;
-//        global $INFO;
-//        global $lang;
-//        global $conf;
-//        global $auth;
-//
-//        print p_locale_xhtml('updateprofile');
-//        $username = $INPUT->post->str('username', $INFO['userinfo']['name'], true);
-//        $usermail = $INPUT->post->str('usermail', $INFO['userinfo']['mail'], true);
-//
-//        $form = new Doku_Form(array('id' => 'dw__register'));
-//        $form->startFieldset($lang['profile']);
-//        $form->addHidden('do', 'profile');
-//        $form->addHidden('save', '1');
-//        $form->addElement(form_makeTextField('login', $_SERVER['REMOTE_USER'], $lang['user'], '', 'block', array('size'=>'50', 'disabled'=>'disabled')));
-//        $attr = array('size'=>'50');
-//        if (!$auth->canDo('modName')) $attr['disabled'] = 'disabled';
-//        $form->addElement(form_makeTextField('username', $username, $lang['fullname'], '', 'block', $attr));
-//        $attr = array('size'=>'50', 'class'=>'edit');
-//        if (!$auth->canDo('modMail')) $attr['disabled'] = 'disabled';
-//        $form->addElement(form_makeField('usermail','usermail', $usermail, $lang['email'], '', 'block', $attr));
-//        $form->addElement(form_makeTag('br'));
-//        if ($conf['profileconfirm']) {
-//            $form->addElement(form_makeTag('br'));
-//            $form->addElement(form_makePasswordField('oldpass', $lang['oldpass'], '', 'block', array('size'=>'50', 'required' => 'required')));
-//        }
-//        if ($auth->canDo('modPass')) {
-//            $form->addElement(form_makePasswordField('newpass', $lang['newpass'], '', 'block', array('size'=>'50')));
-//            $form->addElement(form_makePasswordField('passchk', $lang['passchk'], '', 'block', array('size'=>'50')));
-//        }
-//        $form->addElement(form_makeButton('submit', '', $lang['btn_save']));
-//        $form->addElement(form_makeButton('reset', '', $lang['btn_reset']));
-//
-//        $form->endFieldset();
-//        html_form('updateprofile', $form);
-//
-//        if ($auth->canDo('delUser') && actionOK('profile_delete')) {
-//            $form_profiledelete = new Doku_Form(array('id' => 'dw__profiledelete'));
-//            $form_profiledelete->startFieldset($lang['profdeleteuser']);
-//            $form_profiledelete->addHidden('do', 'profile_delete');
-//            $form_profiledelete->addHidden('delete', '1');
-//            $form_profiledelete->addElement(form_makeCheckboxField('confirm_delete', '1', $lang['profconfdelete'],'dw__confirmdelete','', array('required' => 'required')));
-//            if ($conf['profileconfirm']) {
-//                $form_profiledelete->addElement(form_makeTag('br'));
-//                $form_profiledelete->addElement(form_makePasswordField('oldpass', $lang['oldpass'], '', 'block', array('size'=>'50', 'required' => 'required')));
-//            }
-//            $form_profiledelete->addElement(form_makeButton('submit', '', $lang['btn_deleteuser']));
-//            $form_profiledelete->endFieldset();
-//
-//            html_form('profiledelete', $form_profiledelete);
-//        }
-//
-//        print '</div>'.NL;
     }
 
 }
 
+class FormInTableTwoColumn {
+
+    var $f_attr = array();  // Form id and other attributes
+    var $_hidden = array();
+    var $_input = array();
+    var $_head = array();
+
+    /**
+     * Constructor. Sets form parameters
+     * @param mixed  $f_attr  Parameters for the HTML form element
+     * @param string $action  submit URL, defaults to current page
+     * @param string $method  'POST' or 'GET', default is POST
+     * @param string $enctype Encoding type of the data
+     */
+    function FormInTable($f_attr, $action=false, $method=false, $enctype=false, $charset=false) {
+        if (!is_array($f_attr)) {
+            $this->f_attr = array('id' => $f_attr);
+            if ($action !== false) $this->f_attr['action'] = $action;
+            if ($method !== false) $this->f_attr['method'] = strtolower($method);
+            if ($enctype !== false) $this->f_attr['enctype'] = $enctype;
+            if ($charset !== false) $this->f_attr['accept-charset'] = $charset;
+        } else {
+            $this->f_attr = $f_attr;
+        }
+        $this->f_attr['method'] = (!isset($this->f_attr['method'])) ? 'post' : strtolower($this->f_attr['method']);
+        if (!isset($this->f_attr['action'])) {$this->f_attr['action'] = '';}
+        if (!isset($this->f_attr['accept-charset'])) {$this->f_attr['accept-charset'] = WikiIocLangManager::getLang('encoding');}
+    }
+
+    /**
+     * Adds a name/value pair as a hidden field.
+     * @param mixed   string $name  Field name | array [name, value]
+     * @param string  $value  Field value
+     */
+    function addHidden($name, $value=null) {
+        if (is_array($name)) {
+            foreach ($name as $k => $v)
+                $this->_hidden[$k] = $v;
+        }else
+            $this->_hidden[$name] = $value;
+    }
+
+    /**
+     * Adds a name/value pair as a input field.
+     * @param mixed   string $name  Field name | array [name, value]
+     * @param string  $value  Field value
+     */
+    function addInput($name, $value=null) {
+        if (is_array($name)) {
+            foreach ($name as $k => $v)
+                $input[$k] = $v;
+        }else {
+            $input[$name] = $value;
+        }
+        $this->_input[] = $input;
+    }
+
+    /**
+     * Appends a content element to the form.
+     * @param   string  $elem   Pseudo-tag or string to add to the form.
+     */
+    function addHeadElement($elem_1, $elem_2=null) {
+        $ret .= "<tr><thead><tr>";
+        if (is_null($elem_2))
+            $ret .= "<th colspan=2>{$elem_1}";
+        else
+            $ret .= "<th>{$elem_1}</th><th>{$elem_2}";
+
+        $ret .= "</th></tr></thead></tr>";
+        $this->_head[] = $ret;
+    }
+
+    /**
+     * Return the assembled HTML for the form.
+     */
+    function makeForm() {
+        $form = $this->getFormTag();
+        $form .= $this->getHiddenInputs();
+        $form .= $this->getInitTable();
+
+        foreach ($this->_content as $element) {
+            if (is_array($element)) {
+                $elem_type = $element['_elem'];
+                if (function_exists('form_'.$elem_type)) {
+                    $form .= call_user_func('form_'.$elem_type, $element).DOKU_LF;
+                }
+            } else {
+                $form .= $element;
+            }
+        }
+        if ($this->_infieldset) $form .= form_closefieldset().DOKU_LF;
+        $form .= '</div></form>'.DOKU_LF;
+
+        return $form;
+    }
+
+    /**
+     * Return the FORM tag
+     */
+    function getFormTag() {
+        $form = "<form ".buildAttributes($this->f_attr,false).">".NL;
+        return $form;
+    }
+
+    /**
+     * Return the TABLE inicialization
+     */
+    function getInitTable($detail_header=null) {
+        $ret = "<div class='table'>".NL
+             . "<table class='inline'>".NL;
+        if ($detail_header)
+            $ret.= $detail_header;
+        $ret.= "<tbody>".NL;
+        return $ret;
+    }
+
+    /**
+     * Return a TR separator
+     */
+    function getTrSeparator() {
+        return "<tr><td colspan=2><br /></td></tr>".NL;
+    }
+
+    /**
+     * Return a TH detail header
+     */
+    function getHeadElement($i) {
+        return $this->_head[$i].NL;
+    }
+
+    /**
+     * Return the DIV block with the hidden INPUT
+     */
+    function getHiddenInputs() {
+        $ret = "";
+        if (!empty($this->_hidden)) {
+            $ret = "<div class='no'>".NL;
+            foreach ($this->_hidden as $name => $value) {
+                $ret.= "<input name='{$name}' type='hidden' value='".formText($value)."'>".NL;
+            }
+            $ret.= "</div>".NL;
+        }
+        return $ret;
+    }
+
+    /**
+     * Return the TR block with the INPUT elements
+     */
+    function getInputElements($n) {
+        $ret = "";
+        if (!empty($this->_input[$n])) {
+            foreach ($this->_input[$n] as $name => $arr_value) {
+                $ret.= "<tr>".NL;
+                $ret.= "<td><label for='modify_{$name}'>".WikiIocLangManager::getLang($name,'usermanager').": </label></td>".NL;
+                $ret.= "<td><input id='modify_{$name}' name='{$name}' ";
+                foreach ($arr_value as $key => $value) {
+                    if (is_array($value)) {
+                        foreach ($value as $k => $v) {
+                            $ret.= "$k='{$v}' ";
+                        }
+                    }else {
+                        $ret.= "$key='".formText($value)."' ";
+                    }
+                }
+                $ret.= "></td>".NL;
+                $ret.= "</tr>".NL;
+            }
+        }
+        return $ret;
+    }
+
+}
