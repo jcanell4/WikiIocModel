@@ -96,6 +96,7 @@ class ProfileAction extends DokuAction{
         print p_locale_xhtml('updateprofile');
         ptln("<div class='edit_user'>");
         ptln("<div class='level2'>");
+        /*
         $form = new FormInTableTwoColumn("dw__user_profile");
         $form->addHidden( ['do' =>  "profile",
                            'page' => "usermanager",
@@ -114,6 +115,11 @@ class ProfileAction extends DokuAction{
                  'userpass' =>  array('type'=>"password", 'size'=>"30"),
                  'newpass' =>  array('type'=>"password", 'size'=>"30")
                 ]);
+        $form->addInputButton(
+                ['fn[modify]' => array('class'=>"button", 'type'=>"submit", 'value'=>WikiIocLangManager::getLang('btn_save')),
+                 "fn[edit][{$this->usrdata['userid']}]" => array('class'=>"button", 'type'=>"hidden", 'value'=>"Desfés els canvis")
+                ]);
+
         $htmlForm = $form->getFormTag();
         $htmlForm.= $form->getHiddenInputs();
         $htmlForm.= $form->getInitTable($form->getHeadElement(0));
@@ -121,11 +127,14 @@ class ProfileAction extends DokuAction{
         $htmlForm.= $form->getTrSeparator();
         $htmlForm.= $form->getHeadElement(1);
         $htmlForm.= $form->getInputElements(1);
-
+        $htmlForm.= $form->getEndBody();
+        $htmlForm.= $form->getTrSeparator();
+        $htmlForm.= $form->getTrBlock($form->getEmptyTd(), $form->getInputButtons(0));
+        $htmlForm.= $form->getEndTableFormTag();
+        */
         ptln("<form id='dw__register' action=''>");
         ptln("<div class='no'>");
         ptln("<input name='do' type='hidden' value='profile'>");
-        //ptln("<input name='save' type='hidden' value='1'>");
         ptln("<input name='page' type='hidden' value='usermanager'>");
         ptln("<input name='userid' type='hidden' value='{$this->usrdata['userid']}'>");
         ptln("<input name='userid_old' type='hidden' value='{$this->usrdata['userid']}'>");
@@ -158,7 +167,7 @@ class ProfileAction extends DokuAction{
         ptln("<thead><tr><th colspan=2></th></tr></thead>");
         ptln("<tr><td></td><td>");
         ptln("<input name='fn[modify]' class='button' type='submit' value='".WikiIocLangManager::getLang('btn_save')."'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-        ptln("<input name='fn[edit][{$this->usrdata['userid']}]' class='button' type='submit' value='Desfés els canvis'>");
+        //ptln("<input name='fn[edit][{$this->usrdata['userid']}]' class='button' type='submit' value='Desfés els canvis'>");
         ptln("</td></tr>");
         ptln("</table>");
         ptln("</form>");
@@ -169,11 +178,11 @@ class ProfileAction extends DokuAction{
 }
 
 class FormInTableTwoColumn {
-
-    var $f_attr = array();  // Form id and other attributes
+    var $f_attr = array();  //Form ID and other attributes
     var $_hidden = array();
     var $_input = array();
     var $_head = array();
+    var $_button = array();
 
     /**
      * Constructor. Sets form parameters
@@ -215,14 +224,32 @@ class FormInTableTwoColumn {
      * @param mixed   string $name  Field name | array [name, value]
      * @param string  $value  Field value
      */
-    function addInput($name, $value=null) {
+    function addTagElement($name, $value=null) {
         if (is_array($name)) {
             foreach ($name as $k => $v)
                 $input[$k] = $v;
         }else {
             $input[$name] = $value;
         }
-        $this->_input[] = $input;
+        return $input;
+    }
+
+    /**
+     * Adds a name/value pair as a input field.
+     * @param mixed   string $name  Field name | array [name, value]
+     * @param string  $value  Field value
+     */
+    function addInput($name, $value=null) {
+        $this->_input[] = $this->addTagElement($name, $value);
+    }
+
+    /**
+     * Adds a name/value pair as a input button
+     * @param mixed   string $name  Field name | array [name, value]
+     * @param string  $value  Field value
+     */
+    function addInputButton($name, $value=null) {
+        $this->_button[] = $this->addTagElement($name, $value);
     }
 
     /**
@@ -240,40 +267,14 @@ class FormInTableTwoColumn {
         $this->_head[] = $ret;
     }
 
-    /**
-     * Return the assembled HTML for the form.
-     */
-    function makeForm() {
-        $form = $this->getFormTag();
-        $form .= $this->getHiddenInputs();
-        $form .= $this->getInitTable();
-
-        foreach ($this->_content as $element) {
-            if (is_array($element)) {
-                $elem_type = $element['_elem'];
-                if (function_exists('form_'.$elem_type)) {
-                    $form .= call_user_func('form_'.$elem_type, $element).DOKU_LF;
-                }
-            } else {
-                $form .= $element;
-            }
-        }
-        if ($this->_infieldset) $form .= form_closefieldset().DOKU_LF;
-        $form .= '</div></form>'.DOKU_LF;
-
-        return $form;
-    }
-
-    /**
-     * Return the FORM tag
+    /** Return the FORM tag
      */
     function getFormTag() {
         $form = "<form ".buildAttributes($this->f_attr,false).">".NL;
         return $form;
     }
 
-    /**
-     * Return the TABLE inicialization
+    /** Return the TABLE inicialization
      */
     function getInitTable($detail_header=null) {
         $ret = "<div class='table'>".NL
@@ -284,22 +285,37 @@ class FormInTableTwoColumn {
         return $ret;
     }
 
-    /**
-     * Return a TR separator
+    /** Return the en TABLE FORM tag
+     */
+    function getEndTableFormTag() {
+        return "</table></form>".NL;
+    }
+
+    /** Return a TR separator
      */
     function getTrSeparator() {
         return "<tr><td colspan=2><br /></td></tr>".NL;
     }
 
-    /**
-     * Return a TH detail header
+    /** Return the end BODY tag
+     */
+    function getEndBody() {
+        return "</body>".NL;
+    }
+
+    /** Return a empty TD tag
+     */
+    function getEmptyTd() {
+        return "<td></td>";
+    }
+
+    /** Return a TH detail header
      */
     function getHeadElement($i) {
         return $this->_head[$i].NL;
     }
 
-    /**
-     * Return the DIV block with the hidden INPUT
+    /** Return the DIV block with the hidden INPUT
      */
     function getHiddenInputs() {
         $ret = "";
@@ -313,13 +329,12 @@ class FormInTableTwoColumn {
         return $ret;
     }
 
-    /**
-     * Return the TR block with the INPUT elements
+    /** Return the TR block with the INPUT elements
      */
-    function getInputElements($n) {
+    function getInputElements($i) {
         $ret = "";
-        if (!empty($this->_input[$n])) {
-            foreach ($this->_input[$n] as $name => $arr_value) {
+        if (!empty($this->_input[$i])) {
+            foreach ($this->_input[$i] as $name => $arr_value) {
                 $ret.= "<tr>".NL;
                 $ret.= "<td><label for='modify_{$name}'>".WikiIocLangManager::getLang($name,'usermanager').": </label></td>".NL;
                 $ret.= "<td><input id='modify_{$name}' name='{$name}' ";
@@ -336,6 +351,35 @@ class FormInTableTwoColumn {
                 $ret.= "</tr>".NL;
             }
         }
+        return $ret;
+    }
+
+    /** Return the block with the BUTTONs
+     */
+    function getInputButtons($i) {
+        $ret = "";
+        if (!empty($this->_button[$i])) {
+            foreach ($this->_hidden as $name => $arr_value) {
+                $ret.= "<input name='{$name}' ";
+                foreach ($arr_value as $key => $value) {
+                    $ret.= "$key='{$value}' ";
+                }
+                $ret.= "/>".NL;
+            }
+        }
+        return $ret;
+    }
+
+    /** Return the TR block with the params
+     */
+    function getTrBlock($pre, $arr_elements) {
+        $ret = "<tr>".NL;
+        $ret.= $pre.NL;
+        $ret.= "<td>".NL;
+        foreach ($arr_elements as $elem) {
+            $ret .= $elem.NL;
+        }
+        $ret.= "</td></tr>".NL;
         return $ret;
     }
 
