@@ -275,5 +275,5 @@ class ProjectMetaDataQuery extends DataQuery {
         $data[self::K_PROJECT_FILEPATH] = $this->getFileName($idResource, array(self::K_PROJECTTYPE=>$projectType, self::K_METADATASUBSET=>$metaDataSubSet));
         return $data;
     }
-
+    
 }
