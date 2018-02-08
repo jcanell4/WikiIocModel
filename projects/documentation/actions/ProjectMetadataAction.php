@@ -15,10 +15,12 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
     protected $persistenceEngine;
     protected $projectModel;
 
-    public function __construct($persistenceEngine) {
-        $this->persistenceEngine = $persistenceEngine;
-        $this->projectModel = new ProjectModel($persistenceEngine);
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->persistenceEngine = $modelManager->getPersistenceEngine();
+        $this->projectModel = new ProjectModel($this->persistenceEngine);
     }
+
 
     protected function idToRequestId($requestId) {
         $id = str_replace(":", "_", $requestId);
