@@ -20,9 +20,18 @@ class ProjectMetaDataQuery extends DataQuery {
     const K_PROJECT_FILENAME       = ProjectKeys::KEY_PROJECT_FILENAME;
     const K_PROJECT_FILEPATH       = ProjectKeys::KEY_PROJECT_FILEPATH;
 
-    const PATH_METADATA_CONFIG     = "/metadata/config/";
-    const FILE_CONFIGMAIN          = "configMain.json";
-    const FILE_DEFAULTVIEW         = "defaultView.json";
+    const PATH_METADATA_CONFIG = "/metadata/config/";
+    const FILE_CONFIGMAIN      = "configMain.json";
+    const FILE_DEFAULTVIEW     = "defaultView.json";
+
+    const PROJECT_LOG_TYPE_CREATE     = 'C';
+    const PROJECT_LOG_TYPE_EDIT       = 'E';
+    const PROJECT_LOG_TYPE_MINOR_EDIT = 'e';
+    const PROJECT_LOG_TYPE_DELETE     = 'D';
+    const PROJECT_LOG_TYPE_REVERT     = 'R';
+
+    private $projectFileName = NULL;
+    private $projectFilePath = NULL;
 
     /**
      * Devuelve la lista ordenada de tipos de proyecto obtenida a partir de la lectura
@@ -130,9 +139,9 @@ class ProjectMetaDataQuery extends DataQuery {
      * Devuelve el estado de generación del proyecto
      * @return boolean : true si el proyecto ya ha sido generado
      */
-    public function isProjectGenerated($idResource, $projectType) {
+    public function isProjectGenerated($idProject, $projectType) {
         $filename = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
-        $jsonArr = $this->getMeta($idResource, $projectType, "system", $filename);
+        $jsonArr = $this->getMeta($idProject, $projectType, "system", $filename);
         $data = json_decode($jsonArr, true);
         return $data['generated'];
     }
@@ -141,27 +150,27 @@ class ProjectMetaDataQuery extends DataQuery {
      * Establece el estado 'generated'=true del proyecto
      * @return boolean : true si el estado del proyecto se ha establecido con éxito
      */
-    public function setProjectGenerated($idResource, $projectType) {
-        $filename = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
+    public function setProjectGenerated($idProject, $projectType) {
+        $projectSystemDataFile = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
         $metaDataSubSet = "system";
-        $jSysArr = $this->getMeta($idResource, $projectType, $metaDataSubSet, $filename);
+        $jSysArr = $this->getMeta($idProject, $projectType, $metaDataSubSet, $projectSystemDataFile);
         $sysValue = json_decode($jSysArr, true);
         $sysValue['generated'] = true;
-        $success = $this->setMeta($idResource, $projectType, $metaDataSubSet, $filename, json_encode($sysValue));
+        $success = $this->setMeta($idProject, $projectType, $metaDataSubSet, $projectSystemDataFile, json_encode($sysValue));
         return $success;
     }
 
     /**
      * Extrae, del contenido del fichero, los datos correspondientes a la clave
-     * @param string $idResource : wikiRuta del proyecto
+     * @param string $idProject : wikiRuta del proyecto
      * @param string $projectType : tipo de proyecto
      * @param string $metaDataSubSet : clave del contenido
      * @param string $filename : fichero de datos del proyecto
      * @return JSON conteniendo el array de la clave 'metadatasubset' con los datos del proyecto
      */
-    public function getMeta($idResource, $projectType, $metaDataSubSet, $filename) {
+    public function getMeta($idProject, $projectType, $metaDataSubSet, $filename) {
         $metaDataReturn = null;
-        $idResoucePath = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $idResource);
+        $idResoucePath = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $idProject);
         $contentFile = @file_get_contents("$idResoucePath/$projectType/$filename");
         if ($contentFile != false) {
             $contentMainArray = json_decode($contentFile, true);
@@ -178,26 +187,42 @@ class ProjectMetaDataQuery extends DataQuery {
         return $metaDataReturn;
     }
 
-    public function setMeta($idResource, $projectType, $metaDataSubSet, $filename, $metaDataValue) {
+    /**
+     * Guarda el nuevo archivo de datos del proyecto, guardando previamente la versión anterior como una revisión
+     * @param string $id              ns del proyecto (ruta relativa del projecte, a partir de 'data/mdproject/')
+     * @param string $projectType     tipus de projete (exemples: "defaultProject", "documentation")
+     * @param string $metaDataSubSet  Valor de metadatasubset (exemple: "main")
+     * @param string $projectFileName Nom de l'arxiu de dades del projecte (exemple: "meta.mdpr")
+     * @param JSON   $metaDataValue   Nou contingut de l'arxiu de dades del projecte
+     * @return string
+     */
+    public function setMeta($id, $projectType, $metaDataSubSet, $projectFileName, $metaDataValue) {
+        $projectId = str_replace(':', "/", $id);
+        $this->projectFileName = $projectFileName;
+        $this->projectFilePath = WikiGlobalConfig::getConf('mdprojects')."/$projectId/$projectType/";
+        $dirProject = $this->projectFilePath;
+        $projectFilePathName = "{$this->projectFilePath}{$this->projectFileName}";
 
-        $dir = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(':', "/", $idResource)."/$projectType";
-
-        if (is_file("$dir/$filename")) {
-            $contentFile = file_get_contents("$dir/$filename");
-            if ($contentFile != false) {
-                $contentFileArray = json_decode($contentFile, true);
+        if (is_file($projectFilePathName)) {
+            $old_contentFile = file_get_contents($projectFilePathName);
+            //Aquí, ya existe, como mínimo, una versión previa de los archivos del proyecto
+            if ($old_contentFile != false) {
+                $contentFileArray = json_decode($old_contentFile, true);
                 if ($contentFileArray[$metaDataSubSet]) {
+                    $prev_date = filemtime($projectFilePathName);
                     $contentFileArray[$metaDataSubSet] = json_decode($metaDataValue, true);
-                    $resourceCreated = io_saveFile("$dir/$filename", json_encode($contentFileArray));
+                    $resourceCreated = io_saveFile($projectFilePathName, json_encode($contentFileArray));
+                    //Guardamos el archivo existente (la versión previa) como revisión
+                    $dateRevision = $this->_saveRevision($prev_date, $projectId, $projectFilePathName, $old_contentFile);
                 }else {
                     $resourceCreated = '{"error":"5090"}';  //no existe $metaDataSubSet en el fichero
                 }
             }
         }else {
-            $resourceCreated = $this->_createResource($dir, $filename);
+            $resourceCreated = $this->_createResource($dirProject, $projectFileName);
             if ($resourceCreated) {
-                $metaDataValue = $this->_setSystemData($metaDataSubSet, $metaDataValue, $dir);
-                $resourceCreated = io_saveFile("$dir/$filename", $metaDataValue);
+                $metaDataValue = $this->_setSystemData($metaDataSubSet, $metaDataValue, $dirProject);
+                $resourceCreated = io_saveFile($projectFilePathName, $metaDataValue);
             }else {
                 $resourceCreated = '{"error":"5090"}';
             }
@@ -205,15 +230,15 @@ class ProjectMetaDataQuery extends DataQuery {
         return $resourceCreated;
     }
 
-    private function _createResource($dir, $file) {
-        $resourceCreated = is_dir($dir);
+    private function _createResource($dirProject, $file) {
+        $resourceCreated = is_dir($dirProject);
         if (!$resourceCreated) {
             //Crea, si no existe, la estructura de directorios en 'mdprojects'
-            $resourceCreated = mkdir($dir, 0777, true);
+            $resourceCreated = mkdir($dirProject, 0777, true);
         }
         if ($resourceCreated) {
             // Crea y verifica el fichero .mdpr que contendrá los datos del proyecto
-            if (($fp = @fopen("$dir/$file", 'w')) !== false) {
+            if (($fp = @fopen("$dirProject/$file", 'w')) !== false) {
                 fclose($fp);
                 $resourceCreated = true;
             }
@@ -221,23 +246,23 @@ class ProjectMetaDataQuery extends DataQuery {
         return $resourceCreated;
     }
 
-    private function _setSystemData($metaDataSubSet, $metaDataValue, $dir) {
+    private function _setSystemData($metaDataSubSet, $metaDataValue, $dirProject) {
         //Crea el fichero de sistema del proyecto
         $data = '{"system":{"generated":false}}';
         $file = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
-        io_saveFile("$dir/$file", $data);
+        io_saveFile("$dirProject/$file", $data);
         //Retorna el array json construido a partir del subset y su array de valores
         return "{\"$metaDataSubSet\":$metaDataValue}";
     }
 
-    /** NO SE USA
+    /**
      * Devuelve la ruta completa al fichero del proyecto (en mdprojects)
      * @param string $id : wikiRuta de la página del proyecto
-     * @param array $params : {$projectType, $metaDataSubSet}
+     * @param array $params : {projectType, metaDataSubSet, projectfilename}
      * @return string
      */
-    public function getFileName($id, $params=NULL) {
-        $filename = $this->getProjectFileName($params);
+    public function getFileName($id, $params=array()) {
+        $filename = ($params[self::K_PROJECT_FILENAME]) ? $params[self::K_PROJECT_FILENAME] : $this->getProjectFileName($params);
         $dir = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(':', "/", $id)."/${params[self::K_PROJECTTYPE]}";
         return "$dir/$filename";
     }
@@ -249,7 +274,8 @@ class ProjectMetaDataQuery extends DataQuery {
     public function getProjectFileName($parms) {
         $jsonArray = $this->getMetaDataConfig($parms[self::K_PROJECTTYPE], $parms[self::K_METADATASUBSET], self::K_CONFIGUSUBSETSTRUCTURE);
         $data = json_decode($jsonArray, true);
-        return $data[$parms[self::K_METADATASUBSET]];
+        $this->projectFileName = $data[$parms[self::K_METADATASUBSET]];
+        return $this->projectFileName;
     }
 
     public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProjects=TRUE, $hiddenProjects=FALSE, $root=FALSE) {
@@ -266,14 +292,251 @@ class ProjectMetaDataQuery extends DataQuery {
     /**
      * @return array Contiene los datos del proyecto correspondientes a la clave '$metaDataSubSet'
      */
-    public function getDataProject($idResource, $projectType) {
+    public function getDataProject($idProject, $projectType) {
         $metaDataSubSet = ProjectKeys::VAL_DEFAULTSUBSET;   //clave del array que contiene los datos del proyecto
         $filename = $this->getProjectFileName(array(self::K_PROJECTTYPE=>$projectType, self::K_METADATASUBSET=>$metaDataSubSet));
-        $jsonData = $this->getMeta($idResource, $projectType, $metaDataSubSet, $filename);
+        $jsonData = $this->getMeta($idProject, $projectType, $metaDataSubSet, $filename);
         $data = json_decode($jsonData, true);
         $data[self::K_PROJECT_FILENAME] = $filename;
-        $data[self::K_PROJECT_FILEPATH] = $this->getFileName($idResource, array(self::K_PROJECTTYPE=>$projectType, self::K_METADATASUBSET=>$metaDataSubSet));
+        $data[self::K_PROJECT_FILEPATH] = $this->getFileName($idProject, array(self::K_PROJECTTYPE => $projectType, self::K_METADATASUBSET => $metaDataSubSet));
         return $data;
     }
-    
+
+    private function _saveRevision($prev_date, $projectId, $projectFilePathName, $old_content) {
+        $resourceCreated = FALSE;
+
+        if (@file_exists($projectFilePathName)) {
+            $mdate = filemtime($projectFilePathName);
+            $new_rev_file = $this->_revisionProjectFN($projectId, "{$this->projectFileName}.$mdate", ".txt");
+            $resourceCreated = io_saveFile("$new_rev_file.gz", $old_content);
+
+            $last_rev_date = $this->getProjectRevisions($projectId, 1)[0]['date'];
+            if ($last_rev_date && $last_rev_date < $prev_date) {
+                $summary = WikiIocLangManager::getLang('external_edit');
+                $flags = array('ExternalEdit'=> true);
+            }
+            $resourceCreated &= $this->addProjectLogEntry($mdate, $projectId, $projectFilePathName, self::PROJECT_LOG_TYPE_EDIT, $summary, "", $flags);
+        }
+        return ($resourceCreated) ? $mdate : "";
+    }
+
+    /**
+     * Logs del proceso de guardar una modificación del archivo de datos del proyecto.
+     * @param string $mdate               fecha de última modificación del archivo de datos del proyecto
+     * @param string $projectId           ruta relativa del proyecto
+     * @param string $projectFilePathName ruta absoluta del fichero del proyecto (incluye el nombre del fichero)
+     * @param string $type                tipo de modificación
+     * @param string $summary
+     * @param string $extra
+     * @param array $flags
+     * @return boolean
+     */
+    private function addProjectLogEntry($mdate, $projectId, $projectFilePathName, $type=self::PROJECT_LOG_TYPE_EDIT, $summary="", $extra="", $flags=NULL) {
+        $strip  = array("\t", "\n");
+        if (is_array($flags))
+            $flagExternalEdit = isset($flags['ExternalEdit']);
+        $record = array(
+            'date'  => $mdate,
+            'ip'    => (!$flagExternalEdit) ? clientIP(true) : "127.0.0.1",
+            'type'  => str_replace($strip, "", $type),
+            'id'    => str_replace("/", ":", $projectId),
+            'user'  => (!$flagExternalEdit) ? $_SERVER['REMOTE_USER'] : "",
+            'sum'   => utf8_substr(str_replace($strip, "", $summary), 0, 255),
+            'extra' => str_replace($strip, "", $extra)
+            );
+
+        //meta log
+        $ret = $this->addLogMetaFile($projectId, $projectFilePathName, $record );
+
+        //changes log
+        $ret &= $this->addLogChangesFile($projectId, $record);
+
+        return $ret;
+    }
+
+    /**
+     * En este log se guarda una línea por cada modificación sufrida por el archivo de datos del proyecto
+     * @param string $projectId ruta relativa del proyecto
+     * @param array  $record    datos del registro de log
+     * @return boolean
+     */
+    private function addLogChangesFile($projectId, $record) {
+        $ret = TRUE;
+        $record_line = implode("\t", $record)."\n";
+        $ch_filename = $this->_metaProjectFN($projectId, "", ".changes");
+
+        $fh = fopen($ch_filename, "r");
+        if ($fh) {
+            $fh2 = fopen("$ch_filename.tmp", "w");
+            $bytes = fwrite($fh2, $record_line);
+            while (!feof($fh)) {
+                fwrite($fh2, fgets($fh));
+            }
+            fclose($fh2);
+            fclose($fh);
+            $ret &= rename("$ch_filename.tmp", $ch_filename);
+        }else {
+            $fh = fopen($ch_filename, "w");
+            $bytes = fwrite($fh, $record_line);
+            fclose($fh);
+        }
+        $ret &= ($bytes === strlen($record_line));
+        return $ret;
+    }
+
+    /**
+     * Log del proceso de guardar una modificación del archivo de datos del proyecto. Es el log que se guarda en
+     * el archivo projectId/projectFilename.meta. Este archivo log contiene un JSON de metadatos del proyecto
+     * @param string $projectId            ruta relativa del proyecto
+     * @param string $projectFilePathName  ruta absoluta del fichero del proyecto (incluye el nombre del fichero)
+     * @param array  $record               datos del registro de log
+     * @return boolean
+     */
+    private function addLogMetaFile($projectId, $projectFilePathName, $record) {
+        $minor = ($record['type'] === self::PROJECT_LOG_TYPE_MINOR_EDIT);
+        $user   = $record['user'];
+        $created = @filectime($projectFilePathName);
+
+        $old_meta = $this->p_read_projectmetadata($projectId);
+        $new_meta = array();
+        if (!WikiIocInfoManager::getInfo('exists')) {
+            if (empty($old_meta['persistent']['date']['created'])) { //newly created
+                $new_meta['date']['created'] = $created;
+                if ($user){
+                    $new_meta['creator'] = WikiIocInfoManager::getInfo('userinfo')['name'];
+                    $new_meta['user']    = $user;
+                }
+            } elseif (!empty($old_meta['persistent']['date']['created'])) { //re-created / restored
+                $new_meta['date']['created']  = $old_meta['persistent']['date']['created'];
+                $new_meta['date']['modified'] = $created; // use the files ctime here
+                $new_meta['creator'] = $old_meta['persistent']['creator'];
+                if ($user) $new_meta['contributor'][$user] = WikiIocInfoManager::getInfo('userinfo')['name'];
+            }
+        } elseif (!$minor) {
+            $new_meta['date']['modified'] = $record['date'];
+            if ($user) $new_meta['contributor'][$user] = WikiIocInfoManager::getInfo('userinfo')['name'];
+        }
+        $new_meta['last_change'] = $record;
+        $ret = $this->p_set_projectmetadata($projectId, $new_meta);
+        return $ret;
+    }
+
+    private function _revisionProjectFN($projectId, $filename="", $ext="") {
+        if ($filename === "") {
+            if ($this->projectFileName) $filename = $this->projectFileName;
+        }
+        $dir = $this->_revisionProjectDir($projectId) . "$filename$ext";
+        return $dir;
+    }
+
+    private function _revisionProjectDir($projectId) {
+        $projectId = utf8_encodeFN(str_replace(':', '/', $projectId));
+        $dir = WikiGlobalConfig::getConf('revisionprojectdir') . "/$projectId/";
+        return $dir;
+    }
+
+    private function _metaProjectFN($projectId, $filename="", $ext="") {
+        $projectId = utf8_encodeFN(str_replace(':', '/', $projectId));
+        if ($filename === "") {
+            if ($this->projectFileName) $filename = $this->projectFileName;
+        }
+        $dir = WikiGlobalConfig::getConf('metaprojectdir') . "/$projectId/$filename$ext";
+        return $dir;
+    }
+
+    private function p_set_projectmetadata($projectId, $data){
+        if (!is_array($data))
+            return false;
+
+        $meta = $orig = $this->p_read_projectmetadata($projectId);
+        $protected = array('description', 'date', 'contributor');
+
+        foreach ($data as $key => $value){
+            if ($key == 'relation'){
+                foreach ($value as $subkey => $subvalue){
+                    if (isset($meta['current'][$key][$subkey]) && is_array($meta['current'][$key][$subkey])) {
+                        $meta['current'][$key][$subkey] = array_merge($meta['current'][$key][$subkey], (array)$subvalue);
+                    }else {
+                        $meta['current'][$key][$subkey] = $subvalue;
+                    }
+
+                    if (isset($meta['persistent'][$key][$subkey]) && is_array($meta['persistent'][$key][$subkey])) {
+                        $meta['persistent'][$key][$subkey] = array_merge($meta['persistent'][$key][$subkey], (array)$subvalue);
+                    }else {
+                        $meta['persistent'][$key][$subkey] = $subvalue;
+                    }
+                }
+            }elseif (in_array($key, $protected)){
+                // these keys, must have subkeys - a legitimate value must be an array
+                if (is_array($value)) {
+                    $meta['current'][$key] = !empty($meta['current'][$key]) ? array_merge((array)$meta['current'][$key],$value) : $value;
+                    $meta['persistent'][$key] = !empty($meta['persistent'][$key]) ? array_merge((array)$meta['persistent'][$key],$value) : $value;
+                }
+            }else {
+                $meta['current'][$key] = $value;
+                $meta['persistent'][$key] = $value;
+            }
+        }
+
+        // save only if metadata changed
+        if ($meta == $orig)
+            return true;
+        else
+            return $this->p_save_projectmetadata($projectId, $meta);
+    }
+
+    private function p_read_projectmetadata($idProject, $filename="") {
+        $meta_file = $this->_metaProjectFN($idProject, $filename, ".meta");
+        if (@file_exists($meta_file))
+            $meta = unserialize(io_readFile($meta_file, false));
+        else
+            $meta = array('current' => array(), 'persistent' => array());
+        return $meta;
+    }
+
+    private function p_save_projectmetadata($idProject, $meta) {
+        return io_saveFile($this->_metaProjectFN($idProject, "", ".meta"), serialize($meta));
+    }
+
+    /**
+     * Retorna un array con las líneas del archivo de log .changes
+     * @param string $projectId
+     * @param int    $num        Número de registros solicitados
+     * @param int    $chunk_size Máximo número de bytes que van a leerse del fichero de log
+     * @return array
+     */
+    private function getProjectRevisions($projectId, $num=1, $chunk_size=1024) {
+        $revs = array();
+        $file = $this->_metaProjectFN($projectId, "", ".changes");
+
+        if ($num > 0 && @file_exists($file)) {
+            if (filesize($file) < $chunk_size || $chunk_size==0) {
+                $lines = file($file);
+            }else {
+                $fh = fopen($file, 'r');
+                if ($fh) {
+                    $lines[] = fgets($fh, $chunk_size);
+                    $count = intdiv($chunk_size, strlen($revs[0]));
+                    $i = 1;
+                    while (!feof($fh) && $i < $count) {
+                        $lines[] = fgets($fh);
+                        $i++;
+                    }
+                    fclose($fh);
+                }
+            }
+            for ($i=0; $i<$num; $i++) {
+                $registre = explode("\t", $lines[$i]);
+                $revs[]['date'] = $registre[0];
+                $revs[]['ip']   = $registre[1];
+                $revs[]['type'] = $registre[2];
+                $revs[]['ns']   = $registre[3];
+                $revs[]['user'] = $registre[4];
+                $revs[]['sum']  = $registre[5];
+                $revs[]['extra']= $registre[6];
+            }
+        }
+        return $revs;
+    }
+
 }
