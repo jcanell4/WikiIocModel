@@ -7,6 +7,7 @@ if (!defined("DOKU_INC")) die();
 
 abstract class AbstractWikiAction {
 
+    protected $params;
     protected $modelManager;
 
     public function init($modelManager = NULL) {
@@ -14,8 +15,9 @@ abstract class AbstractWikiAction {
     }
 
     public function get($paramsArr = array()){
-        $this->params = $paramsArr;
         $this->triggerStartEvents();
+        $this->setParams($paramsArr);
+        $this->runProcess();
         $ret = $this->responseProcess();
         $this->triggerEndEvents();
         return $ret;
@@ -110,5 +112,11 @@ abstract class AbstractWikiAction {
         }
     }
 
+    protected function runProcess(){}
+
+    protected function setParams($paramsArr){
+        $this->params = $paramsArr;
+    }
+    
     protected abstract function responseProcess();
 }

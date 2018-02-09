@@ -17,14 +17,14 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
         $this->types['renderType'] = self::T_STRING;
     }
 
-    public function init( $modelManager=NULL ) {
-        global $plugin_controller;
-        $plugin_controller->setCurrentProject($this->params[AjaxKeys::PROJECT_TYPE]);
-        if (!$modelManager) {
-            $modelManager = AbstractModelManager::Instance($this->params[AjaxKeys::PROJECT_TYPE]);
-        }
-        $this->setModelManager($modelManager);
-    }
+//    public function init( $modelManager=NULL ) {
+//        global $plugin_controller;
+//        $plugin_controller->setCurrentProject($this->params[AjaxKeys::PROJECT_TYPE]);
+//        if (!$modelManager) {
+//            $modelManager = AbstractModelManager::Instance($this->params[AjaxKeys::PROJECT_TYPE]);
+//        }
+//        $this->setModelManager($modelManager);
+//    }
 
     protected function process() {
         $params = array(AjaxKeys::KEY_ID       => $this->params[AjaxKeys::KEY_ID],
@@ -35,8 +35,8 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
                   );
         $modelManager = $this->getModelManager();
         $action = $modelManager->getActionInstance("ProjectExportAction", $modelManager->getExporterManager());
-        $action->init($params);
-        $content = $action->get();
+        //$action->init($params);
+        $content = $action->get($params);
         $projectId = $action->getProjectID();
         return array('projectId' => $projectId, 'meta' => $content);
     }
@@ -55,4 +55,8 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
     public function getAuthorizationType() {
         return "save";
     }
+    
+     public function isEmptyText() {
+         return FALSE;
+     }
 }

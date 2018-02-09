@@ -12,7 +12,6 @@ require_once DOKU_PLUGIN."wikiiocmodel/actions/AbstractWikiAction.php";
  */
 abstract class DokuAction extends AbstractWikiAction{
     protected $defaultDo;
-    protected $params;
     protected $response;
 
     private $preResponseTmp = array(); //EL format d'aquestes dades és un hashArray on la clau indica el tipus i el valor el contingut. La clau
