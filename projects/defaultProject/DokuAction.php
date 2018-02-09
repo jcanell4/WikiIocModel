@@ -266,5 +266,4 @@ abstract class DokuAction extends AbstractWikiAction{
     protected function isRenderer(){
         return $this->renderer;
     }
-
 }

@@ -17,7 +17,7 @@ abstract class AbstractWikiAction {
     public function get($paramsArr = array()){
         $this->triggerStartEvents();
         $this->setParams($paramsArr);
-        $this->runProcess();
+        //$this->runProcess();
         $ret = $this->responseProcess();
         $this->triggerEndEvents();
         return $ret;
@@ -112,11 +112,11 @@ abstract class AbstractWikiAction {
         }
     }
 
-    protected function runProcess(){}
-
     protected function setParams($paramsArr){
         $this->params = $paramsArr;
     }
     
+    //protected function runProcess(){}
+
     protected abstract function responseProcess();
 }
