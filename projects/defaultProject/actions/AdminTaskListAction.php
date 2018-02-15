@@ -20,6 +20,9 @@ class AdminTaskListAction extends AdminTaskAction {
 
     protected function runProcess() {
         global $ACT;
+        if(WikiIocInfoManager::getInfo("ismanager")){
+            WikiIocInfoManager::setInfo("perm", 1);
+        }
         $ACT = act_permcheck($ACT);
         $this->pageToSend = $this->getAdminTaskListHtml();
     }
