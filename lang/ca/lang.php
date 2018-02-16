@@ -19,6 +19,7 @@ $lang['reverted'] = "La reversió s'ha completat correctament";
 $lang['pageNotFound'] = "La pàgina %s no s'ha trobat";
 $lang['pageExists'] = "La pàgina %s ja existeix";
 $lang['metaEditForm'] = "Camps Edició";
+$lang['project_loaded'] = "El projecte s'ha carregat correctament";
 
 $lang['auth_CreatePage'] = "No teniu permís per a Crear la pàgina %s";
 $lang['auth_EditPage'] = "No teniu permís per a Editar la pàgina %s";

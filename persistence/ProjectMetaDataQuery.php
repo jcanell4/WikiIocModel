@@ -30,8 +30,8 @@ class ProjectMetaDataQuery extends DataQuery {
     const PROJECT_LOG_TYPE_DELETE     = 'D';
     const PROJECT_LOG_TYPE_REVERT     = 'R';
 
-    private $projectFileName = NULL;
-    private $projectFilePath = NULL;
+    private $projectFileName = NULL;    //Nom de l'arxiu de dades del projecte
+    private $projectFilePath = NULL;    //Ruta completa al directori del projecte
 
     /**
      * Devuelve la lista ordenada de tipos de proyecto obtenida a partir de la lectura
@@ -57,9 +57,9 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
 
-        $configMain = @file_get_contents(WIKI_IOC_PROJECTS . $projectType . self::PATH_METADATA_CONFIG.self::FILE_CONFIGMAIN);
+        $configMain = @file_get_contents(WIKI_IOC_PROJECTS . $projectType . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN);
         if ($configMain == false) {
-            $configMain = @file_get_contents(WIKI_IOC_PROJECTS . "defaultProject" . self::PATH_METADATA_CONFIG.self::FILE_CONFIGMAIN);
+            $configMain = @file_get_contents(WIKI_IOC_PROJECTS . "defaultProject" . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN);
         }
 
         $configMainArray = json_decode($configMain, true);
@@ -165,13 +165,19 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param string $idProject : wikiRuta del proyecto
      * @param string $projectType : tipo de proyecto
      * @param string $metaDataSubSet : clave del contenido
-     * @param string $filename : fichero de datos del proyecto
+     * @param string $filename : fichero de datos del proyecto / ruta completa para las revisiones
      * @return JSON conteniendo el array de la clave 'metadatasubset' con los datos del proyecto
      */
     public function getMeta($idProject, $projectType, $metaDataSubSet, $filename) {
         $metaDataReturn = null;
-        $idResoucePath = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $idProject);
-        $contentFile = @file_get_contents("$idResoucePath/$projectType/$filename");
+
+        if (substr($idProject, -5) === ProjectKeys::REVISION_SUFFIX) {
+            $contentFile = io_readFile($filename, false);
+        }else {
+            $idResoucePath = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $idProject);
+            $contentFile = @file_get_contents("$idResoucePath/$projectType/$filename");
+        }
+
         if ($contentFile != false) {
             $contentMainArray = json_decode($contentFile, true);
             foreach ($contentMainArray as $clave => $valor) {
@@ -201,7 +207,7 @@ class ProjectMetaDataQuery extends DataQuery {
         $this->projectFileName = $projectFileName;
         $this->projectFilePath = WikiGlobalConfig::getConf('mdprojects')."/$projectId/$projectType/";
         $dirProject = $this->projectFilePath;
-        $projectFilePathName = "{$this->projectFilePath}{$this->projectFileName}";
+        $projectFilePathName = $this->projectFilePath . $this->projectFileName;
 
         if (is_file($projectFilePathName)) {
             $old_contentFile = file_get_contents($projectFilePathName);
@@ -262,9 +268,14 @@ class ProjectMetaDataQuery extends DataQuery {
      * @return string
      */
     public function getFileName($id, $params=array()) {
-        $filename = ($params[self::K_PROJECT_FILENAME]) ? $params[self::K_PROJECT_FILENAME] : $this->getProjectFileName($params);
-        $dir = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(':', "/", $id)."/${params[self::K_PROJECTTYPE]}";
-        return "$dir/$filename";
+        if ($id && $params) {
+            $filename = ($params[self::K_PROJECT_FILENAME]) ? $params[self::K_PROJECT_FILENAME] : $this->getProjectFileName($params);
+            $dir = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(':', "/", $id)."/${params[self::K_PROJECTTYPE]}";
+            $ret = "$dir/$filename";
+        }else {
+            $ret = $this->getProjectFilePath() . $this->getProjectFileName();
+        }
+        return $ret;
     }
 
      /**
@@ -272,10 +283,22 @@ class ProjectMetaDataQuery extends DataQuery {
      * @return string el nombre del fichero de datos del proyecto del tipo solicitado
      */
     public function getProjectFileName($parms) {
-        $jsonArray = $this->getMetaDataConfig($parms[self::K_PROJECTTYPE], $parms[self::K_METADATASUBSET], self::K_CONFIGUSUBSETSTRUCTURE);
-        $data = json_decode($jsonArray, true);
-        $this->projectFileName = $data[$parms[self::K_METADATASUBSET]];
+        if ($parms) {
+            $jsonArray = $this->getMetaDataConfig($parms[self::K_PROJECTTYPE], $parms[self::K_METADATASUBSET], self::K_CONFIGUSUBSETSTRUCTURE);
+            $data = json_decode($jsonArray, true);
+            $this->projectFileName = $data[$parms[self::K_METADATASUBSET]];
+
+            if ($parms[AjaxKeys::KEY_ID]) {
+                $this->projectFilePath = WikiGlobalConfig::getConf('mdprojects') . "/"
+                                         . str_replace(":", "/", $parms[AjaxKeys::KEY_ID]) . "/"
+                                         . $parms[self::K_PROJECTTYPE] . "/";
+            }
+        }
         return $this->projectFileName;
+    }
+
+    public function getProjectFilePath() {
+        return $this->projectFilePath;
     }
 
     public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProjects=TRUE, $hiddenProjects=FALSE, $root=FALSE) {
@@ -284,8 +307,8 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     public function createDataDir($id) {
-        $id = str_replace(':', '/', $id);
-        $dir = WikiGlobalConfig::getConf('datadir') . '/' . utf8_encodeFN($id) . "/dummy";
+        $id = str_replace(":", "/", $id);
+        $dir = WikiGlobalConfig::getConf('datadir') . "/" . utf8_encodeFN($id) . "/dummy";
         $this->makeFileDir($dir);
     }
 
@@ -294,7 +317,7 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getDataProject($idProject, $projectType) {
         $metaDataSubSet = ProjectKeys::VAL_DEFAULTSUBSET;   //clave del array que contiene los datos del proyecto
-        $filename = $this->getProjectFileName(array(self::K_PROJECTTYPE=>$projectType, self::K_METADATASUBSET=>$metaDataSubSet));
+        $filename = $this->getProjectFileName(array('id'=>$idProject, self::K_PROJECTTYPE=>$projectType, self::K_METADATASUBSET=>$metaDataSubSet));
         $jsonData = $this->getMeta($idProject, $projectType, $metaDataSubSet, $filename);
         $data = json_decode($jsonData, true);
         $data[self::K_PROJECT_FILENAME] = $filename;
@@ -310,7 +333,7 @@ class ProjectMetaDataQuery extends DataQuery {
             $new_rev_file = $this->_revisionProjectFN($projectId, "{$this->projectFileName}.$mdate", ".txt");
             $resourceCreated = io_saveFile("$new_rev_file.gz", $old_content);
 
-            $last_rev_date = $this->getProjectRevisions($projectId, 1)[0]['date'];
+            $last_rev_date = $this->getProjectRevisionList($projectId, 1)[0]['date'];
             if ($last_rev_date && $last_rev_date < $prev_date) {
                 $summary = WikiIocLangManager::getLang('external_edit');
                 $flags = array('ExternalEdit'=> true);
@@ -422,23 +445,23 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     private function _revisionProjectFN($projectId, $filename="", $ext="") {
-        if ($filename === "") {
-            if ($this->projectFileName) $filename = $this->projectFileName;
+        if ($filename==="" && $this->projectFileName) {
+            $filename = $this->projectFileName;
         }
-        $dir = $this->_revisionProjectDir($projectId) . "$filename$ext";
+        $dir = $this->revisionProjectDir($projectId) . "$filename$ext";
         return $dir;
     }
 
-    private function _revisionProjectDir($projectId) {
-        $projectId = utf8_encodeFN(str_replace(':', '/', $projectId));
+    public function revisionProjectDir($projectId) {
+        $projectId = utf8_encodeFN(str_replace(":", "/", $projectId));
         $dir = WikiGlobalConfig::getConf('revisionprojectdir') . "/$projectId/";
         return $dir;
     }
 
     private function _metaProjectFN($projectId, $filename="", $ext="") {
-        $projectId = utf8_encodeFN(str_replace(':', '/', $projectId));
-        if ($filename === "") {
-            if ($this->projectFileName) $filename = $this->projectFileName;
+        $projectId = utf8_encodeFN(str_replace(":", "/", $projectId));
+        if ($filename==="" && $this->projectFileName) {
+            $filename = $this->projectFileName;
         }
         $dir = WikiGlobalConfig::getConf('metaprojectdir') . "/$projectId/$filename$ext";
         return $dir;
@@ -505,13 +528,14 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param int    $chunk_size Máximo número de bytes que van a leerse del fichero de log
      * @return array
      */
-    private function getProjectRevisions($projectId, $num=1, $chunk_size=1024) {
+    public function getProjectRevisionList($projectId, $num=1, $chunk_size=1024) {
         $revs = array();
         $file = $this->_metaProjectFN($projectId, "", ".changes");
 
-        if ($num > 0 && @file_exists($file)) {
-            if (filesize($file) < $chunk_size || $chunk_size==0) {
+        if (@file_exists($file)) {
+            if (filesize($file) < $chunk_size || $num==0 || $chunk_size==0) {
                 $lines = file($file);
+                if ($num==0 || $chunk_size==0) $num = count($lines);
             }else {
                 $fh = fopen($file, 'r');
                 if ($fh) {
@@ -526,14 +550,16 @@ class ProjectMetaDataQuery extends DataQuery {
                 }
             }
             for ($i=0; $i<$num; $i++) {
-                $registre = explode("\t", $lines[$i]);
-                $revs[]['date'] = $registre[0];
-                $revs[]['ip']   = $registre[1];
-                $revs[]['type'] = $registre[2];
-                $revs[]['ns']   = $registre[3];
-                $revs[]['user'] = $registre[4];
-                $revs[]['sum']  = $registre[5];
-                $revs[]['extra']= $registre[6];
+                if (!empty(trim($lines[$i]))) {
+                    $registre = explode("\t", $lines[$i]);
+                    $revs[$registre[0]]['date'] = date("d-m-Y h:i:s", $registre[0]);
+                    $revs[$registre[0]]['ip']   = $registre[1];
+                    $revs[$registre[0]]['type'] = $registre[2];
+                    $revs[$registre[0]]['id']   = $registre[3];
+                    $revs[$registre[0]]['user'] = $registre[4];
+                    $revs[$registre[0]]['sum']  = trim($registre[5]);
+                    $revs[$registre[0]]['extra']= trim($registre[6]);
+                }
             }
         }
         return $revs;

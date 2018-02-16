@@ -18,6 +18,7 @@ require_once (WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
 class ProjectModel extends AbstractWikiDataModel {
 
     protected $id;
+    protected $rev;
     protected $projectType;
     protected $projectFileName;
     protected $projectFilePath;
@@ -35,10 +36,11 @@ class ProjectModel extends AbstractWikiDataModel {
         $this->dokuPageModel = new DokuPageModel($persistenceEngine);
     }
 
-    public function init($id, $projectType=NULL, $projectFileName=NULL) {
+    public function init($id, $projectType=NULL, $rev=NULL, $projectFileName=NULL) {
         $this->id = $id;
         $this->projectType = $projectType;
         $this->setProjectFileName($projectFileName);
+        $this->rev = $rev;
     }
 
     public function setData($toSet) {
@@ -63,13 +65,24 @@ class ProjectModel extends AbstractWikiDataModel {
      */
     public function getData() {
         $ret = [];
-        $query = [
-            ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
-            ProjectKeys::KEY_PROJECT_TYPE => $this->projectType,
-            ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET,
-            ProjectKeys::KEY_ID_RESOURCE => $this->id,
-            ProjectKeys::KEY_PROJECT_FILENAME => $this->getProjectFileName()
-        ];
+        if ($this->rev) {
+            $revision_file = $this->projectMetaDataQuery->revisionProjectDir($this->id) . $this->projectFileName . "." . $this->rev . ".txt.gz";
+            $query = [
+                ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
+                ProjectKeys::KEY_PROJECT_TYPE => $this->projectType,
+                ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET,
+                ProjectKeys::KEY_ID_RESOURCE => $this->id . ProjectKeys::REVISION_SUFFIX,
+                ProjectKeys::KEY_PROJECT_FILENAME => $revision_file
+            ];
+        }else {
+            $query = [
+                ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
+                ProjectKeys::KEY_PROJECT_TYPE => $this->projectType,
+                ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET,
+                ProjectKeys::KEY_ID_RESOURCE => $this->id,
+                ProjectKeys::KEY_PROJECT_FILENAME => $this->getProjectFileName()
+            ];
+        }
         $meta = $this->metaDataService->getMeta($query, FALSE)[0];
         $ret['projectMetaData']['values'] = $meta['values'];
         $ret['projectMetaData']['structure'] = $meta['structure']; //inclou els valors
@@ -96,7 +109,8 @@ class ProjectModel extends AbstractWikiDataModel {
         if ($projectFileName) {
             $this->projectFileName = $projectFileName;
         }else {
-            $a = array(ProjectKeys::KEY_PROJECT_TYPE    => $this->projectType,
+            $a = array('id' => $this->id,
+                       ProjectKeys::KEY_PROJECT_TYPE    => $this->projectType,
                        ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET
                       );
             $this->projectFileName = $this->projectMetaDataQuery->getProjectFileName($a);
@@ -262,12 +276,24 @@ class ProjectModel extends AbstractWikiDataModel {
         $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
                                        PageKeys::KEY_WIKITEXT => $text . $extra,
                                        PageKeys::KEY_SUM => $summary]);
-        /* antiguo modelo
-        $action = new CreatePageAction($this->persistenceEngine);
-        $contentData = $action->get([PageKeys::KEY_ID => $destino,
-                                     PageKeys::KEY_WIKITEXT => $text,
-                                     PageKeys::KEY_SUM => $summary]);
-        return $contentData;*/
     }
 
+    /**
+     * @param integer $num Número de revisiones solicitadas El valor 0 significa obtener todas las revisiones
+     * @return array  Contiene $num elementos de la lista de revisiones del fichero de proyecto obtenidas del log .changes
+     */
+    public function getProjectRevisionList($id, $num=0) {
+        $revs = $this->projectMetaDataQuery->getProjectRevisionList($id, $num);
+        if ($revs) {
+            $amount = WikiGlobalConfig::getConf('revision-lines-per-page', 'wikiiocmodel');
+            if (count($revs) > $amount) {
+                $revs['show_more_button'] = true;
+            }
+            $revs['current'] = @filemtime($this->projectMetaDataQuery->getFileName($id));
+            $revs['docId'] = $id;
+            $revs['position'] = -1;
+            $revs['amount'] = $amount;
+        }
+        return $revs;
+    }
 }
