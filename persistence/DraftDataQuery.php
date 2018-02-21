@@ -11,63 +11,44 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
  */
 class DraftDataQuery extends DataQuery
 {
-    public function getFileName($id, $extra = NULL)
-    {
+    public function getFileName($id, $extra = NULL) {
         return $this->getFullFileName($id);
     }
 
-    public function getFullFileName($id)
-    {
-//        $id = WikiPageSystemManager::cleanIDForFiles($id);
+    public function getFullFileName($id) {
         return getCacheName(WikiIocInfoManager::getInfo("client") . $id, '.draft');
     }
 
-    public function getStructuredFilename($id)
-    {
-//        $id = WikiPageSystemManager::cleanIDForFiles($id);
+    public function getStructuredFilename($id) {
         return $this->getFilename($id) . '.structured';
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs = FALSE, $expandProject = FALSE, $hiddenProjects = FALSE, $root = FALSE)
-    {
+    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE) {
         throw new UnavailableMethodExecutionException("DraftDataQuery#getNsTree");
     }
 
-    public function getFull($id)
-    {
-//        $id = WikiPageSystemManager::cleanIDForFiles($id);
+    public function getFull($id)    {
         $draftFile = $this->getFilename($id);
         $cleanedDraft = NULL;
         $draft = [];
 
         // Si el draft es més antic que el document actual esborrem el draft
         if ($this->hasFull($id)) {
-//        if (@file_exists($draftFile)) {
-//            if (@filemtime($draftFile) < @filemtime(wikiFN($id))) {
-//                @unlink($draftFile);
-//            } else {
             $draft = unserialize(io_readFile($draftFile, FALSE));
             $cleanedDraft = self::cleanDraft(con($draft['prefix'], $draft['text'], $draft['suffix']));
-//            }
         }
-
-//        $draftDate = WikiPageSystemManager::extractDateFromRevision(@filemtime($draftFile));
 
         return ['content' => $cleanedDraft, 'date' => $draft['date']];
     }
 
-    public function removeStructured($id)
-    {
-//        $id = WikiPageSystemManager::cleanIDForFiles($id);
+    public function removeStructured($id) {
         $draftFile = $this->getStructuredFilename($id);
         if (@file_exists($draftFile)) {
             @unlink($draftFile);
         }
     }
 
-    public function removeChunk($id, $chunkId)
-    {
-//        $id = WikiPageSystemManager::cleanIDForFiles($id);
+    public function removeChunk($id, $chunkId) {
         $draftFile = $this->getStructuredFilename($id);
 
         if (@file_exists($draftFile)) {
@@ -87,9 +68,7 @@ class DraftDataQuery extends DataQuery
         }
     }
 
-    public function getStructured($id)
-    {
-//        $id = WikiPageSystemManager::cleanIDForFiles($id);
+    public function getStructured($id) {
         $draftFile = self::getStructuredFilename($id);
         $draft = [];
 
@@ -100,14 +79,12 @@ class DraftDataQuery extends DataQuery
         return $draft;
     }
 
-    public function hasFull($id)
-    {
+    public function hasFull($id) {
         $draftFile = $this->getFullFileName($id);
         return self::existsDraft($draftFile, $id);
     }
 
-    public function hasStructured($id)
-    {
+    public function hasStructured($id) {
         $draftFile = $this->getStructuredFilename($id);
         return self::existsDraft($draftFile, $id);
     }
@@ -115,43 +92,32 @@ class DraftDataQuery extends DataQuery
     /**
      * Retorna cert si existeix un esborrany o no. En cas de que es trobi un esborrany més antic que el document es
      * esborrat.
-     *
      * @param $id - id del document
-     *
      * @return bool - cert si hi ha un esborrany vàlid o fals en cas contrari.
      */
-    public function hasAny($id)
-    {
+    public function hasAny($id) {
         return $this->hasFull($id) || $this->hasStructured($id);
     }
 
-    public function getChunk($id, $header)
-    {
+    public function getChunk($id, $header) {
+        $ret = NULL;
         $draftFile = $this->getStructuredFilename($id);
-
 
         if ($this->hasStructured($id)) {
             $draft = unserialize(io_readFile($draftFile, FALSE));
 
             if ($draft['content'][$header]) {
-                return [
-                    'content' => $draft['content'][$header],
-                    'date' => $draft['date']
-                ];
-
+                $ret = ['content' => $draft['content'][$header],
+                        'date' => $draft['date']
+                       ];
             }
-
         }
 
-        return null;
+        return $ret;
     }
 
 
-    public function generateStructured($draft, $id, $date)
-    {
-
-//        $time = time();
-
+    public function generateStructured($draft, $id, $date) {
         $newDraft = [];
         $newDraft['date'] = $date;
 
@@ -165,7 +131,6 @@ class DraftDataQuery extends DataQuery
         }
 
         // Recorrem la llista de headers de old drafts
-
         foreach ($oldDraft as $header => $chunk) {
 
             if (array_key_exists($header, $draft) && $chunk != $draft[$header]) {
@@ -182,7 +147,6 @@ class DraftDataQuery extends DataQuery
             $newDraft['content'][$header] = $content;
         }
 
-
         foreach ($draft as $header => $content) {
             $newDraft['content'][$header] = $content;
         }
@@ -196,7 +160,6 @@ class DraftDataQuery extends DataQuery
             @unlink($draftFile);
         }
 
-
     }
 
     /**
@@ -204,16 +167,15 @@ class DraftDataQuery extends DataQuery
      * @param $draft
      * @param $id
      */
-    public function saveFullDraft($draft, $id, $date)
-    {
+    public function saveFullDraft($draft, $id, $date) {
+        global $INFO;
         $aux = ['id' => $id,
-            'prefix' => '',
-            'text' => $draft,
-            'suffix' => '',
-            'date' => $date,
-            'client' => WikiIocInfoManager::getInfo('client')
-        ];
-
+                'prefix' => '',
+                'text' => $draft,
+                'suffix' => '',
+                'date' => $date,
+                'client' => WikiIocInfoManager::getInfo('client')
+               ];
         $filename = $this->getFilename($id);
 
         if (io_saveFile($filename, serialize($aux))) {
@@ -221,15 +183,31 @@ class DraftDataQuery extends DataQuery
         }
 
         $this->removeStructured($id);
-//        self::removeStructuredDraftAll($id);
-
     }
 
+    /**
+     * Guarda l'esborrany del projecte (dades del formulari) que s'està modificant
+     * @return boolean Indica si el draft s'ha desat correctamment
+     */
+    public function saveProjectDraft($draft) {
+        $aux = ['id' => $draft['id'],
+                'prefix' => '',
+                'text' => $draft['content'],
+                'suffix' => '',
+                'date' => $draft['date'],
+                'client' => WikiIocInfoManager::getInfo('client')
+               ];
+        $filename = $this->getFilename($draft['id']);
+        return io_saveFile($filename, serialize($aux));
+    }
 
-    public function getStructuredDraft($id)
-    {
-        $draftFile = $this->getStructuredFilename($id);
+    public function removeProjectDraft($id) {
+        $this->removeFull($id);
+    }
+
+    public function getStructuredDraft($id) {
         $draft = [];
+        $draftFile = $this->getStructuredFilename($id);
 
         if (@file_exists($draftFile)) {
             $draft = unserialize(io_readFile($draftFile, FALSE));
@@ -238,27 +216,6 @@ class DraftDataQuery extends DataQuery
         return $draft;
     }
 
-//    private static function removeStructuredDraft($id, $header_id){
-//        $draftFile = $this->getStructuredFilename($id);
-//
-//        if (@file_exists($draftFile)) {
-//            $oldDraft = $this->getStructured($id);
-//
-//            if (array_key_exists($header_id, $oldDraft)) {
-//                unset($oldDraft[$header_id]);
-//            }
-//
-//            if (count($oldDraft) > 0) {
-//                io_saveFile($draftFile, serialize($oldDraft));
-//
-//            } else {
-//                // No hi ha res, l'esborrem
-//                @unlink($draftFile);
-//            }
-//        }
-//
-//    }
-
     /**
      * Retorna cert si existeix un draft o fals en cas contrari. Si es troba un draft però es més antic que el document
      * corresponent aquest draft s'esborra.
@@ -266,9 +223,7 @@ class DraftDataQuery extends DataQuery
      * @param {string} $id id del document a comprovar
      * @return bool
      */
-    private static function existsDraft($draftFile, $id)
-    {
-
+    private static function existsDraft($draftFile, $id) {
         $exists = false;
 
         // Si el draft es més antic que el document actual esborrem el draft
@@ -287,29 +242,22 @@ class DraftDataQuery extends DataQuery
      * Neteja el contingut del esborrany per poder fer-lo servir directament.
      *
      * @param string $text - contingut original del fitxer de esborrany.
-     *
      * @return mixed
      */
-    private static function cleanDraft($text)
-    {
+    private static function cleanDraft($text) {
         $pattern = '/^(wikitext\s*=\s*)|(date=[0-9]*)$/i';
         $content = preg_replace($pattern, '', $text);
         return $content;
     }
 
-    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
-    public function removeFull($id)
-    {
-//        $id = WikiPageSystemManager::cleanIDForFiles($id);
+    public function removeFull($id) {
         $draftFile = $this->getFileName($id);
         if (@file_exists($draftFile)) {
             @unlink($draftFile);
         }
     }
 
-    // ALERTA[Xavi] Afegit perquè no s'ha trobat equivalent
-    public function getFullDraftDate($id)
-    {
+    public function getFullDraftDate($id) {
         $draftFile = $this->getFullFileName($id);
         if (@file_exists($draftFile)) {
             $draft = unserialize(io_readFile($draftFile, FALSE));
@@ -317,17 +265,11 @@ class DraftDataQuery extends DataQuery
         } else {
             return -1;
         }
-
-//        return @file_exists($draftFile) ? @filemtime($draftFile) : -1;
     }
 
-
-    public function getStructuredDraftDate($id)
-    {
+    public function getStructuredDraftDate($id)   {
         $draft = $this->getStructured($id);
-
         return $draft['date'];
-
     }
 
 }
