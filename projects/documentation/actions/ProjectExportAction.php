@@ -36,7 +36,7 @@ class ProjectExportAction  extends AbstractWikiAction{
      * Ejecuta los procesos_render de primer nivel definidos en el primer nivel
      * del archivo de configuración del proyecto
      */
-    public function init($params) {
+    protected function setParams($params) {
         $this->mode        = $params['mode'];
         $this->filetype    = $params['filetype'];
         $this->projectType = $params['projectType'];

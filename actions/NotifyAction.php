@@ -31,7 +31,6 @@ class NotifyAction extends AbstractWikiAction {
      */
 
     protected $dokuNotifyModel;
-    protected $params;
     protected $isAdmin;
 
     public function __construct($isAdmin) {
