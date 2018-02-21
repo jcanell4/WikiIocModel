@@ -20,9 +20,12 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
         $this->projectModel = new ProjectModel($this->persistenceEngine);
     }
 
+    protected function getModel() {
+        return $this->projectModel;
+    }
+
     protected function idToRequestId($requestId) {
-        $id = str_replace(":", "_", $requestId);
-        return $id;
+        return str_replace(":", "_", $requestId);
     }
 
 }

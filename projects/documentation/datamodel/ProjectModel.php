@@ -25,6 +25,8 @@ class ProjectModel extends AbstractWikiDataModel {
     protected $metaDataService;
     protected $persistenceEngine;
     protected $projectMetaDataQuery;
+    protected $draftDataQuery;
+    protected $lockDataQuery;
     protected $pageDataQuery;
     protected $dokuPageModel;
 
@@ -32,6 +34,8 @@ class ProjectModel extends AbstractWikiDataModel {
         parent::__construct($persistenceEngine);
         $this->metaDataService= new MetaDataService();
         $this->projectMetaDataQuery = $persistenceEngine->createProjectMetaDataQuery();
+        $this->draftDataQuery = $persistenceEngine->createDraftDataQuery();
+        $this->lockDataQuery = $persistenceEngine->createLockDataQuery();
         $this->pageDataQuery = $persistenceEngine->createPageDataQuery();
         $this->dokuPageModel = new DokuPageModel($persistenceEngine);
     }
@@ -39,8 +43,8 @@ class ProjectModel extends AbstractWikiDataModel {
     public function init($id, $projectType=NULL, $rev=NULL, $projectFileName=NULL) {
         $this->id = $id;
         $this->projectType = $projectType;
-        $this->setProjectFileName($projectFileName);
         $this->rev = $rev;
+        $this->setProjectFileName($projectFileName);
     }
 
     public function setData($toSet) {
@@ -88,6 +92,14 @@ class ProjectModel extends AbstractWikiDataModel {
         $ret['projectMetaData']['structure'] = $meta['structure']; //inclou els valors
         $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->projectType, "defaultView");
         return $ret;
+    }
+
+    public function saveDraft($draft) {
+        $this->draftDataQuery->saveProjectDraft($draft);
+    }
+
+    public function removeDraft($id) {
+        $this->draftDataQuery->removeProjectDraft($id);
     }
 
     /* Valida que exista el nombre de usuario que se desea utilizar */
