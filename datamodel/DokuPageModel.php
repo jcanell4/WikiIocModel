@@ -440,10 +440,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
     }
 
     public function removeDraft($draft) {
-
-        $type = $draft['type'];
-
-        switch ($type) {
+        switch ($draft['type']) {
             case 'structured':
                 if(isset($draft["section_id"])){
                     return $this->removeChunkDraft($draft["section_id"]);
@@ -462,26 +459,19 @@ class DokuPageModel extends WikiRenderizableDataModel {
         }
     }
 
-    public function saveDraft($draft)
-    {
-        $type = $draft['type'];
-
-        switch ($type) {
+    public function saveDraft($draft) {
+        switch ($draft['type']) {
             case 'structured':
-//                $this->draftDataQuery->generateStructured($draft['content'], $draft['id'], $draft['date']);
                 $this->draftDataQuery->generateStructured($draft['content'], $draft['id'], $draft['date']);
                 break;
 
             case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
-//                $this->draftDataQuery->saveFullDraft($draft['content'], $draft['id'], $draft['date']);
                 $this->draftDataQuery->saveFullDraft($draft['content'], $draft['id'], $draft['date']);
                 break;
 
             default:
-                // error o no draft
                 break;
         }
     }
-
 
 }
