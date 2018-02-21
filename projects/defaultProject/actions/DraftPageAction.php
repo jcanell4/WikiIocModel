@@ -37,31 +37,30 @@ class DraftPageAction extends PageAction {
         }
 
         $ACT = act_permcheck($this->defaultDo);
-
         if ($ACT == PageKeys::DW_ACT_DENIED) {
             throw new InsufficientPermissionToEditPageException($this->params[PageKeys::KEY_ID]);
         }
-        
+
         if($this->checklock()== LockDataQuery::LOCKED){
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
 
         if($this->params[PageKeys::KEY_DO]===PageKeys::DW_ACT_PREVIEW){
             $lockInfo = $this->updateLock()["info"];
-            $draft =json_decode($this->params['draft'], true);
+            $draft = json_decode($this->params['draft'], true);
             $draft['date'] = $this->params['date'];
-            //$this->response = DraftManager::saveDraft($draft);// TODO[Xavi] Això hurà de contenir la info
             $this->getModel()->saveDraft($draft);
+
             $this->response[PageKeys::KEY_ID] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
+            
             if($draft['type']==="full"){
-                $this->response = ['info' => self::generateInfo('info', 'Desat esborrany complet', $this->response['id'], self::$infoDuration)];//TODO [Josep] internacionalitzar!
+                $this->response['info'] = self::generateInfo('info', 'Desat esborrany complet', $this->response['id'], self::$infoDuration);
             }else{
-                $this->response = ['info' => self::generateInfo('info', 'Desat esborrany parcial', $this->response['id'], self::$infoDuration)];//TODO [Josep] internacionalitzar!
+                $this->response['info'] = self::generateInfo('info', 'Desat esborrany parcial', $this->response['id'], self::$infoDuration);
             }
             $this->response["lockInfo"] = $lockInfo;
         }
         else if($this->params[PageKeys::KEY_DO]===PageKeys::DW_ACT_DRAFTDEL){
-            //$this->response = DraftManager::removeDraft($this->params);// TODO[Xavi] Això hurà de contenir la info
             $this->getModel()->removeDraft($this->params);
             $this->response[PageKeys::KEY_ID] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
         }
