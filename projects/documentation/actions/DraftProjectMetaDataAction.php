@@ -1,6 +1,6 @@
 <?php
 /**
- * DraftProjectAction: Gestiona l'esborrany del formulari de dades d'un projecte mentre s'està modificant
+ * DraftProjectMetaDataAction: Gestiona l'esborrany del formulari de dades d'un projecte mentre s'està modificant
  * @culpable Rafael
  */
 if (!defined("DOKU_INC")) die();
@@ -8,7 +8,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once (DOKU_INC . 'lib/plugins/ajaxcommand/defkeys/PageKeys.php');
 include_once (DOKU_PLUGIN . "wikiiocmodel/projects/documentation/actions/ProjectMetadataAction.php");
 
-class DraftProjectAction extends ProjectMetadataAction {
+class DraftProjectMetaDataAction extends ProjectMetadataAction {
 
     private $do;
     private static $infoDuration = 15;
@@ -22,9 +22,9 @@ class DraftProjectAction extends ProjectMetadataAction {
         $this->projectModel->init($this->params[ProjectKeys::KEY_ID],
                                   $this->params[ProjectKeys::KEY_PROJECT_TYPE],
                                   $this->params[ProjectKeys::KEY_REV]);
-        if ($this->params[ProjectKeys::KEY_DO]===PageKeys::DW_ACT_PREVIEW || $this->params[ProjectKeys::KEY_DO]===PageKeys::DW_ACT_SAVE) {
+        if ($this->params[ProjectKeys::KEY_DO]===PageKeys::DW_ACT_PREVIEW || $this->params[ProjectKeys::KEY_DO]===ProjectKeys::KEY_SAVE || $this->params[ProjectKeys::KEY_DO]===ProjectKeys::KEY_SAVE_PROJECT_DRAFT) {
             $this->do = PageKeys::DW_ACT_PREVIEW;
-        }else if ($this->params[ProjectKeys::KEY_DO]===PageKeys::DW_ACT_DRAFTDEL || $this->params[ProjectKeys::KEY_DO]===PageKeys::DW_ACT_REMOVE) {
+        }else if ($this->params[ProjectKeys::KEY_DO]===PageKeys::DW_ACT_DRAFTDEL || $this->params[ProjectKeys::KEY_DO]===PageKeys::DW_ACT_REMOVE || $this->params[ProjectKeys::KEY_DO]===ProjectKeys::KEY_REMOVE_PROJECT_DRAFT) {
             $this->do = PageKeys::DW_ACT_DRAFTDEL;
         }
     }
@@ -49,7 +49,7 @@ class DraftProjectAction extends ProjectMetadataAction {
             $response['info'] = self::generateInfo("info", "S'ha desat l'esborrany", $id, self::$infoDuration);
         }
         else if ($this->do === PageKeys::DW_ACT_DRAFTDEL) {
-            $this->getModel()->removeDraft($id);
+            $this->getModel()->removeDraft();
             $response[ProjectKeys::KEY_ID] = $id;
         }
         else{
