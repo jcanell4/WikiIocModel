@@ -98,12 +98,14 @@ class ProjectModel extends AbstractWikiDataModel {
         $this->draftDataQuery->saveProjectDraft($draft);
     }
 
-    public function removeDraft($id) {
-        $this->draftDataQuery->removeProjectDraft($id);
+    public function removeDraft() {
+        $this->draftDataQuery->removeProjectDraft($this->id);
     }
 
-    /* Valida que exista el nombre de usuario que se desea utilizar */
-    public function validaNomAutor($nom) {
+    /**
+     * Valida que exista el nombre de usuario que se desea utilizar
+     */
+    public function validaNom($nom) {
         global $auth;
         return ($auth->getUserCount(['user' => $nom]) > 0);
     }
