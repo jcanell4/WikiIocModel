@@ -540,7 +540,7 @@ class ProjectMetaDataQuery extends DataQuery {
                 $fh = fopen($file, 'r');
                 if ($fh) {
                     $lines[] = fgets($fh, $chunk_size);
-                    $count = intdiv($chunk_size, strlen($revs[0]));
+                    $count = floor($chunk_size / strlen($lines[0]));
                     $i = 1;
                     while (!feof($fh) && $i < $count) {
                         $lines[] = fgets($fh);
