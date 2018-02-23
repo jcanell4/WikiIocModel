@@ -17,30 +17,32 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
         $paramsArr = $this->params;
         $dataProject = $paramsArr['dataProject'];
         $extraProject = $paramsArr['extraProject'];
-        $this->projectModel->init($dataProject[AjaxKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE]);
+        $this->getModel()->init($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE]);
 
         //sólo se ejecuta si existe el proyecto
-        if ($this->projectModel->existProject($dataProject[AjaxKeys::KEY_ID])) {
+        if ($this->getModel()->existProject($dataProject[ProjectKeys::KEY_ID])) {
 
             $metaDataValues = $this->netejaKeysFormulari($dataProject);
-            if (!$this->projectModel->validaNomAutor($metaDataValues['autor'])) {
+            if (!$this->getModel()->validaNom($metaDataValues['autor']))
                 throw new UnknownUserException($metaDataValues['autor']." (indicat al camp 'autor') ");
-            }
+            if (!$this->getModel()->validaNom($metaDataValues['responsable']))
+                throw new UnknownUserException($metaDataValues['responsable']." (indicat al camp 'responsable') ");
+
             $metaData = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                 ProjectKeys::KEY_PROJECT_TYPE => $dataProject[ProjectKeys::KEY_PROJECT_TYPE], //opcional
                 ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET,
-                ProjectKeys::KEY_ID_RESOURCE => $dataProject[AjaxKeys::KEY_ID],
+                ProjectKeys::KEY_ID_RESOURCE => $dataProject[ProjectKeys::KEY_ID],
                 ProjectKeys::KEY_FILTER => $dataProject[ProjectKeys::KEY_FILTER],  //opcional
                 ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
             ];
-            $ret = $this->projectModel->setData($metaData);
+            $ret = $this->getModel()->setData($metaData);
 
-            if ($this->projectModel->isProjectGenerated($dataProject[AjaxKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE])) {
-                $data = $this->projectModel->getData();   //obtiene la estructura y el contenido del proyecto
+            if ($this->getModel()->isProjectGenerated($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE])) {
+                $data = $this->getModel()->getData();   //obtiene la estructura y el contenido del proyecto
                 $include = [
-                     'id' => $dataProject[AjaxKeys::KEY_ID]
-                    ,'link_page' => $dataProject[AjaxKeys::KEY_ID].":".end(explode(":", $data['projectMetaData']['values']["plantilla"]))
+                     'id' => $dataProject[ProjectKeys::KEY_ID]
+                    ,'link_page' => $dataProject[ProjectKeys::KEY_ID].":".end(explode(":", $data['projectMetaData']['values']["plantilla"]))
                     ,'old_autor' => $extraProject['old_autor']
                     ,'old_responsable' => $extraProject['old_responsable']
                     ,'new_autor' => $data['projectMetaData']['values']['autor']
@@ -48,13 +50,15 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
                     ,'userpage_ns' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')
                     ,'shortcut_name' => WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
                 ];
-                $this->projectModel->modifyACLPageToUser($include);
+                $this->getModel()->modifyACLPageToUser($include);
             }
-            $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $dataProject[AjaxKeys::KEY_ID]);
-            $ret[AjaxKeys::KEY_ID] = $this->idToRequestId($dataProject[AjaxKeys::KEY_ID]);
+            $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $dataProject[ProjectKeys::KEY_ID]);
+            $ret[ProjectKeys::KEY_ID] = $this->idToRequestId($dataProject[ProjectKeys::KEY_ID]);
+
+            $this->getModel()->removeDraft();
         }
         if (!$ret)
-            throw new ProjectExistException($dataProject[AjaxKeys::KEY_ID]);
+            throw new ProjectExistException($dataProject[ProjectKeys::KEY_ID]);
         else
             return $ret;
     }
