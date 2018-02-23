@@ -9,10 +9,11 @@
  */
 $_AuthorizationCfg =
     array(
-        '_default'      => 'admin'      /*Default case*/
-	,'saveProject'  => 'editProject'
-	,'draft'  	=> 'editProject'
-        ,"_none"        => "command"
+        '_default'                     => "admin"      /*Default case*/
+	,'saveProject'                 => "editProject"
+	,'save_project_draftProject'   => "editProject"
+	,'remove_project_draftProject' => "editProject"
+        ,'_none'                       => "command"
     );
 
 /* Noms de commanda que ja ténen un fitxer d'autorització amb el seu nom
