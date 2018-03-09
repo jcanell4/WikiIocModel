@@ -5,6 +5,18 @@ include_once (DOKU_PLUGIN . 'wikiiocmodel/projects/documentation/actions/Project
 
 class GetProjectMetaDataAction extends ProjectMetadataAction {
 
+    protected function startProcess() {
+        $draft_date = $this->projectModel->getDraft('date');
+
+        if ($this->params[ProjectKeys::KEY_DO] === ProjectKeys::KEY_RECOVER_LOCAL_DRAFT || $draft_date) {
+            $this->params[ProjectKeys::KEY_RECOVER_LOCAL_DRAFT] = TRUE;
+
+            if (!$this->params[ProjectKeys::KEY_DATE]) {
+                $this->params[ProjectKeys::KEY_DATE] = $draft_date;
+            }
+        }
+    }
+
     public function responseProcess() {
         $this->projectModel->init($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_REV]);
 
@@ -13,11 +25,19 @@ class GetProjectMetaDataAction extends ProjectMetadataAction {
 
             $response = $this->projectModel->getData();
 
+            $this->startProcess();
+
             //afegir les revisions a la resposta
             $response[ProjectKeys::KEY_REV] = $this->projectModel->getProjectRevisionList($this->params[ProjectKeys::KEY_ID], 0);
 
             //en un futuro, añadir pestaña de notificaciones en la ZONA META
             //$this->projectModel->addNotificationsMetaToResponse($response);
+
+            $drafts = $this->projectModel->getAllDrafts();
+            if (count($drafts) > 0) {
+                $response['drafts'] = $drafts;
+                $response['originalLastmod'] = $this->projectModel->getLastModFileDate($this->params[ProjectKeys::KEY_ID]);
+            }
 
             $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_loaded'), $this->params[ProjectKeys::KEY_ID]);
             $response[ProjectKeys::KEY_ID] = $this->idToRequestId($this->params[ProjectKeys::KEY_ID]);

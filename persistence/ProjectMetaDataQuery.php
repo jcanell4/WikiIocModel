@@ -565,4 +565,10 @@ class ProjectMetaDataQuery extends DataQuery {
         return $revs;
     }
 
+    public function getLastModFileDate($id) {
+        $fn = $this->getFileName($id);
+        if (@file_exists($fn)) {
+            return filemtime($fn);
+        }
+    }
 }

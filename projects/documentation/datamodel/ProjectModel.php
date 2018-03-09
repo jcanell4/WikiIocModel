@@ -94,6 +94,26 @@ class ProjectModel extends AbstractWikiDataModel {
         return $ret;
     }
 
+    public function getDraft($peticio=NULL) {
+        $draft = $this->draftDataQuery->getFull($this->id);
+        if ($peticio)
+            return $draft[$peticio]; // $peticio = 'content' | 'date'
+        else
+            return $draft;
+    }
+
+    public function getAllDrafts() {
+        $drafts = [];
+        if ($this->hasDraft()) {
+            $drafts['project'] = $this->getDraft();
+        }
+        return $drafts;
+    }
+
+    private function hasDraft(){
+        return $this->draftDataQuery->hasFull($this->id);
+    }
+
     public function saveDraft($draft) {
         $this->draftDataQuery->saveProjectDraft($draft);
     }
@@ -310,4 +330,9 @@ class ProjectModel extends AbstractWikiDataModel {
         }
         return $revs;
     }
+
+    public function getLastModFileDate($id) {
+        return $this->projectMetaDataQuery->getLastModFileDate($id);
+    }
+
 }

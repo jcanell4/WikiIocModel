@@ -74,6 +74,9 @@ $lang['commandAuthorizationNotFound'] = 'Command authorization not found';
 $lang['cantCreatePageInProject'] = 'No pots crear una pàgina en aquest projecte';
 $lang['ClassNotFound'] = "No s'ha trobat la classe %s";
 
+$lang['projects']['project_loaded'] = "El projecte s'ha carregat correctament";
+$lang['projects']['cancel_editing_with_changes'] = "S'han produït canvis a les dades del projecte. Vols tancar el formulari?";
+
 //Excepciones del proyecto 'documentation'
 $lang['projectException']['projectAlreadyGenerated'] = 'El projecte %s ja està generat. No es pot tornar a generar.';
 $lang['projectException']['projectExist'] = 'The project %s already exist';

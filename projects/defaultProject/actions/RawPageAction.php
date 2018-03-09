@@ -31,8 +31,6 @@ class RawPageAction extends PageAction {
             $this->params[PageKeys::KEY_TO_REQUIRE] = TRUE;
         } else if ($this->params[PageKeys::KEY_DO] === PageKeys::KEY_RECOVER_LOCAL_DRAFT) {
             $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = TRUE;
-        } else if ($this->params[PageKeys::KEY_DO] === PageKeys::KEY_RECOVER_LOCAL_DRAFT) {
-            $this->params[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = TRUE;
         }
 
         parent::startProcess();
@@ -282,7 +280,7 @@ class RawPageAction extends PageAction {
         $resp[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
         $resp = array_merge($resp, $this->_getStructuredHtmlForm($this->getModel()->getRawData()['content']));
 
-        //ALERTA [Josep]: De moment cal retornar $resp[recover_local]=true, però cal valorar si cal fer-ho així.
+        //ALERTA [Josep]: De moment cal retornar $resp[recover_local_draft]=true, però cal valorar si cal fer-ho així.
         $resp[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
         $info = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
 
