@@ -10,13 +10,11 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
 
     /**
      * Envía los datos $metaData del proyecto al ProjectModel y obtiene la estructura y los valores del proyecto
-     * @param array $paramsArr [dataProject[], extraProject[]]
      * @return array con la estructura y los valores del proyecto
      */
     public function responseProcess() {
-        $paramsArr = $this->params;
-        $dataProject = $paramsArr['dataProject'];
-        $extraProject = $paramsArr['extraProject'];
+        $dataProject = $this->params['dataProject'];
+        $extraProject = $this->params['extraProject'];
         $this->getModel()->init($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE]);
 
         //sólo se ejecuta si existe el proyecto
@@ -55,8 +53,11 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
             $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $dataProject[ProjectKeys::KEY_ID]);
             $ret[ProjectKeys::KEY_ID] = $this->idToRequestId($dataProject[ProjectKeys::KEY_ID]);
 
-            $this->getModel()->removeDraft();
+            if ($dataProject[ProjectKeys::KEY_KEEP_DRAFT] && $dataProject[ProjectKeys::KEY_KEEP_DRAFT]==="false") {
+                $this->getModel()->removeDraft();
+            }
         }
+
         if (!$ret)
             throw new ProjectExistException($dataProject[ProjectKeys::KEY_ID]);
         else
@@ -65,7 +66,7 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
 
     private function netejaKeysFormulari($array) {
         $cleanArray = [];
-        $excludeKeys = ['id','ns','do','sectok','projectType','submit', 'cancel','keep_draft','close','no_response'];
+        $excludeKeys = ['id','do','sectok','projectType','ns','submit', 'cancel','close','keep_draft','no_response'];
         foreach ($array as $key => $value) {
             if (!in_array($key, $excludeKeys)) {
                 $cleanArray[$key] = $value;
