@@ -65,7 +65,7 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
 
     private function netejaKeysFormulari($array) {
         $cleanArray = [];
-        $excludeKeys = ['id','ns','projectType','do','submit','sectok'];
+        $excludeKeys = ['id','ns','do','sectok','projectType','submit', 'cancel','keep_draft','close','no_response'];
         foreach ($array as $key => $value) {
             if (!in_array($key, $excludeKeys)) {
                 $cleanArray[$key] = $value;
