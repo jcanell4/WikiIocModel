@@ -5,27 +5,23 @@ include_once (DOKU_PLUGIN . 'wikiiocmodel/projects/documentation/actions/Project
 
 class GetProjectMetaDataAction extends ProjectMetadataAction {
 
-    protected function startProcess() {
-        $draft_date = $this->projectModel->getDraft('date');
+    protected function setParams($params) {
+        parent::setParams($params);
+        $this->projectModel->init($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_REV]);
 
-        if ($this->params[ProjectKeys::KEY_DO] === ProjectKeys::KEY_RECOVER_LOCAL_DRAFT || $draft_date) {
-            $this->params[ProjectKeys::KEY_RECOVER_LOCAL_DRAFT] = TRUE;
-
-            if (!$this->params[ProjectKeys::KEY_DATE]) {
+        if (!$this->params[ProjectKeys::KEY_DATE]) {
+            $draft_date = $this->projectModel->getDraft('date');
+            if ($draft_date) {
                 $this->params[ProjectKeys::KEY_DATE] = $draft_date;
             }
         }
     }
 
     public function responseProcess() {
-        $this->projectModel->init($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_REV]);
-
         //sólo se ejecuta si existe el proyecto
         if ($this->projectModel->existProject($this->params[ProjectKeys::KEY_ID])) {
 
             $response = $this->projectModel->getData();
-
-            $this->startProcess();
 
             //afegir les revisions a la resposta
             $response[ProjectKeys::KEY_REV] = $this->projectModel->getProjectRevisionList($this->params[ProjectKeys::KEY_ID], 0);

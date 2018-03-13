@@ -52,10 +52,11 @@
         },
         "titol": {
           "mandatory": true,
+          "n_columns": 8,
           "props": {"required":true}
         },
         "descripcio": {
-          "n_columns": 7
+          "n_columns": 12
         },
         "plantilla": {
           "n_columns": 4,
