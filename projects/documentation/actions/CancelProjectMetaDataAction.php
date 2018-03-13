@@ -12,7 +12,7 @@ class CancelProjectMetaDataAction extends GetProjectMetaDataAction {
         }
 
         if ( $this->params[ProjectKeys::KEY_NO_RESPONSE] ) {
-            $response['codeType'] = 0;
+            $response[ProjectKeys::KEY_CODETYPE] = 0;
             return $response;
         }
 
