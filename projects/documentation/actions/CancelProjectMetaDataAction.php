@@ -7,11 +7,11 @@ class CancelProjectMetaDataAction extends GetProjectMetaDataAction {
 
     public function responseProcess() {
 
-        if ( $this->params[ProjectKeys::KEY_KEEP_DRAFT] === "false" ) {
+        if (!$this->params[ProjectKeys::KEY_KEEP_DRAFT]) {
             $this->getModel()->removeDraft(); //Elimina els esborranys
         }
 
-        if ( $this->params[ProjectKeys::KEY_NO_RESPONSE] ) {
+        if ($this->params[ProjectKeys::KEY_NO_RESPONSE] ) {
             $response[ProjectKeys::KEY_CODETYPE] = 0;
             return $response;
         }
