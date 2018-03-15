@@ -34,7 +34,8 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
                 ProjectKeys::KEY_FILTER => $dataProject[ProjectKeys::KEY_FILTER],  //opcional
                 ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
             ];
-            $ret = $this->getModel()->setData($metaData);
+            
+            $response = $this->getModel()->setData($metaData);
 
             if ($this->getModel()->isProjectGenerated($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE])) {
                 $data = $this->getModel()->getData();   //obtiene la estructura y el contenido del proyecto
@@ -50,18 +51,22 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
                 ];
                 $this->getModel()->modifyACLPageToUser($include);
             }
-            $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $dataProject[ProjectKeys::KEY_ID]);
-            $ret[ProjectKeys::KEY_ID] = $this->idToRequestId($dataProject[ProjectKeys::KEY_ID]);
-
-            if ($dataProject[ProjectKeys::KEY_KEEP_DRAFT] && $dataProject[ProjectKeys::KEY_KEEP_DRAFT]==="false") {
+            if (!$dataProject[ProjectKeys::KEY_KEEP_DRAFT]) {
                 $this->getModel()->removeDraft();
+            }
+            
+            if ($dataProject[ProjectKeys::KEY_NO_RESPONSE]) {
+                $response[ProjectKeys::KEY_CODETYPE] = 0;
+            }else{
+                $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $dataProject[ProjectKeys::KEY_ID]);
+                $response[ProjectKeys::KEY_ID] = $this->idToRequestId($dataProject[ProjectKeys::KEY_ID]);
             }
         }
 
-        if (!$ret)
+        if (!$response)
             throw new ProjectExistException($dataProject[ProjectKeys::KEY_ID]);
         else
-            return $ret;
+            return $response;
     }
 
     private function netejaKeysFormulari($array) {

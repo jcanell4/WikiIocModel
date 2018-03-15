@@ -27,7 +27,7 @@ class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAct
      * Rellena de información una pestaña de la zona de MetaInformación
      */
     function setExtraMeta(&$event, $param) {
-        if(!isset($event->data["responseData"]["codeType"])){
+        if (!isset($event->data['responseData'][ProjectKeys::KEY_CODETYPE])) {
             $result['ns'] = getID();
             $result['id'] = str_replace(':', '_', $result['ns']);
             if (class_exists("ProjectExportAction", TRUE)){
