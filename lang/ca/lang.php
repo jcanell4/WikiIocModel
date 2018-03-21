@@ -20,6 +20,7 @@ $lang['pageNotFound'] = "La pàgina %s no s'ha trobat";
 $lang['pageExists'] = "La pàgina %s ja existeix";
 $lang['metaEditForm'] = "Camps Edició";
 $lang['project_loaded'] = "El projecte s'ha carregat correctament";
+$lang['project_view'] = "Es mostren les dades actuals del projecte.";
 
 $lang['auth_CreatePage'] = "No teniu permís per a Crear la pàgina %s";
 $lang['auth_EditPage'] = "No teniu permís per a Editar la pàgina %s";
@@ -74,9 +75,6 @@ $lang['commandAuthorizationNotFound'] = 'Command authorization not found';
 $lang['cantCreatePageInProject'] = 'No pots crear una pàgina en aquest projecte';
 $lang['ClassNotFound'] = "No s'ha trobat la classe %s";
 
-$lang['projects']['project_loaded'] = "El projecte s'ha carregat correctament";
-$lang['projects']['cancel_editing_with_changes'] = "S'han produït canvis a les dades del projecte. Vols tancar el formulari?";
-
 //Excepciones del proyecto 'documentation'
 $lang['projectException']['projectAlreadyGenerated'] = 'El projecte %s ja està generat. No es pot tornar a generar.';
 $lang['projectException']['projectExist'] = 'The project %s already exist';
@@ -93,7 +91,6 @@ $lang['projectException']['insufficientPermissionToGenerateProject'] = 'Vosté n
 $lang['title_message_notification'] = 'Missatge de %s';
 $lang['title_message_notification_with_id'] = 'Missatge de %s (document %s)';
 $lang['doc_message'] = 'Missatge referent a: [[%s|%s]].';
-//$lang['doc_message_with_rev'] = 'Missatge referent a: [[this>%1$s?rev=%2$s|<%1$s(%2$s)>]].';
 $lang['doc_message_with_rev'] = 'Missatge referent a: [[%s|%s (%s)]].';
 $lang['mail_message'] = "S'ha enviat una notificació a la [[%s|wiki]] referent a //%s//, amb el missatge següent: ";
 $lang['message_notification_receivers'] = '**Destinataris**: %s';
@@ -123,3 +120,5 @@ $lang['save_or_discard_dialog_message'] = 'Vols desar els canvis abans de cancel
 $lang['save_or_discard_dialog_dont_save'] = 'No desar';
 $lang['save_or_discard_dialog_save'] = 'Desar';
 $lang['search'] = 'Cercar';
+
+$lang['projects']['cancel_editing_with_changes'] = "S'han produït canvis a les dades del projecte. Vols tancar el formulari?";
