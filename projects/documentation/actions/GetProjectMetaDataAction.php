@@ -32,8 +32,9 @@ class GetProjectMetaDataAction extends ProjectMetadataAction {
             $drafts = $this->projectModel->getAllDrafts();
             if (count($drafts) > 0) {
                 $response['drafts'] = $drafts;
-                $response['originalLastmod'] = $this->projectModel->getLastModFileDate($this->params[ProjectKeys::KEY_ID]);
             }
+            //Pot existir un draft local i sense draft remot
+            $response['originalLastmod'] = $this->projectModel->getLastModFileDate($this->params[ProjectKeys::KEY_ID]);
 
             $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_loaded'), $this->params[ProjectKeys::KEY_ID]);
             $response[ProjectKeys::KEY_ID] = $this->idToRequestId($this->params[ProjectKeys::KEY_ID]);
