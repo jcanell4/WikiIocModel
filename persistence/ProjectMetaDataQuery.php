@@ -315,13 +315,15 @@ class ProjectMetaDataQuery extends DataQuery {
     /**
      * @return array Contiene los datos del proyecto correspondientes a la clave '$metaDataSubSet'
      */
-    public function getDataProject($idProject, $projectType) {
-        $metaDataSubSet = ProjectKeys::VAL_DEFAULTSUBSET;   //clave del array que contiene los datos del proyecto
+    public function getDataProject($idProject, $projectType, $extra=FALSE) {
+        $metaDataSubSet = ProjectKeys::VAL_DEFAULTSUBSET;   //clave en el array que contiene los datos del proyecto
         $filename = $this->getProjectFileName(array('id'=>$idProject, self::K_PROJECTTYPE=>$projectType, self::K_METADATASUBSET=>$metaDataSubSet));
         $jsonData = $this->getMeta($idProject, $projectType, $metaDataSubSet, $filename);
         $data = json_decode($jsonData, true);
-        $data[self::K_PROJECT_FILENAME] = $filename;
-        $data[self::K_PROJECT_FILEPATH] = $this->getFileName($idProject, array(self::K_PROJECTTYPE => $projectType, self::K_METADATASUBSET => $metaDataSubSet));
+        if ($extra) {
+            $data[self::K_PROJECT_FILENAME] = $filename;
+            $data[self::K_PROJECT_FILEPATH] = $this->getFileName($idProject, array(self::K_PROJECTTYPE => $projectType, self::K_METADATASUBSET => $metaDataSubSet));
+        }
         return $data;
     }
 

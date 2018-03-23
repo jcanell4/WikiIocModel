@@ -45,6 +45,7 @@ class ProjectModel extends AbstractWikiDataModel {
         $this->projectType = $projectType;
         $this->rev = $rev;
         $this->setProjectFileName($projectFileName);
+        $this->setProjectFilePath();
     }
 
     public function setData($toSet) {
@@ -70,7 +71,7 @@ class ProjectModel extends AbstractWikiDataModel {
     public function getData() {
         $ret = [];
         if ($this->rev) {
-            $revision_file = $this->projectMetaDataQuery->revisionProjectDir($this->id) . $this->projectFileName . "." . $this->rev . ".txt.gz";
+            $revision_file = $this->getProjectRevisionFile($this->id, $this->rev);
             $query = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                 ProjectKeys::KEY_PROJECT_TYPE => $this->projectType,
@@ -156,6 +157,45 @@ class ProjectModel extends AbstractWikiDataModel {
             $this->setProjectFileName();
         }
         return $this->projectFileName;
+    }
+
+    public function setProjectFilePath() {
+        $this->projectFilePath = $this->projectMetaDataQuery->getProjectFilePath();
+    }
+
+    public function getProjectFilePath() {
+        if (!$this->projectFilePath) {
+            $this->setProjectFilePath();
+        }
+        return $this->projectFilePath;
+    }
+
+    public function getProjectAbsFilePath() {
+        return $this->getProjectFilePath() . $this->getProjectFileName();
+    }
+
+    public function getProjectRevisionFile($id, $rev) {
+        return $this->projectMetaDataQuery->revisionProjectDir($id) . "{$this->projectFileName}.$rev.txt.gz";
+    }
+
+    //Obtiene un array [key, value] con los datos del proyecto solicitado
+    public function getDataProject($id, $projectType) {
+        return $this->projectMetaDataQuery->getDataProject($id, $projectType);
+    }
+
+    //Obtiene un array [key, value] con los datos de una revisión específica del proyecto solicitado
+    public function getDataRevisionProject($id, $rev) {
+        $file_revision = $this->getProjectRevisionFile($id, $rev);
+        $jrev = gzfile($file_revision);
+        $a = json_decode($jrev[0], TRUE);
+        return $a[ProjectKeys::VAL_DEFAULTSUBSET];
+    }
+
+    //Obtiene la fecha de una revisión específica del proyecto solicitado
+    public function getDateRevisionProject($id, $rev) {
+        $file_revision = $this->getProjectRevisionFile($id, $rev);
+        $date = @filemtime($file_revision);
+        return $date;
     }
 
     public function createDataDir($id) {
