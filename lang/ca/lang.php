@@ -21,6 +21,8 @@ $lang['pageExists'] = "La pàgina %s ja existeix";
 $lang['metaEditForm'] = "Camps Edició";
 $lang['project_loaded'] = "El projecte s'ha carregat correctament";
 $lang['project_view'] = "Es mostren les dades actuals del projecte.";
+$lang['form_compare'] = "Es mostren les dades comparades del projecte i la revisió seleccionada: ";
+$lang['form_compare_rev'] = "Es mostren les dades comparades de les dos revisions seleccionades: ";
 
 $lang['auth_CreatePage'] = "No teniu permís per a Crear la pàgina %s";
 $lang['auth_EditPage'] = "No teniu permís per a Editar la pàgina %s";
