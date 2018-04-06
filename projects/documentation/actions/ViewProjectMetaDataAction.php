@@ -11,7 +11,11 @@ class ViewProjectMetaDataAction extends GetProjectMetaDataAction {
 
     public function responseProcess() {
         $response = parent::responseProcess();
-        $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_view'), $this->params[ProjectKeys::KEY_ID]);
+        if ($this->params[ProjectKeys::KEY_REV]) {
+            $response['info'] = $this->generateInfo("info", trim(strip_tags(WikiIocLangManager::getXhtml('showprojectrev'))), $response[ProjectKeys::KEY_ID]);
+        }else {
+            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_view'), $response[ProjectKeys::KEY_ID]);
+        }
         return $response;
     }
 

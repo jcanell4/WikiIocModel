@@ -1,11 +1,10 @@
 <?php
 /**
- * DraftProjectMetaDataAction: Gestiona l'esborrany del formulari de dades d'un projecte mentre s'està modificant
+ * DiffProjectMetaDataAction: Costrueix les dades dels 2 projecte-revisió que es volen comparar
  * @culpable Rafael
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-require_once (DOKU_INC . 'lib/plugins/ajaxcommand/defkeys/PageKeys.php');
 include_once (DOKU_PLUGIN . "wikiiocmodel/projects/documentation/actions/ProjectMetadataAction.php");
 
 class DiffProjectMetaDataAction extends ProjectMetadataAction {

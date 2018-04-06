@@ -16,6 +16,14 @@ class CancelProjectMetaDataAction extends GetProjectMetaDataAction {
             return $response;
         }
 
+        if (isset($this->params[ProjectKeys::KEY_REV])) {
+            $response[ProjectKeys::KEY_ID] .= ProjectKeys::REVISION_SUFFIX;
+            if ($response['meta']) {
+                // Corregim els ids de les metas per indicar que és una revisió
+                $this->addRevisionSuffixIdToArray($response['meta']);
+            }
+        }
+
         $response = parent::responseProcess();
         return $response;
     }

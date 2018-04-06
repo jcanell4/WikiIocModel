@@ -1,82 +1,83 @@
 <?php
+/**
+ * Converteix la revisió en el projecte actual (reverteix el el projecte a una versió anterior)
+ * @culpable Rafael
+ */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 include_once (DOKU_PLUGIN . 'wikiiocmodel/projects/documentation/actions/ProjectMetadataAction.php');
 
-/**
- * Desa els canvis fets al formulari que defineix el projecte
- */
-class SetProjectMetaDataAction extends ProjectMetadataAction {
+class RevertProjectMetaDataAction extends ProjectMetadataAction {
+
+    public function init($modelManager) {
+        parent::init($modelManager);
+    }
+
+    protected function startProcess() {
+        $this->getModel()->init($this->params[ProjectKeys::KEY_ID],
+                                $this->params[ProjectKeys::KEY_PROJECT_TYPE],
+                                $this->params[ProjectKeys::KEY_REV]);
+    }
 
     /**
-     * Envía los datos $metaData del proyecto al ProjectModel y obtiene la estructura y los valores del proyecto
+     * Envía los datos de la revisión al projectModel para sustituir al proyecto actual
      * @return array con la estructura y los valores del proyecto
      */
-    public function responseProcess() {
-        $dataProject = $this->params['dataProject'];
-        $extraProject = $this->params['extraProject'];
-        $this->getModel()->init($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE]);
+    protected function runProcess() {
+        $id = $this->params[ProjectKeys::KEY_ID];
+        $pType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
+        $rev = $this->params[ProjectKeys::KEY_REV];
+        $model = $this->getModel();
 
         //sólo se ejecuta si existe el proyecto
-        if ($this->getModel()->existProject($dataProject[ProjectKeys::KEY_ID])) {
+        if ($model->existProject($id)) {
 
-            $metaDataValues = $this->netejaKeysFormulari($dataProject);
-            if (!$this->getModel()->validaNom($metaDataValues['autor']))
-                throw new UnknownUserException($metaDataValues['autor']." (indicat al camp 'autor') ");
-            if (!$this->getModel()->validaNom($metaDataValues['responsable']))
-                throw new UnknownUserException($metaDataValues['responsable']." (indicat al camp 'responsable') ");
+            $dataProject = $model->getDataProject($id, $pType);
+            $dataRevision = $model->getDataRevisionProject($id, $rev);
 
             $metaData = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
-                ProjectKeys::KEY_PROJECT_TYPE => $dataProject[ProjectKeys::KEY_PROJECT_TYPE], //opcional
+                ProjectKeys::KEY_PROJECT_TYPE => $pType,
                 ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET,
-                ProjectKeys::KEY_ID_RESOURCE => $dataProject[ProjectKeys::KEY_ID],
-                ProjectKeys::KEY_FILTER => $dataProject[ProjectKeys::KEY_FILTER],  //opcional
-                ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
+                ProjectKeys::KEY_ID_RESOURCE => $id,
+                ProjectKeys::KEY_FILTER => $this->params[ProjectKeys::KEY_FILTER],  //opcional
+                ProjectKeys::KEY_METADATA_VALUE => json_encode($dataRevision)
             ];
-            
-            $response = $this->getModel()->setData($metaData);
 
-            if ($this->getModel()->isProjectGenerated($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE])) {
-                $data = $this->getModel()->getData();   //obtiene la estructura y el contenido del proyecto
+            $response = $model->setData($metaData);
+
+            if ($model->isProjectGenerated($id, $pType)) {
+                $data = $model->getData();   //obtiene la estructura y el contenido del proyecto
                 $include = [
-                     'id' => $dataProject[ProjectKeys::KEY_ID]
-                    ,'link_page' => $dataProject[ProjectKeys::KEY_ID].":".end(explode(":", $data['projectMetaData']['values']["plantilla"]))
-                    ,'old_autor' => $extraProject['old_autor']
-                    ,'old_responsable' => $extraProject['old_responsable']
+                     'id' => $id
+                    ,'link_page' => $id.":".end(explode(":", $data['projectMetaData']['values']["plantilla"]))
+                    ,'old_autor' => $dataProject['autor']
+                    ,'old_responsable' => $dataProject['responsable']
                     ,'new_autor' => $data['projectMetaData']['values']['autor']
                     ,'new_responsable' => $data['projectMetaData']['values']['responsable']
                     ,'userpage_ns' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')
                     ,'shortcut_name' => WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
                 ];
-                $this->getModel()->modifyACLPageToUser($include);
+                $model->modifyACLPageToUser($include);
             }
-            if (!$dataProject[ProjectKeys::KEY_KEEP_DRAFT]) {
-                $this->getModel()->removeDraft();
-            }
-            
-            if ($dataProject[ProjectKeys::KEY_NO_RESPONSE]) {
-                $response[ProjectKeys::KEY_CODETYPE] = 0;
-            }else{
-                $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $dataProject[ProjectKeys::KEY_ID]);
-                $response[ProjectKeys::KEY_ID] = $this->idToRequestId($dataProject[ProjectKeys::KEY_ID]);
-            }
+
+            //Elimina todos los borradores dado que estamos haciendo una reversión del proyecto
+            $model->removeDraft();
+
+            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_reverted'), $id);
+            $response[ProjectKeys::KEY_ID] = $this->idToRequestId($id);
         }
 
         if (!$response)
-            throw new ProjectExistException($dataProject[ProjectKeys::KEY_ID]);
+            throw new ProjectExistException($id);
         else
             return $response;
     }
 
-    private function netejaKeysFormulari($array) {
-        $cleanArray = [];
-        $excludeKeys = ['id','do','sectok','projectType','ns','submit', 'cancel','close','keep_draft','no_response'];
-        foreach ($array as $key => $value) {
-            if (!in_array($key, $excludeKeys)) {
-                $cleanArray[$key] = $value;
-            }
-        }
-        return $cleanArray;
+    protected function responseProcess() {
+        $this->startProcess();
+        $ret = $this->runProcess();
+        return $ret;
     }
+
 }
