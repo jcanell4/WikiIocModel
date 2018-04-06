@@ -16,6 +16,23 @@
                 "typeDef": "document"
             },
             "typesDefinition": {
+                "taula-de-prova": {
+                    "type": "array",
+                    "keys": {
+                        "key": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "value1": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "value2": {
+                            "type": "string",
+                            "mandatory": true
+                        }
+                    }
+                },
                 "document": {
                     "type": "object",
                     "keys": {
@@ -54,6 +71,9 @@
                         "media_address": {
                             "type": "string",
                             "default": "../media"
+                        },
+                        "nom-de-prova": {
+                            "type": "taula-de-prova"
                         }
                     }
                 }

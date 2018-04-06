@@ -36,43 +36,63 @@
         }
     },
     "fields": {
-        "nsproject": {
-          "type": "hidden",
-          "props": {"readonly":true}
-        },
-        "responsable": {
-          "n_columns": 6,
-          "group": "admin",
-          "props": {"required":true}
-        },
-        "autor": {
-          "n_columns": 6,
-          "group": "admin",
-          "props": {"required":true}
-        },
-        "titol": {
-          "mandatory": true,
-          "n_columns": 8,
-          "props": {"required":true}
-        },
-        "descripcio": {
-          "n_columns": 12
-        },
-        "plantilla": {
-          "n_columns": 4,
-          "group": "files",
-          "props": {"readonly":true}
-        },
-        "fitxercontinguts": {
-          "label": "ruta de l'arxiu de continguts",
-          "n_columns": 4,
-          "group": "files",
-          "props": {"readonly":true}
-        },
-        "media_address": {
-          "label": "ruta del directori media",
-          "n_columns": 4,
-          "group": "files"
+      "nsproject": {
+        "type": "hidden",
+        "props": {
+          "readonly": true
         }
+      },
+      "responsable": {
+        "n_columns": 6,
+        "group": "admin",
+        "props": {
+          "required": true
+        }
+      },
+      "autor": {
+        "n_columns": 6,
+        "group": "admin",
+        "props": {
+          "required": true
+        }
+      },
+      "titol": {
+        "mandatory": true,
+        "n_columns": 8,
+        "props": {
+          "required": true
+        }
+      },
+      "descripcio": {
+        "n_columns": 12
+      },
+      "plantilla": {
+        "n_columns": 4,
+        "group": "files",
+        "props": {
+          "readonly": true
+        }
+      },
+      "fitxercontinguts": {
+        "label": "ruta de l'arxiu de continguts",
+        "n_columns": 4,
+        "group": "files",
+        "props": {
+          "readonly": true
+        }
+      },
+      "media_address": {
+        "label": "ruta del directori media",
+        "n_columns": 4,
+        "group": "files"
+      },
+      "nom-de-prova": {
+        "label": "Taula de prova",
+        "n_columns": 12,
+        "type": "editableObject",
+        "props": {
+          "data-editable-element": "table"
+        }
+      }
     }
 }
