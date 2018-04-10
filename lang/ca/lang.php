@@ -21,6 +21,7 @@ $lang['pageExists'] = "La pàgina %s ja existeix";
 $lang['metaEditForm'] = "Camps Edició";
 $lang['project_loaded'] = "El projecte s'ha carregat correctament";
 $lang['project_view'] = "Es mostren les dades actuals del projecte.";
+$lang['project_reverted'] = "El projecte s'ha revertit amb éxit a la versió de la revisió indicada";
 $lang['form_compare'] = "Es mostren les dades comparades del projecte i la revisió seleccionada: ";
 $lang['form_compare_rev'] = "Es mostren les dades comparades de les dos revisions seleccionades: ";
 

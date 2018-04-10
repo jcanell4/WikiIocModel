@@ -5,7 +5,7 @@ require([
         "dojo/domReady!"
     ], function (registry, dom, domForm) {
         
-        var reversionButton = registry.byId('reversion');
+        var trifidsButton = registry.byId('trifids');
         
         var fOnClick=function(){
             var id = this.dispatcher.getGlobalState().getCurrentId();
@@ -18,15 +18,15 @@ require([
             var projectType = this.dispatcher.getGlobalState().getContent(id)["projectType"];
             
             var aux = [];
-            var nodeForm = dom.byId("revert__form_" + id);
+            var nodeForm = dom.byId("export__form_" + id);
             for(var i=0; i<nodeForm.elements.length; i++){
                 aux[i] = nodeForm.elements[i].disabled;
-                if (aux[i]){
+                if(aux[i]){
                     nodeForm.elements[i].disabled=false;
                 }
             }
             var form = domForm.toObject(nodeForm);
-            var ret = "id="+id + "&projectType="+projectType + "&filetype="+form.filetype;
+            var ret = "id="+id + "&projectType="+projectType + "&mode=pdf" + "&filetype="+form.filetype;
         
             for(var i=0; i<nodeForm.elements.length; i++){
                 nodeForm.elements[i].disabled = aux[i];
@@ -35,10 +35,10 @@ require([
             return ret;
         };
         
-        if (reversionButton){
-            reversionButton.getQuery=fGetQuery;
-            reversionButton.set("hasTimer", true);
-            reversionButton.onClick =fOnClick;
+        if (trifidsButton){
+            trifidsButton.getQuery=fGetQuery;
+            trifidsButton.set("hasTimer", true);
+            trifidsButton.onClick =fOnClick;
         }
 });
 

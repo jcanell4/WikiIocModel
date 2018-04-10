@@ -32,7 +32,8 @@
                    "responsable"
                 ],
                 "conditions": {
-                    "page.action":"'project_view'"
+                    "page.action": "'project_view'",
+                    "page.isRevision": true
                 }
             }
         }
@@ -71,7 +72,7 @@
                    "responsable"
                 ],
                 "conditions": {
-                    "page.action":"'project_view'"
+                    "page.action": "'project_view'"
                 }
             }
         }
@@ -110,7 +111,7 @@
                    "responsable"
                 ],
                 "conditions": {
-                    "page.action":"'project_view'"
+                    "page.action": "'project_view'"
                 }
             }
         }

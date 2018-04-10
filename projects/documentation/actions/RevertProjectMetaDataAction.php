@@ -21,7 +21,7 @@ class RevertProjectMetaDataAction extends ProjectMetadataAction {
 
     /**
      * Envía los datos de la revisión al projectModel para sustituir al proyecto actual
-     * @return array con la estructura y los valores del proyecto
+     * @return array con la estructura y los valores del proyecto (la revisión se habrá convertido en el proyecto actual)
      */
     protected function runProcess() {
         $id = $this->params[ProjectKeys::KEY_ID];
@@ -44,17 +44,17 @@ class RevertProjectMetaDataAction extends ProjectMetadataAction {
                 ProjectKeys::KEY_METADATA_VALUE => json_encode($dataRevision)
             ];
 
-            $response = $model->setData($metaData);
+            $model->setData($metaData);
+            $response = $model->getData();
 
             if ($model->isProjectGenerated($id, $pType)) {
-                $data = $model->getData();   //obtiene la estructura y el contenido del proyecto
                 $include = [
                      'id' => $id
-                    ,'link_page' => $id.":".end(explode(":", $data['projectMetaData']['values']["plantilla"]))
+                    ,'link_page' => $id.":".end(explode(":", $response['projectMetaData']['values']["plantilla"]))
                     ,'old_autor' => $dataProject['autor']
                     ,'old_responsable' => $dataProject['responsable']
-                    ,'new_autor' => $data['projectMetaData']['values']['autor']
-                    ,'new_responsable' => $data['projectMetaData']['values']['responsable']
+                    ,'new_autor' => $response['projectMetaData']['values']['autor']
+                    ,'new_responsable' => $response['projectMetaData']['values']['responsable']
                     ,'userpage_ns' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')
                     ,'shortcut_name' => WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
                 ];
@@ -63,15 +63,15 @@ class RevertProjectMetaDataAction extends ProjectMetadataAction {
 
             //Elimina todos los borradores dado que estamos haciendo una reversión del proyecto
             $model->removeDraft();
+            //afegim les revisions del projecte a la resposta
+            $response[ProjectKeys::KEY_REV] = $this->projectModel->getProjectRevisionList($this->params[ProjectKeys::KEY_ID], 0);
 
             $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_reverted'), $id);
             $response[ProjectKeys::KEY_ID] = $this->idToRequestId($id);
         }
 
-        if (!$response)
-            throw new ProjectExistException($id);
-        else
-            return $response;
+        if (!$response) throw new ProjectExistException($id);
+        return $response;
     }
 
     protected function responseProcess() {
