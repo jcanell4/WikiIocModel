@@ -73,18 +73,18 @@ class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAct
                 foreach ($arrayButton['scripts']['updateHandler']['permissions'] as $value) {
                     $permButtonVisible .= "disp.getGlobalState().permissions['$value'] || ";
                 }
-                $permButtonVisible = substr($permButtonVisible, 0, -3) . ");";
+                $permButtonVisible = substr($permButtonVisible, 0, -4) . ");";
             }
-            $permissionsButtonVisible .= $permButtonVisible . "\n\t\t\t\t\t\t";
+            $permissionsButtonVisible .= $permButtonVisible . "\n\t\t\t\t\t\t\t";
 
             //bucle para que los roles determinen si el botón correspondiente es visible u oculto
             $rolButtonVisible = "";
             if ($arrayButton['scripts']['updateHandler']['rols']) {
                 $rolButtonVisible = "is${nameButton}ButtonVisible = is${nameButton}ButtonVisible || (";
                 foreach ($arrayButton['scripts']['updateHandler']['rols'] as $value) {
-                    $rolButtonVisible .= "page.rol==='".$value."' || ";
+                    $rolButtonVisible .= "page.rol=='".$value."' || ";
                 }
-                $rolButtonVisible = substr($rolButtonVisible, 0, -3) . ");";
+                $rolButtonVisible = substr($rolButtonVisible, 0, -4) . ");";
             }
             $rolesButtonVisible .= $rolButtonVisible . "\n\t\t\t\t\t\t";
 
@@ -93,12 +93,11 @@ class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAct
             if ($arrayButton['scripts']['updateHandler']['conditions']) {
                 $condButtonVisible = "is${nameButton}ButtonVisible = is${nameButton}ButtonVisible && (";
                 foreach ($arrayButton['scripts']['updateHandler']['conditions'] as $key => $value) {
-                    $condButtonVisible .= "$key===$value && ";
+                    $condButtonVisible .= "$key==$value && ";
                 }
-                $condButtonVisible = substr($condButtonVisible, 0, -3) . ");";
+                $condButtonVisible = substr($condButtonVisible, 0, -4) . ");";
             }
-            $conditionsButtonVisible .= $condButtonVisible . "\n\t\t\t\t\t";
-
+            $conditionsButtonVisible .= $condButtonVisible . "\n\t\t\t\t\t\t";
         }
 
         $aReplacements["search"] = ["//%_changeWidgetPropertyFalse_%",

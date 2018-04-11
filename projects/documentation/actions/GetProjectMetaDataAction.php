@@ -41,16 +41,11 @@ class GetProjectMetaDataAction extends ProjectMetadataAction {
 
             if ($this->params[ProjectKeys::KEY_REV]) {
                 $response[ProjectKeys::KEY_ID] .= ProjectKeys::REVISION_SUFFIX;
-
-                // Si no s'ha especificat cap altre missatge mostrem el de càrrega
-                $revisionInfo = WikiIocLangManager::getXhtml('showprojectrev');
-                if (!$response['info']) {
-                    $response['info'] = $this->generateInfo("warning", strip_tags($revisionInfo), $response[ProjectKeys::KEY_ID]);
-                } else {
-                    $this->addInfoToInfo($response['info'], $this->generateInfo("info", strip_tags($revisionInfo), $response[ProjectKeys::KEY_ID]));
+                $response['info'] = $this->addInfoToInfo($response['info'], $this->generateInfo("info", trim(strip_tags(WikiIocLangManager::getXhtml('showprojectrev'))), $response[ProjectKeys::KEY_ID]));
+                if ($response['meta']) {
+                    // Corregim els ids de les metas per indicar que és una revisió
+                    $this->addRevisionSuffixIdToArray($response['meta']);
                 }
-                // Corregim els ids de les metas per indicar que és una revisió
-                $this->addRevisionSuffixIdToArray($response['meta']);
             }
         }
 
@@ -64,7 +59,7 @@ class GetProjectMetaDataAction extends ProjectMetadataAction {
      * Añade sufijo de revisión al id de cada una de las pestañas de la Zona META
      * @param type $elements de la Zona META
      */
-    private function addRevisionSuffixIdToArray(&$elements) {
+    public function addRevisionSuffixIdToArray(&$elements) {
         for ($i=0, $len=count($elements); $i<$len; $i++) {
             if ($elements[$i]['id'] && substr($elements[$i]['id'], -5) != ProjectKeys::REVISION_SUFFIX) {
                 $elements[$i]['id'] .= ProjectKeys::REVISION_SUFFIX;

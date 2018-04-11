@@ -11,10 +11,23 @@ class CancelProjectMetaDataAction extends GetProjectMetaDataAction {
             $this->getModel()->removeDraft(); //Elimina els esborranys
         }
 
+        if (!$this->params[ProjectKeys::DISCARD_CHANGES]) {
+            //Descarta els canvis
+        }
+
         if ($this->params[ProjectKeys::KEY_NO_RESPONSE] ) {
             $response[ProjectKeys::KEY_CODETYPE] = 0;
             return $response;
         }
+
+        //eSTO NO DEBE SUCEDER
+//        if (isset($this->params[ProjectKeys::KEY_REV])) {
+//            $response[ProjectKeys::KEY_ID] .= ProjectKeys::REVISION_SUFFIX;
+//            if ($response['meta']) {
+//                // Corregim els ids de les metas per indicar que és una revisió
+//                $this->addRevisionSuffixIdToArray($response['meta']);
+//            }
+//        }
 
         $response = parent::responseProcess();
         return $response;

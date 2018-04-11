@@ -1,4 +1,44 @@
 {
+    "reversion": {
+        "class": "WikiIocButton",
+        "parms": { 
+            "DOM": {
+               "id": "reversion",
+               "title": "Revertir",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=revert'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocIconUndo'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectRevert'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+
+        "scripts": {
+            "getFunctions": {
+                "path": "revertGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'",
+                    "page.isRevision": true
+                }
+            }
+        }
+
+    },
     "trifids": {
         "class": "WikiIocButton",
         "parms": { 
@@ -32,7 +72,7 @@
                    "responsable"
                 ],
                 "conditions": {
-                    "page.action":"'form'"
+                    "page.action": "'project_view'"
                 }
             }
         }
@@ -71,7 +111,7 @@
                    "responsable"
                 ],
                 "conditions": {
-                    "page.action":"'form'"
+                    "page.action": "'project_view'"
                 }
             }
         }
