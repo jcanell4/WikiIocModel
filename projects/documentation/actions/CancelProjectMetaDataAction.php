@@ -11,25 +11,24 @@ class CancelProjectMetaDataAction extends GetProjectMetaDataAction {
             $this->getModel()->removeDraft(); //Elimina els esborranys
         }
 
-        if (!$this->params[ProjectKeys::DISCARD_CHANGES]) {
-            //Descarta els canvis
-        }
-
         if ($this->params[ProjectKeys::KEY_NO_RESPONSE] ) {
             $response[ProjectKeys::KEY_CODETYPE] = 0;
             return $response;
         }
 
-        //eSTO NO DEBE SUCEDER
-//        if (isset($this->params[ProjectKeys::KEY_REV])) {
-//            $response[ProjectKeys::KEY_ID] .= ProjectKeys::REVISION_SUFFIX;
-//            if ($response['meta']) {
-//                // Corregim els ids de les metas per indicar que és una revisió
-//                $this->addRevisionSuffixIdToArray($response['meta']);
-//            }
-//        }
-
         $response = parent::responseProcess();
+        //Eliminamos los parámetros que NO son datos del formulario  del proyecto
+        unset($response['projectMetaData']['values']['cancel']);
+        unset($response['projectMetaData']['values']['close']);
+        unset($response['projectMetaData']['values']['keep_draft']);
+        unset($response['projectMetaData']['values']['no_response']);
+        unset($response['projectMetaData']['structure']['cancel']);
+        unset($response['projectMetaData']['structure']['close']);
+        unset($response['projectMetaData']['structure']['keep_draft']);
+        unset($response['projectMetaData']['structure']['no_response']);
+
+        $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_canceled'), $this->params[ProjectKeys::KEY_ID]);
+
         return $response;
     }
 

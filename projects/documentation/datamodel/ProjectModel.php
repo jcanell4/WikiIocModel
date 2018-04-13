@@ -49,19 +49,8 @@ class ProjectModel extends AbstractWikiDataModel {
     }
 
     public function setData($toSet) {
-        $ret = [];
-        // En aquest cas el $toSet equival al $query, que es genera al Action corresponent
-        $meta = $this->metaDataService->setMeta($toSet);
-        /* El retorn es un array, agrupat:
-            // primer nivell: project-type
-            // segon nivell: idResource
-           Per tant, aquí sempre voldrem el [0][0] perquè només demanem un id i un projecttype */
-        $metaJSON = json_decode($meta[0][0], true);
-        $ret['projectMetaData']['values'] = json_decode($metaJSON['metaDataValue'], true);
-        $ret['projectMetaData']['values']['idResource'] = $metaJSON['idResource'];
-        $ret['projectMetaData']['structure'] = json_decode($metaJSON['metaDataStructure'], true);
-
-        return $ret;
+        // $toSet es genera a l'Action corresponent
+        $this->metaDataService->setMeta($toSet);
     }
 
     /**
