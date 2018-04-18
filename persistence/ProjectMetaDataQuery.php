@@ -282,7 +282,7 @@ class ProjectMetaDataQuery extends DataQuery {
      * @params array(projectType, metadatasubset)
      * @return string el nombre del fichero de datos del proyecto del tipo solicitado
      */
-    public function getProjectFileName($parms) {
+    public function getProjectFileName($parms=[]) {
         if ($parms) {
             $jsonArray = $this->getMetaDataConfig($parms[self::K_PROJECTTYPE], $parms[self::K_METADATASUBSET], self::K_CONFIGUSUBSETSTRUCTURE);
             $data = json_decode($jsonArray, true);
