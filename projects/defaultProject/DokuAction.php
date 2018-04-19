@@ -86,7 +86,7 @@ abstract class DokuAction extends AbstractWikiAction{
                 if(!$response["after.content"])
                     $response["after.content"]="";
                 $response["after.content"] = $postResponseTmp;
-            }else{
+            }elseif (is_array($postResponseTmp)){
                 foreach ($postResponseTmp as $key => $value ){
                     if($key==="before.content"  && $this->addContentIsAllowed){
                         if(!$response["before.content"])
