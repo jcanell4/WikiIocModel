@@ -16,22 +16,24 @@
                 "typeDef": "document"
             },
             "typesDefinition": {
-                "taula-de-prova": {
-                    "type": "array",
+                "entry-de-prova": {
+                    "type":"object",
                     "keys": {
                         "key": {
                             "type": "string",
                             "mandatory": true
                         },
                         "value1": {
-                            "type": "string",
-                            "mandatory": true
+                            "type": "string"
                         },
                         "value2": {
-                            "type": "string",
-                            "mandatory": true
+                            "type": "string"
                         }
-                    }
+                    }                    
+                },
+                "taula-de-prova": {
+                    "type": "objectArray",
+                    "typeDef":"entry-de-prova"
                 },
                 "document": {
                     "type": "object",
@@ -73,8 +75,9 @@
                             "default": "../media"
                         },
                         "nom-de-prova": {
-                            "type": "taula-de-prova"
-                        }
+                            "type": "taula-de-prova",
+                            "mandatory": true
+                        }                        
                     }
                 }
             }

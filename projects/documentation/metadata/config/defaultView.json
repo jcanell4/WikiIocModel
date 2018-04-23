@@ -33,6 +33,13 @@
             "n_columns": 12,
             "n_rows": 1,
             "frame": true
+        },
+        "taula": {
+            "parent": "",
+            "label": "Taula de substitució",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": false
         }
     },
     "fields": {
@@ -90,6 +97,7 @@
         "label": "Taula de prova",
         "n_columns": 12,
         "type": "editableObject",
+        "group": "taula",
         "props": {
           "data-editable-element": "table"
         }
