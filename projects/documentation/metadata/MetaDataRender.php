@@ -18,7 +18,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         $values = json_decode($objAux['metaDataValue'], true);
 
         $returnTree = [];
-        $returnTree['structure'] = $this->runParser($values, $structure, $types);
+        $returnTree = $this->runParser($values, $structure, $types);
 //        $returnTree['structure'] = $this->initParser($values, $structure, $types);
 //        $returnTree['value'] = $this->flatten($returnTree['structure']);
 
