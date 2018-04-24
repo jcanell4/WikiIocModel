@@ -10,6 +10,8 @@ const PAG_DEFAULT = "createDefaultText";
 const PAG_SAVED = "saved";
 const PAG_DELETED = "deleted";
 
+$lang['yes'] = 'Sí';
+$lang['no'] = 'No';
 $lang['createDefaultText'] = 'Pàgina creada per defecte';
 $lang['conflictsSaving'] = "Hi ha conflictes amb altres versions. No s'han pogut guardar els canvis";
 $lang['saved'] = "Els canvis s'han guardat correctament";
@@ -56,6 +58,12 @@ $lang['requiring_dialog_title'] = "ALERTA. Document bloquejat!";
 $lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari %s. S'estima que quedarà alliberat a les %s\n"
         . "Vols que t'avisem quan es desbloquegi aquest document?\n"
         . "Això enviarà una notificació a %s indicant que t'interessa editar el document %s i que l'alliberi l'abans possible.\n"
+        . "Activem la notificació?";
+$lang['require_message'] = "El projecte %s està bloquejat per l'usuari %s.<br>S'estima que quedarà alliberat a les %s";
+$lang['require_dialog_title'] = "ALERTA. Projecte bloquejat!";
+$lang['require_dialog_message'] = "El projecte %s està bloquejat per l'usuari %s.<br>S'estima que quedarà alliberat a les %s<br>"
+        . "Vols que t'avisem quan es desbloquegi aquest projecte?<br>"
+        . "Això enviarà una notificació a %s indicant que t'interessa editar el projecte %s i que l'alliberi l'abans possible.<br>"
         . "Activem la notificació?";
 
 $lang['tab_shortcuts'] = "Dreceres";

@@ -373,73 +373,15 @@ class DokuModelAdapter extends BasicModelAdapter {
      *
      * @return array - array amb la configuració del item de informació
      */
-    public function generateInfo($type, $message, $id = NULL, $duration = -1)
-    {
+    public function generateInfo($type, $message, $id = NULL, $duration = -1) {
         if ($id === NULL) {
             $id = str_replace(":", "_", $this->params['id']);
         }
-
-        return [
-            "id" => $id,
-            "type" => $type,
-            "message" => $message,
-            "duration" => $duration,
-            "timestamp" => date("d-m-Y H:i:s")
-        ];
+        return IocCommon::generateInfo($type, $message, $id, $duration);
     }
 
-    // En els casos en que hi hagi discrepancies i no hi hagi cap preferencia es fa servir el valor de A
-    public function addInfoToInfo($infoA, $infoB)
-    {
-        // Els tipus global de la info serà el de major gravetat: "debug" > "error" > "warning" > "info"
-        $info = [];
-
-        if ($infoA['type'] == 'debug' || $infoB['type'] == 'debug') {
-            $info['type'] = 'debug';
-        } else if ($infoA['type'] == 'error' || $infoB['type'] == 'error') {
-            $info['type'] = 'error';
-        } else if ($infoA['type'] == 'warning' || $infoB['type'] == 'warning') {
-            $info['type'] = 'warning';
-        } else {
-            $info['type'] = $infoA['type'];
-        }
-
-        // Si algun dels dos te duració ilimitada, aquesta perdura
-        if ($infoA['duration'] == -1 || $infoB['duration'] == -1) {
-            $info['duration'] = -1;
-        } else {
-            $info['duration'] = $infoA['duration'];
-        }
-
-        // El $id i el timestamp ha de ser el mateix per a tots dos
-        $info ['timestamp'] = $infoA['timestamp'];
-        $info ['id'] = $infoA['id'];
-
-        $messageStack = [];
-
-        if (is_string($infoA ['message'])) {
-
-            $messageStack[] = $infoA['message'];
-
-        } else if (is_array($infoA['message'])) {
-
-            $messageStack = $infoA['message'];
-
-        }
-
-        if (is_string($infoB ['message'])) {
-
-            $messageStack[] = $infoB['message'];
-
-        } else if (is_array($infoB['message'])) {
-
-            $messageStack = array_merge($messageStack, $infoB['message']);
-
-        }
-
-        $info['message'] = $messageStack;
-
-        return $info;
+    public function addInfoToInfo($infoA, $infoB) {
+        return IocCommon::addInfoToInfo($infoA, $infoB);
     }
 
     /**

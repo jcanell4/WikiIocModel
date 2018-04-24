@@ -1,70 +1,85 @@
 <?php
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-include_once (DOKU_PLUGIN . 'wikiiocmodel/projects/documentation/actions/ProjectMetadataAction.php');
+require_once DOKU_INC . "lib/lib_ioc/wikiiocmodel/ResourceLocker.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/documentation/actions/ViewProjectMetaDataAction.php";
 
-class GetProjectMetaDataAction extends ProjectMetadataAction {
+class GetProjectMetaDataAction extends ViewProjectMetaDataAction implements ResourceLockerInterface {
 
-    protected function setParams($params) {
-        parent::setParams($params);
-        $this->projectModel->init($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_REV]);
+    private $resourceLocker;
+    private $messageLock;
 
-        if (!$this->params[ProjectKeys::KEY_DATE]) {
-            $draft_date = $this->projectModel->getDraft('date');
-            if ($draft_date) {
-                $this->params[ProjectKeys::KEY_DATE] = $draft_date;
-            }
-        }
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
     }
 
-    public function responseProcess() {
-        //sólo se ejecuta si existe el proyecto
-        if ($this->projectModel->existProject($this->params[ProjectKeys::KEY_ID])) {
-
-            $response = $this->projectModel->getData();
-
-            //afegir les revisions a la resposta
-            $response[ProjectKeys::KEY_REV] = $this->projectModel->getProjectRevisionList($this->params[ProjectKeys::KEY_ID], 0);
-
-            //en un futuro, añadir pestaña de notificaciones en la ZONA META
-            //$this->projectModel->addNotificationsMetaToResponse($response);
-
-            $drafts = $this->projectModel->getAllDrafts();
-            if (count($drafts) > 0) {
-                $response['drafts'] = $drafts;
-            }
-            //Pot existir un draft local i sense draft remot
-            $response['originalLastmod'] = $this->projectModel->getLastModFileDate($this->params[ProjectKeys::KEY_ID]);
-
-            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_loaded'), $this->params[ProjectKeys::KEY_ID]);
-            $response[ProjectKeys::KEY_ID] = $this->idToRequestId($this->params[ProjectKeys::KEY_ID]);
-
-            if ($this->params[ProjectKeys::KEY_REV]) {
-                $response[ProjectKeys::KEY_ID] .= ProjectKeys::REVISION_SUFFIX;
-                $response['info'] = $this->addInfoToInfo($response['info'], $this->generateInfo("info", trim(strip_tags(WikiIocLangManager::getXhtml('showprojectrev'))), $response[ProjectKeys::KEY_ID]));
-                if ($response['meta']) {
-                    // Corregim els ids de les metas per indicar que és una revisió
-                    $this->addRevisionSuffixIdToArray($response['meta']);
-                }
+    protected function runAction() {
+        //Establecimiento del sistema de bloqueo
+        if ( ! $this->params[PageKeys::KEY_REV] ) {
+            $lockStruct = $this->requireResource(TRUE);
+            $this->messageLock = $this->generateLockInfo($lockStruct, $this->params[ProjectKeys::KEY_ID]);
+        }
+        $response = parent::runAction();
+        if ($lockStruct['state']) {
+            $response['lockInfo'] = $lockStruct['info']['locker'];
+            $response['lockInfo']['state'] = $lockStruct['state'];
+        }
+        return $response;
+    }
+    protected function postAction(&$response) {
+        if ($response) {
+            if ($this->messageLock) {
+                $response['info'] = $this->addInfoToInfo($response['info'], $this->messageLock);
+            }else {
+                $new_message = $this->generateInfo("info", WikiIocLangManager::getLang('project_edited'), $this->params[ProjectKeys::KEY_ID]);
+                $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
             }
         }
-
-        if (!$response)
-            throw new ProjectNotExistException($this->params[ProjectKeys::KEY_ID]);
-        else
-            return $response;
     }
 
     /**
-     * Añade sufijo de revisión al id de cada una de las pestañas de la Zona META
-     * @param type $elements de la Zona META
+     * Genera un mensaje tipo 'info' como respuesta al tipo de boqueo
      */
-    public function addRevisionSuffixIdToArray(&$elements) {
-        for ($i=0, $len=count($elements); $i<$len; $i++) {
-            if ($elements[$i]['id'] && substr($elements[$i]['id'], -5) != ProjectKeys::REVISION_SUFFIX) {
-                $elements[$i]['id'] .= ProjectKeys::REVISION_SUFFIX;
-            }
+    private function generateLockInfo($lockStruct, $id) {
+
+        switch ($lockStruct['state']) {
+            case self::LOCKED:
+                // El fitxer no estava bloquejat
+                $infoType = 'info';
+                break;
+
+            case self::REQUIRED:
+                // S'ha d'afegir una notificació per l'usuari que el te bloquejat
+                $message = WikiIocLangManager::getLang('lockedby') . " " . $lockStruct['info']['locker']['name'];
+                $infoType = 'error';
+                break;
+
+            case self::LOCKED_BEFORE:
+                // El teniem bloquejat nosaltres
+                $message = WikiIocLangManager::getLang('alreadyLocked');
+                $infoType = 'warning';
+                break;
+
+            default:
+                throw new UnknownTypeParamException($lockStruct['state']);
         }
+
+        if ($message) {
+            $message = self::generateInfo($infoType, $message, $id);
+        }
+        return $message;
+    }
+
+    /**
+     * És el mètode que s'ha d'executar per iniciar el bloqueig.
+     * Per defecte el bloqueig es fa només amb les funcions natives de la wiki.
+     * @param bool $lock = TRUE produirà bloqueix wikiioc del recurs. El mètode comprova si el recurs està bloquejat i
+     * @return array [una constant amb el tipus de bloqueix i un missatge]
+     */
+    public function requireResource($lock = FALSE) {
+        $this->resourceLocker->init($this->params);
+        return $this->resourceLocker->requireResource($lock);
     }
 
 }
