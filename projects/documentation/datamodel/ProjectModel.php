@@ -88,9 +88,10 @@ class ProjectModel extends AbstractWikiDataModel {
                 ProjectKeys::KEY_PROJECT_FILENAME => $this->getProjectFileName()
             ];
         }
-        $meta = $this->metaDataService->getMeta($query, FALSE)[0];
-        $ret['projectMetaData']['values'] = $meta['values'];
-        $ret['projectMetaData']['structure'] = $meta['structure']; //inclou els valors
+//        $meta = $this->metaDataService->getMeta($query, FALSE)[0];
+        //$ret['projectMetaData']['values'] = $meta['values'];
+        //$ret['projectMetaData']['structure'] = $meta['structure']; //inclou els valors
+        $ret['projectMetaData'] = $this->metaDataService->getMeta($query, FALSE)[0];
         $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->projectType, "defaultView");
         return $ret;
     }
