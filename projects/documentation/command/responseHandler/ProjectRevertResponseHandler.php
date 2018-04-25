@@ -62,7 +62,7 @@ class projectRevertResponseHandler extends ProjectResponseHandler {
         $form = $this->buildForm($id, $ns, $responseData['projectMetaData']['structure'], $responseData['projectViewData'], $outValues);
 
         $ajaxCmdResponseGenerator->addViewProject($id, $ns, $title, $form,
-            $outValues,
+            $outValues
 //            $responseData['projectMetaData']['values']
         );
         $this->addMetadataResponse($id, $ns, $ajaxCmdResponseGenerator);
