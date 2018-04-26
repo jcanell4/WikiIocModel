@@ -391,18 +391,8 @@ class RawPageAction extends PageAction {
         return $resp;
     }
 
-    private function _getBaseDataToSend()
-    {
-        $pageTitle = tpl_pagetitle($this->params[PageKeys::KEY_ID], TRUE);
-        $id = $this->params[PageKeys::KEY_ID];
-        $contentData = array(
-            'id' => str_replace(":", "_", $id),
-            'ns' => $id,
-            'title' => $pageTitle,
-            'rev' => $this->params[PageKeys::KEY_REV],
-        );
-
-        return $contentData;
+    private function _getBaseDataToSend() {
+        return $this->dokuPageModel->getBaseDataToSend($this->params[PageKeys::KEY_ID], $this->params[PageKeys::KEY_REV]);
     }
 
     private function _getDraftType($dt = PageKeys::NO_DRAFT) {

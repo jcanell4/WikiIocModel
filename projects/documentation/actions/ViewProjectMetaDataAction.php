@@ -47,8 +47,6 @@ class ViewProjectMetaDataAction extends ProjectMetadataAction {
 
         if ($this->params[ProjectKeys::KEY_REV]) {
             $response[ProjectKeys::KEY_ID] .= ProjectKeys::REVISION_SUFFIX;
-            $new_message = $this->generateInfo("info", trim(strip_tags(WikiIocLangManager::getXhtml('showprojectrev'))), $response[ProjectKeys::KEY_ID]);
-            $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
             if ($response['meta']) {
                 // Corregim els ids de les metas per indicar que és una revisió
                 $this->addRevisionSuffixIdToArray($response['meta']);
@@ -65,12 +63,12 @@ class ViewProjectMetaDataAction extends ProjectMetadataAction {
     }
 
     protected function postAction(&$response) {
-        $new_message = $this->generateInfo("info", WikiIocLangManager::getLang('project_loaded'), $response[ProjectKeys::KEY_ID]);
-        $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
         if ($this->params[ProjectKeys::KEY_REV]) {
-            $new_message = $this->generateInfo("info", trim(strip_tags(WikiIocLangManager::getXhtml('showprojectrev'))), $response[ProjectKeys::KEY_ID]);
+            $new_message = $this->generateInfo("warning", WikiIocLangManager::getLang('project_revision'), $response[ProjectKeys::KEY_ID]);
             $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
         }else {
+            $new_message = $this->generateInfo("info", WikiIocLangManager::getLang('project_loaded'), $response[ProjectKeys::KEY_ID]);
+            $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
             $new_message = $this->generateInfo("info", WikiIocLangManager::getLang('project_view'), $response[ProjectKeys::KEY_ID]);
             $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
         }

@@ -1,7 +1,6 @@
 <?php
 /**
  * Catalan language file
- *
  * @author Joseo Cañellas<jcanell4@ioc.cat>
  */
 require_once (DOKU_INC . 'lib/plugins/ajaxcommand/defkeys/GlobalKeys.php');
@@ -23,8 +22,10 @@ $lang['pageExists'] = "La pàgina %s ja existeix";
 $lang['metaEditForm'] = "Camps Edició";
 $lang['project_loaded'] = "El projecte s'ha carregat correctament";
 $lang['project_view'] = "Es mostren les dades actuals del projecte.";
+$lang['project_edited'] = "El projecte està en mode edició. Prem el botó [Desa] per desar les dades.";
 $lang['project_reverted'] = "El projecte s'ha revertit amb éxit a la versió de la revisió indicada";
 $lang['project_canceled'] = "S'ha cancel·lat l'edició del projecte ";
+$lang['project_revision'] = "Aquesta és una revisió antiga del projecte";
 $lang['form_compare'] = "Es mostren les dades comparades del projecte i la revisió seleccionada: ";
 $lang['form_compare_rev'] = "Es mostren les dades comparades de les dos revisions seleccionades: ";
 

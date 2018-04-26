@@ -207,6 +207,19 @@ class DokuPageModel extends WikiRenderizableDataModel {
         return null;
     }
 
+    public function getBaseDataToSend($id, $rev) {
+        $date = WikiIocInfoManager::getInfo('meta')['date']['modified'] + 1;
+        if ($rev)
+            $title_rev = " - Revisió (" . date("d.m.Y h:i:s", $date) . ")";
+
+        return ['id' => str_replace(":", "_", $id),
+                'ns' => $id,
+                'title' => tpl_pagetitle($id, TRUE) . $title_rev,
+                'rev' => $rev
+               ];
+    }
+
+
     private function _getChunkFromDraft($id, $selected) {
         return $this->draftDataQuery->getChunk($id, $selected);
     }
@@ -221,11 +234,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
             $editing = [];
         }
 
-        $document = [];
-        $document['title'] = tpl_pagetitle($id, TRUE);
-        $document['ns'] = $id;
-        $document['id'] = str_replace(":", "_", $id);
-        $document['rev'] = $rev;
+        $document = self::getBaseDataToSend($id, $rev);
         $document['selected'] = $selected;
         $document['date'] = WikiIocInfoManager::getInfo('meta')['date']['modified'] + 1;
 
