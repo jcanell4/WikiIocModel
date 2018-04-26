@@ -127,8 +127,8 @@ class RawPageAction extends PageAction {
             // ALERTA[Xavi] Les revisións no bloquejan el document. Per altra banda afegeixen un suffix al id per diferenciar-se del document original
             $response['id'] .= PageAction::REVISION_SUFFIX;
         } else {
-            // ALERTA: Es bloqueja correctament??
-            $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
+            $mess = $this->generateLockInfo($this->lockState(), $this->params[PageKeys::KEY_ID]);
+            $response['info'] = self::addInfoToInfo($response['info'], $mess);
         }
 
         $this->addNotificationsMetaToResponse($response, $response['ns']);
@@ -230,44 +230,6 @@ class RawPageAction extends PageAction {
             throw new SystemExecutionFailedException();
         }
         return implode ( "\n" , $return );
-    }
-
-    private function generateLockInfo($lockState, $mes) {
-        $infoType = 'message';
-        $message = null;
-
-        switch ($lockState) {
-
-            case self::LOCKED:
-                // El fitxer no estava bloquejat
-                break;
-
-            case self::REQUIRED:
-                // S'ha d'afegir una notificació per l'usuari que el te bloquejat
-                $lockingUser = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
-                $message = WikiIocLangManager::getLang('lockedby') . ' ' . $lockingUser;
-                $infoType = 'error';
-                break;
-
-            case self::LOCKED_BEFORE:
-                // El teniem bloquejat nosaltres
-                $message = WikiIocLangManager::getLang('alreadyLocked');
-                $infoType = 'warning';
-                break;
-
-            default:
-                throw new UnknownTypeParamException($lockState);
-        }
-
-        if ($mes && $message) {
-            $message = $this->addInfoToInfo(self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]),
-                                            self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]));
-        }elseif ($mes) {
-            $message = $mes;
-        }else {
-            $message = self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]);
-        }
-        return $message;
     }
 
     private function _getLocalDraftResponse()
