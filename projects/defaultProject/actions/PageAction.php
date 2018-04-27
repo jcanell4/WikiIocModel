@@ -232,6 +232,10 @@ abstract class PageAction extends DokuAction implements ResourceLockerInterface,
         }
     }
 
+    
+    //[JOSEP] per a [RAFA]. Cal crear una nova jerarquia una classe intermèdia que hereti de PageAction i tingui només
+    //les parts comuns dels editors(com per exemple aquesta funcio). Caldrà passar aquesta funció
+    //a la classe creada i fer que el RawAction i RawPageAction heretin d'aquesta
     protected function generateLockInfo($lockState, $id, $structured=FALSE, $section=NULL) {
         $message = null;
 
