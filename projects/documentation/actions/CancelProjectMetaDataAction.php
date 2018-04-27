@@ -11,10 +11,9 @@ class CancelProjectMetaDataAction extends GetProjectMetaDataAction {
             $this->getModel()->removeDraft(); //Elimina els esborranys
         }
 
-        // ALERTA[Xavi] Comentada perque no fa res i DISCARD_CHANGES no existeix
-//        if (!$this->params[ProjectKeys::DISCARD_CHANGES]) {
-//            //Descarta els canvis
-//        }
+        if (!$this->params[ProjectKeys::DISCARD_CHANGES]) {
+            //Descarta els canvis
+        }
 
         if ($this->params[ProjectKeys::KEY_NO_RESPONSE] ) {
             $response[ProjectKeys::KEY_CODETYPE] = 0;
