@@ -8,7 +8,6 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/LockManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
@@ -230,45 +229,6 @@ abstract class PageAction extends DokuAction implements ResourceLockerInterface,
                 $elements[$i]['id'] .= self::REVISION_SUFFIX;
             }
         }
-    }
-
-    
-    //[JOSEP] per a [RAFA]. Cal crear una nova jerarquia una classe intermèdia que hereti de PageAction i tingui només
-    //les parts comuns dels editors(com per exemple aquesta funcio). Caldrà passar aquesta funció
-    //a la classe creada i fer que el RawAction i RawPageAction heretin d'aquesta
-    protected function generateLockInfo($lockState, $id, $structured=FALSE, $section=NULL) {
-        $message = null;
-
-        switch ($lockState) {
-            case self::LOCKED:
-                // El fitxer no estava bloquejat
-                if ($structured) {
-                    $message = WikiIocLangManager::getLang('chunk_editing'). $id . ':' . $section;
-                    $infoType = 'info';
-                }
-                break;
-
-            case self::REQUIRED:
-                // S'ha d'afegir una notificació per l'usuari que el te bloquejat
-                $lockingUser = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
-                $message = WikiIocLangManager::getLang('lockedby') . ' ' . $lockingUser;
-                $infoType = 'error';
-                break;
-
-            case self::LOCKED_BEFORE:
-                // El teniem bloquejat nosaltres
-                $message = WikiIocLangManager::getLang('alreadyLocked');
-                $infoType = 'warning';
-                break;
-
-            default:
-                throw new UnknownTypeParamException($lockState);
-        }
-
-        if ($message) {
-            $message = self::generateInfo($infoType, $message, $id);
-        }
-        return $message;
     }
 
     /**
