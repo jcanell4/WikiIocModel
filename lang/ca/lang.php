@@ -1,7 +1,6 @@
 <?php
 /**
  * Catalan language file
- *
  * @author Joseo Cañellas<jcanell4@ioc.cat>
  */
 require_once (DOKU_INC . 'lib/plugins/ajaxcommand/defkeys/GlobalKeys.php');
@@ -10,6 +9,8 @@ const PAG_DEFAULT = "createDefaultText";
 const PAG_SAVED = "saved";
 const PAG_DELETED = "deleted";
 
+$lang['yes'] = 'Sí';
+$lang['no'] = 'No';
 $lang['createDefaultText'] = 'Pàgina creada per defecte';
 $lang['conflictsSaving'] = "Hi ha conflictes amb altres versions. No s'han pogut guardar els canvis";
 $lang['saved'] = "Els canvis s'han guardat correctament";
@@ -21,7 +22,10 @@ $lang['pageExists'] = "La pàgina %s ja existeix";
 $lang['metaEditForm'] = "Camps Edició";
 $lang['project_loaded'] = "El projecte s'ha carregat correctament";
 $lang['project_view'] = "Es mostren les dades actuals del projecte.";
+$lang['project_edited'] = "El projecte està en mode edició. Prem el botó [Desa] per desar les dades.";
 $lang['project_reverted'] = "El projecte s'ha revertit amb éxit a la versió de la revisió indicada";
+$lang['project_canceled'] = "S'ha cancel·lat l'edició del projecte ";
+$lang['project_revision'] = "Aquesta és una revisió antiga del projecte";
 $lang['form_compare'] = "Es mostren les dades comparades del projecte i la revisió seleccionada: ";
 $lang['form_compare_rev'] = "Es mostren les dades comparades de les dos revisions seleccionades: ";
 
@@ -55,6 +59,12 @@ $lang['requiring_dialog_title'] = "ALERTA. Document bloquejat!";
 $lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari %s. S'estima que quedarà alliberat a les %s\n"
         . "Vols que t'avisem quan es desbloquegi aquest document?\n"
         . "Això enviarà una notificació a %s indicant que t'interessa editar el document %s i que l'alliberi l'abans possible.\n"
+        . "Activem la notificació?";
+$lang['require_message'] = "El projecte %s està bloquejat per l'usuari %s.<br>S'estima que quedarà alliberat a les %s";
+$lang['require_dialog_title'] = "ALERTA. Projecte bloquejat!";
+$lang['require_dialog_message'] = "El projecte %s està bloquejat per l'usuari %s.<br>S'estima que quedarà alliberat a les %s<br>"
+        . "Vols que t'avisem quan es desbloquegi aquest projecte?<br>"
+        . "Això enviarà una notificació a %s indicant que t'interessa editar el projecte %s i que l'alliberi l'abans possible.<br>"
         . "Activem la notificació?";
 
 $lang['tab_shortcuts'] = "Dreceres";

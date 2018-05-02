@@ -23,7 +23,7 @@ class RevertProjectMetaDataAction extends ProjectMetadataAction {
      * Envía los datos de la revisión al projectModel para sustituir al proyecto actual
      * @return array con la estructura y los valores del proyecto (la revisión se habrá convertido en el proyecto actual)
      */
-    protected function runProcess() {
+    private function localRunProcess() {
         $id = $this->params[ProjectKeys::KEY_ID];
         $pType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
         $rev = $this->params[ProjectKeys::KEY_REV];
@@ -76,7 +76,7 @@ class RevertProjectMetaDataAction extends ProjectMetadataAction {
 
     protected function responseProcess() {
         $this->startProcess();
-        $ret = $this->runProcess();
+        $ret = $this->localRunProcess();
         return $ret;
     }
 
