@@ -37,13 +37,15 @@ class PagePermissionManager{
         $camins = explode(":", $id);
         for ($c = count($camins)-1; $c >= 0; $c--) {
             $camí = implode(":", $camins);
-            foreach ($acl[$camí] as $k => $v) {
-                switch ($type) {
-                    case 'users': $inc = (substr($k,0,1)!=="@"); break;
-                    case 'groups': $inc = (substr($k,0,1)==="@"); break;
-                    default: $inc = true; break;
+            if ($acl[$camí]) {
+                foreach ($acl[$camí] as $k => $v) {
+                    switch ($type) {
+                        case 'users': $inc = (substr($k,0,1)!=="@"); break;
+                        case 'groups': $inc = (substr($k,0,1)==="@"); break;
+                        default: $inc = true; break;
+                    }
+                    if ($inc && $v >= $permis) $ret[] = $k;
                 }
-                if ($inc && $v >= $permis) $ret[] = $k;
             }
             if ($c > 0) {
                 if ($camins[$c] === "*") {
