@@ -71,7 +71,14 @@
         }
       },
       "descripcio": {
-        "n_columns": 12
+        "n_columns": 12,
+        "type": "textarea",
+        "props": {
+          "data-editable-element": "textarea"
+        },
+        "config": {
+          "syntaxhighlight": true
+        }
       },
       "plantilla": {
         "n_columns": 4,
