@@ -6,13 +6,10 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
-require_once(DOKU_INC . 'inc/common.php');
-require_once(DOKU_INC . 'inc/actions.php');
-require_once(DOKU_INC . 'inc/template.php');
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/EditPageAction.php";
 
-class RawPageAction extends PageAction {
+class RawPageAction extends EditPageAction {
     const HTML_FORMAT = "Dojo";
     const DW_FORMAT = "ACE";
 
@@ -127,8 +124,8 @@ class RawPageAction extends PageAction {
             // ALERTA[Xavi] Les revisións no bloquejan el document. Per altra banda afegeixen un suffix al id per diferenciar-se del document original
             $response['id'] .= PageAction::REVISION_SUFFIX;
         } else {
-            // ALERTA: Es bloqueja correctament??
-            $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
+            $mess = $this->generateLockInfo($this->lockState(), $this->params[PageKeys::KEY_ID]);
+            $response['info'] = self::addInfoToInfo($response['info'], $mess);
         }
 
         $this->addNotificationsMetaToResponse($response, $response['ns']);
@@ -230,44 +227,6 @@ class RawPageAction extends PageAction {
             throw new SystemExecutionFailedException();
         }
         return implode ( "\n" , $return );
-    }
-
-    private function generateLockInfo($lockState, $mes) {
-        $infoType = 'message';
-        $message = null;
-
-        switch ($lockState) {
-
-            case self::LOCKED:
-                // El fitxer no estava bloquejat
-                break;
-
-            case self::REQUIRED:
-                // S'ha d'afegir una notificació per l'usuari que el te bloquejat
-                $lockingUser = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
-                $message = WikiIocLangManager::getLang('lockedby') . ' ' . $lockingUser;
-                $infoType = 'error';
-                break;
-
-            case self::LOCKED_BEFORE:
-                // El teniem bloquejat nosaltres
-                $message = WikiIocLangManager::getLang('alreadyLocked');
-                $infoType = 'warning';
-                break;
-
-            default:
-                throw new UnknownTypeParamException($lockState);
-        }
-
-        if ($mes && $message) {
-            $message = $this->addInfoToInfo(self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]),
-                                            self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]));
-        }elseif ($mes) {
-            $message = $mes;
-        }else {
-            $message = self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]);
-        }
-        return $message;
     }
 
     private function _getLocalDraftResponse()
@@ -391,18 +350,8 @@ class RawPageAction extends PageAction {
         return $resp;
     }
 
-    private function _getBaseDataToSend()
-    {
-        $pageTitle = tpl_pagetitle($this->params[PageKeys::KEY_ID], TRUE);
-        $id = $this->params[PageKeys::KEY_ID];
-        $contentData = array(
-            'id' => str_replace(":", "_", $id),
-            'ns' => $id,
-            'title' => $pageTitle,
-            'rev' => $this->params[PageKeys::KEY_REV],
-        );
-
-        return $contentData;
+    private function _getBaseDataToSend() {
+        return $this->dokuPageModel->getBaseDataToSend($this->params[PageKeys::KEY_ID], $this->params[PageKeys::KEY_REV]);
     }
 
     private function _getDraftType($dt = PageKeys::NO_DRAFT) {

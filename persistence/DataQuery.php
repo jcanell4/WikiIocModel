@@ -266,10 +266,11 @@ abstract class DataQuery {
 
         $pathElement = $metaDataPath."/".str_replace(":", "/", $ns);
         $camins = ($ns) ? explode(":", $ns) : NULL;
-        $page = $datadir."/".implode("/", $camins);
+        $page = "$datadir/";
+        if ($camins)
+            $page .= implode("/", $camins);
 
         $ret[self::K_TYPE] = is_dir($page) ? "d" : (is_file($page) ? "f" : "none");
-        //$ret['levelProject'] = $level;
 
         while ($camins) {
             $nsElement = implode(":", $camins);

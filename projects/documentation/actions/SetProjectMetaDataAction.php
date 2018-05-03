@@ -34,8 +34,9 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
                 ProjectKeys::KEY_FILTER => $dataProject[ProjectKeys::KEY_FILTER],  //opcional
                 ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
             ];
-            
-            $response = $this->getModel()->setData($metaData);
+
+            $this->getModel()->setData($metaData);
+            $response = $this->getModel()->getData();
 
             if ($this->getModel()->isProjectGenerated($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE])) {
                 $data = $this->getModel()->getData();   //obtiene la estructura y el contenido del proyecto
@@ -54,7 +55,7 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
             if (!$dataProject[ProjectKeys::KEY_KEEP_DRAFT]) {
                 $this->getModel()->removeDraft();
             }
-            
+
             if ($dataProject[ProjectKeys::KEY_NO_RESPONSE]) {
                 $response[ProjectKeys::KEY_CODETYPE] = 0;
             }else{

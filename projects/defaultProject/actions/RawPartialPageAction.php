@@ -5,13 +5,9 @@
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/EditPageAction.php";
 
-require_once(DOKU_INC . 'inc/common.php');
-require_once(DOKU_INC . 'inc/actions.php');
-require_once(DOKU_INC . 'inc/template.php');
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
-
-class RawPartialPageAction extends PageAction {
+class RawPartialPageAction extends EditPageAction {
     private $lockStruct;
 
     public function init($modelManager) {
@@ -156,50 +152,7 @@ class RawPartialPageAction extends PageAction {
         return $originalCall;
     }
 
-    private function generateLockInfo($lockState, $mes) {
-        $infoType = 'message';
-        $message = null;
-
-        switch ($lockState) {
-
-            case self::LOCKED:
-                // El fitxer no estava bloquejat
-                $message = WikiIocLangManager::getLang('chunk_editing'). $this->params[PageKeys::KEY_ID] . ':' . $this->params[PageKeys::KEY_SECTION_ID];
-                $infoType = 'info';
-                break;
-
-            case self::REQUIRED:
-                // S'ha d'afegir una notificació per l'usuari que el te bloquejat
-                $lockingUser = WikiIocInfoManager::getInfo(WikiIocInfoManager::KEY_LOCKED);
-                $message = WikiIocLangManager::getLang('lockedby') . ' ' . $lockingUser;
-                $infoType = 'error';
-                break;
-
-            case self::LOCKED_BEFORE:
-                // El teniem bloquejat nosaltres
-                $message = WikiIocLangManager::getLang('alreadyLocked');
-                $infoType = 'warning';
-                break;
-
-            default:
-                throw new UnknownTypeParamException($lockState);
-        }
-
-        if ($mes && $message) {
-            $message = $this->addInfoToInfo(self::generateInfo($infoType, $mes, $this->params[PageKeys::KEY_ID]),
-                                            self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]));
-        }elseif ($mes) {
-            $message = $mes;
-        }else {
-            $message = self::generateInfo($infoType, $message, $this->params[PageKeys::KEY_ID]);
-        }
-        return $message;
-    }
-
-    // TODO[Xavi] copiat de RawPageAction
-
-    private function lockState()
-    {
+    private function lockState()    {
         return $this->lockStruct["state"];
     }
 
@@ -236,8 +189,7 @@ class RawPartialPageAction extends PageAction {
         return $response;
     }
 
-    private function _getDraftInfo($data)
-    {
+    private function _getDraftInfo($data) {
 
         $draftInfo ['draftType'] = $data['draftType'];
         $draftInfo['local'] = false;
@@ -266,8 +218,6 @@ class RawPartialPageAction extends PageAction {
             } else if ($structuredLastLocalDraftTime) {
                 $structuredLastSavedDraftTime = $this->dokuPageModel->getStructuredDraftDate();
 
-//            $structuredLastSavedDraftTime = 1558822524; // TODO[Xavi] Forçant la comprovació, ELIMINAR!
-
                 if ($structuredLastLocalDraftTime > $structuredLastSavedDraftTime) { // local es més recent
                     $draftInfo ['local'] = true;
                     $draftInfo ['draftType'] = PageKeys::LOCAL_PARTIAL_DRAFT;
@@ -293,9 +243,9 @@ class RawPartialPageAction extends PageAction {
     }
 
     private function _getDocumentResponse($data) {
-        $response = $data;
-        $response['info'] = $this->generateLockInfo($this->lockState(), $response['info']);
-        return $response;
+        $message = $this->generateLockInfo($this->lockState(), $this->params[PageKeys::KEY_ID], TRUE, $this->params[PageKeys::KEY_SECTION_ID]);
+        $data['info'] = self::addInfoToInfo($data['info'], $message);
+        return $data;
     }
 
     private function _getDialogOrDocumentResponse($data)
@@ -324,15 +274,12 @@ class RawPartialPageAction extends PageAction {
 
             default:
                 throw new UnknownTypeParamException($draftInfo['draftType']);
-
-
         }
 
         if ($draftInfo['draftType'] === PageKeys::FULL_DRAFT || $draftInfo['draftType'] === PageKeys::PARTIAL_DRAFT) {
             // TODO: Afegir a la resposta els esborranys remots per actualitzar els locals (
-                    $response['update_drafts'][$draftInfo['draftType']] = $data['draft'];
+            $response['update_drafts'][$draftInfo['draftType']] = $data['draft'];
         }
-
 
         return $response;
     }
