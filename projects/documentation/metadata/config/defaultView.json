@@ -33,46 +33,81 @@
             "n_columns": 12,
             "n_rows": 1,
             "frame": true
+        },
+        "taula": {
+            "parent": "",
+            "label": "Taula de substitució",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": false
         }
     },
     "fields": {
-        "nsproject": {
-          "type": "hidden",
-          "props": {"readonly":true}
-        },
-        "responsable": {
-          "n_columns": 6,
-          "group": "admin",
-          "props": {"required":true}
-        },
-        "autor": {
-          "n_columns": 6,
-          "group": "admin",
-          "props": {"required":true}
-        },
-        "titol": {
-          "mandatory": true,
-          "n_columns": 8,
-          "props": {"required":true}
-        },
-        "descripcio": {
-          "n_columns": 12
-        },
-        "plantilla": {
-          "n_columns": 4,
-          "group": "files",
-          "props": {"readonly":true}
-        },
-        "fitxercontinguts": {
-          "label": "ruta de l'arxiu de continguts",
-          "n_columns": 4,
-          "group": "files",
-          "props": {"readonly":true}
-        },
-        "media_address": {
-          "label": "ruta del directori media",
-          "n_columns": 4,
-          "group": "files"
+      "nsproject": {
+        "type": "hidden",
+        "props": {
+          "readonly": true
         }
+      },
+      "responsable": {
+        "n_columns": 6,
+        "group": "admin",
+        "props": {
+          "required": true
+        }
+      },
+      "autor": {
+        "n_columns": 6,
+        "group": "admin",
+        "props": {
+          "required": true
+        }
+      },
+      "titol": {
+        "mandatory": true,
+        "n_columns": 8,
+        "props": {
+          "required": true
+        }
+      },
+      "descripcio": {
+        "n_columns": 12,
+        "type": "textarea",
+        "props": {
+          "data-editable-element": "textarea"
+        },
+        "config": {
+          "syntaxhighlight": true
+        }
+      },
+      "plantilla": {
+        "n_columns": 4,
+        "group": "files",
+        "props": {
+          "readonly": true
+        }
+      },
+      "fitxercontinguts": {
+        "label": "ruta de l'arxiu de continguts",
+        "n_columns": 4,
+        "group": "files",
+        "props": {
+          "readonly": true
+        }
+      },
+      "media_address": {
+        "label": "ruta del directori media",
+        "n_columns": 4,
+        "group": "files"
+      },
+      "nom-de-prova": {
+        "label": "Taula de prova",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "taula",
+        "props": {
+          "data-editable-element": "table"
+        }
+      }
     }
 }
