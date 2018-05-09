@@ -73,7 +73,7 @@
       "descripcio": {
         "n_columns": 12,
         "type": "textarea",
-        "n_rows": 10,
+        "struc_rows": 10,
         "props": {
           "data-editable-element": "textarea"
         },
@@ -104,7 +104,6 @@
       "nom-de-prova": {
         "label": "Taula de prova",
         "n_columns": 12,
-        "n_rows": 5,
         "type": "editableObject",
         "group": "taula",
         "props": {
