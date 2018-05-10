@@ -6,7 +6,8 @@ namespace documentation;
 require_once(DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderAbstract.php');
 
 class MetaDataRender extends \MetaDataRenderAbstract {
-    const DEFAULT_SINGLE_VALUES = array("string"=>"", "number" => 0, "boolean" => false);
+    //const DEFAULT_SINGLE_VALUES = array("string"=>"", "number" => 0, "boolean" => false);
+    public static $DEFAULT_SINGLE_VALUES = ["string"=>"", "number"=>0, "boolean"=>false];
 
     /**
      * @param $metaDataEntityWrapper -> Entities array
@@ -55,11 +56,11 @@ class MetaDataRender extends \MetaDataRenderAbstract {
 //        $tree = $this->parser($values, $structure, $types);
 //        return $tree;
 //    }
-//    
+//
     protected function runParser($values, $structure, $types){
         return $this->_runParser($values, $structure, $types, "");
     }
-    
+
     protected function _runCompositeParser($values, &$properties, $types, $newid){
         switch ($properties['type']){
             case 'object':
@@ -84,14 +85,14 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         }
         return $values;
     }
-    
+
     protected function _runParser($values, $structure, $types, $id){
         $tree = [];
         foreach ($structure as $field => $properties) {
                 $newid = $id.$field;
                 if(array_key_exists($properties['type'], $types)){
                     $original_type = $properties['type'];
-                    $td = $types[$properties['type']];                
+                    $td = $types[$properties['type']];
                     $properties['type']=$td['type'] ;
                     if(isset($td['typeDef'])){
                         $properties['typeDef']=$td['typeDef'];
@@ -100,7 +101,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
                     }else{
                         $properties['typeDef']=$original_type;
                     }
-                }   
+                }
                 $_values = $this->_getValue($field, $values, $properties, $types);
                 $_values['value'] = $this->_runCompositeParser($_values['value'], $properties, $types, $newid);
                 $_values['default'] = $this->_runCompositeParser($_values['default'], $properties, $types, $newid);
@@ -109,7 +110,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
                 $tree[$field]['default'] = $_values['default'];
                 if (isset($_values['defaultRow'])) {
                     $tree[$field]['defaultRow'] = $_values['defaultRow'];
-                }            
+                }
                 if (isset($values[$field])) {
                     $tree[$field]['value'] = $_values['value'];
                 }else{
@@ -121,7 +122,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         }
         return $tree;
     }
-    
+
     protected function _runTableParser($itemValues, $properties, $types, $id){
         $tree = [];
         for($i = 0, $len = count($itemValues); $i < $len; $i++) {
@@ -132,7 +133,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
                 $sproperties = array();
                 $sproperties['type'] = $properties['typeDef'];
                 $sproperties['mandatory'] = $properties['mandatory'];
-                $_values = $this->_getSingleValue($itemValues[$i], $sproperties, $types, self::DEFAULT_SINGLE_VALUES[$properties['typeDef']]);
+                $_values = $this->_getSingleValue($itemValues[$i], $sproperties, $types, self::$DEFAULT_SINGLE_VALUES[$properties['typeDef']]);
                 $tree []= $sproperties;
                 $tree[$i]['value'] = $_values['value'];
                 $tree[$i]['default'] = $_values['default'];
@@ -141,7 +142,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         }
         return $tree;
     }
-    
+
     protected function _runArrayItemsParser($itemValues, $structure, $types, $id){
         $tree = [];
         for($i = 0, $len = count($itemValues); $i < $len; $i++) {
@@ -150,8 +151,8 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         }
         return $tree;
     }
-    
-    
+
+
     private function _getObjectStructureKeys($properties, $types){
         $ret;
         if(array_key_exists($properties['type'], $types)){
@@ -173,7 +174,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
 //                $dv = isset($dv)?$dv:0;
             case "string":
 //                $dv = isset($dv)?$dv:"";
-                $dv = self::DEFAULT_SINGLE_VALUES[$properties["type"]];
+                $dv = self::$DEFAULT_SINGLE_VALUES[$properties["type"]];
                 $ret = $this->_getSingleValue($values[$field], $properties, $types, $dv);
                 break;
             case "array":
@@ -197,12 +198,12 @@ class MetaDataRender extends \MetaDataRenderAbstract {
                     $ret = $this->_getValue($field, $values, $properties, $types);
                 }else{
                     throw new \IncorrectParametersException();
-                }    
+                }
                 break;
         }
         return $ret;
     }
-    
+
     private function _getDefaultSingleArrayItem($properties, $types){
         $cols = isset($properties['n_columns'])?$properties['n_columns']:1;
         $singleValue = $this->_getValue("", array(), array("type" => $properties['typeDef']), $types)['value'];
@@ -210,14 +211,14 @@ class MetaDataRender extends \MetaDataRenderAbstract {
             $_vcols = [];
             for($j=0; $j<$cols; $j++){
                 $_vcols[]= $singleValue;
-            }             
+            }
             $_value = $_vcols;
         }else{
             $_value = $singleValue;
         }
         return $_value;
     }
-    
+
     private function _getDefaultSingleArray($properties, $types, $defaultRow){
         if(isset($properties['default'])){
             $_values = $properties['default'];
@@ -225,36 +226,36 @@ class MetaDataRender extends \MetaDataRenderAbstract {
             $_values= [];
 
             $rows = isset($properties['n_rows'])?$properties['n_rows']:0;
-            for($i=0; $i<$rows; $i++){            
+            for($i=0; $i<$rows; $i++){
                 $_values[]= $defaultRow;
             }
         }
         return $_values;
     }
-    
+
     private function _getSingleArray($values, $properties, $types){
         $_values = [];
         $_values['defaultRow'] = $this->_getDefaultSingleArrayItem($properties, $types);
         $_values['default'] = $this->_getDefaultSingleArray($properties, $types, $_values['defaultRow']);
         if ($values) {
-            $_values['value'] = $values;            
+            $_values['value'] = $values;
         }else{
             $_values['value'] =$_values['default'];
-        }        
+        }
         return $_values;
     }
-    
+
     private function _getSingleValue($values, $properties, $types, $dv){
         $_values = [];
         $_values['default'] = isset($properties['default'])?$properties['default']:$dv;
         if ($values) {
-            $_values['value'] = $values;       
+            $_values['value'] = $values;
         }else{
-            $_values['value'] = $_values['default'];       
+            $_values['value'] = $_values['default'];
         }
         return $_values;
     }
-    
+
     private function _getDefaultObjectValue($properties, $types){
         if(isset($properties['default'])){
             $_values = $properties['default'];
@@ -267,15 +268,15 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         }
         return $_values;
     }
-    
+
     private function _getObjectValue($field, $values, $properties, $types){
         $_values = [];
         $_values['default'] = $this->_getDefaultObjectValue($properties, $types);
         if (isset($values[$field])) {
-            $_values['value'] = $values[$field];            
+            $_values['value'] = $values[$field];
         }else{
             $_values['value'] =$_values['default'];
-        }        
+        }
         return $_values;
     }
 
@@ -286,22 +287,22 @@ class MetaDataRender extends \MetaDataRenderAbstract {
             $_values= [];
 
             $rows = isset($properties['n_rows'])?$properties['n_rows']:0;
-            for($i=0; $i<$rows; $i++){            
+            for($i=0; $i<$rows; $i++){
                 $_values[]= $defaultRow;
             }
         }
         return $_values;
     }
-    
+
     private function _getObjectArrayValue($field, $values, $properties, $types){
         $_values = [];
         $_values['defaultRow'] = $this->_getObjectValue("", array(), $properties, $types)['value'];
         $_values['default'] = $this->_getDefaultObjectArrayValue($properties, $types, $_values['defaultRow']);
         if (isset($values[$field])) {
-            $_values['value'] = $values[$field];            
+            $_values['value'] = $values[$field];
         }else{
             $_values['value'] =$_values['default'];
-        }        
+        }
         return $_values;
     }
 
@@ -321,7 +322,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
 //        }
 //        return $values;
 //    }
-//    
+//
 //    protected function parser($values, $structure, $definitionTypes) {
 //        $tree = [];
 //
@@ -332,7 +333,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
 //            // Si $value es un strig ho afegim a la estructura (fulla)
 //            if ($structure[$key]['type'] === 'string') {
 //                $tree[$key] = $structure[$key];
-//                $tree[$key]['value'] = $value;                
+//                $tree[$key]['value'] = $value;
 //            // Si $value es un array fem un parse (branca)
 //            }else if ($structure[$key]['type'] === 'array') {
 //                $tree[$key] = $structure[$key];
@@ -350,7 +351,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
 //        }
 //        return $tree;
 //    }
-    
+
 //    protected function parseArray($type, $values, $definitionTypes, $prefix) {
 //        $tree = [];
 //        $item = null;
