@@ -106,6 +106,7 @@
         "n_columns": 12,
         "type": "editableObject",
         "group": "taula",
+        "struc_rows": 4,
         "props": {
           "data-editable-element": "table"
         }
