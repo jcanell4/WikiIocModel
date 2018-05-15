@@ -21,12 +21,11 @@ class MetaDataQuery extends DataQuery {
 
         return metaFN($id, $ext);
     }
-    
-    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE) {
-            global $conf;
-            $base = $conf['metadir'];
 
-            return $this->getNsTreeFromBase( $base, $currentNode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects, $root );        
+    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProjects=FALSE, $hiddenProjects=FALSE, $root=FALSE) {
+        global $conf;
+        $base = $conf['metadir'];
+        return $this->getNsTreeFromGenericSearch($base, $currentNode, $sortBy, $onlyDirs, 'search_index', $expandProjects, $hiddenProjects, $root);
     }
 
 }
