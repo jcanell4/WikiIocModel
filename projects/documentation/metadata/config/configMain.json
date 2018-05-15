@@ -44,7 +44,11 @@
                         },
                         "descripcio": {
                             "type": "string",
-                            "default": "write a brief project description here"
+                            "default": "write a brief project description here",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
                         },
                         "nsproject": {
                             "type": "string",

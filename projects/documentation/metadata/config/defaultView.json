@@ -78,9 +78,6 @@
         "struc_rows": 10,
         "props": {
           "data-editable-element": "textarea"
-        },
-        "config": {
-          "syntaxhighlight": true
         }
       },
       "plantilla": {
