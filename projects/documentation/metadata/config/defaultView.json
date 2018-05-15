@@ -11,6 +11,7 @@
             "label": "Principal",
             "n_columns": 5,
             "n_rows": 5,
+            "struc_rows": 30,
             "frame": true
         },
         "dades": {
@@ -25,6 +26,7 @@
             "label": "dades d'administració",
             "n_columns": 10,
             "n_rows": 1,
+            "struc_rows": 15,
             "frame": true
         },
         "files": {
