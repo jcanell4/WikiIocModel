@@ -5,12 +5,13 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
-define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
+if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC.'lib/lib_ioc/');
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
+if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
 
 require_once (DOKU_INC . 'inc/common.php');
 require_once (DOKU_INC . 'inc/auth.php');
-require_once (WIKI_IOC_PROJECTS . 'defaultProject/DokuModelExceptions.php');
+require_once(DOKU_LIB_IOC . "wikiiocmodel/DefaultProjectModelExceptions.php");
 require_once (WIKI_IOC_PROJECTS . 'defaultProject/authorization/Permission.php');
 
 class CommandAuthorization extends AbstractCommandAuthorization {
