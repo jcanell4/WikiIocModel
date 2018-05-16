@@ -170,8 +170,10 @@ abstract class DataQuery {
         $typeNs = $this->getNsType($node);
         $itemsProject = $this->updateNsProperties($node, $typeNs);
 
-        if (($itemsProject[self::K_PROJECTTYPE] || $itemsProject[self::K_TYPE] === "pd") && $expandProject) {
-            $children = $this->fillProjectNode($nodeData, $level, $itemsProject, $onlyDirs);
+        if ($itemsProject[self::K_PROJECTTYPE] || $itemsProject[self::K_TYPE] === "pd") {
+            if ($expandProject) {
+                $children = $this->fillProjectNode($nodeData, $level, $itemsProject, $onlyDirs);
+            }
         }elseif ($nodeData) {
             $children = $this->fillNode($nodeData, $level, $onlyDirs, $hiddenProjects);
         }
@@ -216,9 +218,14 @@ abstract class DataQuery {
                     $ptype = $this->getNsType($nodeData[$item][self::K_ID]);
                     $_type = ($ptype[self::K_PROJECTTYPE]) ? "o" : $ptype[self::K_TYPE];
                 }
+                if (isset($ptype) && $ptype[self::K_PROJECTTYPE]) {
+                    $children[$item][self::K_PROJECTTYPE] = $ptype[self::K_PROJECTTYPE];
+                    $children[$item][self::K_NSPROJECT] = $ptype[self::K_NSPROJECT];
+                }else {
+                    $children[$item][self::K_PROJECTTYPE] = $itemsProject[self::K_PROJECTTYPE];
+                    $children[$item][self::K_NSPROJECT] = $itemsProject[self::K_NSPROJECT];
+                }
                 $children[$item][self::K_TYPE] = "p$_type";
-                $children[$item][self::K_PROJECTTYPE] = $itemsProject[self::K_PROJECTTYPE];
-                $children[$item][self::K_NSPROJECT] = $itemsProject[self::K_NSPROJECT];
             }
         }
         return $children;
