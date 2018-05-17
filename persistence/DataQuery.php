@@ -12,12 +12,24 @@ require_once (DOKU_INC . 'inc/io.php');
 require_once (DOKU_PLUGIN . 'ajaxcommand/defkeys/ProjectKeys.php');
 
 abstract class DataQuery {
-    const K_PROJECTTYPE  = ProjectKeys::KEY_PROJECT_TYPE;
-    const K_ID           = AjaxKeys::KEY_ID;
-    const K_NS           = AjaxKeys::KEY_NS;
-    const K_NAME         = "name";
-    const K_NSPROJECT    = "nsproject";
-    const K_TYPE         = "type";
+    const K_PROJECTTYPE = ProjectKeys::KEY_PROJECT_TYPE;
+    const K_ID          = ProjectKeys::KEY_ID;
+    const K_NS          = ProjectKeys::KEY_NS;
+    const K_NAME        = "name";
+    const K_NSPROJECT   = "nsproject";
+    const K_TYPE        = "type";
+
+    private $datadir;
+    private $metaDataPath;
+    private $metaDataExtension;
+
+    private function init($base=NULL) {
+        if (!isset($this->datadir)) {
+            $this->datadir = ($base) ? $base : WikiGlobalConfig::getConf('datadir');
+            $this->metaDataPath = WikiGlobalConfig::getConf('mdprojects');
+            $this->metaDataExtension = WikiGlobalConfig::getConf('mdextension');
+        }
+    }
 
     public abstract function getFileName($id, $especParams=NULL);
 
@@ -29,6 +41,7 @@ abstract class DataQuery {
      * @return boolean
      */
     public function haveADirProject($id) {
+        $this->init();
         $ret = $this->getNsItems($id);
         return isset($ret[self::K_PROJECTTYPE]);
     }
@@ -100,11 +113,8 @@ abstract class DataQuery {
      * @param string $root
      * @return json conteniendo el nodo actual con sus propiedades y sus hijos, con sus propiedades, a 1 nivel de profundidad
      */
-    protected function getNsTreeFromBase( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE) {
-    	return $this->getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs, 'search_index', $expandProject, $hiddenProjects, $root);
-    }
-
     protected function getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $function='search_index', $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE ) {
+        $this->init($base);
         $nodeData    = array();
         $children    = array();
         $sortOptions = array(self::K_NAME, 'date');    //no se usa
@@ -112,16 +122,17 @@ abstract class DataQuery {
         if ( $currentnode == "_" ) {
             $path = $base.'/'.($root ? "$root/" : "");
             $path = str_replace(':', '/', $path);
+            $name = ($root) ? $root : "";
             if (is_dir($path)){
                 $itemsProject = $this->getNsItems($root);
-                $name = ($root) ? $root : "";
+                if ($root && $itemsProject[self::K_PROJECTTYPE])
+                    $itemsProject = $this->updateNsProperties($root, $itemsProject);
                 $type = $itemsProject[self::K_TYPE];
             }else{
-                $name = $root;
                 $type = "f";
             }
             $ret = array(
-                      self::K_ID => "",
+                      self::K_ID => $name,
                       self::K_NAME => $name,
                       self::K_TYPE => $type
                    );
@@ -157,13 +168,14 @@ abstract class DataQuery {
         $dir = str_replace(':', '/', $node);
         search($nodeData, $base, $function, $opts, $dir, $level);
 
-        $itemsProject = $this->getNsItems($node, $level);
+        $typeNs = $this->getNsType($node);
+        $itemsProject = $this->updateNsProperties($node, $typeNs);
 
-        if ($itemsProject[self::K_PROJECTTYPE]) {
+        if ($itemsProject[self::K_PROJECTTYPE] || $itemsProject[self::K_TYPE] === "pd") {
             if ($expandProject) {
                 $children = $this->fillProjectNode($nodeData, $level, $itemsProject, $onlyDirs);
             }
-        }else {
+        }elseif ($nodeData) {
             $children = $this->fillNode($nodeData, $level, $onlyDirs, $hiddenProjects);
         }
 
@@ -177,9 +189,9 @@ abstract class DataQuery {
             $tree[self::K_NSPROJECT]   = $itemsProject[self::K_NSPROJECT];
         }
         $tree['children'] = $children;
-//        Logger::debug("getNsTreeFromGenericSearch: \$params=".json_encode(array('base'=>$base,'currentnode'=>$currentnode,'sortBy'=>$sortBy,'onlyDirs'=>$onlyDirs,'function'=>$function,'expandProject'=>$expandProject,'hiddenProjects'=>$hiddenProjects,'root'=>$root))."\n".
-//                      "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\$tree=".json_encode($tree)."\n".
-//                      "\$tree=".print_r($tree, TRUE), 0, __LINE__, "DataQuery", -1, TRUE);
+        //Logger::debug("getNsTreeFromGenericSearch: \$params=".json_encode(array('base'=>$base,'currentnode'=>$currentnode,'sortBy'=>$sortBy,'onlyDirs'=>$onlyDirs,'function'=>$function,'expandProject'=>$expandProject,'hiddenProjects'=>$hiddenProjects,'root'=>$root))."\n".
+                        //"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\$tree=".json_encode($tree)."\n".
+                        //"\$tree=".print_r($tree, TRUE), 0, __LINE__, "DataQuery", -1, TRUE);
         return $tree;
     }
 
@@ -194,18 +206,27 @@ abstract class DataQuery {
      */
     private function fillProjectNode($nodeData, $level, $itemsProject, $onlyDirs) {
         $children = array();
-
-//        Logger::debug("fillProjectNode->nodeData: ".json_encode($nodeData), 0, __LINE__, "DataQuery", -1, TRUE);
-//        Logger::debug("fillProjectNode->itmsProject: ".json_encode($itemsProject), 0, __LINE__, "DataQuery", -1, TRUE);
-
+        //Logger::debug("fillProjectNode->nodeData: ".json_encode($nodeData), 0, __LINE__, "DataQuery", -1, TRUE);
+        //Logger::debug("fillProjectNode->itmsProject: ".json_encode($itemsProject), 0, __LINE__, "DataQuery", -1, TRUE);
         foreach (array_keys($nodeData) as $item) {
 
             if ($onlyDirs && $nodeData[$item][self::K_TYPE] == 'd' || !$onlyDirs) {
                 $children[$item][self::K_ID] = $nodeData[$item][self::K_ID];
                 $children[$item][self::K_NAME] = explode(":", $nodeData[$item][self::K_ID])[$level];
-                $children[$item][self::K_TYPE] = "p".$nodeData[$item][self::K_TYPE];
-                $children[$item][self::K_PROJECTTYPE] = $itemsProject[self::K_PROJECTTYPE];
-                $children[$item][self::K_NSPROJECT] = $itemsProject[self::K_NSPROJECT];
+
+                $_type = $nodeData[$item][self::K_TYPE];
+                if ($_type === "d") {
+                    $ptype = $this->getNsType($nodeData[$item][self::K_ID]);
+                    $_type = ($ptype[self::K_PROJECTTYPE]) ? "o" : $ptype[self::K_TYPE];
+                }
+                if (isset($ptype) && $ptype[self::K_PROJECTTYPE]) {
+                    $children[$item][self::K_PROJECTTYPE] = $ptype[self::K_PROJECTTYPE];
+                    $children[$item][self::K_NSPROJECT] = $ptype[self::K_NSPROJECT];
+                }else {
+                    $children[$item][self::K_PROJECTTYPE] = $itemsProject[self::K_PROJECTTYPE];
+                    $children[$item][self::K_NSPROJECT] = $itemsProject[self::K_NSPROJECT];
+                }
+                $children[$item][self::K_TYPE] = "p$_type";
             }
         }
         return $children;
@@ -219,7 +240,6 @@ abstract class DataQuery {
      * @param bool $hiddenProjects
      * @return array lista de hijos con sus atributos
      */
-    //private function fillNode($nodeData, $level, $onlyDirs, $hiddenProjects, $metaDataPath, $metaDataExtension) {
     private function fillNode($nodeData, $level, $onlyDirs, $hiddenProjects) {
         $children = array();
 
@@ -259,59 +279,56 @@ abstract class DataQuery {
      * @param type $ns : ns (ruta wiki relativa a pages) que se evalúa
      * @return array : propiedades del elemento $ns
      */
-    public function getNsItems($ns, $level=1) {
-        $datadir = WikiGlobalConfig::getConf('datadir');
-        $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
-        $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
-
-        $pathElement = $metaDataPath."/".str_replace(":", "/", $ns);
+    private function getNsItems($ns) {
+        $this->init();
+        $page = $this->datadir."/";
         $camins = ($ns) ? explode(":", $ns) : NULL;
-        $page = "$datadir/";
         if ($camins)
             $page .= implode("/", $camins);
-
         $ret[self::K_TYPE] = is_dir($page) ? "d" : (is_file($page) ? "f" : "none");
 
-        while ($camins) {
-            $nsElement = implode(":", $camins);
-            $parentDir = $metaDataPath."/".implode("/", $camins);
-            if (is_dir($parentDir)) {
-                $fh1 = opendir($parentDir);
-                while ($current = readdir($fh1)) {
-                    $currentDir = "$parentDir/$current";
-                    if (is_dir($currentDir) && $current!=="." && $current!=="..") {
-                        $ret = $this->getProjectProperties($pathElement, $currentDir, $nsElement, $current, $metaDataExtension);
-                        if ($ret[self::K_PROJECTTYPE]) {
-//                            Logger::debug("getNsItems(p): \$ns=$ns, \$ret=".json_encode($ret), 0, __LINE__, "DataQuery", -1, TRUE);
-                            return $ret;
+        if ($ns) {
+            $pathElement = $this->metaDataPath."/".str_replace(":", "/", $ns);
+
+            while ($camins) {
+                $nsElement = implode(":", $camins);
+                $parentDir = $this->metaDataPath."/".implode("/", $camins);
+                if (is_dir($parentDir)) {
+                    $fh1 = opendir($parentDir);
+                    while ($current = readdir($fh1)) {
+                        $currentDir = "$parentDir/$current";
+                        if (is_dir($currentDir) && $current !== "." && $current !== "..") {
+                            $ret = $this->getProjectProperties($pathElement, $currentDir, $nsElement, $current);
+                            if ($ret[self::K_PROJECTTYPE]) {
+                                return $ret;
+                            }
                         }
                     }
                 }
+                array_pop($camins);
             }
-            array_pop($camins);
         }
-//        Logger::debug("getNsItems: \$ns=$ns, \$ret=".json_encode($ret), 0, __LINE__, "DataQuery", -1, TRUE);
+        //Logger::debug("getNsItems: \$ns=$ns, \$ret=".json_encode($ret), 0, __LINE__, "DataQuery", -1, TRUE);
         return $ret;
     }
 
     /**
      * Busca averiguar si $currentDir es un directorio de proyecto, es decir, si contiene los ficheros de proyecto
-     * @param type $pathElement : nombre original del elemento/archivo que se examina (con ruta en mdprojects)
-     * @param type $currentDir : ruta absoluta al directorio que se desea explorar para averiguar si contiene el fichero de proyecto
-     * @param type $nsElement : ruta absoluta al padre del directorio $currentDir
-     * @param type $dirName : nombre del directorio $currentDir
-     * @param type $metaDataExtension : extensión del nombre del fichero de proyecto
-     * @return type array con atributos del proyecto
+     * @param string $pathElement : nombre original del elemento/archivo que se examina (con ruta en mdprojects)
+     * @param string $currentDir : ruta absoluta al directorio que se desea explorar para averiguar si contiene el fichero de proyecto
+     * @param string $nsElement : ruta absoluta al padre del directorio $currentDir
+     * @param string $dirName : nombre del directorio $currentDir
+     * @return array con atributos del proyecto
      */
-    private function getProjectProperties($pathElement, $currentDir, $nsElement, $dirName, $metaDataExtension) {
-
+    private function getProjectProperties($pathElement, $currentDir, $nsElement, $dirName) {
         $ret[self::K_TYPE] = is_dir($currentDir) ? "d" : "f";
         $fh2 = opendir($currentDir);
 
         while ($currentOne = readdir($fh2)) {
+            //busca el archivo *.mdpr ($this->metaDataExtension)
             if (!is_dir("$currentDir/$currentOne")) {
                 $fileTokens = explode(".", $currentOne);
-                if ($fileTokens[sizeof($fileTokens) - 1] === $metaDataExtension) {
+                if ($fileTokens[sizeof($fileTokens) - 1] === $this->metaDataExtension) {
                     $ret[self::K_TYPE] = "p" . (("$pathElement/$dirName" === $currentDir) ? "" : $ret[self::K_TYPE]);
                     $ret[self::K_PROJECTTYPE] = $dirName;
                     $ret[self::K_NSPROJECT] = $nsElement;
@@ -321,4 +338,96 @@ abstract class DataQuery {
         }
         return $ret;
     }
+
+    /**
+     * Obtiene el tipo en la ruta correspondiente a un ns
+     * @return array | null
+     */
+    private function getNsType($ns) {
+        $ret[self::K_TYPE] = "none";
+        if ($ns) {
+            $this->init();
+            $nsPath = str_replace(":", "/", $ns);
+
+            if (is_dir($this->datadir."/$nsPath"))
+                $ret[self::K_TYPE] = "d";
+
+            $dir = $this->metaDataPath."/$nsPath";
+            if (is_dir($dir)) {
+                $fh1 = opendir($dir);
+                while ($current = readdir($fh1)) {
+                    $currentDir = "$dir/$current";
+                    if (is_dir($currentDir) && $current !== "." && $current !== "..") {
+                        $ret2 = $this->getProjectProperties2($currentDir, $ns, $current);
+                        if ($ret2[self::K_PROJECTTYPE]) {
+                            return $ret2;
+                        }
+                    }
+                }
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * Busca averiguar si $currentDir es un directorio de proyecto, es decir, si contiene los ficheros de proyecto
+     * @param string $currentDir : ruta absoluta al directorio que se desea explorar para averiguar si contiene el fichero de proyecto
+     * @param string $nsElement : ns del padre del directorio $currentDir
+     * @param string $dirName : nombre del directorio $currentDir
+     * @return array con atributos del proyecto
+     */
+    private function getProjectProperties2($currentDir, $nsElement, $dirName) {
+        $fh2 = opendir($currentDir);
+        while ($currentOne = readdir($fh2)) {
+            //busca el archivo *.mdpr ($this->metaDataExtension)
+            if (!is_dir("$currentDir/$currentOne")) {
+                $fileTokens = explode(".", $currentOne);
+                if ($fileTokens[sizeof($fileTokens) - 1] === $this->metaDataExtension) {
+                    $ret[self::K_TYPE] = "p";
+                    $ret[self::K_PROJECTTYPE] = $dirName;
+                    $ret[self::K_NSPROJECT] = $nsElement;
+                    return $ret;
+                }
+            }
+        }
+        return $ret;
+    }
+
+    private function updateNsProperties($ns, &$nsProp) {
+        $ret = $this->getParentProjectProperties(explode(":", $ns));
+        if ($ret[self::K_PROJECTTYPE]) {
+            $type = ($nsProp[self::K_TYPE] === "p") ? "o" : $nsProp[self::K_TYPE];
+            $nsProp[self::K_TYPE] = "p$type";
+        }
+        return $nsProp;
+    }
+
+    /**
+     * Busca el proyecto padre en la ruta correspondiente a un ns
+     * @param array $camins : ns en formato array
+     * @return array | null
+     */
+    private function getParentProjectProperties($camins) {
+        $ns_elem = "";
+        array_pop($camins); //empezamos justo en el directorio superior
+
+        while ($camins) {
+            $ns_elem = implode(":", $camins);
+            $projectPath = $this->metaDataPath."/".implode("/", $camins);
+            if (is_dir($projectPath)) {
+                $fh = opendir($projectPath);
+                while ($dir_elem = readdir($fh)) {
+                    if (is_dir("$projectPath/$dir_elem") && $dir_elem!=="." && $dir_elem!=="..") {
+                        $ret = $this->getProjectProperties2("$projectPath/$dir_elem", $ns_elem, $dir_elem);
+                        if ($ret[self::K_PROJECTTYPE]) {
+                            return $ret;
+                        }
+                    }
+                }
+            }
+            array_pop($camins);
+        }
+        return $ret;
+    }
+
 }

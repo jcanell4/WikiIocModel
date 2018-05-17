@@ -22,15 +22,14 @@ class MediaMetaDataQuery extends DataQuery {
         return mediaMetaFN($id, $ext);
     }
 
-    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE) {
+    public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProjects=FALSE, $hiddenProjects=FALSE, $root=FALSE) {
         global $conf;
         $base = $conf['mediametadir'];
-
-        return $this->getNsTreeFromBase( $base, $currentNode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects, $root );                
+        return $this->getNsTreeFromGenericSearch($base, $currentNode, $sortBy, $onlyDirs, 'search_index', $expandProjects, $hiddenProjects, $root);
     }
 
     public function save($id, $data, $summary = "", $minor = false) {
-        
+
     }
 
 }

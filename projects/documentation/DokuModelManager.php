@@ -6,13 +6,13 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
+if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC.'lib/lib_ioc/');
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
 if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
 
-require_once(WIKI_IOC_MODEL . 'metadata/MetaDataService.php');
-require_once(WIKI_IOC_MODEL . 'BasicModelAdapter.php');
-//Las siguientes includes son para Clases específicas y exclusivas de este proyecto
-require_once(WIKI_IOC_PROJECTS . 'documentation/DocumentationModelExceptions.php');
+require_once(DOKU_LIB_IOC . "wikiiocmodel/ProjectModelExceptions.php");
+require_once(WIKI_IOC_MODEL . "metadata/MetaDataService.php");
+require_once(WIKI_IOC_MODEL . "BasicModelAdapter.php");
 
 class DokuModelManager extends AbstractModelManager{
 

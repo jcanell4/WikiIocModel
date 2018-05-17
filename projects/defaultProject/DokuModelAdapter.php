@@ -22,11 +22,12 @@ require_once(DOKU_INC . 'inc/JSON.php');
 require_once(DOKU_INC . 'inc/JpegMeta.php');
 
 if (!defined('DOKU_TPL_INCDIR')) define('DOKU_TPL_INCDIR', WikiGlobalConfig::tplIncDir());
+if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC.'lib/lib_ioc/');
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
+require_once(DOKU_LIB_IOC . "wikiiocmodel/DefaultProjectModelExceptions.php");
 require_once(DOKU_PLUGIN . 'wikiiocmodel/BasicModelAdapter.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/authorization/PagePermissionManager.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelExceptions.php');
 
 require_once(DOKU_PLUGIN . 'acl/admin.php');
 

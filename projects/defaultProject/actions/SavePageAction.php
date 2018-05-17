@@ -10,7 +10,6 @@ require_once(DOKU_INC . 'inc/common.php');
 require_once(DOKU_INC . 'inc/actions.php');
 require_once(DOKU_INC . 'inc/template.php');
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 
 class SavePageAction extends RawPageAction {

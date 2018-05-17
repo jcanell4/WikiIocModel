@@ -10,7 +10,6 @@ require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/LockManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuModelExceptions.php";
 
 abstract class PageAction extends DokuAction implements ResourceLockerInterface,ResourceUnlockerInterface {
     protected $dokuPageModel;
