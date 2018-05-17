@@ -66,13 +66,16 @@
                         "responsable": {
                             "type": "string",
                             "struc_chars": "40",
-                            "struc_rows": "1",
                             "mandatory": true
                         },
                         "titol": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "Dades generals del projecte"
+                            "default": "Dades generals del projecte",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
                         },
                         "media_address": {
                             "type": "string",
