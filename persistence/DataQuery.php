@@ -122,16 +122,17 @@ abstract class DataQuery {
         if ( $currentnode == "_" ) {
             $path = $base.'/'.($root ? "$root/" : "");
             $path = str_replace(':', '/', $path);
+            $name = ($root) ? $root : "";
             if (is_dir($path)){
                 $itemsProject = $this->getNsItems($root);
-                $name = ($root) ? $root : "";
+                if ($root && $itemsProject[self::K_PROJECTTYPE])
+                    $itemsProject = $this->updateNsProperties($root, $itemsProject);
                 $type = $itemsProject[self::K_TYPE];
             }else{
-                $name = $root;
                 $type = "f";
             }
             $ret = array(
-                      self::K_ID => "",
+                      self::K_ID => $name,
                       self::K_NAME => $name,
                       self::K_TYPE => $type
                    );
@@ -299,7 +300,6 @@ abstract class DataQuery {
                         if (is_dir($currentDir) && $current !== "." && $current !== "..") {
                             $ret = $this->getProjectProperties($pathElement, $currentDir, $nsElement, $current);
                             if ($ret[self::K_PROJECTTYPE]) {
-                                //Logger::debug("getNsItems(p): \$ns=$ns, \$ret=".json_encode($ret), 0, __LINE__, "DataQuery", -1, TRUE);
                                 return $ret;
                             }
                         }
