@@ -105,9 +105,9 @@ De forma opcional les keys accepten també qualsevol de les propietats descrites
     * mandatory: pot prendre el valor true o false i indica si estracta d'un camp obligatori o opcional. Per defecte mandatory és fals.
     * struc_chars": pren valors numerics i indica el nombre de caràcters o dígits que pot prendre un camp de tipus identificat per una dada de tipus string o number. 
     Aquesta propietat no té valor per defecte.
-    * struc_rows": També pren valors numèrics i indica el número de files que es preveu  que ocupi. Bàsicament es fa sevir indicar si estracta d'un camp de tipus string al 
+    * n_rows": També pren valors numèrics i indica el número de files que es preveu  que ocupi. Bàsicament es fa sevir indicar si estracta d'un camp de tipus string al 
     qual se li permet contenir text amb múltiples línies. Per defecte el nombre de files és 1.
-    * Pels tipus table, caldrà definir de forma obligatoria la propietat n_columns per indicar quantes columnes tindrà aquesta taula.
+    * Pels tipus table, caldrà definir de forma obligatoria la propietat array_columns per indicar quantes columnes tindrà aquesta taula.
     * També pels tipus table, però de forma opcional, es pot especificar el nombre de files. Això crearà una taula amb el nombre de files prefixat. Si es vol que le nombre 
     de files variï caldria deixar aquesta propitat sense definir.
     
@@ -280,7 +280,7 @@ En el següent exemple es poden veure els diferents elements de configuració de
                         "responsable": {
                             "type": "string",
                             "struc_chars": "40",
-                            "struc_rows": "1",
+                            "n_rows": "1",
                             "mandatory": true
                         },
                         "titol": {
@@ -295,7 +295,7 @@ En el següent exemple es poden veure els diferents elements de configuració de
                         "nom1-de-prova": {
                             "type": "objectArray",
                             "typeDef": "objecte2-de-prova",
-                            "n_rows": "2",
+                            "array_rows": "2",
                             "mandatory": true
                         },
                         "nom2-de-prova": {
@@ -309,7 +309,7 @@ En el següent exemple es poden veure els diferents elements de configuració de
                                 }
                             },
                             "renderAsMultiField":true,
-                            "n_rows": "2",
+                            "array_rows": "2",
                             "mandatory": true
                         },
                         "nom3A-de-prova": {
@@ -342,20 +342,20 @@ En el següent exemple es poden veure els diferents elements de configuració de
                         "nom7-de-prova": {
                             "type": "array",
                             "typeDef":"string",
-                            "n_rows": "3",
+                            "array_rows": "3",
                             "renderAsMultiField":true,
                             "mandatory": true
                         },
                         "nom8-de-prova": {
                             "type": "table",
                             "typeDef":"string",
-                            "n_columns": "3"
+                            "array_columns": "3"
                         },
                         "nom9-de-prova": {
                             "type": "table",
                             "typeDef":"string",
-                            "n_columns": "3",
-                            "n_rows": "3",
+                            "array_columns": "3",
+                            "array_rows": "3",
                             "renderAsMultiField":true,
                             "mandatory": true
                         },

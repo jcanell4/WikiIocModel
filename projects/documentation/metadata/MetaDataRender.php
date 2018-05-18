@@ -205,7 +205,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
     }
 
     private function _getDefaultSingleArrayItem($properties, $types){
-        $cols = isset($properties['n_columns'])?$properties['n_columns']:1;
+        $cols = isset($properties['array_columns'])?$properties['array_columns']:1;
         $singleValue = $this->_getValue("", array(), array("type" => $properties['typeDef']), $types)['value'];
         if($cols>1){
             $_vcols = [];
@@ -225,7 +225,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         }else{
             $_values= [];
 
-            $rows = isset($properties['n_rows'])?$properties['n_rows']:0;
+            $rows = isset($properties['array_rows'])?$properties['array_rows']:0;
             for($i=0; $i<$rows; $i++){
                 $_values[]= $defaultRow;
             }
@@ -286,7 +286,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         }else{
             $_values= [];
 
-            $rows = isset($properties['n_rows'])?$properties['n_rows']:0;
+            $rows = isset($properties['array_rows'])?$properties['array_rows']:0;
             for($i=0; $i<$rows; $i++){
                 $_values[]= $defaultRow;
             }

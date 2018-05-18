@@ -10,14 +10,14 @@
             "parent": "",
             "label": "Principal",
             "n_columns": 5,
-            "n_rows": 5,
+            "n_rows": 16,
             "frame": true
         },
         "dades": {
             "parent": "",
             "label": "Dades generals",
             "n_columns": 7,
-            "n_rows": 5,
+            "n_rows": 16,
             "frame": true
         },
         "admin": {
@@ -66,6 +66,9 @@
       "titol": {
         "mandatory": true,
         "n_columns": 8,
+        "config":{    
+            "formEditorButton":true
+        },
         "props": {
           "required": true
         }
@@ -73,12 +76,9 @@
       "descripcio": {
         "n_columns": 12,
         "type": "textarea",
-        "struc_rows": 10,
+        "n_rows": 10,
         "props": {
           "data-editable-element": "textarea"
-        },
-        "config": {
-          "syntaxhighlight": true
         }
       },
       "plantilla": {
@@ -106,6 +106,7 @@
         "n_columns": 12,
         "type": "editableObject",
         "group": "taula",
+        "n_rows": 4,
         "props": {
           "data-editable-element": "table"
         }
