@@ -127,10 +127,12 @@ class ProjectModel extends AbstractWikiDataModel {
     public function getMetaDataDefKeys($projectType) {
         $dao = $this->metaDataService->getMetaDataDaoConfig();
         $struct = $dao->getMetaDataStructure($projectType, ProjectKeys::VAL_DEFAULTSUBSET, $this->persistenceEngine);
+            //prueba: debe ser eliminada
+            $subProjects = $dao->getMetaDataSubProjects($projectType, ProjectKeys::VAL_DEFAULTSUBSET, $this->persistenceEngine);
         return json_decode($struct, TRUE);
     }
 
-    public function setProjectFileName($projectFileName=NULL) {
+    private function setProjectFileName($projectFileName=NULL) {
         if ($projectFileName) {
             $this->projectFileName = $projectFileName;
         }else {
@@ -142,14 +144,14 @@ class ProjectModel extends AbstractWikiDataModel {
         }
     }
 
-    public function getProjectFileName() {
+    private function getProjectFileName() {
         if (!$this->projectFileName) {
             $this->setProjectFileName();
         }
         return $this->projectFileName;
     }
 
-    public function setProjectFilePath() {
+    private function setProjectFilePath() {
         $this->projectFilePath = $this->projectMetaDataQuery->getProjectFilePath();
     }
 

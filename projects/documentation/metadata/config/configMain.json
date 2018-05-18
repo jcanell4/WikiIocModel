@@ -8,6 +8,15 @@
             }
         }
     ],
+    "metaDataSubProjects": [
+        {
+            "main": [
+                "otroProyecto",
+                "activities" 
+            ]
+        }
+        
+    ],
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",

@@ -5,7 +5,7 @@
  * - Class giving config utils
  * - Config utils are obtained from Persistence Component
  * - Only are calling Persistence, if it not has data yet (as an inMemory behavior)
- * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat> 
+ * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
  * @modified by Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
@@ -115,6 +115,11 @@ class MetaDataDaoConfig {
     public static function getMetaDataTypesDefinition($projectType, $metaDataSubset, $persistence, $configSubSet=NULL) {
         $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, $configSubSet);
         return json_encode($ret['typesDefinition']);
+    }
+
+    public static function getMetaDataSubProjects($projectType, $metaDataSubset, $persistence) {
+        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, "metaDataSubProjects");
+        return json_encode($ret[$metaDataSubset]);
     }
 
     /**

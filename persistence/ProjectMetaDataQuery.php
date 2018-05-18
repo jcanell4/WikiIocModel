@@ -14,12 +14,6 @@ require_once (WIKI_IOC_MODEL.'persistence/DataQuery.php');
 
 class ProjectMetaDataQuery extends DataQuery {
 
-    const K_CONFIGUSUBSETSTRUCTURE = ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE;
-    const K_METADATASUBSET         = ProjectKeys::KEY_METADATA_SUBSET;
-    const K_DEFAULTSUBSET          = ProjectKeys::KEY_DEFAULTSUBSET;
-    const K_PROJECT_FILENAME       = ProjectKeys::KEY_PROJECT_FILENAME;
-    const K_PROJECT_FILEPATH       = ProjectKeys::KEY_PROJECT_FILEPATH;
-
     const PATH_METADATA_CONFIG = "/metadata/config/";
     const FILE_CONFIGMAIN      = "configMain.json";
     const FILE_DEFAULTVIEW     = "defaultView.json";
@@ -69,7 +63,7 @@ class ProjectMetaDataQuery extends DataQuery {
         for ($i = 0; $i < sizeof($configMainArray[$configSubSet]); $i++) {
             if (isset($configMainArray[$configSubSet][$i][$metaDataSubset])) {
                 $toReturn = $encoder->encode($configMainArray[$configSubSet][$i]);
-            } else if (isset($configMainArray[$configSubSet][$i][self::K_DEFAULTSUBSET])) {
+            } else if (isset($configMainArray[$configSubSet][$i][ProjectKeys::KEY_DEFAULTSUBSET])) {
                 if ($toReturn == "") {
                     $toReturn = $encoder->encode($configMainArray[$configSubSet][$i]);
                 }
@@ -99,7 +93,7 @@ class ProjectMetaDataQuery extends DataQuery {
         $returnArray = array();
         foreach ($elementsKeyArray['children'] as $arrayElement) {
             if ($arrayElement['type'] == 'p') {
-                $returnArray[$arrayElement['id']] = $arrayElement[self::K_PROJECTTYPE];
+                $returnArray[$arrayElement['id']] = $arrayElement[ProjectKeys::KEY_PROJECT_TYPE];
             }
         }
 
@@ -206,7 +200,6 @@ class ProjectMetaDataQuery extends DataQuery {
         $projectId = str_replace(':', "/", $id);
         $this->projectFileName = $projectFileName;
         $this->projectFilePath = WikiGlobalConfig::getConf('mdprojects')."/$projectId/$projectType/";
-        $dirProject = $this->projectFilePath;
         $projectFilePathName = $this->projectFilePath . $this->projectFileName;
 
         if (is_file($projectFilePathName)) {
@@ -225,9 +218,9 @@ class ProjectMetaDataQuery extends DataQuery {
                 }
             }
         }else {
-            $resourceCreated = $this->_createResource($dirProject, $projectFileName);
+            $resourceCreated = $this->_createResource($this->projectFilePath, $projectFileName);
             if ($resourceCreated) {
-                $metaDataValue = $this->_setSystemData($metaDataSubSet, $metaDataValue, $dirProject);
+                $metaDataValue = $this->_setSystemData($metaDataSubSet, $metaDataValue, $this->projectFilePath);
                 $resourceCreated = io_saveFile($projectFilePathName, $metaDataValue);
             }else {
                 $resourceCreated = '{"error":"5090"}';
@@ -269,8 +262,9 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getFileName($id, $params=array()) {
         if ($id && $params) {
-            $filename = ($params[self::K_PROJECT_FILENAME]) ? $params[self::K_PROJECT_FILENAME] : $this->getProjectFileName($params);
-            $dir = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(':', "/", $id)."/${params[self::K_PROJECTTYPE]}";
+            $params['id'] = $id;
+            $filename = ($params[ProjectKeys::KEY_PROJECT_FILENAME]) ? $params[ProjectKeys::KEY_PROJECT_FILENAME] : $this->getProjectFileName($params);
+            $dir = $this->getProjectFilePath($params);
             $ret = "$dir/$filename";
         }else {
             $ret = $this->getProjectFilePath() . $this->getProjectFileName();
@@ -284,20 +278,23 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getProjectFileName($parms=[]) {
         if ($parms) {
-            $jsonArray = $this->getMetaDataConfig($parms[self::K_PROJECTTYPE], $parms[self::K_METADATASUBSET], self::K_CONFIGUSUBSETSTRUCTURE);
+            $jsonArray = $this->getMetaDataConfig($parms[ProjectKeys::KEY_PROJECT_TYPE], $parms[ProjectKeys::KEY_METADATA_SUBSET], ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE);
             $data = json_decode($jsonArray, true);
-            $this->projectFileName = $data[$parms[self::K_METADATASUBSET]];
-
-            if ($parms[AjaxKeys::KEY_ID]) {
-                $this->projectFilePath = WikiGlobalConfig::getConf('mdprojects') . "/"
-                                         . str_replace(":", "/", $parms[AjaxKeys::KEY_ID]) . "/"
-                                         . $parms[self::K_PROJECTTYPE] . "/";
-            }
+            $this->projectFileName = $data[$parms[ProjectKeys::KEY_METADATA_SUBSET]];
         }
         return $this->projectFileName;
     }
 
-    public function getProjectFilePath() {
+    private function setProjectFilePath($parms=[]) {
+        $this->projectFilePath = WikiGlobalConfig::getConf('mdprojects') . "/"
+                                    . str_replace(":", "/", $parms[ProjectKeys::KEY_ID]) . "/"
+                                    . $parms[ProjectKeys::KEY_PROJECT_TYPE] . "/";
+    }
+
+    public function getProjectFilePath($parms=[]) {
+        if (!$this->projectFilePath && $parms[ProjectKeys::KEY_ID]) {
+            $this->setProjectFilePath($parms);
+        }
         return $this->projectFilePath;
     }
 
@@ -317,12 +314,12 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getDataProject($idProject, $projectType, $extra=FALSE) {
         $metaDataSubSet = ProjectKeys::VAL_DEFAULTSUBSET;   //clave en el array que contiene los datos del proyecto
-        $filename = $this->getProjectFileName(array('id'=>$idProject, self::K_PROJECTTYPE=>$projectType, self::K_METADATASUBSET=>$metaDataSubSet));
+        $filename = $this->getProjectFileName(array('id'=>$idProject, ProjectKeys::KEY_PROJECT_TYPE => $projectType, ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet));
         $jsonData = $this->getMeta($idProject, $projectType, $metaDataSubSet, $filename);
         $data = json_decode($jsonData, true);
         if ($extra) {
-            $data[self::K_PROJECT_FILENAME] = $filename;
-            $data[self::K_PROJECT_FILEPATH] = $this->getFileName($idProject, array(self::K_PROJECTTYPE => $projectType, self::K_METADATASUBSET => $metaDataSubSet));
+            $data[ProjectKeys::KEY_PROJECT_FILENAME] = $filename;
+            $data[ProjectKeys::KEY_PROJECT_FILEPATH] = $this->getFileName($idProject, array(ProjectKeys::KEY_PROJECT_TYPE => $projectType, ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet));
         }
         return $data;
     }
