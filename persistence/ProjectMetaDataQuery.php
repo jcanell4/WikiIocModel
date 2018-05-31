@@ -31,11 +31,23 @@ class ProjectMetaDataQuery extends DataQuery {
      * Devuelve la lista ordenada de tipos de proyecto obtenida a partir de la lectura
      * de la estructura de directorios de wikiiocmodel/projects/
      */
-    public function getListProjectTypes() {
+    public function getListProjectTypes($projectType=NULL) {
+        if ($projectType) {
+            //lista de proyectos permitidos para el proyecto dado
+            $jsonListProjects = $this->getMetaDataConfig($projectType, "metaDataSubProjects", "main");
+            $arrayListProjects = json_decode($jsonListProjects, true);
+            $listProjects = $arrayListProjects["main"];
+        }
         $projectsDir = opendir(WIKI_IOC_PROJECTS);
-        while ($projType = readdir($projectsDir)) {
-            if (is_dir(WIKI_IOC_PROJECTS.$projType) && $projType !== '.' && $projType !== '..') {
-                $ret[] = $projType;
+        while ($pType = readdir($projectsDir)) {
+            if (is_dir(WIKI_IOC_PROJECTS.$pType) && $pType !== '.' && $pType !== '..') {
+                if ($listProjects) {
+                    if (in_array($pType, $listProjects)) {
+                        $ret[] = $pType;
+                    }
+                }else {
+                    $ret[] = $pType;
+                }
             }
         }
         if ($ret) sort($ret);
@@ -43,29 +55,38 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     /**
-     * Obtiene el array correspondiente a la clave $configSubSet del archivo FILE_CONFIGMAIN
-     * @param string $projectType
-     * @param string $metaDataSubset
-     * @param string $configSubSet
-     * @return Json con el array correspondiente a la clave $configSubSet del archivo FILE_CONFIGMAIN
+     * Busca si la ruta (ns) es un proyecto
+     * @param string $ns
+     * @return boolean
      */
-    public function getMetaDataConfig($projectType, $metaDataSubset, $configSubSet) {
+    public function existProject($ns) {
+        return $this->isAProject($ns);
+    }
+
+    /**
+     * Obtiene el array correspondiente a la clave $configAttribute del archivo FILE_CONFIGMAIN
+     * @param string $projectType
+     * @param string $configAttribute : attributo 'metaData' principal
+     * @param string $metaDataSubset : nombre del subconjunto requerido
+     * @return Json con el array correspondiente a la clave $configAttribute del archivo FILE_CONFIGMAIN
+     */
+    public function getMetaDataConfig($projectType, $configAttribute, $metaDataSubset) {
 
         $configMain = @file_get_contents(WIKI_IOC_PROJECTS . $projectType . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN);
         if ($configMain == false) {
             $configMain = @file_get_contents(WIKI_IOC_PROJECTS . "defaultProject" . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN);
         }
 
-        $configMainArray = json_decode($configMain, true);
+        $configArray = json_decode($configMain, true);
         $toReturn = "";
         $encoder = new JSON();
 
-        for ($i = 0; $i < sizeof($configMainArray[$configSubSet]); $i++) {
-            if (isset($configMainArray[$configSubSet][$i][$metaDataSubset])) {
-                $toReturn = $encoder->encode($configMainArray[$configSubSet][$i]);
-            } else if (isset($configMainArray[$configSubSet][$i][ProjectKeys::KEY_DEFAULTSUBSET])) {
+        for ($i = 0; $i < sizeof($configArray[$configAttribute]); $i++) {
+            if (isset($configArray[$configAttribute][$i][$metaDataSubset])) {
+                $toReturn = $encoder->encode($configArray[$configAttribute][$i]);
+            } else if (isset($configArray[$configAttribute][$i][ProjectKeys::KEY_DEFAULTSUBSET])) {
                 if ($toReturn == "") {
-                    $toReturn = $encoder->encode($configMainArray[$configSubSet][$i]);
+                    $toReturn = $encoder->encode($configArray[$configAttribute][$i]);
                 }
             }
         }
@@ -278,7 +299,7 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getProjectFileName($parms=[]) {
         if ($parms) {
-            $jsonArray = $this->getMetaDataConfig($parms[ProjectKeys::KEY_PROJECT_TYPE], $parms[ProjectKeys::KEY_METADATA_SUBSET], ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE);
+            $jsonArray = $this->getMetaDataConfig($parms[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $parms[ProjectKeys::KEY_METADATA_SUBSET]);
             $data = json_decode($jsonArray, true);
             $this->projectFileName = $data[$parms[ProjectKeys::KEY_METADATA_SUBSET]];
         }
