@@ -52,7 +52,7 @@ class MetaDataDaoConfig {
             }
         }
         if (!$exists) {
-            $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, $configSubSet);
+            $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $configSubSet, $metaDataSubset);
 
             $encoder = new JSON();
             $arrayConfigPre = $encoder->decode($jSONArray, true);
@@ -80,7 +80,7 @@ class MetaDataDaoConfig {
         if ($configSubSet === NULL) {
             $configSubSet = ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE;
         }
-        $jsonConfigProject = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, $configSubSet);
+        $jsonConfigProject = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $configSubSet, $metaDataSubset);
         $arrConfigProject = self::controlMalFormedJson($jsonConfigProject, "array");
 
 //        $encoder = new JSON();
@@ -96,7 +96,7 @@ class MetaDataDaoConfig {
         if ($configSubSet === NULL) {
             $configSubSet = ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE;
         }
-        $jsonConfigProject = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $metaDataSubset, $configSubSet);
+        $jsonConfigProject = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $configSubSet, $metaDataSubset);
         $arrConfigProject = self::controlMalFormedJson($jsonConfigProject, "array");
         return $arrConfigProject;
     }
