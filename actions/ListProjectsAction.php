@@ -20,10 +20,10 @@ class ListProjectsAction extends AbstractWikiAction {
     }
 
     /**
-     * Retorna un JSON que conté la llista de tipus de projectes
+     * Retorna un JSON que conté la llista de tipus de projectes vàlids
      */
     public function responseProcess() {
-        $listProjectTypes = $this->dataquery->getListProjectTypes();
+        $listProjectTypes = $this->dataquery->getListProjectTypes($this->params['newProjectType']);
         foreach ($listProjectTypes as $pTypes) {
             $aList[] = ['id' => "id_$pTypes", 'name' => $pTypes];
         }
