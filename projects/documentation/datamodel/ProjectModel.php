@@ -199,7 +199,7 @@ class ProjectModel extends AbstractWikiDataModel {
      * @return boolean
      */
     public function existProject($id) {
-        return $this->projectMetaDataQuery->haveADirProject($id);
+        return $this->projectMetaDataQuery->existProject($id);
     }
 
     /**
