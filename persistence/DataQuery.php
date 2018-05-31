@@ -47,6 +47,16 @@ abstract class DataQuery {
     }
 
     /**
+     * Busca si la ruta (ns) es un proyecto
+     * @param string $ns
+     * @return boolean
+     */
+    public function isAProject($ns) {
+        $ret = $this->getNsType($ns);
+        return isset($ret[self::K_PROJECTTYPE]);
+    }
+
+    /**
      * Retorna la llista de fitxers continguts a l'espai de noms identificat per $ns
      * @param string $ns és l'espai de noms d'on consultar la llista
      * @return array amb la llista de fitxers
