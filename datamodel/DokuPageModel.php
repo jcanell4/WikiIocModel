@@ -37,7 +37,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
         $this->rev = $rev;
     }
 
-    public function existProject($id) {
+    public function haveADirProject($id) {
         return $this->pageDataQuery->haveADirProject($id);
     }
 
