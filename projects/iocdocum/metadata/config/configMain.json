@@ -1,0 +1,93 @@
+{
+    "metaDataClassesNameSpaces": [
+        {
+            "main": {
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "iocdocum"
+            }
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+            "mainType": {
+                "type": "object",
+                "typeDef": "document"
+            },
+            "typesDefinition": {
+                "entry-de-prova": {
+                    "type":"object",
+                    "keys": {
+                        "key": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "value1": {
+                            "type": "string"
+                        },
+                        "value2": {
+                            "type": "string"
+                        }
+                    }                    
+                },
+                "taula-de-prova": {
+                    "type": "objectArray",
+                    "typeDef":"entry-de-prova"
+                },
+                "document": {
+                    "type": "object",
+                    "keys": {
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "default": "write a brief project description here",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
+                        },
+                        "nsproject": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "plantilla": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "plantilles:projects:continguts"
+                        },
+                        "fitxercontinguts": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true
+                        },
+                        "titol": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Dades generals del projecte",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
+                        },
+                        "media_address": {
+                            "type": "string",
+                            "default": "../media"
+                        },
+                        "nom-de-prova": {
+                            "type": "taula-de-prova",
+                            "mandatory": true
+                        }                        
+                    }
+                }
+            }
+        }
+    ]
+}
