@@ -42,11 +42,11 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
                 $data = $this->getModel()->getData();   //obtiene la estructura y el contenido del proyecto
                 $include = [
                      'id' => $dataProject[ProjectKeys::KEY_ID]
-                    ,'link_page' => $dataProject[ProjectKeys::KEY_ID].":".end(explode(":", $data['projectMetaData']['values']["plantilla"]))
+                    ,'link_page' => $dataProject[ProjectKeys::KEY_ID].":".end(explode(":", $data['projectMetaData']["plantilla"]['value']))
                     ,'old_autor' => $extraProject['old_autor']
                     ,'old_responsable' => $extraProject['old_responsable']
-                    ,'new_autor' => $data['projectMetaData']['values']['autor']
-                    ,'new_responsable' => $data['projectMetaData']['values']['responsable']
+                    ,'new_autor' => $data['projectMetaData']['autor']['value']
+                    ,'new_responsable' => $data['projectMetaData']['responsable']['value']
                     ,'userpage_ns' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')
                     ,'shortcut_name' => WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
                 ];
