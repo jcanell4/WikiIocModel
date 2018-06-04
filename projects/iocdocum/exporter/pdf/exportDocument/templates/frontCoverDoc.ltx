@@ -1,0 +1,47 @@
+\raggedbottom
+\begin{document}
+% ********* COVER FEATURES *************
+\thispagestyle{empty}
+\ThisCenterWallPaper{1}{@DOC_BACKGROUND@}
+\hyphenpenalty=100000
+%************ Page elements *************
+%\begin{textblock*}{\paperwidth}(-20mm, -25mm)
+%\includegraphics[width=\paperwidth]{@DOC_COVER_IMAGE@}
+%\end{textblock*}
+
+\begin{textblock*}{156mm}(-7mm,105mm)
+    \begin{spacing}{0.8}
+        \fontfamily{mnf}
+        \fontseries{m}
+        \fontsize{29}{32}
+        \selectfont
+        \raggedleft
+        \textcolor[RGB]{55, 52, 165}{
+            \noindent
+            \textls[97]{@DOC_TITOL@\\}
+        }
+        \vspace{4mm}
+        \fontfamily{hln}
+        \fontseries{m}
+        \fontsize{14}{16}
+        \selectfont
+        \raggedleft
+        \textcolor[RGB]{113, 116, 223}{
+            \noindent
+            \textls[-14]{@DOC_AUTOR@\\}
+        }
+    \end{spacing}
+\end{textblock*}
+\newpage
+\cleardoublepage 
+%******************** BACK COVER *******************
+%\thispagestyle{empty}
+%\hyphenpenalty=100000
+%\begin{textblock*}{68mm}(94.5mm,139.5mm)
+%\normalfont
+%\fontsize{10.5}{11}
+%\selectfont
+%@BACK_COVER_TEXT@
+%\end{textblock*}
+%\newpage
+%\cleardoublepage 
