@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of CreatePageAction
+ * CreateFolderAction: crea una nueva carpeta para el proyecto en la ruta especificada
  * @culpable Rafael
  */
 if (!defined("DOKU_INC")) die();
@@ -9,34 +9,26 @@ require_once (DOKU_PLUGIN."wikiiocmodel/projects/documentation/actions/ProjectMe
 
 class CreateFolderAction extends ProjectMetadataAction {
 
-    public function init($modelManager) {
-        parent::init($modelManager);
-        $this->defaultDo = ProjectKeys::KEY_CREATE;
-    }
-
     protected function responseProcess() {
         $id = $this->params[ProjectKeys::KEY_ID];
-        $projectType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
+        $new_folder = $this->params['new_folder'];
+        $this->projectModel->init($id, $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
 
-        $this->projectModel->init($id, $projectType);
+        //sólo se ejecuta si existe el proyecto
+        if ($this->projectModel->existProject($id)) {
 
-        //sólo se ejecuta si no existe el proyecto
-        if (!$this->projectModel->existProject($id)) {
+            if ($this->projectModel->folderExists($new_folder)) {
+                throw new PageAlreadyExistsException($new_folder, 'pageExists');
+            }
 
-            $id = str_replace(":", "_", $this->params[ProjectKeys::KEY_ID]);
-            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('folder_created'), $id);
+            if ($this->projectModel->createFolder($new_folder)) {
+                $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('folder_created')." ($new_folder)", $id);
+            }else {
+                $response['info'] = $this->generateInfo("error", WikiIocLangManager::getLang('folder_created_error')." ($new_folder)", $id);
+                $response['alert'] = WikiIocLangManager::getLang('folder_created_error')." ($new_folder)";
+            }
         }
         return $response;
     }
-
-    protected function runProcess() {
-        if (WikiIocInfoManager::getInfo("exists")) {
-            throw new PageAlreadyExistsException($this->params[PageKeys::KEY_ID], 'pageExists');
-        }
-        //parent::runProcess();
-    }
-
-//    protected function startProcess() {
-//    }
 
 }
