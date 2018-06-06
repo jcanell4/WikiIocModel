@@ -364,6 +364,10 @@ class ProjectModel extends AbstractWikiDataModel {
         return $this->projectMetaDataQuery->getLastModFileDate($id);
     }
 
+    public function createFolder($new_folder){
+        return $this->projectMetaDataQuery->createFolder(str_replace(":", "/", $new_folder));
+    }
+
     public function folderExists($ns) {
         $id = str_replace(":", "/", $ns);
         return file_exists($id) && is_dir($id);

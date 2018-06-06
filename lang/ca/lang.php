@@ -85,7 +85,7 @@ $lang[GlobalKeys::TEMPLATE_SHORTCUTS_NS] = "Nou document de dreceres.\n\n"
 //Excepciones del proyecto 'defaultProject'
 $lang['pageExist'] = 'The page %s already exists';
 $lang['commandAuthorizationNotFound'] = 'Command authorization not found';
-$lang['cantCreatePageInProject'] = 'No pots crear una pàgina en aquest projecte';
+$lang['cantCreatePageInProject'] = 'No pots crear una pàgina en aquest projecte: %s';
 $lang['ClassNotFound'] = "No s'ha trobat la classe %s";
 
 //Excepciones del proyecto 'documentation'

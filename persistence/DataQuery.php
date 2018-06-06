@@ -57,6 +57,17 @@ abstract class DataQuery {
     }
 
     /**
+     * Busca, de profundo a superfície, si en la ruta ns hay un proyecto
+     * @param string $ns
+     * @return array[type, projectType, ns] del primer proyecto obtenido
+     */
+    public function getThisProject($ns) {
+        $this->init();
+        $ret = $this->getParentProjectProperties(explode(":", $ns));
+        return $ret;
+    }
+
+    /**
      * Retorna la llista de fitxers continguts a l'espai de noms identificat per $ns
      * @param string $ns és l'espai de noms d'on consultar la llista
      * @return array amb la llista de fitxers
@@ -418,24 +429,26 @@ abstract class DataQuery {
      * @return array | null
      */
     private function getParentProjectProperties($camins) {
-        $ns_elem = "";
-        array_pop($camins); //empezamos justo en el directorio superior
+        if (is_array($camins)) {
+            $ns_elem = "";
+            array_pop($camins); //empezamos justo en el directorio superior
 
-        while ($camins) {
-            $ns_elem = implode(":", $camins);
-            $projectPath = $this->metaDataPath."/".implode("/", $camins);
-            if (is_dir($projectPath)) {
-                $fh = opendir($projectPath);
-                while ($dir_elem = readdir($fh)) {
-                    if (is_dir("$projectPath/$dir_elem") && $dir_elem!=="." && $dir_elem!=="..") {
-                        $ret = $this->getProjectProperties2("$projectPath/$dir_elem", $ns_elem, $dir_elem);
-                        if ($ret[self::K_PROJECTTYPE]) {
-                            return $ret;
+            while ($camins) {
+                $ns_elem = implode(":", $camins);
+                $projectPath = $this->metaDataPath."/".implode("/", $camins);
+                if (is_dir($projectPath)) {
+                    $fh = opendir($projectPath);
+                    while ($dir_elem = readdir($fh)) {
+                        if (is_dir("$projectPath/$dir_elem") && $dir_elem!=="." && $dir_elem!=="..") {
+                            $ret = $this->getProjectProperties2("$projectPath/$dir_elem", $ns_elem, $dir_elem);
+                            if ($ret[self::K_PROJECTTYPE]) {
+                                return $ret;
+                            }
                         }
                     }
                 }
+                array_pop($camins);
             }
-            array_pop($camins);
         }
         return $ret;
     }

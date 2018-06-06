@@ -41,6 +41,10 @@ class DokuPageModel extends WikiRenderizableDataModel {
         return $this->pageDataQuery->haveADirProject($id);
     }
 
+    public function getThisProject($id) {
+        return $this->pageDataQuery->getThisProject($id);
+    }
+
     public function setData($toSet) {
         $params = (is_array($toSet)) ? $toSet : array(PageKeys::KEY_WIKITEXT => $toSet);
         $params[PageKeys::KEY_ID] = ($this->id) ? $this->id : $params[PageKeys::KEY_ID];
@@ -340,12 +344,12 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
         return $chunks;
     }
-    
+
     private static function _getSectionInstructionValue($instruction, $type){
         $ret = FALSE;
         if ($instruction[0] === $type){
             $ret = $instruction;
-//        }else if($instruction[0]==='plugin' 
+//        }else if($instruction[0]==='plugin'
 //                    && $instruction[1][0]==='iocexportl_ioccontainer'
 //                    && $instruction[1][1][0]===2){
 //            $i=0;

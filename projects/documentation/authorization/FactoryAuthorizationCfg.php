@@ -17,7 +17,7 @@ $_AuthorizationCfg =
         ,'revertProject'               => "editProject"
 	,'save_project_draftProject'   => "editProject"
 	,'remove_project_draftProject' => "editProject"
-	,'new_pageProject'             => "editProject"
+	,'new_documentProject'         => "editProject"
 	,'new_folderProject'           => "editProject"
         ,'_none'                       => "command"
     );
