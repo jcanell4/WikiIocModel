@@ -70,17 +70,6 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "PLA DE TREBALL"
-<<<<<<< HEAD
-                        },
-                        "semestre": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "plantilla": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "plantilles:docum_ioc:pla_treball_fp:loe_me:continguts"
-=======
                         },
                         "semestre": {
                             "type": "string",
@@ -99,7 +88,6 @@
                             "type": "string",
                             "struc_chars": "40",
                             "mandatory": true
->>>>>>> 3c6963c8e6ac7ea08d7692f7611627a5797d4520
                         }
                     }
                 }
