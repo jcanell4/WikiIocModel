@@ -27,7 +27,7 @@ class ProjectModel extends AbstractWikiDataModel {
     protected $projectMetaDataQuery;
     protected $draftDataQuery;
     protected $lockDataQuery;
-    protected $pageDataQuery;
+    //protected $pageDataQuery;
     protected $dokuPageModel;
 
     public function __construct($persistenceEngine)  {

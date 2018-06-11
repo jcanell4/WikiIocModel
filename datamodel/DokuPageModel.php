@@ -37,10 +37,12 @@ class DokuPageModel extends WikiRenderizableDataModel {
         $this->rev = $rev;
     }
 
+    //[JOSEP] Alerta: Caldria pujar aquest metode a AbstractWikiDataModel
     public function haveADirProject($id) {
         return $this->pageDataQuery->haveADirProject($id);
     }
 
+    //[JOSEP] Alerta: Caldria pujar aquest metode a AbstractWikiDataModel
     public function getThisProject($id) {
         return $this->pageDataQuery->getThisProject($id);
     }

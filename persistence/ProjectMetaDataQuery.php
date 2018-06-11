@@ -34,9 +34,9 @@ class ProjectMetaDataQuery extends DataQuery {
     public function getListProjectTypes($projectType=NULL) {
         if ($projectType) {
             //lista de proyectos permitidos para el proyecto dado
-            $jsonListProjects = $this->getMetaDataConfig($projectType, "metaDataSubProjects", "main");
+            $jsonListProjects = $this->getMetaDataConfig($projectType, "metaDataComponentTypes", "main");
             $arrayListProjects = json_decode($jsonListProjects, true);
-            $listProjects = $arrayListProjects["main"];
+            $listProjects = $arrayListProjects["main"]["subprojects"];
         }
         $projectsDir = opendir(WIKI_IOC_PROJECTS);
         while ($pType = readdir($projectsDir)) {
@@ -285,8 +285,7 @@ class ProjectMetaDataQuery extends DataQuery {
         if ($id && $params) {
             $params['id'] = $id;
             $filename = ($params[ProjectKeys::KEY_PROJECT_FILENAME]) ? $params[ProjectKeys::KEY_PROJECT_FILENAME] : $this->getProjectFileName($params);
-            $dir = $this->getProjectFilePath($params);
-            $ret = "$dir/$filename";
+            $ret = $this->getProjectFilePath($params).$filename;
         }else {
             $ret = $this->getProjectFilePath() . $this->getProjectFileName();
         }
@@ -541,6 +540,7 @@ class ProjectMetaDataQuery extends DataQuery {
         return io_saveFile($this->_metaProjectFN($idProject, "", ".meta"), serialize($meta));
     }
 
+    //[JOSEP] Alerta: Caldria pujar aquest metode a DataQuery
     public function createFolder($new_folder){
         $dir = WikiGlobalConfig::getConf('datadir')."/$new_folder";
         return mkdir($dir);

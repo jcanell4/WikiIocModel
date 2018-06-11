@@ -7,6 +7,7 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once (DOKU_PLUGIN.'wikiiocmodel/projects/defaultProject/actions/CreatePageAction.php');
 
+//[JOSEP] Alerta: Caldria pujar aquesta action a nivell de wikiocmodel/actions
 class CreateDocumentAction extends CreatePageAction {
 
     protected function runProcess() {
