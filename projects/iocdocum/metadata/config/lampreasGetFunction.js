@@ -3,7 +3,7 @@ require([
         "dojo/domReady!"
     ], function (registry) {
        
-        var lampreasButton = registry.byId('lampreas');
+        var lampreasButton = registry.byId('i_lampreas');
        
         var fOnClick=function(){
             var id = this.dispatcher.getGlobalState().getCurrentId();

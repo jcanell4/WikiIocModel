@@ -30,6 +30,25 @@ es defineix, pel subconjunt "main",  que la classe MetaDataDao i MetaDataEntity 
 classe MetaDataRender cal instanciar la que es troba al projecte iocdocum. La raó d'aquesta configuració és per poder reutilitzar des d'altres projectes, classes 
 ja implementades en projectes diferents. 
 
+metaDataComponentTypes
+-----------------------
+
+{
+    ...
+    "metaDataComponentTypes": [
+        {
+            "main": {
+                "subprojects":["taulasubs", "anotherProject"] | true | false,   //Array => tipus de projectes acceptats, true => qualsevol projecte, false o undefined (absència) => no presenta aquest tipus de component 
+                "documents":["fp:plantilles:plantillaX", "fp:plantilles:plantillaY"] | true | false,  //Array => quines plantilles són acceptades, true => qualsevol plantilla, flase o undefined(absència) => no presenta aquest tipus de component 
+                "folders": true | false, //true => true => accepta crear carpetes i subpcarpetes, false o undefined (absència) => no presenta aquest tipus de component 
+            }
+        }
+        
+    ],
+    ...
+}
+
+
 metaDataProjectStructure
 ------------------------
 El camp "metaDataProjectStructure" defienix un array que conté tants elments com subconjunts de dades es necessitin definir. Per defecte n'hi haurà d'haber un. Cada 
