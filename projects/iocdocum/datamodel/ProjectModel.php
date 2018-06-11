@@ -224,7 +224,7 @@ class ProjectModel extends AbstractWikiDataModel {
         PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']["autor"]['value'], AUTH_UPLOAD);
 
         //3b. Otorga, al Responsable, permisos sobre el directorio de proyecto
-        if ($ret['projectMetaData']['values']["autor"] !== $ret['projectMetaData']["responsable"]['value'])
+        if ($ret['projectMetaData']["autor"]['value'] !== $ret['projectMetaData']["responsable"]['value'])
             PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']["responsable"]['value'], AUTH_UPLOAD);
 
         //4a. Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
