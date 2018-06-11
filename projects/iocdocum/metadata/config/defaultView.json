@@ -9,6 +9,14 @@
         "main": {
             "parent": "",
             "label": "Dades del projecte",
+<<<<<<< HEAD
+            "n_columns": 12,
+            "n_rows": 16,
+            "frame": true
+        },
+        "tipusFrame": {
+            "parent": "main",
+=======
             "n_columns": 12,
             "n_rows": 16,
             "frame": true
@@ -18,7 +26,14 @@
             "n_columns": 12,
             "n_rows": 1,
             "frame": false
-        }
+        },
+        "authorship": {
+            "parent": "",
+            "label": "Autoria",
+>>>>>>> 3c6963c8e6ac7ea08d7692f7611627a5797d4520
+            "n_columns": 12,
+            "frame": true
+        }        
     },
     "fields": {
       "tipus": {
@@ -28,6 +43,7 @@
         "props": {
           "required": true
         }            
+<<<<<<< HEAD
       },
       "titol": {
         "label": "Títol del projecte",
@@ -39,6 +55,19 @@
         "n_columns": 12,
         "group": "main"
       },
+=======
+      },
+      "titol": {
+        "label": "Títol del projecte",
+        "n_columns": 12,
+        "group": "main"
+      },
+      "subtitol": {
+        "label": "Subtítol del projecte",
+        "n_columns": 12,
+        "group": "main"
+      },
+>>>>>>> 3c6963c8e6ac7ea08d7692f7611627a5797d4520
       "cicle": {
         "label" : "Nom del cicle",
         "n_columns": 12,
@@ -74,11 +103,35 @@
         "label": "Coordinador",
         "n_columns": 8,
         "group": "main"
+<<<<<<< HEAD
       },
       "semestre": {
         "label": "Semestre",
         "n_columns": 4,
         "group": "main"
+=======
+      },
+      "semestre": {
+        "label": "Semestre",
+        "n_columns": 4,
+        "group": "main"
+      },
+      "responsable": {
+        "label": "Responsable de la creació",
+        "n_columns": 6,
+        "group": "authorship",
+        "props": {
+            "required": true
+        }
+      },
+      "autor": {
+        "label": "Autor",
+        "n_columns": 6,
+        "group": "authorship",
+        "props": {
+            "required": true
+        }
+>>>>>>> 3c6963c8e6ac7ea08d7692f7611627a5797d4520
       },
       "plantilla": {
         "type" : "hidden"

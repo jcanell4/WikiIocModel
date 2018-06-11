@@ -51,20 +51,4 @@ class projectRevertResponseHandler extends ProjectResponseHandler {
             $ajaxCmdResponseGenerator->addExtraMetadata($xtr['id'], $xtr['idr'], $xtr['txt'], $xtr['html']);
         }
     }
-
-//    protected function viewResponse($requestParams, $responseData, &$ajaxCmdResponseGenerator) {
-//        $id = $responseData[ProjectKeys::KEY_ID];
-//        $ns = $requestParams[ProjectKeys::KEY_ID];
-//        $title = "Projecte $ns";
-//        $outValues = [];
-//
-//        $form = $this->buildForm($id, $ns, $responseData['projectMetaData']['structure'], $responseData['projectViewData'], $outValues);
-//
-//        $ajaxCmdResponseGenerator->addViewProject($id, $ns, $title, $form,
-//            $outValues
-////            $responseData['projectMetaData']['values']
-//        );
-//        $this->addMetadataResponse($id, $ns, $ajaxCmdResponseGenerator);
-//    }
-
 }

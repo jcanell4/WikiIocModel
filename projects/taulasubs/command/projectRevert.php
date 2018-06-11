@@ -5,7 +5,7 @@
  */
 if (!defined('DOKU_INC')) die();
 
-class command_plugin_wikiiocmodel_projects_iocdocum_projectRevert extends abstract_project_command_class {
+class command_plugin_wikiiocmodel_projects_taulasubs_projectRevert extends abstract_project_command_class {
 
     public function __construct() {
         parent::__construct();

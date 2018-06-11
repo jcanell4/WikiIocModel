@@ -4,17 +4,15 @@
             "main": {
                 "MetaDataDAO": "defaultProject",
                 "MetaDataEntity": "defaultProject",
-                "MetaDataRender": "iocdocum"
+                "MetaDataRender": "taulasubs"
             }
         }
     ],
-    "metaDataComponentTypes": [
+    "metaDataSubProjects": [
         {
-            "main": {
-                "subprojects":[
-                    "taulasubs" 
-                ]
-            }
+            "main": [
+                "taulasubs" 
+            ]
         }
         
     ],
@@ -52,10 +50,6 @@
                             "mandatory": true,
                             "default": "continguts"
                         },
-                        "professors": {
-                            "type": "string",
-                            "mandatory": true
-                        },
                         "coordinador": {
                             "type": "string",
                             "struc_chars": "40",
@@ -70,7 +64,6 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "PLA DE TREBALL"
-<<<<<<< HEAD
                         },
                         "semestre": {
                             "type": "string",
@@ -80,26 +73,6 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "plantilles:docum_ioc:pla_treball_fp:loe_me:continguts"
-=======
-                        },
-                        "semestre": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "plantilla": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "plantilles:docum_ioc:pla_treball_fp:loe_me:continguts"
-                        },
-                        "autor": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "responsable": {
-                            "type": "string",
-                            "struc_chars": "40",
-                            "mandatory": true
->>>>>>> 3c6963c8e6ac7ea08d7692f7611627a5797d4520
                         }
                     }
                 }

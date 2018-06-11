@@ -1,8 +1,9 @@
 {
-    "reversion": {
+    "iocDocumPdfExport": {
         "class": "WikiIocButton",
         "parms": { 
             "DOM": {
+<<<<<<< HEAD
                "id": "reversion",
                "title": "Revertir",
                "class": "iocDisplayBlock"
@@ -43,6 +44,8 @@
         "class": "WikiIocButton",
         "parms": { 
             "DOM": {
+=======
+>>>>>>> 3c6963c8e6ac7ea08d7692f7611627a5797d4520
                "id": "iocDocumPdfExport",
                "title": "iocDocumPdfExport",
                "class": "iocDisplayBlock"

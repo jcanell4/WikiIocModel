@@ -27,7 +27,7 @@ class CreateProjectMetaDataAction extends ProjectMetadataAction {
             $metaDataValues['nsproject'] = $id;
             $metaDataValues["responsable"] = $_SERVER['REMOTE_USER'];
             $metaDataValues['autor'] = $_SERVER['REMOTE_USER'];
-            $metaDataValues['fitxercontinguts'] = $id.":".$metaDataValues['fitxercontinguts'];
+            $metaDataValues['fitxercontinguts'] = $id.":".array_pop(explode(":", $metaDataValues['plantilla']));
 
             $metaData = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
