@@ -18,7 +18,13 @@
             "n_columns": 12,
             "n_rows": 1,
             "frame": false
-        }
+        },
+        "authorship": {
+            "parent": "",
+            "label": "Autoria",
+            "n_columns": 12,
+            "frame": true
+        }        
     },
     "fields": {
       "tipus": {
@@ -79,6 +85,22 @@
         "label": "Semestre",
         "n_columns": 4,
         "group": "main"
+      },
+      "responsable": {
+        "label": "Responsable de la creació",
+        "n_columns": 6,
+        "group": "authorship",
+        "props": {
+            "required": true
+        }
+      },
+      "autor": {
+        "label": "Autor",
+        "n_columns": 6,
+        "group": "authorship",
+        "props": {
+            "required": true
+        }
       },
       "plantilla": {
         "type" : "hidden"

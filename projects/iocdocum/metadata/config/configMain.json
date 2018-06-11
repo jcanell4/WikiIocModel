@@ -79,6 +79,15 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "plantilles:docum_ioc:pla_treball_fp:loe_me:continguts"
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true
                         }
                     }
                 }
