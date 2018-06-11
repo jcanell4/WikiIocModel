@@ -211,8 +211,8 @@ class ProjectModel extends AbstractWikiDataModel {
     public function generateProject($id, $projectType) {
         //0. Obtiene los datos del proyecto
         $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
-        $plantilla = $ret['projectMetaData']['values']["plantilla"];
-        $ret['projectMetaData']['values']["fitxercontinguts"] = $destino = "$id:".end(explode(":", $plantilla));
+        $plantilla = $ret['projectMetaData']["plantilla"]['value'];
+        $ret['projectMetaData']["fitxercontinguts"]['value'] = $destino = "$id:".end(explode(":", $plantilla));
 
         //1. Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
@@ -221,20 +221,20 @@ class ProjectModel extends AbstractWikiDataModel {
         $this->projectMetaDataQuery->setProjectGenerated($id, $projectType);
 
         //3a. Otorga, al Autor, permisos sobre el directorio de proyecto
-        PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']['values']["autor"], AUTH_UPLOAD);
+        PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']["autor"]['value'], AUTH_UPLOAD);
 
         //3b. Otorga, al Responsable, permisos sobre el directorio de proyecto
-        if ($ret['projectMetaData']['values']["autor"] !== $ret['projectMetaData']['values']["responsable"])
-            PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']['values']["responsable"], AUTH_UPLOAD);
+        if ($ret['projectMetaData']['values']["autor"] !== $ret['projectMetaData']["responsable"]['value'])
+            PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']["responsable"]['value'], AUTH_UPLOAD);
 
         //4a. Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
-        $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$ret['projectMetaData']['values']["autor"].":";
-        PagePermissionManager::updatePagePermission($ns."*", $ret['projectMetaData']['values']["autor"], AUTH_DELETE, TRUE);
+        $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$ret['projectMetaData']["autor"]['value'].":";
+        PagePermissionManager::updatePagePermission($ns."*", $ret['projectMetaData']["autor"]['value'], AUTH_DELETE, TRUE);
         //4b. Incluye la página del proyecto en el archivo de atajos del Autor
         $params = [
              'id' => $id
-            ,'autor' => $ret['projectMetaData']['values']["autor"]
-            ,'link_page' => $ret['projectMetaData']['values']["destino"]
+            ,'autor' => $ret['projectMetaData']["autor"]['value']
+            ,'link_page' => $ret['projectMetaData']["fitxercontinguts"]['value']
             ,'user_shortcut' => $ns.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
         ];
         $this->includePageProjectToUserShortcut($params);

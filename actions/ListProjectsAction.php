@@ -24,6 +24,7 @@ class ListProjectsAction extends AbstractWikiAction {
      */
     public function responseProcess() {
         $listProjectTypes = $this->dataquery->getListProjectTypes($this->params['newProjectType']);
+        $aList=[];
         foreach ($listProjectTypes as $pTypes) {
             $aList[] = ['id' => "id_$pTypes", 'name' => $pTypes];
         }

@@ -1,0 +1,85 @@
+<?php
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+require_once DOKU_INC . "lib/lib_ioc/wikiiocmodel/ResourceLocker.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/projects/taulasubs/actions/ViewProjectMetaDataAction.php";
+
+class GetProjectMetaDataAction extends ViewProjectMetaDataAction implements ResourceLockerInterface {
+
+    private $resourceLocker;
+    private $messageLock;
+
+    public function init($modelManager) {
+        parent::init($modelManager);
+        $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
+    }
+
+    protected function runAction() {
+        //Establecimiento del sistema de bloqueo
+        if ( ! $this->params[PageKeys::KEY_REV] ) {
+            $lockStruct = $this->requireResource(TRUE);
+            $this->messageLock = $this->generateLockInfo($lockStruct, $this->params[ProjectKeys::KEY_ID]);
+        }
+        $response = parent::runAction();
+        if ($lockStruct['state']) {
+            $response['lockInfo'] = $lockStruct['info']['locker'];
+            $response['lockInfo']['state'] = $lockStruct['state'];
+        }
+        return $response;
+    }
+    protected function postAction(&$response) {
+        if ($response) {
+            if ($this->messageLock) {
+                $response['info'] = $this->addInfoToInfo($response['info'], $this->messageLock);
+            }else {
+                $new_message = $this->generateInfo("info", WikiIocLangManager::getLang('project_edited'), $this->params[ProjectKeys::KEY_ID]);
+                $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
+            }
+        }
+    }
+
+    /**
+     * Genera un mensaje tipo 'info' como respuesta al tipo de boqueo
+     */
+    private function generateLockInfo($lockStruct, $id) {
+
+        switch ($lockStruct['state']) {
+            case self::LOCKED:
+                // El fitxer no estava bloquejat
+                $infoType = 'info';
+                break;
+
+            case self::REQUIRED:
+                // S'ha d'afegir una notificació per l'usuari que el te bloquejat
+                $message = WikiIocLangManager::getLang('lockedby') . " " . $lockStruct['info']['locker']['name'];
+                $infoType = 'error';
+                break;
+
+            case self::LOCKED_BEFORE:
+                // El teniem bloquejat nosaltres
+                $message = WikiIocLangManager::getLang('alreadyLocked');
+                $infoType = 'warning';
+                break;
+
+            default:
+                throw new UnknownTypeParamException($lockStruct['state']);
+        }
+
+        if ($message) {
+            $message = self::generateInfo($infoType, $message, $id);
+        }
+        return $message;
+    }
+
+    /**
+     * És el mètode que s'ha d'executar per iniciar el bloqueig.
+     * Per defecte el bloqueig es fa només amb les funcions natives de la wiki.
+     * @param bool $lock = TRUE produirà bloqueix wikiioc del recurs. El mètode comprova si el recurs està bloquejat i
+     * @return array [una constant amb el tipus de bloqueix i un missatge]
+     */
+    public function requireResource($lock = FALSE) {
+        $this->resourceLocker->init($this->params);
+        return $this->resourceLocker->requireResource($lock);
+    }
+
+}

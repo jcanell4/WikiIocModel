@@ -8,108 +8,83 @@
     "groups": {
         "main": {
             "parent": "",
-            "label": "Principal",
-            "n_columns": 5,
-            "n_rows": 16,
-            "frame": true
-        },
-        "dades": {
-            "parent": "",
-            "label": "Dades generals",
-            "n_columns": 7,
-            "n_rows": 16,
-            "frame": true
-        },
-        "admin": {
-            "parent": "dades",
-            "label": "dades d'administració",
-            "n_columns": 10,
-            "n_rows": 1,
-            "frame": true
-        },
-        "files": {
-            "parent": "",
-            "label": "fitxers del projecte",
+            "label": "Dades del projecte",
             "n_columns": 12,
-            "n_rows": 1,
+            "n_rows": 16,
             "frame": true
         },
-        "taula": {
-            "parent": "",
-            "label": "Taula de substitució",
+        "tipusFrame": {
+            "parent": "main",
             "n_columns": 12,
             "n_rows": 1,
             "frame": false
         }
     },
     "fields": {
-      "nsproject": {
-        "type": "hidden",
-        "props": {
-          "readonly": true
-        }
-      },
-      "responsable": {
-        "n_columns": 6,
-        "group": "admin",
+      "tipus": {
+        "n_columns": 4,
+        "label": "Tipus",
+        "group": "tipusFrame",
         "props": {
           "required": true
-        }
-      },
-      "autor": {
-        "n_columns": 6,
-        "group": "admin",
-        "props": {
-          "required": true
-        }
+        }            
       },
       "titol": {
-        "mandatory": true,
-        "n_columns": 8,
-        "config":{    
-            "formEditorButton":true
-        },
+        "label": "Títol del projecte",
+        "n_columns": 12,
+        "group": "main"
+      },
+      "subtitol": {
+        "label": "Subtítol del projecte",
+        "n_columns": 12,
+        "group": "main"
+      },
+      "cicle": {
+        "label" : "Nom del cicle",
+        "n_columns": 12,
+        "group": "main",
         "props": {
           "required": true
         }
       },
-      "descripcio": {
-        "n_columns": 12,
-        "type": "textarea",
-        "n_rows": 10,
+      "modul": {
+        "label" : "Nom del mòdul o bloc",
+        "n_columns": 9,
+        "group": "main",
         "props": {
-          "data-editable-element": "textarea"
+          "required": true
         }
+      },
+      "durada": {
+        "label" : "Durada",
+        "n_columns": 3,
+        "group": "main",
+        "props": {
+          "required": true
+        }
+      },
+      "professors": {
+        "label" : "Professors",
+        "n_columns": 12,
+        "props": {
+          "required": true
+        }
+      },
+      "coordinador": {
+        "label": "Coordinador",
+        "n_columns": 8,
+        "group": "main"
+      },
+      "semestre": {
+        "label": "Semestre",
+        "n_columns": 4,
+        "group": "main"
       },
       "plantilla": {
-        "n_columns": 4,
-        "group": "files",
-        "props": {
-          "readonly": true
-        }
+        "type" : "hidden"
       },
       "fitxercontinguts": {
-        "label": "ruta de l'arxiu de continguts",
-        "n_columns": 4,
-        "group": "files",
-        "props": {
-          "readonly": true
-        }
-      },
-      "media_address": {
-        "label": "ruta del directori media",
-        "n_columns": 4,
-        "group": "files"
-      },
-      "nom-de-prova": {
-        "label": "Taula de prova",
-        "n_columns": 12,
-        "type": "editableObject",
-        "group": "taula",
-        "n_rows": 4,
-        "props": {
-          "data-editable-element": "table"
-        }
+        "type" : "hidden"
       }
     }
 }

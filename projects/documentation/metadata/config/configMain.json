@@ -8,6 +8,19 @@
             }
         }
     ],
+    "metaDataComponentTypes": [
+        {
+            "main": {
+                "subprojects":[
+                    "otroProyecto",
+                    "activities" ,
+                    "taulasubs" 
+                ],
+                "documents":true,
+                "folders": true
+            }
+        }        
+    ],
     "metaDataSubProjects": [
         {
             "main": [
