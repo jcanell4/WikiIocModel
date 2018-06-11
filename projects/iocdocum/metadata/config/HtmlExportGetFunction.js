@@ -3,7 +3,7 @@ require([
         "dojo/domReady!"
     ], function (registry) {
        
-        var lampreasButton = registry.byId('lampreas');
+        var iocDocumHtmlExportButton = registry.byId('iocDocumHtmlExport');
        
         var fOnClick=function(){
             var id = this.dispatcher.getGlobalState().getCurrentId();
@@ -18,9 +18,9 @@ require([
             return ret;
         };
        
-        if (lampreasButton){
-            lampreasButton.getQuery=fGetQuery;
-            lampreasButton.set("hasTimer", true);
-            lampreasButton.onClick =fOnClick;
+        if (iocDocumHtmlExportButton){
+            iocDocumHtmlExportButton.getQuery=fGetQuery;
+            iocDocumHtmlExportButton.set("hasTimer", true);
+            iocDocumHtmlExportButton.onClick =fOnClick;
         }
 });
