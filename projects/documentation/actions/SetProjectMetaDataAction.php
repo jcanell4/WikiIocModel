@@ -64,10 +64,13 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
             }
         }
 
-        if (!$response)
+        if (!$response) {
             throw new ProjectExistException($dataProject[ProjectKeys::KEY_ID]);
-        else
+        }else {
+            //Añadir propiedades/restricciones del configMain para la creación de elementos dentro del proyecto
+            parent::addResponseProperties($response);
             return $response;
+        }
     }
 
     private function netejaKeysFormulari($array) {

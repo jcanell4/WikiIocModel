@@ -27,7 +27,7 @@ class ProjectModel extends AbstractWikiDataModel {
     protected $projectMetaDataQuery;
     protected $draftDataQuery;
     protected $lockDataQuery;
-    protected $pageDataQuery;
+    //protected $pageDataQuery;
     protected $dokuPageModel;
 
     public function __construct($persistenceEngine)  {
@@ -44,6 +44,10 @@ class ProjectModel extends AbstractWikiDataModel {
         $this->id = $id;
         $this->projectType = $projectType;
         $this->rev = $rev;
+        if ($id && $projectType) {
+            $this->projectMetaDataQuery->init([ProjectKeys::KEY_ID => $id,
+                                               ProjectKeys::KEY_PROJECT_TYPE => $projectType]);
+        }
         $this->setProjectFileName($projectFileName);
         $this->setProjectFilePath();
     }
@@ -55,7 +59,7 @@ class ProjectModel extends AbstractWikiDataModel {
 
     /**
      * Obtiene y, después, retorna una estructura con los metadatos y valores del proyecto
-     * @return array('projectMetaData'=>array('values','structure'), array('projectViewData'))
+     * @return array(array('projectMetaData'), array('projectViewData'))
      */
     public function getData() {
         $ret = [];
@@ -127,11 +131,19 @@ class ProjectModel extends AbstractWikiDataModel {
         return json_decode($struct, TRUE);
     }
 
-    public function setProjectFileName($projectFileName=NULL) {
+    public function getMetaDataComponent($projectType, $type){
+        $dao = $this->metaDataService->getMetaDataDaoConfig();
+        $set = $dao->getMetaDataComponentTypes($projectType, ProjectKeys::VAL_DEFAULTSUBSET, $this->persistenceEngine);
+        $subset = $set[$type];
+        $ret = is_array($subset) ? "array" : $subset;
+        return $ret;
+    }
+
+    private function setProjectFileName($projectFileName=NULL) {
         if ($projectFileName) {
             $this->projectFileName = $projectFileName;
         }else {
-            $a = array('id' => $this->id,
+            $a = array(ProjectKeys::KEY_ID => $this->id,
                        ProjectKeys::KEY_PROJECT_TYPE    => $this->projectType,
                        ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET
                       );
@@ -139,14 +151,14 @@ class ProjectModel extends AbstractWikiDataModel {
         }
     }
 
-    public function getProjectFileName() {
+    private function getProjectFileName() {
         if (!$this->projectFileName) {
             $this->setProjectFileName();
         }
         return $this->projectFileName;
     }
 
-    public function setProjectFilePath() {
+    private function setProjectFilePath() {
         $this->projectFilePath = $this->projectMetaDataQuery->getProjectFilePath();
     }
 
@@ -194,7 +206,7 @@ class ProjectModel extends AbstractWikiDataModel {
      * @return boolean
      */
     public function existProject($id) {
-        return $this->projectMetaDataQuery->haveADirProject($id);
+        return $this->projectMetaDataQuery->existProject($id);
     }
 
     /**
@@ -208,8 +220,8 @@ class ProjectModel extends AbstractWikiDataModel {
     public function generateProject($id, $projectType) {
         //0. Obtiene los datos del proyecto
         $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
-        $plantilla = $ret['projectMetaData']['values']["plantilla"];
-        $ret['projectMetaData']['values']["fitxercontinguts"] = $destino = "$id:".end(explode(":", $plantilla));
+        $plantilla = $ret['projectMetaData']["plantilla"]['value'];
+        $ret['projectMetaData']["fitxercontinguts"]['value'] = $destino = "$id:".end(explode(":", $plantilla));
 
         //1. Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
@@ -218,20 +230,20 @@ class ProjectModel extends AbstractWikiDataModel {
         $this->projectMetaDataQuery->setProjectGenerated($id, $projectType);
 
         //3a. Otorga, al Autor, permisos sobre el directorio de proyecto
-        PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']['values']["autor"], AUTH_UPLOAD);
+        PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']["autor"]['value'], AUTH_UPLOAD);
 
         //3b. Otorga, al Responsable, permisos sobre el directorio de proyecto
-        if ($ret['projectMetaData']['values']["autor"] !== $ret['projectMetaData']['values']["responsable"])
-            PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']['values']["responsable"], AUTH_UPLOAD);
+        if ($ret['projectMetaData']["autor"]['value'] !== $ret['projectMetaData']["responsable"]['value'])
+            PagePermissionManager::updatePagePermission($id.":*", $ret['projectMetaData']["responsable"]['value'], AUTH_UPLOAD);
 
         //4a. Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
-        $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$ret['projectMetaData']['values']["autor"].":";
-        PagePermissionManager::updatePagePermission($ns."*", $ret['projectMetaData']['values']["autor"], AUTH_DELETE, TRUE);
+        $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$ret['projectMetaData']["autor"]['value'].":";
+        PagePermissionManager::updatePagePermission($ns."*", $ret['projectMetaData']["autor"]['value'], AUTH_DELETE, TRUE);
         //4b. Incluye la página del proyecto en el archivo de atajos del Autor
         $params = [
              'id' => $id
-            ,'autor' => $ret['projectMetaData']['values']["autor"]
-            ,'link_page' => $ret['projectMetaData']['values']["destino"]
+            ,'autor' => $ret['projectMetaData']["autor"]['value']
+            ,'link_page' => $ret['projectMetaData']["fitxercontinguts"]['value']
             ,'user_shortcut' => $ns.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
         ];
         $this->includePageProjectToUserShortcut($params);
@@ -299,9 +311,9 @@ class ProjectModel extends AbstractWikiDataModel {
      * Si la página dreceres.txt del usuario no existe, se crea a partir de la plantilla 'userpage_shortcuts_ns'
      * @param array $parArr ['id', 'autor', 'link_page', 'user_shortcut']
      */
-    public function includePageProjectToUserShortcut($parArr) {
+    private function includePageProjectToUserShortcut($parArr) {
         $summary = "include Page Project To User Shortcut";
-        $shortcutText = "\n[[${parArr['link_page']}|accés al projecte ${parArr['id']}]]";
+        $shortcutText = "\n[[${parArr['link_page']}|accés als continguts del projecte ${parArr['id']}]]";
         $text = $this->pageDataQuery->getRaw($parArr['user_shortcut']);
         if ($text == "") {
             //La página dreceres.txt del usuario no existe
@@ -318,7 +330,7 @@ class ProjectModel extends AbstractWikiDataModel {
     /**
      * Elimina el link al proyecto contenido en el archivo dreceres del usuario
      */
-    public function removeProjectPageFromUserShortcut($usershortcut, $link_page) {
+    private function removeProjectPageFromUserShortcut($usershortcut, $link_page) {
         $text = $this->pageDataQuery->getRaw($usershortcut);
         if ($text !== "" ) {
             if (preg_match("/$link_page/", $text) === 1) {  //subtexto hallado
@@ -360,6 +372,17 @@ class ProjectModel extends AbstractWikiDataModel {
 
     public function getLastModFileDate($id) {
         return $this->projectMetaDataQuery->getLastModFileDate($id);
+    }
+
+    //[JOSEP] Alerta caldria pujar aquest mètode a abstractwikdatamodel
+    public function createFolder($new_folder){
+        return $this->projectMetaDataQuery->createFolder(str_replace(":", "/", $new_folder));
+    }
+
+    //[JOSEP] Alerta caldria pujar aquest mètode a abstractwikdatamodel
+    public function folderExists($ns) {
+        $id = str_replace(":", "/", $ns);
+        return file_exists($id) && is_dir($id);
     }
 
 }

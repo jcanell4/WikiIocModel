@@ -44,6 +44,10 @@ class ProjectModel extends AbstractWikiDataModel {
         $this->id = $id;
         $this->projectType = $projectType;
         $this->rev = $rev;
+        if ($id && $projectType) {
+            $this->projectMetaDataQuery->init([ProjectKeys::KEY_ID => $id,
+                                               ProjectKeys::KEY_PROJECT_TYPE => $projectType]);
+        }
         $this->setProjectFileName($projectFileName);
         $this->setProjectFilePath();
     }
@@ -124,16 +128,22 @@ class ProjectModel extends AbstractWikiDataModel {
     public function getMetaDataDefKeys($projectType) {
         $dao = $this->metaDataService->getMetaDataDaoConfig();
         $struct = $dao->getMetaDataStructure($projectType, ProjectKeys::VAL_DEFAULTSUBSET, $this->persistenceEngine);
-            //prueba: debe ser eliminada
-            $subProjects = $dao->getMetaDataSubProjects($projectType, ProjectKeys::VAL_DEFAULTSUBSET, $this->persistenceEngine);
         return json_decode($struct, TRUE);
+    }
+
+    public function getMetaDataComponent($projectType, $type){
+        $dao = $this->metaDataService->getMetaDataDaoConfig();
+        $set = $dao->getMetaDataComponentTypes($projectType, ProjectKeys::VAL_DEFAULTSUBSET, $this->persistenceEngine);
+        $subset = $set[$type];
+        $ret = is_array($subset) ? "array" : $subset;
+        return $ret;
     }
 
     private function setProjectFileName($projectFileName=NULL) {
         if ($projectFileName) {
             $this->projectFileName = $projectFileName;
         }else {
-            $a = array('id' => $this->id,
+            $a = array(ProjectKeys::KEY_ID => $this->id,
                        ProjectKeys::KEY_PROJECT_TYPE    => $this->projectType,
                        ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET
                       );
@@ -197,6 +207,14 @@ class ProjectModel extends AbstractWikiDataModel {
      */
     public function existProject($id) {
         return $this->projectMetaDataQuery->existProject($id);
+    }
+
+    public function getListProjectTypes($projectType=NULL) {
+        return $this->projectMetaDataQuery->getListProjectTypes($projectType);
+    }
+
+    public function getListMetaDataComponentTypes($projectType, $component) {
+        return $this->projectMetaDataQuery->getListMetaDataComponentTypes($projectType, $component);
     }
 
     /**

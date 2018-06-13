@@ -43,9 +43,9 @@ class DokuPageModel extends WikiRenderizableDataModel {
     }
 
     //[JOSEP] Alerta: Caldria pujar aquest metode a AbstractWikiDataModel
-    public function getThisProject($id) {
-        return $this->pageDataQuery->getThisProject($id);
-    }
+//    public function getThisProject($id) {
+//        return $this->pageDataQuery->getThisProject($id);
+//    }
 
     public function setData($toSet) {
         $params = (is_array($toSet)) ? $toSet : array(PageKeys::KEY_WIKITEXT => $toSet);
