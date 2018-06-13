@@ -1,0 +1,22 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 20,
+        "chars_column": 10, 
+        "rows_row": 1
+    },
+    "groups": {
+    },
+    "fields": {
+      "taula": {
+        "label": "Taula de substitució",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "",
+        "n_rows": 20,
+        "props": {
+          "data-editable-element": "table"
+        }
+      }
+    }
+}

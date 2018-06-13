@@ -11,7 +11,6 @@
     "metaDataSubProjects": [
         {
             "main": [
-                "taulasubs" 
             ]
         }
         
@@ -21,58 +20,39 @@
             "main": "meta.mdpr",
             "mainType": {
                 "type": "object",
-                "typeDef": "pla"
+                "typeDef": "taula"
             },
             "typesDefinition": {
-                "pla": {
+                "entrySubsTable": {
+                    "type":"object",
+                    "keys": {
+                        "key": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "@CLAU_DE_SUBSTITUCIO@"
+                        },
+                        "type": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "string"
+                        },
+                        "value": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Escriviu el valor a aquí"
+                        }
+                    }                    
+                },
+                "taulaSubsTaula": {
+                    "type": "objectArray",
+                    "typeDef":"entrySubsTable"
+                },                
+                "taula": {
                     "type": "object",
                     "keys": {
-                        "cicle": {
-                            "type": "string",
-                            "default": "Indiqueu el cicle",
+                        "taula": {
+                            "type": "taulaSubsTaula",
                             "mandatory": true
-                        },
-                        "modul": {
-                            "type": "string",
-                            "default": "Indiqueu el mòdul o el bloc",
-                            "mandatory": true
-                        },
-                        "durada": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "tipus": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "fitxercontinguts": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "continguts"
-                        },
-                        "coordinador": {
-                            "type": "string",
-                            "struc_chars": "40",
-                            "mandatory": true
-                        },
-                        "titol": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "FORMACIÓ PROFESSIONAL"
-                        },
-                        "subtitol": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "PLA DE TREBALL"
-                        },
-                        "semestre": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "plantilla": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "plantilles:docum_ioc:pla_treball_fp:loe_me:continguts"
                         }
                     }
                 }
