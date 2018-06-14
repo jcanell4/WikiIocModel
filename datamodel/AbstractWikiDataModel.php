@@ -21,8 +21,12 @@ abstract class AbstractWikiDataModel {
         return $this->persistenceEngine;
     }
 
+    public function getPageDataQuery() {
+        return $this->pageDataQuery;
+    }
+
     public function getThisProject($id) {
-        return $this->pageDataQuery->getThisProject($id);
+        return $this->getPageDataQuery()->getThisProject($id);
     }
 
 }

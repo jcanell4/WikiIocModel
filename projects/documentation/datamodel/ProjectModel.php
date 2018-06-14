@@ -27,7 +27,6 @@ class ProjectModel extends AbstractWikiDataModel {
     protected $projectMetaDataQuery;
     protected $draftDataQuery;
     protected $lockDataQuery;
-    //protected $pageDataQuery;
     protected $dokuPageModel;
 
     public function __construct($persistenceEngine)  {
@@ -322,7 +321,7 @@ class ProjectModel extends AbstractWikiDataModel {
     private function includePageProjectToUserShortcut($parArr) {
         $summary = "include Page Project To User Shortcut";
         $shortcutText = "\n[[${parArr['link_page']}|accés als continguts del projecte ${parArr['id']}]]";
-        $text = $this->pageDataQuery->getRaw($parArr['user_shortcut']);
+        $text = $this->getPageDataQuery()->getRaw($parArr['user_shortcut']);
         if ($text == "") {
             //La página dreceres.txt del usuario no existe
             $this->createPageFromTemplate($parArr['user_shortcut'], WikiGlobalConfig::getConf('template_shortcuts_ns', 'wikiiocmodel'), $shortcutText, $summary);
@@ -339,7 +338,7 @@ class ProjectModel extends AbstractWikiDataModel {
      * Elimina el link al proyecto contenido en el archivo dreceres del usuario
      */
     private function removeProjectPageFromUserShortcut($usershortcut, $link_page) {
-        $text = $this->pageDataQuery->getRaw($usershortcut);
+        $text = $this->getPageDataQuery()->getRaw($usershortcut);
         if ($text !== "" ) {
             if (preg_match("/$link_page/", $text) === 1) {  //subtexto hallado
                 $eliminar = "/\[\[$link_page\|.*]]/";
@@ -353,7 +352,7 @@ class ProjectModel extends AbstractWikiDataModel {
      * Crea el archivo $destino a partir de una plantilla
      */
     private function createPageFromTemplate($destino, $plantilla=NULL, $extra=NULL, $summary="generate project") {
-        $text = ($plantilla) ? $this->pageDataQuery->getRaw($plantilla) : "";
+        $text = ($plantilla) ? $this->getPageDataQuery()->getRaw($plantilla) : "";
         $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
                                        PageKeys::KEY_WIKITEXT => $text . $extra,
                                        PageKeys::KEY_SUM => $summary]);
