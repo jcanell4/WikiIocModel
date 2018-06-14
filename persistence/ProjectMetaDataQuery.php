@@ -27,16 +27,29 @@ class ProjectMetaDataQuery extends DataQuery {
     private $projectFileName = NULL;    //Nom de l'arxiu de dades del projecte
     private $projectFilePath = NULL;    //Ruta completa al directori del projecte
 
+    public function init(array $parms) {
+        if (!isset($parms[ProjectKeys::KEY_METADATA_SUBSET])) {
+            $parms[ProjectKeys::KEY_METADATA_SUBSET] = ProjectKeys::VAL_DEFAULTSUBSET;
+        }
+        $this->projectFileName = $this->getProjectFileName($parms);
+        $this->projectFilePath = $this->getProjectFilePath($parms);
+    }
+
+    public function getListMetaDataComponentTypes($projectType, $component) {
+        //lista de elementos permitidos para el componente dado
+        $jsonList = $this->getMetaDataConfig($projectType, ProjectKeys::KEY_METADATA_COMPONENT_TYPES, ProjectKeys::VAL_DEFAULTSUBSET);
+        $arrayList = json_decode($jsonList, true);
+        $list = $arrayList[ProjectKeys::VAL_DEFAULTSUBSET][$component];
+        return $list;
+    }
+
     /**
      * Devuelve la lista ordenada de tipos de proyecto obtenida a partir de la lectura
      * de la estructura de directorios de wikiiocmodel/projects/
      */
     public function getListProjectTypes($projectType=NULL) {
         if ($projectType) {
-            //lista de proyectos permitidos para el proyecto dado
-            $jsonListProjects = $this->getMetaDataConfig($projectType, "metaDataComponentTypes", "main");
-            $arrayListProjects = json_decode($jsonListProjects, true);
-            $listProjects = $arrayListProjects["main"]["subprojects"];
+            $listProjects = $this->getListMetaDataComponentTypes($projectType, ProjectKeys::KEY_MD_CT_SUBPROJECTS);
         }
         $projectsDir = opendir(WIKI_IOC_PROJECTS);
         while ($pType = readdir($projectsDir)) {
@@ -283,9 +296,9 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getFileName($id, $params=array()) {
         if ($id && $params) {
-            $params['id'] = $id;
             $filename = ($params[ProjectKeys::KEY_PROJECT_FILENAME]) ? $params[ProjectKeys::KEY_PROJECT_FILENAME] : $this->getProjectFileName($params);
-            $ret = $this->getProjectFilePath($params).$filename;
+            $params['id'] = $id;
+            $ret = $this->getProjectFilePath($params) . $filename;
         }else {
             $ret = $this->getProjectFilePath() . $this->getProjectFileName();
         }
@@ -300,12 +313,15 @@ class ProjectMetaDataQuery extends DataQuery {
         if ($parms) {
             $jsonArray = $this->getMetaDataConfig($parms[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $parms[ProjectKeys::KEY_METADATA_SUBSET]);
             $data = json_decode($jsonArray, true);
-            $this->projectFileName = $data[$parms[ProjectKeys::KEY_METADATA_SUBSET]];
+            return $data[$parms[ProjectKeys::KEY_METADATA_SUBSET]];
         }
         return $this->projectFileName;
     }
 
-    private function setProjectFilePath($parms=[]) {
+    private function setProjectFilePath(array $parms) {
+        if (empty($parms) || $parms===NULL) {
+            throw new Exception("Manquen paràmetres a la funció setProjectFilePath(array) de ProjectMetaDataQuery");
+        }
         $this->projectFilePath = WikiGlobalConfig::getConf('mdprojects') . "/"
                                     . str_replace(":", "/", $parms[ProjectKeys::KEY_ID]) . "/"
                                     . $parms[ProjectKeys::KEY_PROJECT_TYPE] . "/";

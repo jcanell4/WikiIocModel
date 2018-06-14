@@ -114,9 +114,9 @@ class ProjectModel extends AbstractProjectModel {
      * Si la página dreceres.txt del usuario no existe, se crea a partir de la plantilla 'userpage_shortcuts_ns'
      * @param array $parArr ['id', 'autor', 'link_page', 'user_shortcut']
      */
-    public function includePageProjectToUserShortcut($parArr) {
+    private function includePageProjectToUserShortcut($parArr) {
         $summary = "include Page Project To User Shortcut";
-        $shortcutText = "\n[[${parArr['link_page']}|accés al projecte ${parArr['id']}]]";
+        $shortcutText = "\n[[${parArr['link_page']}|accés als continguts del projecte ${parArr['id']}]]";
         $text = $this->pageDataQuery->getRaw($parArr['user_shortcut']);
         if ($text == "") {
             //La página dreceres.txt del usuario no existe
@@ -133,7 +133,7 @@ class ProjectModel extends AbstractProjectModel {
     /**
      * Elimina el link al proyecto contenido en el archivo dreceres del usuario
      */
-    public function removeProjectPageFromUserShortcut($usershortcut, $link_page) {
+    private function removeProjectPageFromUserShortcut($usershortcut, $link_page) {
         $text = $this->pageDataQuery->getRaw($usershortcut);
         if ($text !== "" ) {
             if (preg_match("/$link_page/", $text) === 1) {  //subtexto hallado

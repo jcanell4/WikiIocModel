@@ -216,5 +216,14 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     public function getLastModFileDate($id) {
         return $this->projectMetaDataQuery->getLastModFileDate($id);
     }
+
+    public function getMetaDataComponent($projectType, $type){
+        $dao = $this->metaDataService->getMetaDataDaoConfig();
+        $set = $dao->getMetaDataComponentTypes($projectType, ProjectKeys::VAL_DEFAULTSUBSET, $this->persistenceEngine);
+        $subset = $set[$type];
+        $ret = is_array($subset) ? "array" : $subset;
+        return $ret;
+    }
+
 }
     

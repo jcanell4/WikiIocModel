@@ -17,18 +17,9 @@
                     "taulasubs" 
                 ],
                 "documents":true,
-                "folders": true
+                "folders": false
             }
         }        
-    ],
-    "metaDataSubProjects": [
-        {
-            "main": [
-                "otroProyecto",
-                "activities" 
-            ]
-        }
-        
     ],
     "metaDataProjectStructure": [
         {

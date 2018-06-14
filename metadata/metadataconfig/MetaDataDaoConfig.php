@@ -117,9 +117,9 @@ class MetaDataDaoConfig {
         return json_encode($ret['typesDefinition']);
     }
 
-    public static function getMetaDataSubProjects($projectType, $metaDataSubset, $persistence) {
-        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, "metaDataSubProjects");
-        return json_encode($ret[$metaDataSubset]);
+    public static function getMetaDataComponentTypes($projectType, $metaDataSubset, $persistence) {
+        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, "metaDataComponentTypes");
+        return $ret[$metaDataSubset];
     }
 
     /**
