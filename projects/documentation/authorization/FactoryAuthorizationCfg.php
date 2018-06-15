@@ -11,6 +11,8 @@
 $_AuthorizationCfg =
     array(
         '_default'                     => "admin"      /*Default case*/
+	,'create_projectProject'       => "createProject"
+	,'create_subprojectProject'    => "createProject"
 	,'saveProject'                 => "editProject"
 	,'cancelProject'               => "editProject"
 	,'viewProject'                 => "editProject"
