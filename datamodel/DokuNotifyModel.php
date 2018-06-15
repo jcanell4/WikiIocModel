@@ -1,18 +1,16 @@
 <?php
-if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
-require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/AbstractWikiDataModel.php";
-require_once DOKU_INC . "inc/media.php";
-require_once(DOKU_INC . 'inc/pageutils.php');
-require_once(DOKU_INC . 'inc/common.php');
-
 /**
  * Description of DokuNotifyModel
- *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
-abstract class DokuNotifyModel extends AbstractWikiDataModel
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+require_once DOKU_INC . "inc/media.php";
+require_once DOKU_INC . "inc/pageutils.php";
+require_once DOKU_INC . "inc/common.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/AbstractWikiModel.php";
+
+abstract class DokuNotifyModel extends AbstractWikiModel
 {
     const TYPE_ALERT = 'alert';
     const TYPE_MESSAGE = 'message';
@@ -24,7 +22,6 @@ abstract class DokuNotifyModel extends AbstractWikiDataModel
     const MAILBOX_RECEIVED = 'inbox';
     const MAILBOX_SEND = 'outbox';
     const MAILBOX_SYSTEM = 'system';
-
 
     protected $type = 'abstract';
     protected $dataQuery;

@@ -17,7 +17,6 @@ class DokuPageModel extends WikiRenderizableDataModel {
     protected $editing;
     protected $rev;
     protected $recoverDraft;
-    protected $pageDataQuery;
     protected $draftDataQuery;
     protected $lockDataQuery;
     protected $resourceLocker;  //El $resourceLocker se ha trasladado desde los Actions hasta aquí. Cal revisar los Actions
@@ -37,23 +36,13 @@ class DokuPageModel extends WikiRenderizableDataModel {
         $this->rev = $rev;
     }
 
-    //[JOSEP] Alerta: Caldria pujar aquest metode a AbstractWikiDataModel
-    public function haveADirProject($id) {
-        return $this->pageDataQuery->haveADirProject($id);
-    }
-
-    //[JOSEP] Alerta: Caldria pujar aquest metode a AbstractWikiDataModel
-//    public function getThisProject($id) {
-//        return $this->pageDataQuery->getThisProject($id);
-//    }
-
     public function setData($toSet) {
         $params = (is_array($toSet)) ? $toSet : array(PageKeys::KEY_WIKITEXT => $toSet);
         $params[PageKeys::KEY_ID] = ($this->id) ? $this->id : $params[PageKeys::KEY_ID];
         $this->resourceLocker->init($params);
         //mirar si està bloquejat i si no ho està => excepció
         if ($this->resourceLocker->checklock() === LockDataQuery::UNLOCKED) {
-            $this->pageDataQuery->save($params[PageKeys::KEY_ID], $params[PageKeys::KEY_WIKITEXT], $params[PageKeys::KEY_SUM], $params[PageKeys::KEY_MINOR]);
+            $this->getPageDataQuery()->save($params[PageKeys::KEY_ID], $params[PageKeys::KEY_WIKITEXT], $params[PageKeys::KEY_SUM], $params[PageKeys::KEY_MINOR]);
         }else {
             throw new UnexpectedLockCodeException($params[PageKeys::KEY_ID], 'ResourceLocked');
         }
@@ -65,7 +54,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
     }
 
     public function getViewData() {
-        $ret['structure'] = self::getStructuredDocument($this->pageDataQuery, $this->id,
+        $ret['structure'] = self::getStructuredDocument($this->getPageDataQuery(), $this->id,
             $this->editing, $this->selected,
             $this->rev);
         //TODO [Josep] Comprovar si això es pot eliminar (ara el draft es recupera a HtmlAction)
@@ -77,7 +66,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
     }
 
     public function getViewRawData() {
-        $response['structure'] = self::getStructuredDocument($this->pageDataQuery, $this->id,
+        $response['structure'] = self::getStructuredDocument($this->getPageDataQuery(), $this->id,
             $this->editing, $this->selected,
             $this->rev);
 
@@ -111,7 +100,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
     public function getRawData() {
         $id = $this->id;
         $response['locked'] = checklock($id);
-        $response['content'] = $this->pageDataQuery->getRaw($id, $this->rev);
+        $response['content'] = $this->getPageDataQuery()->getRaw($id, $this->rev);
         if ($this->draftDataQuery->hasAny($id)) {
             $response['draftType'] = PageKeys::FULL_DRAFT;
         }else{
@@ -122,7 +111,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
     }
 
     public function getMetaToc() {
-        $toc = $this->pageDataQuery->getToc($this->id);
+        $toc = $this->getPageDataQuery()->getToc($this->id);
         $toc = preg_replace(
             '/(<!-- TOC START -->\s?)(.*\s?)(<div class=.*tocheader.*<\/div>|<h3 class=.*toggle.*<\/h3>)((.*\s)*)(<!-- TOC END -->)/i',
             '$1<div class="dokuwiki">$2$4</div>$6', $toc
@@ -131,11 +120,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
     }
 
     public function getRevisionList($offset = -1) {
-        return $this->pageDataQuery->getRevisionList($this->id, $offset);
-    }
-
-    public function getPageDataQuery() {
-        return $this->pageDataQuery;
+        return $this->getPageDataQuery()->getRevisionList($this->id, $offset);
     }
 
     public function getDraftFilename() {
@@ -184,7 +169,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
         $draftContent = '';
 
         $structuredDraft = $this->draftDataQuery->getStructured($this->id);
-        $chunks = self::getAllChunksWithText($this->id, $this->pageDataQuery)['chunks'];
+        $chunks = self::getAllChunksWithText($this->id, $this->getPageDataQuery())['chunks'];
         $draftContent .= $structuredDraft['pre'] /*. "\n"*/;
 
         for ($i = 0; $i < count($chunks); $i++) {
@@ -193,7 +178,6 @@ class DokuPageModel extends WikiRenderizableDataModel {
             } else {
                 $draftContent .= $chunks[$i]['text']['editing'];
             }
-//            $draftContent .= "\n";
         }
 
         $draft['content'] = $draftContent;
@@ -436,7 +420,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
     }
 
     public function pageExists() {
-        $filename = $this->pageDataQuery->getFileName($this->id);
+        $filename = $this->getPageDataQuery()->getFileName($this->id);
         return file_exists($filename);
     }
 

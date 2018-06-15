@@ -10,22 +10,22 @@ require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
 class ListProjectsAction extends AbstractWikiAction {
 
     private $persistenceEngine;
-    private $projectModel;
+    private $model;
 
     public function init($modelManager) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
-        $this->projectModel = new ProjectModel($this->persistenceEngine);
+        $this->model = new DokuPageModel($this->persistenceEngine);
     }
 
     /**
      * Retorna un JSON que conté la llista de tipus de projectes vàlids
      */
     public function responseProcess() {
-        if (isset($this->params['list_type'])) {
-            $this->projectModel->init($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
-            $p = ($this->params['list_type']==="array") ? $this->params['newProjectType'] : NULL;
-            $listProjectTypes = $this->projectModel->getListProjectTypes($p);
+        if ($this->params['list_type'] !== FALSE) {
+            $this->model->init($this->params[ProjectKeys::KEY_ID]);
+            $p = ($this->params['list_type']==="array") ? $this->params['projectType'] : NULL;
+            $listProjectTypes = $this->model->getListProjectTypes($p);
             $aList=[];
             foreach ($listProjectTypes as $pTypes) {
                 $aList[] = ['id' => "id_$pTypes", 'name' => $pTypes];

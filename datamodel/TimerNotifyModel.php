@@ -1,18 +1,15 @@
 <?php
-if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
-require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/AbstractWikiDataModel.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/DokuNotifyModel.php";
-require_once DOKU_INC . "inc/media.php";
-require_once(DOKU_INC . 'inc/pageutils.php');
-require_once(DOKU_INC . 'inc/common.php');
-
 /**
  * Description of TimerLockModel
- *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+require_once DOKU_INC . "inc/media.php";
+require_once DOKU_INC . "inc/pageutils.php";
+require_once DOKU_INC . "inc/common.php";
+require_once DOKU_PLUGIN . "wikiiocmodel/datamodel/DokuNotifyModel.php";
+
 class TimerNotifyModel extends DokuNotifyModel
 {
     protected $type = 'ajax';
