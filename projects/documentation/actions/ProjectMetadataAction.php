@@ -9,6 +9,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
 require_once DOKU_PLUGIN . "wikiiocmodel/projects/documentation/datamodel/ProjectModel.php";
 
+//[JOSEP] ALERTA: Cal pujar tota la classe a wikiiocmodel/actions
 abstract class ProjectMetadataAction extends AbstractWikiAction {
 
     protected $persistenceEngine;

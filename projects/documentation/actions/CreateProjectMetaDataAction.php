@@ -3,6 +3,7 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
 include_once (DOKU_PLUGIN . "wikiiocmodel/projects/documentation/actions/ProjectMetadataAction.php");
 
+//[JOSEP] Alerta: Caldria pujar aquesta action a nivell de wikiocmodel/actions
 class CreateProjectMetaDataAction extends ProjectMetadataAction {
 
     /**

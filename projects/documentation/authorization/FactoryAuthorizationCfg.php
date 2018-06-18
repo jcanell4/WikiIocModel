@@ -7,7 +7,9 @@
  *                          ( el nom de la comanda s'estableix amb el mètode getAuthorizationType() )
  * @author Rafael Claver
  */
-//[JOSEP] Alerta caldria pujar una versió per defecte a wikiiocmodel/
+//[JOSEP] Alerta caldria:
+//   a) Convertir això en una classe amb atributs statics de manera que sigui possible heretar  i disposar d'una classe per defecte al wikiiocmodel/authorization
+//   b) pujar una versió per defecte a wikiiocmodel/authorization
 $_AuthorizationCfg =
     array(
         '_default'                     => "admin"      /*Default case*/
