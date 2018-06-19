@@ -52,6 +52,10 @@ class ViewProjectMetaDataAction extends ProjectMetadataAction {
                 $this->addRevisionSuffixIdToArray($response['meta']);
             }
         }
+
+        //Añadir propiedades/restricciones del configMain para la creación de elementos dentro del proyecto
+        parent::addResponseProperties($response);
+
         return $response;
     }
 
