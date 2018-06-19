@@ -5,21 +5,27 @@
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-require_once (DOKU_PLUGIN."wikiiocmodel/projects/documentation/actions/ProjectMetadataAction.php");
+require_once (DOKU_PLUGIN."wikiiocmodel/actions/ProjectMetadataAction.php");
 
-//[JOSEP] Alerta: Caldria pujar aquesta action a nivell de wikiocmodel/actions
 class CreateFolderAction extends ProjectMetadataAction {
 
     protected function responseProcess() {
         $id = $this->params[ProjectKeys::KEY_ID];
         $new_folder = $this->params['new_folder'];
-        $this->projectModel->init($id, $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
+        $projectModel = $this->getModel();
+
+        $projectModel->init($id, $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
 
         //sólo se ejecuta si existe el proyecto
-        if ($this->projectModel->existProject($id)) {
+        if ($projectModel->existProject($id)) {
 
-            if ($this->projectModel->folderExists($new_folder)) {
+            if ($projectModel->folderExists($new_folder)) {
                 throw new PageAlreadyExistsException($new_folder, 'pageExists');
+            }
+            //No se permite la creación de una carpeta dentro de un proyecto hijo
+            $hasProject = $projectModel->getThisProject($new_folder);
+            if ($hasProject['nsproject'] !== $id) {
+                throw new UnknownProjectException($new_folder, "No es permet la creació d'una carpeta dins d'un subprojecte.");
             }
 
             if ($this->projectModel->createFolder($new_folder)) {
