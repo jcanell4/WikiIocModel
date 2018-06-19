@@ -50,11 +50,11 @@ class RevertProjectMetaDataAction extends ProjectMetadataAction {
             if ($model->isProjectGenerated($id, $pType)) {
                 $include = [
                      'id' => $id
-                    ,'link_page' => $id.":".end(explode(":", $response['projectMetaData']['values']["plantilla"]))
+                    ,'link_page' => $id.":".end(explode(":", $response['projectMetaData']["plantilla"]['value']))
                     ,'old_autor' => $dataProject['autor']
                     ,'old_responsable' => $dataProject['responsable']
-                    ,'new_autor' => $response['projectMetaData']['values']['autor']
-                    ,'new_responsable' => $response['projectMetaData']['values']['responsable']
+                    ,'new_autor' => $response['projectMetaData']['autor']['value']
+                    ,'new_responsable' => $response['projectMetaData']['responsable']['value']
                     ,'userpage_ns' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')
                     ,'shortcut_name' => WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
                 ];

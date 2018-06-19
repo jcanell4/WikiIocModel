@@ -37,7 +37,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
         $this->rev = $rev;
     }
 
-    public function existProject($id) {
+    public function haveADirProject($id) {
         return $this->pageDataQuery->haveADirProject($id);
     }
 
@@ -340,6 +340,24 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
         return $chunks;
     }
+    
+    private static function _getSectionInstructionValue($instruction, $type){
+        $ret = FALSE;
+        if ($instruction[0] === $type){
+            $ret = $instruction;
+//        }else if($instruction[0]==='plugin' 
+//                    && $instruction[1][0]==='iocexportl_ioccontainer'
+//                    && $instruction[1][1][0]===2){
+//            $i=0;
+//            while($i<count($instruction[1][1][1]) && $instruction[1][1][1][$i][0]!==$type){
+//                $i++;
+//            }
+//            if($i<count($instruction[1][1][1])){
+//                $ret = $instruction[1][1][1][$i];
+//            }
+        }
+        return $ret;
+    }
 
     // Només son editables parcialment les seccions de nivell 1, 2 i 3
     private static function _getChunks($instructions) {
@@ -352,30 +370,33 @@ class DokuPageModel extends WikiRenderizableDataModel {
         for ($i = 0; $i < count($instructions); $i++) {
             $currentSection['type'] = 'section';
 
-            if ($instructions[$i][0] === 'header') {
-                $lastHeaderRead = $instructions[$i][1][0];
+            $instruction = self::_getSectionInstructionValue($instructions[$i], 'header');
+            if ($instruction) {
+                $lastHeaderRead = $instruction[1][0];
             }
 
-            if ($instructions[$i][0] === 'section_open' && $instructions[$i][1][0] < 4) {
+            $instruction = self::_getSectionInstructionValue($instructions[$i], 'section_open');
+            if ($instruction && $instruction[1][0] < 4) {
                 // Tanquem la secció anterior
                 if ($firstSection) {
                     // Ho descartem, el primer element no conté informació
                     $firstSection = false;
                 } else {
-                    $currentSection['end'] = $instructions[$i][2];
+                    $currentSection['end'] = $instruction[2];
                     $sections[] = $currentSection;
                 }
 
                 // Obrim la nova secció
                 $currentSection = [];
                 $currentSection['title'] = $lastHeaderRead;
-                $currentSection['start'] = $instructions[$i][2];
-                $currentSection['params']['level'] = $instructions[$i][1][0];
+                $currentSection['start'] = $instruction[2];
+                $currentSection['params']['level'] = $instruction[1][0];
             }
 
             // Si trobem un tancament de secció actualitzem la ultima posició de tancament
-            if ($instructions[$i][0] === 'section_close') {
-                $lastClosePosition = $instructions[$i][2];
+            $instruction = self::_getSectionInstructionValue($instructions[$i], 'section_close');
+            if ($instruction) {
+                $lastClosePosition = $instruction[2];
             }
 
         }

@@ -1,0 +1,24 @@
+{
+    "typesDefinition": {
+        "document": {
+            "render": {
+                "typeDef":"document",
+                "class": "exportDocument",
+                "fields": ["titol","autor","responsable","fitxercontinguts"]
+            },
+            "keys": {
+                "titol": {
+                    "render": {"class": "render_title"}
+                },
+                "fitxercontinguts": {
+                    "render": {"class": "renderFile"}
+                }
+            }
+        },
+        "string": {
+            "render": {
+                "class": "renderField"
+            }
+        }
+    }
+}
