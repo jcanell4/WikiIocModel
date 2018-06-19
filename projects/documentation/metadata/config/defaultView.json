@@ -109,6 +109,20 @@
         "n_rows": 4,
         "props": {
           "data-editable-element": "table"
+        },
+        "config": {
+          "fields": {
+            "value2": {
+              "type": "textarea"
+            },
+            "value3": {
+              "type": "bool"
+            },
+            "value4": {
+              "type": "select",
+              "options": ["aaa", 123, true]
+            }
+          }
         }
       }
     }

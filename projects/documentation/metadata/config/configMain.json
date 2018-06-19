@@ -17,7 +17,7 @@
             },
             "typesDefinition": {
                 "entry-de-prova": {
-                    "type":"object",
+                    "type": "object",
                     "keys": {
                         "key": {
                             "type": "string",
@@ -28,8 +28,14 @@
                         },
                         "value2": {
                             "type": "string"
+                        },
+                        "value3": {
+                            "type": "string"
+                        },
+                        "value4": {
+                            "type": "string"
                         }
-                    }                    
+                    }
                 },
                 "taula-de-prova": {
                     "type": "objectArray",
