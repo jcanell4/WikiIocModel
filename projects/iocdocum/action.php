@@ -60,16 +60,17 @@ class action_plugin_wikiiocmodel_projects_iocdocum extends WikiIocPluginAction {
                 if ($key === "path") $event->data->addControlScript($path.$value);
             }
 
+            $id = $arrayButton['parms']['DOM']['id'];
             //Construcción de los valores de sustitución de los patrones para el template UpdateViewHandler
             //changeWidgetProperty para todos los botones
-            $changeWidgetPropertyFalse .= "disp.changeWidgetProperty('$nameButton', 'visible', false);\n\t\t\t";
-            $changeWidgetPropertyCondition .= "disp.changeWidgetProperty('$nameButton', 'visible', is${nameButton}ButtonVisible);\n\t\t\t\t";
-            $VarsIsButtonVisible .= "var is${nameButton}ButtonVisible = true;\n\t\t\t\t\t";
+            $changeWidgetPropertyFalse .= "disp.changeWidgetProperty('${id}', 'visible', false);\n\t\t\t";
+            $changeWidgetPropertyCondition .= "disp.changeWidgetProperty('${id}', 'visible', is${id}ButtonVisible);\n\t\t\t\t";
+            $VarsIsButtonVisible .= "var is${id}ButtonVisible = true;\n\t\t\t\t\t";
 
             //bucle para que los permisos determinen si el botón correspondiente es visible u oculto
             $permButtonVisible = "";
             if ($arrayButton['scripts']['updateHandler']['permissions']) {
-                $permButtonVisible = "is${nameButton}ButtonVisible = (";
+                $permButtonVisible = "is${id}ButtonVisible = (";
                 foreach ($arrayButton['scripts']['updateHandler']['permissions'] as $value) {
                     $permButtonVisible .= "disp.getGlobalState().permissions['$value'] || ";
                 }
@@ -80,7 +81,7 @@ class action_plugin_wikiiocmodel_projects_iocdocum extends WikiIocPluginAction {
             //bucle para que los roles determinen si el botón correspondiente es visible u oculto
             $rolButtonVisible = "";
             if ($arrayButton['scripts']['updateHandler']['rols']) {
-                $rolButtonVisible = "is${nameButton}ButtonVisible = is${nameButton}ButtonVisible || (";
+                $rolButtonVisible = "is${id}ButtonVisible = is${id}ButtonVisible || (";
                 foreach ($arrayButton['scripts']['updateHandler']['rols'] as $value) {
                     $rolButtonVisible .= "page.rol=='".$value."' || ";
                 }
@@ -91,7 +92,7 @@ class action_plugin_wikiiocmodel_projects_iocdocum extends WikiIocPluginAction {
             //bucle para que otras condiciones determinen si el botón correspondiente es visible u oculto
             $condButtonVisible = "";
             if ($arrayButton['scripts']['updateHandler']['conditions']) {
-                $condButtonVisible = "is${nameButton}ButtonVisible = is${nameButton}ButtonVisible && (";
+                $condButtonVisible = "is${id}ButtonVisible = is${id}ButtonVisible && (";
                 foreach ($arrayButton['scripts']['updateHandler']['conditions'] as $key => $value) {
                     $condButtonVisible .= "$key==$value && ";
                 }
