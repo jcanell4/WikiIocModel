@@ -15,7 +15,7 @@ class ListProjectsAction extends AbstractWikiAction {
     public function init($modelManager) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
-        $this->model = new DokuPageModel($this->persistenceEngine);
+        $this->model = new DokuPageModel($this->persistenceEngine);  //Canviar per BasicWikiDataModel
     }
 
     /**
