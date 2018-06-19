@@ -3,7 +3,7 @@
         "class": "WikiIocButton",
         "parms": { 
             "DOM": {
-               "id": "reversion",
+               "id": "documentation_reversion",
                "title": "Revertir",
                "class": "iocDisplayBlock"
             },
@@ -43,7 +43,7 @@
         "class": "WikiIocButton",
         "parms": { 
             "DOM": {
-               "id": "trifids",
+               "id": "documentation_trifids",
                "title": "trifids",
                "class": "iocDisplayBlock"
             },
@@ -82,7 +82,7 @@
         "class": "WikiIocButton",
         "parms": {
             "DOM": {
-               "id": "lampreas",
+               "id": "documentation_lampreas",
                "title": "lampreas",
                "class": "iocDisplayBlock"
             },
