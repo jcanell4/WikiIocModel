@@ -13,6 +13,7 @@
             "main": {
                 "subprojects":[
                     "otroProyecto",
+                    "iocdocum",
                     "activities" ,
                     "taulasubs" 
                 ],
@@ -20,15 +21,6 @@
                 "folders": false
             }
         }        
-    ],
-    "metaDataSubProjects": [
-        {
-            "main": [
-                "otroProyecto",
-                "activities" 
-            ]
-        }
-        
     ],
     "metaDataProjectStructure": [
         {
