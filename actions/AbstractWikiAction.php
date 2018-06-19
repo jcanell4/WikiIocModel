@@ -7,19 +7,32 @@ if (!defined("DOKU_INC")) die();
 
 abstract class AbstractWikiAction {
 
+    static protected $flagMainAction = NULL; //control de Actions en cascada
     protected $params;
     protected $modelManager;
 
+    public function __destruct() {
+        if (get_class($this) === self::$flagMainAction) {
+            self::$flagMainAction = NULL;
+        }
+    }
+
     public function init($modelManager = NULL) {
         $this->modelManager = $modelManager;
+        self::$flagMainAction = (!self::$flagMainAction) ? get_class($this) : self::$flagMainAction;
     }
 
     public function get($paramsArr = array()){
-        $this->triggerStartEvents();
+        //previene que un Action llamado por otro Action vuelva a ejecutar los trigers
+        $jomateix = (get_class($this) === self::$flagMainAction);
+
+        if ($jomateix)
+            $this->triggerStartEvents();
         if (!empty($paramsArr))
             $this->setParams($paramsArr);
         $ret = $this->responseProcess();
-        $this->triggerEndEvents();
+        if ($jomateix)
+            $this->triggerEndEvents();
         return $ret;
     }
 
