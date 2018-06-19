@@ -18,7 +18,7 @@
                     "taulasubs" 
                 ],
                 "documents":true,
-                "folders": false
+                "folders": true
             }
         }        
     ],
