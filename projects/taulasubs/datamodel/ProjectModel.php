@@ -7,19 +7,13 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
 
-require_once (DOKU_INC . 'inc/common.php');
-require_once (DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php");
-require_once (DOKU_PLUGIN . "ajaxcommand/defkeys/ProjectKeys.php");
-require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
-require_once (WIKI_IOC_MODEL . "datamodel/DokuPageModel.php");
-require_once (WIKI_IOC_MODEL . "metadata/MetaDataService.php");
 require_once (WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
 
-class ProjectModel extends AbstractProjectModel {
+class ProjectModel extends AbstractProjectModel{
+
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
     }
-    
 
     public function generateProject($id, $projectType) {
         //0. Obtiene los datos del proyecto
@@ -154,4 +148,4 @@ class ProjectModel extends AbstractProjectModel {
                                        PageKeys::KEY_WIKITEXT => $text . $extra,
                                        PageKeys::KEY_SUM => $summary]);
     }
-            }
+}

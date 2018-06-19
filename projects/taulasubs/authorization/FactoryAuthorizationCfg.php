@@ -7,9 +7,12 @@
  *                          ( el nom de la comanda s'estableix amb el mètode getAuthorizationType() )
  * @author Rafael Claver
  */
+//[JOSEP] Alerta caldria pujar una versió per defecte a wikiiocmodel/
 $_AuthorizationCfg =
     array(
         '_default'                     => "admin"      /*Default case*/
+	,'create_projectProject'       => "createProject"
+	,'create_subprojectProject'    => "createProject"
 	,'saveProject'                 => "editProject"
 	,'cancelProject'               => "editProject"
 	,'viewProject'                 => "editProject"
@@ -17,6 +20,8 @@ $_AuthorizationCfg =
         ,'revertProject'               => "editProject"
 	,'save_project_draftProject'   => "editProject"
 	,'remove_project_draftProject' => "editProject"
+	,'new_documentProject'         => "editProject"
+	,'new_folderProject'           => "editProject"
         ,'_none'                       => "command"
     );
 

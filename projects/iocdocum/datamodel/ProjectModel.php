@@ -7,13 +7,9 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
 
-require_once (DOKU_INC . 'inc/common.php');
-require_once (DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php");
-require_once (DOKU_PLUGIN . "ajaxcommand/defkeys/ProjectKeys.php");
-require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
-require_once (WIKI_IOC_MODEL . "datamodel/DokuPageModel.php");
-require_once (WIKI_IOC_MODEL . "metadata/MetaDataService.php");
 require_once (WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
+require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
+
 
 class ProjectModel extends AbstractProjectModel {
 
@@ -118,7 +114,7 @@ class ProjectModel extends AbstractProjectModel {
     private function includePageProjectToUserShortcut($parArr) {
         $summary = "include Page Project To User Shortcut";
         $shortcutText = "\n[[${parArr['link_page']}|accés als continguts del projecte ${parArr['id']}]]";
-        $text = $this->pageDataQuery->getRaw($parArr['user_shortcut']);
+        $text = $this->getPageDataQuery()->getRaw($parArr['user_shortcut']);
         if ($text == "") {
             //La página dreceres.txt del usuario no existe
             $this->createPageFromTemplate($parArr['user_shortcut'], WikiGlobalConfig::getConf('template_shortcuts_ns', 'wikiiocmodel'), $shortcutText, $summary);
@@ -135,7 +131,7 @@ class ProjectModel extends AbstractProjectModel {
      * Elimina el link al proyecto contenido en el archivo dreceres del usuario
      */
     private function removeProjectPageFromUserShortcut($usershortcut, $link_page) {
-        $text = $this->pageDataQuery->getRaw($usershortcut);
+        $text = $this->getPageDataQuery()->getRaw($usershortcut);
         if ($text !== "" ) {
             if (preg_match("/$link_page/", $text) === 1) {  //subtexto hallado
                 $eliminar = "/\[\[$link_page\|.*]]/";
@@ -149,9 +145,10 @@ class ProjectModel extends AbstractProjectModel {
      * Crea el archivo $destino a partir de una plantilla
      */
     private function createPageFromTemplate($destino, $plantilla=NULL, $extra=NULL, $summary="generate project") {
-        $text = ($plantilla) ? $this->pageDataQuery->getRaw($plantilla) : "";
+        $text = ($plantilla) ? $this->getPageDataQuery()->getRaw($plantilla) : "";
         $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
                                        PageKeys::KEY_WIKITEXT => $text . $extra,
                                        PageKeys::KEY_SUM => $summary]);
     }
+
 }
