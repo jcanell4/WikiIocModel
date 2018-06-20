@@ -1,6 +1,5 @@
 <?php
 if (!defined("DOKU_INC")) die();
-include_once 'ProjectMetadataAction.php';
 
 class CreateProjectMetaDataAction extends ProjectMetadataAction {
 
