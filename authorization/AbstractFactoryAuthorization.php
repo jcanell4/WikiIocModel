@@ -14,10 +14,10 @@ abstract class AbstractFactoryAuthorization {
         $this->projectAuth = $projectAuth;
     }
 
-    public static function Instance($defaultAuth=NULL){
+    public static function Instance($defaultAuth=NULL, $projectType=NULL){
         static $inst = NULL;
         if ($inst === NULL) {
-            $inst = new FactoryAuthorization();
+            $inst = new FactoryAuthorization($projectType);
             $inst->defaultAuth = $defaultAuth;
         }
         return $inst;
@@ -42,11 +42,31 @@ abstract class AbstractFactoryAuthorization {
         }
 
         $authorization = new $fileAuthorization();
+        $authorization->setPermissionInstance($this->_createPermissionClass($authorization));
         return $authorization;
     }
 
-    private function _createAuthorization($str_cmd, $pathAuth) {
+    private function _createPermissionClass($authorization) {
+        $file = $this->projectAuth . "Permission.php";
+        if (!file_exists($file) && $this->defaultAuth) {
+            foreach ($this->defaultAuth as $pathAuth) {
+                if (!file_exists($file)) {
+                    $file = $pathAuth . "Permission.php";
+                }
+            }
+        }
 
+        if (file_exists($file)) {
+            include_once $file;
+            $permis = new Permission($authorization);
+        }else{
+            $permis = new BasicPermission($authorization);
+        }
+        $ret = &$permis;
+        return $ret;
+    }
+
+    private function _createAuthorization($str_cmd, $pathAuth) {
         $fileAuthorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization', $pathAuth);
         if ($fileAuthorization === NULL) {
             $_AuthorizationCfg = array();
