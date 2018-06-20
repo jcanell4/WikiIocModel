@@ -1,38 +1,15 @@
 <?php
 /**
- * Permission: define la clase de permisos
- *
+ * Permission: define la clase de permisos para este proyecto
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC') ) die();
 
-class Permission extends AbstractPermission {
+class Permission extends BasicPermission {
 
-    private $info_perm;
-    private $resourceExist;
     private $overwriteRequired;
     private $isMyOwnNs;
     private $isEmptyText;
-
-    public function getInfoPerm() {
-        return $this->info_perm;
-    }
-
-    public function setInfoPerm($info_perm) {
-        $this->info_perm = $info_perm;
-    }
-
-    public function isReadOnly(){
-        return ($this->getInfoPerm() < AUTH_EDIT);
-    }
-
-    public function getResourceExist() {
-        return $this->resourceExist;
-    }
-
-    public function setResourceExist($resourceExist) {
-        $this->resourceExist = $resourceExist;
-    }
 
     public function getOverwriteRequired() {
         return $this->overwriteRequired;
