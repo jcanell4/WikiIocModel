@@ -11,7 +11,8 @@ class FactoryAuthorization extends AbstractFactoryAuthorization {
 
     const PROJECT_AUTH = WIKI_IOC_MODEL . "projects/documentation/authorization/";
 
-    public function __construct() {
+    public function __construct($projectType=NULL) {
+        if ($projectType===NULL) $projectType = "defaultProject";
         parent::__construct(self::PROJECT_AUTH);
     }
 
