@@ -7,8 +7,6 @@
  */
 if (!defined('DOKU_INC')) die();
 define('WIKI_IOC_PROJECTS', DOKU_INC . "lib/plugins/wikiiocmodel/projects/");
-
-require_once (DOKU_INC . 'inc/auth.php');
 require_once (WIKI_IOC_PROJECTS . 'documentation/authorization/CommandAuthorization.php');
 
 class CreateProjectAuthorization extends CommandAuthorization {

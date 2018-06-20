@@ -6,9 +6,8 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-
-require_once (DOKU_INC . 'inc/auth.php');
-require_once (DOKU_INC . 'lib/plugins/wikiiocmodel/projects/documentation/authorization/CommandAuthorization.php');
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
+require_once (WIKI_IOC_MODEL . "projects/documentation/authorization/CommandAuthorization.php");
 
 class EditProjectAuthorization extends CommandAuthorization {
 
