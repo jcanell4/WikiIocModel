@@ -20,7 +20,7 @@
             "main": "meta.mdpr",
             "mainType": {
                 "type": "object",
-                "typeDef": "taula"
+                "typeDef": "main"
             },
             "typesDefinition": {
                 "entrySubsTable": {
@@ -43,17 +43,26 @@
                         }
                     }                    
                 },
-                "taulaSubsTaula": {
+                "taulaSubs": {
                     "type": "objectArray",
                     "typeDef":"entrySubsTable"
                 },                
-                "taula": {
+                "main": {
                     "type": "object",
                     "keys": {
-                        "taula": {
-                            "type": "taulaSubsTaula",
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
                             "mandatory": true
-                        }
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "arraytaula": {
+                            "type": "taulaSubs",
+                            "mandatory": true
+                        }                        
                     }
                 }
             }

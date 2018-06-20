@@ -44,7 +44,8 @@ class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAct
         return TRUE;
     }
 
-
+    //[JOSEP] Alert:  Passar aquestes funcions com statiques d'una classe de ioc_lib 
+    //per tal que tothom les pugui cridar i no calgui implementar-les a cada lloc
     function addControlScripts(Doku_Event &$event, $param) {
         $changeWidgetPropertyFalse = "";
         $changeWidgetPropertyCondition = "";

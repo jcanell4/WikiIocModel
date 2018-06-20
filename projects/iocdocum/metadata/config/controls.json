@@ -1,50 +1,10 @@
 {
-    "reversion": {
+    "iocDocumPdfExport": {
         "class": "WikiIocButton",
         "parms": { 
             "DOM": {
-               "id": "iocdocum_reversion",
-               "title": "Revertir",
-               "class": "iocDisplayBlock"
-            },
-            "DJO": {
-               "query": "'do=revert'",
-               "autoSize": true,
-               "visible": false,
-               "iconClass": "'iocIconUndo'",
-               "urlBase": "'lib/exe/ioc_ajax.php?call=projectRevert'",
-               "standbyId": "'bodyContent'",
-               "disableOnSend": true
-            }
-        },
-
-        "scripts": {
-            "getFunctions": {
-                "path": "revertGetFunction.js"
-            },
-            "updateHandler": {
-                "permissions": [
-                   "isadmin",
-                   "ismanager",
-                   "isprojectmanager"
-                ],
-                "rols": [
-                   "responsable"
-                ],
-                "conditions": {
-                    "page.action": "'project_view'",
-                    "page.isRevision": true
-                }
-            }
-        }
-
-    },
-    "trifids": {
-        "class": "WikiIocButton",
-        "parms": { 
-            "DOM": {
-               "id": "iocdocum_trifids",
-               "title": "trifids",
+               "id": "iocDocumPdfExport",
+               "title": "iocDocumPdfExport",
                "class": "iocDisplayBlock"
             },
             "DJO": {
@@ -60,7 +20,7 @@
 
         "scripts": {
             "getFunctions": {
-                "path": "trifidsGetFunction.js"
+                "path": "PdfExportGetFunction.js"
             },
             "updateHandler": {
                 "permissions": [
@@ -78,12 +38,12 @@
         }
 
     },
-    "lampreas": {
+    "iocDocumHtmlExport": {
         "class": "WikiIocButton",
         "parms": {
             "DOM": {
-               "id": "iocdocum_lampreas",
-               "title": "lampreas",
+               "id": "iocDocumHtmlExport",
+               "title": "iocDocumHtmlExport",
                "class": "iocDisplayBlock"
             },
             "DJO": {
@@ -99,7 +59,7 @@
        
         "scripts": {
             "getFunctions": {
-                "path": "lampreasGetFunction.js"
+                "path": "HtmlExportGetFunction.js"
             },
             "updateHandler": {
                 "permissions": [

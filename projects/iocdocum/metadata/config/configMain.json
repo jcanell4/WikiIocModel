@@ -12,71 +12,51 @@
         {
             "main": {
                 "subprojects":[
-                    "otroProyecto",
-                    "activities" ,
                     "taulasubs" 
-                ],
-                "documents":true,
-                "folders": false
+                ]
             }
-        }        
+        }
+        
     ],
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
             "mainType": {
                 "type": "object",
-                "typeDef": "document"
+                "typeDef": "pla"
             },
             "typesDefinition": {
-                "entry-de-prova": {
-                    "type":"object",
-                    "keys": {
-                        "key": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "value1": {
-                            "type": "string"
-                        },
-                        "value2": {
-                            "type": "string"
-                        }
-                    }                    
-                },
-                "taula-de-prova": {
-                    "type": "objectArray",
-                    "typeDef":"entry-de-prova"
-                },
-                "document": {
+                "pla": {
                     "type": "object",
                     "keys": {
-                        "autor": {
+                        "cicle": {
+                            "type": "string",
+                            "default": "Indiqueu el cicle",
+                            "mandatory": true
+                        },
+                        "modul": {
+                            "type": "string",
+                            "default": "Indiqueu el mòdul o el bloc",
+                            "mandatory": true
+                        },
+                        "durada": {
                             "type": "string",
                             "mandatory": true
                         },
-                        "descripcio": {
-                            "type": "string",
-                            "default": "write a brief project description here",
-                            "config": {
-                                "renderable": true,
-                                "mode": "xhtml"
-                            }
-                        },
-                        "nsproject": {
+                        "tipus": {
                             "type": "string",
                             "mandatory": true
-                        },
-                        "plantilla": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "plantilles:projects:continguts"
                         },
                         "fitxercontinguts": {
                             "type": "string",
+                            "mandatory": true,
+                            "default": "continguts"
+                        },
+                        "professors": {
+                            "type": "string",
                             "mandatory": true
                         },
-                        "responsable": {
+                        "coordinador": {
                             "type": "string",
                             "struc_chars": "40",
                             "mandatory": true
@@ -84,20 +64,31 @@
                         "titol": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "Dades generals del projecte",
-                            "config": {
-                                "renderable": true,
-                                "mode": "xhtml"
-                            }
+                            "default": "FORMACIÓ PROFESSIONAL"
                         },
-                        "media_address": {
+                        "subtitol": {
                             "type": "string",
-                            "default": "../media"
+                            "mandatory": true,
+                            "default": "PLA DE TREBALL"
                         },
-                        "nom-de-prova": {
-                            "type": "taula-de-prova",
+                        "semestre": {
+                            "type": "string",
                             "mandatory": true
-                        }                        
+                        },
+                        "plantilla": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "plantilles:docum_ioc:pla_treball_fp:loe_me:continguts"
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true
+                        }
                     }
                 }
             }
