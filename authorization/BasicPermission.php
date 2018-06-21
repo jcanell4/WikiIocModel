@@ -7,9 +7,6 @@ if (!defined('DOKU_INC') ) die();
 
 class BasicPermission extends AbstractPermission {
 
-    const ROL_RESPONSABLE = "responsable";
-    const ROL_AUTOR = "autor";
-
     protected $info_perm;
     protected $resourceExist;
 
