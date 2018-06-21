@@ -244,7 +244,7 @@ class ProjectMetaDataQuery extends DataQuery {
                 if ($contentFileArray[$metaDataSubSet]) {
                     $prev_date = filemtime($projectFilePathName);
                     $contentFileArray[$metaDataSubSet] = json_decode($metaDataValue, true);
-                    $resourceCreated = io_saveFile($projectFilePathName, json_encode($contentFileArray));
+                    $resourceCreated = io_saveFile($projectFilePathName, str_replace("\\r\\n", "\\n", json_encode($contentFileArray)));
                     //Guardamos el archivo existente (la versión previa) como revisión
                     $dateRevision = $this->_saveRevision($prev_date, $projectId, $projectFilePathName, $old_contentFile);
                 }else {
