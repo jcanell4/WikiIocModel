@@ -12,7 +12,7 @@
         {
             "main": {
                 "subprojects":[
-                    "otroProyecto",
+                    "documentation",
                     "iocdocum",
                     "activities" ,
                     "taulasubs" 
