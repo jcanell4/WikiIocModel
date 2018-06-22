@@ -274,9 +274,8 @@ class ProjectMetaDataQuery extends DataQuery {
         }
         if ($resourceCreated) {
             // Crea y verifica el fichero .mdpr que contendrá los datos del proyecto
-            if (($fp = @fopen("$dirProject/$file", 'w')) !== false) {
+            if ($resourceCreated = ($fp = @fopen("$dirProject/$file", 'w') !== false)) {
                 fclose($fp);
-                $resourceCreated = true;
             }
         }
         return $resourceCreated;
