@@ -35,7 +35,7 @@ class DraftProjectMetaDataAction extends ProjectMetadataAction {
     }
 
     protected function runProcess() {
-        if ( ! $this->projectModel->existProject($this->params[ProjectKeys::KEY_ID]) ) {
+        if ( ! $this->projectModel->existProject() ) {
             throw new PageNotFoundException($this->ProjectKeys[ProjectKeys::KEY_ID]);
         }
 

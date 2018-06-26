@@ -22,9 +22,9 @@ class DokuModelManager extends AbstractModelManager{
 
     static $defDirClass = array (
                'Authorization' => array(self::MOD."authorization/", self::DEF."authorization/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
-               'Action'        => array(self::DEF."actions/", self::DEF."actions/extra/"),
-               'Model'         => array(self::MOD."datamodel"),
-               'Renderer'      => array(self::PRJ."renderer")
+               'Action'        => array(self::MOD."actions/", self::DEF."actions/extra/"),
+               'Model'         => array(self::MOD."datamodel/"),
+               'Renderer'      => array(self::PRJ."renderer/")
            );
     static $defMainClass = array(
                'DokuModelAdapter'     => self::MOD."BasicModelAdapter.php",

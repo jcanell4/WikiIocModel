@@ -15,15 +15,16 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
     public function responseProcess() {
         $dataProject = $this->params['dataProject'];
         $extraProject = $this->params['extraProject'];
-        $this->getModel()->init($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE]);
+        $model = $this->getModel();
+        $model->init($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE]);
 
         //sólo se ejecuta si existe el proyecto
-        if ($this->getModel()->existProject($dataProject[ProjectKeys::KEY_ID])) {
+        if ($model->existProject()) {
 
             $metaDataValues = $this->netejaKeysFormulari($dataProject);
-            if (!$this->getModel()->validaNom($metaDataValues['autor']))
+            if (!$model->validaNom($metaDataValues['autor']))
                 throw new UnknownUserException($metaDataValues['autor']." (indicat al camp 'autor') ");
-            if (!$this->getModel()->validaNom($metaDataValues['responsable']))
+            if (!$model->validaNom($metaDataValues['responsable']))
                 throw new UnknownUserException($metaDataValues['responsable']." (indicat al camp 'responsable') ");
 
             $metaData = [
@@ -32,28 +33,27 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
                 ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET,
                 ProjectKeys::KEY_ID_RESOURCE => $dataProject[ProjectKeys::KEY_ID],
                 ProjectKeys::KEY_FILTER => $dataProject[ProjectKeys::KEY_FILTER],  //opcional
-                ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
+                ProjectKeys::KEY_METADATA_VALUE => str_replace("\\r\\n", "\\n", json_encode($metaDataValues))
             ];
 
-            $this->getModel()->setData($metaData);
-            $response = $this->getModel()->getData();
+            $model->setData($metaData);
+            $response = $model->getData();  //obtiene la estructura y el contenido del proyecto
 
-            if ($this->getModel()->isProjectGenerated($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE])) {
-                $data = $this->getModel()->getData();   //obtiene la estructura y el contenido del proyecto
+            if ($model->isProjectGenerated()) {
                 $include = [
                      'id' => $dataProject[ProjectKeys::KEY_ID]
-                    ,'link_page' => $dataProject[ProjectKeys::KEY_ID].":".end(explode(":", $data['projectMetaData']["plantilla"]['value']))
+                    ,'link_page' => $dataProject[ProjectKeys::KEY_ID].":".end(explode(":", $response['projectMetaData']["plantilla"]['value']))
                     ,'old_autor' => $extraProject['old_autor']
                     ,'old_responsable' => $extraProject['old_responsable']
-                    ,'new_autor' => $data['projectMetaData']['autor']['value']
-                    ,'new_responsable' => $data['projectMetaData']['responsable']['value']
+                    ,'new_autor' => $response['projectMetaData']['autor']['value']
+                    ,'new_responsable' => $response['projectMetaData']['responsable']['value']
                     ,'userpage_ns' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')
                     ,'shortcut_name' => WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
                 ];
-                $this->getModel()->modifyACLPageToUser($include);
+                $model->modifyACLPageToUser($include);
             }
             if (!$dataProject[ProjectKeys::KEY_KEEP_DRAFT]) {
-                $this->getModel()->removeDraft();
+                $model->removeDraft();
             }
 
             if ($dataProject[ProjectKeys::KEY_NO_RESPONSE]) {

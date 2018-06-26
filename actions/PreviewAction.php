@@ -10,8 +10,6 @@ require_once DOKU_INC . 'inc/pluginutils.php';
 require_once DOKU_INC . 'inc/actions.php';
 require_once DOKU_INC . 'inc/html.php';
 require_once DOKU_INC . 'inc/parserutils.php';
-require_once DOKU_PLUGIN . 'ajaxcommand/defkeys/PageKeys.php';
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
 
 class PreviewAction extends DokuAction{
     private $info;

@@ -4,10 +4,6 @@
  * @author josep
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
-require_once (DOKU_INC.'inc/common.php');
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/CancelEditPageAction.php";
 
 class CancelPartialEditPageAction extends CancelEditPageAction {
 
@@ -21,7 +17,7 @@ class CancelPartialEditPageAction extends CancelEditPageAction {
             $this->getModel()->removeChunkDraft($this->params[PageKeys::KEY_SECTION_ID]);
         }
 
-        $unlock = isset($this->params[PageKeys::KEY_UNLOCK]) ? $this->params[PageKeys::KEY_UNLOCK] : FALSE; // ALERTA[Xavi] Canviat a false, si no sempre s'alliberà
+        $unlock = isset($this->params[PageKeys::KEY_UNLOCK]) ? $this->params[PageKeys::KEY_UNLOCK] : FALSE; // ALERTA[Xavi] Canviat a false, si no sempre s'allibera
 
         if (count($this->params[PageKeys::KEY_EDITING_CHUNKS])==0 || $unlock) {
             $this->leaveResource(TRUE);
@@ -38,10 +34,10 @@ class CancelPartialEditPageAction extends CancelEditPageAction {
         }
 
         if($this->params[PageKeys::KEY_TO_REQUIRE]){
-                // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou
-                $this->addMetaTocResponse($response);
-                // TODO: afegir les revisions
-                $response['revs'] = $this->getRevisionList();
+            // TODO: afegir el 'meta' que correspongui perquè si va al requiring dialog, el content tool es crerà de nou
+            $this->addMetaTocResponse($response);
+            // TODO: afegir les revisions
+            $response['revs'] = $this->getRevisionList();
         }
         $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('chunk_closed'), $this->params[PageKeys::KEY_ID]);
         return $response;

@@ -52,83 +52,6 @@ class DokuModelAdapter extends BasicModelAdapter {
     protected $ppEvt;
 
     /**
-     * MOGUT a: admin_task_command
-     *****************************
-     * Crida principal de la comanda admin_task.
-     * @return Array
-     *//*
-    public function getAdminTask($params){
-        $action = new AdminTaskAction();
-        return $action->get($params);
-    }*/
-
-    /**
-     * COPIAT a: 'admin_tab_command' encara que sembla ser que ningú utilitza la comanda 'admin_tab_command'
-     * També es cridat per la funció 'login()' de LoginResponseHandler
-     **************************************************************************
-     * Crida principal de la comanda admin_tab i crida del LoginResponseHandler
-     * @return type
-    public function getAdminTaskList() {
-        $action = $this->modelManager->getActionInstance("AdminTaskListAction");
-        return $action->get();
-    }
-     */
-
-    /**
-     * COPIAT a: 'shortcuts_tab_command' encara que sembla ser que ningú utilitza la comanda 'shortcuts_tab_command'
-     * També es cridat per LoginResponseHandler, New_pageResponseHandler, SaveResponseHandler i Save_partialResponseHandler
-     * però els Handler funcionen amb $command->modelAdapter
-    public function getShortcutsTaskList($user_id) {
-        $action = new ShortcutsTaskListAction($this->persistenceEngine);
-        if (!$user_id) {
-            throw new Exception("No es troba cap usuari al userinfo"); // TDOD[Xavi] canviar per una excepció més adient i localitzar el missatge.
-        } else {
-            $params = ['id' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$user_id.':'.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')]; // TODO[Xavi] Obtenir el nom d'usuari d'altre manera, canviar dreceres per un valor del CONF
-        }
-        return $action->get($params);
-    }
-     **************************************************************************/
-
-    /*NO es fa servir
-    public function setParams($element, $value) {
-        $this->params[$element] = $value;
-    }*/
-
-    /**
-     * MOGUT a: cancel_command
-     *****************************
-     * Crida principal de la comanda cancel
-     *//*
-    public function cancelEdition($pars){
-        $action = new CancelEditPageAction($this->persistenceEngine);
-        return $action->get($pars);
-    }*/
-
-    /**
-     * Crida principal de la comanda save
-     *//*
-    public function saveEdition($params) {
-        $action = new SavePageAction($this->persistenceEngine);
-        $ret = $action->get($params);
-        return $ret;
-    }*/
-
-    /**
-     * MOGUT a save_unlinked_image_command
-     * Guarda un fitxer de tipus media pujat des del client
-     * @param string $nsTarget
-     * @param string $idTarget
-     * @param string $filePathSource
-     * @param bool $overWrite
-     * @return int
-     *//*
-    public function uploadImage($nsTarget, $idTarget, $filePathSource, $overWrite = FALSE)    {
-        $action  = new UploadMediaAction($this->persistenceEngine);
-        $res = $action->get(array('nsTarget' => $nsTarget, 'mediaName' => $idTarget, 'filePathSource' => $filePathSource, 'overWrite' => $overWrite));
-        return $res["resultCode"];
-    }*/
-
-    /**
      * És la crida principal de la comanda copy_image_to_project
      * @param string $nsTarget, $idTarget, $filePathSource
      * @param bool $overWrite
@@ -501,21 +424,6 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         return $contentData;
     }
-
-    /* MOGUT a: media_command i a mediadetails_command
-     *************************************************
-    public function deleteMediaManager($paramsArr){
-       $action = new DeleteMediaAction($this->persistenceEngine);
-       return $action->get($paramsArr);
-    }*/
-
-    /* MOGUT a: media_command
-     ************************
-    public function uploadMediaManager($paramsArr){
-       $action = new UploadMediaAction($this->persistenceEngine);
-       return $action->get($paramsArr);
-    }
-    */
 
     /**
      * és la crida principal de la comanda media
@@ -1545,27 +1453,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $sections;
     }
 
-    /* MOGUT a: cancel_partial_command
-     *********************************
-    public function cancelPartialEdition($params){
-        $action = new CancelPartialEditPageAction($this->persistenceEngine);
-        return $action->get($params);
-    }*/
-
-    /* MOGUT a: save_partial_command
-     *********************************
-    public function savePartialEdition($params){
-        $action = new SavePartialPageAction($this->persistenceEngine);
-        return $action->get($params);
-    }*/
-
-    /* MOGUT a: edit_partial_command
-     *********************************
-    public function getPartialEdit($paramsArr){
-        $action = new RawPartialPageAction($this->persistenceEngine);
-        return $action->get($paramsArr);
-    }*/
-
     //És la crida principal de la comanda lock
     public function lock($pid)
     {
@@ -1604,22 +1491,6 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         return $response;
     }
-
-    /* MOGUT a: draft_command
-     ************************
-    public function draft($params) {
-        $action = new DraftPageAction($this->persistenceEngine);
-        $ret = $action->get($params);
-        return $ret;
-    }*/
-
-    /* 'revision_command' ha sido moodificado convenientemente para no tener que llamar a esta función
-     * aparte de 'revision_command', también lo usa 'DiffResponseHandler'
-    public function getRevisionsList($params) {
-        $action = new RevisionsListAction($this->persistenceEngine);
-        $ret = $action->get($params);
-        return $ret;
-    }*/
 
     /** SEMBLA SER QUE AQUESTA FUNCIÓ NO S'UTILITZA
      * S'ha de fer servir getRevisionsList en lloc d'aquest

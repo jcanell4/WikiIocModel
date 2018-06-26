@@ -5,9 +5,7 @@
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/EditPageAction.php";
 
 class RawPageAction extends EditPageAction {
     const HTML_FORMAT = "Dojo";

@@ -4,12 +4,8 @@
  * @author josep
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
 require_once DOKU_INC . "inc/changelog.php";
 require_once DOKU_INC . "inc/html.php";
-require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/DokuAction.php";
 
 class RecentListAction extends DokuAction{
     private $content;

@@ -3,12 +3,9 @@
  * Description of AdminTaskListAction
  * @author josep
  */
-if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
-require_once DOKU_INC . 'inc/pluginutils.php';
-require_once DOKU_INC . 'inc/actions.php';
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/AdminTaskAction.php";
+if (!defined('DOKU_INC')) die();
+require_once DOKU_INC . "inc/pluginutils.php";
+require_once DOKU_INC . "inc/actions.php";
 
 class AdminTaskListAction extends AdminTaskAction {
 

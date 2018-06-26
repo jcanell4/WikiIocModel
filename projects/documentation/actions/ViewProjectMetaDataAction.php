@@ -27,11 +27,10 @@ class ViewProjectMetaDataAction extends ProjectMetadataAction {
     }
 
     protected function runAction() {
-        $id = $this->params[ProjectKeys::KEY_ID];
         $response = $this->projectModel->getData();
 
         //afegir les revisions a la resposta
-        $response[ProjectKeys::KEY_REV] = $this->projectModel->getProjectRevisionList($id, 0);
+        $response[ProjectKeys::KEY_REV] = $this->projectModel->getProjectRevisionList(0);
 
         //en un futuro, añadir pestaña de notificaciones en la ZONA META
         //$this->projectModel->addNotificationsMetaToResponse($response);
@@ -41,9 +40,9 @@ class ViewProjectMetaDataAction extends ProjectMetadataAction {
             $response['drafts'] = $drafts;
         }
         //Pot existir un draft local i sense draft remot
-        $response['originalLastmod'] = $this->projectModel->getLastModFileDate($id);
+        $response['originalLastmod'] = $this->projectModel->getLastModFileDate();
 
-        $response[ProjectKeys::KEY_ID] = $this->idToRequestId($id);
+        $response[ProjectKeys::KEY_ID] = $this->idToRequestId($this->params[ProjectKeys::KEY_ID]);
 
         if ($this->params[ProjectKeys::KEY_REV]) {
             $response[ProjectKeys::KEY_ID] .= ProjectKeys::REVISION_SUFFIX;
@@ -61,7 +60,7 @@ class ViewProjectMetaDataAction extends ProjectMetadataAction {
 
     protected function initAction() {
         //sólo se ejecuta si existe el proyecto
-        if (!$this->projectModel->existProject($this->params[ProjectKeys::KEY_ID])) {
+        if (!$this->projectModel->existProject()) {
             throw new ProjectNotExistException($this->params[ProjectKeys::KEY_ID]);
         }
     }

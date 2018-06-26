@@ -6,11 +6,10 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
-require_once(DOKU_INC . 'inc/common.php');
-require_once(DOKU_INC . 'inc/actions.php');
-require_once(DOKU_INC . 'inc/template.php');
-require_once DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/actions/PageAction.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
+//require_once(DOKU_INC . 'inc/common.php');
+//require_once(DOKU_INC . 'inc/actions.php');
+//require_once(DOKU_INC . 'inc/template.php');
+//require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 
 class DraftPageAction extends PageAction {
     private static $infoDuration = 15;
@@ -52,7 +51,7 @@ class DraftPageAction extends PageAction {
             $this->getModel()->saveDraft($draft);
 
             $this->response[PageKeys::KEY_ID] = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
-            
+
             if($draft['type']==="full"){
                 $this->response['info'] = self::generateInfo('info', 'Desat esborrany complet', $this->response['id'], self::$infoDuration);
             }else{
