@@ -1,15 +1,12 @@
 <?php
-if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
-require_once DOKU_PLUGIN."ajaxcommand/defkeys/PageKeys.php";
-require_once DOKU_PLUGIN."wikiiocmodel/actions/AbstractWikiAction.php";
-
 /**
  * Description of DokuAction
- *
  * @author josep
  */
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+require_once DOKU_PLUGIN."ajaxcommand/defkeys/PageKeys.php";
+
 abstract class DokuAction extends AbstractWikiAction{
     protected $defaultDo;
     protected $response;
@@ -20,7 +17,6 @@ abstract class DokuAction extends AbstractWikiAction{
     private $postResponseTmp= array(); //EL format d'aquestes dades és un hashArray on la clau indica el tipus i el valor el contingut. La clau
                                        //pot ser qualsevol de les que es processaràn després com a resposta en el responseHandler. Per exemple
                                        //title, content, info, meta, etc.
-
     private $renderer = FALSE;
     private $addContentIsAllowed=FALSE; //Per defecte no deixem afegir contingut HTML a la renderització
 
@@ -28,8 +24,7 @@ abstract class DokuAction extends AbstractWikiAction{
      * @param Array $paramsArr
      */
     public function get($paramsArr=array()){
-        global $MSG;
-        $this->response="";
+        $this->response = "";
 
         $this->start($paramsArr);
         $this->run();
@@ -38,6 +33,13 @@ abstract class DokuAction extends AbstractWikiAction{
         if ($this->isDenied()) {
             throw new HttpErrorCodeException('accessdenied', 403);
         }
+
+        $response = $this->_responseGet($response);
+        return $response;
+    }
+
+    private function _responseGet($response) {
+        global $MSG;
 
         foreach ($this->preResponseTmp as $preResponseTmp) {
             if(is_string($preResponseTmp) && $this->addContentIsAllowed){
@@ -152,17 +154,10 @@ abstract class DokuAction extends AbstractWikiAction{
     /**
      * És un mètode per sobrescriure. Per defecte no fa res, però la
      * sobrescriptura permet processar l'acció i emmagatzemar totes aquelles
-     * dades  intermèdies que siguin necessàries per generar la resposta final:
+     * dades intermèdies que siguin necessàries per generar la resposta final:
      * DokuAction#responseProcess.
      */
     protected abstract function runProcess();
-
-    /**
-     * És un mètode per sobrescriure. Per defecte no fa res, però la
-     * sobrescriptura permet generar la resposta a enviar al client. Aquest
-     * mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
-     * DokuAction#response.
-     */
 
     private function start($paramsArr){
         $this->params = $paramsArr;
@@ -209,6 +204,11 @@ abstract class DokuAction extends AbstractWikiAction{
         }
     }
 
+    /**
+     * És un mètode per sobrescriure. La sobrescriptura permet generar la resposta a enviar al client.
+     * Aquest mètode ha de retornar la resposa o bé emmagatzemar-la a l'atribut
+     * DokuAction#response.
+     */
     private function getResponse(){
         if($this->isRenderer()){
             $evt = new Doku_Event('TPL_ACT_RENDER', $this->params[PageKeys::KEY_DO]);
@@ -232,25 +232,20 @@ abstract class DokuAction extends AbstractWikiAction{
         }else{
             $response = $this->responseProcess();
         }
-        if(!empty($this->response)){
-            if(!$response){
-                $response = $this->response;
-            }else{
 
-            }
+        if (!empty($this->response) && !$response){
+            $response = $this->response;
         }
+
         return $response;
     }
 
     protected function getCommonPage( $id, $title, $content=NULL ) {
-        $contentData = array(
-                'id'      => $id,
-                'title'   => $title
-        );
+        $contentData['id'] = $id;
+        $contentData['title'] = $title;
         if($content){
             $contentData["content"] = $content;
         }
-
         return $contentData;
     }
 

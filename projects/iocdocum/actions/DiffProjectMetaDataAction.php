@@ -22,7 +22,7 @@ class DiffProjectMetaDataAction extends ProjectMetadataAction {
     }
 
     protected function runProcess() {
-        if (!$this->projectModel->existProject($this->params[ProjectKeys::KEY_ID])) {
+        if (!$this->projectModel->existProject()) {
             throw new PageNotFoundException($this->ProjectKeys[ProjectKeys::KEY_ID]);
         }
 
@@ -31,19 +31,19 @@ class DiffProjectMetaDataAction extends ProjectMetadataAction {
         if ($this->params['rev2']) {
             $revTrev = true;
             //array de datos de la primera revisión
-            $rev1 = $this->projectModel->getDataRevisionProject($this->params[ProjectKeys::KEY_ID], $this->params['rev2'][0]);
+            $rev1 = $this->projectModel->getDataRevisionProject($this->params['rev2'][0]);
             $date_rev1 = $this->params['rev2'][0];
             //array de datos de la segunda revisión
-            $rev2 = $this->projectModel->getDataRevisionProject($this->params[ProjectKeys::KEY_ID], $this->params['rev2'][1]);
+            $rev2 = $this->projectModel->getDataRevisionProject($this->params['rev2'][1]);
             $date_rev2 = $this->params['rev2'][1];
         }
         else {
             $revTrev = false;
             //array de datos del proyecto actual
-            $rev1 = $this->projectModel->getDataProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
-            $date_rev1 = $this->projectModel->getLastModFileDate($this->params[ProjectKeys::KEY_ID]);
+            $rev1 = $this->projectModel->getDataProject();
+            $date_rev1 = $this->projectModel->getLastModFileDate();
             //array de datos de la revisión
-            $rev2 = $this->projectModel->getDataRevisionProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_REV]);
+            $rev2 = $this->projectModel->getDataRevisionProject($this->params[ProjectKeys::KEY_REV]);
             $date_rev2 = $this->params[ProjectKeys::KEY_REV];
         }
 
@@ -66,7 +66,7 @@ class DiffProjectMetaDataAction extends ProjectMetadataAction {
         $d = "%d.%m.%Y %H:%M";
         $response['info'] = self::generateInfo("warning", WikiIocLangManager::getLang($m).' '.strftime($d, $date_rev1).' - '.strftime($d, $date_rev2), $rdata['id'], self::$infoDuration);
         //afegir les revisions a la resposta
-        $response[ProjectKeys::KEY_REV] = $this->projectModel->getProjectRevisionList($this->params[ProjectKeys::KEY_ID], 0);
+        $response[ProjectKeys::KEY_REV] = $this->projectModel->getProjectRevisionList(0);
 
         return $response;
     }

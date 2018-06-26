@@ -18,7 +18,7 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
         $this->getModel()->init($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE]);
 
         //sólo se ejecuta si existe el proyecto
-        if ($this->getModel()->existProject($dataProject[ProjectKeys::KEY_ID])) {
+        if ($this->getModel()->existProject()) {
 
             $metaDataValues = $this->netejaKeysFormulari($dataProject);
             if (!$this->getModel()->validaNom($metaDataValues['autor']))
@@ -38,7 +38,7 @@ class SetProjectMetaDataAction extends ProjectMetadataAction {
             $this->getModel()->setData($metaData);
             $response = $this->getModel()->getData();
 
-            if ($this->getModel()->isProjectGenerated($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE])) {
+            if ($this->getModel()->isProjectGenerated()) {
                 $data = $this->getModel()->getData();   //obtiene la estructura y el contenido del proyecto
                 $include = [
                      'id' => $dataProject[ProjectKeys::KEY_ID]

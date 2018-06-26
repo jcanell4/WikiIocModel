@@ -51,7 +51,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     public function getData() {
         $ret = [];
         if ($this->rev) {
-            $revision_file = $this->getProjectRevisionFile($this->id, $this->rev);
+            $revision_file = $this->_getProjectRevisionFile();
             $query = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                 ProjectKeys::KEY_PROJECT_TYPE => $this->projectType,
@@ -119,11 +119,11 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         if ($projectFileName) {
             $this->projectFileName = $projectFileName;
         }else {
-            $a = array('id' => $this->id,
-                       ProjectKeys::KEY_PROJECT_TYPE    => $this->projectType,
-                       ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET
-                      );
-            $this->projectFileName = $this->projectMetaDataQuery->getProjectFileName($a);
+            $parm = [ProjectKeys::KEY_ID => $this->id,
+                     ProjectKeys::KEY_PROJECT_TYPE    => $this->projectType,
+                     ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET
+                    ];
+            $this->projectFileName = $this->projectMetaDataQuery->getProjectFileName($parm);
         }
     }
 
@@ -135,7 +135,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     private function setProjectFilePath() {
-        $this->projectFilePath = $this->projectMetaDataQuery->getProjectFilePath();
+        $parm = [ProjectKeys::KEY_ID => $this->id,
+                 ProjectKeys::KEY_PROJECT_TYPE => $this->projectType
+                ];
+        $this->projectFilePath = $this->projectMetaDataQuery->getProjectFilePath($parm);
     }
 
     public function getProjectFilePath() {
@@ -149,26 +152,26 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $this->getProjectFilePath() . $this->getProjectFileName();
     }
 
-    public function getProjectRevisionFile($id, $rev) {
-        return $this->projectMetaDataQuery->revisionProjectDir($id) . "{$this->projectFileName}.$rev.txt.gz";
+    private function _getProjectRevisionFile($rev) {
+        return $this->projectMetaDataQuery->revisionProjectDir($this->id) . "{$this->projectFileName}.$rev.txt.gz";
     }
 
     //Obtiene un array [key, value] con los datos del proyecto solicitado
-    public function getDataProject($id, $projectType) {
-        return $this->projectMetaDataQuery->getDataProject($id, $projectType);
+    public function getDataProject() {
+        return $this->projectMetaDataQuery->getDataProject($this->id, $this->projectType);
     }
 
     //Obtiene un array [key, value] con los datos de una revisión específica del proyecto solicitado
-    public function getDataRevisionProject($id, $rev) {
-        $file_revision = $this->getProjectRevisionFile($id, $rev);
+    public function getDataRevisionProject($rev) {
+        $file_revision = $this->_getProjectRevisionFile($rev);
         $jrev = gzfile($file_revision);
         $a = json_decode($jrev[0], TRUE);
         return $a[ProjectKeys::VAL_DEFAULTSUBSET];
     }
 
     //Obtiene la fecha de una revisión específica del proyecto solicitado
-    public function getDateRevisionProject($id, $rev) {
-        $file_revision = $this->getProjectRevisionFile($id, $rev);
+    public function getDateRevisionProject($rev) {
+        $file_revision = $this->_getProjectRevisionFile($rev);
         $date = @filemtime($file_revision);
         return $date;
     }
@@ -177,41 +180,41 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * Indica si el proyecto ya existe
      * @return boolean
      */
-    public function existProject($id) {
-        return $this->projectMetaDataQuery->existProject($id);
+    public function existProject() {
+        return $this->projectMetaDataQuery->existProject($this->id);
     }
 
     /**
      * Indica si el proyecto ya ha sido generado
      * @return boolean
      */
-    public function isProjectGenerated($id, $projectType) {
-        return $this->projectMetaDataQuery->isProjectGenerated($id, $projectType);
+    public function isProjectGenerated() {
+        return $this->projectMetaDataQuery->isProjectGenerated($this->id, $this->projectType);
     }
 
-    public abstract function generateProject($id, $projectType);
+    public abstract function generateProject();
 
     /**
      * @param integer $num Número de revisiones solicitadas El valor 0 significa obtener todas las revisiones
      * @return array  Contiene $num elementos de la lista de revisiones del fichero de proyecto obtenidas del log .changes
      */
-    public function getProjectRevisionList($id, $num=0) {
-        $revs = $this->projectMetaDataQuery->getProjectRevisionList($id, $num);
+    public function getProjectRevisionList($num=0) {
+        $revs = $this->projectMetaDataQuery->getProjectRevisionList($this->id, $this->projectFileName, $num);
         if ($revs) {
             $amount = WikiGlobalConfig::getConf('revision-lines-per-page', 'wikiiocmodel');
             if (count($revs) > $amount) {
                 $revs['show_more_button'] = true;
             }
-            $revs['current'] = @filemtime($this->projectMetaDataQuery->getFileName($id));
-            $revs['docId'] = $id;
+            $revs['current'] = @filemtime($this->projectMetaDataQuery->getFileName($this->id));
+            $revs['docId'] = $this->id;
             $revs['position'] = -1;
             $revs['amount'] = $amount;
         }
         return $revs;
     }
 
-    public function getLastModFileDate($id) {
-        return $this->projectMetaDataQuery->getLastModFileDate($id);
+    public function getLastModFileDate() {
+        return $this->projectMetaDataQuery->getLastModFileDate($this->id);
     }
 
     public function getMetaDataComponent($projectType, $type){

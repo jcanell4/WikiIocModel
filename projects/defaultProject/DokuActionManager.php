@@ -1,17 +1,16 @@
 <?php
-if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', DOKU_PLUGIN . 'wikiiocmodel/projects/');
-
-require_once WIKI_IOC_PROJECTS . "defaultProject/DokuExtraAction.php";
-
 /**
- * Description: Recoge el conjunto de arrays de parámetros de las acciones extra
+ * DokuActionManager: Recoge el conjunto de arrays de parámetros de las acciones extra
  * @author culpable Rafa
  */
+if (!defined('DOKU_INC')) die();
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
+if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL."projects/");
+require_once WIKI_IOC_MODEL."actions/DokuExtraAction.php";
+
 abstract class DokuActionManager extends AbstractActionManager{
 
-    const EXTRA_ACTIONS = WIKI_IOC_PROJECTS . 'defaultProject/actions/extra/';
+    const EXTRA_ACTIONS = WIKI_IOC_PROJECTS."defaultProject/actions/extra/";
 
     /**
      * Construye un array que contiene las definiciones y parámetros de las acciones no comunes

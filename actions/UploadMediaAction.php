@@ -3,12 +3,7 @@
  * Description of UploadMediaAction
  * @author josep
  */
-if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
-require_once DOKU_PLUGIN."ajaxcommand/defkeys/MediaKeys.php";
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/actions/MediaAction.php";
-require_once DOKU_PLUGIN."wikiiocmodel/projects/defaultProject/datamodel/DokuMediaModel.php";
+if (!defined('DOKU_INC')) die();
 
 class UploadMediaAction extends MediaAction {
     private $actionReturn;
