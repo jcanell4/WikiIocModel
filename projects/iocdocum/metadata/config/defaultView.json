@@ -19,6 +19,19 @@
             "n_rows": 1,
             "frame": false
         },
+        "camps": {
+            "parent": "main",
+            "n_columns": 12,
+            "n_rows": 14,
+            "frame": false
+        },
+        "taula": {
+            "parent": "main",
+            "label": "Taula d'hores de les UF",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": false
+        },
         "authorship": {
             "parent": "",
             "label": "Autoria",
@@ -28,27 +41,38 @@
     },
     "fields": {
       "tipus": {
+        "type":"select",
         "n_columns": 4,
         "label": "Tipus",
         "group": "tipusFrame",
         "props": {
           "required": true
-        }            
+        },
+         "config":{
+            "options":[
+                {"value":"fct", "description":"fct"}, 
+                {"value":"loe", "description":"loe"}, 
+                {"value":"loe_me", "description":"loe_me"}, 
+                {"value":"logse", "description":"logse"}, 
+                {"value":"logse_me", "description":"logse_me"}, 
+                {"value":"sintesi", "description":"sintesi"}
+            ]
+         }
       },
       "titol": {
         "label": "Títol del projecte",
         "n_columns": 12,
-        "group": "main"
+        "group": "camps"
       },
       "subtitol": {
         "label": "Subtítol del projecte",
         "n_columns": 12,
-        "group": "main"
+        "group": "camps"
       },
       "cicle": {
         "label" : "Nom del cicle",
         "n_columns": 12,
-        "group": "main",
+        "group": "camps",
         "props": {
           "required": true
         }
@@ -56,35 +80,56 @@
       "modul": {
         "label" : "Nom del mòdul o bloc",
         "n_columns": 9,
-        "group": "main",
+        "group": "camps",
         "props": {
           "required": true
         }
       },
-      "durada": {
-        "label" : "Durada",
+      "semestre": {
+        "label": "Semestre",
         "n_columns": 3,
-        "group": "main",
-        "props": {
-          "required": true
-        }
+        "group": "camps"
       },
       "professors": {
         "label" : "Professors",
         "n_columns": 12,
+        "group": "camps",
         "props": {
           "required": true
         }
       },
       "coordinador": {
         "label": "Coordinador",
-        "n_columns": 8,
-        "group": "main"
+        "n_columns": 9,
+        "group": "camps"
       },
-      "semestre": {
-        "label": "Semestre",
-        "n_columns": 4,
-        "group": "main"
+      "durada": {
+        "label" : "Durada",
+        "n_columns": 3,
+        "group": "camps",
+        "props": {
+          "required": true
+        }
+      },
+      "taulaHoresUF": {
+        "label": "Taula d'Hores de les UF",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "taula",
+        "n_rows": 4,
+        "props": {
+          "data-editable-element": "table"
+        },
+        "config": {
+          "fields": {
+            "Unitat Formativa": {
+              "type": "text"
+            },
+            "Hores": {
+              "type": "text"
+            }
+          }
+        }
       },
       "responsable": {
         "label": "Responsable de la creació",

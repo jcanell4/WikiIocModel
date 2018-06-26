@@ -84,8 +84,8 @@ class ProjectMetaDataQuery extends DataQuery {
      * @return Json con el array correspondiente a la clave $configAttribute del archivo FILE_CONFIGMAIN
      */
     public function getMetaDataConfig($projectType, $configAttribute, $metaDataSubset) {
-
-        $configMain = @file_get_contents(WIKI_IOC_PROJECTS . $projectType . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN);
+        $path = WIKI_IOC_PROJECTS . $projectType . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN;
+        $configMain = @file_get_contents($path);
         if ($configMain == false) {
             $configMain = @file_get_contents(WIKI_IOC_PROJECTS . "defaultProject" . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN);
         }

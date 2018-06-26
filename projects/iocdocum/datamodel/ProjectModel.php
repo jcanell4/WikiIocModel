@@ -23,8 +23,11 @@ class ProjectModel extends AbstractProjectModel {
         $plantilla = $ret['projectMetaData']["plantilla"]['value'];
         $ret['projectMetaData']["fitxercontinguts"]['value'] = $destino = "$id:".end(explode(":", $plantilla));
 
-        //1. Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
+        //1.1 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
+
+        //1.2 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
+        $this->createSubprojectTaulaSubs();
 
         //2. Establece la marca de 'proyecto generado'
         $this->projectMetaDataQuery->setProjectGenerated($id, $projectType);
@@ -151,4 +154,34 @@ class ProjectModel extends AbstractProjectModel {
                                        PageKeys::KEY_SUM => $summary]);
     }
 
+    /**
+     * Crea el archivo $destino a partir de una plantilla
+     */
+    private function createSubprojectTaulaSubs($destino, $plantilla=NULL, $extra=NULL, $summary="generate project") {
+        $id = $this->id.":taulasubs";
+        $struct = $this->getProjectMetaDataQuery()->getMetaDataConfig("taulasubs", ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, ProjectKeys::VAL_DEFAULTSUBSET);
+        $metaDataKeys = json_decode($struct, TRUE);
+        $filename = $metaDataKeys[ProjectKeys::VAL_DEFAULTSUBSET];
+        foreach ($metaDataKeys as $key => $value) {
+            if ($value['default']) $metaDataValues[$key] = $value['default'];
+        }
+//        //asigna valores por defecto a algunos campos definidos en configMain.json
+//        $metaDataValues['nsproject'] = $id;
+//        $metaDataValues["responsable"] = $_SERVER['REMOTE_USER'];
+//        $metaDataValues['autor'] = $_SERVER['REMOTE_USER'];
+//        $metaDataValues['fitxercontinguts'] = $id.":".array_pop(explode(":", $metaDataValues['plantilla']));
+
+//        $metaData = [
+//            ProjectKeys::KEY_PERSISTENCE => $this->getPersistenceEngine(),
+//            ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET,
+//            ProjectKeys::KEY_ID_RESOURCE => $id."taulasubs",
+//            ProjectKeys::KEY_PROJECT_TYPE => "taulasubs",
+//            //ProjectKeys::KEY_FILTER => $this->params[ProjectKeys::KEY_FILTER], // opcional
+//            ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
+//        ];
+//        
+        $this->getProjectMetaDataQuery()->setMeta($id, "taulasubs", ProjectKeys::VAL_DEFAULTSUBSET, $filename, json_encode($metaDataValues));
+
+        $this->getProjectMetaDataQuery()->createDataDir($id);
+    }
 }

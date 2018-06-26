@@ -8,16 +8,6 @@
             }
         }
     ],
-    "metaDataComponentTypes": [
-        {
-            "main": {
-                "subprojects":[
-                    "taulasubs" 
-                ]
-            }
-        }
-        
-    ],
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
@@ -26,6 +16,22 @@
                 "typeDef": "pla"
             },
             "typesDefinition": {
+                "entradaHoresUF": {
+                    "type": "object",
+                    "keys": {
+                        "Unitat Formativa": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "Hores": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "defTaulaHoresUF": {
+                    "type": "objectArray",
+                    "typeDef":"entradaHoresUF"
+                },                                                
                 "pla": {
                     "type": "object",
                     "keys": {
@@ -75,6 +81,10 @@
                             "type": "string",
                             "mandatory": true
                         },
+                        "taulaHoresUF": {
+                            "type": "defTaulaHoresUF",
+                            "mandatory": true
+                        },                                                
                         "plantilla": {
                             "type": "string",
                             "mandatory": true,

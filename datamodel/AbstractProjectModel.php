@@ -25,7 +25,6 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     protected $persistenceEngine;
     protected $draftDataQuery;
     protected $lockDataQuery;
-    protected $pageDataQuery;
     protected $dokuPageModel;
 
     public function __construct($persistenceEngine)  {
@@ -220,6 +219,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $subset = $set[$type];
         $ret = is_array($subset) ? "array" : $subset;
         return $ret;
+    }
+    
+    public static function getDirProjectType($projectType){
+        return "/".trim(WIKI_IOC_MODEL.$projectType, '/')."/";
     }
 
 }
