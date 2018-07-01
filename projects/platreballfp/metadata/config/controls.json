@@ -1,0 +1,79 @@
+{
+    "platreballfpPdfExport": {
+        "class": "WikiIocButton",
+        "parms": { 
+            "DOM": {
+               "id": "platreballfpPdfExport",
+               "title": "platreballfpPdfExport",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportPdfIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectexport'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+
+        "scripts": {
+            "getFunctions": {
+                "path": "PdfExportGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'"
+                }
+            }
+        }
+
+    },
+    "platreballfpHtmlExport": {
+        "class": "WikiIocButton",
+        "parms": {
+            "DOM": {
+               "id": "platreballfpHtmlExport",
+               "title": "platreballfpHtmlExport",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportHtmlIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectexport'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+       
+        "scripts": {
+            "getFunctions": {
+                "path": "HtmlExportGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'"
+                }
+            }
+        }
+    }
+}

@@ -3,9 +3,9 @@
  * CreateFolderAction: crea una nueva carpeta para el proyecto en la ruta especificada
  * @culpable Rafael
  */
-if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-require_once (DOKU_PLUGIN."wikiiocmodel/actions/ProjectMetadataAction.php");
+if (!defined('DOKU_INC')) die();
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
+require_once WIKI_IOC_MODEL."actions/ProjectMetadataAction.php";
 
 class CreateFolderAction extends ProjectMetadataAction {
 
@@ -17,7 +17,7 @@ class CreateFolderAction extends ProjectMetadataAction {
         $projectModel->init($id, $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
 
         //sólo se ejecuta si existe el proyecto
-        if ($projectModel->existProject($id)) {
+        if ($projectModel->existProject()) {
 
             if ($projectModel->folderExists($new_folder)) {
                 throw new PageAlreadyExistsException($new_folder, 'pageExists');

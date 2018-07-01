@@ -4,8 +4,6 @@
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
 
 class ListProjectsAction extends AbstractWikiAction {
 

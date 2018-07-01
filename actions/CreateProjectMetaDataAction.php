@@ -1,7 +1,7 @@
 <?php
-if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-include_once (DOKU_PLUGIN . "wikiiocmodel/actions/ProjectMetadataAction.php");
+if (!defined('DOKU_INC')) die();
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
+include_once WIKI_IOC_MODEL."actions/ProjectMetadataAction.php";
 
 class CreateProjectMetaDataAction extends ProjectMetadataAction {
 
@@ -16,7 +16,7 @@ class CreateProjectMetaDataAction extends ProjectMetadataAction {
         $this->projectModel->init($id, $projectType);
 
         //sólo se ejecuta si no existe el proyecto
-        if (!$this->projectModel->existProject($id)) {
+        if (!$this->projectModel->existProject()) {
             //obtiene las claves de la estructura de los metadatos del proyecto
             $metaDataKeys = $this->projectModel->getMetaDataDefKeys($projectType);
             foreach ($metaDataKeys as $key => $value) {

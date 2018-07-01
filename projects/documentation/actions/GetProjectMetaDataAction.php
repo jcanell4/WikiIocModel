@@ -25,6 +25,7 @@ class GetProjectMetaDataAction extends ViewProjectMetaDataAction implements Reso
             $response['lockInfo'] = $lockStruct['info']['locker'];
             $response['lockInfo']['state'] = $lockStruct['state'];
         }
+        $response['generated'] = $this->getModel()->isProjectGenerated();
         return $response;
     }
     protected function postAction(&$response) {
