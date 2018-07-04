@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of ProjectModel
+ * taulasubsProjectModel
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
@@ -10,7 +10,7 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocm
 require_once (WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
 require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
 
-class ProjectModel extends AbstractProjectModel{
+class taulasubsProjectModel extends AbstractProjectModel{
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);

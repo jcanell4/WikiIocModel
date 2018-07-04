@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of ProjectModel
+ * platreballfpProjectModel
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
@@ -11,7 +11,7 @@ require_once (WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
 require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
 
 
-class ProjectModel extends AbstractProjectModel {
+class platreballfpProjectModel extends AbstractProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
@@ -165,21 +165,7 @@ class ProjectModel extends AbstractProjectModel {
         foreach ($metaDataKeys as $key => $value) {
             if ($value['default']) $metaDataValues[$key] = $value['default'];
         }
-//        //asigna valores por defecto a algunos campos definidos en configMain.json
-//        $metaDataValues['nsproject'] = $id;
-//        $metaDataValues["responsable"] = $_SERVER['REMOTE_USER'];
-//        $metaDataValues['autor'] = $_SERVER['REMOTE_USER'];
-//        $metaDataValues['fitxercontinguts'] = $id.":".array_pop(explode(":", $metaDataValues['plantilla']));
 
-//        $metaData = [
-//            ProjectKeys::KEY_PERSISTENCE => $this->getPersistenceEngine(),
-//            ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET,
-//            ProjectKeys::KEY_ID_RESOURCE => $id."taulasubs",
-//            ProjectKeys::KEY_PROJECT_TYPE => "taulasubs",
-//            //ProjectKeys::KEY_FILTER => $this->params[ProjectKeys::KEY_FILTER], // opcional
-//            ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
-//        ];
-//        
         $this->getProjectMetaDataQuery()->setMeta($id, "taulasubs", ProjectKeys::VAL_DEFAULTSUBSET, $filename, json_encode($metaDataValues));
 
         $this->getProjectMetaDataQuery()->createDataDir($id);

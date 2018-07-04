@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of ProjectModel
+ * documentationProjectModel
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
@@ -11,7 +11,7 @@ require_once (WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
 require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
 
 
-class ProjectModel extends AbstractProjectModel {
+class documentationProjectModel extends AbstractProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
