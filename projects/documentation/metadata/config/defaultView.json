@@ -61,16 +61,16 @@
         "config": {
           "options": [
             {
-              "value": 111,
+              "value": "manolo",
               "description": "Primer"
             },
             {
-              "value": 222,
+              "value": "manager",
               "description": "Segon"
             },
             {
-              "value": "aaa",
-              "description": "Tercer (lletres)"
+              "value": 123,
+              "description": "Tercer (números)"
             }
           ]
         },
