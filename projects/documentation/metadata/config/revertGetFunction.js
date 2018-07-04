@@ -3,7 +3,7 @@ require([
     "dojo/domReady!"
 ], function (registry) {
         
-    var reversionButton = registry.byId('reversion');
+    var reversionButton = registry.byId('documentation_reversion');
 
     var fOnClick = function(){
         var id = this.dispatcher.getGlobalState().getCurrentId();

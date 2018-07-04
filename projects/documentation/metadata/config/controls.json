@@ -39,12 +39,12 @@
         }
 
     },
-    "trifids": {
+    "pdfExport": {
         "class": "WikiIocButton",
         "parms": { 
             "DOM": {
-               "id": "documentation_trifids",
-               "title": "trifids",
+               "id": "documentation_pdfExport",
+               "title": "pdfExport",
                "class": "iocDisplayBlock"
             },
             "DJO": {
@@ -60,7 +60,7 @@
 
         "scripts": {
             "getFunctions": {
-                "path": "trifidsGetFunction.js"
+                "path": "pdfExportGetFunction.js"
             },
             "updateHandler": {
                 "permissions": [
@@ -78,12 +78,12 @@
         }
 
     },
-    "lampreas": {
+    "htmlExport": {
         "class": "WikiIocButton",
         "parms": {
             "DOM": {
-               "id": "documentation_lampreas",
-               "title": "lampreas",
+               "id": "documentation_htmlExport",
+               "title": "htmlExport",
                "class": "iocDisplayBlock"
             },
             "DJO": {
@@ -99,7 +99,7 @@
        
         "scripts": {
             "getFunctions": {
-                "path": "lampreasGetFunction.js"
+                "path": "htmlExportGetFunction.js"
             },
             "updateHandler": {
                 "permissions": [

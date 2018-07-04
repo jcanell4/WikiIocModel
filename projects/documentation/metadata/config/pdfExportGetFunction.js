@@ -5,7 +5,7 @@ require([
         "dojo/domReady!"
     ], function (registry, dom, domForm) {
         
-        var trifidsButton = registry.byId('trifids');
+        var pdfExportButton = registry.byId('documentation_pdfExport');
         
         var fOnClick=function(){
             var id = this.dispatcher.getGlobalState().getCurrentId();
@@ -35,10 +35,10 @@ require([
             return ret;
         };
         
-        if (trifidsButton){
-            trifidsButton.getQuery=fGetQuery;
-            trifidsButton.set("hasTimer", true);
-            trifidsButton.onClick =fOnClick;
+        if (pdfExportButton){
+            pdfExportButton.getQuery=fGetQuery;
+            pdfExportButton.set("hasTimer", true);
+            pdfExportButton.onClick =fOnClick;
         }
 });
 

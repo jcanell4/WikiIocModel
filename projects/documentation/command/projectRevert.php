@@ -22,6 +22,4 @@ class command_plugin_wikiiocmodel_projects_documentation_projectRevert extends a
         return $projectMetaData;
     }
 
-    protected function getDefaultResponse($response, &$ret) {}
-
 }
