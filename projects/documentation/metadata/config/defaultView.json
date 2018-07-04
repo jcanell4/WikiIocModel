@@ -99,7 +99,24 @@
       "media_address": {
         "label": "ruta del directori media",
         "n_columns": 4,
-        "group": "files"
+        "group": "files",
+        "config": {
+          "options": [
+            {
+              "value": 111,
+              "description": "Primer"
+            },
+            {
+              "value": 222,
+              "description": "Segon"
+            },
+            {
+              "value": "aaa",
+              "description": "Tercer (lletres)"
+            }
+          ]
+        },
+        "type": "select"
       },
       "nom-de-prova": {
         "label": "Taula de prova",
