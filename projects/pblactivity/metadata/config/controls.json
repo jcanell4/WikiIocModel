@@ -1,0 +1,79 @@
+{
+    "exportPdf": {
+        "class": "WikiIocButton",
+        "parms": { 
+            "DOM": {
+               "id": "pblactivity_exportPdf",
+               "title": "exportPdf",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportPdfIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectexport'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+
+        "scripts": {
+            "getFunctions": {
+                "path": "exportPdfGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'"
+                }
+            }
+        }
+
+    },
+    "exportHtml": {
+        "class": "WikiIocButton",
+        "parms": {
+            "DOM": {
+               "id": "pblactivity_exportHtml",
+               "title": "exportHtml",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportHtmlIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectexport'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+       
+        "scripts": {
+            "getFunctions": {
+                "path": "exportHtmlGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'"
+                }
+            }
+        }
+    }
+}

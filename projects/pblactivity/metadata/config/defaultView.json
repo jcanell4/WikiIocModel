@@ -58,6 +58,23 @@
       },
       "autor": {
         "n_columns": 6,
+        "config": {
+          "options": [
+            {
+              "value": 111,
+              "description": "Primer"
+            },
+            {
+              "value": 222,
+              "description": "Segon"
+            },
+            {
+              "value": "aaa",
+              "description": "Tercer (lletres)"
+            }
+          ]
+        },
+        "type": "select",
         "group": "admin",
         "props": {
           "required": true
