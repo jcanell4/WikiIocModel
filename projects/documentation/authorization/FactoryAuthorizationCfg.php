@@ -12,19 +12,20 @@
 //   b) pujar una versió per defecte a wikiiocmodel/authorization
 $_AuthorizationCfg =
     array(
-        '_default'                     => "admin"      /*Default case*/
-	,'create_projectProject'       => "createProject"
-	,'create_subprojectProject'    => "createProject"
-	,'saveProject'                 => "editProject"
-	,'cancelProject'               => "editProject"
-	,'viewProject'                 => "editProject"
-	,'diffProject'                 => "editProject"
-        ,'revertProject'               => "editProject"
-	,'save_project_draftProject'   => "editProject"
-	,'remove_project_draftProject' => "editProject"
-	,'new_documentProject'         => "editProject"
-	,'new_folderProject'           => "editProject"
-        ,'_none'                       => "command"
+//        '_default'                     => "admin"      /*Default case*/
+//	,'create_projectProject'       => "createProject"
+//	,'create_subprojectProject'    => "createProject"
+//	,'saveProject'                 => "editProject"
+//	,'cancelProject'               => "editProject"
+//	,'viewProject'                 => "editProject"
+//	,'diffProject'                 => "editProject"
+//        ,'revertProject'               => "editProject"
+         'revertProject'               => "editProject"
+//	,'save_project_draftProject'   => "editProject"
+//	,'remove_project_draftProject' => "editProject"
+//	,'new_documentProject'         => "editProject"
+//	,'new_folderProject'           => "editProject"
+//        ,'_none'                       => "command"
     );
 
 /* Noms de commanda que ja ténen un fitxer d'autorització amb el seu nom

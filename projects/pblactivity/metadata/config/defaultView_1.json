@@ -6,25 +6,33 @@
         "rows_row": 1
     },
     "groups": {
-        "auth": {
+        "left": {
             "parent": "",
-            "label": "Autoria",
-            "n_columns": 8,
-            "n_rows": 8,
-            "frame": true,
-            "config":{
-                "columns_offset":2
-            }
+            "label": " ",
+            "n_columns": 2,
+            "n_rows": 16,
+            "frame": false
         },
         "main": {
             "parent": "",
             "label": "Principal",
             "n_columns": 8,
             "n_rows": 8,
-            "frame": true,
-            "config":{
-                "columns_offset":2
-            }
+            "frame": true
+        },
+        "main2": {
+            "parent": "",
+            "label": "Principal 2",
+            "n_columns": 8,
+            "n_rows": 8,
+            "frame": true
+        },
+        "right": {
+            "parent": "",
+            "label": " ",
+            "n_columns": 2,
+            "n_rows": 16,
+            "frame": false
         }
     },
     "fields": {
@@ -35,15 +43,15 @@
         }
       },
       "responsable": {
-        "n_columns": 7,
-        "group": "auth",
+        "n_columns": 5,
+        "group": "main",
         "props": {
           "required": true
         }
       },
       "autor": {
-        "n_columns": 7,
-        "group": "auth",
+        "n_columns": 6,
+        "group": "main",
         "props": {
           "required": true
         }
