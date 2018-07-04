@@ -62,11 +62,11 @@
           "options": [
             {
               "value": "manolo",
-              "description": "Primer"
+              "description": "Primer (manolo)"
             },
             {
               "value": "manager",
-              "description": "Segon"
+              "description": "Segon (manager)"
             },
             {
               "value": 123,

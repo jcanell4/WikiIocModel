@@ -50,7 +50,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     public function getData() {
         $ret = [];
         if ($this->rev) {
-            $revision_file = $this->_getProjectRevisionFile();
+            $revision_file = $this->_getProjectRevisionFile($this->rev);
             $query = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                 ProjectKeys::KEY_PROJECT_TYPE => $this->projectType,
@@ -223,7 +223,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $ret = is_array($subset) ? "array" : $subset;
         return $ret;
     }
-    
+
     public static function getDirProjectType($projectType){
         return "/".trim(WIKI_IOC_MODEL.$projectType, '/')."/";
     }
