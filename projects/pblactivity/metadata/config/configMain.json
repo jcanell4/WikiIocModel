@@ -27,59 +27,17 @@
             "main": "meta.mdpr",
             "mainType": {
                 "type": "object",
-                "typeDef": "document"
+                "typeDef": "especificació"
             },
             "typesDefinition": {
-                "entry-de-prova": {
-                    "type": "object",
-                    "keys": {
-                        "key": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "value1": {
-                            "type": "string"
-                        },
-                        "value2": {
-                            "type": "string"
-                        },
-                        "value3": {
-                            "type": "string"
-                        },
-                        "value4": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "taula-de-prova": {
-                    "type": "objectArray",
-                    "typeDef":"entry-de-prova"
-                },
-                "document": {
+                "especificació": {
                     "type": "object",
                     "keys": {
                         "autor": {
                             "type": "string",
                             "mandatory": true
                         },
-                        "descripcio": {
-                            "type": "string",
-                            "default": "write a brief project description here",
-                            "config": {
-                                "renderable": true,
-                                "mode": "xhtml"
-                            }
-                        },
                         "nsproject": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "plantilla": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "plantilles:projects:continguts"
-                        },
-                        "fitxercontinguts": {
                             "type": "string",
                             "mandatory": true
                         },
@@ -96,15 +54,7 @@
                                 "renderable": true,
                                 "mode": "xhtml"
                             }
-                        },
-                        "media_address": {
-                            "type": "string",
-                            "default": "../media"
-                        },
-                        "nom-de-prova": {
-                            "type": "taula-de-prova",
-                            "mandatory": true
-                        }                        
+                        }
                     }
                 }
             }
