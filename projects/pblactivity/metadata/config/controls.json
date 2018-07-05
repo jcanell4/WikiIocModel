@@ -1,49 +1,10 @@
 {
-    "exportPdf": {
-        "class": "WikiIocButton",
-        "parms": { 
-            "DOM": {
-               "id": "pblactivity_exportPdf",
-               "title": "exportPdf",
-               "class": "iocDisplayBlock"
-            },
-            "DJO": {
-               "query": "'do=edit'",
-               "autoSize": true,
-               "visible": false,
-               "iconClass": "'iocExportPdfIcon'",
-               "urlBase": "'lib/exe/ioc_ajax.php?call=projectexport'",
-               "standbyId": "'bodyContent'",
-               "disableOnSend": true
-            }
-        },
-
-        "scripts": {
-            "getFunctions": {
-                "path": "exportPdfGetFunction.js"
-            },
-            "updateHandler": {
-                "permissions": [
-                   "isadmin",
-                   "ismanager",
-                   "isprojectmanager"
-                ],
-                "rols": [
-                   "responsable"
-                ],
-                "conditions": {
-                    "page.action": "'project_view'"
-                }
-            }
-        }
-
-    },
-    "exportHtml": {
+    "packHtml": {
         "class": "WikiIocButton",
         "parms": {
             "DOM": {
-               "id": "pblactivity_exportHtml",
-               "title": "exportHtml",
+               "id": "pblactivity_packHtml",
+               "title": "packHtml",
                "class": "iocDisplayBlock"
             },
             "DJO": {
@@ -59,7 +20,7 @@
        
         "scripts": {
             "getFunctions": {
-                "path": "exportHtmlGetFunction.js"
+                "path": "packHtmlGetFunction.js"
             },
             "updateHandler": {
                 "permissions": [
@@ -75,5 +36,43 @@
                 }
             }
         }
-    }
+    },
+    "export": {
+        "class": "WikiIocButton",
+        "parms": { 
+            "DOM": {
+               "id": "pblactivity_export",
+               "title": "export",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocIconUpload'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectexport'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+
+        "scripts": {
+            "getFunctions": {
+                "path": "exportGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'"
+                }
+            }
+        }
+    }    
 }
