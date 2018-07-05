@@ -49,7 +49,82 @@
                         "titol": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "Dades generals del projecte",
+                            "default": "Títol de l'activitat"
+                        },
+                        "paper": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "La descripció del paper inclou ...",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
+                        },
+                        "tipus": {
+                            "type": "select",
+                            "mandatory": true,
+                            "default": "basic",
+                            "config": {
+                                "options": [
+                                    {
+                                        "value": "repas",
+                                        "description": "Activitat de repàs"
+                                    },
+                                    {
+                                        "value": "intro",
+                                        "description": "Activitat Introductòria"
+                                    },
+                                    {
+                                        "value": "basic",
+                                        "description": "Activitat Bàsica"
+                                    },
+                                    {
+                                        "value": "ampli",
+                                        "description": "Activitat d'ampliació"
+                                    }
+                                ]
+                            }
+                        },
+                        "orientacionsMapaTaxonomic": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu les orientacions generals sobre el mapa taxonòmic que hauria de complir aquesta activitat ...",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
+                        },
+                        "coneixementsPrevis": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu si l'activitat requereix coneixements previs i quins.",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
+                        },
+                        "temari": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu el temari de l'activitat.",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
+                        },
+                        "objectius": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu els objectius de l'activitat.",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
+                        },
+                        "objectiusFonamentals": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu quins són els objectius i coneixements fonamentals que cal assegurar.",
                             "config": {
                                 "renderable": true,
                                 "mode": "xhtml"
