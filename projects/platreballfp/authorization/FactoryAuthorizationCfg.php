@@ -10,19 +10,19 @@
 //[JOSEP] Alerta caldria pujar una versió per defecte a wikiiocmodel/
 $_AuthorizationCfg =
     array(
-//        '_default'                     => "admin"      /*Default case*/
-//	,'create_projectProject'       => "createProject"
-//	,'create_subprojectProject'    => "createProject"
-//	,'saveProject'                 => "editProject"
-//	,'cancelProject'               => "editProject"
-//	,'viewProject'                 => "editProject"
-//	,'diffProject'                 => "editProject"
-//	,'save_project_draftProject'   => "editProject"
-//	,'remove_project_draftProject' => "editProject"
-//	,'new_documentProject'         => "editProject"
-	 'new_documentProject'         => "notAllowedCommand"
-	,'new_folderProject'           => "notAllowedCommand"
-//        ,'_none'                       => "command"
+//      '_default'                     => "admin",      /*Default case*/
+//	'create_projectProject'       => "createProject",
+//	'create_subprojectProject'    => "createProject",
+//	'saveProject'                 => "editProject",
+//	'cancelProject'               => "editProject",
+//	'viewProject'                 => "editProject",
+//	'diffProject'                 => "editProject",
+//	'save_project_draftProject'   => "editProject",
+//	'remove_project_draftProject' => "editProject",
+//	'new_documentProject'         => "editProject",
+	'new_documentProject'         => "notAllowedCommand",
+	'new_folderProject'           => "notAllowedCommand",
+//      '_none'                       => "command"
     );
 
 /* Noms de commanda que ja ténen un fitxer d'autorització amb el seu nom

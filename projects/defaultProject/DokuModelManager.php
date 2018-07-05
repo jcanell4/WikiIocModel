@@ -34,10 +34,7 @@ class DokuModelManager extends AbstractModelManager{
     }
 
     public function getModelAdapterManager() {
-        //return (new \DokuModelAdapter())->init($this->getPersistenceEngine());
-	$dm = new DokuModelAdapter();
-	$dm->init($this->getPersistenceEngine());
-	return $dm;
+        return (new \DokuModelAdapter())->init($this->getPersistenceEngine());
     }
 
     public static function getDefaultDirClass($name) {

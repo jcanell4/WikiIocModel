@@ -14,7 +14,7 @@
                 "subprojects":[
                     "documentation",
                     "platreballfp",
-                    "activities" ,
+                    "pblactivity" ,
                     "taulasubs" 
                 ],
                 "documents":true,
