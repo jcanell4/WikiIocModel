@@ -21,7 +21,7 @@ class DokuModelManager extends AbstractModelManager{
     const PRJ = WIKI_IOC_PROJECTS . 'platreballfp/';
 
     static $defDirClass = array (
-               'Authorization' => array(self::DEF."authorization/", self::DEF."authorization/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
+               'Authorization' => array(self::MOD."authorization/", self::DEF."authorization/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
                'Action'        => array(self::MOD."actions/", self::DEF."actions/extra/"),
                'Model'         => array(self::MOD."datamodel/"),
                'Renderer'      => array(self::PRJ."renderer/")

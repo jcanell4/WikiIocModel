@@ -172,6 +172,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
 //                $dv = false;
             case "number":
 //                $dv = isset($dv)?$dv:0;
+            case "select":
             case "string":
 //                $dv = isset($dv)?$dv:"";
                 $dv = self::$DEFAULT_SINGLE_VALUES[$properties["type"]];
