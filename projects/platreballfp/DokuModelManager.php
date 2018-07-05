@@ -21,7 +21,7 @@ class DokuModelManager extends AbstractModelManager{
     const PRJ = WIKI_IOC_PROJECTS . 'platreballfp/';
 
     static $defDirClass = array (
-               'Authorization' => array(self::DEF."authorization/", self::DEF."authorization/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
+               'Authorization' => array(self::MOD."authorization/", self::DEF."authorization/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
                'Action'        => array(self::MOD."actions/", self::DEF."actions/extra/"),
                'Model'         => array(self::MOD."datamodel/"),
                'Renderer'      => array(self::PRJ."renderer/")
@@ -32,8 +32,8 @@ class DokuModelManager extends AbstractModelManager{
                'FactoryExporter'      => self::PRJ."export/FactoryExporter.php"
            );
 
-    public function getAuthorizationManager($str_command) {
-        $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
+    public function getAuthorizationManager($str_command, $projectType=NULL) {
+        $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization'], $projectType);
         return $factory->createAuthorizationManager($str_command);
     }
 
@@ -42,10 +42,7 @@ class DokuModelManager extends AbstractModelManager{
     }
 
     public function getModelAdapterManager() {
-        //return (new \BasicModelAdapter())->init($this->getPersistenceEngine());
-	$dm = new \BasicModelAdapter();
-	$dm->init($this->getPersistenceEngine());
-	return $dm;
+        return (new \BasicModelAdapter())->init($this->getPersistenceEngine());
     }
 
     public static function getDefaultDirClass($name) {
