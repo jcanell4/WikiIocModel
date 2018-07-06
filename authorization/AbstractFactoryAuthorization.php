@@ -9,6 +9,7 @@ abstract class AbstractFactoryAuthorization {
 
     protected $projectAuth; //ruta de las autorizaciones particular del proyecto
     protected $defaultAuth; //array de rutas por defecto de las autorizaciones
+    protected $authCfg = array();
 
     protected function __construct($projectAuth=NULL) {
         $this->projectAuth = $projectAuth;
@@ -36,9 +37,8 @@ abstract class AbstractFactoryAuthorization {
         }
 
         if ($fileAuthorization === NULL) {
-            $_AuthorizationCfg = array();
-            require ($this->projectAuth . 'FactoryAuthorizationCfg.php');
-            $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg['_default'], 'authorization', $this->projectAuth);
+            $this->setAuthorizationCfg();
+            $fileAuthorization = $this->readFileIn2CaseFormat($this->authCfg['_default'], 'authorization', $this->projectAuth);
         }
 
         $authorization = new $fileAuthorization();
@@ -69,9 +69,10 @@ abstract class AbstractFactoryAuthorization {
     private function _createAuthorization($str_cmd, $pathAuth) {
         $fileAuthorization = $this->readFileIn2CaseFormat($str_cmd, 'authorization', $pathAuth);
         if ($fileAuthorization === NULL) {
-            $_AuthorizationCfg = array();
-            require ($pathAuth . 'FactoryAuthorizationCfg.php');
-            $fileAuthorization = $this->readFileIn2CaseFormat($_AuthorizationCfg[$str_cmd], 'authorization', $pathAuth);
+            $this->setAuthorizationCfg();
+            if ($this->authCfg[$str_cmd]) {
+                $fileAuthorization = $this->readFileIn2CaseFormat($this->authCfg[$str_cmd], 'authorization', $pathAuth);
+            }
         }
         return $fileAuthorization;
     }
@@ -113,4 +114,36 @@ abstract class AbstractFactoryAuthorization {
         }
         return $ret;
     }
+
+    public function setAuthorizationCfg() {
+        $aCfg = ['_default'              => 'admin'  //default case
+                 ,'cancel'		 => 'read'
+                 ,'cancel_partial'	 => 'read'
+                 ,'copy_image_to_project'=> 'upload'
+                 ,'diff'		 => 'read'
+                 ,'draft'		 => 'editing'
+                 ,'edit'		 => 'read'
+                 ,'get_image_detail'	 => 'read'
+                 ,'login'                => 'command'
+                 ,'lock'                 => 'read'
+                 ,'media'		 => 'read'
+                 ,'media_delete'	 => 'delete'
+                 ,'media_edit'		 => 'write'
+                 ,'media_upload'	 => 'upload'
+                 ,'mediadetails'	 => 'read'
+                 ,'mediadetails_delete'	 => 'deleteMedia'
+                 ,'mediadetails_edit'	 => 'write'
+                 ,'mediadetails_upload'	 => 'upload'
+                 ,'new_page'		 => 'create'
+                 ,'page'		 => 'read'
+                 ,'revision'		 => 'write'
+                 ,'save'		 => 'write'
+                 ,'save_partial'	 => 'write'
+                 ,'unlock'               => 'read'
+                 ,'user_list'            => 'editing'
+                 ,"_none"                => 'command'
+                ];
+        $this->authCfg = $aCfg;
+    }
+
 }
