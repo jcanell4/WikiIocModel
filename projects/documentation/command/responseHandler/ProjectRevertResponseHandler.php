@@ -16,14 +16,13 @@ class projectRevertResponseHandler extends ProjectResponseHandler {
         parent::postResponse($requestParams, $responseData, $ajaxCmdResponseGenerator);
 
         $id = $responseData[ProjectKeys::KEY_ID];
-
-        if (!$responseData['projectExtraData'][ProjectKeys::PROJECT_TYPE]) {
-            $ajaxCmdResponseGenerator->addExtraContentStateResponse($id, ProjectKeys::PROJECT_TYPE,
-                                                                    $requestParams[ProjectKeys::PROJECT_TYPE]);
-        }
-        if ($responseData['info']) {
-            $ajaxCmdResponseGenerator->addInfoDta($responseData['info']);
-        }
+        //Això es fa en el pare
+        //if (!$responseData['projectExtraData'][ProjectKeys::PROJECT_TYPE]) {
+        //    $ajaxCmdResponseGenerator->addExtraContentStateResponse($id, ProjectKeys::PROJECT_TYPE, $requestParams[ProjectKeys::PROJECT_TYPE]);
+        //}
+        //if ($responseData['info']) {
+        //    $ajaxCmdResponseGenerator->addInfoDta($responseData['info']);
+        //}
         $ajaxCmdResponseGenerator->addProcessFunction(true, "ioc/dokuwiki/processCloseTab",
                                                       ['id' => $id.ProjectKeys::REVISION_SUFFIX,
                                                        'idToShow' => $id]
