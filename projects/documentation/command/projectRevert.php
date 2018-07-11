@@ -9,10 +9,9 @@ class command_plugin_wikiiocmodel_projects_documentation_projectRevert extends a
 
     public function __construct() {
         parent::__construct();
-        $this->types[ProjectKeys::KEY_ID] = self::T_STRING;
         $this->types[ProjectKeys::PROJECT_TYPE] = self::T_STRING;
-        $this->types['mode'] = self::T_STRING;
-        $this->types['renderType'] = self::T_STRING;
+        $this->types[ProjectKeys::KEY_MODE] = self::T_STRING;
+        $this->types[ProjectKeys::KEY_RENDER_TYPE] = self::T_STRING; //CLAVE NO UTILIZADA
     }
 
     protected function process() {

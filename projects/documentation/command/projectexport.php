@@ -11,27 +11,27 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
 
     public function __construct() {
         parent::__construct();
-        $this->types[AjaxKeys::KEY_ID] = self::T_STRING;
-        $this->types[AjaxKeys::PROJECT_TYPE] = self::T_STRING;
-        $this->types['mode'] = self::T_STRING;
-        $this->types['renderType'] = self::T_STRING;
+        $this->types[ProjectKeys::KEY_ID] = self::T_STRING;
+        $this->types[ProjectKeys::PROJECT_TYPE] = self::T_STRING;
+        $this->types[ProjectKeys::KEY_MODE] = self::T_STRING;
+        $this->types[ProjectKeys::KEY_RENDER_TYPE] = self::T_STRING;
     }
 
 //    public function init( $modelManager=NULL ) {
 //        global $plugin_controller;
-//        $plugin_controller->setCurrentProject($this->params[AjaxKeys::PROJECT_TYPE]);
+//        $plugin_controller->setCurrentProject($this->params[ProjectKeys::PROJECT_TYPE]);
 //        if (!$modelManager) {
-//            $modelManager = AbstractModelManager::Instance($this->params[AjaxKeys::PROJECT_TYPE]);
+//            $modelManager = AbstractModelManager::Instance($this->params[ProjectKeys::PROJECT_TYPE]);
 //        }
 //        $this->setModelManager($modelManager);
 //    }
 
     protected function process() {
-        $params = array(AjaxKeys::KEY_ID       => $this->params[AjaxKeys::KEY_ID],
-                        AjaxKeys::KEY_NS       => str_replace("_", ":", $this->params[AjaxKeys::KEY_ID]),
-                        AjaxKeys::PROJECT_TYPE => $this->params[AjaxKeys::PROJECT_TYPE],
-                        "mode"     => $this->params['mode'],
-                        "filetype" => $this->params['filetype']
+        $params = array(ProjectKeys::KEY_ID        => $this->params[ProjectKeys::KEY_ID],
+                        ProjectKeys::KEY_NS        => str_replace("_", ":", $this->params[ProjectKeys::KEY_ID]),
+                        ProjectKeys::PROJECT_TYPE  => $this->params[ProjectKeys::PROJECT_TYPE],
+                        ProjectKeys::KEY_MODE      => $this->params[ProjectKeys::KEY_MODE],
+                        ProjectKeys::KEY_FILE_TYPE => $this->params[ProjectKeys::KEY_FILE_TYPE]
                   );
         $modelManager = $this->getModelManager();
         $action = $modelManager->getActionInstance("ProjectExportAction", $modelManager->getExporterManager());
@@ -43,9 +43,9 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
 
     protected function getDefaultResponse($response, &$ret) {
         if ($response) {
-            $response[AjaxKeys::PROJECT_TYPE] = $this->params[AjaxKeys::PROJECT_TYPE];
+            $response[ProjectKeys::PROJECT_TYPE] = $this->params[ProjectKeys::PROJECT_TYPE];
             $meta = $response["meta"];
-            $pageId = $this->params[AjaxKeys::KEY_ID];
+            $pageId = $this->params[ProjectKeys::KEY_ID];
             $ret->addExtraMetadata($pageId, $pageId."_iocexport", WikiIocLangManager::getLang("metadata_export_title"), $meta);
         }else {
             $ret->addError(1000, "EXPORTACIÓ NO REALITZADA");
@@ -55,7 +55,7 @@ class command_plugin_wikiiocmodel_projects_documentation_projectexport extends a
     public function getAuthorizationType() {
         return "save";
     }
-    
+
      public function isEmptyText() {
          return FALSE;
      }

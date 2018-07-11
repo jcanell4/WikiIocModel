@@ -17,7 +17,7 @@ class ProjectExportAction  extends AbstractWikiAction{
     const PATH_CONFIG_FILE = WIKI_IOC_PROJECT."metadata/config/";
     const CONFIG_TYPE_FILENAME = "configMain.json";
     const CONFIG_RENDER_FILENAME = "configRender.json";
-    
+
     protected $projectID = NULL;
     protected $projectNS = NULL;
     protected $mainTypeName = NULL;
@@ -37,11 +37,11 @@ class ProjectExportAction  extends AbstractWikiAction{
      * del archivo de configuración del proyecto
      */
     protected function setParams($params) {
-        $this->mode        = $params['mode'];
-        $this->filetype    = $params['filetype'];
-        $this->projectType = $params['projectType'];
-        $this->projectID   = $params['id'];
-        $this->projectNS   = $params['ns'];
+        $this->mode        = $params[ProjectKeys::KEY_MODE];
+        $this->filetype    = $params[ProjectKeys::KEY_FILE_TYPE];
+        $this->projectType = $params[ProjectKeys::KEY_PROJECT_TYPE];
+        $this->projectID   = $params[ProjectKeys::KEY_ID];
+        $this->projectNS   = $params[ProjectKeys::KEY_NS];
         $this->typesRender = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
             $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE)[0];
         $this->mainTypeName = $cfgArray['mainType']['typeDef'];
