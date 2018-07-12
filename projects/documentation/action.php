@@ -21,6 +21,7 @@ class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAct
         $controller->register_hook('ADD_TPL_CONTROLS', "AFTER", $this, "addWikiIocButtons", array());
         $controller->register_hook('ADD_TPL_CONTROL_SCRIPTS', "AFTER", $this, "addControlScripts", array());
         $controller->register_hook('WIOC_PROCESS_RESPONSE_project', "AFTER", $this, "setExtraMeta", array());
+        $controller->register_hook('WIOC_PROCESS_RESPONSE_projectRevert', "AFTER", $this, "setExtraMeta", array());
     }
 
     /**
@@ -44,7 +45,7 @@ class action_plugin_wikiiocmodel_projects_documentation extends WikiIocPluginAct
         return TRUE;
     }
 
-    //[JOSEP] Alert:  Passar aquestes funcions com statiques d'una classe de ioc_lib 
+    //[JOSEP] Alert:  Passar aquestes funcions com statiques d'una classe de ioc_lib
     //per tal que tothom les pugui cridar i no calgui implementar-les a cada lloc
     function addControlScripts(Doku_Event &$event, $param) {
         $changeWidgetPropertyFalse = "";

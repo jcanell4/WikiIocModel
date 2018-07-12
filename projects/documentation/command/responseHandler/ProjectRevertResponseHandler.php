@@ -9,7 +9,7 @@ require_once(DOKU_TPL_INCDIR."cmd_response_handler/ProjectResponseHandler.php");
 class projectRevertResponseHandler extends ProjectResponseHandler {
 
     function __construct($cmd) {
-        WikiIocResponseHandler::__construct(end(explode("_", $cmd)));
+        parent::__construct(end(explode("_", $cmd)));
     }
 
     protected function postResponse($requestParams, $responseData, &$ajaxCmdResponseGenerator) {
