@@ -129,6 +129,24 @@
                                 "renderable": true,
                                 "mode": "xhtml"
                             }
+                        },
+                        "explicacioDinamica": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Expliqueu quina ha de ser la dinàmica de l'activitat.",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
+                        },
+                        "metodologiaEmprada": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu quina o quines són les metodologies emprades a l'activitat",
+                            "config": {
+                                "renderable": true,
+                                "mode": "xhtml"
+                            }
                         }
                     }
                 }

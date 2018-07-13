@@ -45,6 +45,16 @@
             "config":{
                 "columns_offset":2
             }
+        },
+        "dinamica": {
+            "parent": "",
+            "label": "Medotologia i dinàmica de l'activitat",
+            "n_columns": 10,
+            "n_rows": 8,
+            "frame": true,
+            "config":{
+                "columns_offset":2
+            }
         }
     },
     "fields": {
@@ -165,6 +175,43 @@
           "data-editable-element": "textarea",
           "required": true
         }            
-      }      
+      },      
+     "explicacioDinamica": {
+        "label":"Explicació de la dinàmica usada a l'activitat",
+        "group": "dinamica",
+        "type": "textarea",
+        "n_rows": 12,
+        "n_columns": 9,
+        "mandatory": true,
+        "props": {
+          "data-editable-element": "textarea",
+          "required": true
+        }            
+      },
+     "metodologiaEmprada": {
+        "label":"Metodologies emprades en aquesta activitat",
+        "group": "dinamica",
+        "type": "textarea",
+        "n_rows": 12,
+        "n_columns": 9,
+        "mandatory": true,
+        "props": {
+          "data-editable-element": "textarea",
+          "required": true
+        }            
+      },
+      "graficMetodologies": {
+        "name":"graficMetodologies",
+        "label":"Distribució de les metodologies d'aprenentatge usades a l'activitat",
+        "group": "dinamica",
+        "type": "image",
+        "n_rows": 12,
+        "n_columns": 3,
+        "props":{
+                "src": "pie7.jpg",
+                "style":"max-width:100%"
+        },
+        "mandatory": true
+      }
     }
 }
