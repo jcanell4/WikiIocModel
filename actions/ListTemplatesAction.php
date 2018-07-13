@@ -14,7 +14,8 @@ class ListTemplatesAction extends AbstractWikiAction {
     public function init($modelManager) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
-        $ownProjectModel = $modelManager->getProjectType()."ProjectModel";
+        $projectType = $modelManager->getProjectType();
+        $ownProjectModel = ($projectType==="defaultProject") ? "BasicWikiDataModel" : $projectType."ProjectModel";
         $this->projectModel = new $ownProjectModel($this->persistenceEngine);
     }
 
@@ -28,12 +29,13 @@ class ListTemplatesAction extends AbstractWikiAction {
             if ($this->params['template_list_type'] === "array") {
                 $this->projectModel->init($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
                 $list = $this->projectModel->getListMetaDataComponentTypes($this->params[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_MD_CT_DOCUMENTS);
-            }else{
-                include (DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
-                $list = json_encode($conf['projects']['defaultProject']['templates']);
             }
-            return $list;
         }
+        if (!isset($list)) {
+            include (DOKU_PLUGIN . 'wikiiocmodel/conf/default.php');
+            $list = json_encode($conf['projects']['defaultProject']['templates']);
+        }
+        return $list;
     }
 
 }
