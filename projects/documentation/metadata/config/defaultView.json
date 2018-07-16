@@ -18,7 +18,10 @@
             "label": "Dades generals",
             "n_columns": 7,
             "n_rows": 16,
-            "frame": true
+            "frame": true,
+            "config": {
+              "collapsed": true
+            }
         },
         "admin": {
             "parent": "dades",
@@ -39,7 +42,10 @@
             "label": "Taula de substitució",
             "n_columns": 12,
             "n_rows": 1,
-            "frame": false
+            "frame": false,
+            "config": {
+              "collapsed": true
+            }
         }
     },
     "fields": {
