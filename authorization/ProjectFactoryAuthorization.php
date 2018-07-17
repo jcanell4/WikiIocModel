@@ -12,8 +12,10 @@ require_once(WIKI_IOC_MODEL . "authorization/AbstractFactoryAuthorization.php");
 
 class ProjectFactoryAuthorization extends AbstractFactoryAuthorization {
 
+    const DEFAULT_AUTH = WIKI_IOC_MODEL . "projects/defaultProject/authorization/";
+
     public function __construct($projectType=NULL) {
-        parent::__construct( ($projectType) ? $projectType : "defaultProject" );
+        parent::__construct( ($projectType) ? $projectType : self::DEFAULT_AUTH );
     }
 
     /* Noms de commanda que ja ténen un fitxer d'autorització amb el seu nom

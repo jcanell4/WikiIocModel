@@ -10,10 +10,10 @@ require_once(WIKI_IOC_MODEL . "authorization/ProjectFactoryAuthorization.php");
 class FactoryAuthorization extends ProjectFactoryAuthorization {
 
     const PROJECT_AUTH = WIKI_IOC_MODEL . "projects/documentation/authorization/";
+    const DEFAULT_AUTH = WIKI_IOC_MODEL . "projects/defaultProject/authorization/";
 
     public function __construct($projectType=NULL) {
-        if ($projectType===NULL) $projectType = "defaultProject";
-        parent::__construct(self::PROJECT_AUTH);
+        parent::__construct( ($projectType!==NULL) ? self::PROJECT_AUTH : self::DEFAULT_AUTH);
     }
 
     public function setAuthorizationCfg() {
