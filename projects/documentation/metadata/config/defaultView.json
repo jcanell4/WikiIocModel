@@ -151,7 +151,31 @@
               "type": "select",
               "options": ["aaa", 123, true]
             }
-          }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "10%",
+                "styles": "text-align: right;"
+              },
+              "cells": [
+                {
+                  "name": "key",
+                  "editable": false
+                },
+
+                {
+                  "name": "value2",
+                  "editable": false
+                },
+
+                {
+                  "name": "value4",
+                  "editable": true
+                }
+              ]
+            }
+          ]
         }
       }
     }
