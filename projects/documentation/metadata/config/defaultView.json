@@ -20,6 +20,7 @@
             "n_rows": 16,
             "frame": true,
             "config": {
+              "collapsable": true,
               "collapsed": true
             }
         },
@@ -28,7 +29,11 @@
             "label": "dades d'administració",
             "n_columns": 10,
             "n_rows": 1,
-            "frame": true
+            "frame": true,
+          "config": {
+            "collapsable": true,
+            "collapsed": false
+          }
         },
         "files": {
             "parent": "",
@@ -44,6 +49,7 @@
             "n_rows": 1,
             "frame": false,
             "config": {
+              "collapsable": true,
               "collapsed": true
             }
         }
