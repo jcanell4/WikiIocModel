@@ -141,7 +141,12 @@
         },
         "config": {
           "fields": {
+            "key": {
+              "input_on_new_row": true,
+              "type": "textarea"
+            },
             "value2": {
+              "input_on_new_row": true,
               "type": "textarea"
             },
             "value3": {
