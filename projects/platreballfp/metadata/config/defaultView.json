@@ -40,10 +40,15 @@
         }        
     },
     "fields": {
-      "tipus": {
+      "semestre": {
+        "label": "Semestre",
+        "n_columns": 3,
+        "group": "camps"
+      },
+      "tipusPla": {
         "type":"select",
-        "n_columns": 4,
-        "label": "Tipus",
+        "n_columns": 3,
+        "label": "Tipus de pla",
         "group": "tipusFrame",
         "props": {
           "required": true
@@ -59,15 +64,20 @@
             ]
          }
       },
-      "titol": {
-        "label": "Títol del projecte",
-        "n_columns": 12,
-        "group": "camps"
-      },
-      "subtitol": {
-        "label": "Subtítol del projecte",
-        "n_columns": 12,
-        "group": "camps"
+      "tipusBlocModul":{
+        "type":"select",
+        "n_columns": 3,
+        "label": "Bloc o mòdul",
+        "group": "tipusFrame",
+        "props": {
+          "required": true
+        },
+        "config":{
+            "options":[
+                {"value":"bloc"}, 
+                {"value":"mòdul"}
+            ]
+        }
       },
       "cicle": {
         "label" : "Nom del cicle",
@@ -85,10 +95,13 @@
           "required": true
         }
       },
-      "semestre": {
-        "label": "Semestre",
+      "durada": {
+        "label" : "Durada",
         "n_columns": 3,
-        "group": "camps"
+        "group": "camps",
+        "props": {
+          "required": true
+        }
       },
       "professors": {
         "label" : "Professors",
@@ -98,17 +111,50 @@
           "required": true
         }
       },
-      "coordinador": {
-        "label": "Coordinador",
-        "n_columns": 9,
-        "group": "camps"
-      },
-      "durada": {
-        "label" : "Durada",
-        "n_columns": 3,
+      "urlMaterialDidactic": {
+        "label" : "Adreça del material didàctic",
+        "n_columns": 12,
         "group": "camps",
         "props": {
           "required": true
+        }
+      },
+      "dedicacio": {
+        "type":"number",
+        "label" : "Dedicació setmanal",
+        "n_columns": 12,
+        "group": "camps",
+        "props": {
+          "required": true                
+        }
+      },
+      "requisits": {
+        "n_columns": 12,
+        "group": "camps",
+        "props": {
+          "required": true
+        }
+      },
+      "descripcio": {
+        "n_columns": 12,
+        "type": "textarea",
+        "n_rows": 10,
+        "props": {
+          "data-editable-element": "textarea"
+        },
+        "config": {
+            "renderable": true,
+            "mode": "xhtml"
+        },
+        "group": "camps"
+      },
+      "itinerariRecomanat": {
+        "n_columns": 12,
+        "group": "camps",
+        "props": {
+          "required": true,
+          "min":1,
+          "max":8      
         }
       },
       "taulaHoresUF": {
@@ -122,11 +168,67 @@
         },
         "config": {
           "fields": {
-            "Unitat Formativa": {
-              "type": "text"
+            "uf": {
+              "type": "number"
             },
-            "Hores": {
-              "type": "text"
+            "u": {
+              "type": "number"
+            },
+            "hores": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "einesAprenentatge": {
+        "label": "Eines d'aprenentatge",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "taula",
+        "n_rows": 4,
+        "props": {
+          "data-editable-element": "table"
+        },
+        "config": {
+          "fields": {
+            "tipus": {
+              "type": "select",
+              "options": ["lectura", "exercicis d'autoavalució", "fòrum", "qüestionari", "Exercicis d'Avaluació contínua"]                        
+            },
+            "eina": {
+              "type": "string"
+            },
+            "opcionalitat": {
+              "type": "string"
+            },
+            "puntuable": {
+              "type": "bool"
+            }
+          }
+        }
+      },
+      "calendari": {
+        "label": "Calendari d'estudi",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "taula",
+        "n_rows": 4,
+        "props": {
+          "data-editable-element": "table"
+        },
+        "config": {
+          "fields": {
+            "unitat": {
+              "type": "string"
+            },
+            "periode": {
+              "type": "string"
+            },
+            "inici": {
+              "type": "date"
+            },
+            "final": {
+              "type": "date"
             }
           }
         }

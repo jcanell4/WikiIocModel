@@ -16,15 +16,74 @@
                 "typeDef": "pla"
             },
             "typesDefinition": {
-                "entradaHoresUF": {
+                "entradaCalendari": {
                     "type": "object",
                     "keys": {
-                        "Unitat Formativa": {
+                        "unitat": {
                             "type": "string",
                             "mandatory": true
                         },
-                        "Hores": {
-                            "type": "string"
+                        "periode": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "inici": {
+                            "type": "date",
+                            "mandatory": true
+                        },
+                        "final": {
+                            "type": "date",
+                            "mandatory": true
+                        }
+                    }
+                },
+                "defCalendari": {
+                    "type": "objectArray",
+                    "typeDef":"entradaCalendari"
+                },                                                
+                "entradaEinesAprenentatge": {
+                    "type": "object",
+                    "keys": {
+                        "tipus": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "eina": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "opcionalitat": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "opcional"
+                        },
+                        "puntuable": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "defEinesAprenentatge": {
+                    "type": "objectArray",
+                    "typeDef":"entradaEinesAprenentatge"
+                },                                                
+                "entradaHoresUF": {
+                    "type": "object",
+                    "keys": {
+                        "uf": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 1
+                        },
+                        "unitat": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 1
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 0
                         }
                     }
                 },
@@ -35,6 +94,18 @@
                 "pla": {
                     "type": "object",
                     "keys": {
+                        "semestre": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "tipusPla": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "tipusBlocModul":{
+                            "type":"string",
+                            "mandatory": true
+                        },
                         "cicle": {
                             "type": "string",
                             "default": "Indiqueu el cicle",
@@ -47,42 +118,49 @@
                         },
                         "durada": {
                             "type": "string",
-                            "mandatory": true
-                        },
-                        "tipus": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "fitxercontinguts": {
-                            "type": "string",
                             "mandatory": true,
-                            "default": "continguts"
+                            "props" : {
+                                "readonly" : true
+                            }
                         },
                         "professors": {
                             "type": "string",
                             "mandatory": true
                         },
-                        "coordinador": {
-                            "type": "string",
-                            "struc_chars": "40",
-                            "mandatory": true
-                        },
-                        "titol": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "FORMACIÓ PROFESSIONAL"
-                        },
-                        "subtitol": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "PLA DE TREBALL"
-                        },
-                        "semestre": {
+                        "urlMaterialDidactic": {
                             "type": "string",
                             "mandatory": true
+                        },
+                        "dedicacio": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "requisits": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "itinerariRecomanat": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min":1,
+                                "max":8
+                            }
                         },
                         "taulaHoresUF": {
                             "type": "defTaulaHoresUF",
+                            "mandatory": true
+                        },                                                
+                        "einesAprenentatge": {
+                            "type": "defEinesAprenentatge",
+                            "mandatory": true
+                        },                                                
+                        "calendari": {
+                            "type": "defCalendari",
                             "mandatory": true
                         },                                                
                         "plantilla": {
@@ -98,6 +176,11 @@
                             "type": "string",
                             "struc_chars": "40",
                             "mandatory": true
+                        },
+                        "fitxercontinguts": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "continguts"
                         }
                     }
                 }
