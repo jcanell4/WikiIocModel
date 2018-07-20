@@ -15,9 +15,6 @@ class BasicCommandAuthorization extends AbstractCommandAuthorization {
     }
 
     protected function getPermissionInstance() {
-//        $permis = new Permission($this);
-//        $ret = &$permis;
-//        return $ret;
         return $this->permission;
     }
 
@@ -28,8 +25,9 @@ class BasicCommandAuthorization extends AbstractCommandAuthorization {
     public function setPermission($command) {
         parent::setPermission($command);
         $this->permission->setIdPage($command->getParams('id'));
-        if (is_array(WikiIocInfoManager::getInfo('userinfo'))){
-            $this->permission->setUserGroups(WikiIocInfoManager::getInfo('userinfo')['grps']);
+        $userinfo = WikiIocInfoManager::getInfo('userinfo');
+        if (is_array($userinfo)){
+            $this->permission->setUserGroups($userinfo['grps']);
         }
         $this->permission->setInfoPerm(WikiIocInfoManager::getInfo('perm'));
     }

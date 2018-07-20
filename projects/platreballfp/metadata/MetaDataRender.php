@@ -7,7 +7,7 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderAbstract.php');
 
 class MetaDataRender extends \MetaDataRenderAbstract {
     //const DEFAULT_SINGLE_VALUES = array("string"=>"", "number" => 0, "boolean" => false);
-    public static $DEFAULT_SINGLE_VALUES = ["string"=>"", "number"=>0, "boolean"=>false];
+    public static $DEFAULT_SINGLE_VALUES = ["string"=>"", "number"=>0, "boolean"=>false, "date"=>""];
 
     /**
      * @param $metaDataEntityWrapper -> Entities array
@@ -168,6 +168,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
     private function _getValue($field, $values, $properties, $types){
         $ret;
         switch ($properties["type"]) {
+            case "date":
             case "boolean":
 //                $dv = false;
             case "number":
