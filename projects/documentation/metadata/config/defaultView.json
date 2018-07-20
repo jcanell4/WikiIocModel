@@ -2,7 +2,7 @@
     "definition": {
         "n_columns": 12,
         "n_rows": 10,
-        "chars_column": 10, 
+        "chars_column": 10,
         "rows_row": 1
     },
     "groups": {
@@ -78,7 +78,7 @@
       "titol": {
         "mandatory": true,
         "n_columns": 8,
-        "config":{    
+        "config":{
             "formEditorButton":true
         },
         "props": {
@@ -140,6 +140,9 @@
           "data-editable-element": "table"
         },
         "config": {
+          "actions": {
+            "add_multiple_default_rows": "Afegir múltiples files per defecte"
+          },
           "fields": {
             "key": {
               "input_on_new_row": true,
