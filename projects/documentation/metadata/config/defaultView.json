@@ -66,6 +66,12 @@
         "group": "admin",
         "props": {
           "required": true
+        },
+        "config": {
+          "readonly": {
+            "class": "ValidationByRoles",
+            "data" : ["admin"]
+          }
         }
       },
       "autor": {
@@ -73,6 +79,9 @@
         "group": "admin",
         "props": {
           "required": true
+        },
+        "config": {
+          "readonly": true
         }
       },
       "titol": {
