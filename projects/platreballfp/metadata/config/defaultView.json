@@ -8,59 +8,98 @@
     "groups": {
         "main": {
             "parent": "",
-            "label": "Dades del projecte",
-            "n_columns": 12,
-            "n_rows": 16,
-            "frame": true
-        },
-        "tipusFrame": {
-            "parent": "main",
+            "label": "Sobre la tipologia",
             "n_columns": 12,
             "n_rows": 1,
-            "frame": false
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":true
+            }
         },
-        "camps": {
-            "parent": "main",
+        "dadesBasiques": {
+            "parent": "",
+            "label":"Dades bàsiques de llarga durada",
             "n_columns": 12,
-            "n_rows": 14,
-            "frame": false
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":true
+            }
         },
-        "taula": {
-            "parent": "main",
+        "variables": {
+            "parent": "",
+            "label":"Dades bàsiques variables",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+        "taulahores": {
+            "parent": "",
             "label": "Taula d'hores de les UF",
             "n_columns": 12,
             "n_rows": 1,
-            "frame": false
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":true
+            }
+        },
+        "taulaEines": {
+            "parent": "",
+            "label": "Taula de les eines d'estudi",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":true
+            }
+        },
+        "taulaCalendari": {
+            "parent": "",
+            "label": "Calendari",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
         },
         "authorship": {
             "parent": "",
             "label": "Autoria",
             "n_columns": 12,
-            "frame": true
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":true
+            }
         }        
     },
     "fields": {
-      "semestre": {
-        "label": "Semestre",
-        "n_columns": 3,
-        "group": "camps"
-      },
       "tipusPla": {
         "type":"select",
         "n_columns": 3,
         "label": "Tipus de pla",
-        "group": "tipusFrame",
+        "group": "main",
         "props": {
           "required": true
         },
          "config":{
             "options":[
-                {"value":"fct", "description":"fct"}, 
-                {"value":"loe", "description":"loe"}, 
-                {"value":"loe_me", "description":"loe_me"}, 
-                {"value":"logse", "description":"logse"}, 
-                {"value":"logse_me", "description":"logse_me"}, 
-                {"value":"sintesi", "description":"sintesi"}
+                {"value":"fct"}, 
+                {"value":"loe"}, 
+                {"value":"loe_me"}, 
+                {"value":"logse"}, 
+                {"value":"logse_me"}, 
+                {"value":"sintesi"}
             ]
          }
       },
@@ -68,7 +107,7 @@
         "type":"select",
         "n_columns": 3,
         "label": "Bloc o mòdul",
-        "group": "tipusFrame",
+        "group": "main",
         "props": {
           "required": true
         },
@@ -82,7 +121,7 @@
       "cicle": {
         "label" : "Nom del cicle",
         "n_columns": 12,
-        "group": "camps",
+        "group": "dadesBasiques",
         "props": {
           "required": true
         }
@@ -90,7 +129,7 @@
       "modul": {
         "label" : "Nom del mòdul o bloc",
         "n_columns": 9,
-        "group": "camps",
+        "group": "dadesBasiques",
         "props": {
           "required": true
         }
@@ -98,7 +137,7 @@
       "durada": {
         "label" : "Durada",
         "n_columns": 3,
-        "group": "camps",
+        "group": "dadesBasiques",
         "props": {
           "required": true
         }
@@ -106,7 +145,7 @@
       "professors": {
         "label" : "Professors",
         "n_columns": 12,
-        "group": "camps",
+        "group": "dadesBasiques",
         "props": {
           "required": true
         }
@@ -114,7 +153,7 @@
       "urlMaterialDidactic": {
         "label" : "Adreça del material didàctic",
         "n_columns": 12,
-        "group": "camps",
+        "group": "dadesBasiques",
         "props": {
           "required": true
         }
@@ -123,14 +162,14 @@
         "type":"number",
         "label" : "Dedicació setmanal",
         "n_columns": 12,
-        "group": "camps",
+        "group": "dadesBasiques",
         "props": {
           "required": true                
         }
       },
       "requisits": {
         "n_columns": 12,
-        "group": "camps",
+        "group": "dadesBasiques",
         "props": {
           "required": true
         }
@@ -146,11 +185,20 @@
             "renderable": true,
             "mode": "xhtml"
         },
-        "group": "camps"
+        "group": "dadesBasiques"
+      },
+      "semestre": {
+        "label": "Semestre",
+        "n_columns": 6, 
+        "group": "variables",
+        "props":{
+                "min":1,
+                "max":2
+        }    
       },
       "itinerariRecomanat": {
-        "n_columns": 12,
-        "group": "camps",
+        "n_columns":6,
+        "group": "variables",
         "props": {
           "required": true,
           "min":1,
@@ -161,12 +209,15 @@
         "label": "Taula d'Hores de les UF",
         "n_columns": 12,
         "type": "editableObject",
-        "group": "taula",
+        "group": "taulahores",
         "n_rows": 4,
         "props": {
           "data-editable-element": "table"
         },
         "config": {
+          "actions": {
+            "add_multiple_default_rows": "Definir el nombre d'unitats"
+          },
           "fields": {
             "uf": {
               "type": "number"
@@ -184,12 +235,16 @@
         "label": "Eines d'aprenentatge",
         "n_columns": 12,
         "type": "editableObject",
-        "group": "taula",
+        "group": "taulaEines",
         "n_rows": 4,
         "props": {
           "data-editable-element": "table"
         },
         "config": {
+          "actions": {
+            "add_default_row": "Afegir eina",
+            "remove_rows": "Eliminar eines seleccionades"        
+          },
           "fields": {
             "tipus": {
               "type": "select",
@@ -211,7 +266,7 @@
         "label": "Calendari d'estudi",
         "n_columns": 12,
         "type": "editableObject",
-        "group": "taula",
+        "group": "taulaCalendari",
         "n_rows": 4,
         "props": {
           "data-editable-element": "table"
