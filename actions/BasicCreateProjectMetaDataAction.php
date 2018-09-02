@@ -50,7 +50,7 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
             if ($value['default']) $metaDataValues[$key] = $value['default'];
         }
         //asigna valores por defecto a algunos campos definidos en configMain.json
-        $metaDataValues['nsproject'] = $id;
+        //$metaDataValues['nsproject'] = $this->params[ProjectKeys::KEY_ID];
         $metaDataValues["responsable"] = $_SERVER['REMOTE_USER'];
         $metaDataValues['autor'] = $_SERVER['REMOTE_USER'];
 

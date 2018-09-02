@@ -16,6 +16,103 @@
                 "typeDef": "pla"
             },
             "typesDefinition": {
+                "entradaQualificacioUFs": {
+                    "type":"object",
+                    "keys": {
+                        "unitat formativa": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "1"
+                        },
+                        "tipus qualificació": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        },
+                        "ponderació": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        }
+                    }                    
+                },
+                "defQualificacioUFs": {
+                    "type": "objectArray",
+                    "typeDef":"entradaQualificacioUFs"
+                },
+                "entradaQualificacioFinal": {
+                    "type":"object",
+                    "keys": {
+                        "unitat formativa": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "1"
+                        },
+                        "ponderació": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        }
+                    }                    
+                },
+                "defQualificacioFinal": {
+                    "type": "objectArray",
+                    "typeDef":"entradaQualificacioFinal"
+                },
+                "entradaExtres": {
+                    "type":"object",
+                    "keys": {
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu la dada extra que necessiteu"
+                        },
+                        "tipus": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        },
+                        "valor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Escriviu el valor de la dada aquí"
+                        }
+                    }                    
+                },
+                "defExtres": {
+                    "type": "objectArray",
+                    "typeDef":"entradaExtres"
+                },                
+                "entradaDatesAC": {
+                    "type": "object",
+                    "keys": {
+                        "unitat": {
+                            "type": "string",
+                            "default": 1,
+                            "mandatory": true
+                        },
+                        "enunciat": {
+                            "type": "date",
+                            "mandatory": true
+                        },
+                        "lliurament": {
+                            "type": "date",
+                            "mandatory": true
+                        },
+                        "solució": {
+                            "type": "date",
+                            "mandatory": true
+                        },
+                        "qualificació": {
+                            "type": "date",
+                            "mandatory": true
+                        }
+                    }
+                },
+                "defDatesAC": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDatesAC"
+                },                                                
                 "entradaCalendari": {
                     "type": "object",
                     "keys": {
@@ -23,7 +120,7 @@
                             "type": "string",
                             "mandatory": true
                         },
-                        "periode": {
+                        "període": {
                             "type": "string",
                             "mandatory": true
                         },
@@ -70,7 +167,7 @@
                 "entradaHoresUF": {
                     "type": "object",
                     "keys": {
-                        "uf": {
+                        "unitat formativa": {
                             "type": "number",
                             "mandatory": true,
                             "default": 1
@@ -144,7 +241,15 @@
                             "type": "string",
                             "mandatory": true
                         },
-                        "itinerariRecomanat": {
+                        "itinerariRecomanatS1": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min":1,
+                                "max":8
+                            }
+                        },
+                        "itinerariRecomanatS2": {
                             "type": "number",
                             "mandatory": true,
                             "props": {
@@ -163,11 +268,74 @@
                         "calendari": {
                             "type": "defCalendari",
                             "mandatory": true
+                        },
+                        "ponderacioEACs": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min":0,
+                                "max":100
+                            }
+                        },                                                
+                        "numLliuraments": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min":0,
+                                "max":20
+                            }
+                        },                                                
+                        "tipusLliuraments": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "EACs"
+                        },                                                
+                        "datesAC": {
+                            "type": "defDatesAC",
+                            "mandatory": true
+                        },                                                
+                        "notaMinimaAC": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min":0,
+                                "max":10
+                            },
+                            "default": 0
+                        },                                                
+                        "dataPaf1": {
+                            "type": "date",
+                            "mandatory": true
+                        },                                                
+                        "dataPaf2": {
+                            "type": "date",
+                            "mandatory": true
+                        },                                                
+                        "notaMinimaPAF": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min":0,
+                                "max":10
+                            },
+                            "default": 0
+                        },                                                
+                        "dadesQualificacioUFs": {
+                            "type": "defQualificacioUFs",
+                            "mandatory": true
+                        },                                                
+                        "dadesQualificacioFinal": {
+                            "type": "defQualificacioFinal",
+                            "mandatory": true
+                        },                                                
+                        "dadesExtres": {
+                            "type": "defExtres",
+                            "mandatory": true
                         },                                                
                         "plantilla": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "plantilles:docum_ioc:pla_treball_fp:loe_me:continguts"
+                            "default": "plantilles:docum_ioc:pla_treball_fp:##tipusPla##:continguts"
                         },
                         "autor": {
                             "type": "string",
