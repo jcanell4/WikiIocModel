@@ -55,6 +55,15 @@ abstract class AbstractWikiDataModel extends AbstractWikiModel{
         return file_exists($id) && is_dir($id);
     }
 
+    public function fileExistsInProject($id, $file) {
+        $ns = str_replace(":", "/", $id);
+        $fileList = $this->getPageDataQuery()->getFileList($ns);
+        if ($fileList) {
+            $ret = in_array($file, $fileList);
+        }    
+        return $ret;
+    }
+
     public function getListProjectTypes($projectType=NULL) {
         return $this->getProjectMetaDataQuery()->getListProjectTypes($projectType);
     }

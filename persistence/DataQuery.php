@@ -73,8 +73,8 @@ abstract class DataQuery {
      * @return array amb la llista de fitxers
      */
     public function getFileList($ns) {
-        $dir = $this->getFileName( $ns );
-        $arrayDir = scandir( $dir );
+        $this->init();
+        $arrayDir = scandir("{$this->datadir}/$ns");
         if ( $arrayDir ) {
             unset( $arrayDir[0] );
             unset( $arrayDir[1] );
@@ -83,6 +83,11 @@ abstract class DataQuery {
             $arrayDir = array();
         }
         return $arrayDir;
+    }
+
+    public function createFolder($new_folder){
+        $this->init();
+        return mkdir("{$this->datadir}/$new_folder");
     }
 
     /**
