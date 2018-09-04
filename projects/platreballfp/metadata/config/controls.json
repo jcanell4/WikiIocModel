@@ -1,4 +1,20 @@
 {
+    "generateProject": {
+        "parms": { 
+            "DOM": {
+               "id": "generateProjectButton"
+            }
+        },
+
+        "scripts": {
+            "updateHandler": {
+                "conditions": {
+                    "page.action": "'project_view'"
+                }
+            }
+        }
+
+    },
     "platreballfpPdfExport": {
         "class": "WikiIocButton",
         "parms": { 
