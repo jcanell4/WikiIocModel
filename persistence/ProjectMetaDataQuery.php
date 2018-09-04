@@ -569,10 +569,10 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     //[JOSEP] Alerta: Caldria pujar aquest metode a DataQuery
-    public function createFolder($new_folder){
-        $dir = WikiGlobalConfig::getConf('datadir')."/$new_folder";
-        return mkdir($dir);
-    }
+//    public function createFolder($new_folder){
+//        $dir = WikiGlobalConfig::getConf('datadir')."/$new_folder";
+//        return mkdir($dir);
+//    }
 
     /**
      * Retorna un array con las líneas del archivo de log .changes
