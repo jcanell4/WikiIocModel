@@ -124,12 +124,14 @@ class action_plugin_wikiiocmodel_projects_platreballfp extends WikiIocPluginActi
         //Lectura de los botones definidos en el fichero de control
         foreach ($this->viewArray as $arrayButton) {
             $button = array();
-            $class = $arrayButton['class'];
-            if ($arrayButton['parms']['DOM']) $button['DOM'] = $arrayButton['parms']['DOM'];
-            if ($arrayButton['parms']['DJO']) $button['DJO'] = $arrayButton['parms']['DJO'];
-            if ($arrayButton['parms']['CSS']) $button['CSS'] = $arrayButton['parms']['CSS'];
-            if ($arrayButton['parms']['PRP']) $button['PRP'] = $arrayButton['parms']['PRP'];
-            $event->data->addWikiIocButton($class, $button);
+            if(isset($arrayButton['class'])){
+                $class = $arrayButton['class'];
+                if ($arrayButton['parms']['DOM']) $button['DOM'] = $arrayButton['parms']['DOM'];
+                if ($arrayButton['parms']['DJO']) $button['DJO'] = $arrayButton['parms']['DJO'];
+                if ($arrayButton['parms']['CSS']) $button['CSS'] = $arrayButton['parms']['CSS'];
+                if ($arrayButton['parms']['PRP']) $button['PRP'] = $arrayButton['parms']['PRP'];
+                $event->data->addWikiIocButton($class, $button);
+            }
         }
     }
 }
