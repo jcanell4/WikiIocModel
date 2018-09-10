@@ -14,10 +14,11 @@ config: valors de configuració especials que no s'han de mostrar al codi html, 
 * fields: diccionari amb la configuració dels camps
 	"clau": clau es el nom de la clau, que serà diferent per cada camp i podrà contenir diverses propietats:
 		* type: tipus de cel·la, per defecte es fa servir un input normal d'una sola línia. Altre stipus que es poden utilitzar:
+		    * string (tipus per defecte)
 			* textarea (multilínia)
 			* bool (check box)
 			* select (desplegable)
-			* date (fecha)
+			* date (data)
 			* number (numeric)
 		* options: configuració de les opcions per les cel·les de tipus select, el contingut serà un array amb els valors.
 		* input_on_new_row: booleà. TODO: determinar on es fa servir!
