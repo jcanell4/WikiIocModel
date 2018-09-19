@@ -89,4 +89,17 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
         }
     }
 
+   /**
+     * Mètode que s'ha d'executar en iniciar el desbloqueig o també quan l'usuari cancel·la la petició de bloqueig.
+     * Per defecte no es desbloqueja el recurs, perquè actualment el desbloqueig es realitza internament
+     * a les funcions natives de la wiki.
+     *
+     * @param bool $unlock : si TRUE, llavors es força aquí del desbloqueig
+     * @return int : és una constant amb el resultat de la petició
+     */
+    public function leaveResource($unlock = FALSE) {
+        $this->resourceLocker->init($this->params);
+        return $this->resourceLocker->leaveResource($unlock);
+    }
+
 }

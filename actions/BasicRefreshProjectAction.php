@@ -8,13 +8,6 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 class BasicRefreshProjectAction extends BasicViewProjectMetaDataAction implements ResourceLockerInterface {
 
-    private $resourceLocker;
-
-    public function init($modelManager) {
-        parent::init($modelManager);
-        $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
-    }
-
     protected function runAction() {
         $this->lockStruct = $this->requireResource(TRUE);
         if ($this->lockStruct["state"]!== ResourceLockerInterface::LOCKED){

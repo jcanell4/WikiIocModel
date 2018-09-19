@@ -5,13 +5,7 @@ require_once DOKU_INC . "lib/lib_ioc/wikiiocmodel/ResourceLocker.php";
 
 class BasicGetProjectMetaDataAction extends BasicViewProjectMetaDataAction implements ResourceLockerInterface {
 
-    private $resourceLocker;
     private $messageLock;
-
-    public function init($modelManager) {
-        parent::init($modelManager);
-        $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
-    }
 
     protected function runAction() {
         //Establecimiento del sistema de bloqueo

@@ -10,13 +10,11 @@ include_once (DOKU_PLUGIN . "wikiiocmodel/actions/ProjectMetadataAction.php");
 
 class BasicDraftProjectMetaDataAction extends ProjectMetadataAction {
 
-    private $resourceLocker;
     private $Do;
     private static $infoDuration = 15;
 
     public function init($modelManager) {
         parent::init($modelManager);
-        $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
         $this->Do = PageKeys::DW_ACT_PREVIEW;
     }
 
