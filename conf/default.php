@@ -5,7 +5,7 @@
  */
 require_once (DOKU_INC . 'lib/plugins/ajaxcommand/defkeys/GlobalKeys.php');
 
-//$conf['debugLvl']                 = 1;                  // debug mode level -- more verbose ( 0: no display; 1: display error msg; 2: display&log error msg all msg; 3: display&log all )
+//$conf['debugLvl']              = 1;  //debug mode level -- more verbose ( 0: no display; 1: display error msg; 2: display&log error msg all msg; 3: display&log all )
 $conf['userpage_allowed']      = 1;
 $conf['userpage_ns']           = ":wiki:user:";
 $conf['userpage_discuss_ns']   = ":talk:wiki:user:";
@@ -26,6 +26,7 @@ $conf['system_warning_end_date']   = '31-12-2000 00:00';
 $conf['system_warning_type']       = 'warning';
 
 $conf['projects']['dataSystem'] = "_wikiIocSystem_.mdpr";
+$conf['projects']['configuration'] = "configuration";  //nombre del proyecto en el que se definen las configuraciones de los tipos de proyectos
 
 $conf['projects']['defaultProject']['templates'][0]['name'] ="glossari";
 $conf['projects']['defaultProject']['templates'][0]['path'] ="plantilles:sensecommon:cicle:m99:glossari";
