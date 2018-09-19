@@ -16,18 +16,18 @@ class platreballfpProjectModel extends AbstractProjectModel {
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
     }
-    
+
     public function setData($toSet) {
         // $toSet es genera a l'Action corresponent
         $metaDataValue = json_decode($toSet["metaDataValue"], true);
         $metaDataValue['durada'] = 0;
-        if(is_string($metaDataValue['taulaHoresUF'])){
+        if (is_string($metaDataValue['taulaHoresUF'])){
             $taulaHoresUF = json_decode($metaDataValue['taulaHoresUF'], true);
         }else{
             $taulaHoresUF = $metaDataValue['taulaHoresUF'];
         }
         foreach ($taulaHoresUF as $item) {
-            if(is_string($item['hores'])){
+            if (is_string($item['hores'])){
                 $item['hores'] = intval($item['hores']);
             }
             $metaDataValue['durada']+=$item['hores'];
@@ -39,12 +39,12 @@ class platreballfpProjectModel extends AbstractProjectModel {
     public function generateProject() {
         //0. Obtiene los datos del proyecto
         $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
-        
+
         $plantilla = $ret['projectMetaData']["plantilla"]['value'];
         preg_match("/##.*?##/s", $plantilla, $matches);
         $field = substr($matches[0],2,-2);
         $plantilla = preg_replace("/##.*?##/s", $ret['projectMetaData'][$field]['value'], $plantilla);
-        if($ret['projectMetaData']["fitxercontinguts"]['value']){
+        if ($ret['projectMetaData']["fitxercontinguts"]['value']){
             $destino = $this->id.":" . $ret['projectMetaData']["fitxercontinguts"]['value'];
         }else{
             $ret['projectMetaData']["fitxercontinguts"]['value'] = $destino = $this->id.":".end(explode(":", $plantilla));
@@ -52,9 +52,6 @@ class platreballfpProjectModel extends AbstractProjectModel {
 
         //1.1 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
-
-//        //1.2 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
-//        $this->createSubprojectTaulaSubs();
 
         //2. Establece la marca de 'proyecto generado'
         $this->projectMetaDataQuery->setProjectGenerated($this->id, $this->projectType);
@@ -181,20 +178,4 @@ class platreballfpProjectModel extends AbstractProjectModel {
                                        PageKeys::KEY_SUM => $summary]);
     }
 
-//    /**
-//     * Crea el archivo $destino a partir de una plantilla
-//     */
-//    private function createSubprojectTaulaSubs($destino, $plantilla=NULL, $extra=NULL, $summary="generate project") {
-//        $id = $this->id.":taulasubs";
-//        $struct = $this->getProjectMetaDataQuery()->getMetaDataConfig("taulasubs", ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, ProjectKeys::VAL_DEFAULTSUBSET);
-//        $metaDataKeys = json_decode($struct, TRUE);
-//        $filename = $metaDataKeys[ProjectKeys::VAL_DEFAULTSUBSET];
-//        foreach ($metaDataKeys as $key => $value) {
-//            if ($value['default']) $metaDataValues[$key] = $value['default'];
-//        }
-//
-//        $this->getProjectMetaDataQuery()->setMeta($id, "taulasubs", ProjectKeys::VAL_DEFAULTSUBSET, $filename, json_encode($metaDataValues));
-//
-//        $this->getProjectMetaDataQuery()->createDataDir($id);
-//    }
 }

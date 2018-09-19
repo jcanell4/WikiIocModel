@@ -17,7 +17,7 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
 
         //sólo se ejecuta si no existe el proyecto
         if (!$this->projectModel->existProject()) {
-            
+
             $metaDataValues = $this->getDefaultValues();
 
             $metaData = [
@@ -42,15 +42,17 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
         else
             return $ret;
     }
-    
+
     protected function getDefaultValues(){
         $metaDataValues = array();
-        $metaDataKeys = $this->projectModel->getMetaDataDefKeys($projectType);
-        foreach ($metaDataKeys as $key => $value) {
-            if ($value['default']) $metaDataValues[$key] = $value['default'];
+        $metaDataKeys = $this->projectModel->getMetaDataDefKeys();
+        if ($metaDataKeys) {
+            foreach ($metaDataKeys as $key => $value) {
+                if ($value['default'])
+                    $metaDataValues[$key] = $value['default'];
+            }
         }
         //asigna valores por defecto a algunos campos definidos en configMain.json
-        //$metaDataValues['nsproject'] = $this->params[ProjectKeys::KEY_ID];
         $metaDataValues["responsable"] = $_SERVER['REMOTE_USER'];
         $metaDataValues['autor'] = $_SERVER['REMOTE_USER'];
 

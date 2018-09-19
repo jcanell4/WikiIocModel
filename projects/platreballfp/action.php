@@ -55,9 +55,12 @@ class action_plugin_wikiiocmodel_projects_platreballfp extends WikiIocPluginActi
 
         //Lectura de los botones definidos en el fichero de control
         foreach ($this->viewArray as $nameButton => $arrayButton) {
-            //carga de los archivos de funciones de los botones
-            foreach ($arrayButton['scripts']['getFunctions'] as $key => $value) {
-                if ($key === "path") $event->data->addControlScript($path.$value);
+            if ($arrayButton['scripts']['getFunctions']) {
+                //carga de los archivos de funciones de los botones
+                foreach ($arrayButton['scripts']['getFunctions'] as $key => $value) {
+                    if ($key === "path")
+                        $event->data->addControlScript($path.$value);
+                }
             }
 
             $id = $arrayButton['parms']['DOM']['id'];
