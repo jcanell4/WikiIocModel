@@ -27,12 +27,12 @@ class ProjectMetaDataQuery extends DataQuery {
     private $projectFileName = NULL;    //Nom de l'arxiu de dades del projecte
     private $projectFilePath = NULL;    //Ruta completa al directori del projecte
 
-    public function getListMetaDataComponentTypes($projectType, $component) {
+    public function getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $component) {
         //lista de elementos permitidos para el componente dado
-        $jsonList = $this->getMetaDataConfig($projectType, ProjectKeys::KEY_METADATA_COMPONENT_TYPES, ProjectKeys::VAL_DEFAULTSUBSET);
+        $subset = ProjectKeys::VAL_DEFAULTSUBSET;
+        $jsonList = $this->getMetaDataConfig($projectType, $metaDataPrincipal, $subset);
         $arrayList = json_decode($jsonList, true);
-        $list = $arrayList[ProjectKeys::VAL_DEFAULTSUBSET][$component];
-        return $list;
+        return $arrayList[$subset][$component];
     }
 
     /**
@@ -41,7 +41,7 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getListProjectTypes($projectType=NULL) {
         if ($projectType) {
-            $listProjects = $this->getListMetaDataComponentTypes($projectType, ProjectKeys::KEY_MD_CT_SUBPROJECTS);
+            $listProjects = $this->getListMetaDataComponentTypes($projectType, ProjectKeys::KEY_METADATA_COMPONENT_TYPES, ProjectKeys::KEY_MD_CT_SUBPROJECTS);
         }
         $projectsDir = opendir(WIKI_IOC_PROJECTS);
         while ($pType = readdir($projectsDir)) {
@@ -127,18 +127,20 @@ class ProjectMetaDataQuery extends DataQuery {
         $metaDataPath = WikiGlobalConfig::getConf('mdprojects');
         $metaDataExtension = WikiGlobalConfig::getConf('mdextension');
         $pathProject = $metaDataPath . '/'. str_replace(':', '/', $nsRoot);
-        $dirProject = opendir($pathProject);
+        $dirProject = @opendir($pathProject);
 
-        while ($current = readdir($dirProject)) {
-            $pathProjectOne = $pathProject . '/' . $current;
-            if (is_dir($pathProjectOne)) {
-                $dirProjectOne = opendir($pathProjectOne);
-                while ($currentOne = readdir($dirProjectOne)) {
-                    if (!is_dir($pathProjectOne . '/' . $currentOne)) {
-                        $fileTokens = explode(".", $currentOne);
-                        if ($fileTokens[sizeof($fileTokens) - 1] == $metaDataExtension) {
-                            //És projecte i escriure   p
-                            $returnArray[$nsRoot] = $current;
+        if ($dirProject) {  //En el proceso de creación de un proyecto, no existe, todavía el directorio del proyecto
+            while ($current = readdir($dirProject)) {
+                $pathProjectOne = $pathProject . '/' . $current;
+                if (is_dir($pathProjectOne)) {
+                    $dirProjectOne = opendir($pathProjectOne);
+                    while ($currentOne = readdir($dirProjectOne)) {
+                        if (!is_dir($pathProjectOne . '/' . $currentOne)) {
+                            $fileTokens = explode(".", $currentOne);
+                            if ($fileTokens[sizeof($fileTokens) - 1] == $metaDataExtension) {
+                                //És projecte i escriure   p
+                                $returnArray[$nsRoot] = $current;
+                            }
                         }
                     }
                 }
@@ -149,7 +151,7 @@ class ProjectMetaDataQuery extends DataQuery {
             $encoder = new JSON();
             $toReturn = $encoder->encode($returnArray);
         } else {
-            return null;
+            return NULL;
         }
 
         return $toReturn;
@@ -266,7 +268,8 @@ class ProjectMetaDataQuery extends DataQuery {
         }
         if ($resourceCreated) {
             // Crea y verifica el fichero .mdpr que contendrá los datos del proyecto
-            if ($resourceCreated = ($fp = @fopen("$dirProject/$file", 'w') !== false)) {
+            $fp = @fopen("$dirProject/$file", 'w');
+            if ($resourceCreated = ($fp !== false)) {
                 fclose($fp);
             }
         }

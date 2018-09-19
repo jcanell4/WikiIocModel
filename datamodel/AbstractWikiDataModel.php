@@ -60,7 +60,7 @@ abstract class AbstractWikiDataModel extends AbstractWikiModel{
         $fileList = $this->getPageDataQuery()->getFileList($ns);
         if ($fileList) {
             $ret = in_array($file, $fileList);
-        }    
+        }
         return $ret;
     }
 
@@ -68,8 +68,8 @@ abstract class AbstractWikiDataModel extends AbstractWikiModel{
         return $this->getProjectMetaDataQuery()->getListProjectTypes($projectType);
     }
 
-    public function getListMetaDataComponentTypes($projectType, $component) {
-        return $this->getProjectMetaDataQuery()->getListMetaDataComponentTypes($projectType, $component);
+    public function getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $component) {
+        return $this->getProjectMetaDataQuery()->getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $component);
     }
 
 }

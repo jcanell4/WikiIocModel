@@ -28,7 +28,7 @@ class ListTemplatesAction extends AbstractWikiAction {
         if (isset($this->params['template_list_type'])) {
             if ($this->params['template_list_type'] === "array") {
                 $this->projectModel->init($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
-                $list = $this->projectModel->getListMetaDataComponentTypes($this->params[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_MD_CT_DOCUMENTS);
+                $list = $this->projectModel->getListMetaDataComponentTypes($this->params[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_METADATA_COMPONENT_TYPES, ProjectKeys::KEY_MD_CT_DOCUMENTS);
             }
         }
         if (!isset($list)) {
