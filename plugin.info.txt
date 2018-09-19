@@ -6,3 +6,4 @@ name   wikiiocmodel plugin
 desc   This plugin defines a interface to access easily to the dokuwiki data 
        since other plugins.  It is a wrap to access data needed by IOC.
 url    ???
+

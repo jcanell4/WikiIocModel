@@ -10,14 +10,21 @@ class ValidationByRoles extends ValidateWithPermission
 
     function validate($data)
     {
-        $groups = $this->permission->getUserGroups();
+        $role = $this->permission->getRole();
+        $ret = TRUE;
 
-        foreach ( $data as $group) {
-            if (in_array($group, $groups)) {
-                return false;
+        if(is_array($role)){
+            for ($i=0; $i<count($role) && $ret; $i++){
+                $ret = !in_array($role[$i], $data);                
             }
+        }else if(strpos($role, ',') !== false){
+            $arole = explode(',', $role);
+            for ($i=0; $i<count($arole) && $ret; $i++){
+                $ret = !in_array($arole[$i], $data);                
+            }
+        }else{
+            $ret = !in_array($role, $data);
         }
-
-        return true;
+        return $ret;
     }
 }
