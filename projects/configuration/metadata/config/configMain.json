@@ -1,0 +1,67 @@
+{
+    "metaDataClassesNameSpaces": [
+        {
+            "main": {
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "configuration"
+            }
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+            "mainType": {
+                "type": "object",
+                "typeDef": "configuracio"
+            },
+            "typesDefinition": {
+                "entrySubsTable": {
+                    "type":"object",
+                    "keys": {
+                        "key": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "@CLAU_DE_SUBSTITUCIO@"
+                        },
+                        "type": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "string"
+                        },
+                        "value": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Escriviu aquí el valor"
+                        },
+                        "parameters": {
+                            "type": "string"
+                        }
+                    }                    
+                },
+                "subTable": {
+                    "type": "objectArray",
+                    "typeDef": "entrySubsTable"
+                },                
+                "configuracio": {
+                    "type": "object",
+                    "keys": {
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "arraytaula": {
+                            "type": "subTable",
+                            "mandatory": true
+                        }                        
+                    }
+                }
+            }
+        }
+    ]
+}
