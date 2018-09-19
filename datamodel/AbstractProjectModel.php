@@ -44,6 +44,14 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     /**
+     * Obtiene los datos del archivo de datos (meta.mdpr) de un proyecto
+     */
+    public function getMetaDataProject($projectFileName, $metaDataSubset) {
+        $ret = $this->projectMetaDataQuery->getMeta($this->id, $this->projectType, $metaDataSubset, $projectFileName);
+        return json_decode($ret, true);
+    }
+
+    /**
      * Obtiene y, después, retorna una estructura con los metadatos y valores del proyecto
      * @return array('projectMetaData'=>array('values','structure'), array('projectViewData'))
      */
@@ -70,6 +78,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $ret['projectMetaData'] = $this->metaDataService->getMeta($query, FALSE)[0];
         $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->projectType, "defaultView");
         return $ret;
+    }
+
+    public function getProjectType() {
+        return $this->projectType;
     }
 
     public function setData($toSet) {
@@ -108,9 +120,9 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     /**
      * Devuelve un array con la estructura definida en el archivo configMain.json
      */
-    public function getMetaDataDefKeys($projectType) {
+    public function getMetaDataDefKeys() {
         $dao = $this->metaDataService->getMetaDataDaoConfig();
-        $struct = $dao->getMetaDataStructure($projectType, ProjectKeys::VAL_DEFAULTSUBSET, $this->persistenceEngine);
+        $struct = $dao->getMetaDataStructure($this->projectType, ProjectKeys::VAL_DEFAULTSUBSET, $this->persistenceEngine);
         return json_decode($struct, TRUE);
     }
 
@@ -214,6 +226,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
     public function getLastModFileDate() {
         return $this->projectMetaDataQuery->getLastModFileDate($this->id);
+    }
+
+    public function getProjectTypeConfigFile($projectType) {
+        return $this->projectMetaDataQuery->getListMetaDataComponentTypes($projectType, ProjectKeys::KEY_METADATA_PROJECT_CONFIG, ProjectKeys::KEY_MD_PROJECTTYPECONFIGFILE);
     }
 
     public function getMetaDataComponent($projectType, $type){
