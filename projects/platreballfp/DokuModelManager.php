@@ -19,11 +19,12 @@ class DokuModelManager extends AbstractModelManager{
     const MOD = WIKI_IOC_MODEL;
     const DEF = WIKI_IOC_PROJECTS . 'defaultProject/';
     const PRJ = WIKI_IOC_PROJECTS . 'platreballfp/';
+    const CFG = WIKI_IOC_PROJECTS . 'configuration/';
 
     static $defDirClass = array (
                'Authorization' => array(self::MOD."authorization/", self::DEF."authorization/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
                'Action'        => array(self::MOD."actions/", self::DEF."actions/extra/"),
-               'Model'         => array(self::MOD."datamodel/"),
+               'Model'         => array(self::MOD."datamodel/", self::CFG."datamodel/"),
                'Renderer'      => array(self::PRJ."renderer/")
            );
     static $defMainClass = array(
