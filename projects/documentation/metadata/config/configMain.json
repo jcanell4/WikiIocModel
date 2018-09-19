@@ -17,8 +17,15 @@
                     "pblactivity" ,
                     "taulasubs" 
                 ],
-                "documents":true,
+                "documents": true,
                 "folders": true
+            }
+        }        
+    ],
+    "metaDataProjectConfig": [
+        {
+            "main": {
+                "projectTypeConfigFile": "admconfig:documentation"
             }
         }        
     ],

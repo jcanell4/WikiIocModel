@@ -8,6 +8,13 @@
             }
         }
     ],
+    "metaDataProjectConfig": [
+        {
+            "main": {
+                "projectTypeConfigFile": "admconfig:platreballfp"
+            }
+        }        
+    ],
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
