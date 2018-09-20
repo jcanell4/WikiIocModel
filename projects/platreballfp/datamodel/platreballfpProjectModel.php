@@ -35,21 +35,41 @@ class platreballfpProjectModel extends AbstractProjectModel {
         $toSet["metaDataValue"] = json_encode($metaDataValue);
         parent::setData($toSet);
     }
+    
+    public function getContentDocumentId($responseData){
+        if ($responseData['projectMetaData']["fitxercontinguts"]['value']){
+            $contentName = $responseData['projectMetaData']["fitxercontinguts"]['value'];
+        }else{
+            $contentName = end(explode(":", $this->getTemplateContentDocumentId($responseData)));
+        }
+        $destino = $con;
+
+        return $this->id.":" .$contentName;
+    }
+    
+    public function getTemplateContentDocumentId($responseData){
+        $plantilla = $responseData['projectMetaData']["plantilla"]['value'];
+        preg_match("/##.*?##/s", $plantilla, $matches);
+        $field = substr($matches[0],2,-2);
+        $plantilla = preg_replace("/##.*?##/s", $ret['projectMetaData'][$field]['value'], $plantilla);
+        return $plantilla;
+    }
 
     public function generateProject() {
         //0. Obtiene los datos del proyecto
         $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
 
-        $plantilla = $ret['projectMetaData']["plantilla"]['value'];
-        preg_match("/##.*?##/s", $plantilla, $matches);
-        $field = substr($matches[0],2,-2);
-        $plantilla = preg_replace("/##.*?##/s", $ret['projectMetaData'][$field]['value'], $plantilla);
-        if ($ret['projectMetaData']["fitxercontinguts"]['value']){
-            $destino = $this->id.":" . $ret['projectMetaData']["fitxercontinguts"]['value'];
-        }else{
-            $ret['projectMetaData']["fitxercontinguts"]['value'] = $destino = $this->id.":".end(explode(":", $plantilla));
-        }
-
+        $plantilla = $this->getTemplateContentDocumentId($ret);
+//        preg_match("/##.*?##/s", $plantilla, $matches);
+//        $field = substr($matches[0],2,-2);
+//        $plantilla = preg_replace("/##.*?##/s", $ret['projectMetaData'][$field]['value'], $plantilla);
+//        if ($ret['projectMetaData']["fitxercontinguts"]['value']){
+//            $destino = $this->id.":" . $ret['projectMetaData']["fitxercontinguts"]['value'];
+//        }else{
+//            $ret['projectMetaData']["fitxercontinguts"]['value'] = $destino = $this->id.":".end(explode(":", $plantilla));
+//        }
+        $destino = $this->getContentDocumentId($ret);
+        
         //1.1 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
 

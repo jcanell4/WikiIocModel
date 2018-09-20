@@ -12,7 +12,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
      * Envía los datos $metaData del proyecto al ProjectModel y obtiene la estructura y los valores del proyecto
      * @return array con la estructura y los valores del proyecto
      */
-    public function responseProcess() {
+    protected function responseProcess() {
         $dataProject = $this->params['dataProject'];
         $extraProject = $this->params['extraProject'];
         $model = $this->getModel();

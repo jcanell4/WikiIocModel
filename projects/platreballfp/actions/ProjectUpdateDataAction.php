@@ -64,6 +64,10 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                 $projectModel->setData($metaData);    //actualiza el contenido en 'mdprojects/'
 
                 $response = parent::runAction();
+                if($this->getModel()->isProjectGenerated()){
+                    $id = $this->getModel()->getContentDocumentId($response);
+                    p_set_metadata($id, array('metadataProjectChanged'=>true));
+                }
             }
         }
 
