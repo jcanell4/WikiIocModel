@@ -359,8 +359,8 @@ class ProjectMetaDataQuery extends DataQuery {
     /**
      * @return array Contiene los datos del proyecto correspondientes a la clave '$metaDataSubSet'
      */
-    public function getDataProject($idProject, $projectType, $extra=FALSE) {
-        $metaDataSubSet = ProjectKeys::VAL_DEFAULTSUBSET;   //clave en el array que contiene los datos del proyecto
+    public function getDataProject($idProject, $projectType, $metaDataSubSet=NULL, $extra=FALSE) {
+        $metaDataSubSet = (!$metaDataSubSet) ? ProjectKeys::VAL_DEFAULTSUBSET : $metaDataSubSet;
         $parms = [ProjectKeys::KEY_ID => $idProject,
                   ProjectKeys::KEY_PROJECT_TYPE => $projectType,
                   ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet
