@@ -10,8 +10,8 @@ class ProjectPermission extends BasicPermission {
     const ROL_RESPONSABLE = "responsable";
     const ROL_AUTOR = "autor";
 
-    private $author;
-    private $responsable;
+    private $author;        //array
+    private $responsable;   //array
     private $rol;
 
     public function getAuthor() {
@@ -27,11 +27,11 @@ class ProjectPermission extends BasicPermission {
     }
 
     public function setAuthor($author) {
-        $this->author = $author;
+        $this->author = preg_split("/[\s,]+/", $author);
     }
 
     public function setResponsable($responsable) {
-        $this->responsable = $responsable;
+        $this->responsable = preg_split("/[\s,]+/", $responsable);
     }
 
     public function setRol($rol) {

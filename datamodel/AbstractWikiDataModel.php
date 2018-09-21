@@ -35,11 +35,18 @@ abstract class AbstractWikiDataModel extends AbstractWikiModel{
     }
 
     /**
-     * Valida que exista el nombre de usuario que se desea utilizar
+     * Valida que exista el nombre de usuario que se desea utilizar (pueden ser varios nombres)
      */
     public function validaNom($nom) {
         global $auth;
-        return ($auth->getUserCount(['user' => $nom]) > 0);
+        $aNoms = preg_split("/[\s,]+/", $nom);
+        if (!empty($aNoms)) {
+            $ret = TRUE;
+            foreach ($aNoms as $n) {
+                $ret &= ($auth->getUserCount(['user' => $n]) > 0);
+            }
+        }
+        return $ret;
     }
 
     public function createDataDir($id) {
