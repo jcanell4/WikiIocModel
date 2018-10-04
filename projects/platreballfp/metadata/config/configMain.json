@@ -23,6 +23,25 @@
                 "typeDef": "pla"
             },
             "typesDefinition": {
+                "entradaResultatsAprenentage": {
+                    "type":"object",
+                    "keys": {
+                        "id": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "RAn"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        }
+                    }                    
+                },
+                "defResultatsAprenentage": {
+                    "type": "objectArray",
+                    "typeDef":"entradaResultatsAprenentage"
+                },
                 "entradaQualificacioUFs": {
                     "type":"object",
                     "keys": {
@@ -171,7 +190,34 @@
                     "type": "objectArray",
                     "typeDef":"entradaEinesAprenentatge"
                 },                                                
-                "entradaHoresUF": {
+                "entradaDadesUF": {
+                    "type": "object",
+                    "keys": {
+                        "bloc": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 0
+                        },
+                        "unitat formativa": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 1
+                        },
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu el nom de la UF"
+                        },
+                        "hores": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "defTaulaDadesUF": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDadesUF"
+                },                                                
+                "entradaDadesUnitats": {
                     "type": "object",
                     "keys": {
                         "unitat formativa": {
@@ -184,6 +230,11 @@
                             "mandatory": true,
                             "default": 1
                         },
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu el nom de la unitat"
+                        },
                         "hores": {
                             "type": "number",
                             "mandatory": true,
@@ -191,9 +242,9 @@
                         }
                     }
                 },
-                "defTaulaHoresUF": {
+                "defTaulaDadesUnitats": {
                     "type": "objectArray",
-                    "typeDef":"entradaHoresUF"
+                    "typeDef":"entradaDadesUnitats"
                 },                                                
                 "pla": {
                     "type": "object",
@@ -228,7 +279,15 @@
                                 "readonly" : true
                             }
                         },
+                        "duradaCicle": {
+                            "type": "string",
+                            "mandatory": true   
+                        },
                         "professors": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "coordinador": {
                             "type": "string",
                             "mandatory": true
                         },
@@ -240,7 +299,7 @@
                             "type": "string",
                             "mandatory": true
                         },
-                        "requisits": {
+                        "requerimentsMatricula": {
                             "type": "string",
                             "mandatory": true
                         },
@@ -264,12 +323,20 @@
                                 "max":8
                             }
                         },
-                        "taulaHoresUF": {
-                            "type": "defTaulaHoresUF",
+                        "taulaDadesUF": {
+                            "type": "defTaulaDadesUF",
+                            "mandatory": true
+                        },                                                
+                        "taulaDadesUnitats": {
+                            "type": "defTaulaDadesUnitats",
                             "mandatory": true
                         },                                                
                         "einesAprenentatge": {
                             "type": "defEinesAprenentatge",
+                            "mandatory": true
+                        },                                                
+                        "resultatsAprenentatge": {
+                            "type": "defResultatsAprenentage",
                             "mandatory": true
                         },                                                
                         "calendari": {
@@ -318,6 +385,14 @@
                             "type": "date",
                             "mandatory": true
                         },                                                
+                        "dataQualificacioPaf1": {
+                            "type": "date",
+                            "mandatory": true
+                        },                                                
+                        "dataQualificacioPaf2": {
+                            "type": "date",
+                            "mandatory": true
+                        },                                                
                         "notaMinimaPAF": {
                             "type": "number",
                             "mandatory": true,
@@ -325,7 +400,7 @@
                                 "min":0,
                                 "max":10
                             },
-                            "default": 0
+                            "default": 4
                         },                                                
                         "dadesQualificacioUFs": {
                             "type": "defQualificacioUFs",

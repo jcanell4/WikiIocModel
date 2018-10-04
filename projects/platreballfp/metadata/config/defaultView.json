@@ -8,7 +8,7 @@
     "groups": {
         "main": {
             "parent": "",
-            "label": "Sobre la tipologia",
+            "label": "Dades de llarga durada",
             "n_columns": 12,
             "n_rows": 1,
             "frame": true,
@@ -17,103 +17,15 @@
                 "collapsed":true
             }
         },
-        "dadesBasiques": {
+        "actualitzables": {
             "parent": "",
-            "label":"Dades bàsiques de llarga durada",
-            "n_columns": 12,
-            "n_rows": 1,
-            "frame": true,
-            "config":{
-                "collapsable":true,
-                "collapsed":true
-            }
-        },
-        "variables": {
-            "parent": "",
-            "label":"Dades bàsiques variables",
+            "label": "Dades actualitzables semestralment",
             "n_columns": 12,
             "n_rows": 1,
             "frame": true,
             "config":{
                 "collapsable":true,
                 "collapsed":false
-            }
-        },
-        "taulahores": {
-            "parent": "",
-            "label": "Taula d'hores de les UF (taulaHoresUF)",
-            "n_columns": 12,
-            "n_rows": 1,
-            "frame": true,
-            "config":{
-                "collapsable":true,
-                "collapsed":true
-            }
-        },
-        "taulaEines": {
-            "parent": "",
-            "label": "Taula de les eines d'estudi (einesAprenentatge)",
-            "n_columns": 12,
-            "n_rows": 1,
-            "frame": true,
-            "config":{
-                "collapsable":true,
-                "collapsed":true
-            }
-        },
-        "taulaCalendari": {
-            "parent": "",
-            "label": "Calendari (calendari)",
-            "n_columns": 12,
-            "n_rows": 1,
-            "frame": true,
-            "config":{
-                "collapsable":true,
-                "collapsed":false
-            }
-        },
-        "avaluacioBasiques": {
-            "parent": "",
-            "label": "Dades de llarga durada sobre l'avaluació",
-            "n_columns": 12,
-            "n_rows": 1,
-            "frame": true,
-            "config":{
-                "collapsable":true,
-                "collapsed":true
-            }
-        },
-        "avaluacioVariables": {
-            "parent": "",
-            "label": "Dates importants per a l'avaluació (datesAC)",
-            "n_columns": 12,
-            "n_rows": 1,
-            "frame": true,
-            "config":{
-                "collapsable":true,
-                "collapsed":false
-            }
-        },
-        "pafs": {
-            "parent": "",
-            "label": "Dates de les PAF",
-            "n_columns": 12,
-            "n_rows": 1,
-            "frame": true,
-            "config":{
-                "collapsable":true,
-                "collapsed":false
-            }
-        },
-        "qualificacions": {
-            "parent": "",
-            "label": "Dates Sobre la qualificació",
-            "n_columns": 12,
-            "n_rows": 1,
-            "frame": true,
-            "config":{
-                "collapsable":true,
-                "collapsed":true
             }
         },
         "extres": {
@@ -169,24 +81,35 @@
         },
         "config":{
             "options":[
-                {"value":"bloc"}, 
-                {"value":"mòdul"}
+                {"value":"mòdul"},
+                {"value":"1r. bloc"}, 
+                {"value":"2n. bloc"}
             ]
         }
       },
       "cicle": {
         "label" : "Nom del cicle (cicle)",
-        "n_columns": 12,
-        "group": "dadesBasiques",
+        "n_columns": 9,
+        "group": "main",
         "props": {
           "required": true,
           "title": "indiqueu el nom del cicle"
         }
       },
+      "duradaCicle": {
+        "label" : "Durada del Cicle(duradaCicle)",
+        "n_columns": 3,
+        "group": "main",
+        "props": {
+          "required": true,
+          "readonly": true,
+          "title": "Aquest és un camp calculat. No l'heu d'introduir"
+        }
+      },
       "modul": {
         "label" : "Nom del mòdul o bloc (modul)",
         "n_columns": 9,
-        "group": "dadesBasiques",
+        "group": "main",
         "props": {
           "required": true,
           "title": "indiqueu el nom del mòdul i el bloc si cal"
@@ -195,17 +118,26 @@
       "durada": {
         "label" : "Durada (durada)",
         "n_columns": 3,
-        "group": "dadesBasiques",
+        "group": "main",
         "props": {
           "required": true,
           "readonly": true,
           "title": "Aquest és un camp calculat. No l'heu d'introduir"
         }
       },
-      "professors": {
-        "label" : "Professors (professor)",
+      "coordinador": {
+        "label" : "Coordinador (coordinador)",
         "n_columns": 12,
-        "group": "dadesBasiques",
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "Indiqueu el nom del coordinador"
+        }
+      },
+      "professors": {
+        "label" : "Professors (professors)",
+        "n_columns": 12,
+        "group": "main",
         "props": {
           "required": true,
           "title": "Indiqueu el/s nom/s del/s professor/s"
@@ -214,7 +146,7 @@
       "urlMaterialDidactic": {
         "label" : "Adreça del material didàctic (urlMaterialDidactic)",
         "n_columns": 12,
-        "group": "dadesBasiques",
+        "group": "main",
         "props": {
           "required": true,
           "title": "indiqueu la URL per accedir als materials didàctics"
@@ -224,19 +156,19 @@
         "type":"number",
         "label" : "Dedicació setmanal (dedicacio)",
         "n_columns": 12,
-        "group": "dadesBasiques",
+        "group": "main",
         "props": {
           "required": true,
           "title": "indiqueu el número d'hores de dedicació setmanal"
         }
       },
-      "requisits": {
+      "requerimentsMatricula": {
         "n_columns": 12,
-        "label" : "Requisits (requisits)",
-        "group": "dadesBasiques",
+        "label" : "Requisits (requerimentsMatricula)",
+        "group": "main",
         "props": {
           "required": true,
-          "title": "indiqueu quins són els requisits d'aquest mòdul o bloc"
+          "title": "indiqueu quins són els requeriments de la matrícula d'aquest mòdul o bloc"
         }
       },
       "descripcio": {
@@ -252,12 +184,12 @@
             "renderable": true,
             "mode": "xhtml"
         },
-        "group": "dadesBasiques"
+        "group": "main"
       },
       "itinerariRecomanatS1": {
         "label" : "Itinerari recomanat semestre 1 (itinerariRecomanatS1)",
         "n_columns":6,
-        "group": "dadesBasiques",
+        "group": "main",
         "props": {
           "required": true,
           "min":1,
@@ -268,7 +200,7 @@
       "itinerariRecomanatS2": {
         "label" : "Itinerari recomanat semestre 2 (itinerariRecomanatS2)",
         "n_columns":6,
-        "group": "dadesBasiques",
+        "group": "main",
         "props": {
           "required": true,
           "min":1,
@@ -279,21 +211,80 @@
       "semestre": {
         "label": "Semestre (semestre)",
         "n_columns": 6, 
-        "group": "variables",
+        "group": "actualitzables",
         "props":{
                 "min":1,
                 "max":2,
                 "title" : "Indiqueu quin és el semestre actual"
         }    
       },
-      "taulaHoresUF": {
+      "taulaDadesUF": {
+        "label": "Noms de les UF (taulaDadesUF)",
         "n_columns": 12,
         "type": "editableObject",
-        "group": "taulahores",
+        "group": "main",
         "n_rows": 5,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu el nombre d'hores que té cada UF"      
+          "title": "Detalleu el nom de cada UF"      
+        },
+        "config": {
+          "actions": {
+            "set_multiple_default_rows": "Definir el nombre d'Unitats Formatives del mòdul",
+            "remove_rows": "Eliminar les Unitats Formatives seleccionades"
+          },
+          "fields": {
+            "bloc":{
+              "type": "number"         
+            },        
+            "unitat formativa": {
+              "type": "number"
+            },
+            "nom": {
+              "type": "string"
+            },
+            "hores": {
+              "type": "number",
+              "editable": false
+            }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "10%"
+              },
+              "cells": [
+                {
+                  "name": "unitat formativa",
+                  "field": "nom",
+                  "editable": true
+                },
+
+                {
+                  "name": "nom",
+                  "field": "unitat formativa",
+                  "editable": true
+                },
+
+                {
+                  "name": "hores",
+                  "field": "hores",
+                  "editable": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "taulaDadesUnitats": {
+        "label": "Taula de dades de les unitats (taulaDadesUnitats)",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "main",
+        "n_rows": 5,
+        "props": {
+          "data-editable-element": "table",
+          "title": "Detalleu les dades referents a cada unitat"      
         },
         "config": {
           "actions": {
@@ -307,6 +298,9 @@
             "unitat": {
               "type": "number"
             },
+            "nom": {
+              "type": "string"
+            },
             "hores": {
               "type": "number"
             }
@@ -314,9 +308,10 @@
         }
       },
       "einesAprenentatge": {
+        "label": "Taula de les eines d'estudi (einesAprenentatge)",
         "n_columns": 12,
         "type": "editableObject",
-        "group": "taulaEines",
+        "group": "main",
         "n_rows": 4,
         "props": {
           "data-editable-element": "table",
@@ -344,10 +339,36 @@
           }
         }
       },
-      "calendari": {
+      "resultatsAprenentatge": {
+        "label": "Taula dels resultats d'aprenentatge (resultatsAprenentatge)",
         "n_columns": 12,
         "type": "editableObject",
-        "group": "taulaCalendari",
+        "group": "main",
+        "n_rows": 4,
+        "props": {
+          "data-editable-element": "table",
+          "title": "Detalleu els resultats d'aprenentatge."
+        },
+        "config": {
+          "actions": {
+            "add_default_row": "Afegir RA",
+            "remove_rows": "Eliminar els RA seleccionats"        
+          },
+          "fields": {
+            "id": {
+              "type": "string"
+            },
+            "descripcio": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "calendari": {
+        "label": "Temporització (calendari)",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "actualitzables",
         "n_rows": 4,
         "props": {
           "data-editable-element": "table",
@@ -377,7 +398,7 @@
       "ponderacioEACs": {
         "label": "Ponderació de l'avalació contínua (ponderacioEACs)",
         "n_columns":6,
-        "group": "avaluacioBasiques",
+        "group": "main",
         "default": 30,
         "props": {
           "required": true,
@@ -389,7 +410,7 @@
       "notaMinimaAC": {
         "label": "Nota minima de l'AC (notaMinimaAC)",
         "n_columns":6,
-        "group": "avaluacioBasiques",
+        "group": "main",
         "props": {
           "required": true,
           "title": "Indiqueu quina ha de ser la nota mínima de l'AC per tenir-la en compte en la ponderació"
@@ -398,7 +419,7 @@
       "numLliuraments": {
         "label": "Número de lliuraments (numLliuraments)",
         "n_columns":6,
-        "group": "avaluacioBasiques",
+        "group": "main",
         "props": {
           "required": true,
           "min":1,
@@ -409,16 +430,17 @@
       "tipusLliuraments": {
         "label": "Tipus de lliuraments (tipusLliuraments)",
         "n_columns":6,
-        "group": "avaluacioBasiques",
+        "group": "main",
         "props": {
           "required": true,
           "title": "Indiqueu el tipus de lliurament"
         }
       },
       "datesAC": {
+        "label":"Dates importants (datesAC)",
         "n_columns": 12,
         "type": "editableObject",
-        "group": "avaluacioVariables",
+        "group": "actualitzables",
         "n_rows": 4,
         "props": {
           "data-editable-element": "table",
@@ -451,7 +473,16 @@
       "dataPaf1": {
         "label": "Data de la PAF 1 (dataPaf1)",
         "n_columns":6,
-        "group": "pafs",
+        "group": "actualitzables",
+        "props": {
+          "required": true,
+          "title": "Indiqueu la data en que es realitzarà la PAF 1"
+        }
+      },
+      "dataQualificacioPaf1": {
+        "label": "Data de la qualificació de la PAF 1 (dataQualificacioPaf1)",
+        "n_columns":6,
+        "group": "actualitzables",
         "props": {
           "required": true,
           "title": "Indiqueu la data en que es realitzarà la PAF 1"
@@ -460,7 +491,16 @@
       "dataPaf2": {
         "label": "Data de la PAF 2 (dataPaf2)",
         "n_columns":6,
-        "group": "pafs",
+        "group": "actualitzables",
+        "props": {
+          "required": true,
+          "title": "Indiqueu la data en que es realitzarà la PAF 2"
+        }
+      },
+      "dataQualificacioPaf2": {
+        "label": "Data de la qualificació de la PAF 2 (dataQualificacioPaf2)",
+        "n_columns":6,
+        "group": "actualitzables",
         "props": {
           "required": true,
           "title": "Indiqueu la data en que es realitzarà la PAF 2"
@@ -469,7 +509,7 @@
       "notaMinimaPAF": {
         "label": "Nota minima a la PAF per poder comptar l'AC (notaMinimaPAF)",
         "n_columns":12,
-        "group": "pafs",
+        "group": "actualitzables",
         "props": {
           "required": true,
           "title": "Indiqueu la nota mínima que cal treure a la PAF per tal de poder ponderar l'AC"
@@ -478,7 +518,7 @@
       "dadesQualificacioUFs": {
         "label": "Qualificació de les UF (dadesQualificacioUFs)",
         "n_columns": 12,
-        "group": "qualificacions",
+        "group": "main",
         "n_rows": 4,
         "type": "editableObject",
         "props": {
@@ -506,7 +546,7 @@
       "dadesQualificacioFinal": {
         "label": "Qualificació final (dadesQualificacioFinal)",
         "n_columns": 12,
-        "group": "qualificacions",
+        "group": "main",
         "n_rows": 4,
         "type": "editableObject",
         "props": {

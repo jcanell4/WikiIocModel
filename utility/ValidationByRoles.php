@@ -10,7 +10,7 @@ class ValidationByRoles extends ValidateWithPermission
 
     function validate($data)
     {
-        $role = $this->permission->getRole();
+        $role = $this->permission->getRol();
         $ret = TRUE;
 
         if(is_array($role)){
