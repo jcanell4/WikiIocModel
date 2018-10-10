@@ -364,6 +364,23 @@
           }
         }
       },
+      "avaluacioInicial":{
+        "label": "Avaluació inicial (avaluacioInicial)",
+        "type":"select",
+        "n_columns":4,
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada UF"      
+        },
+         "config":{
+            "options":[
+                {"description":"No es fa","value":"NO"}, 
+                {"description":"A l'inci","value":"INICI"}, 
+                {"description":"Per cada UF","value":"PER_UF"}
+            ]
+         }            
+      },
       "calendari": {
         "label": "Temporització (calendari)",
         "n_columns": 12,
@@ -395,6 +412,26 @@
           }
         }
       },
+      "numLliuraments": {
+        "label": "Número de lliuraments (numLliuraments)",
+        "n_columns":4,
+        "group": "main",
+        "props": {
+          "required": true,
+          "min":1,
+          "max":20,
+          "title": "Indiqueu el nombre de lliuraments que l'AC té"      
+        }
+      },
+      "tipusLliuraments": {
+        "label": "Tipus de lliuraments (tipusLliuraments)",
+        "n_columns":4,
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "Indiqueu el tipus de lliurament"
+        }
+      },
       "ponderacioEACs": {
         "label": "Ponderació de l'avalació contínua (ponderacioEACs)",
         "n_columns":6,
@@ -414,26 +451,6 @@
         "props": {
           "required": true,
           "title": "Indiqueu quina ha de ser la nota mínima de l'AC per tenir-la en compte en la ponderació"
-        }
-      },
-      "numLliuraments": {
-        "label": "Número de lliuraments (numLliuraments)",
-        "n_columns":6,
-        "group": "main",
-        "props": {
-          "required": true,
-          "min":1,
-          "max":20,
-          "title": "Indiqueu el nombre de lliuraments que l'AC té"      
-        }
-      },
-      "tipusLliuraments": {
-        "label": "Tipus de lliuraments (tipusLliuraments)",
-        "n_columns":6,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "Indiqueu el tipus de lliurament"
         }
       },
       "datesAC": {
@@ -508,11 +525,20 @@
       },
       "notaMinimaPAF": {
         "label": "Nota minima a la PAF per poder comptar l'AC (notaMinimaPAF)",
-        "n_columns":12,
-        "group": "actualitzables",
+        "n_columns":6,
+        "group": "main",
         "props": {
           "required": true,
           "title": "Indiqueu la nota mínima que cal treure a la PAF per tal de poder ponderar l'AC"
+        }
+      },
+      "duradaPAF": {
+        "label": "Durada de la PAF (duradaPAF)",
+        "n_columns":6,
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "Indiqueu la durada màxima de la PAF"
         }
       },
       "dadesQualificacioUFs": {
@@ -534,7 +560,10 @@
             "unitat formativa": {
               "type": "number"
             },
-            "tipus qualificació": {
+            "tipus qualificació (breu)": {
+              "type": "string"
+            },
+            "descripció qualificació (opcional)": {
               "type": "string"
             },
             "ponderació": {

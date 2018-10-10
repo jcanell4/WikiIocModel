@@ -53,7 +53,11 @@
                         "tipus qualificació": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "dada"
+                            "default": "Identificador del tipus de qualificació"
+                        },
+                        "descripció qualificació": {
+                            "type": "string",
+                            "mandatory": true
                         },
                         "ponderació": {
                             "type": "number",
@@ -339,6 +343,11 @@
                             "type": "defResultatsAprenentage",
                             "mandatory": true
                         },                                                
+                        "avaluacioInicial": {
+                            "type": "string",
+                            "default":"no",
+                            "mandatory": true
+                        },                                                
                         "calendari": {
                             "type": "defCalendari",
                             "mandatory": true
@@ -405,6 +414,11 @@
                         "dadesQualificacioUFs": {
                             "type": "defQualificacioUFs",
                             "mandatory": true
+                        },                                                
+                        "duradaPAF": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default":"1 hora i 50 minuts"
                         },                                                
                         "dadesQualificacioFinal": {
                             "type": "defQualificacioFinal",
