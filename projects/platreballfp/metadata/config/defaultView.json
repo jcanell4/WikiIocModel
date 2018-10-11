@@ -175,7 +175,7 @@
         "n_columns": 12,
         "label" : "Descripció (descripcio)",
         "type": "textarea",
-        "n_rows": 10,
+        "n_rows": 6,
         "props": {
           "data-editable-element": "textarea",
           "title": "descriviu breument el mòdul"
@@ -281,7 +281,7 @@
         "n_columns": 12,
         "type": "editableObject",
         "group": "main",
-        "n_rows": 5,
+        "n_rows": 8,
         "props": {
           "data-editable-element": "table",
           "title": "Detalleu les dades referents a cada unitat"      
@@ -312,7 +312,7 @@
         "n_columns": 12,
         "type": "editableObject",
         "group": "main",
-        "n_rows": 4,
+        "n_rows": 8,
         "props": {
           "data-editable-element": "table",
           "title": "Detalleu els recursos i les eines usades en l'aprenentatge de l'alumne"
@@ -364,6 +364,38 @@
           }
         }
       },
+      "activitatsAprenentatge": {
+        "label": "Taula de les activitats d'aprenentatge (activitatsAprenentatge)",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "main",
+        "n_rows": 8,
+        "props": {
+          "data-editable-element": "table",
+          "title": "Detalleu les activitats d'aprenentatge."
+        },
+        "config": {
+          "actions": {
+            "add_default_row": "Afegir activitat",
+            "remove_rows": "Eliminar les activitats seleccionades"        
+          },
+          "fields": {
+            "unitat": {
+                "type": "number"
+            },
+            "període": {
+                "type": "number"
+            },
+            "eina": {
+              "type": "select",
+              "options": ["lectura", "autoavalució", "fòrum", "qüestionari", "exercicis", "altres"]                        
+            },
+            "descripció": {
+                "type": "string"
+            }
+          }
+        }
+      },
       "avaluacioInicial":{
         "label": "Avaluació inicial (avaluacioInicial)",
         "type":"select",
@@ -401,7 +433,13 @@
               "type": "string"
             },
             "període": {
-              "type": "string"
+                "type": "number"
+            },
+            "tipus període": {
+                "type": "string"
+            },
+            "descripció període": {
+                "type": "string"
             },
             "inici": {
               "type": "date"
@@ -545,7 +583,7 @@
         "label": "Qualificació de les UF (dadesQualificacioUFs)",
         "n_columns": 12,
         "group": "main",
-        "n_rows": 4,
+        "n_rows": 10,
         "type": "editableObject",
         "props": {
           "data-editable-element": "table",
@@ -576,7 +614,7 @@
         "label": "Qualificació final (dadesQualificacioFinal)",
         "n_columns": 12,
         "group": "main",
-        "n_rows": 4,
+        "n_rows": 5,
         "type": "editableObject",
         "props": {
           "data-editable-element": "table"

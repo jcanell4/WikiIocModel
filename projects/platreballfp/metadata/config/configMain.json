@@ -151,6 +151,14 @@
                             "mandatory": true
                         },
                         "període": {
+                            "type": "number",
+                            "mandatory": true
+                        },
+                        "tipus període": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "descripció període": {
                             "type": "string",
                             "mandatory": true
                         },
@@ -250,6 +258,32 @@
                     "type": "objectArray",
                     "typeDef":"entradaDadesUnitats"
                 },                                                
+                "entradaActivitatsAprenentatge": {
+                    "type": "object",
+                    "keys": {
+                        "unitat": {
+                            "type": "number",
+                            "mandatory": true
+                        },
+                        "període": {
+                            "type": "number",
+                            "mandatory": true
+                        },
+                        "eina": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "descripció": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Descriviu breument l'activitat"
+                        }
+                    }
+                },
+                "defActivitatsAprenentatge": {
+                    "type": "objectArray",
+                    "typeDef":"entradaActivitatsAprenentatge"
+                },                                                
                 "pla": {
                     "type": "object",
                     "keys": {
@@ -341,6 +375,10 @@
                         },                                                
                         "resultatsAprenentatge": {
                             "type": "defResultatsAprenentage",
+                            "mandatory": true
+                        },                                                
+                        "activitatsAprenentatge": {
+                            "type": "defActivitatsAprenentatge",
                             "mandatory": true
                         },                                                
                         "avaluacioInicial": {
