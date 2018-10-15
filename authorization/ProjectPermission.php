@@ -10,9 +10,9 @@ class ProjectPermission extends BasicPermission {
     const ROL_RESPONSABLE = "responsable";
     const ROL_AUTOR = "autor";
 
-    private $author;        //array
-    private $responsable;   //array
-    private $rol;
+    protected $author;        //array
+    protected $responsable;   //array
+    protected $rol;
 
     public function getAuthor() {
         return $this->author;
