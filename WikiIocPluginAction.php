@@ -1,13 +1,11 @@
 <?php
 /**
- * Exemple de action
- * aquest exemple no és operatiu, només serveix per verificar el disseny estructural i el fluxe
- *
+ * WikiIocPluginAction: classe base de les classes action de plugins de projectes
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
-if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL . 'projects/');
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once (WIKI_IOC_MODEL . 'persistence/BasicPersistenceEngine.php');
 
 class WikiIocPluginAction extends DokuWiki_Action_Plugin {
@@ -22,15 +20,20 @@ class WikiIocPluginAction extends DokuWiki_Action_Plugin {
     }
 
     function register(Doku_Event_Handler $controller) {
-        $listProjects = $this->projectMetaDataQuery->getListProjectTypes();
-        foreach ($listProjects as $dir) {
-            $action = WIKI_IOC_PROJECTS.$dir."/action.php";
+        //NOTA: Los nombres de tipo de proyecto no pueden contener el caracter '_'
+        $elem = explode("_", get_class($this));
+        $plugin = $elem[count($elem)-1];
+
+        $listProjects = $this->projectMetaDataQuery->getPluginProjectTypes($plugin);
+
+        foreach ($listProjects as $project) {
+            $dir = realpath(DOKU_PLUGIN."$plugin/projects/$project")."/";
+            $action = "{$dir}action.php";
             if (is_file($action)) {
                 require_once ($action);
-                $classe = "action_plugin_wikiiocmodel_projects_$dir";
-                $accio = new $classe($dir);
+                $classe = "action_plugin_{$plugin}_projects_$project";
+                $accio = new $classe($project, $dir);
                 $accio->register($controller);
-
             }
         }
     }
