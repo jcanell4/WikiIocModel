@@ -5,8 +5,9 @@
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-require_once (DOKU_INC . "lib/plugins/ajaxcommand/defkeys/PageKeys.php");
-include_once (DOKU_PLUGIN . "wikiiocmodel/actions/ProjectMetadataAction.php");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
+require_once (DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php");
+include_once (WIKI_IOC_MODEL . "actions/ProjectMetadataAction.php");
 
 class BasicDraftProjectMetaDataAction extends ProjectMetadataAction {
 
@@ -19,9 +20,12 @@ class BasicDraftProjectMetaDataAction extends ProjectMetadataAction {
     }
 
     protected function startProcess() {
-        $this->projectModel->init($this->params[ProjectKeys::KEY_ID],
-                                  $this->params[ProjectKeys::KEY_PROJECT_TYPE],
-                                  $this->params[ProjectKeys::KEY_REV]);
+        $this->projectModel->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
+                                   ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
+                                   ProjectKeys::KEY_REV             => $this->params[ProjectKeys::KEY_REV],
+                                   ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET],
+                                   ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                                ]);
 
         $this->resourceLocker->init($this->params);
 

@@ -9,11 +9,14 @@ class ListProjectsAction extends AbstractWikiAction {
 
     private $persistenceEngine;
     private $model;
+    private $projectTypeDir;
 
     public function init($modelManager) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
-        $this->model = new DokuPageModel($this->persistenceEngine);  //Canviar per BasicWikiDataModel
+        //$this->model = new DokuPageModel($this->persistenceEngine);  //Canviar per BasicWikiDataModel
+        $this->projectTypeDir = $modelManager->getProjectTypeDir();
+        $this->model = new BasicWikiDataModel($this->persistenceEngine);
     }
 
     /**
@@ -21,9 +24,16 @@ class ListProjectsAction extends AbstractWikiAction {
      */
     public function responseProcess() {
         if ($this->params['list_type'] !== FALSE) {
-            $this->model->init($this->params[ProjectKeys::KEY_ID]);
-            $p = ($this->params['list_type']==="array") ? $this->params['projectType'] : NULL;
-            $listProjectTypes = $this->model->getListProjectTypes($p);
+            $metaDataSubSet = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
+
+            $this->model->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
+                                ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
+                                ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet,
+                                ProjectKeys::KEY_PROJECTTYPE_DIR => $this->projectTypeDir
+                              ]);
+            $pT = ($this->params['list_type']==="array") ? $this->params[ProjectKeys::KEY_PROJECT_TYPE] : NULL;
+            $pTDir = ($pT) ? $this->projectTypeDir : NULL;
+            $listProjectTypes = $this->model->getListProjectTypes($pT, $metaDataSubSet, $pTDir);
             $aList=[];
             foreach ($listProjectTypes as $pTypes) {
                 $aList[] = ['id' => "id_$pTypes", 'name' => $pTypes];

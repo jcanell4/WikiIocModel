@@ -1,22 +1,33 @@
 <?php
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-include_once (DOKU_PLUGIN . 'wikiiocmodel/actions/ProjectMetadataAction.php');
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
+include_once (WIKI_IOC_MODEL . 'actions/ProjectMetadataAction.php');
 
 /**
  * Desa els canvis fets al formulari que defineix el projecte
  */
 class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
 
+    protected function setParams($params) {
+        parent::setParams($params);
+        $this->getModel()->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
+                                 ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
+                                 ProjectKeys::KEY_REV             => $this->params[ProjectKeys::KEY_REV],
+                                 ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET],
+                                 ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                               ]);
+    }
+
     /**
      * Envía los datos $metaData del proyecto al ProjectModel y obtiene la estructura y los valores del proyecto
      * @return array con la estructura y los valores del proyecto
      */
     protected function responseProcess() {
-        $dataProject = $this->params['dataProject'];
+        $dataProject = $this->params;
         $extraProject = $this->params['extraProject'];
         $model = $this->getModel();
-        $model->init($dataProject[ProjectKeys::KEY_ID], $dataProject[ProjectKeys::KEY_PROJECT_TYPE]);
+        $modelAttrib = $model->getModelAttributes();
 
         //sólo se ejecuta si existe el proyecto
         if ($model->existProject()) {
@@ -28,10 +39,11 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
                 throw new UnknownUserException($metaDataValues['responsable']." (indicat al camp 'responsable') ");
 
             $metaData = [
+                ProjectKeys::KEY_ID_RESOURCE => $modelAttrib[ProjectKeys::KEY_ID],
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
-                ProjectKeys::KEY_PROJECT_TYPE => $dataProject[ProjectKeys::KEY_PROJECT_TYPE], //opcional
-                ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET,
-                ProjectKeys::KEY_ID_RESOURCE => $dataProject[ProjectKeys::KEY_ID],
+                ProjectKeys::KEY_PROJECT_TYPE => $modelAttrib[ProjectKeys::KEY_PROJECT_TYPE],
+                ProjectKeys::KEY_METADATA_SUBSET => $modelAttrib[ProjectKeys::KEY_METADATA_SUBSET],
+                ProjectKeys::KEY_PROJECTTYPE_DIR => $modelAttrib[ProjectKeys::KEY_PROJECTTYPE_DIR],
                 ProjectKeys::KEY_FILTER => $dataProject[ProjectKeys::KEY_FILTER],  //opcional
                 ProjectKeys::KEY_METADATA_VALUE => str_replace("\\r\\n", "\\n", json_encode($metaDataValues))
             ];
@@ -41,8 +53,8 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
 
             if ($model->isProjectGenerated()) {
                 $include = [
-                     'id' => $dataProject[ProjectKeys::KEY_ID]
-                    ,'link_page' => $dataProject[ProjectKeys::KEY_ID].":".end(explode(":", $response['projectMetaData']["plantilla"]['value']))
+                     'id' => $modelAttrib[ProjectKeys::KEY_ID]
+                    ,'link_page' => $modelAttrib[ProjectKeys::KEY_ID].":".end(explode(":", $response['projectMetaData']["plantilla"]['value']))
                     ,'old_autor' => $extraProject['old_autor']
                     ,'old_responsable' => $extraProject['old_responsable']
                     ,'new_autor' => $response['projectMetaData']['autor']['value']
@@ -59,13 +71,13 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
             if ($dataProject[ProjectKeys::KEY_NO_RESPONSE]) {
                 $response[ProjectKeys::KEY_CODETYPE] = 0;
             }else{
-                $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $dataProject[ProjectKeys::KEY_ID]);
-                $response[ProjectKeys::KEY_ID] = $this->idToRequestId($dataProject[ProjectKeys::KEY_ID]);
+                $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $modelAttrib[ProjectKeys::KEY_ID]);
+                $response[ProjectKeys::KEY_ID] = $this->idToRequestId($modelAttrib[ProjectKeys::KEY_ID]);
             }
         }
 
         if (!$response) {
-            throw new ProjectExistException($dataProject[ProjectKeys::KEY_ID]);
+            throw new ProjectExistException($modelAttrib[ProjectKeys::KEY_ID]);
         }else {
             //Añadir propiedades/restricciones del configMain para la creación de elementos dentro del proyecto
             parent::addResponseProperties($response);
@@ -75,7 +87,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
 
     private function netejaKeysFormulari($array) {
         $cleanArray = [];
-        $excludeKeys = ['id','do','sectok','projectType','ns','submit', 'cancel','close','keep_draft','no_response'];
+        $excludeKeys = ['id','do','sectok','projectType','ns','submit', 'cancel','close','keep_draft','no_response','extraProject'];
         foreach ($array as $key => $value) {
             if (!in_array($key, $excludeKeys)) {
                 $cleanArray[$key] = $value;

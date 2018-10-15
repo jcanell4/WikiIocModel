@@ -4,19 +4,19 @@
  * @author josep et al.
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN.'wikiiocmodel/');
-if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL.'projects/');
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
 
-require_once (DOKU_INC.'inc/JSON.php');
-require_once (DOKU_PLUGIN.'ajaxcommand/defkeys/ProjectKeys.php');
-require_once (WIKI_IOC_MODEL.'persistence/DataQuery.php');
+require_once (DOKU_INC."inc/JSON.php");
+require_once (DOKU_PLUGIN."ajaxcommand/defkeys/ProjectKeys.php");
+require_once (WIKI_IOC_MODEL."persistence/DataQuery.php");
 
 class ProjectMetaDataQuery extends DataQuery {
 
-    const PATH_METADATA_CONFIG = "/metadata/config/";
+    const PATH_METADATA_CONFIG = "metadata/config/";
     const FILE_CONFIGMAIN      = "configMain.json";
     const FILE_DEFAULTVIEW     = "defaultView.json";
+    const DEFAULT_PROJECT_TYPE_DIR = WIKI_IOC_MODEL . "projects/defaultProject/";
 
     const LOG_TYPE_CREATE     = 'C';
     const LOG_TYPE_EDIT       = 'E';
@@ -27,35 +27,104 @@ class ProjectMetaDataQuery extends DataQuery {
     private $projectFileName = NULL;    //Nom de l'arxiu de dades del projecte
     private $projectFilePath = NULL;    //Ruta completa al directori del projecte
 
-    public function getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $component) {
+    public function getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $subset, $component, $projectTypeDir=NULL) {
+        if (!$projectTypeDir) {
+            $projectTypeDir = $this->getProjectTypeDir($projectType);
+        }
         //lista de elementos permitidos para el componente dado
-        $subset = ProjectKeys::VAL_DEFAULTSUBSET;
-        $jsonList = $this->getMetaDataConfig($projectType, $metaDataPrincipal, $subset);
+        $jsonList = $this->getMetaDataConfig($projectType, $metaDataPrincipal, $subset, $projectTypeDir);
         $arrayList = json_decode($jsonList, true);
         return $arrayList[$subset][$component];
     }
 
     /**
      * Devuelve la lista ordenada de tipos de proyecto obtenida a partir de la lectura
-     * de la estructura de directorios de wikiiocmodel/projects/
+     * de la estructura de directorios de 'plugin'/projects/
      */
-    public function getListProjectTypes($projectType=NULL) {
+    public function getListProjectTypes($projectType=NULL, $subset=NULL, $projectTypeDir=NULL) {
+        global $plugin_controller;
         if ($projectType) {
-            $listProjects = $this->getListMetaDataComponentTypes($projectType, ProjectKeys::KEY_METADATA_COMPONENT_TYPES, ProjectKeys::KEY_MD_CT_SUBPROJECTS);
+            if (!$subset) $subset = ProjectKeys::VAL_DEFAULTSUBSET;
+            $listProjects = $this->getListMetaDataComponentTypes($projectType,
+                                                                 ProjectKeys::KEY_METADATA_COMPONENT_TYPES,
+                                                                 $subset,
+                                                                 ProjectKeys::KEY_MD_CT_SUBPROJECTS,
+                                                                 $projectTypeDir);
         }
-        $projectsDir = opendir(WIKI_IOC_PROJECTS);
-        while ($pType = readdir($projectsDir)) {
-            if (is_dir(WIKI_IOC_PROJECTS.$pType) && $pType !== '.' && $pType !== '..') {
-                if ($listProjects) {
-                    if (in_array($pType, $listProjects)) {
-                        $ret[] = $pType;
+        $plugin_list = $plugin_controller->getList('action');
+        foreach ($plugin_list as $plugin) {
+            $pluginProjectsDir = DOKU_PLUGIN."$plugin/projects/";
+            if (($projectsDir = @opendir($pluginProjectsDir))) {
+                while ($pType = readdir($projectsDir)) {
+                    if (is_dir($pluginProjectsDir.$pType) && $pType !== '.' && $pType !== '..') {
+                        if ($listProjects) {
+                            if (in_array($pType, $listProjects)) {
+                                $ret[] = $pType;
+                            }
+                        }else {
+                            $ret[] = $pType;
+                        }
                     }
-                }else {
+                }
+            }
+        }
+        if ($ret) sort($ret);
+        return $ret;
+    }
+
+    /**
+     * Devuelve una lista ordenada con los tipos de proyecto contenidos en el plugin
+     */
+    public function getPluginProjectTypes($plugin) {
+        $pluginProjectsDir = DOKU_PLUGIN."$plugin/projects/";
+        if (($projectsDir = @opendir($pluginProjectsDir))) {
+            while ($pType = readdir($projectsDir)) {
+                if (is_dir($pluginProjectsDir.$pType) && $pType !== '.' && $pType !== '..') {
                     $ret[] = $pType;
                 }
             }
         }
         if ($ret) sort($ret);
+        return $ret;
+    }
+
+    /**
+     * AHORA MISMO NO LA USA NADIE
+     * Devuelve un array de tipos de proyecto contenidos en el plugin
+     */
+    public function getArrayProjectTypes($plugin) {
+        $pluginProjectsDir = DOKU_PLUGIN."$plugin/projects/";
+        if (($projectsDir = @opendir($pluginProjectsDir))) {
+            while ($pType = readdir($projectsDir)) {
+                if (is_dir($pluginProjectsDir.$pType) && $pType !== '.' && $pType !== '..') {
+                    $ret[] = ['project' => $pType,
+                              'dir' => $pluginProjectsDir.$pType."/"];
+                }
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * AHORA MISMO NO LA USA NADIE
+     * Devuelve un array de tipos de proyecto obtenido a partir de la lectura
+     * de la estructura de directorios de 'plugin'/projects/
+     */
+    public function getAllArrayProjectTypes() {
+        global $plugin_controller;
+        $plugin_list = $plugin_controller->getList('action');
+        foreach ($plugin_list as $plugin) {
+            $pluginProjectsDir = DOKU_PLUGIN."$plugin/projects/";
+            if (($projectsDir = @opendir($pluginProjectsDir))) {
+                while ($pType = readdir($projectsDir)) {
+                    if (is_dir($pluginProjectsDir.$pType) && $pType !== '.' && $pType !== '..') {
+                        $ret[] = ['plugin' => $plugin,
+                                  'project' => $pType,
+                                  'dir' => $pluginProjectsDir.$pType."/"];
+                    }
+                }
+            }
+        }
         return $ret;
     }
 
@@ -73,13 +142,15 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param string $projectType
      * @param string $configAttribute : attributo 'metaData' principal
      * @param string $metaDataSubset : nombre del subconjunto requerido
+     * @param string $projectTypeDir : directorio del tipo de proyecto
      * @return Json con el array correspondiente a la clave $configAttribute del archivo FILE_CONFIGMAIN
      */
-    public function getMetaDataConfig($projectType, $configAttribute, $metaDataSubset) {
-        $path = WIKI_IOC_PROJECTS . $projectType . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN;
+    public function getMetaDataConfig($projectType, $configAttribute, $metaDataSubset, $projectTypeDir=NULL) {
+        if (!$projectTypeDir) $projectTypeDir = $this->getProjectTypeDir($projectType);
+        $path = $projectTypeDir . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN;
         $configMain = @file_get_contents($path);
         if ($configMain == false) {
-            $configMain = @file_get_contents(WIKI_IOC_PROJECTS . "defaultProject" . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN);
+            $configMain = @file_get_contents(self::DEFAULT_PROJECT_TYPE_DIR . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN);
         }
 
         $configArray = json_decode($configMain, true);
@@ -98,13 +169,13 @@ class ProjectMetaDataQuery extends DataQuery {
         return $toReturn;
     }
 
-    public function getMetaViewConfig($projectType, $viewConfig) {
-
-        $view = @file_get_contents(WIKI_IOC_PROJECTS.$projectType.self::PATH_METADATA_CONFIG."$viewConfig.json");
+    public function getMetaViewConfig($projectType, $viewConfig, $projectTypeDir=NULL) {
+        if (!$projectTypeDir) $projectTypeDir = $this->getProjectTypeDir($projectType);
+        $view = @file_get_contents($projectTypeDir . self::PATH_METADATA_CONFIG . "$viewConfig.json");
         if ($view == false) {
-            $view = @file_get_contents(WIKI_IOC_PROJECTS.$projectType.self::PATH_METADATA_CONFIG.self::FILE_DEFAULTVIEW);
+            $view = @file_get_contents($projectTypeDir . self::PATH_METADATA_CONFIG . self::FILE_DEFAULTVIEW);
             if ($view == false) {
-                $view = @file_get_contents(WIKI_IOC_PROJECTS."defaultProject".self::PATH_METADATA_CONFIG.self::FILE_DEFAULTVIEW);
+                $view = @file_get_contents(self::DEFAULT_PROJECT_TYPE_DIR . self::PATH_METADATA_CONFIG . self::FILE_DEFAULTVIEW);
             }
         }
         $viewArray = json_decode($view, true);
@@ -312,16 +383,30 @@ class ProjectMetaDataQuery extends DataQuery {
         return $ret;
     }
 
-     /**
-     * @params array(projectType, metadatasubset)
-     * @return string el nombre del fichero de datos del proyecto del tipo solicitado
+    /**
+     * Devuelve el nombre del archivo de datos para este tipo de proyecto
+     * @params array [ProjectKeys::KEY_PROJECT_TYPE,
+     *                ProjectKeys::KEY_METADATA_SUBSET,
+     *                ProjectKeys::KEY_PROJECTTYPE_DIR]
+     * @return string el nombre del fichero de datos del tipo de proyecto solicitado
      */
     public function getProjectFileName($parms) {
-        $jsonArray = $this->getMetaDataConfig($parms[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $parms[ProjectKeys::KEY_METADATA_SUBSET]);
+        $jsonArray = $this->getMetaDataConfig($parms[ProjectKeys::KEY_PROJECT_TYPE],
+                                              ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE,
+                                              $parms[ProjectKeys::KEY_METADATA_SUBSET],
+                                              $parms[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                                            );
         $data = json_decode($jsonArray, true);
         return $data[$parms[ProjectKeys::KEY_METADATA_SUBSET]];
     }
 
+    /**
+     * Devuelve el nombre del archivo de datos para este tipo de proyecto
+     * Si recibe parámetros, guarda el valor en la variable privada $this->projectFileName
+     * @params array [ProjectKeys::KEY_PROJECT_TYPE,
+     *                ProjectKeys::KEY_METADATA_SUBSET,
+     *                ProjectKeys::KEY_PROJECTTYPE_DIR]
+     */
     private function _getProjectFileName($parms=[]) {
         if (!empty($parms)) {
             $this->projectFileName = $this->getProjectFileName($parms);
@@ -345,6 +430,10 @@ class ProjectMetaDataQuery extends DataQuery {
         return $this->projectFilePath;
     }
 
+    public function getProjectTypeDir($projectType){
+        return (class_exists('DokuModelManager', FALSE)) ? DokuModelManager::getProjectTypeDir() : WIKI_IOC_MODEL . "projects/$projectType/";
+    }
+
     public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProjects=TRUE, $hiddenProjects=FALSE, $root=FALSE) {
         $base = WikiGlobalConfig::getConf('datadir');
         return $this->getNsTreeFromGenericSearch($base, $currentNode, $sortBy, $onlyDirs, 'search_universal', $expandProjects, $hiddenProjects, $root);
@@ -357,20 +446,23 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     /**
+     * @param boolean parameters['extra'] : TRUE | FALSE
      * @return array Contiene los datos del proyecto correspondientes a la clave '$metaDataSubSet'
      */
-    public function getDataProject($idProject, $projectType, $metaDataSubSet=NULL, $extra=FALSE) {
-        $metaDataSubSet = (!$metaDataSubSet) ? ProjectKeys::VAL_DEFAULTSUBSET : $metaDataSubSet;
-        $parms = [ProjectKeys::KEY_ID => $idProject,
-                  ProjectKeys::KEY_PROJECT_TYPE => $projectType,
+    public function getDataProject($parameters) {
+        $metaDataSubSet = ($parameters['metaDataSubSet']) ? $parameters['metaDataSubSet'] : ProjectKeys::VAL_DEFAULTSUBSET;
+        $parms = [ProjectKeys::KEY_ID => $parameters[ProjectKeys::KEY_ID],
+                  ProjectKeys::KEY_PROJECT_TYPE => $parameters[ProjectKeys::KEY_PROJECT_TYPE],
+                  ProjectKeys::KEY_PROJECTTYPE_DIR => $parameters[ProjectKeys::KEY_PROJECTTYPE_DIR],
                   ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet
                  ];
         $filename = $this->_getProjectFileName($parms);
-        $jsonData = $this->getMeta($idProject, $projectType, $metaDataSubSet, $filename);
+        $jsonData = $this->getMeta($parameters[ProjectKeys::KEY_ID], $parameters[ProjectKeys::KEY_PROJECT_TYPE], $metaDataSubSet, $filename);
         $data = json_decode($jsonData, true);
-        if ($extra) {
-            $data[ProjectKeys::KEY_PROJECT_FILENAME] = $filename;
-            $data[ProjectKeys::KEY_PROJECT_FILEPATH] = $this->getFileName($idProject, $parms);
+        $data[ProjectKeys::KEY_PROJECTTYPE_DIR] = $parameters[ProjectKeys::KEY_PROJECTTYPE_DIR];
+        if ($parameters['extra']) {
+            $data[ProjectKeys::KEY_PROJECT_FILENAME] = $parms[ProjectKeys::KEY_PROJECT_FILENAME] = $filename;
+            $data[ProjectKeys::KEY_PROJECT_FILEPATH] = $this->getFileName($parameters[ProjectKeys::KEY_ID], $parms);
         }
         return $data;
     }
@@ -438,9 +530,9 @@ class ProjectMetaDataQuery extends DataQuery {
         $record_line = implode("\t", $record)."\n";
         $ch_filename = $this->_metaProjectFN($projectId, "", ".changes");
 
-        $fh = fopen($ch_filename, "r");
+        $fh = @fopen($ch_filename, "r");
         if ($fh) {
-            $fh2 = fopen("$ch_filename.tmp", "w");
+            $fh2 = @fopen("$ch_filename.tmp", "w");
             $bytes = fwrite($fh2, $record_line);
             while (!feof($fh)) {
                 fwrite($fh2, fgets($fh));
@@ -449,7 +541,7 @@ class ProjectMetaDataQuery extends DataQuery {
             fclose($fh);
             $ret &= rename("$ch_filename.tmp", $ch_filename);
         }else {
-            $fh = fopen($ch_filename, "w");
+            $fh = @fopen($ch_filename, "w");
             $bytes = fwrite($fh, $record_line);
             fclose($fh);
         }

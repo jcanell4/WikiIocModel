@@ -1,6 +1,7 @@
 <?php
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 include_once WIKI_IOC_MODEL."actions/ProjectMetadataAction.php";
 
 class CreateSubprojectMetaDataAction extends ProjectMetadataAction {
@@ -16,10 +17,15 @@ class CreateSubprojectMetaDataAction extends ProjectMetadataAction {
         $new_projectType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
 
         $projectModel = $this->getModel();
-        $projectModel->init($parent_id, $parent_projectType);
+        //$projectModel->init($parent_id, $parent_projectType);
+        $projectModel->init([ProjectKeys::KEY_ID              => $parent_id,
+                             ProjectKeys::KEY_PROJECT_TYPE    => $parent_projectType,
+                             ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET],
+                             ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                           ]);
 
         //Verifica que el proyecto solicitado sea un proyecto permitido
-        $listProjectTypes = $projectModel->getListProjectTypes($parent_projectType);
+        $listProjectTypes = $projectModel->getListProjectTypes($parent_projectType, $this->params[ProjectKeys::KEY_METADATA_SUBSET], $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]);
         if (!in_array($new_projectType, $listProjectTypes)) {
             throw new UnknownProjectException($new_id, "El tipus de projecte so·licitat no està permés.");
         }

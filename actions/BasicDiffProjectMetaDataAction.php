@@ -5,7 +5,8 @@
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-include_once (DOKU_PLUGIN . "wikiiocmodel/actions/ProjectMetadataAction.php");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
+include_once (WIKI_IOC_MODEL . "actions/ProjectMetadataAction.php");
 
 class BasicDiffProjectMetaDataAction extends ProjectMetadataAction {
 
@@ -16,9 +17,12 @@ class BasicDiffProjectMetaDataAction extends ProjectMetadataAction {
     }
 
     protected function startProcess() {
-        $this->projectModel->init($this->params[ProjectKeys::KEY_ID],
-                                  $this->params[ProjectKeys::KEY_PROJECT_TYPE],
-                                  $this->params[ProjectKeys::KEY_REV]);
+        $this->projectModel->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
+                                   ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
+                                   ProjectKeys::KEY_REV             => $this->params[ProjectKeys::KEY_REV],
+                                   ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET],
+                                   ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                                ]);
     }
 
     protected function runProcess() {

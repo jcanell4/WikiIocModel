@@ -1,32 +1,35 @@
 <?php
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
-include_once WIKI_IOC_MODEL."actions/BasicViewProjectMetaDataAction.php";
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
+include_once WIKI_IOC_MODEL . "actions/BasicViewProjectMetaDataAction.php";
 
 class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
 
     protected function runAction() {
-
         $response = parent::runAction();
-
         $projectModel = $this->getModel();
 
         if ($projectModel->isProjectGenerated()) {
-
             $projectType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
+            $metaDataSubSet = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
             $confProjectType = $this->modelManager->getConfigProjectType();
 
             //obtenir la ruta de la configuració per a aquest tipus de projecte
-            $projectTypeConfigFile = $projectModel->getProjectTypeConfigFile($projectType);
+            $projectTypeConfigFile = $projectModel->getProjectTypeConfigFile($projectType, $metaDataSubSet);
 
             $cfgProjectModel = $confProjectType."ProjectModel";
-            $configProjectModel = new $cfgProjectModel($this->persistenceEngine);
-            $configProjectModel->init($projectTypeConfigFile, $confProjectType);
+            $cfgProjectTypeDir = $this->findProjectTypeDir($confProjectType);
+            $configProjectModel = new $cfgProjectModel($this->persistenceEngine, $cfgProjectTypeDir);
 
+            $configProjectModel->init([ProjectKeys::KEY_ID              => $projectTypeConfigFile,
+                                       ProjectKeys::KEY_PROJECT_TYPE    => $confProjectType,
+                                       ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet,
+                                       ProjectKeys::KEY_PROJECTTYPE_DIR => $cfgProjectTypeDir
+                                    ]);
             //Obtenir les dades de la configuració per a aquest tipus de projecte
             $projectFileName = $projectModel->getProjectFileName();
-            $metaDataSubset = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
-            $metaDataConfigProject = $configProjectModel->getMetaDataProject($projectFileName, $metaDataSubset);
+            $metaDataConfigProject = $configProjectModel->getMetaDataProject($projectFileName, $metaDataSubSet);
 
             if ($metaDataConfigProject['arraytaula']) {
                 $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
@@ -34,7 +37,7 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
                 $dataActual = new DateTime();
 
                 foreach ($arraytaula as $elem) {
-                    if ($response['projectMetaData']['semestre']['value'] == "1") {
+                    if ($response['projectMetaData']['semestre']['value'] == "1") { //$response['projectMetaData']['semestre']['value'] Semestre actual indicado en los datos del proyecto
                         if ($elem['key']==="inici_semestre_1") {
                             $inici_semestre = $this->_obtenirData($elem['value'], $anyActual);
                         }

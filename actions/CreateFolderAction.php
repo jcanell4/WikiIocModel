@@ -4,7 +4,8 @@
  * @culpable Rafael
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once WIKI_IOC_MODEL."actions/ProjectMetadataAction.php";
 
 class CreateFolderAction extends ProjectMetadataAction {
@@ -14,7 +15,11 @@ class CreateFolderAction extends ProjectMetadataAction {
         $projectId = $this->params['projectId'];
         $projectModel = $this->getModel();
 
-        $projectModel->init($projectId, $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
+        $projectModel->init([ProjectKeys::KEY_ID              => $projectId,
+                             ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
+                             ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET],
+                             ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                           ]);
 
         //sólo se ejecuta si existe el proyecto
         if ($projectModel->existProject()) {

@@ -71,12 +71,12 @@ abstract class AbstractWikiDataModel extends AbstractWikiModel{
         return $ret;
     }
 
-    public function getListProjectTypes($projectType=NULL) {
-        return $this->getProjectMetaDataQuery()->getListProjectTypes($projectType);
+    public function getListProjectTypes($projectType=NULL, $metaDataSubset=NULL, $projectTypeDir=NULL) {
+        return $this->getProjectMetaDataQuery()->getListProjectTypes($projectType, $metaDataSubset, $projectTypeDir);
     }
 
-    public function getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $component) {
-        return $this->getProjectMetaDataQuery()->getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $component);
+    public function getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $metaDataSubSet, $component) {
+        return $this->getProjectMetaDataQuery()->getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $metaDataSubSet, $component);
     }
 
 }

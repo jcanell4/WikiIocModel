@@ -9,18 +9,14 @@
  * @modified by Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 
 require_once( DOKU_INC . 'inc/JSON.php' );
-require_once (DOKU_PLUGIN.'ajaxcommand/defkeys/ProjectKeys.php');
-require_once (DOKU_PLUGIN.'wikiiocmodel/metadata/MetaDataExceptions.php');
+require_once (DOKU_PLUGIN."ajaxcommand/defkeys/ProjectKeys.php");
+require_once (WIKI_IOC_MODEL."metadata/MetaDataExceptions.php");
 
 class MetaDataDaoConfig {
-    /*
-     * Constants actualment definides a Projectkeys.php
-     */
-   // protected static $KEY_METADATA_CLASSES_NAMESPACES = "metaDataClassesNameSpaces";
-   // protected static $KEY_METADATA_PROJECT_STRUCTURE = "metaDataProjectStructure";
 
     /*
      * Array bidimensional containing
@@ -41,7 +37,7 @@ class MetaDataDaoConfig {
      * @param string $projectType, $metaDataSubset
      * @return JSON with {class:ns, ..., class:ns}
      */
-    public static function getMetaDataConfig($projectType, $metaDataSubset, $persistence, $configSubSet=NULL) {
+    public static function getMetaDataConfig($projectType, $metaDataSubset, $persistence, $projectTypeDir, $configSubSet=NULL) {
         if ($configSubSet === NULL) {
             $configSubSet = ProjectKeys::KEY_METADATA_CLASSES_NAMESPACES;
         }
@@ -52,51 +48,26 @@ class MetaDataDaoConfig {
             }
         }
         if (!$exists) {
-            $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $configSubSet, $metaDataSubset);
+            $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $configSubSet, $metaDataSubset, $projectTypeDir);
+            $arrayConfigPre = self::controlMalFormedJson($jSONArray, "array");
+            $arrayConfig = array_values($arrayConfigPre)[0];
 
-            $encoder = new JSON();
-            $arrayConfigPre = $encoder->decode($jSONArray, true);
-            if (json_last_error() != JSON_ERROR_NONE) {
-                throw new MalFormedJSON();
-            }
-
-            $arrayConfig = array();
-            foreach ($arrayConfigPre as $obj1 => $value1) {
-                foreach ($value1 as $obj => $value) {
-                    $arrayConfig[$obj] = $value;
-                }
-            }
-            self::$ClassesNameSpaces[$projectType][$metaDataSubset] = $encoder->encode($arrayConfig);
+            self::$ClassesNameSpaces[$projectType][$metaDataSubset] = json_encode($arrayConfig);
         }
         return self::$ClassesNameSpaces[$projectType][$metaDataSubset];
     }
 
-    /**
-     * Call PERSISTENCE component to obtain file name containing metadata
-     * @param string $projectType, $metaDataSubset
-     * @return string file name
-     */
-    public static function getMetaDataFileName($projectType, $metaDataSubset, $persistence, $configSubSet=NULL) {
-        if ($configSubSet === NULL) {
-            $configSubSet = ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE;
-        }
-        $jsonConfigProject = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $configSubSet, $metaDataSubset);
-        $arrConfigProject = self::controlMalFormedJson($jsonConfigProject, "array");
+    public static function getMetaDataFileName($projectType, $metaDataSubset, $persistence, $projectTypeDir) {
+        $arrConfigProject = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, $projectTypeDir, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE);
+        return $arrConfigProject[$metaDataSubset];
 
-//        $encoder = new JSON();
-//        $arrConfigProject = $encoder->decode($jsonConfigProject, true);
-//        if (json_last_error() != JSON_ERROR_NONE) {
-//            throw new MalFormedJSON();
-//        }
-//        $arrConfigProject = get_object_vars($arrConfigProject);
-        return reset($arrConfigProject);
     }
 
-    private static function getMetaDataDefinition($projectType, $metaDataSubset, $persistence, $configSubSet=NULL) {
+    private static function getMetaDataDefinition($projectType, $metaDataSubset, $persistence, $projectTypeDir, $configSubSet=NULL) {
         if ($configSubSet === NULL) {
             $configSubSet = ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE;
         }
-        $jsonConfigProject = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $configSubSet, $metaDataSubset);
+        $jsonConfigProject = $persistence->createProjectMetaDataQuery()->getMetaDataConfig($projectType, $configSubSet, $metaDataSubset, $projectTypeDir);
         $arrConfigProject = self::controlMalFormedJson($jsonConfigProject, "array");
         return $arrConfigProject;
     }
@@ -106,19 +77,19 @@ class MetaDataDaoConfig {
      * @param string $projectType, $metaDataSubset
      * @return JSON con las keys, del tipo principal, del archivo de configuración
      */
-    public static function getMetaDataStructure($projectType, $metaDataSubset, $persistence, $configSubSet=NULL) {
-        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, $configSubSet);
+    public static function getMetaDataStructure($projectType, $metaDataSubset, $persistence, $projectTypeDir, $configSubSet=NULL) {
+        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, $projectTypeDir, $configSubSet);
         $type = $ret['mainType']['typeDef'];
         return json_encode($ret['typesDefinition'][$type]['keys']);
     }
 
-    public static function getMetaDataTypesDefinition($projectType, $metaDataSubset, $persistence, $configSubSet=NULL) {
-        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, $configSubSet);
+    public static function getMetaDataTypesDefinition($projectType, $metaDataSubset, $persistence, $projectTypeDir, $configSubSet=NULL) {
+        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, $projectTypeDir, $configSubSet);
         return json_encode($ret['typesDefinition']);
     }
 
-    public static function getMetaDataComponentTypes($projectType, $metaDataSubset, $persistence) {
-        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, "metaDataComponentTypes");
+    public static function getMetaDataComponentTypes($projectType, $metaDataSubset, $persistence, $projectTypeDir) {
+        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, $projectTypeDir, ProjectKeys::KEY_METADATA_COMPONENT_TYPES);
         return $ret[$metaDataSubset];
     }
 
@@ -129,7 +100,7 @@ class MetaDataDaoConfig {
      */
     public static function getMetaDataElementsKey($nsRoot, $persistence) {
         $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataElementsKey($nsRoot);
-        self::controlMalFormedJson($jSONArray);
+        if ($jSONArray!==NULL) self::controlMalFormedJson($jSONArray);
         return $jSONArray;
     }
 
