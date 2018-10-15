@@ -296,14 +296,16 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
         $draft = $this->draftDataQuery->getStructured($id)['content'];
 
-        for ($i = 0; $i < count($document['chunks']); $i++) {
-            if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
-                	&& $document['chunks'][$i]['header_id'] == $selected) {
-                // Si el contingut del draft i el propi es igual, l'eliminem
-                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]) {
-                    $this->removeStructuredDraft($id, $selected);
-                } else {
-                    return true;
+        if ($draft) {
+            for ($i = 0; $i < count($document['chunks']); $i++) {
+                if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
+                            && $document['chunks'][$i]['header_id'] == $selected) {
+                    // Si el contingut del draft i el propi es igual, l'eliminem
+                    if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]) {
+                        $this->removeStructuredDraft($id, $selected);
+                    } else {
+                        return true;
+                    }
                 }
             }
         }
