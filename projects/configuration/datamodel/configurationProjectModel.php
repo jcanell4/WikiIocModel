@@ -4,16 +4,16 @@
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 
 require_once (WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
 require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
 
 class configurationProjectModel extends AbstractProjectModel{
 
-    public function __construct($persistenceEngine)  {
-        parent::__construct($persistenceEngine);
+    public function __construct($persistenceEngine, $projectTypeDir=NULL)  {
+        parent::__construct($persistenceEngine, $projectTypeDir);
     }
 
     public function generateProject() {

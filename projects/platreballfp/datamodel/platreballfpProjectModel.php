@@ -6,52 +6,52 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
-
 require_once (WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
 require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
 
-
 class platreballfpProjectModel extends AbstractProjectModel {
 
-    public function __construct($persistenceEngine)  {
-        parent::__construct($persistenceEngine);
+    public function __construct($persistenceEngine, $projectTypeDir)  {
+        parent::__construct($persistenceEngine, $projectTypeDir);
     }
 
-    public function setData($toSet) {
-        // $toSet es genera a l'Action corresponent
-        $metaDataValue = json_decode($toSet["metaDataValue"], true);
+    /**
+     * @param array $metaData : es genera a l'Action corresponent
+     */
+    public function setData($metaData) {
+        $metaDataValue = json_decode($metaData["metaDataValue"], true);
         $metaDataValue['durada'] = 0;
         if (is_string($metaDataValue['taulaHoresUF'])){
             $taulaHoresUF = json_decode($metaDataValue['taulaHoresUF'], true);
         }else{
             $taulaHoresUF = $metaDataValue['taulaHoresUF'];
         }
-        foreach ($taulaHoresUF as $item) {
-            if (is_string($item['hores'])){
-                $item['hores'] = intval($item['hores']);
+        if (!empty($taulaHoresUF)) {
+            foreach ($taulaHoresUF as $item) {
+                if (is_string($item['hores'])){
+                    $item['hores'] = intval($item['hores']);
+                }
+                $metaDataValue['durada']+=$item['hores'];
             }
-            $metaDataValue['durada']+=$item['hores'];
         }
-        $toSet["metaDataValue"] = json_encode($metaDataValue);
-        parent::setData($toSet);
+        $metaData["metaDataValue"] = json_encode($metaDataValue);
+        parent::setData($metaData);
     }
-    
+
     public function getContentDocumentId($responseData){
         if ($responseData['projectMetaData']["fitxercontinguts"]['value']){
             $contentName = $responseData['projectMetaData']["fitxercontinguts"]['value'];
         }else{
             $contentName = end(explode(":", $this->getTemplateContentDocumentId($responseData)));
         }
-        $destino = $con;
-
         return $this->id.":" .$contentName;
     }
-    
+
     public function getTemplateContentDocumentId($responseData){
         $plantilla = $responseData['projectMetaData']["plantilla"]['value'];
         preg_match("/##.*?##/s", $plantilla, $matches);
         $field = substr($matches[0],2,-2);
-        $plantilla = preg_replace("/##.*?##/s", $ret['projectMetaData'][$field]['value'], $plantilla);
+        $plantilla = preg_replace("/##.*?##/s", $responseData['projectMetaData'][$field]['value'], $plantilla);
         return $plantilla;
     }
 
@@ -60,16 +60,8 @@ class platreballfpProjectModel extends AbstractProjectModel {
         $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
 
         $plantilla = $this->getTemplateContentDocumentId($ret);
-//        preg_match("/##.*?##/s", $plantilla, $matches);
-//        $field = substr($matches[0],2,-2);
-//        $plantilla = preg_replace("/##.*?##/s", $ret['projectMetaData'][$field]['value'], $plantilla);
-//        if ($ret['projectMetaData']["fitxercontinguts"]['value']){
-//            $destino = $this->id.":" . $ret['projectMetaData']["fitxercontinguts"]['value'];
-//        }else{
-//            $ret['projectMetaData']["fitxercontinguts"]['value'] = $destino = $this->id.":".end(explode(":", $plantilla));
-//        }
         $destino = $this->getContentDocumentId($ret);
-        
+
         //1.1 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
 
@@ -114,8 +106,10 @@ class platreballfpProjectModel extends AbstractProjectModel {
                 if (!$ret) $retError[] = "Error en eliminar permissos a '${parArr['old_autor']}' sobre '$project_ns'";
             }
             //Elimina el acceso a la página del proyecto en el archivo dreceres de de old_autor
-            $old_usershortcut = $parArr['userpage_ns'].$parArr['old_autor'].":".$parArr['shortcut_name'];
-            $this->removeProjectPageFromUserShortcut($old_usershortcut, $parArr['link_page']);
+            if ($parArr['old_autor']!=="") {
+                $old_usershortcut = $parArr['userpage_ns'].$parArr['old_autor'].":".$parArr['shortcut_name'];
+                $this->removeProjectPageFromUserShortcut($old_usershortcut, $parArr['link_page']);
+            }
 
             //Crea ACL para new_autor sobre la página del proyecto
             $ret = PagePermissionManager::updatePagePermission($project_ns, $parArr['new_autor'], AUTH_UPLOAD, TRUE);
@@ -125,10 +119,11 @@ class platreballfpProjectModel extends AbstractProjectModel {
             $ns = $parArr['userpage_ns'].$parArr['new_autor'].":";
             PagePermissionManager::updatePagePermission($ns."*", $parArr['new_autor'], AUTH_DELETE, TRUE);
             //Escribe un acceso a la página del proyecto en el archivo de atajos de de new_autor
+            $link_page = ($parArr['old_autor']!=="") ? $parArr['link_page'] : $parArr['id'];
             $params = [
                  'id' => $parArr['id']
                 ,'autor' => $parArr['new_autor']
-                ,'link_page' => $parArr['link_page']
+                ,'link_page' => $link_page
                 ,'user_shortcut' => $ns.$parArr['shortcut_name']
             ];
             $this->includePageProjectToUserShortcut($params);
@@ -138,8 +133,10 @@ class platreballfpProjectModel extends AbstractProjectModel {
         if ($parArr['old_responsable'] !== $parArr['new_responsable']) {
             if ($parArr['old_autor'] !== $parArr['old_responsable']) {
                 //Elimina ACL de old_responsable sobre la página del proyecto
-                $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $parArr['old_responsable']);
-                if (!$ret) $retError[] = "Error en eliminar permissos a '${parArr['old_responsable']}' sobre '$project_ns'";
+                if ($parArr['old_responsable']!=="") {
+                    $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $parArr['old_responsable']);
+                    if (!$ret) $retError[] = "Error en eliminar permissos a '${parArr['old_responsable']}' sobre '$project_ns'";
+                }
             }
             //Crea ACL para new_responsable sobre la página del proyecto
             $ret = PagePermissionManager::updatePagePermission($project_ns, $parArr['new_responsable'], AUTH_UPLOAD, TRUE);
@@ -160,7 +157,8 @@ class platreballfpProjectModel extends AbstractProjectModel {
      */
     private function includePageProjectToUserShortcut($parArr) {
         $summary = "include Page Project To User Shortcut";
-        $shortcutText = "\n[[${parArr['link_page']}|accés als continguts del projecte ${parArr['id']}]]";
+        $comment = ($parArr['link_page'] === $parArr['id']) ? "al" : "als continguts del";
+        $shortcutText = "\n[[${parArr['link_page']}|accés $comment projecte ${parArr['id']}]]\n";
         $text = $this->getPageDataQuery()->getRaw($parArr['user_shortcut']);
         if ($text == "") {
             //La página dreceres.txt del usuario no existe
