@@ -12,9 +12,11 @@ require([
         };
 
         var fGetQuery=function(){
-            var id = this.dispatcher.getGlobalState().getCurrentId();
-            var projectType = this.dispatcher.getGlobalState().getContent(id)["projectType"]; 
-            var ret = "id="+id + "&projectType="+projectType + "&mode=xhtml";
+            var globalState = this.dispatcher.getGlobalState();
+            var id = globalState.getCurrentId();
+            var ns = globalState.getContent(id).ns;
+            var projectType = globalState.getContent(id)["projectType"]; 
+            var ret = "id="+ns + "&projectType="+projectType + "&mode=xhtml";
             return ret;
         };
        
