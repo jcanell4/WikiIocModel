@@ -63,7 +63,7 @@
                "autoSize": true,
                "visible": false,
                "iconClass": "'iocExportHtmlIcon'",
-               "urlBase": "'lib/exe/ioc_ajax.php?call=projectexport'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectExport'",
                "standbyId": "'bodyContent'",
                "disableOnSend": true
             }
