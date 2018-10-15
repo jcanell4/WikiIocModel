@@ -72,7 +72,7 @@ abstract class renderComposite extends AbstractRenderer {
      * @param array $typedef : tipo (objeto en configMain.json) correspondiente al campo actual en $data
      * @param array $renderdef : tipo (objeto en configRender.json) correspondiente al campo actual en $data
      */
-    public function __construct($factory, $typedef, $renderdef, $cfgExport) {
+    public function __construct($factory, $typedef, $renderdef, $cfgExport=NULL) {
         parent::__construct($factory, $cfgExport);
         $this->typedef = $typedef;
         $this->renderdef = $renderdef;
