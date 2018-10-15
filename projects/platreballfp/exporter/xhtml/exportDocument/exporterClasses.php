@@ -1,10 +1,10 @@
 <?php
 /**
- * renderDocument: clase que renderiza grupos de elementos
+ * projecte: platreballfp
+ * exportDocument: clase que renderiza grupos de elementos
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
-define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL."projects/platreballfp/");
+//require_once DOKU_PLUGIN . "wikiocmodel/projects/documentation/exporter/xhtml/exporterClasses.php";
 
 class exportDocument extends MainRender {
 
@@ -158,7 +158,7 @@ class exportDocument extends MainRender {
         }
         $this->cfgExport->gif_images = array();
 
-        session_destroy();
+        if (session_status() == PHP_SESSION_ACTIVE) session_destroy();
         if (!$conf['plugin']['iocexportl']['saveWorkDir']){
             $this->removeDir($this->cfgExport->tmp_dir);
         }
