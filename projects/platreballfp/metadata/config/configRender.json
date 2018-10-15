@@ -1,8 +1,8 @@
 {
     "typesDefinition": {
-        "document": {
+        "pla": {
             "render": {
-                "typeDef":"document",
+                "typeDef":"pla",
                 "class": "exportDocument",
                 "fields": ["titol","autor","responsable","fitxercontinguts"]
             },
