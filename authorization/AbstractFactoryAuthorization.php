@@ -41,6 +41,10 @@ abstract class AbstractFactoryAuthorization {
             $fileAuthorization = $this->readFileIn2CaseFormat($this->authCfg['_default'], 'authorization', $this->projectAuth);
         }
 
+        if ($fileAuthorization === NULL) {
+            throw new AuthorizationNotCommandAllowed("authorization file not supplied.");
+        }
+
         $authorization = new $fileAuthorization();
         $authorization->setPermissionInstance($this->_createPermissionClass($authorization));
         return $authorization;
