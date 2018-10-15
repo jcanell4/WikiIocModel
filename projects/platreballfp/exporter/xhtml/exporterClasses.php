@@ -7,6 +7,7 @@
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
 require_once DOKU_INC."inc/parserutils.php";
+//require_once DOKU_PLUGIN . "wikiocmodel/projects/documentation/exporter/exporterClasses.php";
 
 class MainRender extends renderObject {
     protected $max_menu;

@@ -1,14 +1,15 @@
 <?php
 /**
  * Cierra todas las pestañas del contenedor central de la dokuwiki
-  * @author culpable Rafa
+ * @author culpable Rafa
 */
 
 //
 //[JOSEP] ALERTA! Això només és unh exemple no té cap funció, actualment dins la WIKI
 //
 if (!defined("DOKU_INC")) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once WIKI_IOC_MODEL . "DokuExtraAction.php";
 
 class CloseAllTabsAction extends DokuExtraAction {

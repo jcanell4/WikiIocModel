@@ -4,12 +4,12 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
-require_once(WIKI_IOC_MODEL . "authorization/ProjectFactoryAuthorization.php");
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
+require_once(DOKU_PLUGIN."wikiiocmodel/authorization/ProjectFactoryAuthorization.php");
 
 class FactoryAuthorization extends ProjectFactoryAuthorization {
 
-    const PROJECT_AUTH = WIKI_IOC_MODEL . "projects/platreballfp/authorization/";
+    const PROJECT_AUTH = DOKU_PLUGIN."wikiiocmodel/projects/platreballfp/authorization/";
 
     public function __construct() {
         parent::__construct(self::PROJECT_AUTH);

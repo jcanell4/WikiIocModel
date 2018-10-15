@@ -2,13 +2,12 @@
 /**
  * PageCommandAuthorization: define la clase de autorizaciones de los comandos
  * con acceso a páginas. Es una extensión de la jerarquía Authorization
- *
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
-
-require_once (WIKI_IOC_MODEL . 'projects/defaultProject/authorization/CommandAuthorization.php');
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
+require_once (WIKI_IOC_MODEL . "projects/defaultProject/authorization/CommandAuthorization.php");
 
 abstract class PageCommandAuthorization extends CommandAuthorization {
 

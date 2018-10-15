@@ -7,15 +7,13 @@
  * - Abstract class that must inherit all entities
  * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
  */
-if (!defined("DOKU_INC"))
-    die();
-if (!defined('DOKU_PLUGIN')) {
-    define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-}
+if (!defined("DOKU_INC")) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 
-require_once( DOKU_INC . 'inc/JSON.php' );
-require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataEntityInterface.php');
-require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataExceptions.php');
+require_once( DOKU_INC . "inc/JSON.php");
+require_once (WIKI_IOC_MODEL . "metadata/MetaDataEntityInterface.php");
+require_once (WIKI_IOC_MODEL . "metadata/MetaDataExceptions.php");
 
 abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
 
@@ -158,7 +156,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * - $filter wellformed JSON
      * - All keys in $filter must exist in metaDataValue
      * - All key:value in $filter are the same in metaDataValue
-     * @return exception || false || true 
+     * @return exception || false || true
      */
     public function checkFilter($filter) {
         $encoder = new JSON();
@@ -249,7 +247,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * (allways true in this Abstract Class)
      * @param array
      * Restrictions:
-     * - 
+     * -
      * @return true if all values are validated by the model (allways true in this Abstract Class)
      */
     public function __checkValues($checkValues) {

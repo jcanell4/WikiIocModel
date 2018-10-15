@@ -4,13 +4,13 @@
  * @author culpable Rafa
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
-if (!defined('WIKI_IOC_PROJECTS')) define('WIKI_IOC_PROJECTS', WIKI_IOC_MODEL."projects/");
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once WIKI_IOC_MODEL."actions/DokuExtraAction.php";
 
 abstract class DokuActionManager extends AbstractActionManager{
 
-    const EXTRA_ACTIONS = WIKI_IOC_PROJECTS."defaultProject/actions/extra/";
+    const EXTRA_ACTIONS = WIKI_IOC_MODEL."projects/defaultProject/actions/extra/";
 
     /**
      * Construye un array que contiene las definiciones y parámetros de las acciones no comunes

@@ -4,11 +4,12 @@
  * @author josep
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC."lib/plugins/wikiiocmodel/");
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once WIKI_IOC_MODEL . "authorization/PagePermissionManager.php";
 
 class UserListAction  extends AbstractWikiAction {
-    
+
     const OF_A_PROJECT = "ofAProject";
     const BY_PAGE_PERMSION = "byPagePermision";
     const BY_NAME = "byName";

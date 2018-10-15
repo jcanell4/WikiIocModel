@@ -1,14 +1,11 @@
 <?php
 /**
- * exporterClasses: clases de procesos, establecidas en el fichero de configuración,
- *                  correspondientes a los tipos de datos del proyecto
- * @culpable Rafael Claver
+ * MainRender: clases de procesos render para export
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
 require_once(DOKU_PLUGIN.'iocexportl/lib/renderlib.php');
-define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL."projects/platreballfp/");
+define('WIKI_IOC_PROJECT', DOKU_PLUGIN."wikiiocmodel/projects/platreballfp/");
 require_once WIKI_IOC_PROJECT."exporter/exporterClasses.php";
 
 class MainRender extends renderObject {

@@ -1,13 +1,13 @@
 <?php
 /**
- * GenerateProjectAuthorization: Extensión clase Autorización para los comandos 
+ * GenerateProjectAuthorization: Extensión clase Autorización para los comandos
  * que precisan una autorización mínima de AUTH_CREATE y que el usuario sea del grupo "admin" o "projectmanager"
- * 
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
 require_once (DOKU_INC . 'inc/auth.php');
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once (WIKI_IOC_MODEL . "authorization/ProjectCommandAuthorization.php");
 
 class GenerateProjectAuthorization extends ProjectCommandAuthorization {
@@ -26,6 +26,6 @@ class GenerateProjectAuthorization extends ProjectCommandAuthorization {
                 }
             }
         }
-        return !$this->errorAuth['error'];        
+        return !$this->errorAuth['error'];
     }
 }

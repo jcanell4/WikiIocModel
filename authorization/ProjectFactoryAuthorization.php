@@ -7,15 +7,16 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once(WIKI_IOC_MODEL . "authorization/AbstractFactoryAuthorization.php");
 
 class ProjectFactoryAuthorization extends AbstractFactoryAuthorization {
 
     const DEFAULT_AUTH = WIKI_IOC_MODEL . "projects/defaultProject/authorization/";
 
-    public function __construct($projectType=NULL) {
-        parent::__construct( ($projectType) ? $projectType : self::DEFAULT_AUTH );
+    public function __construct($projectAuthPath = NULL) {
+        parent::__construct( ($projectAuthPath) ? $projectAuthPath : self::DEFAULT_AUTH );
     }
 
     /* Noms de commanda que ja ténen un fitxer d'autorització amb el seu nom
