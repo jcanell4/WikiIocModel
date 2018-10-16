@@ -1,14 +1,14 @@
 <?php
 /**
- * ProcessRenderer: clases de procesos, establecidas en el fichero de configuración,
+ * ProjectExportAction: clases de procesos, establecidas en el fichero de configuración,
  *                  correspondientes a los tipos de datos del proyecto
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
-define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/platreballfp/");
 if (!defined('EXPORT_TMP')) define('EXPORT_TMP',DOKU_PLUGIN.'tmp/latex/');
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/platreballfp/");
 
 require_once WIKI_IOC_MODEL."persistence/ProjectMetaDataQuery.php";
 
@@ -17,9 +17,8 @@ class ProjectExportAction  extends AbstractWikiAction{
     const PATH_CONFIG_FILE = WIKI_IOC_PROJECT."metadata/config/";
     const CONFIG_TYPE_FILENAME = "configMain.json";
     const CONFIG_RENDER_FILENAME = "configRender.json";
-    
+
     protected $projectID = NULL;
-    protected $projectNS = NULL;
     protected $mainTypeName = NULL;
     protected $dataArray = array();
     protected $typesRender = array();
@@ -28,6 +27,7 @@ class ProjectExportAction  extends AbstractWikiAction{
     protected $filetype;
     protected $projectType;
     protected $factoryRender;
+    protected $metaDataSubSet;
 
     public function __construct($factory=NULL){
         $this->factoryRender = $factory;
@@ -37,19 +37,19 @@ class ProjectExportAction  extends AbstractWikiAction{
      * del archivo de configuración del proyecto
      */
     protected function setParams($params) {
-        $this->mode        = $params['mode'];
-        $this->filetype    = $params['filetype'];
-        $this->projectType = $params['projectType'];
-        $this->projectID   = $params['id'];
-        $this->projectNS   = $params['ns'];
+        $this->mode        = $params[ProjectKeys::KEY_MODE];
+        $this->filetype    = $params[ProjectKeys::KEY_FILE_TYPE];
+        $this->projectType = $params[ProjectKeys::KEY_PROJECT_TYPE];
+        $this->projectID   = $params[ProjectKeys::KEY_ID];
+        $this->metaDataSubSet = $params[ProjectKeys::KEY_METADATA_SUBSET];
         $this->typesRender = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
-            $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE)[0];
+            $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $this->metaDataSubSet);
         $this->mainTypeName = $cfgArray['mainType']['typeDef'];
         $this->typesDefinition = $cfgArray['typesDefinition'];
-            $projectfilename = $cfgArray[ProjectKeys::VAL_DEFAULTSUBSET];
-            $idResoucePath = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $this->projectNS);
+            $projectfilename = $cfgArray[$this->metaDataSubSet];
+            $idResoucePath = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $this->projectID);
             $projectfilepath = "$idResoucePath/".$this->projectType."/$projectfilename";
-        $this->dataArray = $this->getProjectDataFile($projectfilepath, ProjectKeys::VAL_DEFAULTSUBSET);
+        $this->dataArray = $this->getProjectDataFile($projectfilepath, $this->metaDataSubSet);
     }
 
     public function responseProcess() {
@@ -59,10 +59,11 @@ class ProjectExportAction  extends AbstractWikiAction{
                           'filetype'        => $this->filetype,
                           'typesDefinition' => $this->typesDefinition,
                           'typesRender'     => $this->typesRender]);
-        $render = $fRenderer->createRender($this->typesDefinition[$this->mainTypeName], $this->typesRender[$this->mainTypeName], array("id"=> $this->projectID));
+        $render = $fRenderer->createRender($this->typesDefinition[$this->mainTypeName],
+                                           $this->typesRender[$this->mainTypeName],
+                                           array(ProjectKeys::KEY_ID => $this->projectID));
         $result = $render->process($this->dataArray);
-        $result['id'] = $this->projectID;
-        $result['ns'] = $this->projectNS;
+        $result['ns'] = $this->projectID;
 
         switch ($this->mode) {
             case 'pdf' :
@@ -79,12 +80,24 @@ class ProjectExportAction  extends AbstractWikiAction{
 
     /**
      * @return array : Devuelve el subconjunto $rama del fichero de configuración del proyecto
+     *                  Si se indica el metaDataSubSet, es que espera encontrar una estructura
      */
-    private function getProjectConfigFile($filename, $rama) {
+    private function getProjectConfigFile($filename, $rama, $metaDataSubSet=NULL) {
         $config = @file_get_contents(self::PATH_CONFIG_FILE.$filename);
         if ($config != FALSE) {
             $array = json_decode($config, true);
-            return $array[$rama];
+            if ($metaDataSubSet) {
+                $elem = $array[$rama];
+                for ($i=0; $i<count($elem); $i++) {
+                    if (array_key_exists($metaDataSubSet, $elem[$i])) {
+                        $ret = $elem[$i];
+                        break;
+                    }
+                }
+            }else{
+                $ret = $array[$rama];
+            }
+            return $ret;
         }
     }
 
