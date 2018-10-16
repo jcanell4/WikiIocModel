@@ -4,17 +4,20 @@
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
-require_once (WIKI_IOC_MODEL . 'WikiIocPluginAction.php');
-require_once (DOKU_INC . 'inc/pageutils.php');
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
+if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
+require_once (DOKU_INC . "inc/pageutils.php");
+require_once (WIKI_IOC_MODEL . "WikiIocPluginAction.php");
 
 class action_plugin_wikiiocmodel_projects_platreballfp extends WikiIocPluginAction {
+    private $dirProjectType;
     private $viewArray;
 
-    public function __construct($projectType) {
+    public function __construct($projectType, $dirProjectType) {
         parent::__construct();
         $this->projectType = $projectType;
-        $this->viewArray = $this->projectMetaDataQuery->getMetaViewConfig($this->projectType, "controls");
+        $this->dirProjectType = $dirProjectType;
+        $this->viewArray = $this->projectMetaDataQuery->getMetaViewConfig($this->projectType, "controls", $dirProjectType);
     }
 
     function register(Doku_Event_Handler $controller) {
@@ -27,23 +30,26 @@ class action_plugin_wikiiocmodel_projects_platreballfp extends WikiIocPluginActi
      * Rellena de información una pestaña de la zona de MetaInformación
      */
     function setExtraMeta(&$event, $param) {
-        if (!isset($event->data['responseData'][ProjectKeys::KEY_CODETYPE])) {
-            $result['ns'] = getID();
-            $result['id'] = str_replace(':', '_', $result['ns']);
-            if (class_exists("ProjectExportAction", TRUE)){
-                $html = ProjectExportAction::get_html_metadata($result) ;
-            }
+        //controlar que se trata del proyecto en curso
+        if ($event->data['requestParams']['projectType'] === $this->projectType) {
 
-            $event->data["ajaxCmdResponseGenerator"]->addExtraMetadata(
-                        $result['id'],
-                        $result['id']."_iocexport",
-                        WikiIocLangManager::getLang("metadata_export_title"),
-                        $html
-                        );
+            if (!isset($event->data['responseData'][ProjectKeys::KEY_CODETYPE])) {
+                $result['ns'] = getID();
+                $result['id'] = str_replace(':', '_', $result['ns']);
+                if (class_exists("ProjectExportAction", TRUE)){
+                    $html = ProjectExportAction::get_html_metadata($result) ;
+                }
+
+                $event->data["ajaxCmdResponseGenerator"]->addExtraMetadata(
+                            $result['id'],
+                            $result['id']."_iocexport",
+                            WikiIocLangManager::getLang("metadata_export_title"),
+                            $html
+                            );
+            }
         }
         return TRUE;
     }
-
 
     function addControlScripts(Doku_Event &$event, $param) {
         $changeWidgetPropertyFalse = "";
@@ -51,10 +57,10 @@ class action_plugin_wikiiocmodel_projects_platreballfp extends WikiIocPluginActi
         $VarsIsButtonVisible = "";
         $permissionsButtonVisible = "";
         $conditionsButtonVisible = "";
-        $path = WIKI_IOC_MODEL."projects/platreballfp/metadata/config/";
+        $path = "{$this->dirProjectType}metadata/config/";
 
         //Lectura de los botones definidos en el fichero de control
-        foreach ($this->viewArray as $nameButton => $arrayButton) {
+        foreach ($this->viewArray as $arrayButton) {
             if ($arrayButton['scripts']['getFunctions']) {
                 //carga de los archivos de funciones de los botones
                 foreach ($arrayButton['scripts']['getFunctions'] as $key => $value) {
