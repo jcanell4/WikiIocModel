@@ -236,7 +236,7 @@ abstract class DataQuery {
         //Logger::debug("fillProjectNode->itmsProject: ".json_encode($itemsProject), 0, __LINE__, "DataQuery", -1, TRUE);
         foreach (array_keys($nodeData) as $item) {
 
-            if ($onlyDirs && $nodeData[$item][self::K_TYPE] == 'd' || !$onlyDirs) {
+            if ($onlyDirs && $nodeData[$item][self::K_TYPE] == "d" || !$onlyDirs) {
                 $children[$item][self::K_ID] = $nodeData[$item][self::K_ID];
                 $children[$item][self::K_NAME] = explode(":", $nodeData[$item][self::K_ID])[$level];
 
@@ -271,9 +271,9 @@ abstract class DataQuery {
 
         foreach (array_keys($nodeData) as $item) {
 
-            if ($onlyDirs && $nodeData[$item][self::K_TYPE] == 'd' || !$onlyDirs) {
+            if ($onlyDirs && $nodeData[$item][self::K_TYPE] == "d" || !$onlyDirs) {
 
-                if ($nodeData[$item][self::K_TYPE] == 'd') {
+                if ($nodeData[$item][self::K_TYPE] == "d") {
                     $itemsProject = $this->getNsItems($nodeData[$item][self::K_ID]);
                     $isProject = ($itemsProject[self::K_PROJECTTYPE] !== NULL);
 
@@ -311,7 +311,7 @@ abstract class DataQuery {
         $camins = ($ns) ? explode(":", $ns) : NULL;
         if ($camins)
             $page .= implode("/", $camins);
-        $ret[self::K_TYPE] = is_dir($page) ? "d" : (is_file($page) ? "f" : "none");
+        $ret[self::K_TYPE] = is_dir($page) ? "d" : (is_file($page) ? "f" : "");
 
         if ($ns) {
             $pathElement = $this->metaDataPath."/".str_replace(":", "/", $ns);
@@ -370,26 +370,23 @@ abstract class DataQuery {
      * @return array | null
      */
     private function getNsType($ns) {
-        $ret[self::K_TYPE] = "none";
+        $ret[self::K_TYPE] = "";
         if ($ns) {
             $this->init();
             $nsPath = str_replace(":", "/", $ns);
 
-            if (is_dir($this->datadir."/$nsPath"))
+            if (is_dir($this->datadir."/$nsPath")) {
                 $ret[self::K_TYPE] = "d";
+                $ret2 = $this->getParentProjectProperties(explode(":", "$ns:dummy"));
+            }
+            else if (page_exists($ns)) {
+                $ret[self::K_TYPE] = "f";
+                $ret2 = $this->getParentProjectProperties(explode(":", $ns));
+            }
 
-            $dir = $this->metaDataPath."/$nsPath";
-            if (is_dir($dir)) {
-                $fh1 = opendir($dir);
-                while ($current = readdir($fh1)) {
-                    $currentDir = "$dir/$current";
-                    if (is_dir($currentDir) && $current !== "." && $current !== "..") {
-                        $ret2 = $this->getProjectProperties2($currentDir, $ns, $current);
-                        if ($ret2[self::K_PROJECTTYPE]) {
-                            return $ret2;
-                        }
-                    }
-                }
+            if ($ret2) {
+                $ret2[self::K_TYPE] .= $ret[self::K_TYPE];
+                $ret = $ret2;
             }
         }
         return $ret;
@@ -419,7 +416,7 @@ abstract class DataQuery {
         return $ret;
     }
 
-    private function updateNsProperties($ns, &$nsProp) {
+    private function updateNsProperties($ns, $nsProp) {
         $ret = $this->getParentProjectProperties(explode(":", $ns));
         if ($ret[self::K_PROJECTTYPE]) {
             $type = ($nsProp[self::K_TYPE] === "p") ? "o" : $nsProp[self::K_TYPE];
