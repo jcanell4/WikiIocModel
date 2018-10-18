@@ -203,13 +203,13 @@ p.llegenda {
 
 /* Contingut */
 
-.taula {
+.pt_taula {
     width: 100%;
     margin: 18px auto 38px auto;
     font-size: 13px; 
 }
 
-.taula th {
+.pt_taula th {
     color: #ffffff;
     background-color: #BE176B;
     text-transform: uppercase;
@@ -220,38 +220,38 @@ p.llegenda {
     text-align: center;
 }
 
-.taula td {
+.pt_taula td {
     padding: 8px 6px;
     background-color: #F4F4F4;
     text-align: center;
 }
 
-.taula td ul,
-.taula td ol {
+.pt_taula td ul,
+.pt_taula td ol {
     text-align: left;
     padding-right: 10px;
 }
-.taula td ul li,
-.taula td ol li {
+.pt_taula td ul li,
+.pt_taula td ol li {
     font-size: 13px; 
 }
 
 
-.taula th.nivell1 {
+.pt_taula th.nivell1 {
     background-color: #BE176B;
 }
 
-.taula th.nivell2 {
+.pt_taula th.nivell2 {
     color: #ffffff;
     background-color: #B6A1AA;
 }
 
-.taula th.nivell3 {
+.pt_taula th.nivell3 {
     color: #182C41;
     background-color: #E1E1E4;
 }
 
-.taula td.semititol {
+.pt_taula td.semititol {
     color: #182C41;
     text-transform: uppercase;
     font-size: 11px !important;
@@ -373,27 +373,27 @@ p.llegenda {
         padding: 32px 0 32px 0;
     }
 
-    .taula {
+    .pt_taula {
         margin: 26px auto 46px auto;
         font-size: 15px; 
     }
     
-    .taula th {
+    .pt_taula th {
         font-size: 13px !important;
         padding: 16px 6px;
     }
     
-    .taula td {
+    .pt_taula td {
         padding: 12px 6px;
     }
     
 
-    .taula td ul li,
-    .taula td ol li {
+    .pt_taula td ul li,
+    .pt_taula td ol li {
         font-size: 15px; 
     }
 
-    .taula td.semititol {
+    .pt_taula td.semititol {
         font-size: 13px !important;
         padding: 18px 6px;
     }
@@ -492,35 +492,41 @@ p.llegenda {
         border: 0;
     }
 
-    .taula {
+    .pt_taula {
         width: 100%;
         margin: 26px auto 46px auto;
         font-size: 15px; 
     }
     
-    .taula th {
+    .pt_taula th {
         color: #ffffff !important;
         background-color: #6D6A7B !important;
     }
     
-    .taula td {
+    .pt_taula td {
         background-color: #F7F7F6 !important;
     }
     
-    .taula th.nivell1 {
+    .pt_taula th.nivell1 {
         background-color: #5F5C6E !important;
     }
     
-    .taula th.nivell2 {
+    .pt_taula th.nivell2 {
         background-color: #9997A2 !important;
     }
     
-    .taula th.nivell3 {
+    .pt_taula th.nivell3 {
         color: #5F5C6E !important;
         background-color: #E1E1E4 !important;
     }
     
-    .taula td.semititol {
+    .pt_taula td.semititol {
         color: #5F5C6E;
     }
+
+    .pt_taula td,
+    .pt_taula tr,
+    .pt_taula th {
+        border: 1px solid #5E5E5E;
+    } 
 }

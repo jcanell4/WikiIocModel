@@ -1,23 +1,18 @@
 {
     "typesDefinition": {
-        "document": {
+        "pla": {
             "render": {
-                "typeDef":"document",
+                "typeDef":"pla",
                 "class": "exportDocument",
-                "fields": ["titol","autor","responsable","fitxercontinguts"]
+                "fields": "ALL"
             },
             "keys": {
-                "titol": {
-                    "render": {"class": "render_title"}
+                "descripcio": {
+                    "render": {"class": "renderRenderizableText"}
                 },
                 "fitxercontinguts": {
                     "render": {"class": "renderFile"}
                 }
-            }
-        },
-        "string": {
-            "render": {
-                "class": "renderField"
             }
         }
     }

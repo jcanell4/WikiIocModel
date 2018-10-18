@@ -19,7 +19,7 @@ class command_plugin_wikiiocmodel_projects_platreballfp_projectexport extends ab
 
     protected function process() {
         $params = array(ProjectKeys::KEY_ID        => $this->params[ProjectKeys::KEY_ID],
-                        ProjectKeys::KEY_NS        => str_replace("_", ":", $this->params[ProjectKeys::KEY_ID]),
+                        ProjectKeys::KEY_NS        => $this->params[ProjectKeys::KEY_ID],
                         ProjectKeys::PROJECT_TYPE  => $this->params[ProjectKeys::PROJECT_TYPE],
                         ProjectKeys::KEY_MODE      => $this->params[ProjectKeys::KEY_MODE],
                         ProjectKeys::KEY_FILE_TYPE => $this->params[ProjectKeys::KEY_FILE_TYPE]
@@ -27,16 +27,17 @@ class command_plugin_wikiiocmodel_projects_platreballfp_projectexport extends ab
         $modelManager = $this->getModelManager();
         $action = $modelManager->getActionInstance("ProjectExportAction", $modelManager->getExporterManager());
         //$action->init($params);
-        $content = $action->get($params);
-        $projectId = $action->getProjectID();
-        return array('projectId' => $projectId, 'meta' => $content);
+//        $content = $action->get($params);
+//        $projectId = $action->getProjectID();
+//        return array('projectId' => $projectId, 'meta' => $content);
+        return $action->get($params);
     }
 
     protected function getDefaultResponse($response, &$ret) {
         if ($response) {
             $response[ProjectKeys::PROJECT_TYPE] = $this->params[ProjectKeys::PROJECT_TYPE];
             $meta = $response["meta"];
-            $pageId = $this->params[ProjectKeys::KEY_ID];
+            $pageId = $response["id"];
             $ret->addExtraMetadata($pageId, $pageId."_iocexport", WikiIocLangManager::getLang("metadata_export_title"), $meta);
         }else {
             $ret->addError(1000, "EXPORTACIÓ NO REALITZADA");
@@ -44,7 +45,7 @@ class command_plugin_wikiiocmodel_projects_platreballfp_projectexport extends ab
     }
 
     public function getAuthorizationType() {
-        return "save";
+        return "saveProject";
     }
 
      public function isEmptyText() {

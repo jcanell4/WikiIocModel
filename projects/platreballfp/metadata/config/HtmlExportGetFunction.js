@@ -13,8 +13,9 @@ require([
 
         var fGetQuery=function(){
             var id = this.dispatcher.getGlobalState().getCurrentId();
+            var ns = this.dispatcher.getGlobalState().getContent(id)["ns"];             
             var projectType = this.dispatcher.getGlobalState().getContent(id)["projectType"]; 
-            var ret = "id="+id + "&projectType="+projectType + "&mode=xhtml";
+            var ret = "id="+ns + "&projectType="+projectType + "&mode=xhtml";
             return ret;
         };
        

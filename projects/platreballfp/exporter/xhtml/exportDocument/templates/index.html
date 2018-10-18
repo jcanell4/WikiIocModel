@@ -15,7 +15,7 @@
 <!-- Capçalera -->
 <header class="main_header">
   <div class="own_container">
-    <h1>Intervenció amb famílies i atenció als infants en risc social</h1>
+    <h1>{##modul##}</h1>
   </div>
 </header>
 <!-- /Capçalera -->
@@ -39,33 +39,33 @@
         <div class="section1_element">
           <div class="section1_icona" id="durada_icona"></div>
           <h3>Durada</h3>
-          <p>132 hores</p>
+          <p>{##durada##} hores</p>
         </div>
         <div class="section1_element">
           <div class="section1_icona" id="professor_icona"></div>
           <h3>Professor</h3>
-          <p>Montse Sorribas</p>
+          <p>{##professors##}</p>
         </div>
         <div class="section1_element">
           <div class="section1_icona" id="material_icona"></div>
           <h3>Material didàctic</h3>
-          <p>M01</p>
+          <a href="{##urlMaterialDidactic##}">material de l'aula</a>
         </div>
       </div>
       <div class="section1_content_row2">
         <div class="section1_element">
           <div class="section1_icona" id="dedicacio_icona"></div>
           <h3>Dedicació setmanal</h3>
-          <p>9 hores</p>
-        </div>
-        <div class="section1_element">
-          <div class="section1_icona" id="requisits_icona"></div>
-          <h3>Requisits</h3>
-          <p>M07. Desenvolupament socioafectiu</p>
+          <p>{##dedicacio##} hores</p>
         </div>
       </div>
     </div>
   </div>
+    <div class="section1_element">
+      <div class="section1_icona" id="requisits_icona"></div>
+      <h3>Requeriments i incompatibilitats de la matrícula</h3>
+      <p>{##requerimentsMatricula##}</p>
+    </div>
 </section>
 <!-- /Secció 1 -->
 
@@ -74,9 +74,7 @@
 <!-- Secció 2 -->
 <section class="section section2">
   <div class="own_container">
-    <p>En aquest mòdul treballareu l’evolució històrica del tractament
-    de la infantesa i del seu marc legal, així com la intervenció
-    socioeducativa que es realitza amb menors i família.</p>
+    <p>{##descripcio##}</p>
   </div>
 </section>
 <!-- /Secció 2 -->
@@ -87,49 +85,230 @@
 <section class="section section3">
   <div class="own_container">
     <h2>Itinerari formatiu recomanat</h2>
+<WIOCCL:IF condition="{##semestre##}==1">
     <div class="section3_itinerari">
-      <h3>Si curses el mòdul el <span>primer semestre</span> (setembre-gener)</h3>
+      <!--h3>Si curses el mòdul el <span>primer semestre</span> (setembre-gener)</h3-->
       <div class="requadre_itinerari">
+         <!-- /requadre semestre 1 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}==1">
+        <div class="rectangle rectangle_destacat">1r semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=1">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 2 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}==2">
+        <div class="rectangle rectangle_destacat">2n semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=2">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 3 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}==3">
+        <div class="rectangle rectangle_destacat">3r semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=3">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 4 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}==4">
+        <div class="rectangle rectangle_destacat">4t semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=4">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 5 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}==5">
+        <div class="rectangle rectangle_destacat">5è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=5">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 6 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}==6">
+        <div class="rectangle rectangle_destacat">6è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=6">
         <div class="rectangle"></div>
-        <div class="rectangle rectangle_destacat"><p>6è semestre</p></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 7 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}==7">
+        <div class="rectangle rectangle_destacat">7è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=7">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 8 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}==8">
+        <div class="rectangle rectangle_destacat">8è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=8">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
       </div>
     </div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##semestre##}==2">
     <div class="section3_itinerari">
-      <h3>Si curses el mòdul el <span>segon semestre</span> (febrer-juny)</h3>
+      <!--h3>Si curses el mòdul el <span>primer semestre</span> (setembre-gener)</h3-->
       <div class="requadre_itinerari">
+         <!-- /requadre semestre 1 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}==1">
+        <div class="rectangle rectangle_destacat">1r semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=1">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 2 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}==2">
+        <div class="rectangle rectangle_destacat">2n semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=2">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 3 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}==3">
+        <div class="rectangle rectangle_destacat">3r semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=3">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 4 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}==4">
+        <div class="rectangle rectangle_destacat">4t semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=4">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 5 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}==5">
+        <div class="rectangle rectangle_destacat">5è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=5">
         <div class="rectangle"></div>
-        <div class="rectangle rectangle_destacat"><p>4t semestre</p></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 6 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}==6">
+        <div class="rectangle rectangle_destacat">6è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=6">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 7 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}==7">
+        <div class="rectangle rectangle_destacat">7è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=7">
         <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 8 -->
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}==8">
+        <div class="rectangle rectangle_destacat">8è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=8">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
       </div>
     </div>
+</WIOCCL:IF>
     <h2>Distribució horària del mòdul</h2>
-    <div class="section3_distribucio">
-      <div class="requadre_distribucio">
-        <div class="rectangle_doble">UF1</div>
-        <div class="rectangle_doble">UF2</div>
-        <div class="rectangle_doble">66h</div>
-        <div class="rectangle_doble">66h</div>
-        <div class="rectangle_simple">33h</div>
-        <div class="rectangle_simple">33h</div>
-        <div class="rectangle_simple">33h</div>
-        <div class="rectangle_simple">33h</div>
-        <div class="rectangle_simple">U1</div>
-        <div class="rectangle_simple">U2</div>
-        <div class="rectangle_simple">U3</div>
-        <div class="rectangle_simple">U4</div>
-      </div>
+    <div class="containerDistribHoraria">
+        <div class="rowDistribHoraria" id="rowDistribHoraria1"></div>
+        <div class="rowDistribHoraria" id="rowDistribHoraria2"></div>
+        <div class="rowDistribHoraria" id="rowDistribHoraria3"></div>
+        <div class="rowDistribHoraria" id="rowDistribHoraria4"></div>
     </div>
+    <script type="text/javascript">
+/**** DADES ****/
+
+/* Es poden modificar les dades, afegint qualsevol sèries de valors de la llargada que calgui.*/
+(function(){
+    var dataArray = [
+                  [<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">{##item[hores]##},</WIOCCL:FOREACH>], /* Num. hores per cada UF */
+                  [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[hores]##},</WIOCCL:FOREACH>] /* Num. hores per cada U */
+                ];
+
+    /*****************/
+
+
+    /* Creem fila total hores per UF */
+
+    var totalHoresUFs = 0;
+    for(var i = 0; i <= dataArray[0].length-1; i++) {
+          totalHoresUFs += dataArray[0][i];
+    }
+
+    var rowDistribHoraria2 = document.getElementById("rowDistribHoraria2");
+
+    for(var i = 0; i <= dataArray[0].length-1; i++) {
+         var percentWidth = dataArray[0][i]*100/totalHoresUFs + "%";
+         var textCell = dataArray[0][i] + "h"
+         createCell(rowDistribHoraria2, percentWidth, textCell);
+    }
+
+
+
+    /* Creem fila total hores per U */
+
+    var totalHoresUs = 0;
+    for(var i = 0; i <= dataArray[1].length-1; i++) {
+          totalHoresUs += dataArray[1][i];
+    }
+
+    var rowDistribHoraria3 = document.getElementById("rowDistribHoraria3");
+
+    for(var i = 0; i <= dataArray[1].length-1; i++) {
+         var percentWidth = dataArray[1][i]*100/totalHoresUs + "%";
+         var textCell = dataArray[1][i] + "h"
+         createCell(rowDistribHoraria3, percentWidth, textCell);
+    }
+
+
+    /* Creem fila títols UFs*/
+
+    var totalHoresUFs = 0;
+    for(var i = 0; i <= dataArray[0].length-1; i++) {
+          totalHoresUFs += dataArray[0][i];
+    }
+
+    var rowDistribHoraria1 = document.getElementById("rowDistribHoraria1");
+
+    for(var i = 0; i <= dataArray[0].length-1; i++) {
+         var percentWidth = dataArray[0][i]*100/totalHoresUFs + "%";
+         var textCell = "UF" + (i+1);
+         createCell(rowDistribHoraria1, percentWidth, textCell);
+    }
+
+
+    /* Creem fila títols Us*/
+
+    var totalHoresUs = 0;
+    for(var i = 0; i <= dataArray[1].length-1; i++) {
+          totalHoresUs += dataArray[1][i];
+    }
+
+    var rowDistribHoraria4 = document.getElementById("rowDistribHoraria4");
+
+    for(var i = 0; i <= dataArray[1].length-1; i++) {
+         var percentWidth = dataArray[1][i]*100/totalHoresUs + "%";
+         var textCell = "U" + (i+1);
+         createCell(rowDistribHoraria4, percentWidth, textCell);
+    }
+
+
+    /* Funció per crear celles */
+
+    function createCell(parent, width, text) {
+        var newCell =  document.createElement("div");
+        var newContent = document.createTextNode(text);
+        newCell.setAttribute("class", "cellDistribHoraria");
+        newCell.appendChild(newContent);
+        newCell.style.width = width;
+        parent.appendChild(newCell);
+    }
+})();
+        
+    </script>    
   </div>
 </section>
 <!-- /Secció 3 -->
@@ -141,41 +320,37 @@
   <div class="own_container">
     <h2>Eines d'aprenentatge</h2>
     <div class="requadre_eines">
-      <div class="puzzle puzzle_dalt" id="puzzle1">
+<WIOCCL:FOREACH var="item" array="{##einesAprenentatge##}" counter="ind">
+<WIOCCL:IF condition="{##ind##}==0">
+      <div class="puzzle puzzle_dalt" id="puzzle{#_SUMA({##ind##},1)_#}">
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##ind##}\>0&&{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##einesAprenentatge##})_#},1)_#}">
+      <div class="puzzle puzzle_mig" id="puzzle{#_SUMA({##ind##},1)_#}">
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##ind##}=={#_SUBS({#_ARRAY_LENGTH({##einesAprenentatge##})_#},1)_#}">
+      <div class="puzzle puzzle_baix" id="puzzle{#_SUMA({##ind##},1)_#}">
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[tipus]##}==''lectura''">
         <div class="section4_icona" id="llibre_icona"></div>
-        <div>
-          <h4>Llibre de l'aula</h4>
-          <h3>Lectura obligada</h3>
-        </div>
-      </div>
-      <div class="puzzle puzzle_mig" id="puzzle2">
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[tipus]##}==''autoavaluació''">
         <div class="section4_icona" id="exercicis_icona"></div>
-        <div>
-          <h4>Exercicis d’autoavaluació i activitats</h4>
-          <h3>Opcional (recomanat)</h3>
-        </div>
-      </div>
-      <div class="puzzle puzzle_mig" id="puzzle3">
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[tipus]##}==''fòrum''">
         <div class="section4_icona" id="forum_icona"></div>
-        <div>
-          <h4>Fòrum de l’aula</h4>
-          <h3>Participació obligada</h3>
-        </div>
-      </div>
-      <div class="puzzle puzzle_mig" id="puzzle4">
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[tipus]##}==''qüestionari''">
         <div class="section4_icona" id="questionari_icona"></div>
-        <div>
-          <h4>Qüestionari obert a l'aula</h4>
-          <h3>Opcional (puntua a l’EAC)</h3>
-        </div>
-      </div>
-      <div class="puzzle puzzle_baix" id="puzzle5">
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[tipus]##}==''exercicis''">
         <div class="section4_icona" id="avaluacio_icona"></div>
+</WIOCCL:IF>
         <div>
-          <h4>Exercicis d'avaluació contínua</h4>
-          <h3>Opcional</h3>
+          <h4>{##item[eina]##}</h4>
+          <h3>{##item[opcionalitat]##} <WIOCCL:IF condition="{##item[puntuable]##}==true">(pntua a l'AC)</WIOCCL:IF></h3>
         </div>
       </div>
+</WIOCCL:FOREACH>
     </div>
   </div>
 </section>
@@ -193,55 +368,20 @@
         <th>Inici</th>
         <th>Final</th>
       </tr>
+<WIOCCL:FOR from="{#_FIRST({##calendari##}, ''FIRST[unitat]'')_#}" to="{#_LAST({##calendari##}, ''LAST[unitat]'')_#}" counter="idUnitat">
+<WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[unitat]##}=={##idUnitat##}">     
+<WIOCCL:FOREACH  var="itemCal" array="{##filtered##}" counter="cont">
       <tr>
-        <th rowspan="2">U1</th>
-        <td>Apartat 1</td>
-        <td>14/2/2018</td>
-        <td>20/2/2018</td>
+<WIOCCL:IF condition="{##cont##}==0">
+        <th rowspan="{#_ARRAY_LENGTH({##filtered##})_#}">U{##itemCal[unitat]##}</th>
+</WIOCCL:IF>
+        <td>{#_UPPERCASE("{##itemCal[tipus període]##}", 1)_#} {##itemCal[període]##}</td>
+        <td>{#_DATE("{##itemCal[inici]##}")_#}</td>
+        <td>{#_DATE("{##itemCal[final]##}")_#}</td>
       </tr>
-      <tr>
-        <td>Apartat 2</td>
-        <td>21/2/2018</td>
-        <td>9/3/2018</td>
-      </tr>
-      <tr>
-        <th rowspan="3">U2</th>
-        <td>Apartat 1</td>
-        <td>14/2/2018</td>
-        <td>20/2/2018</td>
-      </tr>
-      <tr>
-        <td>Apartat 2</td>
-        <td>21/2/2018</td>
-        <td>9/3/2018</td>
-      </tr>
-      <tr>
-        <td>Apartat 3</td>
-        <td>14/2/2018</td>
-        <td>20/2/2018</td>
-      </tr>
-      <tr>
-        <th rowspan="2">U3</th>
-        <td>Apartat 1</td>
-        <td>21/2/2018</td>
-        <td>9/3/2018</td>
-      </tr>
-      <tr>
-        <td>Apartat 2</td>
-        <td>14/2/2018</td>
-        <td>20/2/2018</td>
-      </tr>
-      <tr>
-        <th rowspan="2">U4</th>
-        <td>Apartat 1</td>
-        <td>21/2/2018</td>
-        <td>9/3/2018</td>
-      </tr>
-      <tr>
-        <td>Apartat 2</td>
-        <td>14/2/2018</td>
-        <td>20/2/2018</td>
-      </tr>
+</WIOCCL:FOREACH>
+</WIOCCL:SUBSET>
+</WIOCCL:FOR>
     </table>
   </div>
 </section>
@@ -250,12 +390,12 @@
 <!-- Secció 6 -->
 <section class="section section6">
   <div class="own_container">
-    <h2>Avaluació contínua (EACs)</h2>
-    <p>És recomanable realitzar els <strong>exercicis d’avaluació contínua</strong> (EACs) ja que la seva nota correspon al <span>30%</span> de la qualificació final.</p>
+    <h2>Avaluació contínua</h2>
+    <p>És recomanable realitzar els <strong>les activitats d’avaluació contínua</strong> ja que la seva nota correspon al <span>{##ponderacioEACs##}</span> de la qualificació final.</p>
     <br/>
     <p>Els EACs els resol l’estudiant per la seva banda, i els ha de lliurar al campus en la data indicada. </p>
     <br/>
-    <p>Aquest mòdul inclou <span>4 EACs</span>, 2 per la UF1 i 2 per la UF2:</p>
+    <p>Aquest mòdul inclou <span>{#_ARRAY_LENGTH({##datesAC##})_#} EACs</span>, distribuïts de la següent manera:</p>
     <table class="own_table">
       <tr>
         <th></th>
@@ -264,36 +404,19 @@
         <th>Solució</th>
         <th>Qualificació</th>
       </tr>
+<WIOCCL:FOREACH var="item" array="{##datesAC##}">
       <tr>
-        <th>U1</th>
-        <td>14/2/2018</td>
-        <td>23/2/2018</td>
-        <td>22/3/2018</td>
-        <td>22/3/2018</td>
+        <th>U{##item[unitat]##}</th>
+        <td>{#_DATE("{##item[enunciat]##}")_#}</td>
+        <td>{#_DATE("{##item[lliurament]##}")_#}</td>
+        <td>{#_DATE("{##item[solució]##}")_#}</td>
+        <td>{#_DATE("{##item[qualificació]##}")_#}</td>
       </tr>
-      <tr>
-        <th>U2</th>
-        <td>14/2/2018</td>
-        <td>23/2/2018</td>
-        <td>22/3/2018</td>
-        <td>22/3/2018</td>
-      </tr>
-      <tr>
-        <th>U3</th>
-        <td>14/2/2018</td>
-        <td>23/2/2018</td>
-        <td>22/3/2018</td>
-        <td>22/3/2018</td>
-      </tr>
-      <tr>
-        <th>U4</th>
-        <td>14/2/2018</td>
-        <td>23/2/2018</td>
-        <td>22/3/2018</td>
-        <td>22/3/2018</td>
-      </tr>
+</WIOCCL:FOREACH>            
     </table>
-    <p>No es tindrà en compte la qualificació de l’avaluació contínua si no s’obté com a mínim un <span>4</span> en l’EAC.</p>
+<WIOCCL:IF condition="{##notaMinimaAC##}\>0">
+    <p>No es tindrà en compte la qualificació de l’avaluació contínua si no s’obté com a mínim un <span>{##notaMinimaAC##}</span> en l’EAC.</p>
+</WIOCCL:IF>        
     <br/>
     <p>Compte! El sistema no permet fer lliuraments passades les <span>23’55h</span> de la data prevista.</p>
   </div>
@@ -310,22 +433,22 @@
       <div class="paf_1">
         <h3>PAF 1</h3>
         <div class="section7_icona" id="paf-1-icona"></div>
-        <h3>19/5/18</h3>
+        <h3>{#_DATE("{##dataPaf1##}")_#}</h3>
         <p>Qualificacions:</p>
-        <p>23/2/18</p>
+        <p>{#_DATE("{##dataQualificacioPaf1##}")_#}</p>
         <div class="horizontal_separator"></div>
       </div>
       <div class="vertical_separator"></div>
       <div class="paf_2">
         <h3>PAF 2</h3>
         <div class="section7_icona" id="paf-2-icona"></div>
-        <h3>2/6/18</h3>
+        <h3>{#_DATE("{##dataPaf2##}")_#}</h3>
         <p>Qualificacions:</p>
-        <p>7/6/18</p>
+        <p>{#_DATE("{##dataQualificacioPaf2##}")_#}</p>
         <div class="horizontal_separator"></div>
       </div>
     </div>
-    <p>Cal obtenir una nota mínima de <span>4</span> per poder aplicar-hi el promig de l’avaluació contínua.</p>
+    <p>Cal obtenir una nota mínima de <span>{##notaMinimaPAF##}</span> per poder aplicar-hi el promig de l’avaluació contínua.</p>
     <br/>
     <p>Podeu presentar-vos a la primera convocatòria (PAF 1) i, en cas de no superar-la, presentar-vos a la segona convocatòria (PAF 2), <span>dues setmanes</span> després.</p>
     <br/>
@@ -342,7 +465,141 @@
 <section class="section section8">
   <div class="own_container">
     <h2>Qualificació</h2>
-    <div class="panell_qualificacions">
+     <div class="containerQualificacio" id="contenidorQualificacio">
+
+    </div>
+    <script type="text/javascript"> 
+(function(){
+    var dataArray1 = [
+<WIOCCL:FOR from="{#_FIRST({##dadesQualificacioUFs##}, ''FIRST[unitat formativa]'')_#}" to="{#_LAST({##dadesQualificacioUFs##}, ''LAST[unitat formativa]'')_#}" counter="idUF">        
+                      [
+                        { 
+                          title :"UF{##idUF##}",
+                          percent: 0
+                        },                        
+<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##idUF##}">                        
+                       { 
+                          title :"{##item[descripció qualificació]##}",
+                          percent: {##item[ponderació]##}
+                        },
+</WIOCCL:FOREACH>
+                      ],
+</WIOCCL:FOR>
+/*                      [
+                        { 
+                          title :"UF2",
+                          percent: 0
+                        },
+                       { 
+                          title :"PAF UF2",
+                          percent: 30
+                        },
+                        { 
+                          title :"EAC UF2",
+                          percent: 70
+                        }
+                      ],
+                      [
+                        { 
+                          title :"UF3",
+                          percent: 0
+                        },
+                       { 
+                          title :"PAF UF3",
+                          percent: 30
+                        },
+                        { 
+                          title :"Participació al fòrum",
+                          percent: 5
+                        },
+                        { 
+                          title :"EAC UF3",
+                          percent: 65
+                        }
+                      ],*/
+                      [
+                        { 
+                          title :"FINAL",
+                          percent: 0
+                        },
+<WIOCCL:FOREACH var="item" array="{##dadesQualificacioFinal##}">                        
+                       { 
+                          title :"UF{##item[unitat formativa]##}",
+                          percent: {##item[ponderació]##}
+                        },
+</WIOCCL:FOREACH>                        
+/*                        { 
+                          title :"UF2",
+                          percent: 50
+                        }*/
+                      ]
+                    ];
+
+
+    /*****************/
+
+    var numberOfRows = 0;
+    var numberOfCells = [];
+
+    for(var i = 0; i <= dataArray1.length - 1; i++) {
+        createPercentRow(i);
+        createTitleRow(i);
+        numberOfRows += 2;
+        numberOfCells += dataArray1[i].length;
+        }
+
+    for(var i = 0; i <= numberOfRows - 1; i++) {
+        for(var j = 0; j <= numberOfCells[i] - 1; j++) {
+          /* Creem cel·les de percentatge */
+          var newPercentCell =  document.createElement("div");
+          var newPercentContentCell =  document.createElement("span");
+          var percentCellContent = document.createTextNode(dataArray1[i][j].percent + "%");
+          document.createTextNode(dataArray1[i][j].percent + "%");
+          newPercentCell.setAttribute("class", "cellQualificacio");
+          newPercentContentCell.appendChild(percentCellContent);
+          newPercentCell.appendChild(newPercentContentCell);
+          newPercentCell.style.width = dataArray1[i][j].percent + "%";
+          document.getElementById("percent_row" + i).appendChild(newPercentCell);
+          /* Creem cel·les de títol */
+          var newTitleCell =  document.createElement("div");
+          var newTitleContentCell =  document.createElement("span");
+          var titleCellContent = document.createTextNode(dataArray1[i][j].title);
+          newTitleCell.setAttribute("class", "cellQualificacio");
+          newTitleContentCell.appendChild(titleCellContent);
+          newTitleCell.appendChild(newTitleContentCell);
+          newTitleCell.style.width = dataArray1[i][j].percent + "%";
+          document.getElementById("title_row" + i).appendChild(newTitleCell);
+        }
+    }
+
+    var allCells = document.querySelectorAll(".cellQualificacio");
+
+    for(var k = 0; k <= allCells.length - 1; k++) {
+
+      if (parseInt(allCells[k].style.width) > 0 && parseInt(allCells[k].style.width) < 25) {
+            allCells[k].classList.add("smallCell");
+            var textHolder = allCells[k].innerHTML;
+          }
+    }
+
+    /* Funcions per crear files */
+
+    function createPercentRow(index) {
+        var newPercentRow =  document.createElement("div");
+        newPercentRow.setAttribute("class", "rowQualificacio");
+        newPercentRow.setAttribute("id", "percent_row" + index);
+        document.getElementById("contenidorQualificacio").appendChild(newPercentRow);
+    }
+
+    function createTitleRow(index) {
+        var newTitleRow =  document.createElement("div");
+        newTitleRow.setAttribute("class", "rowQualificacio");
+        newTitleRow.setAttribute("id", "title_row" + index);
+        document.getElementById("contenidorQualificacio").appendChild(newTitleRow);
+    }
+})();
+    </script>
+    <!--div class="panell_qualificacions">
       <div class="panell_qualificacio">
         <div class="unitat_num">
           <p>UF1</p>
@@ -388,8 +645,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <a href="">Consulteu aquí la programació completa</a>
+    </div-->
+    <a href="pt_sencer/pt.html">Consulteu aquí la programació completa</a>
   </div>
 </section>
 <!-- /Secció 8 -->
