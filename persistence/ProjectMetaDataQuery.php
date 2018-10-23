@@ -33,8 +33,12 @@ class ProjectMetaDataQuery extends DataQuery {
         }
         //lista de elementos permitidos para el componente dado
         $jsonList = $this->getMetaDataConfig($projectType, $metaDataPrincipal, $subset, $projectTypeDir);
-        $arrayList = json_decode($jsonList, true);
-        return $arrayList[$subset][$component];
+        if (!empty($jsonList)) {
+            $arrayList = json_decode($jsonList, true);
+            return $arrayList[$subset][$component];
+        }else {
+            return NULL;
+        }
     }
 
     /**
