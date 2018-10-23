@@ -12,12 +12,14 @@ require_once (DOKU_INC . 'inc/io.php');
 require_once (DOKU_PLUGIN . 'ajaxcommand/defkeys/ProjectKeys.php');
 
 abstract class DataQuery {
-    const K_PROJECTTYPE = ProjectKeys::KEY_PROJECT_TYPE;
-    const K_ID          = ProjectKeys::KEY_ID;
-    const K_NS          = ProjectKeys::KEY_NS;
-    const K_NAME        = "name";
-    const K_NSPROJECT   = "nsproject";
-    const K_TYPE        = "type";
+    const K_PROJECTTYPE       = ProjectKeys::KEY_PROJECT_TYPE;
+    const K_PROJECTSOURCETYPE = ProjectKeys::PROJECT_SOURCE_TYPE;
+    const K_PROJECTOWNER      = ProjectKeys::PROJECT_OWNER;
+    const K_ID        = ProjectKeys::KEY_ID;
+    const K_NS        = ProjectKeys::KEY_NS;
+    const K_NAME      = "name";
+    const K_NSPROJECT = "nsproject";
+    const K_TYPE      = "type";
 
     private $datadir;
     private $metaDataPath;
@@ -155,15 +157,21 @@ abstract class DataQuery {
                     $itemsProject = $this->updateNsProperties($root, $itemsProject);
                 $type = $itemsProject[self::K_TYPE];
             }else{
-                $type = "f";
+                $itemsProject = $this->getNsItems($root);
+                $type = $itemsProject[self::K_TYPE];
             }
             $ret = array(
                       self::K_ID => $name,
                       self::K_NAME => $name,
                       self::K_TYPE => $type
                    );
-            if ($itemsProject[self::K_PROJECTTYPE])
+            if ($itemsProject[self::K_PROJECTTYPE]) {
                 $ret[self::K_PROJECTTYPE] = $itemsProject[self::K_PROJECTTYPE];
+            }
+            if ($itemsProject[self::K_PROJECTSOURCETYPE]) {
+                $ret[self::K_PROJECTSOURCETYPE] = $itemsProject[self::K_PROJECTSOURCETYPE];
+                $ret[self::K_PROJECTOWNER]      = $itemsProject[self::K_PROJECTOWNER];
+            }
 
             return $ret;
         }
@@ -213,6 +221,10 @@ abstract class DataQuery {
         if ($itemsProject[self::K_PROJECTTYPE]) {
             $tree[self::K_PROJECTTYPE] = $itemsProject[self::K_PROJECTTYPE];
             $tree[self::K_NSPROJECT]   = $itemsProject[self::K_NSPROJECT];
+        }
+        if ($itemsProject[self::K_PROJECTSOURCETYPE]) {
+            $tree[self::K_PROJECTSOURCETYPE] = $itemsProject[self::K_PROJECTSOURCETYPE];
+            $tree[self::K_PROJECTOWNER]   = $itemsProject[self::K_PROJECTOWNER];
         }
         $tree['children'] = $children;
         //Logger::debug("getNsTreeFromGenericSearch: \$params=".json_encode(array('base'=>$base,'currentnode'=>$currentnode,'sortBy'=>$sortBy,'onlyDirs'=>$onlyDirs,'function'=>$function,'expandProject'=>$expandProject,'hiddenProjects'=>$hiddenProjects,'root'=>$root))."\n".
@@ -311,7 +323,8 @@ abstract class DataQuery {
         $camins = ($ns) ? explode(":", $ns) : NULL;
         if ($camins)
             $page .= implode("/", $camins);
-        $ret[self::K_TYPE] = is_dir($page) ? "d" : (is_file($page) ? "f" : "");
+        $ret[self::K_TYPE] = is_dir($page) ? "d" : (page_exists($ns) ? "f" : "");
+        $type = $ret[self::K_TYPE];
 
         if ($ns) {
             $pathElement = $this->metaDataPath."/".str_replace(":", "/", $ns);
@@ -320,12 +333,19 @@ abstract class DataQuery {
                 $nsElement = implode(":", $camins);
                 $parentDir = $this->metaDataPath."/".implode("/", $camins);
                 if (is_dir($parentDir)) {
-                    $fh1 = opendir($parentDir);
-                    while ($current = readdir($fh1)) {
+                    $fh = opendir($parentDir);
+                    while ($current = readdir($fh)) {
                         $currentDir = "$parentDir/$current";
                         if (is_dir($currentDir) && $current !== "." && $current !== "..") {
                             $ret = $this->getProjectProperties($pathElement, $currentDir, $nsElement, $current);
                             if ($ret[self::K_PROJECTTYPE]) {
+                                if ($type==="f") {
+                                    $ret[self::K_TYPE] = "pf";
+                                    $ret[self::K_PROJECTSOURCETYPE] = $ret[self::K_PROJECTTYPE];
+                                    $ret[self::K_PROJECTOWNER] = $ret[self::K_NSPROJECT];
+                                    unset($ret[self::K_PROJECTTYPE]);
+                                    unset($ret[self::K_NSPROJECT]);
+                                }
                                 return $ret;
                             }
                         }
@@ -348,9 +368,9 @@ abstract class DataQuery {
      */
     private function getProjectProperties($pathElement, $currentDir, $nsElement, $dirName) {
         $ret[self::K_TYPE] = is_dir($currentDir) ? "d" : "f";
-        $fh2 = opendir($currentDir);
+        $fh = opendir($currentDir);
 
-        while ($currentOne = readdir($fh2)) {
+        while ($currentOne = readdir($fh)) {
             //busca el archivo *.mdpr ($this->metaDataExtension)
             if (!is_dir("$currentDir/$currentOne")) {
                 $fileTokens = explode(".", $currentOne);
@@ -377,11 +397,11 @@ abstract class DataQuery {
 
             if (is_dir($this->datadir."/$nsPath")) {
                 $ret[self::K_TYPE] = "d";
-                $ret2 = $this->getParentProjectProperties(explode(":", "$ns:dummy"));
+                $ret2 = $this->getParentProjectProperties(explode(":", "$ns:dummy"), "d");
             }
             else if (page_exists($ns)) {
                 $ret[self::K_TYPE] = "f";
-                $ret2 = $this->getParentProjectProperties(explode(":", $ns));
+                $ret2 = $this->getParentProjectProperties(explode(":", $ns), "f");
             }
 
             if ($ret2) {
@@ -393,24 +413,30 @@ abstract class DataQuery {
     }
 
     /**
-     * Busca averiguar si $currentDir es un directorio de proyecto, es decir, si contiene los ficheros de proyecto
-     * @param string $currentDir : ruta absoluta al directorio que se desea explorar para averiguar si contiene el fichero de proyecto
-     * @param string $nsElement : ns del padre del directorio $currentDir
-     * @param string $dirName : nombre del directorio $currentDir
-     * @return array con atributos del proyecto
+     * Busca el proyecto padre en la ruta correspondiente a un ns
+     * @param array $camins : ns en formato array
+     * @return array | null
      */
-    private function getProjectProperties2($currentDir, $nsElement, $dirName) {
-        $fh2 = opendir($currentDir);
-        while ($currentOne = readdir($fh2)) {
-            //busca el archivo *.mdpr ($this->metaDataExtension)
-            if (!is_dir("$currentDir/$currentOne")) {
-                $fileTokens = explode(".", $currentOne);
-                if ($fileTokens[sizeof($fileTokens) - 1] === $this->metaDataExtension) {
-                    $ret[self::K_TYPE] = "p";
-                    $ret[self::K_PROJECTTYPE] = $dirName;
-                    $ret[self::K_NSPROJECT] = $nsElement;
-                    return $ret;
+    private function getParentProjectProperties($camins, $type="d") {
+        if (is_array($camins)) {
+            $ns_elem = "";
+            array_pop($camins); //empezamos justo en el directorio superior
+
+            while ($camins) {
+                $ns_elem = implode(":", $camins);
+                $projectPath = $this->metaDataPath."/".implode("/", $camins);
+                if (is_dir($projectPath)) {
+                    $fh = opendir($projectPath);
+                    while ($dir_elem = readdir($fh)) {
+                        if (is_dir("$projectPath/$dir_elem") && $dir_elem!=="." && $dir_elem!=="..") {
+                            $ret = $this->getProjectProperties2("$projectPath/$dir_elem", $ns_elem, $dir_elem, $type);
+                            if ($ret[self::K_PROJECTTYPE] || $ret[self::K_PROJECTOWNER]) {
+                                return $ret;
+                            }
+                        }
+                    }
                 }
+                array_pop($camins);
             }
         }
         return $ret;
@@ -426,30 +452,30 @@ abstract class DataQuery {
     }
 
     /**
-     * Busca el proyecto padre en la ruta correspondiente a un ns
-     * @param array $camins : ns en formato array
-     * @return array | null
+     * Busca averiguar si $currentDir es un directorio de proyecto, es decir, si contiene los ficheros de proyecto
+     * @param string $currentDir : ruta absoluta al directorio que se desea explorar para averiguar si contiene el fichero de proyecto
+     * @param string $nsElement : ns del padre del directorio $currentDir
+     * @param string $dirName : nombre del directorio $currentDir
+     * @return array con atributos del proyecto
      */
-    private function getParentProjectProperties($camins) {
-        if (is_array($camins)) {
-            $ns_elem = "";
-            array_pop($camins); //empezamos justo en el directorio superior
-
-            while ($camins) {
-                $ns_elem = implode(":", $camins);
-                $projectPath = $this->metaDataPath."/".implode("/", $camins);
-                if (is_dir($projectPath)) {
-                    $fh = opendir($projectPath);
-                    while ($dir_elem = readdir($fh)) {
-                        if (is_dir("$projectPath/$dir_elem") && $dir_elem!=="." && $dir_elem!=="..") {
-                            $ret = $this->getProjectProperties2("$projectPath/$dir_elem", $ns_elem, $dir_elem);
-                            if ($ret[self::K_PROJECTTYPE]) {
-                                return $ret;
-                            }
-                        }
+    private function getProjectProperties2($currentDir, $nsElement, $dirName, $type="d") {
+        $fh = opendir($currentDir);
+        while ($currentOne = readdir($fh)) {
+            //busca el archivo *.mdpr ($this->metaDataExtension)
+            if (!is_dir("$currentDir/$currentOne")) {
+                $fileTokens = explode(".", $currentOne);
+                if ($fileTokens[sizeof($fileTokens) - 1] === $this->metaDataExtension) {
+                    if ($type==="f") {
+                        $ret[self::K_TYPE] = "";
+                        $ret[self::K_PROJECTSOURCETYPE] = $dirName;
+                        $ret[self::K_PROJECTOWNER] = $nsElement;
+                    }else {
+                        $ret[self::K_TYPE] = "p";
+                        $ret[self::K_PROJECTTYPE] = $dirName;
+                        $ret[self::K_NSPROJECT] = $nsElement;
                     }
+                    return $ret;
                 }
-                array_pop($camins);
             }
         }
         return $ret;
