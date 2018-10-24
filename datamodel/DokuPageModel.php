@@ -270,7 +270,9 @@ class DokuPageModel extends WikiRenderizableDataModel {
                 $editingChunks[] = &$chunks[$i];
 
             }
-            $dictionary[$headerIds[$i]] = $i;
+            if ($headerIds[$i]) {
+                $dictionary[$headerIds[$i]] = $i;
+            }
         }
     }
 
