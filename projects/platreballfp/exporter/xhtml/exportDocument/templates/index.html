@@ -391,7 +391,7 @@
 <section class="section section6">
   <div class="own_container">
     <h2>Avaluació contínua</h2>
-    <p>És recomanable realitzar els <strong>les activitats d’avaluació contínua</strong> ja que la seva nota correspon al <span>{##ponderacioEACs##}</span> de la qualificació final.</p>
+    <p>És recomanable realitzar els <strong>les activitats d’avaluació contínua</strong> ja que la seva nota correspon al <span>{##ponderacioAC##}</span> de la qualificació final.</p>
     <br/>
     <p>Els EACs els resol l’estudiant per la seva banda, i els ha de lliurar al campus en la data indicada. </p>
     <br/>
@@ -522,7 +522,7 @@
                           title :"FINAL",
                           percent: 0
                         },
-<WIOCCL:FOREACH var="item" array="{##dadesQualificacioFinal##}">                        
+<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">                        
                        { 
                           title :"UF{##item[unitat formativa]##}",
                           percent: {##item[ponderació]##}

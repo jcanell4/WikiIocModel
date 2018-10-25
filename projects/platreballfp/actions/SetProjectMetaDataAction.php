@@ -5,6 +5,8 @@ include_once WIKI_IOC_MODEL."actions/ProjectMetadataAction.php";
 
 class SetProjectMetaDataAction extends BasicSetProjectMetaDataAction{
      protected function responseProcess(){
+//         $this->params["duradaClicle"]=0;
+//         $this->params["taulaDadesUF"]=0;
          $response = parent::responseProcess();
          if($this->getModel()->isProjectGenerated()){
              $id = $this->getModel()->getContentDocumentId($response);

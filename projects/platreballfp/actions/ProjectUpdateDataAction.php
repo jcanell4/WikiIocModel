@@ -20,7 +20,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
         $configProjectModel->init($projectTypeConfigFile, $confProjectType);
 
         //Obtenir les dades de la configuració d'aquest tipus de projecte
-        $projectFileName = $projectModel->getProjectFileName();
+        $projectFileName = $configProjectModel->getProjectFileName();
         $metaDataSubset = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
         $metaDataConfigProject = $configProjectModel->getMetaDataProject($projectFileName, $metaDataSubset);
 
@@ -29,28 +29,14 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
             $processArray = array();
 
             foreach ($arraytaula as $elem) {
-
-                switch ($elem['type']) {
-                    case "fieldSubstitution":
-                        $processor = "FieldSingleSubstitutionProjectUpdateProcessor";
-                        if ( !isset($processArray[$processor]) ) {
-                            $processArray[$processor] = new $processor;
-                        }
-                        $processArray[$processor]->runProcess($elem['value'], $elem['parameters'], $response);
-                        break;
-
-                    case "fieldIncrement":
-                        $processor = "FieldIncrementProjectUpdateProcessor";
-                        if ( !isset($processArray[$processor]) ) {
-                            $processArray[$processor] = new $processor;
-                        }
-                        $processArray[$processor]->runProcess($elem['value'], $elem['parameters'], $response);
-                        break;
-
-                    default:
-                        break;
+                if($elem["type"] !== "noprocess"){
+                    $processor = ucwords($elem['type'])."ProjectUpdateProcessor";
+                    if ( !isset($processArray[$processor]) ) {
+                        $processArray[$processor] = new $processor;
+                    }
+                    $processArray[$processor]->init($elem['value'], $elem['parameters']);
+                    $processArray[$processor]->runProcess($response);
                 }
-
             }
 
             if ($elem) {

@@ -26,6 +26,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     protected $draftDataQuery;
     protected $lockDataQuery;
     protected $dokuPageModel;
+    protected $viewConfigName;
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
@@ -33,14 +34,16 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $this->draftDataQuery = $persistenceEngine->createDraftDataQuery();
         $this->lockDataQuery = $persistenceEngine->createLockDataQuery();
         $this->dokuPageModel = new DokuPageModel($persistenceEngine);
+        $this->viewConfigName = "defaultView";
     }
 
-    public function init($id, $projectType=NULL, $rev=NULL, $projectFileName=NULL) {
+    public function init($id, $projectType=NULL, $rev=NULL, $projectFileName=NULL, $viewConfigName="defaultView") {
         $this->id = $id;
         $this->projectType = $projectType;
         $this->rev = $rev;
         $this->setProjectFileName($projectFileName);
         $this->setProjectFilePath();
+        $this->viewConfigName=$viewConfigName;
     }
 
     /**
@@ -76,12 +79,20 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             ];
         }
         $ret['projectMetaData'] = $this->metaDataService->getMeta($query, FALSE)[0];
-        $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->projectType, "defaultView");
+        $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->projectType, $this->viewConfigName);
         return $ret;
     }
 
     public function getProjectType() {
         return $this->projectType;
+    }
+
+    public function getViewConfigName() {
+        return $this->viewConfigName;
+    }
+
+    public function setViewConfigName($viewConfigName) {
+        $this->viewConfigName = $viewConfigName;
     }
 
     public function setData($toSet) {

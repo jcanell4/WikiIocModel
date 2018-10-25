@@ -136,7 +136,7 @@ class ProjectExportAction  extends ProjectMetadataAction{
 
     private static function _getHtmlMetadata($ns, $file/*, $ext*/) {
 //        if ($ext === ".zip") {
-            $ext === ".zip";
+            $ext = ".zip";
             $P = ""; $nP = "";
             $class = "mf_zip";
             $mode = "HTML";

@@ -48,8 +48,8 @@ class exportDocument extends MainRender {
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $zip->addFile($allPathTemplate."/main.css", "main.css");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "pt_sencer", TRUE);
-                $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/pt_sencer/pt2.tpl");
-                $zip->addFromString('/pt_sencer/pt2.html', $ptSencer);
+                $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/pt_sencer/pt.tpl");
+                $zip->addFromString('/pt_sencer/pt.html', $ptSencer);
                 $this->attachMediaFiles($zip);
 
                 $result["zipFile"] = $zipFile;
