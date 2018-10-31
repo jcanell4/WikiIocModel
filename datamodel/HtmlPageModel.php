@@ -29,9 +29,6 @@ class HtmlPageModel extends WikiRenderizableDataModel {
         $this->draftDataQuery = $persistenceEngine->createDraftDataQuery();
         $this->lockDataQuery = $persistenceEngine->createLockDataQuery();
         $this->resourceLocker = new ResourceLocker($persistenceEngine);
-
-
-
     }
 
     public function init($id, $editing=NULL, $selected=NULL, $rev=NULL) {
@@ -41,6 +38,7 @@ class HtmlPageModel extends WikiRenderizableDataModel {
         $this->rev = $rev;
     }
 
+    // No s'ha tocat res, identica a l'original
     public function setData($toSet) {
         $params = (is_array($toSet)) ? $toSet : array(PageKeys::KEY_WIKITEXT => $toSet);
         $params[PageKeys::KEY_ID] = ($this->id) ? $this->id : $params[PageKeys::KEY_ID];
@@ -134,17 +132,18 @@ class HtmlPageModel extends WikiRenderizableDataModel {
         return $this->draftDataQuery->getFileName($this->id);
     }
 
+    // Sense modificar, necesary perque es crida desdel SavePageAction
     public function removePartialDraft() {
         $this->draftDataQuery->removeStructured($this->id);
     }
-
-    public function removeChunkDraft($chunkId) {
-        $this->draftDataQuery->removeChunk($this->id, $chunkId);
-    }
-
-    public function getChunkFromDraft() {
-        return $this->_getChunkFromDraft($this->id, $this->selected);
-    }
+//
+//    public function removeChunkDraft($chunkId) {
+//        $this->draftDataQuery->removeChunk($this->id, $chunkId);
+//    }
+//
+//    public function getChunkFromDraft() {
+//        return $this->_getChunkFromDraft($this->id, $this->selected);
+//    }
 
     public function getFullDraft() {
         $respose = $this->getDraftAsFull();
@@ -172,27 +171,27 @@ class HtmlPageModel extends WikiRenderizableDataModel {
         return $draft;
     }
 
-    private function getFullDraftFromPartials() {
-        $draftContent = '';
-
-        $structuredDraft = $this->draftDataQuery->getStructured($this->id);
-        $chunks = self::getAllChunksWithText($this->id, $this->getPageDataQuery())['chunks'];
-        $draftContent .= $structuredDraft['pre'] /*. "\n"*/;
-
-        for ($i = 0; $i < count($chunks); $i++) {
-            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft['content'])) {
-                $draftContent .= $structuredDraft['content'][$chunks[$i]['header_id']];
-            } else {
-                $draftContent .= $chunks[$i]['text']['editing'];
-            }
-        }
-
-        $draft['content'] = $draftContent;
-        $draft['date'] = $structuredDraft['date'];
-        //$draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime($this->draftDataQuery->getStructuredFilename($this->id)));
-
-        return $draft;
-    }
+//    private function getFullDraftFromPartials() {
+//        $draftContent = '';
+//
+//        $structuredDraft = $this->draftDataQuery->getStructured($this->id);
+//        $chunks = self::getAllChunksWithText($this->id, $this->getPageDataQuery())['chunks'];
+//        $draftContent .= $structuredDraft['pre'] /*. "\n"*/;
+//
+//        for ($i = 0; $i < count($chunks); $i++) {
+//            if (array_key_exists($chunks[$i]['header_id'], $structuredDraft['content'])) {
+//                $draftContent .= $structuredDraft['content'][$chunks[$i]['header_id']];
+//            } else {
+//                $draftContent .= $chunks[$i]['text']['editing'];
+//            }
+//        }
+//
+//        $draft['content'] = $draftContent;
+//        $draft['date'] = $structuredDraft['date'];
+//        //$draft['date'] = WikiPageSystemManager::extractDateFromRevision(@filemtime($this->draftDataQuery->getStructuredFilename($this->id)));
+//
+//        return $draft;
+//    }
 
 //    private function getChunkFromStructure($structure, $selected) {
 //        $chunks = $structure['chunks'];
@@ -217,9 +216,9 @@ class HtmlPageModel extends WikiRenderizableDataModel {
     }
 
 
-    private function _getChunkFromDraft($id, $selected) {
-        return $this->draftDataQuery->getChunk($id, $selected);
-    }
+//    private function _getChunkFromDraft($id, $selected) {
+//        return $this->draftDataQuery->getChunk($id, $selected);
+//    }
 
     /**
      * Hi ha un casos en que no hi ha selected, per exemple quan es cancela un document.
@@ -260,76 +259,76 @@ class HtmlPageModel extends WikiRenderizableDataModel {
         return $document;
     }
 
-    private static function getHeadersFromHtml($html) {
-        $pattern = '/(?:<h[123] class="sectionedit\d+" id=")(.+?)">/s'; //aquest patró només funciona si s'aplica el scedit
-        preg_match_all($pattern, $html, $match);
-        return $match[1]; // Conté l'array amb els ids trobats per cada secció
-    }
-
-    private static function getEditingChunks($pageDataQuery, &$editingChunks, &$dictionary, &$chunks, $id, $headerIds, $editing) {
-        for ($i = 0; $i < count($chunks); $i++) {
-            $chunks[$i]['header_id'] = $headerIds[$i];
-            // Afegim el text només al seleccionat i els textos en edició
-            if (in_array($headerIds[$i], $editing)) {
-                $chunks[$i]['text'] = [];
-                //TODO[Xavi] compte! s'ha d'agafar sempre el editing per montar els nostres pre i suf!
-                $chunks[$i]['text']['editing'] = $pageDataQuery->getRawSlices($id, $chunks[$i]['start'] . "-" . $chunks[$i]['end'])[1];
-                $chunks[$i]['text']['changecheck'] = md5($chunks[$i]['text']['editing']);
-
-                $editingChunks[] = &$chunks[$i];
-
-            }
-            $dictionary[$headerIds[$i]] = $i;
-        }
-    }
-
-    private static function getAllChunksWithText($id, $pageDataQuery) {
-        $html = $pageDataQuery->getHtml($id);
-        $headerIds = self::getHeadersFromHtml($html);
-        $chunks = self::getChunks($pageDataQuery, $id);
-        $editing = $headerIds;
-        $editingChunks = [];
-        $dictionary = [];
-
-        self::getEditingChunks($pageDataQuery, $editingChunks, $dictionary, $chunks, $id, $headerIds, $editing);
-
-        return ['chunks' => $editingChunks, 'dictionary' => $dictionary];
-
-    }
-
-    // Hi ha draft pel chunk a editar?
-    private function isChunkInDraft($id, $document, $selected = null) {
-        if (!$selected) {
-            return false;
-        }
-
-        $draft = $this->draftDataQuery->getStructured($id)['content'];
-
-        for ($i = 0; $i < count($document['chunks']); $i++) {
-            if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
-                	&& $document['chunks'][$i]['header_id'] == $selected) {
-                // Si el contingut del draft i el propi es igual, l'eliminem
-                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]) {
-                    $this->removeStructuredDraft($id, $selected);
-                } else {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private static function addPreToChunks($pageDataQuery, &$chunks, $id) {
-        $lastPos = 0;
-
-        for ($i = 0; $i < count($chunks); $i++) {
-            // El pre de cada chunk va de $lastPos fins al seu start
-            $chunks[$i]['text']['pre'] = $pageDataQuery->getRawSlices($id, $lastPos . "-" . $chunks[$i]['start'])[1];
-
-            // el text no forma part del 'pre'
-            $lastPos = $chunks[$i]['end'];
-        }
-    }
+//    private static function getHeadersFromHtml($html) {
+//        $pattern = '/(?:<h[123] class="sectionedit\d+" id=")(.+?)">/s'; //aquest patró només funciona si s'aplica el scedit
+//        preg_match_all($pattern, $html, $match);
+//        return $match[1]; // Conté l'array amb els ids trobats per cada secció
+//    }
+//
+//    private static function getEditingChunks($pageDataQuery, &$editingChunks, &$dictionary, &$chunks, $id, $headerIds, $editing) {
+//        for ($i = 0; $i < count($chunks); $i++) {
+//            $chunks[$i]['header_id'] = $headerIds[$i];
+//            // Afegim el text només al seleccionat i els textos en edició
+//            if (in_array($headerIds[$i], $editing)) {
+//                $chunks[$i]['text'] = [];
+//                //TODO[Xavi] compte! s'ha d'agafar sempre el editing per montar els nostres pre i suf!
+//                $chunks[$i]['text']['editing'] = $pageDataQuery->getRawSlices($id, $chunks[$i]['start'] . "-" . $chunks[$i]['end'])[1];
+//                $chunks[$i]['text']['changecheck'] = md5($chunks[$i]['text']['editing']);
+//
+//                $editingChunks[] = &$chunks[$i];
+//
+//            }
+//            $dictionary[$headerIds[$i]] = $i;
+//        }
+//    }
+//
+//    private static function getAllChunksWithText($id, $pageDataQuery) {
+//        $html = $pageDataQuery->getHtml($id);
+//        $headerIds = self::getHeadersFromHtml($html);
+//        $chunks = self::getChunks($pageDataQuery, $id);
+//        $editing = $headerIds;
+//        $editingChunks = [];
+//        $dictionary = [];
+//
+//        self::getEditingChunks($pageDataQuery, $editingChunks, $dictionary, $chunks, $id, $headerIds, $editing);
+//
+//        return ['chunks' => $editingChunks, 'dictionary' => $dictionary];
+//
+//    }
+//
+//    // Hi ha draft pel chunk a editar?
+//    private function isChunkInDraft($id, $document, $selected = null) {
+//        if (!$selected) {
+//            return false;
+//        }
+//
+//        $draft = $this->draftDataQuery->getStructured($id)['content'];
+//
+//        for ($i = 0; $i < count($document['chunks']); $i++) {
+//            if (array_key_exists($document['chunks'][$i]['header_id'], $draft)
+//                	&& $document['chunks'][$i]['header_id'] == $selected) {
+//                // Si el contingut del draft i el propi es igual, l'eliminem
+//                if ($document['chunks'][$i]['text'] . ['editing'] == $draft[$selected]) {
+//                    $this->removeStructuredDraft($id, $selected);
+//                } else {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
+//
+//    private static function addPreToChunks($pageDataQuery, &$chunks, $id) {
+//        $lastPos = 0;
+//
+//        for ($i = 0; $i < count($chunks); $i++) {
+//            // El pre de cada chunk va de $lastPos fins al seu start
+//            $chunks[$i]['text']['pre'] = $pageDataQuery->getRawSlices($id, $lastPos . "-" . $chunks[$i]['start'])[1];
+//
+//            // el text no forma part del 'pre'
+//            $lastPos = $chunks[$i]['end'];
+//        }
+//    }
 
 
 //    // Només son editables parcialment les seccions de nivell 1, 2 i 3
@@ -410,16 +409,18 @@ class HtmlPageModel extends WikiRenderizableDataModel {
         $this->draftDataQuery->removeFull($this->id);
     }
 
-    public function replaceContentForChunk(&$structure, $chunkId, $content) {
-        $index = $structure['dictionary'][$chunkId];
-        $structure['chunks'][$index]['text']['originalContent'] = $structure['chunks'][$index]['text']['editing'];
-        $structure['chunks'][$index]['text']['editing'] = $content;
-    }
+//    public function replaceContentForChunk(&$structure, $chunkId, $content) {
+//        $index = $structure['dictionary'][$chunkId];
+//        $structure['chunks'][$index]['text']['originalContent'] = $structure['chunks'][$index]['text']['editing'];
+//        $structure['chunks'][$index]['text']['editing'] = $content;
+//    }
 
+    // Es necesari, es crida desde RawPageAction-#_getDraftType()
     public function getFullDraftDate() {
         return $this->draftDataQuery->getFullDraftDate($this->id);
     }
 
+    // Es necesari, es crida desde RawPageAction-#_getDraftType()
     public function getStructuredDraftDate() {
         return $this->draftDataQuery->getStructuredDraftDate($this->id, $this->selected);
     }
@@ -434,73 +435,80 @@ class HtmlPageModel extends WikiRenderizableDataModel {
     }
 
     public function getAllDrafts() {
-        $drafts = [];
-        $hasStructured = $this->hasStructuredDraft();
 
-        if ($hasStructured) {
-            $drafts['structured'] = $this->getStructuredDraft();
-        }
+        return $drafts['full'] = $this->getFullDraft();
 
-        $hasFull = $this->hasFullDraft();
-
-        if ($hasFull) {
-            $drafts['full'] = $this->getFullDraft();
-        }
-
-        // Si no hi ha draft full, o la data del draft estructurat es més recent, s'envia el draft reestructurat
-        if ($hasStructured && (!$hasFull || $drafts['full']['date'] < $drafts['structured']['date'])) {
-            $drafts['full'] = $this->getFullDraftFromPartials();
-        }
-
-
-        return $drafts;
+//        $drafts = [];
+//        $hasStructured = $this->hasStructuredDraft();
+//
+//        if ($hasStructured) {
+//            $drafts['structured'] = $this->getStructuredDraft();
+//        }
+//
+//        $hasFull = $this->hasFullDraft();
+//
+//        if ($hasFull) {
+//            $drafts['full'] = $this->getFullDraft();
+//        }
+//
+//        // Si no hi ha draft full, o la data del draft estructurat es més recent, s'envia el draft reestructurat
+//        if ($hasStructured && (!$hasFull || $drafts['full']['date'] < $drafts['structured']['date'])) {
+//            $drafts['full'] = $this->getFullDraftFromPartials();
+//        }
+//
+//
+//        return $drafts;
     }
 
-    private function hasFullDraft(){
-        return $this->draftDataQuery->hasFull($this->id);
-    }
+//    private function hasFullDraft(){
+//        return $this->draftDataQuery->hasFull($this->id);
+//    }
 
-    private function hasStructuredDraft(){
-        return $this->draftDataQuery->hasStructured($this->id);
-    }
-
-    private function getStructuredDraft(){
-        return $this->draftDataQuery->getStructured($this->id);
-    }
+//    private function hasStructuredDraft(){
+//        return $this->draftDataQuery->hasStructured($this->id);
+//    }
+//
+//    private function getStructuredDraft(){
+//        return $this->draftDataQuery->getStructured($this->id);
+//    }
 
     public function removeDraft($draft) {
-        switch ($draft['type']) {
-            case 'structured':
-                if(isset($draft["section_id"])){
-                    return $this->removeChunkDraft($draft["section_id"]);
-                }else{
-                    return $this->removePartialDraft();
-                }
-                break;
+        return $this->removeFullDraft();
 
-            case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
-                return $this->removeFullDraft();
-                break;
-
-            default:
-                // error o no draft
-                break;
-        }
+//        switch ($draft['type']) {
+//            case 'structured':
+//                if(isset($draft["section_id"])){
+//                    return $this->removeChunkDraft($draft["section_id"]);
+//                }else{
+//                    return $this->removePartialDraft();
+//                }
+//                break;
+//
+//            case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
+//                return $this->removeFullDraft();
+//                break;
+//
+//            default:
+//                // error o no draft
+//                break;
+//        }
     }
 
     public function saveDraft($draft) {
-        switch ($draft['type']) {
-            case 'structured':
-                $this->draftDataQuery->generateStructured($draft['content'], $draft['id'], $draft['date']);
-                break;
+        $this->draftDataQuery->saveFullDraft($draft['content'], $draft['id'], $draft['date']);
 
-            case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
-                $this->draftDataQuery->saveFullDraft($draft['content'], $draft['id'], $draft['date']);
-                break;
-
-            default:
-                break;
-        }
+//        switch ($draft['type']) {
+//            case 'structured':
+//                $this->draftDataQuery->generateStructured($draft['content'], $draft['id'], $draft['date']);
+//                break;
+//
+//            case 'full': // TODO[Xavi] Processar el esborrany normal també a través d'aquesta classe
+//                $this->draftDataQuery->saveFullDraft($draft['content'], $draft['id'], $draft['date']);
+//                break;
+//
+//            default:
+//                break;
+//        }
     }
 
 }
