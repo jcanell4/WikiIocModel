@@ -16,7 +16,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         $objAux = json_decode($metaDataEntityWrapper[0]->getArrayFromModel(), true);
         $structure = json_decode($objAux['metaDataStructure'], true);
         $types = json_decode($objAux['metaDataTypesDefinition'], true);
-        $values = json_decode($objAux['metaDataValue'], true);
+        $values = $this->processValues(json_decode($objAux['metaDataValue'], true));
 
         $returnTree = [];
         $returnTree = $this->runParser($values, $structure, $types);
@@ -24,6 +24,35 @@ class MetaDataRender extends \MetaDataRenderAbstract {
 //        $returnTree['value'] = $this->flatten($returnTree['structure']);
 
         return $returnTree;
+    }
+    
+    protected function processValues($values){
+        $taulaDadesUF = json_decode($values["taulaDadesUF"], true);
+        $taulaDadesUnitats = json_decode($values["taulaDadesUnitats"], true);
+        if($taulaDadesUnitats!=NULL){
+            $hores = array();
+            $hores[0] = 0;
+            for($i=0; $i<count($taulaDadesUnitats);$i++){
+                $idUf = intval($taulaDadesUnitats[$i]["unitat formativa"]);
+                if(!isset($hores[$idUf])){
+                    $hores[$idUf]=0;
+                }
+                $hores[0]+= $taulaDadesUnitats[$i]["hores"];
+                $hores[$idUf]+= $taulaDadesUnitats[$i]["hores"];
+            }
+
+            if($taulaDadesUF!=NULL){
+                for($i=0; $i<count($taulaDadesUF);$i++){
+                     $idUf = intval($taulaDadesUF[$i]["unitat formativa"]);
+                     if(isset($hores[$idUf])){
+                         $taulaDadesUF[$i]["hores"]=$hores[$idUf];
+                     }
+                 }
+            }
+            $values["durada"] = json_encode($hores[0]);
+            $values["taulaDadesUF"] = json_encode($taulaDadesUF);
+        }
+        return $values;
     }
 
     protected function runParser($values, $structure, $types){

@@ -106,8 +106,7 @@ class renderFile extends AbstractRenderer {
         $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $text, 1, $counter);
         if($counter>0){
             $dataSource = $plugin_controller->getCurrentProjectDataSource($this->cfgExport->id, $plugin_controller->getCurrentProject());
-            $parser = new WiocclParser($text, [], $dataSource);
-            $text = $parser->getValue();                
+            $text = WiocclParser::getValue($text, [], $dataSource);
         }
 
         $instructions = p_get_instructions($text);

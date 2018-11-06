@@ -38,8 +38,8 @@
   <header class="main_header">
     <div class="container">
       <h1>Pla de treball</h1>
-      <h2>CFGS Desenvolupament d'Aplicacions Multiplataforma (DAM)</h2>
-      <h2>Mòdul 9 – Programació de Serveis i Processos </h2>
+      <h2>{##cicle##}</h2>
+      <h2>{##modul##}</h2>
     </div>
   </header>
 
@@ -47,10 +47,10 @@
 
   <section id="intro">
     <div class="container">
-      <p><span>Durada del mòdul</span>: 99 hores</p>
-      <p><span>Professors</span>: Tomàs Bigordà</p>
-      <p><span>Coordinador/a</span>: Josep Cañellas</p>
-      <p><span>Febrer 2018</span></p>
+      <p><span>Durada del <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">bloc</WIOCCL:IF><WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF></span>: {##durada##} hores</p>
+      <p><span>Professors</span>: {##professors##}</p>
+      <p><span>Coordinador/a</span>: {##coordinador##}</p>
+      <p><span><WIOCCL:IF condition="{##semestre##}==1">Setembre</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">Febrer</WIOCCL:IF> {#_YEAR()_#}</span></p>
     </div>
   </section>
 

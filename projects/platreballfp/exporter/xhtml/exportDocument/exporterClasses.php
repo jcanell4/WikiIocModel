@@ -73,9 +73,7 @@ class exportDocument extends MainRender {
 
     private function replaceInTemplate($data, $file) {
         $tmplt = $this->loadTemplateFile($file);
-        $parser = new WiocclParser($tmplt, [], $data);
-        $document = $parser->getValue();
-        
+        $document = WiocclParser::getValue($tmplt, [], $data);
         return $document;
     }
 
