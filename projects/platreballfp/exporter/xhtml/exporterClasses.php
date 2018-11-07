@@ -97,9 +97,9 @@ class renderFile extends AbstractRenderer {
         $_SESSION['alternateAddress'] = TRUE;
 
         if(preg_match("/".$this->cfgExport->id."/", $data)!=1){
-            $data = $this->cfgExport->id.":".$data;
+            $fns = $this->cfgExport->id.":".$data;
         }
-        $file = wikiFN($data);
+        $file = wikiFN($fns);
         $text = io_readFile($file);
         
         $counter = 0;
@@ -112,7 +112,7 @@ class renderFile extends AbstractRenderer {
         $instructions = p_get_instructions($text);
         $renderData = array();
         $html = p_render('wikiiocmodel_ptxhtml', $instructions, $renderData);
-        $this->cfgExport->toc = $renderData["tocItems"];
+        $this->cfgExport->toc[$data] = $renderData["tocItems"];
         if ($startedHere) session_destroy();
 
         return $html;

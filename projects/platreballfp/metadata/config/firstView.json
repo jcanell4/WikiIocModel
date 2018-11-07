@@ -213,7 +213,7 @@
         "n_columns": 12,
         "type": "editableObject",
         "group": "dadesBasiques",
-        "n_rows": 4,
+        "n_rows": 8,
         "props": {
           "data-editable-element": "table",
           "title": "Detalleu els resultats d'aprenentatge."
@@ -273,7 +273,7 @@
         "n_rows": 5,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les dades de cada UF. Deixeu les hores i la ponderació a zero si voleu que les calculi l'aplicació."      
+          "title": "Detalleu les dades de cada UF. No cal que ompliu les hores de les UFs detallades en aquest bloc o mòdul, es calculen automàticament."      
         },
         "config": {
           "actions": {
@@ -300,18 +300,19 @@
           "layout": [
             {
               "defaultCell": {
-                "width" : "10%"
+                "width" : "15%"
               },
               "cells": [
                 {
                   "name": "unitat formativa",
-                  "field": "nom",
+                  "field": "unitat formativa",
                   "editable": true
                 },
 
                 {
                   "name": "nom",
-                  "field": "unitat formativa",
+                  "field": "nom",
+                   "width":"40%",
                   "editable": true
                 },
 
@@ -323,7 +324,7 @@
 
                 {
                   "name": "ponderació",
-                  "field": "hores",
+                  "field": "ponderació",
                   "editable": true
                 }
               ]
@@ -339,7 +340,7 @@
         "n_rows": 8,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les dades referents a cada unitat"      
+          "title": "Detalleu les dades referents a cada unitat. No heu d'omplir les hores de les unitat, es calculen automàticament"      
         },
         "config": {
           "actions": {
@@ -359,7 +360,40 @@
             "hores": {
               "type": "number"
             }
-          }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "15%"
+              },
+              "cells": [
+                {
+                  "name": "unitat formativa",
+                  "field": "unitat formativa",
+                  "editable": true
+                },
+
+                {
+                  "name": "unitat",
+                  "field": "unitat",
+                  "editable": true
+                },
+
+                {
+                  "name": "nom",
+                  "field": "nom",
+                   "width":"55%",
+                  "editable": true
+                },
+
+                {
+                  "name": "hores",
+                  "field": "hores",
+                  "editable": false
+                }
+              ]
+            }
+          ]
         }
       },
       "calendari": {
@@ -367,7 +401,7 @@
         "n_columns": 12,
         "type": "editableObject",
         "group": "dadesBasiques",
-        "n_rows": 4,
+        "n_rows": 9,
         "props": {
           "data-editable-element": "table",
           "title": "Períodes en que seqüenciem el procés d'aprenentatge (apartats, projectes, pràctiques, etc.)"
@@ -379,7 +413,7 @@
           },
           "fields": {
             "unitat": {
-              "type": "string"
+              "type": "number"
             },
             "període": {
                 "type": "number"
@@ -390,13 +424,64 @@
             "descripció període": {
                 "type": "string"
             },
+            "hores": {
+              "type": "number"
+            },
             "inici": {
               "type": "date"
             },
             "final": {
               "type": "date"
             }
-          }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "10%"
+              },
+              "cells": [
+                {
+                  "name": "unitat",
+                  "field": "unitat",
+                  "width": "8%",               
+                  "editable": true
+                },
+                {
+                  "name": "període",
+                  "field": "període",
+                  "width": "8%",               
+                  "editable": true
+                },
+                {
+                  "name": "tipus període",
+                  "field": "tipus període",
+                  "editable": true
+                },
+                {
+                  "name": "descripció període",
+                  "field": "descripció període",
+                  "width": "46%",               
+                  "editable": true
+                },
+                {
+                  "name": "hores",
+                  "field": "hores",
+                  "width": "8%",               
+                  "editable": true
+                },
+                {
+                  "name": "inici",
+                  "field": "inici",
+                  "editable": true
+                },
+                {
+                  "name": "final",
+                  "field": "final",
+                  "editable": true
+                }
+              ]
+            }
+          ]
         }
       },
       "activitatsAprenentatge": {

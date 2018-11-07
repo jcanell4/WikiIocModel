@@ -147,6 +147,10 @@
                             "type": "string",
                             "mandatory": true
                         },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true
+                        },
                         "inici": {
                             "type": "date",
                             "mandatory": true
