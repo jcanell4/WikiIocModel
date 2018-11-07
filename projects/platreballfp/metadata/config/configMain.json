@@ -147,6 +147,10 @@
                             "type": "string",
                             "mandatory": true
                         },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true
+                        },
                         "inici": {
                             "type": "date",
                             "mandatory": true
@@ -394,28 +398,6 @@
                             "type": "defCalendari",
                             "mandatory": true
                         },
-                        "ponderacioAC": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default":30,
-                            "props": {
-                                "min":0,
-                                "max":100
-                            }
-                        },                                                
-                        "numLliuraments": {
-                            "type": "number",
-                            "mandatory": true,
-                            "props": {
-                                "min":0,
-                                "max":20
-                            }
-                        },                                                
-                        "tipusLliuraments": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "EACs"
-                        },                                                
                         "datesAC": {
                             "type": "defDatesAC",
                             "mandatory": true

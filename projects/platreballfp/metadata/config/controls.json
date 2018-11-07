@@ -8,8 +8,17 @@
 
         "scripts": {
             "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
                 "conditions": {
-                    "page.action": "'project_view'"
+                    "page.action": "'project_view'",
+                    "page.generated":"true"
                 }
             }
         }

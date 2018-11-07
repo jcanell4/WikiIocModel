@@ -7,7 +7,6 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . 'lib/plugins/wikiiocmodel/');
 require_once (WIKI_IOC_MODEL . 'WikiIocPluginAction.php');
-require_once (DOKU_INC . 'lib/plugins/iocexportl/wioccl/WiocclParser.php');  //[JOSEP] TODO: Cal canviar de directori la biblioteca wioccl
 
 class action_plugin_wikiiocmodel extends WikiIocPluginAction {
     private $viewMode = false;
@@ -16,6 +15,7 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
         parent::register($controller);
         $controller->register_hook('WIOC_AJAX_COMMAND', "BEFORE", $this, "setViewMode", array());
         $controller->register_hook('IO_WIKIPAGE_READ', "AFTER", $this, "io_readWikiPage", array());
+        $controller->register_hook('PARSER_CACHE_USE', "BEFORE", $this, "cache_use", array());
     }
     
     function setViewMode(&$event, $param){
@@ -27,6 +27,16 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
         }
     }
     
+    function cache_use(&$event, $param){
+        global $plugin_controller;
+        
+        $projectOwner =  $plugin_controller->getProjectOwner();
+        if($this->viewMode &&  $projectOwner){
+            $fileProjetc = $plugin_controller->getProjectFile($projectOwner);
+            $event->data->depends["files"] []= $fileProjetc;
+        }        
+    }
+    
     function io_readWikiPage(&$event, $param){
         global $plugin_controller;
         
@@ -35,8 +45,7 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
             $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $event->result, 1, $counter);
             if($counter>0){
                 $dataSource = $plugin_controller->getCurrentProjectDataSource();
-                $parser = new WiocclParser($text, [], $dataSource);
-                $event->result = $parser->getValue();                
+                $event->result = WiocclParser::getValue($text, [], $dataSource);
             }
         }
         return false;

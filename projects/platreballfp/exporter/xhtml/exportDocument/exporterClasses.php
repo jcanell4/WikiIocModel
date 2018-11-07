@@ -73,9 +73,16 @@ class exportDocument extends MainRender {
 
     private function replaceInTemplate($data, $file) {
         $tmplt = $this->loadTemplateFile($file);
-        $parser = new WiocclParser($tmplt, [], $data);
-        $document = $parser->getValue();
-        
+        $document = WiocclParser::getValue($tmplt, [], $data);
+        foreach ($this->cfgExport->toc as $tocKey => $tocItem) {
+            $toc ="";
+            foreach ($tocItem as $elem) {
+                if($elem['level']==1){
+                    $toc .= "<a href='{$elem['link']}'>".htmlentities($elem['title'])."</a>\n";
+                }
+            }
+            $document = str_replace("@@TOC($tocKey)@@", $toc, $document);
+        }
         return $document;
     }
 
@@ -164,9 +171,9 @@ class exportDocument extends MainRender {
     }
 }
    
-class render_title extends renderField {
-    public function process($data) {
-        $ret = parent::process($data);
-        return $ret;
-    }
-}
+//class render_title extends renderField {
+//    public function process($data) {
+//        $ret = parent::process($data);
+//        return $ret;
+//    }
+//}

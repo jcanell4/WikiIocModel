@@ -19,20 +19,20 @@ class platreballfpProjectModel extends AbstractProjectModel {
 
     public function setData($toSet) {
         // $toSet es genera a l'Action corresponent
-        $metaDataValue = json_decode($toSet["metaDataValue"], true);
-        $metaDataValue['durada'] = 0;
-        if (is_string($metaDataValue['taulaHoresUF'])){
-            $taulaHoresUF = json_decode($metaDataValue['taulaHoresUF'], true);
-        }else{
-            $taulaHoresUF = $metaDataValue['taulaHoresUF'];
-        }
-        foreach ($taulaHoresUF as $item) {
-            if (is_string($item['hores'])){
-                $item['hores'] = intval($item['hores']);
-            }
-            $metaDataValue['durada']+=$item['hores'];
-        }
-        $toSet["metaDataValue"] = json_encode($metaDataValue);
+//        $metaDataValue = json_decode($toSet["metaDataValue"], true);
+//        $metaDataValue['durada'] = 0;
+//        if (is_string($metaDataValue['taulaHoresUF'])){
+//            $taulaHoresUF = json_decode($metaDataValue['taulaHoresUF'], true);
+//        }else{
+//            $taulaHoresUF = $metaDataValue['taulaHoresUF'];
+//        }
+//        foreach ($taulaHoresUF as $item) {
+//            if (is_string($item['hores'])){
+//                $item['hores'] = intval($item['hores']);
+//            }
+//            $metaDataValue['durada']+=$item['hores'];
+//        }
+//        $toSet["metaDataValue"] = json_encode($metaDataValue);
         parent::setData($toSet);
     }
     

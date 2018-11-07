@@ -27,6 +27,10 @@ abstract class AbstractRenderer {
             $this->cfgExport = new cfgExporter();
         }
     }
+    
+    public function getTocs(){
+        return $this->cfgExport->tocs;
+    }
 
     public function init($extra) {
         $this->extra_data = $extra;
@@ -57,7 +61,8 @@ class cfgExporter {
     public $media_files = array();
     public $graphviz_images = array();
     public $gif_images = array();
-    public $toc = NULL;
+    public $toc=NULL;
+    public $tocs=array();
     public $permissionToExport = TRUE;
 
     public function __construct() {

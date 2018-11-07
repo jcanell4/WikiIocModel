@@ -72,7 +72,7 @@
       },
       "tipusBlocModul":{
         "type":"select",
-        "n_columns": 3,
+        "n_columns": 5,
         "label": "Bloc o mòdul (tipusBlocModul)",
         "group": "main",
         "props": {
@@ -89,7 +89,7 @@
       },
       "cicle": {
         "label" : "Nom del cicle (cicle)",
-        "n_columns": 9,
+        "n_columns": 8,
         "group": "main",
         "props": {
           "required": true,
@@ -98,7 +98,7 @@
       },
       "duradaCicle": {
         "label" : "Durada del Cicle(duradaCicle)",
-        "n_columns": 3,
+        "n_columns": 4,
         "group": "main",
         "props": {
           "required": true,
@@ -107,7 +107,7 @@
       },
       "modul": {
         "label" : "Nom del mòdul o bloc (modul)",
-        "n_columns": 9,
+        "n_columns": 8,
         "group": "main",
         "props": {
           "required": true,
@@ -116,7 +116,7 @@
       },
       "durada": {
         "label" : "Durada (durada)",
-        "n_columns": 3,
+        "n_columns": 4,
         "group": "main",
         "props": {
           "required": true,
@@ -126,7 +126,7 @@
       },
       "coordinador": {
         "label" : "Coordinador (coordinador)",
-        "n_columns": 12,
+        "n_columns": 6,
         "group": "main",
         "props": {
           "required": true,
@@ -135,7 +135,7 @@
       },
       "professors": {
         "label" : "Professors (professors)",
-        "n_columns": 12,
+        "n_columns": 6,
         "group": "main",
         "props": {
           "required": true,
@@ -144,7 +144,7 @@
       },
       "urlMaterialDidactic": {
         "label" : "Adreça del material didàctic (urlMaterialDidactic)",
-        "n_columns": 12,
+        "n_columns": 8,
         "group": "main",
         "props": {
           "required": true,
@@ -154,7 +154,7 @@
       "dedicacio": {
         "type":"number",
         "label" : "Dedicació setmanal (dedicacio)",
-        "n_columns": 12,
+        "n_columns": 4,
         "group": "main",
         "props": {
           "required": true,
@@ -225,7 +225,7 @@
         "n_rows": 5,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les dades de cada UF. Deixeu les hores i la ponderació a zero si voleu que les calculi l'aplicació."      
+          "title": "Detalleu les dades de cada UF. No cal que ompliu les hores de les UFs detallades en aquest bloc o mòdul, es calculen automàticament."      
         },
         "config": {
           "actions": {
@@ -252,18 +252,19 @@
           "layout": [
             {
               "defaultCell": {
-                "width" : "10%"
+                "width" : "15%"
               },
               "cells": [
                 {
                   "name": "unitat formativa",
-                  "field": "nom",
+                  "field": "unitat formativa",
                   "editable": true
                 },
 
                 {
                   "name": "nom",
-                  "field": "unitat formativa",
+                  "field": "nom",
+                   "width":"40%",
                   "editable": true
                 },
 
@@ -275,7 +276,7 @@
 
                 {
                   "name": "ponderació",
-                  "field": "hores",
+                  "field": "ponderació",
                   "editable": true
                 }
               ]
@@ -291,7 +292,7 @@
         "n_rows": 8,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les dades referents a cada unitat"      
+          "title": "Detalleu les dades referents a cada unitat. No heu d'omplir les hores de les unitat, es calculen automàticament"      
         },
         "config": {
           "actions": {
@@ -311,7 +312,40 @@
             "hores": {
               "type": "number"
             }
-          }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "15%"
+              },
+              "cells": [
+                {
+                  "name": "unitat formativa",
+                  "field": "unitat formativa",
+                  "editable": true
+                },
+
+                {
+                  "name": "unitat",
+                  "field": "unitat",
+                  "editable": true
+                },
+
+                {
+                  "name": "nom",
+                  "field": "nom",
+                   "width":"55%",
+                  "editable": true
+                },
+
+                {
+                  "name": "hores",
+                  "field": "hores",
+                  "editable": false
+                }
+              ]
+            }
+          ]
         }
       },
       "einesAprenentatge": {
@@ -351,7 +385,7 @@
         "n_columns": 12,
         "type": "editableObject",
         "group": "main",
-        "n_rows": 4,
+        "n_rows": 8,
         "props": {
           "data-editable-element": "table",
           "title": "Detalleu els resultats d'aprenentatge."
@@ -406,7 +440,7 @@
       "avaluacioInicial":{
         "label": "Avaluació inicial (avaluacioInicial)",
         "type":"select",
-        "n_columns":4,
+        "n_columns":6,
         "group": "main",
         "props": {
           "required": true,
@@ -425,10 +459,10 @@
         "n_columns": 12,
         "type": "editableObject",
         "group": "actualitzables",
-        "n_rows": 4,
+        "n_rows": 9,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu la temporització del mòdul"
+          "title": "Períodes en que seqüenciem el procés d'aprenentatge (apartats, projectes, pràctiques, etc.) i detall de la temporització"
         },
         "config": {
           "actions": {
@@ -437,7 +471,7 @@
           },
           "fields": {
             "unitat": {
-              "type": "string"
+              "type": "number"
             },
             "període": {
                 "type": "number"
@@ -448,45 +482,64 @@
             "descripció període": {
                 "type": "string"
             },
+            "hores": {
+              "type": "number"
+            },
             "inici": {
               "type": "date"
             },
             "final": {
               "type": "date"
             }
-          }
-        }
-      },
-      "numLliuraments": {
-        "label": "Número de lliuraments (numLliuraments)",
-        "n_columns":4,
-        "group": "main",
-        "props": {
-          "required": true,
-          "min":1,
-          "max":20,
-          "title": "Indiqueu el nombre de lliuraments que l'AC té"      
-        }
-      },
-      "tipusLliuraments": {
-        "label": "Tipus de lliuraments (tipusLliuraments)",
-        "n_columns":4,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "Indiqueu el tipus de lliurament"
-        }
-      },
-      "ponderacioAC": {
-        "label": "Ponderació de l'avalació contínua (ponderacioAC)",
-        "n_columns":6,
-        "group": "main",
-        "default": 30,
-        "props": {
-          "required": true,
-          "min":0,
-          "max":100,
-          "title": "Indiqueu quant pondera l'AC en la nota final"      
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "10%"
+              },
+              "cells": [
+                {
+                  "name": "unitat",
+                  "field": "unitat",
+                  "width": "8%",               
+                  "editable": true
+                },
+                {
+                  "name": "període",
+                  "field": "període",
+                  "width": "8%",               
+                  "editable": true
+                },
+                {
+                  "name": "tipus període",
+                  "field": "tipus període",
+                  "editable": true
+                },
+                {
+                  "name": "descripció període",
+                  "field": "descripció període",
+                  "width": "46%",               
+                  "editable": true
+                },
+                {
+                  "name": "hores",
+                  "field": "hores",
+                  "width": "8%",               
+                  "editable": true
+                },
+                {
+                  "name": "inici",
+                  "field": "inici",
+                  "editable": true
+                },
+                {
+                  "name": "final",
+                  "field": "final",
+                  "editable": true
+                }
+              ]
+            }
+          ]
         }
       },
       "notaMinimaAC": {
@@ -569,7 +622,7 @@
         }
       },
       "notaMinimaPAF": {
-        "label": "Nota minima a la PAF per poder comptar l'AC (notaMinimaPAF)",
+        "label": "Nota minima a la PAF (notaMinimaPAF)",
         "n_columns":6,
         "group": "main",
         "props": {
@@ -654,14 +707,20 @@
         "group": "authorship",
         "props": {
             "required": true
-        }
+        },
+        "config":{
+           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]}
+        }        
       },
       "autor": {
         "label": "Autor (autor)",
         "n_columns": 6,
         "group": "authorship",
         "props": {
-            "required": true
+           "required": true
+        },
+        "config":{
+           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]}
         }
       },
       "plantilla": {

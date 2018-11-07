@@ -37,22 +37,22 @@
     <div class="section1_container">
       <div class="section1_content_row1">
         <div class="section1_element">
-          <div class="section1_icona" id="durada_icona"></div>
-          <h3>Durada</h3>
-          <p>{##durada##} hores</p>
+          <div class="section1_icona" id="material_icona"></div>
+          <h3>Material didàctic</h3>
+          <a href="{##urlMaterialDidactic##}">material de l'aula</a>
         </div>
         <div class="section1_element">
           <div class="section1_icona" id="professor_icona"></div>
           <h3>Professor</h3>
           <p>{##professors##}</p>
         </div>
-        <div class="section1_element">
-          <div class="section1_icona" id="material_icona"></div>
-          <h3>Material didàctic</h3>
-          <a href="{##urlMaterialDidactic##}">material de l'aula</a>
-        </div>
       </div>
       <div class="section1_content_row2">
+        <div class="section1_element">
+          <div class="section1_icona" id="durada_icona"></div>
+          <h3>Durada</h3>
+          <p>{##durada##} hores</p>
+        </div>
         <div class="section1_element">
           <div class="section1_icona" id="dedicacio_icona"></div>
           <h3>Dedicació setmanal</h3>
@@ -61,25 +61,25 @@
       </div>
     </div>
   </div>
-    <div class="section1_element">
-      <div class="section1_icona" id="requisits_icona"></div>
-      <h3>Requeriments i incompatibilitats de la matrícula</h3>
-      <p>{##requerimentsMatricula##}</p>
-    </div>
 </section>
 <!-- /Secció 1 -->
 
-<hr>
-
 <!-- Secció 2 -->
 <section class="section section2">
+  <hr>
   <div class="own_container">
-    <p>{##descripcio##}</p>
+    {##descripcio##}
   </div>
+  <hr>
+<WIOCCL:IF condition="{##requerimentsMatricula##}!=''''">  
+  <div class="own_container">
+      <h3>Requeriments i incompatibilitats de la matrícula</h3>
+      <p>{##requerimentsMatricula##}</p>
+  </div>
+  <hr>
+</WIOCCL:IF>
 </section>
 <!-- /Secció 2 -->
-
-<hr>
 
 <!-- Secció 3 -->
 <section class="section section3">
@@ -224,9 +224,9 @@
 /* Es poden modificar les dades, afegint qualsevol sèries de valors de la llargada que calgui.*/
 (function(){
     var dataArray = [
-                  [<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">{##item[hores]##},</WIOCCL:FOREACH>], /* Num. hores per cada UF */
-                  [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[hores]##},</WIOCCL:FOREACH>] /* Num. hores per cada U */
-                ];
+            [<WIOCCL:FOR from="{#_FIRST({##taulaDadesUnitats##}, ''FIRST[unitat formativa]'')_#}" to="{#_LAST({##taulaDadesUnitats##}, ''LAST[unitat formativa]'')_#}" counter="idUf"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##idUf##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[hores]")_#},</WIOCCL:SUBSET></WIOCCL:FOR>], /* Num. hores per cada UF */
+            [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[hores]##},</WIOCCL:FOREACH>] /* Num. hores per cada U */
+        ];
 
     /*****************/
 
@@ -391,7 +391,7 @@
 <section class="section section6">
   <div class="own_container">
     <h2>Avaluació contínua</h2>
-    <p>És recomanable realitzar els <strong>les activitats d’avaluació contínua</strong> ja que la seva nota correspon al <span>{##ponderacioAC##}</span> de la qualificació final.</p>
+    <p>És recomanable realitzar els <strong>les activitats d’avaluació contínua</strong> ja que la seva nota incideix en la qualificació final (<a href="#qualificacio">consulteu l'apartat de qualificació</a>).</p>
     <br/>
     <p>Els EACs els resol l’estudiant per la seva banda, i els ha de lliurar al campus en la data indicada. </p>
     <br/>
@@ -464,7 +464,7 @@
 <!-- Secció 8 -->
 <section class="section section8">
   <div class="own_container">
-    <h2>Qualificació</h2>
+    <h2 id="qualificació">Qualificació</h2>
      <div class="containerQualificacio" id="contenidorQualificacio">
 
     </div>

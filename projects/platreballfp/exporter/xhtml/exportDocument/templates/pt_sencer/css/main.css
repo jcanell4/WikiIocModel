@@ -220,6 +220,10 @@ p.llegenda {
     text-align: center;
 }
 
+.pt_taula.pt_planif td {
+    text-align: left;
+}
+
 .pt_taula td {
     padding: 8px 6px;
     background-color: #F4F4F4;
@@ -294,7 +298,13 @@ p.llegenda {
     text-transform: uppercase;
 }
 
+header.header{
+    display: none;
+}
 
+footer.footer{
+    display: none;
+}
 
 /* Layout media queries */
 
@@ -426,10 +436,24 @@ p.llegenda {
 
 }
 
+@page:top{
+    margin-top: 0px;    
+}
+
+@page:bottom{
+    margin-bottom: 0px;    
+}
+
 @page {
     size: A4;
     margin-top: 80px;
     margin-bottom: 46px;
+    @top-center { 
+/*        content: element(header);*/
+    };
+    @bottom-center { 
+/*        content: element(footer);*/
+    };
 }
 
 @media print {
@@ -443,15 +467,33 @@ p.llegenda {
         color: #01172f;
         background-color: #ffffff;
     }
+    
+    footer.footer {        
+/*        display: inline-block;
+        position: running(footer);*/
+    }
 
+    header.header {
+/*        display: inline-block;
+        position: running(header);*/
+    }
+
+    div.ioctable {
+        page-break-inside: avoid !important;
+    }
+    
     h1, h2, h3, h4 {
         page-break-after: avoid !important;
         color: #01172f !important;
+        windows: 2;
+        orphans: 2;
     }
 
     p, a, li {
         font-size: 16px;
         line-height: 1.6;
+        windows: 2;
+        orphans: 2;
     }
 
     #mySidenav {
@@ -491,11 +533,15 @@ p.llegenda {
         background: #5D6B7A;
         border: 0;
     }
+    
+    .salt_impr{
+        page-break-after: always
+    }
 
     .pt_taula {
         width: 100%;
         margin: 26px auto 46px auto;
-        font-size: 15px; 
+        font-size: 15px;         
     }
     
     .pt_taula th {
