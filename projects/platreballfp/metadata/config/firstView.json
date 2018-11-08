@@ -650,8 +650,7 @@
             },
             "tipus qualificació": {
               "type": "select",
-              "options": ["AC", "PAF"]                           
-            },
+              "options": ["AC", "EAF", "JT", "PAF"]                                       },
             "descripció qualificació": {
               "type": "string"
             },
