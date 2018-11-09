@@ -17,9 +17,9 @@ abstract class DataQuery {
     const K_PROJECTOWNER      = ProjectKeys::PROJECT_OWNER;
     const K_ID        = ProjectKeys::KEY_ID;
     const K_NS        = ProjectKeys::KEY_NS;
-    const K_NAME      = "name";
-    const K_NSPROJECT = "nsproject";
-    const K_TYPE      = "type";
+    const K_NAME      = ProjectKeys::KEY_NAME;
+    const K_NSPROJECT = ProjectKeys::KEY_NSPROJECT;
+    const K_TYPE      = ProjectKeys::KEY_TYPE;
 
     private $datadir;
     private $metaDataPath;
@@ -53,9 +53,12 @@ abstract class DataQuery {
      * @param string $ns
      * @return boolean
      */
-    public function isAProject($ns) {
-        $ret = $this->getNsType($ns);
-        return isset($ret[self::K_PROJECTTYPE]);
+    public function isAProject($ns, $full=FALSE) {
+        $ret = $this->getNsProperties($ns);
+        if ($full)
+            return $ret;
+        else
+            return isset($ret[self::K_PROJECTTYPE]);
     }
 
     /**
@@ -141,7 +144,7 @@ abstract class DataQuery {
      * @param string $root
      * @return json conteniendo el nodo actual con sus propiedades y sus hijos, con sus propiedades, a 1 nivel de profundidad
      */
-    protected function getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $function='search_index', $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE ) {
+    protected function getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $function='search_index', $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE, $subSetList=NULL ) {
         $this->init($base);
         $nodeData    = array();
         $children    = array();
@@ -202,12 +205,12 @@ abstract class DataQuery {
         $dir = str_replace(':', '/', $node);
         search($nodeData, $base, $function, $opts, $dir, $level);
 
-        $typeNs = $this->getNsType($node);
-        $itemsProject = $this->updateNsProperties($node, $typeNs);
+        $propertiesNs = $this->getNsProperties($node);
+        $itemsProject = $this->updateNsProperties($node, $propertiesNs);
 
         if ($itemsProject[self::K_PROJECTTYPE] || $itemsProject[self::K_TYPE] === "pd") {
             if ($expandProject) {
-                $children = $this->fillProjectNode($nodeData, $level, $itemsProject, $onlyDirs);
+                $children = $this->fillProjectNode($nodeData, $level, $itemsProject, $onlyDirs, $subSetList);
             }
         }elseif ($nodeData) {
             $children = $this->fillNode($nodeData, $level, $onlyDirs, $hiddenProjects);
@@ -242,29 +245,33 @@ abstract class DataQuery {
      * @param boolean $onlyDirs
      * @return array con todos los hijos incluidos en $nodeData con sus propiedades
      */
-    private function fillProjectNode($nodeData, $level, $itemsProject, $onlyDirs) {
-        $children = array();
+    private function fillProjectNode($nodeData, $level, $itemsProject, $onlyDirs, $subSetList=NULL) {
         //Logger::debug("fillProjectNode->nodeData: ".json_encode($nodeData), 0, __LINE__, "DataQuery", -1, TRUE);
         //Logger::debug("fillProjectNode->itmsProject: ".json_encode($itemsProject), 0, __LINE__, "DataQuery", -1, TRUE);
+        $c = (count($subSetList) > 0) ? count($subSetList) : 0; //countSubSets
+        $children = ($c > 0) ? $subSetList : array();
+
         foreach (array_keys($nodeData) as $item) {
 
             if ($onlyDirs && $nodeData[$item][self::K_TYPE] == "d" || !$onlyDirs) {
-                $children[$item][self::K_ID] = $nodeData[$item][self::K_ID];
-                $children[$item][self::K_NAME] = explode(":", $nodeData[$item][self::K_ID])[$level];
+                $itemc = $item+$c;
+                $children[$itemc][self::K_ID] = $nodeData[$item][self::K_ID];
+                $children[$itemc][self::K_NAME] = explode(":", $nodeData[$item][self::K_ID])[$level];
 
                 $_type = $nodeData[$item][self::K_TYPE];
                 if ($_type === "d") {
-                    $ptype = $this->getNsType($nodeData[$item][self::K_ID]);
-                    $_type = ($ptype[self::K_PROJECTTYPE]) ? "o" : $ptype[self::K_TYPE];
+                    $propertiesNs = $this->getNsProperties($nodeData[$item][self::K_ID]);
+                    $_type = ($propertiesNs[self::K_PROJECTTYPE]) ? "o" : $propertiesNs[self::K_TYPE];
                 }
-                if (isset($ptype) && $ptype[self::K_PROJECTTYPE]) {
-                    $children[$item][self::K_PROJECTTYPE] = $ptype[self::K_PROJECTTYPE];
-                    $children[$item][self::K_NSPROJECT] = $ptype[self::K_NSPROJECT];
+                if (isset($propertiesNs) && $propertiesNs[self::K_PROJECTTYPE]) {
+                    $children[$itemc][self::K_PROJECTTYPE] = $propertiesNs[self::K_PROJECTTYPE];
+                    $children[$itemc][self::K_NSPROJECT] = $propertiesNs[self::K_NSPROJECT];
                 }else {
-                    $children[$item][self::K_PROJECTTYPE] = $itemsProject[self::K_PROJECTTYPE];
-                    $children[$item][self::K_NSPROJECT] = $itemsProject[self::K_NSPROJECT];
+                    $children[$itemc][self::K_PROJECTTYPE] = $itemsProject[self::K_PROJECTTYPE];
+                    $children[$itemc][self::K_NSPROJECT] = $itemsProject[self::K_NSPROJECT];
                 }
-                $children[$item][self::K_TYPE] = "p$_type";
+                unset($propertiesNs);
+                $children[$itemc][self::K_TYPE] = "p$_type";
             }
         }
         return $children;
@@ -317,7 +324,7 @@ abstract class DataQuery {
      * @param type $ns : ns (ruta wiki relativa a pages) que se evalúa
      * @return array : propiedades del elemento $ns
      */
-    private function getNsItems($ns) {
+    private function getNsItems($ns) { //debería llamarse getFullNsProperties()
         $this->init();
         $page = $this->datadir."/";
         $camins = ($ns) ? explode(":", $ns) : NULL;
@@ -386,10 +393,10 @@ abstract class DataQuery {
     }
 
     /**
-     * Obtiene el tipo en la ruta correspondiente a un ns
+     * Obtiene el tipo y, en su caso, propiedaddes del padre, en la ruta correspondiente a un ns
      * @return array | null
      */
-    private function getNsType($ns) {
+    private function getNsProperties($ns) {
         $ret[self::K_TYPE] = "";
         if ($ns) {
             $this->init();

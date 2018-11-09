@@ -48,6 +48,13 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
 
         $response[ProjectKeys::KEY_ID] = $this->idToRequestId($this->params[ProjectKeys::KEY_ID]);
 
+        //¿HAy que decidirlo aquí o en otro sitio más adelante?
+        //¿Modifico valores o pongo sólo el chivato?
+        if ($this->params[ProjectKeys::KEY_METADATA_SUBSET] !== ProjectKeys::VAL_DEFAULTSUBSET) {
+//            $response['projectExtraData'][ProjectKeys::KEY_METADATA_SUBSET] = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
+            $response[ProjectKeys::KEY_ID] .= "-".$this->params[ProjectKeys::KEY_METADATA_SUBSET]."-";
+            $response['isSubSet'] = TRUE;
+        }
         if ($this->params[ProjectKeys::KEY_REV]) {
             $response[ProjectKeys::KEY_ID] .= ProjectKeys::REVISION_SUFFIX;
             if ($response['meta']) {

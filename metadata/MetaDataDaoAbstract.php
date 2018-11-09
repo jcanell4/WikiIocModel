@@ -9,6 +9,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once (DOKU_INC . 'inc/JSON.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataDaoInterface.php');
+require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/metadataconfig/MetaDataDaoConfig.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataExceptions.php');
 require_once (DOKU_PLUGIN . 'ajaxcommand/defkeys/ProjectKeys.php');
 
@@ -18,6 +19,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
     const K_IDRESOURCE      = ProjectKeys::KEY_ID_RESOURCE;
     const K_PERSISTENCE     = ProjectKeys::KEY_PERSISTENCE;
     const K_PROJECT_FILENAME= ProjectKeys::KEY_PROJECT_FILENAME;
+    const K_PROJECTTYPE_DIR = ProjectKeys::KEY_PROJECTTYPE_DIR;
 
     /**
      * Purpose: Call PERSISTENCE component to obtain metadata (only one element)
@@ -36,25 +38,26 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
                             isset($MetaDataRequestMessage[self::K_PROJECTTYPE]) &&
                             $MetaDataRequestMessage[self::K_PROJECTTYPE] != '' &&
                             isset($MetaDataRequestMessage[self::K_METADATASUBSET]) &&
-                            $MetaDataRequestMessage[self::K_METADATASUBSET] != '';
+                            $MetaDataRequestMessage[self::K_METADATASUBSET] != '' &&
+                            isset($MetaDataRequestMessage[self::K_PROJECTTYPE_DIR]) &&
+                            $MetaDataRequestMessage[self::K_PROJECTTYPE_DIR] != '';
 
         if (!$checkParameters) {
             throw new WrongParams();
         }
 
         $jSONArray = $this->__getMetaPersistence($MetaDataRequestMessage);
-
-        //if doesn't exist metadata, then WikiIocModelException -> MetaDataNotFound
+        if (!isset($jSONArray) || $jSONArray == null) {
+            // Se usa cuando todavía no hay datos en el fichero de proyecto, entonces se recoge la lista de campos del tipo de proyecto
+            // aunque, tal vez, habría que retornar NULL (eliminando la Excepción)
+            $jSONArray = $this->__getStructureMetaDataConfig($MetaDataRequestMessage);
+        }
         if (!isset($jSONArray) || $jSONArray == null) {
             throw new MetaDataNotFound();
         }
 
         //Persistence returns wellformed JSON
-        $encoder = new JSON();
-        $arrayConfigPre = $encoder->decode($jSONArray);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new MalFormedJSON();
-        }
+        MetaDataDaoConfig::controlMalFormedJson($jSONArray);
 
         return $jSONArray;
     }
@@ -64,12 +67,29 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      * - Create object from class ProjectMetaDataQuery and call getMeta of this persistence query object
      * - It's possible personalize this method to especific (projectType, metaDataSubSet) MetaDataDao class
      * @param array
-     * Restrictions:
-     * -
      * @return json with metadata values
      */
     public function __getMetaPersistence($MetaDataRequestMessage) {
-        return $MetaDataRequestMessage[self::K_PERSISTENCE]->createProjectMetaDataQuery()->getMeta($MetaDataRequestMessage[self::K_IDRESOURCE], $MetaDataRequestMessage[self::K_PROJECTTYPE], $MetaDataRequestMessage[self::K_METADATASUBSET],$MetaDataRequestMessage[self::K_PROJECT_FILENAME]);
+        return $MetaDataRequestMessage[self::K_PERSISTENCE]
+                    ->createProjectMetaDataQuery()
+                    ->getMeta($MetaDataRequestMessage[self::K_IDRESOURCE],
+                              $MetaDataRequestMessage[self::K_PROJECTTYPE],
+                              $MetaDataRequestMessage[self::K_METADATASUBSET],
+                              $MetaDataRequestMessage[self::K_PROJECT_FILENAME]);
+    }
+
+    /**
+     * Obtiene la estructura de campos de la definición del tipo de proyecto
+     * Se usa cuando todavía no hay datos en el fichero de proyecto, entonces se recoge la lista de campos del tipo de proyecto
+     * @param array $MetaDataRequestMessage
+     * @return JSON
+     */
+    public function __getStructureMetaDataConfig($MetaDataRequestMessage) {
+        return $MetaDataRequestMessage[self::K_PERSISTENCE]
+                    ->createProjectMetaDataQuery()
+                    ->getStructureMetaDataConfig($MetaDataRequestMessage[self::K_PROJECTTYPE],
+                                                 $MetaDataRequestMessage[self::K_METADATASUBSET],
+                                                 $MetaDataRequestMessage[self::K_PROJECTTYPE_DIR]);
     }
 
     /**
@@ -120,19 +140,13 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
             return $jSONArray;
         } else {
             //Persistence returns wellformed JSON
-            $encoder = new JSON();
-            $arrayConfigPre = $encoder->decode($jSONArray);
-            if (json_last_error() != JSON_ERROR_NONE) {
-                throw new MalFormedJSON();
-            }
+            $arrayConfigPre = MetaDataDaoConfig::controlMalFormedJson($jSONArray);
             foreach ($arrayConfigPre as $value) {
                 switch ($value) {
                     case "5120":
                         throw new PersistenceNsNotFound();
-                        break;
                     case "5090":
                         throw new MetaDataNotUpdated();
-                        break;
                     default :
                         throw new MalFormedJSON();
                 }

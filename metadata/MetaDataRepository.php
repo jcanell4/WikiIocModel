@@ -49,7 +49,13 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
 
         try {
             $metaDataDao = MetaDataDaoFactory::getObject($projectType, $metaDataSubSet, $persistence, $projectTypeDir);
+
+            //ATENCIÓN
+            //Cuando todavía no hay datos en el fichero de proyecto, he hecho que se recoja la lista de campos del tipo de proyecto
             $jsonDataProject = $metaDataDao->getMeta($MetaDataRequest);
+            //sin embargo, podría devolverse NULL (ahora está cotrolado por una excepción que no lo permite) y
+            //utilizar en su lugar el valor JSON de $MetaDataRequest['metaDataValue']
+
             $metaDataEntity = MetaDataEntityFactory::getObject($projectType, $metaDataSubSet, $persistence, $projectTypeDir);
             $metaDataEntity->setProjectType($projectType);
             $metaDataEntity->setMetaDataSubSet($metaDataSubSet);

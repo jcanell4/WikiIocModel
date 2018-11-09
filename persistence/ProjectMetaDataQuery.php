@@ -110,7 +110,6 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     /**
-     * AHORA MISMO NO LA USA NADIE
      * Devuelve un array de tipos de proyecto obtenido a partir de la lectura
      * de la estructura de directorios de 'plugin'/projects/
      */
@@ -144,8 +143,8 @@ class ProjectMetaDataQuery extends DataQuery {
     /**
      * Obtiene el array correspondiente a la clave $configAttribute del archivo FILE_CONFIGMAIN
      * @param string $projectType
-     * @param string $configAttribute : attributo 'metaData' principal
-     * @param string $metaDataSubset : nombre del subconjunto requerido
+     * @param string $configAttribute : conjunto principal requerido
+     * @param string $metaDataSubset : subconjunto requerido
      * @param string $projectTypeDir : directorio del tipo de proyecto
      * @return Json con el array correspondiente a la clave $configAttribute del archivo FILE_CONFIGMAIN
      */
@@ -164,13 +163,61 @@ class ProjectMetaDataQuery extends DataQuery {
         for ($i = 0; $i < sizeof($configArray[$configAttribute]); $i++) {
             if (isset($configArray[$configAttribute][$i][$metaDataSubset])) {
                 $toReturn = $encoder->encode($configArray[$configAttribute][$i]);
-            } else if (isset($configArray[$configAttribute][$i][ProjectKeys::KEY_DEFAULTSUBSET])) {
-                if ($toReturn == "") {
-                    $toReturn = $encoder->encode($configArray[$configAttribute][$i]);
-                }
+                break;
+            } else if (isset($configArray[$configAttribute][$i][ProjectKeys::VAL_DEFAULTSUBSET])) {
+                $toReturn = $encoder->encode($configArray[$configAttribute][$i]);
             }
         }
         return $toReturn;
+    }
+
+    /**
+     * Obtiene un array con un conjunto de subSets, extraidos de la clave 'metaDataClassesNameSpaces', del archivo FILE_CONFIGMAIN
+     * @param string $projectType
+     * @param string $projectTypeDir : directorio del tipo de proyecto
+     * @return array con la lista de subSets del archivo FILE_CONFIGMAIN
+     */
+    public function getListMetaDataSubSets($projectType, $projectTypeDir=NULL) {
+        $configSet = ProjectKeys::KEY_METADATA_CLASSES_NAMESPACES;
+        if (!$projectTypeDir)
+            $projectTypeDir = $this->getProjectTypeDir($projectType);
+        $path = $projectTypeDir . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN;
+        $configMain = @file_get_contents($path);
+        if ($configMain == false) {
+            $configMain = @file_get_contents(self::DEFAULT_PROJECT_TYPE_DIR . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN);
+        }
+
+        $configArray = json_decode($configMain, true);
+        $toReturn = "";
+
+        for ($i = 0; $i < sizeof($configArray[$configSet]); $i++) {
+            $toReturn[] = array_keys($configArray[$configSet][$i])[0];
+        }
+        return $toReturn;
+    }
+
+    /**
+     * Extrae el conjunto de campos definidos en la configuración de datos del tipo de proyecto
+     * Se usa cuando todavía no hay datos en el fichero de proyecto, entonces se recoge la lista de campos del tipo de proyecto
+     * @param string $projectType : tipo de proyecto
+     * @param string $metaDataSubset : subconjunto requerido
+     * @param string $projectTypeDir : ruta del proyecto
+     * @return JSON conteniendo el conjunto de campos del subset
+     */
+    public function getStructureMetaDataConfig($projectType, $metaDataSubset, $projectTypeDir=NULL) {
+        $metaStructure = $this->getMetaDataConfig($projectType, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $metaDataSubset, $projectTypeDir);
+
+        if ($metaStructure) {
+            $content = json_decode($metaStructure, TRUE);
+            $typeDef = $content['mainType']['typeDef'];
+            $keys = $content['typesDefinition'][$typeDef]['keys'];
+
+            foreach ($keys as $k => $v) {
+                $metaData[$k] = ($v['default']) ? $v['default'] : "";
+            }
+            $metaDataReturn = json_encode($metaData);
+        }
+        return $metaDataReturn;
     }
 
     public function getMetaViewConfig($projectType, $viewConfig, $projectTypeDir=NULL) {
@@ -280,8 +327,7 @@ class ProjectMetaDataQuery extends DataQuery {
             foreach ($contentMainArray as $clave => $valor) {
                 if ($clave == $metaDataSubSet) {
                     if (is_array($valor)) {
-                        $encoder = new JSON();
-                        $metaDataReturn = $encoder->encode($valor);
+                        $metaDataReturn = json_encode($valor);
                         break;
                     }
                 }
@@ -307,18 +353,14 @@ class ProjectMetaDataQuery extends DataQuery {
 
         if (is_file($projectFilePathName)) {
             $old_contentFile = file_get_contents($projectFilePathName);
-            //Aquí, ya existe, como mínimo, una versión previa de los archivos del proyecto
+            //Aquí, ya existe, como mínimo, una versión previa de los archivos del proyecto y un subSet
             if ($old_contentFile != false) {
                 $contentFileArray = json_decode($old_contentFile, true);
-                if ($contentFileArray[$metaDataSubSet]) {
-                    $prev_date = filemtime($projectFilePathName);
-                    $contentFileArray[$metaDataSubSet] = json_decode($metaDataValue, true);
-                    $resourceCreated = io_saveFile($projectFilePathName, str_replace("\\r\\n", "\\n", json_encode($contentFileArray)));
-                    //Guardamos el archivo existente (la versión previa) como revisión
-                    $dateRevision = $this->_saveRevision($prev_date, $projectId, $old_contentFile);
-                }else {
-                    $resourceCreated = '{"error":"5090"}';  //no existe $metaDataSubSet en el fichero
-                }
+                $prev_date = filemtime($projectFilePathName);
+                $contentFileArray[$metaDataSubSet] = json_decode($metaDataValue, true);
+                $resourceCreated = io_saveFile($projectFilePathName, str_replace("\\r\\n", "\\n", json_encode($contentFileArray)));
+                //Guardamos el archivo existente (la versión previa) como revisión
+                $this->_saveRevision($prev_date, $projectId, $old_contentFile);
             }
         }else {
             $resourceCreated = $this->_createResource($this->projectFilePath, $this->projectFileName);

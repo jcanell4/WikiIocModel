@@ -64,6 +64,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return ($this->metaDataSubSet) ? $this->metaDataSubSet : ProjectKeys::VAL_DEFAULTSUBSET;
     }
 
+    public function isAlternateSubSet() {
+        return ($this->metaDataSubSet && $this->metaDataSubSet !== ProjectKeys::VAL_DEFAULTSUBSET);
+    }
+
     /**
      * Obtiene los datos del archivo de datos (meta.mdpr) de un proyecto
      */
@@ -90,17 +94,34 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                 ProjectKeys::KEY_PROJECTTYPE_DIR => $projectTypeDir
             ];
         }else {
+            $s = $this->isAlternateSubSet() ? $this->getMetaDataSubSet() : "";
             $query = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                 ProjectKeys::KEY_PROJECT_TYPE => $this->getProjectType(),
                 ProjectKeys::KEY_METADATA_SUBSET => $this->getMetaDataSubSet(),
-                ProjectKeys::KEY_ID_RESOURCE => $this->id,
+                ProjectKeys::KEY_ID_RESOURCE => $this->id . $s,
                 ProjectKeys::KEY_PROJECT_FILENAME => $this->getProjectFileName(),
                 ProjectKeys::KEY_PROJECTTYPE_DIR => $projectTypeDir
             ];
         }
+        $subSet = json_decode($this->projectMetaDataQuery
+                                   ->getMetaDataConfig($this->getProjectType(),
+                                                       ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE,
+                                                       $this->getMetaDataSubSet(),
+                                                       $projectTypeDir),
+                              true);
         $ret['projectMetaData'] = $this->metaDataService->getMeta($query, FALSE)[0];
-        $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->getProjectType(), "defaultView", $projectTypeDir);
+        if (!$ret['projectMetaData']) {
+            //si todavía no hay datos en el fichero de proyecto se recoge la lista de campos del tipo de proyecto
+            $typeDef = $subSet['mainType']['typeDef'];
+            $keys = $subSet['typesDefinition'][$typeDef]['keys'];
+            foreach ($keys as $k => $v) {
+                $metaData[$k] = ($v['default']) ? $v['default'] : "";
+            }
+            $ret['projectMetaData'] = $metaData;
+        }
+        $viewfile = ($subSet['viewfiles'][0]) ? $subSet['viewfiles'][0] : ProjectKeys::KEY_DEFAULTVIEW;
+        $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->getProjectType(), $viewfile, $projectTypeDir);
         return $ret;
     }
 
@@ -206,6 +227,12 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                  ProjectKeys::KEY_METADATA_SUBSET => $this->getMetaDataSubSet()
                 ];
         return $this->projectMetaDataQuery->getDataProject($parm);
+    }
+
+    // Verifica que el $subSet estigui definit a l'arxiu de configuració (configMain.json)
+    public function validaSubSet($subSet) {
+        $subSetList = $this->projectMetaDataQuery->getListMetaDataSubSets($this->getProjectType(), $this->getProjectTypeDir());
+        return in_array($subSet, $subSetList);
     }
 
     //Obtiene un array [key, value] con los datos de una revisión específica del proyecto solicitado
