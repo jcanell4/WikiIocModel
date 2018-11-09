@@ -11,6 +11,12 @@ abstract class AbstractWikiAction {
     protected $params;
     protected $modelManager;
 
+    public function __construct($params)
+    {
+        $this->params = $params;
+    }
+
+
     public function __destruct() {
         if (get_class($this) === self::$flagMainAction) {
             self::$flagMainAction = NULL;

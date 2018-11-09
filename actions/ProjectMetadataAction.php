@@ -37,15 +37,17 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
 
     protected function findProjectTypeDir($projectType){
         global $plugin_controller;
-        $plugin_list = $plugin_controller->getList('action');
-        //busca el tipo de proyecto solicitado en todos los directorios de plugins del tipo action
-        foreach ($plugin_list as $plugin) {
-            $dir = DOKU_PLUGIN."$plugin/projects/$projectType/";
-            if (file_exists("$dir.DokuModelManager.php")) {
-                break;
-            }
-        }
-        return $dir;
+        return $plugin_controller->getProjectTypeDir($projectType);
+//        
+//        $plugin_list = $plugin_controller->getList('action');
+//        //busca el tipo de proyecto solicitado en todos los directorios de plugins del tipo action
+//        foreach ($plugin_list as $plugin) {
+//            $dir = DOKU_PLUGIN."$plugin/projects/$projectType/";
+//            if (file_exists("$dir.DokuModelManager.php")) {
+//                break;
+//            }
+//        }
+//        return $dir;
     }
 
 }

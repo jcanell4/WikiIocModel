@@ -33,16 +33,58 @@ class MainRender extends renderObject {
     }
 }
 
-class renderField extends AbstractRenderer {
+class renderDate extends AbstractRenderer {
+    private $sep;
+    
+    public function __construct($factory, $cfgExport=NULL, $sep="-") {
+        parent::__construct($factory, $cfgExport);
+        $this->sep = $sep;
+    }
+    
+    public function process($date) {
+        $dt = strtotime(str_replace('/', '-', $date));
+        return date("d". $this->sep."m".$this->sep."Y", $dt);
+    }
+
+}
+
+class renderText extends AbstractRenderer {
 
     public function process($data) {
         return htmlentities($data, ENT_QUOTES);
     }
 }
 
+class renderField extends AbstractRenderer {
+
+    public function process($data) {
+        return $data;
+    }
+}
+
+class renderRenderizableText extends AbstractRenderer {
+
+    public function process($data) {
+        $instructions = p_get_instructions($data);
+        $html = p_render('wikiiocmodel_ptxhtml', $instructions);
+        return $html;
+    }
+}
+        
+        if($this->viewMode &&  $plugin_controller->getProjectOwner()){
+            $counter = 0;
+            $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $event->result, 1, $counter);
+            if($counter>0){
+                $dataSource = $plugin_controller->getCurrentProjectDataSource();
+                $parser = new WiocclParser($text, [], $dataSource);
+                $event->result = $parser->getValue();                
+            }
+        }
 class renderFile extends AbstractRenderer {
 
     public function process($data) {
+        global $plugin_controller;
+
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
             $startedHere = true;
@@ -55,11 +97,23 @@ class renderFile extends AbstractRenderer {
         $_SESSION['gif_images'] = &$this->cfgExport->gif_images;
         $_SESSION['alternateAddress'] = TRUE;
 
-        $text = io_readFile(wikiFN($data));
+        if(preg_match("/".$this->cfgExport->id."/", $data)!=1){
+            $fns = $this->cfgExport->id.":".$data;
+        }
+        $file = wikiFN($fns);
+        $text = io_readFile($file);
+        
+        $counter = 0;
+        $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $text, 1, $counter);
+        if($counter>0){
+            $dataSource = $plugin_controller->getCurrentProjectDataSource($this->cfgExport->id, $plugin_controller->getCurrentProject());
+            $text = WiocclParser::getValue($text, [], $dataSource);
+        }
+
         $instructions = p_get_instructions($text);
         $renderData = array();
-        $html = p_render('wikiiocmodel_basicxhtml', $instructions, $renderData);
-        $this->cfgExport->toc = $renderData["tocItems"];
+        $html = p_render('wikiiocmodel_ptxhtml', $instructions, $renderData);
+        $this->cfgExport->toc[$data] = $renderData["tocItems"];
         if ($startedHere) session_destroy();
 
         return $html;

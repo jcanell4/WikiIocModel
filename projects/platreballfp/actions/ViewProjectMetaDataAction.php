@@ -7,6 +7,10 @@ include_once WIKI_IOC_MODEL . "actions/BasicViewProjectMetaDataAction.php";
 class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
 
     protected function runAction() {
+        
+        if (!$this->getModel()->isProjectGenerated()) {
+            $this->getModel()->setViewConfigName("firstView");
+        }        
         $response = parent::runAction();
         $projectModel = $this->getModel();
 

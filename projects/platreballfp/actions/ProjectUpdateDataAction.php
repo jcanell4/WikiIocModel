@@ -27,36 +27,23 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                                 ]);
 
         //Obtenir les dades de la configuració d'aquest tipus de projecte
-        $projectFileName = $projectModel->getProjectFileName();
-        $metaDataConfigProject = $configProjectModel->getMetaDataProject($projectFileName, $metaDataSubSet);
+        $projectFileName = $configProjectModel->getProjectFileName();
+        $metaDataSubset = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
+        $metaDataConfigProject = $configProjectModel->getMetaDataProject($projectFileName, $metaDataSubset);
 
         if ($metaDataConfigProject['arraytaula']) {
             $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
             $processArray = array();
 
             foreach ($arraytaula as $elem) {
-
-                switch ($elem['type']) {
-                    case "fieldSubstitution":
-                        $processor = "FieldSingleSubstitutionProjectUpdateProcessor";
-                        if ( !isset($processArray[$processor]) ) {
-                            $processArray[$processor] = new $processor;
-                        }
-                        $processArray[$processor]->runProcess($elem['value'], $elem['parameters'], $response);
-                        break;
-
-                    case "fieldIncrement":
-                        $processor = "FieldIncrementProjectUpdateProcessor";
-                        if ( !isset($processArray[$processor]) ) {
-                            $processArray[$processor] = new $processor;
-                        }
-                        $processArray[$processor]->runProcess($elem['value'], $elem['parameters'], $response);
-                        break;
-
-                    default:
-                        break;
+                if($elem["type"] !== "noprocess"){
+                    $processor = ucwords($elem['type'])."ProjectUpdateProcessor";
+                    if ( !isset($processArray[$processor]) ) {
+                        $processArray[$processor] = new $processor;
+                    }
+                    $processArray[$processor]->init($elem['value'], $elem['parameters']);
+                    $processArray[$processor]->runProcess($response);
                 }
-
             }
 
             if ($elem) {
@@ -65,7 +52,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                     ProjectKeys::KEY_PROJECT_TYPE => $projectType,
                     ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                     ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet,
-                    ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR],
+                    ProjectKeys::KEY_PROJECTTYPE_DIR => $projectModel->getProjectTypeDir(),
                     ProjectKeys::KEY_METADATA_VALUE => json_encode($response)
                 ];
                 $projectModel->setData($metaData);    //actualiza el contenido en 'mdprojects/'

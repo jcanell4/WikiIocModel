@@ -74,6 +74,25 @@
                     "type": "objectArray",
                     "typeDef":"entradaQualificacioUFs"
                 },
+                "entradaQualificacioFinal": {
+                    "type":"object",
+                    "keys": {
+                        "unitat formativa": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "1"
+                        },
+                        "ponderació": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        }
+                    }                    
+                },
+                "defQualificacioFinal": {
+                    "type": "objectArray",
+                    "typeDef":"entradaQualificacioFinal"
+                },
                 "entradaExtres": {
                     "type":"object",
                     "keys": {
@@ -145,10 +164,6 @@
                         },
                         "descripció període": {
                             "type": "string",
-                            "mandatory": true
-                        },
-                        "hores": {
-                            "type": "number",
                             "mandatory": true
                         },
                         "inici": {
@@ -290,8 +305,7 @@
                         },
                         "tipusPla": {
                             "type": "string",
-                            "mandatory": true,
-                            "default":"loe"
+                            "mandatory": true
                         },
                         "tipusBlocModul":{
                             "type":"string",
@@ -377,7 +391,7 @@
                         },                                                
                         "einesAprenentatge": {
                             "type": "defEinesAprenentatge",
-                            "default":[{"tipus":"lectura","eina":"Llibre de l'aula","opcionalitat":"lectura obligada","puntuable":"false"},{"tipus":"autoavaluació","eina":"Exercicis d'autoavaluació i activitats","opcionalitat":"opcional però recomanat","puntuable":"false"},{"tipus":"fòrum","eina":"Fòrum de l'aula","opcionalitat":"Participació recomanada","puntuable":"false"},{"tipus":"exercicis","eina":"Exercicis d'avaluació contínua","opcionalitat":"opcional","puntuable":"true"}],
+                            "default":[{"tipus":"lectura","eina":"Llibre de l'aula","opcionalitat":"lectura obligada","puntuable":"false"},{"tipus":"autoavaluació","eina":"Exercicis d'autoavaluació i activitats","opcionalitat":"opcional però recomanat","puntuable":"false"},{"tipus":"fòrum","eina":"Fòrum de l'aula","opcionalitat":"Participació obligada","puntuable":"false"},{"tipus":"qüestionari","eina":"Qüestionari obert a l'aula","opcionalitat":"opcional","puntuable":"true"},{"tipus":"exercicis","eina":"Exercicis d'avaluació contínua","opcionalitat":"opcional","puntuable":"true"},{"tipus":"qüestionari","eina":"Quaestionari bla, bla","opcionalitat":"opcional","puntuable":"false"}],
                             "mandatory": true
                         },                                                
                         "resultatsAprenentatge": {
@@ -398,6 +412,28 @@
                             "type": "defCalendari",
                             "mandatory": true
                         },
+                        "ponderacioEACs": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default":30,
+                            "props": {
+                                "min":0,
+                                "max":100
+                            }
+                        },                                                
+                        "numLliuraments": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min":0,
+                                "max":20
+                            }
+                        },                                                
+                        "tipusLliuraments": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "EACs"
+                        },                                                
                         "datesAC": {
                             "type": "defDatesAC",
                             "mandatory": true
@@ -449,6 +485,10 @@
                             "type": "string",
                             "mandatory": true,
                             "default":"1 hora i 50 minuts"
+                        },                                                
+                        "dadesQualificacioFinal": {
+                            "type": "defQualificacioFinal",
+                            "mandatory": true
                         },                                                
                         "dadesExtres": {
                             "type": "defExtres",

@@ -26,9 +26,61 @@
             "n_columns": 12,
             "type": "editableObject",
             "group": "main",
-            "n_rows": 8,
+            "n_rows": 15,
             "props": {
                 "data-editable-element": "table"
+            },
+            "config": {
+              "actions": {
+                "add_default_row": "Afegir regla",
+                "remove_rows": "Eliminar les regles seleccionades"    
+              },
+              "fields": {
+                "key":{
+                  "type": "string"         
+                },        
+                "type": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "parameters": {
+                  "type": "string"
+                }
+              },
+              "layout": [
+                {
+                  "defaultCell": {
+                    "width" : "10%"
+                  },
+                  "cells": [
+                    {
+                      "name": "key",
+                      "field": "key",
+                      "editable": false
+                    },
+
+                    {
+                      "name": "type",
+                      "field": "type",
+                      "editable": false
+                    },
+
+                    {
+                      "name": "value",
+                      "field": "value",
+                      "editable": true
+                    },
+
+                    {
+                      "name": "parameters",
+                      "field": "parameters",
+                      "editable": false
+                    }
+                  ]
+                }
+              ]
             }
         }
     }

@@ -435,7 +435,9 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     public function getProjectTypeDir($projectType){
-        return (class_exists('DokuModelManager', FALSE)) ? DokuModelManager::getProjectTypeDir() : WIKI_IOC_MODEL . "projects/$projectType/";
+//        return (class_exists('DokuModelManager', FALSE)) ? DokuModelManager::getProjectTypeDir() : WIKI_IOC_MODEL . "projects/$projectType/";
+        global $plugin_controller;
+        return $plugin_controller->getProjectTypeDir($projectType);
     }
 
     public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProjects=TRUE, $hiddenProjects=FALSE, $root=FALSE) {
