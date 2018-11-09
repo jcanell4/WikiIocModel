@@ -477,7 +477,9 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     public function getProjectTypeDir($projectType){
-        return (class_exists('DokuModelManager', FALSE)) ? DokuModelManager::getProjectTypeDir() : WIKI_IOC_MODEL . "projects/$projectType/";
+//        return (class_exists('DokuModelManager', FALSE)) ? DokuModelManager::getProjectTypeDir() : WIKI_IOC_MODEL . "projects/$projectType/";
+        global $plugin_controller;
+        return $plugin_controller->getProjectTypeDir($projectType);
     }
 
     public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProjects=TRUE, $hiddenProjects=FALSE, $root=FALSE) {
@@ -505,10 +507,10 @@ class ProjectMetaDataQuery extends DataQuery {
         $filename = $this->_getProjectFileName($parms);
         $jsonData = $this->getMeta($parameters[ProjectKeys::KEY_ID], $parameters[ProjectKeys::KEY_PROJECT_TYPE], $metaDataSubSet, $filename);
         $data = json_decode($jsonData, true);
-        $data[ProjectKeys::KEY_PROJECTTYPE_DIR] = $parameters[ProjectKeys::KEY_PROJECTTYPE_DIR];
+        //$data['projectExtraData'][ProjectKeys::KEY_PROJECTTYPE_DIR] = $parameters[ProjectKeys::KEY_PROJECTTYPE_DIR];
         if ($parameters['extra']) {
-            $data[ProjectKeys::KEY_PROJECT_FILENAME] = $parms[ProjectKeys::KEY_PROJECT_FILENAME] = $filename;
-            $data[ProjectKeys::KEY_PROJECT_FILEPATH] = $this->getFileName($parameters[ProjectKeys::KEY_ID], $parms);
+            $data['projectExtraData'][ProjectKeys::KEY_PROJECT_FILENAME] = $parms[ProjectKeys::KEY_PROJECT_FILENAME] = $filename;
+            $data['projectExtraData'][ProjectKeys::KEY_PROJECT_FILEPATH] = $this->getFileName($parameters[ProjectKeys::KEY_ID], $parms);
         }
         return $data;
     }

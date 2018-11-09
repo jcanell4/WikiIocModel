@@ -44,6 +44,7 @@ class FactoryExporter {
                 case "array":  $render = new $class($this, $typedef, $renderdef, $params); break;
                 case "object": $render = new $class($this, $typedef, $renderdef, $params); break;
                 case "file":   $render = new $class($this, $params); break;
+                case "date":   $render = new $class($this, $params, "/"); break;
                 default:       $render = new $class($this, $params); break;
             }
         }else{
@@ -51,6 +52,7 @@ class FactoryExporter {
                 case "array":  $render = new $class($this, $typedef, $renderdef); break;
                 case "object": $render = new $class($this, $typedef, $renderdef); break;
                 case "file":   $render = new $class($this); break;
+                case "date":   $render = new $class($this, NULL, "/"); break;
                 default:       $render = new $class($this); break;
             }
         }
@@ -78,9 +80,6 @@ class FactoryExporter {
     }
 
     private function validateClass($class, $tipo) {
-        if ($class !== NULL && !class_exists($class, TRUE)) {
-            //throw new ErrorException("La clase no existe");
-        }
         if ($class === NULL || !class_exists($class, TRUE)) {
             $class = $this->defaultRenderClass($tipo); //render por defecto del tipo definido en configMain.json
         }
@@ -100,6 +99,8 @@ class FactoryExporter {
         switch ($tipo) {
             case 'array':  $ret = "renderArray"; break;
             case 'object': $ret = "renderObject"; break;
+            case 'date':   $ret = "renderDate"; break;
+            case 'string':   $ret = "renderText";break;
             default:       $ret = "renderField"; break;
         }
         return $ret;

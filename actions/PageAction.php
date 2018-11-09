@@ -16,12 +16,25 @@ abstract class PageAction extends DokuAction implements ResourceLockerInterface,
 
     const REVISION_SUFFIX= '-rev-';
 
+
+
     public function init($modelManager) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
-        $this->dokuPageModel = new DokuPageModel($this->persistenceEngine);
+        $this->dokuPageModel = $this->instantiateModel();
+//        $this->dokuPageModel = new DokuPageModel($this->persistenceEngine);
         $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
     }
+
+    protected function instantiateModel() {
+        switch ($this->params['format']){
+            case 'html':
+                return new HtmlPageModel($this->persistenceEngine);
+            default:
+                return new DokuPageModel($this->persistenceEngine);
+        }
+    }
+
 
     /** @override */
     public function get($paramsArr = array()) {

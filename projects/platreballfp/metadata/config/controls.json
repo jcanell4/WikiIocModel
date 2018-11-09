@@ -9,7 +9,8 @@
         "scripts": {
             "updateHandler": {
                 "conditions": {
-                    "page.action": "'project_view'"
+                    "page.action": "'project_view'",
+                    "page.generated":"false"
                 }
             }
         }

@@ -27,6 +27,10 @@ abstract class AbstractRenderer {
             $this->cfgExport = new cfgExporter();
         }
     }
+    
+    public function getTocs(){
+        return $this->cfgExport->tocs;
+    }
 
     public function init($extra) {
         $this->extra_data = $extra;
@@ -57,7 +61,8 @@ class cfgExporter {
     public $media_files = array();
     public $graphviz_images = array();
     public $gif_images = array();
-    public $toc = NULL;
+    public $toc=NULL;
+    public $tocs=array();
     public $permissionToExport = TRUE;
 
     public function __construct() {
@@ -125,9 +130,30 @@ class renderObject extends renderComposite {
     }
 
     public function getRenderFields() { //devuelve el array de campos establecidos para el render
-        return $this->getRenderDef('render')['fields'];
+        $ret = $this->getRenderDef('render')['fields'];
+        if(is_string($ret)){
+            switch (strtoupper($ret)){
+                case "ALL":
+                    $ret = array_keys($this->typedef["keys"]);
+                    break;
+                case "MANDATORY":
+                    $ret = array();
+                    $allKeys = array_keys($this->typedef["keys"]);
+                    foreach ($allKeys as $key) {
+                        if($this->typedef["keys"][$key]["mandatory"]){
+                          $ret [] = $key;  
+                        }
+                    }
+                    break;
+            }
+        }
+        return $ret;
     }
 
+//    public function getRenderFields() { //devuelve el array de campos establecidos para el render
+//        return $this->getRenderDef('render')['fields'];
+//    }
+//
     public function getDataField($key = NULL) {
         return ($key === NULL) ? $this->data : $this->data[$key];
     }

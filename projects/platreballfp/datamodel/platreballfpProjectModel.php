@@ -15,28 +15,6 @@ class platreballfpProjectModel extends AbstractProjectModel {
         parent::__construct($persistenceEngine, $projectTypeDir);
     }
 
-    /**
-     * @param array $metaData : es genera a l'Action corresponent
-     */
-    public function setData($metaData) {
-        $metaDataValue = json_decode($metaData["metaDataValue"], true);
-        $metaDataValue['durada'] = 0;
-        if (is_string($metaDataValue['taulaHoresUF'])){
-            $taulaHoresUF = json_decode($metaDataValue['taulaHoresUF'], true);
-        }else{
-            $taulaHoresUF = $metaDataValue['taulaHoresUF'];
-        }
-        if (!empty($taulaHoresUF)) {
-            foreach ($taulaHoresUF as $item) {
-                if (is_string($item['hores'])){
-                    $item['hores'] = intval($item['hores']);
-                }
-                $metaDataValue['durada']+=$item['hores'];
-            }
-        }
-        $metaData["metaDataValue"] = json_encode($metaDataValue);
-        parent::setData($metaData);
-    }
 
     public function getContentDocumentId($responseData){
         if ($responseData['projectMetaData']["fitxercontinguts"]['value']){

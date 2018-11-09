@@ -10,6 +10,9 @@ require_once DOKU_PLUGIN."wikiiocmodel/datamodel/AbstractWikiDataModel.php";
  * @author professor
  */
 abstract class WikiRenderizableDataModel extends AbstractWikiDataModel{
+
+    public $format;
+
     //JOSEP: Això és necessari per poder passar a l'AbstractWikiDataModel el paràmetre del cosntructor!
     public function __construct($persistenceEngine){
         parent::__construct($persistenceEngine);
