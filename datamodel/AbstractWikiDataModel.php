@@ -79,4 +79,44 @@ abstract class AbstractWikiDataModel extends AbstractWikiModel{
         return $this->getProjectMetaDataQuery()->getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $metaDataSubSet, $component);
     }
 
+    // Crida principal de la comanda ns_tree_rest
+    public function getNsTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $fromRoot=FALSE, $subSetList=NULL) {
+        return $this->pageDataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects, $fromRoot, $subSetList);
+    }
+
+    public function getNsTreeSubSetsList($ns) {
+        $prps = $this->getPageDataQuery()->isAProject($ns, TRUE);
+        if ($prps[ProjectKeys::KEY_TYPE] === "p" || $prps[ProjectKeys::KEY_TYPE] === "pd") {
+            $projectTypeDir = $this->_getProjectTypeDir($prps[ProjectKeys::KEY_PROJECT_TYPE]);
+            $subSets = $this->getProjectMetaDataQuery()->getListMetaDataSubSets($prps[ProjectKeys::KEY_PROJECT_TYPE], $projectTypeDir);
+            foreach ($subSets as $subset) {
+                if ($subset !== ProjectKeys::VAL_DEFAULTSUBSET) {
+                    $subSetList[] = [ProjectKeys::KEY_ID => $ns,
+                                     ProjectKeys::KEY_NAME => $subset,
+                                     ProjectKeys::KEY_TYPE => "s",
+                                     ProjectKeys::KEY_NSPROJECT => $prps[ProjectKeys::KEY_NSPROJECT],
+                                     ProjectKeys::KEY_PROJECT_TYPE => $prps[ProjectKeys::KEY_PROJECT_TYPE],
+                                     ProjectKeys::KEY_METADATA_SUBSET => $subset,
+                                     ProjectKeys::KEY_PROJECTTYPE_DIR => $projectTypeDir
+                                    ];
+                }
+            }
+        }
+        return $subSetList;
+    }
+
+    //[WARNING] Rafa: Eeste método exige que los nombres de tipo de proyecto no se puedan repetir a lo largo de los diferentes plugins (../lib/plugins/)
+    private function _getProjectTypeDir($projectType) {
+
+        $listProjectPlugin = $this->getProjectMetaDataQuery()->getAllArrayProjectTypes();
+
+        foreach ($listProjectPlugin as $projectPlugin) {
+            if ($projectPlugin['project'] === $projectType) {
+                $dir = $projectPlugin['dir'];
+                break;
+            }
+        }
+        return $dir;
+    }
+
 }

@@ -95,13 +95,10 @@ class DokuModelAdapter extends BasicModelAdapter {
     }
 
     /**
+     * MOGUT a NsTreeAction
+     *****************************************
      * És la crida principal de la comanda ns_tree_rest
-     * @global type $conf
-     * @param type $currentnode
-     * @param type $sortBy
-     * @param type $onlyDirs
-     * @return type
-     */
+     *//*
     public function getNsTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $fromRoot=FALSE)
     {
         $dataQuery = $this->persistenceEngine->createPageDataQuery();
@@ -109,7 +106,7 @@ class DokuModelAdapter extends BasicModelAdapter {
             $root=$fromRoot;
         }
         return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects, $root);
-    }
+    }*/
 
     /**
      * Obté el missatge traduit a l'idioma actual.

@@ -30,24 +30,22 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
 
     //Añadir propiedades/restricciones del configMain para la creación de elementos dentro del proyecto
     protected function addResponseProperties(&$response) {
-        $response['create'][ProjectKeys::KEY_MD_CT_SUBPROJECTS] = $this->projectModel->getMetaDataComponent($this->params[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_MD_CT_SUBPROJECTS); //valores permitidos para el elemento 'create project': array | true (all) | false (none)
-        $response['create'][ProjectKeys::KEY_MD_CT_DOCUMENTS] = $this->projectModel->getMetaDataComponent($this->params[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_MD_CT_DOCUMENTS); //valores permitidos para el elemento 'create document': array | true (all) | false (none)
-        $response['create'][ProjectKeys::KEY_MD_CT_FOLDERS] = $this->projectModel->getMetaDataComponent($this->params[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_MD_CT_FOLDERS); //valores permitidos para el elemento 'create folder': true (all) | false (none)
+        $response[ProjectKeys::KEY_CREATE][ProjectKeys::KEY_MD_CT_SUBPROJECTS] = $this->projectModel->getMetaDataComponent($this->params[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_MD_CT_SUBPROJECTS); //valores permitidos para el elemento 'create project': array | true (all) | false (none)
+        $response[ProjectKeys::KEY_CREATE][ProjectKeys::KEY_MD_CT_DOCUMENTS] = $this->projectModel->getMetaDataComponent($this->params[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_MD_CT_DOCUMENTS); //valores permitidos para el elemento 'create document': array | true (all) | false (none)
+        $response[ProjectKeys::KEY_CREATE][ProjectKeys::KEY_MD_CT_FOLDERS] = $this->projectModel->getMetaDataComponent($this->params[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_MD_CT_FOLDERS); //valores permitidos para el elemento 'create folder': true (all) | false (none)
+    }
+
+    protected function postResponseProcess(&$response) {
+        if ($this->params[ProjectKeys::KEY_METADATA_SUBSET]!=="undefined" && $this->params[ProjectKeys::KEY_METADATA_SUBSET] !== ProjectKeys::VAL_DEFAULTSUBSET) {
+            $response[ProjectKeys::KEY_ID] .= "-".$this->params[ProjectKeys::KEY_METADATA_SUBSET]."-";
+            $response['projectExtraData'][ProjectKeys::KEY_METADATA_SUBSET] = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
+            $response['isSubSet'] = TRUE;
+        }
     }
 
     protected function findProjectTypeDir($projectType){
         global $plugin_controller;
         return $plugin_controller->getProjectTypeDir($projectType);
-//        
-//        $plugin_list = $plugin_controller->getList('action');
-//        //busca el tipo de proyecto solicitado en todos los directorios de plugins del tipo action
-//        foreach ($plugin_list as $plugin) {
-//            $dir = DOKU_PLUGIN."$plugin/projects/$projectType/";
-//            if (file_exists("$dir.DokuModelManager.php")) {
-//                break;
-//            }
-//        }
-//        return $dir;
     }
 
 }

@@ -37,6 +37,8 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
                 throw new UnknownUserException($metaDataValues['autor']." (indicat al camp 'autor') ");
             if (!$model->validaNom($metaDataValues['responsable']))
                 throw new UnknownUserException($metaDataValues['responsable']." (indicat al camp 'responsable') ");
+            if (!$model->validaSubSet($modelAttrib[ProjectKeys::KEY_METADATA_SUBSET]))
+                throw new UnknownUserException($modelAttrib[ProjectKeys::KEY_METADATA_SUBSET]." (indicat al 'metaDataSubSet') ");
 
             $metaData = [
                 ProjectKeys::KEY_ID_RESOURCE => $modelAttrib[ProjectKeys::KEY_ID],
@@ -87,7 +89,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
 
     private function netejaKeysFormulari($array) {
         $cleanArray = [];
-        $excludeKeys = ['id','do','sectok','projectType','ns','submit', 'cancel','close','keep_draft','no_response','extraProject'];
+        $excludeKeys = ['id','do','sectok','projectType','ns','submit', 'cancel','close','keep_draft','no_response','extraProject','metaDataSubSet'];
         foreach ($array as $key => $value) {
             if (!in_array($key, $excludeKeys)) {
                 $cleanArray[$key] = $value;

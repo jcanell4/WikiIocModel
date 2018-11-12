@@ -11,9 +11,8 @@ abstract class AbstractWikiAction {
     protected $params;
     protected $modelManager;
 
-    public function __construct($params)
-    {
-        $this->params = $params;
+    public function __construct($params=NULL) {
+        if ($params) $this->params = $params;
     }
 
 
@@ -37,6 +36,7 @@ abstract class AbstractWikiAction {
         if (!empty($paramsArr))
             $this->setParams($paramsArr);
         $ret = $this->responseProcess();
+        $this->postResponseProcess($ret);
         if ($jomateix)
             $this->triggerEndEvents();
         return $ret;
@@ -75,4 +75,8 @@ abstract class AbstractWikiAction {
     }
 
     protected abstract function responseProcess();
+
+    protected function postResponseProcess(&$ret) {
+        return $ret;
+    }
 }
