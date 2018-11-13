@@ -51,7 +51,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             $this->setProjectFileName($params[ProjectKeys::KEY_PROJECT_FILENAME]);
             $this->setProjectFilePath();
             if ($params[ProjectKeys::VIEW_CONFIG_NAME]){
-                    $this->viewConfigName=$params[ProjectKeys::VIEW_CONFIG_NAME];
+                $this->viewConfigName = $params[ProjectKeys::VIEW_CONFIG_NAME];
             }
         }else{
             $this->id = $params;
@@ -63,7 +63,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             if($projectTypeDir){
                 $this->projectTypeDir = $projectTypeDir;
             }
-            $this->viewConfigName=$viewConfigName;
+            $this->viewConfigName = $viewConfigName;
         }
     }
 
@@ -112,24 +112,25 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                 ProjectKeys::KEY_PROJECTTYPE_DIR => $projectTypeDir
             ];
         }else {
-            $s = $this->isAlternateSubSet() ? $this->getMetaDataSubSet() : "";
             $query = [
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                 ProjectKeys::KEY_PROJECT_TYPE => $this->getProjectType(),
                 ProjectKeys::KEY_METADATA_SUBSET => $this->getMetaDataSubSet(),
-                ProjectKeys::KEY_ID_RESOURCE => $this->id . $s,
+                ProjectKeys::KEY_ID_RESOURCE => $this->id,
                 ProjectKeys::KEY_PROJECT_FILENAME => $this->getProjectFileName(),
                 ProjectKeys::KEY_PROJECTTYPE_DIR => $projectTypeDir
             ];
         }
-        $subSet = json_decode($this->projectMetaDataQuery
-                                   ->getMetaDataConfig($this->getProjectType(),
-                                                       ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE,
-                                                       $this->getMetaDataSubSet(),
-                                                       $projectTypeDir),
-                              true);
         $ret['projectMetaData'] = $this->metaDataService->getMeta($query, FALSE)[0];
-        if ($this->viewConfigName === ProjectKeys::KEY_DEFAULTVIEW){ // CANVIAR $viewConfigNameA VALOR NUMÊRIC
+
+        if ($this->viewConfigName === ProjectKeys::KEY_DEFAULTVIEW){  //CANVIAR $viewConfigName A VALOR NUMÊRIC
+            $subSet = json_decode($this->projectMetaDataQuery
+                                       ->getMetaDataConfig($this->getProjectType(),
+                                                           ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE,
+                                                           $this->getMetaDataSubSet(),
+                                                           $projectTypeDir),
+                                  true);
+
             if (!$ret['projectMetaData']) {
                 //si todavía no hay datos en el fichero de proyecto se recoge la lista de campos del tipo de proyecto
                 $typeDef = $subSet['mainType']['typeDef'];
@@ -139,7 +140,9 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                 }
                 $ret['projectMetaData'] = $metaData;
             }
-            $this->viewConfigName = ($subSet['viewfiles'][0]) ? $subSet['viewfiles'][0] : ProjectKeys::KEY_DEFAULTVIEW;
+            if ($subSet['viewfiles'][0]) {
+                $this->viewConfigName = $subSet['viewfiles'][0];
+            }
         }
         $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->getProjectType(), $this->viewConfigName, $projectTypeDir);
         return $ret;
@@ -210,21 +213,23 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return json_decode($struct, TRUE);
     }
 
-    private function setProjectFileName($projectFileName=NULL) {
-        if ($projectFileName) {
-            $this->projectFileName = $projectFileName;
+    private function setProjectFileName($parm=NULL) {
+        if ($parm && !is_array($parm)) {
+            $this->projectFileName = $parm;
         }else {
-            $parm = [ProjectKeys::KEY_PROJECT_TYPE    => $this->getProjectType(),
-                     ProjectKeys::KEY_METADATA_SUBSET => $this->getMetaDataSubSet(),
-                     ProjectKeys::KEY_PROJECTTYPE_DIR => $this->getProjectTypeDir()
-                    ];
+            if (!is_array($parm)) {
+                $parm = [ProjectKeys::KEY_PROJECT_TYPE    => $this->getProjectType(),
+                         ProjectKeys::KEY_METADATA_SUBSET => $this->getMetaDataSubSet(),
+                         ProjectKeys::KEY_PROJECTTYPE_DIR => $this->getProjectTypeDir()
+                        ];
+            }
             $this->projectFileName = $this->projectMetaDataQuery->getProjectFileName($parm);
         }
     }
 
-    public function getProjectFileName() {
+    public function getProjectFileName($parm=NULL) {
         if (!$this->projectFileName) {
-            $this->setProjectFileName();
+            $this->setProjectFileName($parm);
         }
         return $this->projectFileName;
     }
