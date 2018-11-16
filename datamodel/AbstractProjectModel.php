@@ -48,6 +48,8 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             $this->metaDataSubSet = ($params[ProjectKeys::KEY_METADATA_SUBSET]) ? $params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
             if ($params[ProjectKeys::KEY_PROJECTTYPE_DIR])
                 $this->projectTypeDir = $params[ProjectKeys::KEY_PROJECTTYPE_DIR];
+            if (!$this->projectTypeDir)
+                $this->getProjectTypeDir();
             $this->setProjectFileName($params[ProjectKeys::KEY_PROJECT_FILENAME]);
             $this->setProjectFilePath();
             if ($params[ProjectKeys::VIEW_CONFIG_NAME]){
@@ -60,9 +62,11 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             $this->metaDataSubSet = $metadataSubset;
             $this->setProjectFileName($projectFileName);
             $this->setProjectFilePath();
-            if($projectTypeDir){
+            if ($projectTypeDir){
                 $this->projectTypeDir = $projectTypeDir;
             }
+            if (!$this->projectTypeDir)
+                $this->getProjectTypeDir();
             $this->viewConfigName = $viewConfigName;
         }
     }
