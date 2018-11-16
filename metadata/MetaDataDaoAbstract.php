@@ -18,8 +18,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
     const K_PROJECTTYPE     = ProjectKeys::KEY_PROJECT_TYPE;
     const K_IDRESOURCE      = ProjectKeys::KEY_ID_RESOURCE;
     const K_PERSISTENCE     = ProjectKeys::KEY_PERSISTENCE;
-    const K_PROJECT_FILENAME= ProjectKeys::KEY_PROJECT_FILENAME;
-    const K_PROJECTTYPE_DIR = ProjectKeys::KEY_PROJECTTYPE_DIR;
+    const K_REVISION        = ProjectKeys::KEY_REV;
 
     /**
      * Purpose: Call PERSISTENCE component to obtain metadata (only one element)
@@ -38,9 +37,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
                             isset($MetaDataRequestMessage[self::K_PROJECTTYPE]) &&
                             $MetaDataRequestMessage[self::K_PROJECTTYPE] != '' &&
                             isset($MetaDataRequestMessage[self::K_METADATASUBSET]) &&
-                            $MetaDataRequestMessage[self::K_METADATASUBSET] != '' &&
-                            isset($MetaDataRequestMessage[self::K_PROJECTTYPE_DIR]) &&
-                            $MetaDataRequestMessage[self::K_PROJECTTYPE_DIR] != '';
+                            $MetaDataRequestMessage[self::K_METADATASUBSET] != '';
 
         if (!$checkParameters) {
             throw new WrongParams();
@@ -71,11 +68,12 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      */
     public function __getMetaPersistence($MetaDataRequestMessage) {
         return $MetaDataRequestMessage[self::K_PERSISTENCE]
-                    ->createProjectMetaDataQuery()
-                    ->getMeta($MetaDataRequestMessage[self::K_IDRESOURCE],
-                              $MetaDataRequestMessage[self::K_PROJECTTYPE],
+                    ->createProjectMetaDataQuery($MetaDataRequestMessage[self::K_IDRESOURCE],
                               $MetaDataRequestMessage[self::K_METADATASUBSET],
-                              $MetaDataRequestMessage[self::K_PROJECT_FILENAME]);
+                              $MetaDataRequestMessage[self::K_PROJECTTYPE],
+                              $MetaDataRequestMessage[self::K_REVISION]
+                            )
+                    ->getMeta();
     }
 
     /**
@@ -86,10 +84,10 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      */
     public function __getStructureMetaDataConfig($MetaDataRequestMessage) {
         return $MetaDataRequestMessage[self::K_PERSISTENCE]
-                    ->createProjectMetaDataQuery()
-                    ->getStructureMetaDataConfig($MetaDataRequestMessage[self::K_PROJECTTYPE],
-                                                 $MetaDataRequestMessage[self::K_METADATASUBSET],
-                                                 $MetaDataRequestMessage[self::K_PROJECTTYPE_DIR]);
+                    ->createProjectMetaDataQuery(FALSE, 
+                                                $MetaDataRequestMessage[self::K_METADATASUBSET], 
+                                                $MetaDataRequestMessage[self::K_PROJECTTYPE])
+                    ->getStructureMetaDataConfig();
     }
 
     /**
@@ -163,13 +161,10 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      */
     public function __setMetaPersistence($MetaDataEntity, $MetaDataRequestMessage) {
         return $MetaDataRequestMessage[self::K_PERSISTENCE]
-                    ->createProjectMetaDataQuery()
-                    ->setMeta($MetaDataRequestMessage[self::K_IDRESOURCE],
-                                $MetaDataRequestMessage[self::K_PROJECTTYPE],
+                    ->createProjectMetaDataQuery($MetaDataRequestMessage[self::K_IDRESOURCE],
                                 $MetaDataRequestMessage[self::K_METADATASUBSET],
-                                $MetaDataRequestMessage[self::K_PROJECT_FILENAME],
-                                $MetaDataEntity->getMetaDataValue()
-                            );
+                                $MetaDataRequestMessage[self::K_PROJECTTYPE])
+                    ->setMeta($MetaDataEntity->getMetaDataValue());
     }
 
 }

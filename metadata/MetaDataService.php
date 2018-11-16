@@ -21,24 +21,26 @@ class MetaDataService {
     const K_IDRESOURCE      = ProjectKeys::KEY_ID_RESOURCE;
     const K_PERSISTENCE     = ProjectKeys::KEY_PERSISTENCE;
     const K_FILTER          = ProjectKeys::KEY_FILTER;
-    const K_PROJECT_FILENAME= ProjectKeys::KEY_PROJECT_FILENAME;
-    const K_PROJECTTYPEDIR  = ProjectKeys::KEY_PROJECTTYPE_DIR;
+    //const K_PROJECT_FILENAME= ProjectKeys::KEY_PROJECT_FILENAME;
+    const K_REVISION  = ProjectKeys::KEY_REV;
 
     protected $metaDataDaoConfig;
     protected $metaDataRepository;
     protected $metaDataElements;
     protected $render = null;
     protected $metaDataEntityWrapper = array();
-    protected $projectTypeDir;  //ruta, a lib/plugins/.../, del tipus de projecte
+    protected $revision = FALSE;
 
-    public function __construct($projectTypeDir=NULL) {
-        $this->projectTypeDir = $projectTypeDir;
+    public function __construct() {
         $this->setMetaDataDaoConfig(new MetaDataDaoConfig());
         $this->setMetaDataRepository(new MetaDataRepository());
     }
 
-    function getProjectTypeDir() {
-        return $this->projectTypeDir;
+    function getRevision() {
+        return $this->revision;
+    }
+    function isRevision() {
+        return $this->revision!=FALSE;
     }
     function getMetaDataDaoConfig() {
         return $this->metaDataDaoConfig;
@@ -81,9 +83,7 @@ class MetaDataService {
                isset($MetaDataRequest[self::K_IDRESOURCE]) &&
                $MetaDataRequest[self::K_IDRESOURCE] != '' &&
                isset($MetaDataRequest[self::K_METADATASUBSET]) &&
-               $MetaDataRequest[self::K_METADATASUBSET] != '' &&
-               isset($MetaDataRequest[self::K_PROJECTTYPEDIR]) &&
-               $MetaDataRequest[self::K_PROJECTTYPEDIR] != '')) {
+               $MetaDataRequest[self::K_METADATASUBSET] != '' )) {
             throw new WrongParams();
         }
 
@@ -91,14 +91,14 @@ class MetaDataService {
             $idResource     = $MetaDataRequest[self::K_IDRESOURCE];
             $projectType    = $MetaDataRequest[self::K_PROJECTTYPE];
             $mdSubSet       = $MetaDataRequest[self::K_METADATASUBSET];
-            $projectTypeDir = $MetaDataRequest[self::K_PROJECTTYPEDIR];
             $persistence    = $MetaDataRequest[self::K_PERSISTENCE];
             $filter         = $MetaDataRequest[self::K_FILTER];
+            $revision       = $MetaDataRequest[self::K_REVISION];
 
             $this->setMetaDataElements(json_encode([$idResource => $projectType]));
             $this->metaDataEntityWrapper = array();
             $metaDataResponseGet = null;
-            $this->render = MetaDataRenderFactory::getObject($projectType, $mdSubSet, $persistence, $projectTypeDir);
+            $this->render = MetaDataRenderFactory::getObject($projectType, $mdSubSet, $persistence);
 
             $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequest);
 
@@ -137,9 +137,7 @@ class MetaDataService {
                isset($MetaDataRequest[self::K_IDRESOURCE]) &&
                $MetaDataRequest[self::K_IDRESOURCE] != '' &&
                isset($MetaDataRequest[self::K_METADATASUBSET]) &&
-               $MetaDataRequest[self::K_METADATASUBSET] != '' &&
-               isset($MetaDataRequest[self::K_PROJECTTYPEDIR]) &&
-               $MetaDataRequest[self::K_PROJECTTYPEDIR] != '')) {
+               $MetaDataRequest[self::K_METADATASUBSET] != '')) {
             throw new WrongParams();
         }
         //Control projectType in parameter
@@ -174,8 +172,7 @@ class MetaDataService {
                      */
                     $filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($projectType,
                                                                                    $MetaDataRequest[self::K_METADATASUBSET],
-                                                                                   $MetaDataRequest[self::K_PERSISTENCE],
-                                                                                   $MetaDataRequest[self::K_PROJECTTYPEDIR]);
+                                                                                   $MetaDataRequest[self::K_PERSISTENCE]);
                     if ($projectTypeParameter == null || $projectTypeParameter == $projectType) {
                         if ($projectType != $projectTypeActual) {
                             if ($projectTypeActual != null) {
@@ -236,8 +233,6 @@ class MetaDataService {
                $MetaDataRequest[self::K_IDRESOURCE] != '' &&
                isset($MetaDataRequest[self::K_METADATASUBSET]) &&
                $MetaDataRequest[self::K_METADATASUBSET] != '' &&
-               isset($MetaDataRequest[self::K_PROJECTTYPEDIR]) &&
-               $MetaDataRequest[self::K_PROJECTTYPEDIR] != '' &&
                isset($MetaDataRequest[self::K_METADATAVALUE]) &&
                $MetaDataRequest[self::K_METADATAVALUE] != '')) {
             throw new WrongParams();
@@ -274,8 +269,7 @@ class MetaDataService {
                      */
                     $filename = $this->getMetaDataDaoConfig()->getMetaDataFileName($projectType,
                                                                                    $MetaDataRequest[self::K_METADATASUBSET],
-                                                                                   $MetaDataRequest[self::K_PERSISTENCE],
-                                                                                   $MetaDataRequest[self::K_PROJECTTYPEDIR]);
+                                                                                   $MetaDataRequest[self::K_PERSISTENCE]);
                     if ($projectTypeParameter == null || $projectTypeParameter == $projectType) {
                         if ($projectType != $projectTypeActual) {
                             if ($projectTypeActual != null) {
@@ -317,8 +311,7 @@ class MetaDataService {
                     //nombre del fichero que contiene los datos del formulario del proyecto
                     $MetaDataRequest[self::K_PROJECT_FILENAME] = $this->getMetaDataDaoConfig()->getMetaDataFileName($MetaDataRequest[self::K_PROJECTTYPE],
                                                                                                                     $MetaDataRequest[self::K_METADATASUBSET],
-                                                                                                                    $MetaDataRequest[self::K_PERSISTENCE],
-                                                                                                                    $MetaDataRequest[self::K_PROJECTTYPEDIR]);
+                                                                                                                    $MetaDataRequest[self::K_PERSISTENCE]);
                     $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequest);
                     $metaDataEntity->updateMetaDataValue($MetaDataRequest[self::K_METADATAVALUE]);
                     $this->metaDataEntityWrapper = array();

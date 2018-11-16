@@ -25,7 +25,7 @@ abstract class DataQuery {
     private $metaDataPath;
     private $metaDataExtension;
 
-    private function init($base=NULL) {
+    private function setBaseDir($base=NULL) {
         if (!isset($this->datadir)) {
             $this->datadir = ($base) ? $base : WikiGlobalConfig::getConf('datadir');
             $this->metaDataPath = WikiGlobalConfig::getConf('mdprojects');
@@ -43,7 +43,7 @@ abstract class DataQuery {
      * @return boolean
      */
     public function haveADirProject($id) {
-        $this->init();
+        $this->setBaseDir();
         $ret = $this->getNsItems($id);
         return isset($ret[self::K_PROJECTTYPE]);
     }
@@ -67,7 +67,7 @@ abstract class DataQuery {
      * @return array[type, projectType, ns] del primer proyecto obtenido
      */
     public function getThisProject($ns) {
-        $this->init();
+        $this->setBaseDir();
         $ret = $this->getParentProjectProperties(explode(":", $ns));
         return $ret;
     }
@@ -78,7 +78,7 @@ abstract class DataQuery {
      * @return array amb la llista de fitxers
      */
     public function getFileList($ns) {
-        $this->init();
+        $this->setBaseDir();
         $arrayDir = scandir("{$this->datadir}/$ns");
         if ( $arrayDir ) {
             unset( $arrayDir[0] );
@@ -91,7 +91,7 @@ abstract class DataQuery {
     }
 
     public function createFolder($new_folder){
-        $this->init();
+        $this->setBaseDir();
         return mkdir("{$this->datadir}/$new_folder");
     }
 
@@ -145,7 +145,7 @@ abstract class DataQuery {
      * @return json conteniendo el nodo actual con sus propiedades y sus hijos, con sus propiedades, a 1 nivel de profundidad
      */
     protected function getNsTreeFromGenericSearch( $base, $currentnode, $sortBy, $onlyDirs=FALSE, $function='search_index', $expandProject=FALSE, $hiddenProjects=FALSE, $root=FALSE, $subSetList=NULL ) {
-        $this->init($base);
+        $this->setBaseDir($base);
         $nodeData    = array();
         $children    = array();
         $sortOptions = array(self::K_NAME, 'date');    //no se usa
@@ -325,7 +325,7 @@ abstract class DataQuery {
      * @return array : propiedades del elemento $ns
      */
     private function getNsItems($ns) { //debería llamarse getFullNsProperties()
-        $this->init();
+        $this->setBaseDir();
         $page = $this->datadir."/";
         $camins = ($ns) ? explode(":", $ns) : NULL;
         if ($camins)
@@ -399,7 +399,7 @@ abstract class DataQuery {
     private function getNsProperties($ns) {
         $ret[self::K_TYPE] = "";
         if ($ns) {
-            $this->init();
+            $this->setBaseDir();
             $nsPath = str_replace(":", "/", $ns);
 
             if (is_dir($this->datadir."/$nsPath")) {

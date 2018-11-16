@@ -16,7 +16,7 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
         $ownProjectModel = $modelManager->getProjectType()."ProjectModel";
-        $this->projectModel = new $ownProjectModel($this->persistenceEngine, $modelManager->getProjectTypeDir());
+        $this->projectModel = new $ownProjectModel($this->persistenceEngine);
         $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
     }
 
@@ -43,9 +43,9 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
         }
     }
 
-    protected function findProjectTypeDir($projectType){
-        global $plugin_controller;
-        return $plugin_controller->getProjectTypeDir($projectType);
-    }
+//    protected function findProjectTypeDir($projectType){
+//        global $plugin_controller;
+//        return $plugin_controller->getProjectTypeDir($projectType);
+//    }
 
 }

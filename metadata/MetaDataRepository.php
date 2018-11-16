@@ -20,7 +20,7 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
     const K_PROJECTTYPE     = ProjectKeys::KEY_PROJECT_TYPE;
     const K_IDRESOURCE      = ProjectKeys::KEY_ID_RESOURCE;
     const K_PERSISTENCE     = ProjectKeys::KEY_PERSISTENCE;
-    const K_PROJECTTYPEDIR  = ProjectKeys::KEY_PROJECTTYPE_DIR;
+    const K_REVISION        = ProjectKeys::KEY_REV;
 
     /**
      * Call Dao to obtain metadata (only one element) and build an Entity that returns
@@ -35,20 +35,17 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
                 isset($MetaDataRequest[self::K_PROJECTTYPE]) &&
                 $MetaDataRequest[self::K_PROJECTTYPE] != '' &&
                 isset($MetaDataRequest[self::K_METADATASUBSET]) &&
-                $MetaDataRequest[self::K_METADATASUBSET] != '' &&
-                isset($MetaDataRequest[self::K_PROJECTTYPEDIR]) &&
-                $MetaDataRequest[self::K_PROJECTTYPEDIR] != '')) {
+                $MetaDataRequest[self::K_METADATASUBSET] != '')) {
             throw new WrongParams();
         }
 
         $idResource     = $MetaDataRequest[self::K_IDRESOURCE];
         $projectType    = $MetaDataRequest[self::K_PROJECTTYPE];
         $metaDataSubSet = $MetaDataRequest[self::K_METADATASUBSET];
-        $projectTypeDir = $MetaDataRequest[self::K_PROJECTTYPEDIR];
         $persistence    = $MetaDataRequest[self::K_PERSISTENCE];
 
         try {
-            $metaDataDao = MetaDataDaoFactory::getObject($projectType, $metaDataSubSet, $persistence, $projectTypeDir);
+            $metaDataDao = MetaDataDaoFactory::getObject($projectType, $metaDataSubSet, $persistence);
 
             //ATENCIÓN
             //Cuando todavía no hay datos en el fichero de proyecto, he hecho que se recoja la lista de campos del tipo de proyecto
@@ -56,15 +53,15 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
             //sin embargo, podría devolverse NULL (ahora está cotrolado por una excepción que no lo permite) y
             //utilizar en su lugar el valor JSON de $MetaDataRequest['metaDataValue']
 
-            $metaDataEntity = MetaDataEntityFactory::getObject($projectType, $metaDataSubSet, $persistence, $projectTypeDir);
+            $metaDataEntity = MetaDataEntityFactory::getObject($projectType, $metaDataSubSet, $persistence);
             $metaDataEntity->setProjectType($projectType);
             $metaDataEntity->setMetaDataSubSet($metaDataSubSet);
             $metaDataEntity->setNsRoot($idResource);
             $metaDataEntity->setMetaDataValue($jsonDataProject);
             return $metaDataEntity;
         } catch (MetaDataNotFound $exnf) {
-            $metaDataDao = MetaDataDaoFactory::getObject($projectType, $metaDataSubSet, $persistence, $projectTypeDir);
-            $metaDataEntity = MetaDataEntityFactory::getObject($projectType, $metaDataSubSet, $persistence, $projectTypeDir);
+            $metaDataDao = MetaDataDaoFactory::getObject($projectType, $metaDataSubSet, $persistence);
+            $metaDataEntity = MetaDataEntityFactory::getObject($projectType, $metaDataSubSet, $persistence);
             $metaDataEntity->setProjectType($projectType);
             $metaDataEntity->setMetaDataSubSet($metaDataSubSet);
             $metaDataEntity->setNsRoot($idResource);
@@ -91,8 +88,6 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
             $MetaDataRequest[self::K_PROJECTTYPE] != '' &&
             isset($MetaDataRequest[self::K_METADATASUBSET]) &&
             $MetaDataRequest[self::K_METADATASUBSET] != '' &&
-            isset($MetaDataRequest[self::K_PROJECTTYPEDIR]) &&
-            $MetaDataRequest[self::K_PROJECTTYPEDIR] != '' &&
             isset($MetaDataEntity)) {
                 $metaDataValue = $MetaDataEntity->getMetaDataValue();
                 $checkParameters = isset($metaDataValue);
@@ -103,11 +98,10 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
 
         $projectType    = $MetaDataRequest[self::K_PROJECTTYPE];
         $metaDataSubSet = $MetaDataRequest[self::K_METADATASUBSET];
-        $projectTypeDir = $MetaDataRequest[self::K_PROJECTTYPEDIR];
         $persistence    = $MetaDataRequest[self::K_PERSISTENCE];
 
         try {
-            $metaDataDao = MetaDataDaoFactory::getObject($projectType, $metaDataSubSet, $persistence, $projectTypeDir);
+            $metaDataDao = MetaDataDaoFactory::getObject($projectType, $metaDataSubSet, $persistence);
             $jSONArray = $metaDataDao->setMeta($MetaDataEntity, $MetaDataRequest);
             return $jSONArray;
         } catch (Exception $ex) {

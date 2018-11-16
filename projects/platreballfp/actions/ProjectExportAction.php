@@ -54,9 +54,6 @@ class ProjectExportAction  extends ProjectMetadataAction{
 //            $projectfilepath = "$idResoucePath/".$this->projectType."/$projectfilename";
 //        $this->dataArray = $this->getProjectDataFile($projectfilepath, $this->metaDataSubSet);
         $toInitModel = array(ProjectKeys::KEY_ID =>$this->projectID, ProjectKeys::KEY_PROJECT_TYPE=>$this->projectType, ProjectKeys::KEY_METADATA_SUBSET =>$this->metadataSubset);
-        if(isset($params[ProjectKeys::KEY_PROJECTTYPE_DIR])){
-            $toInitModel[ProjectKeys::KEY_PROJECTTYPE_DIR] = $params[ProjectKeys::KEY_PROJECTTYPE_DIR];
-        }
         $this->projectModel->init($toInitModel);
         $this->dataArray = $this->projectModel->getDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
     }

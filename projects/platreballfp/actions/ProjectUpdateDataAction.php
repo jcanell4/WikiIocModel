@@ -17,19 +17,19 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
         $projectTypeConfigFile = $projectModel->getProjectTypeConfigFile($projectType, $metaDataSubSet);
 
         $cfgProjectModel = $confProjectType."ProjectModel";
-        $cfgProjectTypeDir = $this->findProjectTypeDir($confProjectType);
+//        $cfgProjectTypeDir = $this->findProjectTypeDir($confProjectType);
         $configProjectModel = new $cfgProjectModel($this->persistenceEngine);
 
         $configProjectModel->init([ProjectKeys::KEY_ID              => $projectTypeConfigFile,
                                    ProjectKeys::KEY_PROJECT_TYPE    => $confProjectType,
-                                   ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet,
-                                   ProjectKeys::KEY_PROJECTTYPE_DIR => $cfgProjectTypeDir
+                                   ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet
                                 ]);
 
         //Obtenir les dades de la configuració d'aquest tipus de projecte
-        $projectFileName = $configProjectModel->getProjectFileName();
+//        $projectFileName = $configProjectModel->getProjectFileName();
         $metaDataSubset = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
-        $metaDataConfigProject = $configProjectModel->getMetaDataProject($projectFileName, $metaDataSubset);
+        //$metaDataConfigProject = $configProjectModel->getMetaDataProject($projectFileName, $metaDataSubset);
+        $metaDataConfigProject = $configProjectModel->getMetaDataProject($metaDataSubset);
 
         if ($metaDataConfigProject['arraytaula']) {
             $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
@@ -52,7 +52,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                     ProjectKeys::KEY_PROJECT_TYPE => $projectType,
                     ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                     ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet,
-                    ProjectKeys::KEY_PROJECTTYPE_DIR => $projectModel->getProjectTypeDir(),
+//                    ProjectKeys::KEY_PROJECTTYPE_DIR => $projectModel->getProjectTypeDir(),
                     ProjectKeys::KEY_METADATA_VALUE => json_encode($response)
                 ];
                 $projectModel->setData($metaData);    //actualiza el contenido en 'mdprojects/'

@@ -14,8 +14,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
         $this->getModel()->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
                                  ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
                                  ProjectKeys::KEY_REV             => $this->params[ProjectKeys::KEY_REV],
-                                 ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET],
-                                 ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                                 ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
                                ]);
     }
 
@@ -45,7 +44,6 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                 ProjectKeys::KEY_PROJECT_TYPE => $modelAttrib[ProjectKeys::KEY_PROJECT_TYPE],
                 ProjectKeys::KEY_METADATA_SUBSET => $modelAttrib[ProjectKeys::KEY_METADATA_SUBSET],
-                ProjectKeys::KEY_PROJECTTYPE_DIR => $modelAttrib[ProjectKeys::KEY_PROJECTTYPE_DIR],
                 ProjectKeys::KEY_FILTER => $dataProject[ProjectKeys::KEY_FILTER],  //opcional
                 ProjectKeys::KEY_METADATA_VALUE => str_replace("\\r\\n", "\\n", json_encode($metaDataValues))
             ];

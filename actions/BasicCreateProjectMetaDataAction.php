@@ -10,8 +10,7 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
         parent::setParams($params);
         $this->getModel()->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
                                  ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
-                                 ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET],
-                                 ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                                 ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
                                ]);
     }
 
@@ -35,7 +34,6 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
                 ProjectKeys::KEY_PROJECT_TYPE => $projectType,
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                 ProjectKeys::KEY_METADATA_SUBSET => $modelAttrib[ProjectKeys::KEY_METADATA_SUBSET],
-                ProjectKeys::KEY_PROJECTTYPE_DIR => $modelAttrib[ProjectKeys::KEY_PROJECTTYPE_DIR],
                 ProjectKeys::KEY_FILTER => $this->params[ProjectKeys::KEY_FILTER], // opcional
                 ProjectKeys::KEY_METADATA_VALUE => json_encode($metaDataValues)
             ];
