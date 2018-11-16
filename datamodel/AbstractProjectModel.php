@@ -50,7 +50,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 //            $this->setProjectFileName($params[ProjectKeys::KEY_PROJECT_FILENAME]);
 //            $this->setProjectFilePath();
             if ($params[ProjectKeys::VIEW_CONFIG_NAME]){
-                    $this->viewConfigName=$params[ProjectKeys::VIEW_CONFIG_NAME];
+                $this->viewConfigName = $params[ProjectKeys::VIEW_CONFIG_NAME];
             }
         }else{
             $this->id = $params;
@@ -150,7 +150,9 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                 }
                 $ret['projectMetaData'] = $metaData;
             }
-            $this->viewConfigName = ($subSet['viewfiles'][0]) ? $subSet['viewfiles'][0] : ProjectKeys::KEY_DEFAULTVIEW;
+            if ($subSet['viewfiles'][0]) {
+                $this->viewConfigName = $subSet['viewfiles'][0];
+            }
         }
         $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->viewConfigName);
         return $ret;
