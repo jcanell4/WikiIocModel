@@ -49,8 +49,8 @@ class BasicPersistenceEngine {
         return new LockDataQuery();
     }
 
-    public function createProjectMetaDataQuery(){
+    public function createProjectMetaDataQuery($projectId=FALSE, $projectSubset=FALSE, $projectType=FALSE, $revision=FALSE){
         require_once(DOKU_PERSISTENCE . 'ProjectMetaDataQuery.php');
-        return new ProjectMetaDataQuery();
+        return new ProjectMetaDataQuery($projectId, $projectSubset, $projectType, $revision);
     }
 }

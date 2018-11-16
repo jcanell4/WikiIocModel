@@ -23,17 +23,17 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
             $projectTypeConfigFile = $projectModel->getProjectTypeConfigFile($projectType, $metaDataSubSet);
 
             $cfgProjectModel = $confProjectType."ProjectModel";
-            $cfgProjectTypeDir = $this->findProjectTypeDir($confProjectType);
-            $configProjectModel = new $cfgProjectModel($this->persistenceEngine, $cfgProjectTypeDir);
+//            $cfgProjectTypeDir = $this->findProjectTypeDir($confProjectType);
+            $configProjectModel = new $cfgProjectModel($this->persistenceEngine);
 
             $configProjectModel->init([ProjectKeys::KEY_ID              => $projectTypeConfigFile,
                                        ProjectKeys::KEY_PROJECT_TYPE    => $confProjectType,
-                                       ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet,
-                                       ProjectKeys::KEY_PROJECTTYPE_DIR => $cfgProjectTypeDir
+                                       ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet
                                     ]);
             //Obtenir les dades de la configuració per a aquest tipus de projecte
-            $projectFileName = $projectModel->getProjectFileName();
-            $metaDataConfigProject = $configProjectModel->getMetaDataProject($projectFileName, $metaDataSubSet);
+//            $projectFileName = $projectModel->getProjectFileName();
+//            $metaDataConfigProject = $configProjectModel->getMetaDataProject($projectFileName, $metaDataSubSet);
+            $metaDataConfigProject = $configProjectModel->getMetaDataProject($metaDataSubSet);
 
             if ($metaDataConfigProject['arraytaula']) {
                 $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);

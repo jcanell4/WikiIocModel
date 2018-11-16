@@ -17,7 +17,7 @@ class ListTemplatesAction extends AbstractWikiAction {
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
         $projectType = $modelManager->getProjectType();
         $ownProjectModel = ($projectType==="defaultProject") ? "BasicWikiDataModel" : $projectType."ProjectModel";
-        $this->projectModel = new $ownProjectModel($this->persistenceEngine, $modelManager->getProjectTypeDir());
+        $this->projectModel = new $ownProjectModel($this->persistenceEngine);
     }
 
     /**
@@ -30,14 +30,10 @@ class ListTemplatesAction extends AbstractWikiAction {
             if ($this->params['template_list_type'] === "array") {
                 $this->projectModel->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
                                            ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
-                                           ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET],
-                                           ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                                           ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
                                         ]);
-                $list = $this->projectModel->getListMetaDataComponentTypes($this->params[ProjectKeys::KEY_PROJECT_TYPE],
-                                                                           ProjectKeys::KEY_METADATA_COMPONENT_TYPES,
-                                                                           $this->params[ProjectKeys::KEY_METADATA_SUBSET],
-                                                                           ProjectKeys::KEY_MD_CT_DOCUMENTS,
-                                                                           $this->getModelManager()->getProjectTypeDir());
+                $list = $this->projectModel->getListMetaDataComponentTypes(ProjectKeys::KEY_METADATA_COMPONENT_TYPES,
+                                                                           ProjectKeys::KEY_MD_CT_DOCUMENTS);
             }
         }
         if (!isset($list)) {

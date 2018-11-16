@@ -11,8 +11,7 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
         $this->projectModel->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
                                    ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
                                    ProjectKeys::KEY_REV             => $this->params[ProjectKeys::KEY_REV],
-                                   ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET],
-                                   ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                                   ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
                                 ]);
 
         if (!$this->params[ProjectKeys::KEY_DATE]) {

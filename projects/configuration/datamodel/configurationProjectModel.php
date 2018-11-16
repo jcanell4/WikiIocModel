@@ -12,8 +12,8 @@ require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
 
 class configurationProjectModel extends AbstractProjectModel{
 
-    public function __construct($persistenceEngine, $projectTypeDir=NULL)  {
-        parent::__construct($persistenceEngine, $projectTypeDir);
+    public function __construct($persistenceEngine)  {
+        parent::__construct($persistenceEngine);
     }
 
     public function generateProject() {
@@ -26,7 +26,7 @@ class configurationProjectModel extends AbstractProjectModel{
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
 
         //2. Establece la marca de 'proyecto generado'
-        $this->projectMetaDataQuery->setProjectGenerated($this->id, $this->projectType);
+        $this->projectMetaDataQuery->setProjectGenerated();
 
         //3a. Otorga, al Autor, permisos sobre el directorio de proyecto
         PagePermissionManager::updatePagePermission($this->id.":*", $ret['projectMetaData']["autor"]['value'], AUTH_UPLOAD);

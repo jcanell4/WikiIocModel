@@ -16,16 +16,16 @@ class MetaDataEntityFactory {
      * Call DaoConfig to obtain MetaDataEntity ns and return an object from this
      * @return MetaDataEntity object (from ns returned by MetaDataDaoConfig)
      */
-    public static function getObject($projectType, $metaDataSubSet, $persistence, $projectTypeDir) {
+    public static function getObject($projectType, $metaDataSubSet, $persistence) {
 
-        $classesNameSpaces = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet, $persistence, $projectTypeDir);
+        $classesNameSpaces = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet, $persistence);
         $encoder = new JSON();
         $objClassesNameSpaces = $encoder->decode($classesNameSpaces);
         if (!isset($objClassesNameSpaces->MetaDataEntity) || $objClassesNameSpaces->MetaDataEntity == NULL) {
             throw new ClassEntityNotFound();
         }
-        //require_once (WIKI_IOC_MODEL . "projects/" . $objClassesNameSpaces->MetaDataEntity . "/metadata/MetaDataEntity.php");
-        $dir = implode("/", explode("/", $projectTypeDir, -2));
+        $projectTypeDir = $persistence->createProjectMetaDataQuery(FALSE, $metaDataSubSet, $projectType)->getProjectTypeDir();        
+        $dir = implode("/", explode("/", $projectTypeDir, -2)); 
         $metadataPath = "$dir/" . $objClassesNameSpaces->MetaDataEntity . "/metadata/MetaDataEntity.php";
         if (! file_exists($metadataPath))
             $metadataPath = WIKI_IOC_MODEL . "projects/" . $objClassesNameSpaces->MetaDataEntity . "/metadata/MetaDataEntity.php";
@@ -33,8 +33,8 @@ class MetaDataEntityFactory {
 
         $fully_qualified_name = $objClassesNameSpaces->MetaDataEntity . "\\MetaDataEntity";
 
-        return new $fully_qualified_name(MetaDataDaoConfig::getMetaDataStructure($projectType, $metaDataSubSet, $persistence, $projectTypeDir),
-                                         MetaDataDaoConfig::getMetaDataTypesDefinition($projectType, $metaDataSubSet, $persistence, $projectTypeDir));
+        return new $fully_qualified_name(MetaDataDaoConfig::getMetaDataStructure($projectType, $metaDataSubSet, $persistence),
+                                         MetaDataDaoConfig::getMetaDataTypesDefinition($projectType, $metaDataSubSet, $persistence));
     }
 
 }

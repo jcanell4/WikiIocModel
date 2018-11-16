@@ -24,15 +24,79 @@ class ProjectMetaDataQuery extends DataQuery {
     const LOG_TYPE_DELETE     = 'D';
     const LOG_TYPE_REVERT     = 'R';
 
-    private $projectFileName = NULL;    //Nom de l'arxiu de dades del projecte
-    private $projectFilePath = NULL;    //Ruta completa al directori del projecte
-
-    public function getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $subset, $component, $projectTypeDir=NULL) {
-        if (!$projectTypeDir) {
-            $projectTypeDir = $this->getProjectTypeDir($projectType);
+    private $projectId = NULL;    //Nom de l'arxiu de dades del projecte
+    private $projectSubset = FALSE;    //Nom de l'arxiu de dades del projecte
+    private $projectType = FALSE;    //Nom de l'arxiu de dades del projecte
+    private $projectFileName = FALSE;    //Nom de l'arxiu de dades del projecte
+    private $projectTypeDir = FALSE;    //Ruta completa al directori del projecte
+    private $revision = FALSE;    //Ruta completa al directori del projecte
+    
+    public function __construct($projectId=FALSE, $projectSubset=FALSE, $projectType=FALSE, $revision=FALSE) {
+        if($projectId || !$projectSubset || $projectType){
+            $this->init($projectId, $projectSubset, $projectType);
         }
+        $this->revision = $revision;
+    }
+    
+    public function init($projectId, $projectSubset=FALSE, $projectType=FALSE, $revision=FALSE){
+        $this->projectId = $projectId;
+        $this->projectSubset = $projectSubset;
+        $this->projectType= $projectType;
+        $this->revision=$revision;
+        $this->projectFileName = FALSE;
+        $this->projectFilePath = FALSE;
+        $this->projectTypeDir = FALSE;
+        return $this;
+    }
+    
+    public function setRevision($rev){
+        $this->revision = $rev;
+    }
+
+    public function setProjectType($projectType){
+        $this->projectType = $projectType;
+    }
+
+    public function setProjectSubset($projectSubset){
+        $this->projectSubset = $projectSubset;
+    }
+    
+    public function getRevision(){
+        return $this->revision;
+    }
+
+    public function getProjectId(){
+        return $this->projectId;
+    }
+    
+    public function getProjectSubset(){
+        if($this->projectSubset){
+            $this->projectSubset = AjaxKeys::VAL_DEFAULTSUBSET;
+        }
+        return $this->projectSubset;
+    }
+    
+    public function getProjectType(){
+        if(!$this->projectType){
+            //obtenir el projectType del directori
+            $dir = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $this->projectId.'/');
+            $dirList = scandir($dir) ;
+            $found = false;
+            for($i=0; !$found && $i<count($dirList); $i++){
+                if(is_dir($dirList[$i])){
+                    if(preg_grep("/.*\.mdpr/", scandir($dir.$dirList[$i]))){
+                        $this->projectType = $dirList[$i];
+                        $found = true;
+                    }
+                }
+            }
+        }
+        return  $this->projectType;
+    }
+
+    public function getListMetaDataComponentTypes($metaDataPrincipal, $component) {
         //lista de elementos permitidos para el componente dado
-        $jsonList = $this->getMetaDataConfig($projectType, $metaDataPrincipal, $subset, $projectTypeDir);
+        $jsonList = $this->getMetaDataConfig($metaDataPrincipal);
         if (!empty($jsonList)) {
             $arrayList = json_decode($jsonList, true);
             return $arrayList[$subset][$component];
@@ -45,15 +109,12 @@ class ProjectMetaDataQuery extends DataQuery {
      * Devuelve la lista ordenada de tipos de proyecto obtenida a partir de la lectura
      * de la estructura de directorios de 'plugin'/projects/
      */
-    public function getListProjectTypes($projectType=NULL, $subset=NULL, $projectTypeDir=NULL) {
+    public function getListProjectTypes($all=FALSE) {
         global $plugin_controller;
-        if ($projectType) {
+        if (!$all) {
             if (!$subset) $subset = ProjectKeys::VAL_DEFAULTSUBSET;
-            $listProjects = $this->getListMetaDataComponentTypes($projectType,
-                                                                 ProjectKeys::KEY_METADATA_COMPONENT_TYPES,
-                                                                 $subset,
-                                                                 ProjectKeys::KEY_MD_CT_SUBPROJECTS,
-                                                                 $projectTypeDir);
+            $listProjects = $this->getListMetaDataComponentTypes(ProjectKeys::KEY_METADATA_COMPONENT_TYPES,
+                                                                 ProjectKeys::KEY_MD_CT_SUBPROJECTS);
         }
         $plugin_list = $plugin_controller->getList('action');
         foreach ($plugin_list as $plugin) {
@@ -136,20 +197,23 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param string $ns
      * @return boolean
      */
-    public function existProject($ns) {
-        return $this->isAProject($ns);
+    public function existProject() {
+        return $this->isAProject($this->getProjectId());
     }
 
     /**
      * Obtiene el array correspondiente a la clave $configAttribute del archivo FILE_CONFIGMAIN
-     * @param string $projectType
+     * @param string $projectType       NOOO!
      * @param string $configAttribute : conjunto principal requerido
-     * @param string $metaDataSubset : subconjunto requerido
-     * @param string $projectTypeDir : directorio del tipo de proyecto
+     * @param string $metaDataSubset : subconjunto requerido   NOOO!
+     * @param string $projectTypeDir : directorio del tipo de proyecto  NOOOO!
      * @return Json con el array correspondiente a la clave $configAttribute del archivo FILE_CONFIGMAIN
      */
-    public function getMetaDataConfig($projectType, $configAttribute, $metaDataSubset, $projectTypeDir=NULL) {
-        if (!$projectTypeDir) $projectTypeDir = $this->getProjectTypeDir($projectType);
+    public function getMetaDataConfig($configAttribute, $projectType=FALSE) {
+        if(!$projectType){
+            $projectType = $this->getProjectType();
+        }
+        $projectTypeDir = $this->getProjectTypeDir($projectType);
         $path = $projectTypeDir . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN;
         $configMain = @file_get_contents($path);
         if ($configMain == false) {
@@ -177,10 +241,12 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param string $projectTypeDir : directorio del tipo de proyecto
      * @return array con la lista de subSets del archivo FILE_CONFIGMAIN
      */
-    public function getListMetaDataSubSets($projectType, $projectTypeDir=NULL) {
+    public function getListMetaDataSubSets($projectType=FALSE) {
         $configSet = ProjectKeys::KEY_METADATA_CLASSES_NAMESPACES;
-        if (!$projectTypeDir)
-            $projectTypeDir = $this->getProjectTypeDir($projectType);
+        if(!$projectType){
+            $projectType = $this->getProjectType();
+        }
+        $projectTypeDir = $this->getProjectTypeDir($projectType);
         $path = $projectTypeDir . self::PATH_METADATA_CONFIG . self::FILE_CONFIGMAIN;
         $configMain = @file_get_contents($path);
         if ($configMain == false) {
@@ -204,8 +270,8 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param string $projectTypeDir : ruta del proyecto
      * @return JSON conteniendo el conjunto de campos del subset
      */
-    public function getStructureMetaDataConfig($projectType, $metaDataSubset, $projectTypeDir=NULL) {
-        $metaStructure = $this->getMetaDataConfig($projectType, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $metaDataSubset, $projectTypeDir);
+    public function getStructureMetaDataConfig() {
+        $metaStructure = $this->getMetaDataConfig(ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE);
 
         if ($metaStructure) {
             $content = json_decode($metaStructure, TRUE);
@@ -220,8 +286,11 @@ class ProjectMetaDataQuery extends DataQuery {
         return $metaDataReturn;
     }
 
-    public function getMetaViewConfig($projectType, $viewConfig, $projectTypeDir=NULL) {
-        if (!$projectTypeDir) $projectTypeDir = $this->getProjectTypeDir($projectType);
+    public function getMetaViewConfig($viewConfig, $projectType=FALSE) {
+        if(!$projectType){
+            $projectType = $this->getProjectType();
+        }
+        $projectTypeDir = $this->getProjectTypeDir($projectType);
         $view = @file_get_contents($projectTypeDir . self::PATH_METADATA_CONFIG . "$viewConfig.json");
         if ($view == false) {
             $view = @file_get_contents($projectTypeDir . self::PATH_METADATA_CONFIG . self::FILE_DEFAULTVIEW);
@@ -283,9 +352,9 @@ class ProjectMetaDataQuery extends DataQuery {
      * Devuelve el estado de generación del proyecto
      * @return boolean : true si el proyecto ya ha sido generado
      */
-    public function isProjectGenerated($idProject, $projectType) {
+    public function isProjectGenerated() {
         $filename = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
-        $jsonArr = $this->getMeta($idProject, $projectType, "state", $filename);
+        $jsonArr = $this->_getMeta($this->getProjectId(), $this->getProjectType(), "state", $filename);
         $data = json_decode($jsonArr, true);
         return $data['generated'];
     }
@@ -294,13 +363,13 @@ class ProjectMetaDataQuery extends DataQuery {
      * Establece el estado 'generated'=true del proyecto
      * @return boolean : true si el estado del proyecto se ha establecido con éxito
      */
-    public function setProjectGenerated($idProject, $projectType) {
+public function setProjectGenerated() {
         $projectSystemDataFile = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
         $metaDataSubSet = "state";
-        $jSysArr = $this->getMeta($idProject, $projectType, $metaDataSubSet, $projectSystemDataFile);
+        $jSysArr = $this->_getMeta($this->getProjectId(), $this->getProjectType(), $this->getProjectSubset(), $projectSystemDataFile);
         $sysValue = json_decode($jSysArr, true);
         $sysValue['generated'] = true;
-        $success = $this->setMeta($idProject, $projectType, $metaDataSubSet, $projectSystemDataFile, json_encode($sysValue));
+        $success = $this->_setMeta($this->getProjectId(), $this->getProjectType(), $this->getProjectSubset(), $projectSystemDataFile, json_encode($sysValue));
         return $success;
     }
 
@@ -309,18 +378,27 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param string $idProject : wikiRuta del proyecto
      * @param string $projectType : tipo de proyecto
      * @param string $metaDataSubSet : clave del contenido
-     * @param string $filename : fichero de datos del proyecto / ruta completa para las revisiones
      * @return JSON conteniendo el array de la clave 'metadatasubset' con los datos del proyecto
      */
-    public function getMeta($idProject, $projectType, $metaDataSubSet, $filename) {
-        $metaDataReturn = null;
-
-        if (substr($idProject, -5) === ProjectKeys::REVISION_SUFFIX) {
-            $contentFile = io_readFile($filename, false);
-        }else {
-            $idResoucePath = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $idProject);
-            $contentFile = @file_get_contents("$idResoucePath/$projectType/$filename");
+    public function getMeta($metadataSubset=FALSE, $revision=FALSE) {
+        if(!$metadataSubset){
+            $metadataSubset = $this->getProjectSubset();
         }
+        return $this->_getMeta($metadataSubset, 
+                                $this->getFileName($this->getProjectId(), 
+                                                    array(ProjectKeys::KEY_REV => $revision, 
+                                                          ProjectKeys::KEY_PROJECT_TYPE => $this->getProjectType(),
+                                                          ProjectKeys::KEY_METADATA_SUBSET => $metadataSubset)));
+    }
+    /**
+     * Extrae, del contenido del fichero, los datos correspondientes a la clave
+     * @param string $metaDataSubSet : clave del contenido
+     * @param string $filename : fichero de datos del proyecto / ruta completa para las revisiones 
+     * @return JSON conteniendo el array de la clave 'metadatasubset' con los datos del proyecto
+     */
+    private function _getMeta($metaDataSubSet, $filename) {
+        $metaDataReturn = null;
+        $contentFile = io_readFile($filename, false);
 
         if ($contentFile != false) {
             $contentMainArray = json_decode($contentFile, true);
@@ -338,18 +416,28 @@ class ProjectMetaDataQuery extends DataQuery {
 
     /**
      * Guarda el nuevo archivo de datos del proyecto, guardando previamente la versión anterior como una revisión
-     * @param string $id              ns del proyecto (ruta relativa del projecte, a partir de 'data/mdproject/')
-     * @param string $projectType     tipus de projete (exemples: "defaultProject", "documentation")
+     * @param JSON   $metaDataValue   Nou contingut de l'arxiu de dades del projecte
+     * @return string
+     */
+    public function setMeta($metaDataValue, $metadataSubset=FALSE) {
+        if(!$metadataSubset){
+            $metadataSubset = $this->getProjectSubset();
+        }
+        return $this->_setMeta($metadataSubsetet, 
+                                $this->getProjectFilePath($this->getProjectId()), 
+                                $this->getProjectFileName($metadataSubset, $this->getProjectType()),
+                                $metaDataValue);                
+    }
+    
+    /**
+     * Guarda el nuevo archivo de datos del proyecto, guardando previamente la versión anterior como una revisión
      * @param string $metaDataSubSet  Valor de metadatasubset (exemple: "main")
      * @param string $projectFileName Nom de l'arxiu de dades del projecte (exemple: "meta.mdpr")
      * @param JSON   $metaDataValue   Nou contingut de l'arxiu de dades del projecte
      * @return string
      */
-    public function setMeta($id, $projectType, $metaDataSubSet, $projectFileName, $metaDataValue) {
-        $projectId = str_replace(':', "/", $id);
-        $this->projectFileName = $projectFileName;
-        $this->projectFilePath = WikiGlobalConfig::getConf('mdprojects')."/$projectId/$projectType/";
-        $projectFilePathName = $this->projectFilePath . $this->projectFileName;
+    private function _setMeta($metaDataSubSet, $projectFilePath, $projectFileName, $metaDataValue) {
+        $projectFilePathName = $projectFilePath . $projectFileName;
 
         if (is_file($projectFilePathName)) {
             $old_contentFile = file_get_contents($projectFilePathName);
@@ -359,13 +447,14 @@ class ProjectMetaDataQuery extends DataQuery {
                 $prev_date = filemtime($projectFilePathName);
                 $contentFileArray[$metaDataSubSet] = json_decode($metaDataValue, true);
                 $resourceCreated = io_saveFile($projectFilePathName, str_replace("\\r\\n", "\\n", json_encode($contentFileArray)));
+                $new_date = filemtime($projectFilePathName);
                 //Guardamos el archivo existente (la versión previa) como revisión
-                $this->_saveRevision($prev_date, $projectId, $old_contentFile);
+                $this->_saveRevision($prev_date, $new_date, $this->getProjectId(), $projectFileName, $old_contentFile);
             }
         }else {
-            $resourceCreated = $this->_createResource($this->projectFilePath, $this->projectFileName);
+            $resourceCreated = $this->_createResource($projectFilePath, $projectFileName);
             if ($resourceCreated) {
-                $resourceCreated = $this->_setSystemData($id, $this->projectFilePath);
+                $resourceCreated = $this->_setSystemData($this->getProjectId(), $projectFilePath);
                 if ($resourceCreated) {
                     $resourceCreated = io_saveFile($projectFilePathName, "{\"$metaDataSubSet\":$metaDataValue}");
                 }
@@ -415,71 +504,135 @@ class ProjectMetaDataQuery extends DataQuery {
     /**
      * Devuelve la ruta completa al fichero del proyecto (en mdprojects)
      * @param string $id : wikiRuta de la página del proyecto
-     * @param array $params : {projectType, metaDataSubSet, projectfilename}
+     * @param array $params : {projectType, metaDataSubSet}
      * @return string
      */
     public function getFileName($id, $params=array()) {
-        if ($id && !empty($params)) {
-            $filename = ($params[ProjectKeys::KEY_PROJECT_FILENAME]) ? $params[ProjectKeys::KEY_PROJECT_FILENAME] : $this->_getProjectFileName($params);
-            $params['id'] = $id;
-            $ret = $this->getProjectFilePath($params) . $filename;
-        }else {
-            $ret = $this->getProjectFilePath() . $this->_getProjectFileName();
+        if(isset($params[ProjectKeys::KEY_REV])){
+            $revision = $params[ProjectKeys::KEY_REV];
+        }else{
+            $revision = $this->getRevision();
         }
-        return $ret;
+        if(isset($params[ProjectKeys::KEY_PROJECT_TYPE])){
+            $projectType = $params[ProjectKeys::KEY_PROJECT_TYPE];
+        }else{
+            $projectType = $this->getProjectType();
+        }
+        if(isset($params[ProjectKeys::KEY_METADATA_SUBSET])){
+            $metadataSubset = $params[ProjectKeys::KEY_PROJECT_TYPE];
+        }else{
+            $metadataSubset = $this->getProjectSubset();
+        }
+        return $this->getProjectFilePath($id, $revision).$this->getProjectFileName($metadataSubset, $projectType, $revision);
+//                
+//                
+//        if($this->getProjectId()!=$id){
+//            $this->init($id);
+//            if(isset($params[ProjectKeys::KEY_PROJECT_TYPE])){
+//                $this->setProjectType($params[ProjectKeys::KEY_PROJECT_TYPE]);
+//            }
+//            if(isset($params[ProjectKeys::KEY_METADATA_SUBSET])){
+//                $this->setProjectType($params[ProjectKeys::KEY_PROJECT_TYPE]);
+//            }
+//            if(isset($params[ProjectKeys::KEY_REV])){
+//                $this->setRevision($params[ProjectKeys::KEY_REV]);
+//            }
+//        }
+//        
+//        if($this->getRevision()){
+//            $ret = $this->_getProjectRevisionFile($this->getRevision());
+//        }else{
+//            $ret = $this->getProjectFilePath().$this->getProjectFileName();
+//        }
+//        
+//        return $ret;
     }
 
     /**
      * Devuelve el nombre del archivo de datos para este tipo de proyecto
      * @params array [ProjectKeys::KEY_PROJECT_TYPE,
      *                ProjectKeys::KEY_METADATA_SUBSET,
-     *                ProjectKeys::KEY_PROJECTTYPE_DIR]
+     *                ProjectKeys::KEY_PROJECTTYPE_DIR]  NOOOO!
      * @return string el nombre del fichero de datos del tipo de proyecto solicitado
      */
-    public function getProjectFileName($parms) {
-        $jsonArray = $this->getMetaDataConfig($parms[ProjectKeys::KEY_PROJECT_TYPE],
-                                              ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE,
-                                              $parms[ProjectKeys::KEY_METADATA_SUBSET],
-                                              $parms[ProjectKeys::KEY_PROJECTTYPE_DIR]
-                                            );
-        $data = json_decode($jsonArray, true);
-        return $data[$parms[ProjectKeys::KEY_METADATA_SUBSET]];
-    }
-
-    /**
-     * Devuelve el nombre del archivo de datos para este tipo de proyecto
-     * Si recibe parámetros, guarda el valor en la variable privada $this->projectFileName
-     * @params array [ProjectKeys::KEY_PROJECT_TYPE,
-     *                ProjectKeys::KEY_METADATA_SUBSET,
-     *                ProjectKeys::KEY_PROJECTTYPE_DIR]
-     */
-    private function _getProjectFileName($parms=[]) {
-        if (!empty($parms)) {
-            $this->projectFileName = $this->getProjectFileName($parms);
+    public function getProjectFileName($metadataSubset=FALSE, $projectType=FALSE, $revision=FALSE) {
+        $ret;
+        if(!$revision){
+            $revision = $this->getRevision();
         }
-        return $this->projectFileName;
-    }
-
-    private function setProjectFilePath(array $parms) {
-        if (empty($parms) || $parms===NULL) {
-            throw new Exception("Manquen paràmetres a la funció setProjectFilePath(array) de ProjectMetaDataQuery");
+        if(!$this->projectFileName){
+            if(!$metadataSubset){
+                $metadataSubset = $this->getProjectSubset();
+            }
+            if(!$projectType){
+                $projectType = $this->getProjectType();
+            }
+            $jsonArray = $this->getMetaDataConfig(ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $projectType);
+            $data = json_decode($jsonArray, true);
+            $this->projectFileName = $data[$metadataSubset];
         }
-        $this->projectFilePath = WikiGlobalConfig::getConf('mdprojects') . "/"
-                                    . str_replace(":", "/", $parms[ProjectKeys::KEY_ID]) . "/"
-                                    . $parms[ProjectKeys::KEY_PROJECT_TYPE] . "/";
-    }
-
-    public function getProjectFilePath($parms=[]) {
-        if (!$this->projectFilePath && $parms[ProjectKeys::KEY_ID]) {
-            $this->setProjectFilePath($parms);
+        if($revision){
+            $ret = "{$this->projectFileName}.$revison.txt.gz";
+        }else{
+            $ret = $this->projectFileName;
         }
-        return $this->projectFilePath;
+        return $ret;
+//        $jsonArray = $this->getMetaDataConfig($parms[ProjectKeys::KEY_PROJECT_TYPE],
+//                                              ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE,
+//                                              $parms[ProjectKeys::KEY_METADATA_SUBSET],
+//                                              $parms[ProjectKeys::KEY_PROJECTTYPE_DIR]
+//                                            );
+//        $data = json_decode($jsonArray, true);
+//        return $data[$parms[ProjectKeys::KEY_METADATA_SUBSET]];
     }
 
-    public function getProjectTypeDir($projectType){
+//    /**
+//     * Devuelve el nombre del archivo de datos para este tipo de proyecto
+//     * Si recibe parámetros, guarda el valor en la variable privada $this->projectFileName
+//     * @params array [ProjectKeys::KEY_PROJECT_TYPE,
+//     *                ProjectKeys::KEY_METADATA_SUBSET,
+//     *                ProjectKeys::KEY_PROJECTTYPE_DIR]
+//     */
+//    private function _getProjectFileName($parms=[]) {
+//        if (!empty($parms)) {
+//            $this->projectFileName = $this->getProjectFileName($parms);
+//        }
+//        return $this->projectFileName;
+//    }
+
+
+    private function getProjectFilePath($id=FALSE, $revision=FALSE) {
+        if(!$id){
+            $id = $this->getProjectId();
+        }
+        if(!$revision){
+            $revision = $this->getRevision();
+        }
+        if($revision){
+            $path = WikiGlobalConfig::getConf('revisionprojectdir') . "/"
+                                    . utf8_encodeFN(str_replace(":", "/", $id))."/";
+        }else{
+            $path = WikiGlobalConfig::getConf('mdprojects') . "/"
+                                    . utf8_encodeFN(str_replace(":", "/", $id)) . "/"
+                                    . $this->getProjectType() . "/";
+        }
+        return $path;
+    }
+
+    private function updateProjectTypeDir($projectType=FALSE) {
+            global $plugin_controller;
+            if(!$projectType){
+                $projectType = $this->getProjectType();
+            }            
+            $this->projectTypeDir = $plugin_controller->getProjectTypeDir($projectType);            
+    }
+
+    public function getProjectTypeDir($projectType=FALSE){
+        if(!$this->projectTypeDir){
+            $this->updateProjectTypeDir($projectType);
+        }
+        return $this->projectTypeDir;
 //        return (class_exists('DokuModelManager', FALSE)) ? DokuModelManager::getProjectTypeDir() : WIKI_IOC_MODEL . "projects/$projectType/";
-        global $plugin_controller;
-        return $plugin_controller->getProjectTypeDir($projectType);
     }
 
     public function getNsTree($currentNode, $sortBy, $onlyDirs=FALSE, $expandProjects=TRUE, $hiddenProjects=FALSE, $root=FALSE) {
@@ -497,41 +650,34 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param boolean parameters['extra'] : TRUE | FALSE
      * @return array Contiene los datos del proyecto correspondientes a la clave '$metaDataSubSet'
      */
-    public function getDataProject($parameters) {
-        $metaDataSubSet = ($parameters['metaDataSubSet']) ? $parameters['metaDataSubSet'] : ProjectKeys::VAL_DEFAULTSUBSET;
-        $parms = [ProjectKeys::KEY_ID => $parameters[ProjectKeys::KEY_ID],
-                  ProjectKeys::KEY_PROJECT_TYPE => $parameters[ProjectKeys::KEY_PROJECT_TYPE],
-                  ProjectKeys::KEY_PROJECTTYPE_DIR => $parameters[ProjectKeys::KEY_PROJECTTYPE_DIR],
-                  ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet
-                 ];
-        $filename = $this->_getProjectFileName($parms);
-        $jsonData = $this->getMeta($parameters[ProjectKeys::KEY_ID], $parameters[ProjectKeys::KEY_PROJECT_TYPE], $metaDataSubSet, $filename);
-        $data = json_decode($jsonData, true);
-        //$data['projectExtraData'][ProjectKeys::KEY_PROJECTTYPE_DIR] = $parameters[ProjectKeys::KEY_PROJECTTYPE_DIR];
-        if ($parameters['extra']) {
-            $data['projectExtraData'][ProjectKeys::KEY_PROJECT_FILENAME] = $parms[ProjectKeys::KEY_PROJECT_FILENAME] = $filename;
-            $data['projectExtraData'][ProjectKeys::KEY_PROJECT_FILEPATH] = $this->getFileName($parameters[ProjectKeys::KEY_ID], $parms);
+    public function getDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE) {
+        if(!$id){
+            $id = $this->getProjectId();
         }
+        if(!$projectType){
+            $projectType = $this->getProjectType();
+        }
+        if(!$metaDataSubSet){
+            $metaDataSubSet = $this->getProjectSubset();
+        }
+        $filename = $this->getFileName($id, array(ProjectKeys::KEY_PROJECT_TYPE => $projectType, ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet));
+        $jsonData = $this->_getMeta($metaDataSubSet, $filename);
+        $data = json_decode($jsonData, true);
         return $data;
     }
 
-    private function _saveRevision($prev_date, $projectId, $old_content) {
+    private function _saveRevision($prev_date, $new_date, $projectId, $projectFileName, $old_content) {
         $resourceCreated = FALSE;
-        $projectFilePathName = $this->projectFilePath . $this->projectFileName;
+        $new_rev_file = $this->revisionProjectDir($projectId) . "$projectFileName.$new_date.txt";
+        $resourceCreated = io_saveFile("$new_rev_file.gz", $old_content);
 
-        if (@file_exists($projectFilePathName)) {
-            $mdate = filemtime($projectFilePathName);
-            $new_rev_file = $this->_revisionProjectFN($projectId, "{$this->projectFileName}.$mdate", ".txt");
-            $resourceCreated = io_saveFile("$new_rev_file.gz", $old_content);
-
-            $last_rev_date = $this->getProjectRevisionList($projectId, $this->projectFileName, 1)[0]['date'];
-            if ($last_rev_date && $last_rev_date < $prev_date) {
-                $summary = WikiIocLangManager::getLang('external_edit');
-                $flags = array('ExternalEdit'=> true);
-            }
-            $resourceCreated &= $this->_addProjectLogEntry($mdate, $projectId, self::LOG_TYPE_EDIT, $summary, "", $flags);
+        $last_rev_date = $this->getProjectRevisionList($projectId, $projectFileName, 1)[0]['date'];
+        if ($last_rev_date && $last_rev_date < $prev_date) {
+            $summary = WikiIocLangManager::getLang('external_edit');
+            $flags = array('ExternalEdit'=> true);
         }
-        return ($resourceCreated) ? $mdate : "";
+        $resourceCreated &= $this->_addProjectLogEntry($new_date, $projectId, self::LOG_TYPE_EDIT, $summary, "", $flags);
+        return ($resourceCreated) ? $new_date : "";
     }
 
     /**
@@ -634,15 +780,10 @@ class ProjectMetaDataQuery extends DataQuery {
         return $ret;
     }
 
-    private function _revisionProjectFN($projectId, $filename="", $ext="") {
-        if ($filename==="" && $this->projectFileName) {
-            $filename = $this->projectFileName;
+    public function revisionProjectDir($projectId=FALSE) {
+        if(!$projectId){
+            $projectId = $this->getProjectId();
         }
-        $dir = $this->revisionProjectDir($projectId) . "$filename$ext";
-        return $dir;
-    }
-
-    public function revisionProjectDir($projectId) {
         $projectId = utf8_encodeFN(str_replace(":", "/", $projectId));
         $dir = WikiGlobalConfig::getConf('revisionprojectdir') . "/$projectId/";
         return $dir;
@@ -718,9 +859,9 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param int    $chunk_size Máximo número de bytes que van a leerse del fichero de log
      * @return array
      */
-    public function getProjectRevisionList($projectId, $projectFileName, $num=1, $chunk_size=1024) {
+    public function getProjectRevisionList($num=1, $chunk_size=1024) {
         $revs = array();
-        $file = $this->_metaProjectFN($projectId, $projectFileName, ".changes");
+        $file = $this->_metaProjectFN($this->getProjectId(), $this->getProjectFileName(), ".changes");
 
         if (@file_exists($file)) {
             if (filesize($file) < $chunk_size || $num==0 || $chunk_size==0) {
@@ -755,8 +896,8 @@ class ProjectMetaDataQuery extends DataQuery {
         return $revs;
     }
 
-    public function getLastModFileDate($id) {
-        $fn = $this->getFileName($id);
+    public function getLastModFileDate() {
+        $fn = $this->getFileName($this->getProjectId());
         if (@file_exists($fn)) {
             return filemtime($fn);
         }

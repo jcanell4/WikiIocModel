@@ -23,14 +23,15 @@ class MetaDataRenderFactory {
      * - DaoConfig returns null, Exception ClassRenderNotFound 5080
      * @return MetaDataRender object (from ns returned by MetaDataDaoConfig)
      */
-    public static function getObject($projectType, $metaDataSubSet, $persistence, $projectTypeDir) {
+    public static function getObject($projectType, $metaDataSubSet, $persistence) {
 
-        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet, $persistence, $projectTypeDir);
+        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet, $persistence);
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray, true);
         if (!isset($arrayConfigPre->MetaDataRender) || $arrayConfigPre->MetaDataRender == '' || $arrayConfigPre->MetaDataRender == null) {
             throw new ClassRenderNotFound();
         }
+        $projectTypeDir = $persistence->createProjectMetaDataQuery(FALSE, $metaDataSubSet, $projectType)->getProjectTypeDir();
         $dir = implode("/", explode("/", $projectTypeDir, -2));
         $metadataPath = "$dir/" . $arrayConfigPre->MetaDataRender . "/metadata/MetaDataRender.php";
         if (! file_exists($metadataPath))

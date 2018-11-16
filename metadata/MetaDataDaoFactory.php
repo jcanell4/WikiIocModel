@@ -22,14 +22,15 @@ class MetaDataDaoFactory {
      * - DaoConfig returns null, Exception ClassDaoNotFound 5060
      * @return MetaDataDao object (from ns returned by MetaDataDaoConfig)
      */
-    public static function getObject($projectType, $metaDataSubSet, $persistence, $projectTypeDir) {
+    public static function getObject($projectType, $metaDataSubSet, $persistence) {
 
-        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet, $persistence, $projectTypeDir);
+        $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet, $persistence);
         $encoder = new JSON();
         $arrayConfigPre = $encoder->decode($jSONArray,true);
         if (!isset($arrayConfigPre->MetaDataDAO) || $arrayConfigPre->MetaDataDAO == '' || $arrayConfigPre->MetaDataDAO == null) {
             throw new ClassDaoNotFound();
         }
+        $projectTypeDir = $persistence->createProjectMetaDataQuery()->getProjectTypeDir($projectType);
         $dir = implode("/", explode("/", $projectTypeDir, -2));
         $metadataPath = "$dir/" . $arrayConfigPre->MetaDataDAO . "/metadata/MetaDataDao.php";
         if (! file_exists($metadataPath))

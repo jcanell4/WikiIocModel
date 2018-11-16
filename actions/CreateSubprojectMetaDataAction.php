@@ -19,12 +19,11 @@ class CreateSubprojectMetaDataAction extends ProjectMetadataAction {
         $projectModel = $this->getModel();
         $projectModel->init([ProjectKeys::KEY_ID              => $parent_id,
                              ProjectKeys::KEY_PROJECT_TYPE    => $parent_projectType,
-                             ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET],
-                             ProjectKeys::KEY_PROJECTTYPE_DIR => $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]
+                             ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
                            ]);
 
         //Verifica que el proyecto solicitado sea un proyecto existente
-        $listProjectTypes = $projectModel->getListProjectTypes($parent_projectType, $this->params[ProjectKeys::KEY_METADATA_SUBSET], $this->params[ProjectKeys::KEY_PROJECTTYPE_DIR]);
+        $listProjectTypes = $projectModel->getListProjectTypes();
         if (!in_array($new_projectType, $listProjectTypes)) {
             throw new UnknownProjectException($new_id, "El tipus de projecte so·licitat no està permés.");
         }
