@@ -75,10 +75,6 @@ abstract class AbstractWikiDataModel extends AbstractWikiModel{
         return $this->getProjectMetaDataQuery()->getListProjectTypes($all);
     }
 
-//    public function getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $metaDataSubSet, $component) {
-//        return $this->getProjectMetaDataQuery()->getListMetaDataComponentTypes($projectType, $metaDataPrincipal, $metaDataSubSet, $component);
-//    }
-
     public function getListMetaDataComponentTypes($metaDataPrincipal, $component) {
         return $this->getProjectMetaDataQuery()->getListMetaDataComponentTypes($metaDataPrincipal, $component);
     }
@@ -91,7 +87,6 @@ abstract class AbstractWikiDataModel extends AbstractWikiModel{
     public function getNsTreeSubSetsList($ns) {
         $prps = $this->getPageDataQuery()->isAProject($ns, TRUE);
         if ($prps[ProjectKeys::KEY_TYPE] === "p" || $prps[ProjectKeys::KEY_TYPE] === "pd") {
-//            $projectTypeDir = $this->_getProjectTypeDir($prps[ProjectKeys::KEY_PROJECT_TYPE]);
             $subSets = $this->getProjectMetaDataQuery()->getListMetaDataSubSets($prps[ProjectKeys::KEY_PROJECT_TYPE]);
             foreach ($subSets as $subset) {
                 if ($subset !== ProjectKeys::VAL_DEFAULTSUBSET) {
@@ -100,27 +95,12 @@ abstract class AbstractWikiDataModel extends AbstractWikiModel{
                                      ProjectKeys::KEY_TYPE => "s",
                                      ProjectKeys::KEY_NSPROJECT => $prps[ProjectKeys::KEY_NSPROJECT],
                                      ProjectKeys::KEY_PROJECT_TYPE => $prps[ProjectKeys::KEY_PROJECT_TYPE],
-                                     ProjectKeys::KEY_METADATA_SUBSET => $subset/*,
-                                     ProjectKeys::KEY_PROJECTTYPE_DIR => $projectTypeDir*/
+                                     ProjectKeys::KEY_METADATA_SUBSET => $subset
                                     ];
                 }
             }
         }
         return $subSetList;
     }
-
-//    //[WARNING] Rafa: Eeste método exige que los nombres de tipo de proyecto no se puedan repetir a lo largo de los diferentes plugins (../lib/plugins/)
-//    private function _getProjectTypeDir($projectType) {
-//
-//        $listProjectPlugin = $this->getProjectMetaDataQuery()->getAllArrayProjectTypes();
-//
-//        foreach ($listProjectPlugin as $projectPlugin) {
-//            if ($projectPlugin['project'] === $projectType) {
-//                $dir = $projectPlugin['dir'];
-//                break;
-//            }
-//        }
-//        return $dir;
-//    }
 
 }

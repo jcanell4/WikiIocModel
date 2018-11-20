@@ -43,9 +43,4 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
         }
     }
 
-//    protected function findProjectTypeDir($projectType){
-//        global $plugin_controller;
-//        return $plugin_controller->getProjectTypeDir($projectType);
-//    }
-
 }

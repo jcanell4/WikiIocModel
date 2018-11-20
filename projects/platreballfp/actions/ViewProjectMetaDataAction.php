@@ -7,23 +7,21 @@ include_once WIKI_IOC_MODEL . "actions/BasicViewProjectMetaDataAction.php";
 class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
 
     protected function runAction() {
-        
+
         if (!$this->getModel()->isProjectGenerated()) {
             $this->getModel()->setViewConfigName("firstView");
-        }        
+        }
         $response = parent::runAction();
         $projectModel = $this->getModel();
 
         if ($projectModel->isProjectGenerated()) {
-            $projectType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
             $metaDataSubSet = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
             $confProjectType = $this->modelManager->getConfigProjectType();
 
             //obtenir la ruta de la configuració per a aquest tipus de projecte
-            $projectTypeConfigFile = $projectModel->getProjectTypeConfigFile($projectType, $metaDataSubSet);
+            $projectTypeConfigFile = $projectModel->getProjectTypeConfigFile();
 
             $cfgProjectModel = $confProjectType."ProjectModel";
-//            $cfgProjectTypeDir = $this->findProjectTypeDir($confProjectType);
             $configProjectModel = new $cfgProjectModel($this->persistenceEngine);
 
             $configProjectModel->init([ProjectKeys::KEY_ID              => $projectTypeConfigFile,
@@ -31,8 +29,6 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
                                        ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet
                                     ]);
             //Obtenir les dades de la configuració per a aquest tipus de projecte
-//            $projectFileName = $projectModel->getProjectFileName();
-//            $metaDataConfigProject = $configProjectModel->getMetaDataProject($projectFileName, $metaDataSubSet);
             $metaDataConfigProject = $configProjectModel->getMetaDataProject($metaDataSubSet);
 
             if ($metaDataConfigProject['arraytaula']) {
