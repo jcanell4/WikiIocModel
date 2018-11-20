@@ -72,14 +72,11 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
     }
 
     /**
-     * CONSTRUCTOR
      * Purpose:
      * - Object with model set (MetaDataStructure)
-     * @param any
      * @return String JSON
      */
     public function __construct($MetaDataStructure = null, $metaDataTypesDefinition = null) {
-
         $this->setMetaDataStructure($MetaDataStructure);
         $this->setMetaDataTypesDefinition($metaDataTypesDefinition);
     }
@@ -91,10 +88,8 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * @return String JSON
      */
     public function getArrayFromModel() {
-        $encoder = new JSON();
         $arrayStatus = get_object_vars($this);
-        //return json_encode($arrayStatus);
-        return $encoder->encode($arrayStatus);
+        return json_encode($arrayStatus);
     }
 
     /**
@@ -108,12 +103,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * @return true || exception
      */
     public function setModelFromArray($arrayEntry) {
-        $encoder = new JSON();
-        $arrayStatus = $encoder->decode($arrayEntry);
-        //$arrayStatus = json_decode($arrayEntry);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new MalFormedJSON();
-        }
+        $arrayStatus = self::controlMalFormedJson($arrayEntry);
         $arrayEntryKeys = array();
         $i = 0;
 
@@ -141,7 +131,7 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
                 if (!$isJsonType) {
                     $this->{$property} = $value;
                 } else {
-                    $this->{$property} = $encoder->encode($value);
+                    $this->{$property} = json_encode($value);
                 }
             }
         }
@@ -159,14 +149,8 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      * @return exception || false || true
      */
     public function checkFilter($filter) {
-        $encoder = new JSON();
-        //$arraymd = $encoder->decode($this->metaDataValue);
-        $arraymd = json_decode($this->metaDataValue, true); //true to force json_decode to return an array and not an object
-        //$arrayfi = $encoder->decode($filter);
-        $arrayfi = json_decode($filter, true);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new MalFormedJSON();
-        }
+        $arraymd = self::controlMalFormedJson($this->metaDataValue, "array");
+        $arrayfi = self::controlMalFormedJson($filter, "array");
         $filterChecked = false;
 
         foreach ($arrayfi as $keyfi => $valuefi) {
@@ -203,11 +187,8 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
      */
     public function updateMetaDataValue($paramMetaDataValue) {
 
-        $arraymd = json_decode($this->metaDataValue, true);
-        $arraypi = json_decode($paramMetaDataValue, true);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new MalFormedJSON();
-        }
+        $arraymd = self::controlMalFormedJson($this->metaDataValue, "array");
+        $arraypi = self::controlMalFormedJson($paramMetaDataValue, "array");
         //Amplía el array de metaDataValue con las nuevas propiedades contenidas en $paramMetaDataValue
         foreach ($arraypi as $keypi => $valuepi) {
             $arraymd[$keypi] = $valuepi;
@@ -286,6 +267,15 @@ abstract class MetaDataEntityAbstract implements MetaDataEntityInterface {
             }
         }
         return $validate;
+    }
+
+    public static function controlMalFormedJson($jsonVar, $typeReturn="object") {
+        $t = ($typeReturn==="array") ? TRUE : FALSE;
+        $obj = json_decode($jsonVar, $t);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            throw new MalFormedJSON();
+        }
+        return $obj;
     }
 
 }

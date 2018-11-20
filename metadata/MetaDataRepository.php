@@ -20,7 +20,6 @@ class MetaDataRepository implements MetaDataRepositoryInterface {
     const K_PROJECTTYPE     = ProjectKeys::KEY_PROJECT_TYPE;
     const K_IDRESOURCE      = ProjectKeys::KEY_ID_RESOURCE;
     const K_PERSISTENCE     = ProjectKeys::KEY_PERSISTENCE;
-    const K_REVISION        = ProjectKeys::KEY_REV;
 
     /**
      * Call Dao to obtain metadata (only one element) and build an Entity that returns

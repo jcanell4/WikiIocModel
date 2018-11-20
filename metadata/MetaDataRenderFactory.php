@@ -26,8 +26,7 @@ class MetaDataRenderFactory {
     public static function getObject($projectType, $metaDataSubSet, $persistence) {
 
         $jSONArray = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet, $persistence);
-        $encoder = new JSON();
-        $arrayConfigPre = $encoder->decode($jSONArray, true);
+        $arrayConfigPre = json_decode($jSONArray);
         if (!isset($arrayConfigPre->MetaDataRender) || $arrayConfigPre->MetaDataRender == '' || $arrayConfigPre->MetaDataRender == null) {
             throw new ClassRenderNotFound();
         }

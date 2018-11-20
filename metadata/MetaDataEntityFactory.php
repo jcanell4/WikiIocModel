@@ -19,13 +19,12 @@ class MetaDataEntityFactory {
     public static function getObject($projectType, $metaDataSubSet, $persistence) {
 
         $classesNameSpaces = MetaDataDaoConfig::getMetaDataConfig($projectType, $metaDataSubSet, $persistence);
-        $encoder = new JSON();
-        $objClassesNameSpaces = $encoder->decode($classesNameSpaces);
+        $objClassesNameSpaces = json_decode($classesNameSpaces);
         if (!isset($objClassesNameSpaces->MetaDataEntity) || $objClassesNameSpaces->MetaDataEntity == NULL) {
             throw new ClassEntityNotFound();
         }
-        $projectTypeDir = $persistence->createProjectMetaDataQuery(FALSE, $metaDataSubSet, $projectType)->getProjectTypeDir();        
-        $dir = implode("/", explode("/", $projectTypeDir, -2)); 
+        $projectTypeDir = $persistence->createProjectMetaDataQuery(FALSE, $metaDataSubSet, $projectType)->getProjectTypeDir();
+        $dir = implode("/", explode("/", $projectTypeDir, -2));
         $metadataPath = "$dir/" . $objClassesNameSpaces->MetaDataEntity . "/metadata/MetaDataEntity.php";
         if (! file_exists($metadataPath))
             $metadataPath = WIKI_IOC_MODEL . "projects/" . $objClassesNameSpaces->MetaDataEntity . "/metadata/MetaDataEntity.php";
