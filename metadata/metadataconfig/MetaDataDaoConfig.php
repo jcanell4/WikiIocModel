@@ -57,11 +57,11 @@ class MetaDataDaoConfig {
         return self::$ClassesNameSpaces[$projectType][$metaDataSubset];
     }
 
-    public static function getMetaDataFileName($projectType, $metaDataSubset, $persistence) {
-        $arrConfigProject = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE);
-        return $arrConfigProject[$metaDataSubset];
-
-    }
+    //ESTA FUNCIÓN YA no la utiliza nadie
+//    public static function getMetaDataFileName($projectType, $metaDataSubset, $persistence) {
+//        $arrConfigProject = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE);
+//        return $arrConfigProject[$metaDataSubset];
+//    }
 
     private static function getMetaDataDefinition($projectType, $metaDataSubset, $persistence, $configSubSet=NULL) {
         if ($configSubSet === NULL) {
@@ -88,10 +88,11 @@ class MetaDataDaoConfig {
         return json_encode($ret['typesDefinition']);
     }
 
-    public static function getMetaDataComponentTypes($projectType, $metaDataSubset, $persistence) {
-        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, ProjectKeys::KEY_METADATA_COMPONENT_TYPES);
-        return $ret[$metaDataSubset];
-    }
+    //[TRASPASADO] a ProjectMetaDataQuery.php
+//    public static function getMetaDataComponentTypes($projectType, $metaDataSubset, $persistence) {
+//        $ret = self::getMetaDataDefinition($projectType, $metaDataSubset, $persistence, ProjectKeys::KEY_METADATA_COMPONENT_TYPES);
+//        return ($ret) ? $ret[$metaDataSubset] : NULL;
+//    }
 
     /**
      * Call PERSISTENCE component to obtain ns containing project metadata and his projectType (starting from a nsRoot given)
@@ -100,18 +101,17 @@ class MetaDataDaoConfig {
      */
     public static function getMetaDataElementsKey($nsRoot, $persistence) {
         $jSONArray = $persistence->createProjectMetaDataQuery()->getMetaDataElementsKey($nsRoot);
-        if ($jSONArray!==NULL) self::controlMalFormedJson($jSONArray);
+        $jSONArray = self::controlMalFormedJson($jSONArray);
         return $jSONArray;
     }
 
     public static function controlMalFormedJson($jsonVar, $typeReturn="object") {
-        $encoder = new JSON();
-        $obj = $encoder->decode($jsonVar);
+        $t = ($typeReturn==="array") ? TRUE : FALSE;
+        $obj = json_decode($jsonVar, $t);
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new MalFormedJSON();
         }
-        $t = ($typeReturn==="array") ? TRUE : FALSE;
-        return json_decode($jsonVar, $t);
+        return $obj;
     }
 
 }
