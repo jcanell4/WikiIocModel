@@ -241,8 +241,9 @@ class MetaDataService {
         try {
             $MetaDataElementsKey = $this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequest[self::K_IDRESOURCE], $MetaDataRequest[self::K_PERSISTENCE]);
             $this->setMetaDataElements($MetaDataElementsKey);
-            if ($this->getMetaDataElements() != null && count($this->getMetaDataElements() > 0)) {
-                $arrayElements = get_object_vars(json_decode($this->getMetaDataElements()));
+            $mDEKey = $this->getMetaDataElements();
+            if ($mDEKey != null && count($mDEKey) > 0) {
+                $arrayElements = get_object_vars($this->getMetaDataElements());
                 asort($arrayElements);
                 $this->setMetaDataElements($arrayElements);
                 $this->metaDataEntityWrapper = array();
