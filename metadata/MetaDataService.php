@@ -21,6 +21,7 @@ class MetaDataService {
     const K_IDRESOURCE      = ProjectKeys::KEY_ID_RESOURCE;
     const K_PERSISTENCE     = ProjectKeys::KEY_PERSISTENCE;
     const K_FILTER          = ProjectKeys::KEY_FILTER;
+    const K_REVISION  = ProjectKeys::KEY_REV;  //Perquè havies tret la revisió?
 
     protected $metaDataDaoConfig;
     protected $metaDataRepository;
@@ -91,6 +92,7 @@ class MetaDataService {
             $mdSubSet       = $MetaDataRequest[self::K_METADATASUBSET];
             $persistence    = $MetaDataRequest[self::K_PERSISTENCE];
             $filter         = $MetaDataRequest[self::K_FILTER];
+            $revision       = $MetaDataRequest[self::K_REVISION]; //FALTAVA ASSIGNAR LA REVISIÓ
 
             $this->setMetaDataElements(json_encode([$idResource => $projectType]));
             $this->metaDataEntityWrapper = array();
@@ -243,7 +245,7 @@ class MetaDataService {
             $this->setMetaDataElements($MetaDataElementsKey);
             $mDEKey = $this->getMetaDataElements();
             if ($mDEKey != null && count($mDEKey) > 0) {
-                $arrayElements = get_object_vars($this->getMetaDataElements());
+                $arrayElements = get_object_vars($this->getMetaDataElements());  // NO TRINC CLAR SI ÉS EL MATEIX. NO HI FALTARIA UN DECODE? ($arrayElements = get_object_vars($encoder->decode($this->getMetaDataElements(), true));)  
                 asort($arrayElements);
                 $this->setMetaDataElements($arrayElements);
                 $this->metaDataEntityWrapper = array();
