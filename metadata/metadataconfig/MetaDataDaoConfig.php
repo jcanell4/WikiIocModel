@@ -37,25 +37,29 @@ class MetaDataDaoConfig {
      * @param string $projectType, $metaDataSubset
      * @return JSON with {class:ns, ..., class:ns}
      */
-    public static function getMetaDataConfig($projectType, $metaDataSubset, $persistence, $configSubSet=NULL) {
-        if ($configSubSet === NULL) {
-            $configSubSet = ProjectKeys::KEY_METADATA_CLASSES_NAMESPACES;
-        }
-        $exists = false;
-        if (array_key_exists($projectType, self::$ClassesNameSpaces)) {
-            if (array_key_exists($metaDataSubset, self::$ClassesNameSpaces[$projectType])) {
-                $exists = true;
-            }
-        }
-        if (!$exists) {
-            $jSONArray = $persistence->createProjectMetaDataQuery(FALSE, $metaDataSubset, $projectType)->getMetaDataConfig($configSubSet);
-            $arrayConfigPre = self::controlMalFormedJson($jSONArray, "array");
-            $arrayConfig = array_values($arrayConfigPre)[0];
-
-            self::$ClassesNameSpaces[$projectType][$metaDataSubset] = json_encode($arrayConfig);
-        }
-        return self::$ClassesNameSpaces[$projectType][$metaDataSubset];
-    }
+    //
+    //ESTA FUNCIÓN YA no la utiliza nadie
+    //Ha sido sustituida por la llamada directa al método correspondiente de la clase ProjectMetaDataQuery
+    //
+//    public static function getMetaDataConfig($projectType, $metaDataSubset, $persistence, $configSubSet=NULL) {
+//        if ($configSubSet === NULL) {
+//            $configSubSet = ProjectKeys::KEY_METADATA_CLASSES_NAMESPACES;
+//        }
+//        $exists = false;
+//        if (array_key_exists($projectType, self::$ClassesNameSpaces)) {
+//            if (array_key_exists($metaDataSubset, self::$ClassesNameSpaces[$projectType])) {
+//                $exists = true;
+//            }
+//        }
+//        if (!$exists) {
+//            $jSONArray = $persistence->createProjectMetaDataQuery(FALSE, $metaDataSubset, $projectType)->getMetaDataConfig($configSubSet);
+//            $arrayConfigPre = self::controlMalFormedJson($jSONArray, "array");
+//            $arrayConfig = array_values($arrayConfigPre)[0];
+//
+//            self::$ClassesNameSpaces[$projectType][$metaDataSubset] = json_encode($arrayConfig);
+//        }
+//        return self::$ClassesNameSpaces[$projectType][$metaDataSubset];
+//    }
 
     //ESTA FUNCIÓN YA no la utiliza nadie
 //    public static function getMetaDataFileName($projectType, $metaDataSubset, $persistence) {
