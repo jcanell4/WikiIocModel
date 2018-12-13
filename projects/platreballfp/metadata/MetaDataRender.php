@@ -20,12 +20,10 @@ class MetaDataRender extends \MetaDataRenderAbstract {
 
         $returnTree = [];
         $returnTree = $this->runParser($values, $structure, $types);
-//        $returnTree['structure'] = $this->initParser($values, $structure, $types);
-//        $returnTree['value'] = $this->flatten($returnTree['structure']);
 
         return $returnTree;
     }
-    
+
     protected function processValues($values){
         $taulaDadesUF = json_decode($values["taulaDadesUF"], true);
         $taulaDadesUnitats = json_decode($values["taulaDadesUnitats"], true);
@@ -37,9 +35,9 @@ class MetaDataRender extends \MetaDataRenderAbstract {
                 if(!isset($hores[$idU])){
                     $hores[$idU]=0;
                 }
-                $hores[$idU]+= $taulaCalendari[$i]["hores"];                
+                $hores[$idU]+= $taulaCalendari[$i]["hores"];
             }
-            
+
             $horesUF = array();
             $horesUF[0] = 0;
             for($i=0; $i<count($taulaDadesUnitats);$i++){
@@ -108,8 +106,6 @@ class MetaDataRender extends \MetaDataRenderAbstract {
                     $properties['type']=$td['type'] ;
                     if(isset($td['typeDef'])){
                         $properties['typeDef']=$td['typeDef'];
-//                    }else if(isset($td['keys'])){
-//                        $properties['keys']=$td['keys'];
                     }else{
                         $properties['typeDef']=$original_type;
                     }
@@ -182,11 +178,8 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         switch ($properties["type"]) {
             case "date":
             case "boolean":
-//                $dv = false;
             case "number":
-//                $dv = isset($dv)?$dv:0;
             case "string":
-//                $dv = isset($dv)?$dv:"";
                 $dv = self::$DEFAULT_SINGLE_VALUES[$properties["type"]];
                 $ret = $this->_getSingleValue($values[$field], $properties, $types, $dv);
                 break;
@@ -311,10 +304,10 @@ class MetaDataRender extends \MetaDataRenderAbstract {
         $_values = [];
         $_values['defaultRow'] = $this->_getObjectValue("", array(), $properties, $types, true)['value'];
         $_values['default'] = $this->_getDefaultObjectArrayValue($properties, $types, $_values['defaultRow']);
-        if (isset($values[$field])) {
+        if (isset($values[$field]) && !empty($values[$field])) {
             $_values['value'] = $values[$field];
         }else{
-            $_values['value'] =$_values['default'];
+            $_values['value'] = $_values['default'];
         }
         return $_values;
     }
