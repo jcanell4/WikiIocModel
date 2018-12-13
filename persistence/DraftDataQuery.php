@@ -11,7 +11,7 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/DataQuery.php');
  */
 class DraftDataQuery extends DataQuery
 {
-    public function getFileName($id, $extra = NULL) {
+    public function getFileName($id, $extra=NULL) {
         return $this->getFullFileName($id);
     }
 
@@ -189,7 +189,7 @@ class DraftDataQuery extends DataQuery
      * Guarda l'esborrany del projecte (dades del formulari) que s'està modificant
      * @return boolean Indica si el draft s'ha desat correctamment
      */
-    public function saveProjectDraft($draft) {
+    public function saveProjectDraft($draft, $subSet=NULL) {
         $aux = ['id' => $draft['id'],
                 'prefix' => '',
                 'text' => $draft['content'],
@@ -197,6 +197,7 @@ class DraftDataQuery extends DataQuery
                 'date' => $draft['date'],
                 'client' => WikiIocInfoManager::getInfo('client')
                ];
+        //$filename = $this->getFilename($draft['id'].$subSet);
         $filename = $this->getFilename($draft['id']);
         return io_saveFile($filename, serialize($aux));
     }

@@ -26,7 +26,7 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
 
             $configProjectModel->init([ProjectKeys::KEY_ID              => $projectTypeConfigFile,
                                        ProjectKeys::KEY_PROJECT_TYPE    => $confProjectType,
-                                       ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet
+                                       ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET
                                     ]);
             //Obtenir les dades de la configuració per a aquest tipus de projecte
             $metaDataConfigProject = $configProjectModel->getMetaDataProject($metaDataSubSet);

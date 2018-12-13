@@ -25,7 +25,7 @@ class BasicGetProjectMetaDataAction extends BasicViewProjectMetaDataAction imple
             if ($this->messageLock) {
                 $response['info'] = $this->addInfoToInfo($response['info'], $this->messageLock);
             }else {
-                $new_message = $this->generateInfo("info", WikiIocLangManager::getLang('project_edited'), $this->params[ProjectKeys::KEY_ID]);
+                $new_message = $this->generateMessageInfoForSubSetProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_edited');
                 $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
             }
         }

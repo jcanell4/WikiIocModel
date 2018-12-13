@@ -32,7 +32,7 @@ class BasicCancelProjectMetaDataAction extends BasicViewProjectMetaDataAction im
 
     protected function postAction(&$response) {
         if ($response[ProjectKeys::KEY_CODETYPE] !== 0) {
-            $new_message = $this->generateInfo("info", WikiIocLangManager::getLang('project_canceled'), $this->params[ProjectKeys::KEY_ID]);
+            $new_message = $this->generateMessageInfoForSubSetProject($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_canceled');
             $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
         }
     }
