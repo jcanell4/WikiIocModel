@@ -189,7 +189,7 @@ class DraftDataQuery extends DataQuery
      * Guarda l'esborrany del projecte (dades del formulari) que s'està modificant
      * @return boolean Indica si el draft s'ha desat correctamment
      */
-    public function saveProjectDraft($draft, $subSet=NULL) {
+    public function saveProjectDraft($draft, $subSet) {
         $aux = ['id' => $draft['id'],
                 'prefix' => '',
                 'text' => $draft['content'],
@@ -197,8 +197,7 @@ class DraftDataQuery extends DataQuery
                 'date' => $draft['date'],
                 'client' => WikiIocInfoManager::getInfo('client')
                ];
-        //$filename = $this->getFilename($draft['id'].$subSet);
-        $filename = $this->getFilename($draft['id']);
+        $filename = $this->getFilename($draft['id'].$subSet);
         return io_saveFile($filename, serialize($aux));
     }
 

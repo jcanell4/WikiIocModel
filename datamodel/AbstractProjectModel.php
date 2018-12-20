@@ -175,8 +175,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
     public function getDraft($peticio=NULL) {
         //un draft distinto por cada subset de un proyecto (mismo id para todo el proyecto)
-        //$draft = $this->draftDataQuery->getFull($this->id.$this->getMetaDataSubSet());
-        $draft = $this->draftDataQuery->getFull($this->id);
+        $draft = $this->draftDataQuery->getFull($this->id.$this->getMetaDataSubSet());
         if ($peticio)
             return $draft[$peticio]; // $peticio = 'content' | 'date'
         else
@@ -192,19 +191,16 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     private function hasDraft(){
-        //return $this->draftDataQuery->hasFull($this->id.$this->getMetaDataSubSet());
-        return $this->draftDataQuery->hasFull($this->id);
+        return $this->draftDataQuery->hasFull($this->id.$this->getMetaDataSubSet());
     }
 
     public function saveDraft($draft) {
         //un draft distinto para cada subset de un proyecto (mismo id para todo el proyecto)
-        //$this->draftDataQuery->saveProjectDraft($draft, $this->getMetaDataSubSet());
-        $this->draftDataQuery->saveProjectDraft($draft);
+        $this->draftDataQuery->saveProjectDraft($draft, $this->getMetaDataSubSet());
     }
 
     public function removeDraft() {
-        //$this->draftDataQuery->removeProjectDraft($this->id.$this->getMetaDataSubSet());
-        $this->draftDataQuery->removeProjectDraft($this->id);
+        $this->draftDataQuery->removeProjectDraft($this->id.$this->getMetaDataSubSet());
     }
 
     /**
