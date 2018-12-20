@@ -30,7 +30,11 @@ class ListProjectsAction extends AbstractWikiAction {
             $listProjectTypes = $this->model->getListProjectTypes($this->params['list_type']!=="array");
             $aList=[];
             foreach ($listProjectTypes as $pTypes) {
-                $aList[] = ['id' => "id_$pTypes", 'name' => $pTypes];
+                if(WikiGlobalConfig::getConf("projectname_$pTypes")){
+                    $aList[] = ['id' => "id_$pTypes", 'name' => WikiGlobalConfig::getConf("projectname_$pTypes")];
+                }else{
+                    $aList[] = ['id' => "id_$pTypes", 'name' => $pTypes];
+                }
             }
             $ret = json_encode($aList);
         }

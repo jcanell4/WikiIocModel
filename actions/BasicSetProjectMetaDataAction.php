@@ -50,7 +50,8 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
 
             $model->setData($metaData);
             $response = $model->getData();  //obtiene la estructura y el contenido del proyecto
-
+            $response["generated"] = $model->isProjectGenerated();
+            
             if ($model->isProjectGenerated()) {
                 $include = [
                      'id' => $modelAttrib[ProjectKeys::KEY_ID]
