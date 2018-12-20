@@ -38,7 +38,7 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
     protected function postResponseProcess(&$response) {
         if ($this->params[ProjectKeys::KEY_METADATA_SUBSET]!=="undefined" && $this->params[ProjectKeys::KEY_METADATA_SUBSET] !== ProjectKeys::VAL_DEFAULTSUBSET) {
             //$response[ProjectKeys::KEY_ID] = $this->projectModel->addSubSetSufix($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
-            $response['projectExtraData'][ProjectKeys::KEY_METADATA_SUBSET] = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
+            $response[ProjectKeys::KEY_PROJECT_EXTRADATA][ProjectKeys::KEY_METADATA_SUBSET] = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
             $response['isSubSet'] = TRUE;
         }
     }
