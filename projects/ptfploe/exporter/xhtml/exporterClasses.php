@@ -82,7 +82,7 @@ class renderRenderizableText extends AbstractRenderer {
 //        }
 
 class renderFileToPsDom extends renderFile {
-    protected function render($mode, $instructions, &$renderData){
+    protected function render($instructions, &$renderData){
         return p_latex_render('wikiiocmodel_psdom', $instructions, $renderData);
     }
 }
@@ -119,14 +119,14 @@ class renderFile extends AbstractRenderer {
 
         $instructions = p_get_instructions($text);
         $renderData = array();
-        $html = $this->render('wikiiocmodel_ptxhtml', $instructions, $renderData);
+        $html = $this->render($instructions, $renderData);
         $this->cfgExport->toc[$data] = $renderData["tocItems"];
         if ($startedHere) session_destroy();
 
         return $html;
     }
     
-    protected function render($mode, $instructions, &$renderData){
+    protected function render($instructions, &$renderData){
         return p_render('wikiiocmodel_ptxhtml', $instructions, $renderData);
     }
 }

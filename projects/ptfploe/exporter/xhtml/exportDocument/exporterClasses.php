@@ -53,6 +53,14 @@ class exportDocument extends MainRender {
                 $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/pt_sencer/pt.tpl");
                 $zip->addFromString('/pt_sencer/pt.html', $ptSencer);
                 
+                $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");                
+                $cicle = html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
+                $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
+                $tipusBlocModul = html_entity_decode(htmlspecialchars_decode($data["tipusBlocModul"], ENT_COMPAT|ENT_QUOTES));
+                $durada = html_entity_decode(htmlspecialchars_decode($data["durada"], ENT_COMPAT|ENT_QUOTES));
+                $professors = html_entity_decode(htmlspecialchars_decode($data["professors"], ENT_COMPAT|ENT_QUOTES));
+                $coordinador = html_entity_decode(htmlspecialchars_decode($data["coordinador"], ENT_COMPAT|ENT_QUOTES));
+                
                 $params = array(
                     "id" => $this->cfgExport->id,
                     "path_templates" => $this->rendererPath . "/pdf/exportDocument/templates",  // directori on es troben les plantilles latex usades per crear el pdf
@@ -60,20 +68,20 @@ class exportDocument extends MainRender {
                     "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
                     "mode" => isset($this->mode) ? $this->mode : $this->filetype,
                     "data" => array(
-                        "header_page_logo" => "",
-                        "header_page_wlogo" => 0,
-                        "header_ltext" => "Ltext",
-                        "header_rtext" => "Rtext",
+                        "header_page_logo" => $this->rendererPath . "/resources/escutGene.jpg",
+                        "header_page_wlogo" => 9.9,
+                        "header_page_hlogo" => 11.1,
+                        "header_ltext" => "Generalitat de Catalunya\nDepartament d'Ensenyament\nInstitud Obert de Catalunya",
+                        "header_rtext" => $cicle."\n".$modul."-".$tipusBlocModul."\n".$semestre,
                         "titol" => array(
                             "Formació Professional",
                             "Pla de Treball",
-                            $data["cicle"],
-                            $data['modul'],
-                            $data['tipusBlocModul'],
-                            $data["durada"],
-                            $data["professors"],
-                            $data["coordinador"],
-                            ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y")
+                            $cicle,
+                            $modul."-".$tipusBlocModul,
+                            $semestre,
+                            $durada,
+                            $professors,
+                            $coordinador,
                         ),    //títol del document
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
                     )
