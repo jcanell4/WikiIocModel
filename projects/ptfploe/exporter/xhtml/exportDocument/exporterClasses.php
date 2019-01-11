@@ -79,14 +79,12 @@ class exportDocument extends MainRender {
                             $cicle,
                             $modul."-".$tipusBlocModul,
                             $semestre,
-                            $durada,
-                            $professors,
-                            $coordinador,
                         ),    //títol del document
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
                     )
                 );
-                StaticPdfRenderer::renderDocument($params);
+                StaticPdfRenderer::renderDocument($params, "pt.pdf");
+                $zip->addFile($this->cfgExport->tmp_dir."/pt.pdf", "/pt_sencer/pt.pdf");
                 
                 $this->attachMediaFiles($zip);
 

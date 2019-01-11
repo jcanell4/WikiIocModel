@@ -20,6 +20,6 @@ function closeNav() {
 
 
 function printDoc() {
-    window.print();
+    window.open("pt.pdf");
 }
 

@@ -287,6 +287,8 @@ class IocTcPdf extends TCPDF{
  *              contingut: string   //contingut latex ja rendaritzat
  */
 class StaticPdfRenderer{    
+    static $tableCounter = 0;
+    static $tableReferences = array();
     static $headerNum = array(0,0,0,0,0,0);
     static $headerFont = "helvetica";
     static $headerFontSize = 10;
@@ -295,17 +297,17 @@ class StaticPdfRenderer{
     static $firstPageFont = "Times";
     static $pagesFont = "helvetica";
     
-    public static function renderDocument($params) {
+    static $state = ["table" =>["type" => "table"]];
+    
+    public static function renderDocument($params, $output_filename="") {
         $style = ["B", "BI", "I", "I", ""];
-        $output_filename = str_replace(":", "_", $params["id"]);
+        if(empty($output_filename)){
+            $output_filename = str_replace(":", "_", $params["id"]);
+        }
         
         $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
-//        $iocTcPdf->SetAuthor('Nicola Asuni');
-//        $iocTcPdf->SetTitle('TCPDF Example 005');
-//        $iocTcPdf->SetSubject('TCPDF Tutorial');
-//        $iocTcPdf->SetKeywords('TCPDF, PDF, example, test, guide');
         
         $iocTcPdf->setHeaderData( $params["data"]["header_page_logo"], $params["data"]["header_page_wlogo"], $params["data"]["header_page_hlogo"], $params["data"]["header_ltext"], $params["data"]["header_rtext"]);
         
@@ -346,6 +348,9 @@ class StaticPdfRenderer{
         
         $iocTcPdf->AddPage();
         foreach ($params["data"]["contingut"] as $itemsDoc){
+            self::resolveReferences($itemsDoc);
+        }
+        foreach ($params["data"]["contingut"] as $itemsDoc){
             self::renderHeader($itemsDoc, $iocTcPdf);
         }
         
@@ -360,7 +365,6 @@ class StaticPdfRenderer{
         $iocTcPdf->SetFont('Times', '', 12);
 
         // add a simple Table Of Content at first page
-        // (check the example n. 59 for the HTML version)
         $iocTcPdf->addTOC(2, 'courier', '.', 'INDEX', 'B', array(128,0,0));
 
         // end of TOC page
@@ -369,27 +373,7 @@ class StaticPdfRenderer{
         $params["id"];
         $iocTcPdf->Output("{$params['tmp_dir']}/$output_filename", 'F');
 
-//        if (!file_exists($params["tmp_dir"])) mkdir($params["tmp_dir"], 0775, TRUE);
-//        if (!file_exists($params["tmp_dir"]."/media")) mkdir($params["tmp_dir"]."/media", 0775, TRUE);
-//
-//        $frontCover = "frontCoverDoc.ltx";
-//        $tocPage = "tocPageDoc.ltx";
-//        $background = "bgCoverDoc.pdf";
-//
-//        $latex = self::renderHeader($params["data"]["htitol"], $params["path_templates"], $params["lang"]);
-//        $latex.= self::renderCoverPage($params["data"]["titol"], $params["path_templates"], $frontCover, $params["tmp_dir"], $background);
-//        $latex.= self::renderTocPage($params["data"]["htitol"], $params["path_templates"], $tocPage);
-//        $latex.= $params["data"]['contingut'];
-//        if (file_exists($params["path_templates"]."/footer.ltx")){
-//            $latex .= io_readFile($params["path_templates"]."/footer.ltx");
-//        }
-//
         $result = array();
-//        if ($params["mode"] === 'zip'){
-////            self::createZip($output_filename,$params["tmp_dir"], $latex);
-//        }else{
-//            self::createLatex($params["id"], $output_filename, $params["tmp_dir"], $latex, $result);
-//        }
 
         return $result;
     }    
@@ -410,6 +394,20 @@ class StaticPdfRenderer{
         return self::getHeaderCounter($level);
     }
     
+    private static function resolveReferences($content){
+        if($content["type"]===TableFrame::TABLEFRAME_TYPE_TABLE
+                || $content["type"]===TableFrame::TABLEFRAME_TYPE_ACCOUNTING){
+            self::$tableCounter++;
+            self::$tableReferences[$content["id"]] = self::$tableCounter;            
+        }
+        for ($i=0; $i<count($content["content"]); $i++){
+            self::resolveReferences($content["content"][$i]);
+        }
+        for ($i=0; $i<count($content["children"]); $i++){
+            self::resolveReferences($content["children"][$i]);
+        }
+    }
+    
     private static function renderHeader($header, IocTcPdf &$iocTcPdf){
         $level = $header["level"]-1;
         $iocTcPdf->SetFont('Times', 'B', 12);
@@ -427,15 +425,6 @@ class StaticPdfRenderer{
     }
     
     private static function renderContent($content, IocTcPdf &$iocTcPdf, $pre="", $post=""){
-//        if($content instanceof StructuredNodeDoc){
-//            self::renderStructuredContent($content, $iocTcPdf);
-//        }else if($content instanceof LeafNodeDoc){
-//            self::renderLeafContent($content, $iocTcPdf);
-//        }else if($content instanceof TextNodeDoc){
-//            self::renderLeafContent($content, $iocTcPdf);
-//        }else{
-//            //ERROR
-//        }
         $iocTcPdf->SetFont('helvetica', '', 10);
         $iocTcPdf->writeHTML( self::getContent($content), TRUE, FALSE);      
         if($content["type"] == StructuredNodeDoc::ORDERED_LIST_TYPE
@@ -444,42 +433,19 @@ class StaticPdfRenderer{
             $iocTcPdf->Ln(3);
         }
     }
-    
-//    private static function renderStructuredContent($content, IocTcPdf &$iocTcPdf, $pre="", $post=""){
-//        $limit = count($content["content"]);
-//        for ($i=0; $i<$limit; $i++){
-//            self::renderContent($content["content"][$i], $iocTcPdf, $pre, $post);
-//        }        
-//    }
-//    
-//    private static function renderTextContent($content, IocTcPdf &$iocTcPdf, $pre="", $post=""){
-//        $iocTcPdf->SetFont('helvetica', '', 10);
-//        $iocTcPdf->writeHTML($pre.$content["text"].$post, FALSE, FALSE);                      
-//    }
-//
-//    private static function renderLeafContent($content, IocTcPdf &$iocTcPdf, $pre="", $post=""){
-//        $iocTcPdf->SetFont('helvetica', '', 10);
-//        switch($content["type"]){
-//            case LeafNodeDoc::HORIZONTAL_RULE_TYPE:
-//                $iocTcPdf->writeHTML("<hr>", true, false, false, false, '');
-//                break;
-//            case LeafNodeDoc::LINE_BREAK_TYPE:
-//                $iocTcPdf->writeHTML("<br>", false, false, false, false, '');
-//                break;
-//        }
-//    }
-    
+
     private static function getContent($content){
+        $char = "";
         $ret = "";
         switch ($content["type"]){
             case ListItemNodeDoc::LIST_ITEM_TYPE:
                 $ret = '<li  style="text-align:justify;">'.self::getStructuredContent($content)."</li>";
                 break;
             case StructuredNodeDoc::DELETED_TYPE:
-                $ret = "<del>".self::getStructuredContent($content)."</del>";
+                $ret = " <del>".self::getStructuredContent($content)."</del> ";
                 break;
             case StructuredNodeDoc::EMPHASIS_TYPE:
-                $ret = "<em>".self::getStructuredContent($content)."</em>";
+                $ret = " <em>".self::getStructuredContent($content)."</em> ";
                 break;
             case StructuredNodeDoc::FOOT_NOTE_TYPE:
                 //unsupported
@@ -497,45 +463,76 @@ class StaticPdfRenderer{
             case StructuredNodeDoc::PARAGRAPH_TYPE:
                 $ret = '<p style="text-align:justify;">'.self::getStructuredContent($content).'</p>';
                 break;
+            case StructuredNodeDoc::SINGLEQUOTE_TYPE:
+                $char = "'";
+            case StructuredNodeDoc::DOUBLEQUOTE_TYPE:
+                $char = empty($char)?"\"":$char;
+                $ret = " $char".self::getStructuredContent($content)."$char ";
+                break;
             case StructuredNodeDoc::QUOTE_TYPE:
                 $ret = "<blockquote>".self::getStructuredContent($content)."</blockquote>";
                 break;
             case StructuredNodeDoc::STRONG_TYPE:
-                $ret = "<strong>".self::getStructuredContent($content)."</strong>";
+                $ret = " <strong>".self::getStructuredContent($content)."</strong> ";
                 break;
             case StructuredNodeDoc::SUBSCRIPT_TYPE:
-                $ret = "<sub>".self::getStructuredContent($content)."</sub>";
+                $ret = " <sub>".self::getStructuredContent($content)."</sub> ";
                 break;
             case StructuredNodeDoc::SUPERSCRIPT_TYPE:
-                $ret = "<sup>".self::getStructuredContent($content)."</sup>";
+                $ret = " <sup>".self::getStructuredContent($content)."</sup> ";
                 break;
             case StructuredNodeDoc::UNDERLINE_TYPE:
-                $ret = "<u>".self::getStructuredContent($content)."</u>";
+                $ret = " <u>".self::getStructuredContent($content)."</u> ";
                 break;
             case StructuredNodeDoc::UNORDERED_LIST_TYPE:
                 $ret = "<ul>".self::getStructuredContent($content)."</ul>";
                 break;
+            case TableFrame::TABLEFRAME_TYPE_TABLE:
+//                $this->table_type = "table";
+            case TableFrame::TABLEFRAME_TYPE_ACCOUNTING:
+//                $this->table_type = "accounting";
+                $style ="";
+                $ret = "<div$style  nobr=\"true\">";
+                if($content["title"]){
+                    //self::$tableCounter++;
+//                    self::$tableReferences[$content["id"]] = self::$tableCounter;
+                    $ret .= "<h4  style=\"text-align:center;\"> Taula ".self::$tableReferences[$content["id"]].". ".$content["title"]."</h4>";
+                }
+                $ret .= self::getStructuredContent($content);
+                if($content["footer"]){
+                    if($content["title"]){
+                        $ret .= "<p style=\"text-align:justify; font-size:80%;\">".$content["footer"]."</p>";
+                    }else{
+//                        self::$tableCounter++;
+//                        self::$tableReferences[$content["id"]] = self::$tableCounter;
+                        $ret .= "<p style=\"text-align:justify; font-size:80%;\"> Taula ".self::$tableReferences[$content["id"]].". ".$content["footer"]."</p>";
+                    }
+                }
+                $ret .= "</div>";                
+                break;
             case TableNodeDoc::TABLE_TYPE:
-                $style = $content["hasBorder"]?"style='border:1px solid black; border-collapse:collapse;'":"";
-                $ret = "<table $style>".self::getStructuredContent($content)."</table>";
+               
+                $ret = "<table$style   cellpadding=\"5\" nobr=\"true\">";
+                $ret .= self::getStructuredContent($content)."</table>";
                 break;
             case StructuredNodeDoc::TABLEROW_TYPE:
                 $ret = "<tr>".self::getStructuredContent($content)."</tr>";
                 break;
             case CellNodeDoc::TABLEHEADER_TYPE:
-                $align = $content["align"]?"text-align:{$content["align"]};":"";
-                $style = $content["hasBorder"]?"style='border:1px solid black; border-collapse:collapse; $align'":"";
-                $colspan = $content["colspan"]>1?"colspan='{$content["colspan"]}'":"";
-                $rowspan = $content["rowspan"]>1?"rowspan='{$content["rowspan"]}'":"";
+                $align = $content["align"]?"text-align:{$content["align"]};":"text-align:center;";
+                $style = $content["hasBorder"]?' style="border:1px solid black; border-collapse:collapse; '.$align.' font-weight:bold; background-color:#808080;"':"style=\"$align font-weight:bold; background-color:#808080;\"";
+                $colspan = $content["colspan"]>1?' colspan="'.$content["colspan"].'"':"";
+                $rowspan = $content["rowspan"]>1?' rowspan="'.$content["rowspan"].'"':"";
                 
-                $ret = "<th $colspan $rowspan $style>".self::getStructuredContent($content)."</th>";
+                $ret = "<th$colspan$rowspan$style>".self::getStructuredContent($content)."</th>";
                 break;
             case CellNodeDoc::TABLECELL_TYPE:
-                $align = $content["align"]?"text-align:{$content["align"]};":"";
-                $style = $content["hasBorder"]?"style='border:1px solid black; border-collapse:collapse; $align'":"";
-                $colspan = $content["colspan"]>1?"colspan='{$content["colspan"]}'":"";
-                $rowspan = $content["rowspan"]>1?"rowspan='{$content["rowspan"]}'":"";
-                $ret = "<td $colspan $rowspan $style>".self::getStructuredContent($content)."</td>";
+                $align = $content["align"]?"text-align:{$content["align"]};":"text-align:center";
+                $style = $content["hasBorder"]?' style="border:1px solid black; border-collapse:collapse; '.$align.'"':"style=\"$align\"";
+                $style = $content["hasBorder"]?' style="border:1px solid black; border-collapse:collapse; '.$align.'"':"";
+                $colspan = $content["colspan"]>1?' colspan="'.$content["colspan"].'"':"";
+                $rowspan = $content["rowspan"]>1?' rowspan="'.$content["rowspan"].'"':"";
+                $ret = "<td$colspan$rowspan$style>".self::getStructuredContent($content)."</td>";
                 break;
             case CodeNodeDoc::CODE_TEXT_TYPE:
                 $ret = self::getTextContent($content);
@@ -545,6 +542,14 @@ class StaticPdfRenderer{
                 break;
             case TextNodeDoc::PLAIN_TEXT_TYPE:
                 $ret = self::getTextContent($content);
+                break;
+            case ReferenceNodeDoc::REFERENCE_TYPE:
+                if($content["referenceType"] === ReferenceNodeDoc::REF_TABLE_TYPE){
+                    $ret = " <em>Taula ".self::$tableReferences[trim($content["referenceId"])]."</em> ";
+                }else{
+                    //figure
+                    //$ret = " <em>Figura ".self::$figureReferences[trim($content["referenceId"])]."</em> ";
+                }
                 break;
             case TextNodeDoc::PREFORMATED_TEXT_TYPE:
                 $ret = self::getTextContent($content);
@@ -568,7 +573,12 @@ class StaticPdfRenderer{
     }
     
     private static function getTextContent($content){
-        return $content["text"];
+        if(!empty($content["text"]) && empty(trim($content["text"]))){
+            $ret = " ";
+        }else{
+            $ret = trim($content["text"]);
+        }
+        return $ret;
     }
 
     private static function getLeafContent($content){
@@ -585,107 +595,4 @@ class StaticPdfRenderer{
         }
         return $ret;
     }
-    
-//    private static function renderHeader($titol, $path_templates, $lang) {
-//        $langcontinue = array('CA' => 'continuació', 'DE' => 'fortsetzung', 'EN' => 'continued','ES' => 'continuación','FR' => 'suite','IT' => 'continua');
-//        $latex = "";
-//        if (file_exists("{$path_templates}/header.ltx")) {
-//            $latex = io_readFile("{$path_templates}/header.ltx");
-//            if ($latex) {
-//                $qrcode = ($_SESSION['qrcode']) ? '\usepackage{pst-barcode,auto-pst-pdf}' : '';
-//                $titol = trim(wordwrap($titol), 77, '\break ');
-//                $aSearch = array("@IOCLANGUAGE@", "@IOCQRCODE@", "@DOC_TITOL@", "@IOCLANGCONTINUE@");
-//                $aReplace = array($lang, $qrcode, $titol, $langcontinue[$lang]);
-//                $latex = str_replace($aSearch, $aReplace, $latex);
-//            }
-//        }
-//        return $latex;
-//    }    
-//    
-//    private static function renderCoverPage($titol, $path_templates, $frontCover, $tmp_dir=NULL, $background=NULL){
-//        $latex = "";
-//        if (file_exists($path_templates."/$frontCover")) {
-//            $latex = io_readFile($path_templates."/$frontCover");
-//            if ($latex) {
-//                $aSearch = array("@DOC_BACKGROUND@");
-//                $aReplace = array("media/$background"); 
-//                for ($i=0; $i<count($titol); $i++){
-//                    $aSearch []= "@DOC_TITOL[$i]@";
-//                    $aReplace []= $titol[$i];
-//                }
-//                $latex = str_replace($aSearch, $aReplace, $latex);
-//                if ($background) {
-//                    self::copyToTmp($path_templates, $background, $tmp_dir, "media/$background");
-//                }
-//            }
-//        }
-//        return $latex;
-//    }
-//    
-//    private static function renderTocPage($titol, $path_templates, $tocPage) {
-//        $latex = "";
-//        if (file_exists($path_templates."/$tocPage")) {
-//            $latex = io_readFile($path_templates."/$tocPage");
-//            if ($latex) {
-//                $aSearch = array("@DOC_TITOL@");
-//                $aReplace = array($titol);
-//                $latex = str_replace($aSearch, $aReplace, $latex);
-//            }
-//        }
-//        return $latex;
-//    }
-    
-    private static function copyToTmp($path_templates, $template, $tmp_dir, $dest){
-        return copy("$path_templates/$template", "$tmp_dir/$dest");
-    }
-
-    private static function createLatex($id, $filename, $path, &$text, &$result){
-        io_saveFile("$path/$filename.tex", $text);
-
-        $shell_escape = ($_SESSION['qrcode']) ? "-shell-escape" : "";
-        @exec("cd $path && pdflatex -draftmode $shell_escape -halt-on-error $filename.tex", $sortida, $return);
-        if ($return === 0){
-            //One more to calculate correctly size tables
-            @exec("cd $path && pdflatex -draftmode $shell_escape -halt-on-error $filename.tex" , $sortida, $return);
-            if ($_SESSION['onemoreparsing']){
-                @exec("cd $path && pdflatex -draftmode $shell_escape -halt-on-error $filename.tex" , $sortida, $return);
-            }
-            @exec("cd $path && pdflatex $shell_escape -halt-on-error $filename.tex" , $sortida, $return);
-        }
-        //Si pdflatex no está instalado localmente, probaremos ejecutarlo en otro servidor con una conexión ssh remota
-        else {
-            $destino = mediaFN(str_replace("_", ":", $id));
-            $moreparsing = ($_SESSION['onemoreparsing']) ? 1 : 0;
-            @exec(DOKU_INC."../sh/remoteSSHexport.sh $path $filename $destino $moreparsing $shell_escape", $sortida, $return);
-        }
-        return $return;
-    }    
-    
-//    private static function createZip($filename, $path, $text){
-//
-//        $zip = new ZipArchive;
-//        $res = $zip->open("$path/$filename.zip", ZipArchive::CREATE);
-//        if ($res === TRUE) {
-//            $zip->addFromString("$filename.tex", $text);
-//            $zip->addEmptyDir('media');
-//            $files = array();
-//            if ($this->getFiles("$path/media", $files)) {
-//                foreach($files as $f){
-//                    $zip->addFile($f, 'media/'.basename($f));
-//                }
-//                $zip->close();
-//                $result = $this->returnData($path, "$filename.zip", 'zip');
-//            }else {
-//                $res = FALSE;
-//            }
-//        }
-//
-//        if ($res !== TRUE) {
-//            $zip->close();
-//            $result = $this->getLogError($filename);
-//        }
-//
-//        return $result;
-//    }
-
 }

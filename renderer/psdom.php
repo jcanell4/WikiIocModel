@@ -33,6 +33,36 @@ abstract class AbstractNodeDoc{
     public abstract function getEncodeJson();
 }
 
+class TableFrame extends StructuredNodeDoc{
+    const TABLEFRAME_TYPE_TABLE= "tableframetypetable";
+    const TABLEFRAME_TYPE_ACCOUNTING = "tableframetypeaccounting";
+    
+    var $id = false;
+    var $title;
+    var $footer;
+    var $widths;
+    var $types;
+    var $hasBorder;
+    
+
+    public function __construct($type, $Id = "", $title = "", $footer = "", $widths="", $types="", $hasBorder=FALSE) {
+        parent::__construct($type);
+        $this->id = $Id==NULL?"":$Id;
+        $this->title = $title==NULL?"":$title;
+        $this->footer = $footer==NULL?"":$footer;
+        $this->widths = $widths==NULL?"":$widths;
+        $this->types = $types==NULL?"":$types;
+        $this->hasBorder = $hasBorder==NULL?FALSE:$hasBorder;
+    }
+    
+    public function getEncodeJson() {
+        $ret = "{\"type\":\"".$this->type."\",\"id\":\"".$this->id."\",\"title\":\"".$this->title."\",\"footer\":\"".$this->footer."\",\"widths\":\""
+                    .$this->widths."\",\"types\":\"".$this->types."\",\"hasBorder\":\"".$this->hasBorder."\",\"content\":".$this->getContentEncodeJson();
+        $ret .= "}";
+        return $ret;
+    }    
+}
+
 class CellNodeDoc extends StructuredNodeDoc{
     const TABLEHEADER_TYPE = "tableheader";
     const TABLECELL_TYPE = "tablecell";
@@ -47,10 +77,12 @@ class CellNodeDoc extends StructuredNodeDoc{
         $this->colspan = $colspan;
         $this->rowspan = $rowspan;
         $this->align = $align;
+        $this->hasBorder = $hasBorder;
     }
     
     public function getEncodeJson() {
-        $ret = "{\"type\":\"".$this->type."\",\"colspan\":\"".$this->colspan."\",\"rowspan\":\"".$this->rowspan."\",\"align\":\"".$this->align."\",\"content\":".$this->getContentEncodeJson();
+        $ret = "{\"type\":\"".$this->type."\",\"colspan\":\"".$this->colspan."\",\"rowspan\":\"".$this->rowspan."\",\"align\":\"".$this->align."\",\"hasBorder\":\""
+                    .$this->hasBorder."\",\"content\":".$this->getContentEncodeJson();
         $ret .= "}";
         return $ret;
     }    
@@ -67,7 +99,7 @@ class TableNodeDoc extends StructuredNodeDoc{
     }
     
     public function getEncodeJson() {
-        $ret = "{\"type\":\"".$this->type."\",\"hasborder\":\"".$this->hasBorder."\",\"content\":".$this->getContentEncodeJson();
+        $ret = "{\"type\":\"".$this->type."\",\"hasBorder\":\"".$this->hasBorder."\",\"content\":".$this->getContentEncodeJson();
         $ret .= "}";
         return $ret;
     }    
@@ -273,6 +305,25 @@ class CodeNodeDoc extends TextNodeDoc{
     }        
 }
 
+class ReferenceNodeDoc extends AbstractNodeDoc{
+    const REFERENCE_TYPE = "reference";
+    const REF_FIGURE_TYPE = "fig";
+    const REF_TABLE_TYPE = "tab";
+    var $referenceId;
+    var $referenceType;
+    
+    public function __construct($refId, $refType="") {
+        parent::__construct(self::REFERENCE_TYPE);
+        $this->referenceId = $refId;
+        $this->referenceType = $refType;
+    }
+    
+    public function getEncodeJson() {
+        return "{\"type\":\"".$this->type."\",\"referenceId\":\"".$this->referenceId."\",\"referenceType\":\"".$this->referenceType."\"}";
+    }
+
+}
+
 class TextNodeDoc extends AbstractNodeDoc{
     const PLAIN_TEXT_TYPE = "TEXT";
     const UNFORMATED_TEXT_TYPE = "unformatedText";
@@ -298,6 +349,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     var $toc = NULL;
     var $rootNode = NULL;
     var $currentNode = NULL;
+    var $table_types = "";
     
 //    var $pdfBuilder;
     /**
@@ -325,7 +377,9 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     
     
     function document_start() {
-        $this->rootNode = new RootNodeDoc();
+        if(!isset($this->rootNode)){
+            $this->rootNode = new RootNodeDoc();
+        }
     }
 
     function document_end() {
@@ -500,20 +554,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->currentNode = $this->currentNode->getOwner();                                                
     }
 
-//    function listcontent_open() {
-////        $node = new StructuredNodeDoc(StructuredNodeDoc::LIST_CONTENT_TYPE);
-////        $this->currentNode->addContent($node);
-////        $this->currentNode = $node;         
-//        throw new UnavailableMethodExecutionException("renderer_plugin_wikiiocmodel_psdom#listcontent_open");        
-//    }
-
-
-//    function listcontent_close() {
-////        $this->currentNode = $this->currentNode->getOwner();                                                
-//        throw new UnavailableMethodExecutionException("renderer_plugin_wikiiocmodel_psdom#listcontent_close");        
-//    }
-
-
     function unformatted($text) {
         $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::UNFORMATED_TEXT_TYPE, $this->_xmlEntities($text)));        
     }
@@ -566,34 +606,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->currentNode = $this->currentNode->getOwner();                                                        
     }
 
-//    function file($text, $lang = null, $file = null ) {
-//        //TOODO
-//        throw new UnavailableMethodExecutionException("renderer_plugin_wikiiocmodel_psdom#file");
-//    }
-//
-//    function code($text, $lang = null, $file = null ) {
-//        //TOODO        
-//        throw new UnavailableMethodExecutionException("renderer_plugin_wikiiocmodel_psdom#code");
-//    }
-//
-//    function acronym($acronym) {
-//        throw new UnavailableMethodExecutionException("renderer_plugin_wikiiocmodel_psdom#acronym");
-//    }
-//
-//    function smiley($smiley) {
-//        throw new UnavailableMethodExecutionException("renderer_plugin_wikiiocmodel_psdom#smiley");        
-//    }
-//
-//    function wordblock($word) {        
-//        throw new UnavailableMethodExecutionException("renderer_plugin_wikiiocmodel_psdom#wordblock");        
-//    }
-//
-//
-//    function entity($entity) {}
-//
-//    // 640x480 ($x=640, $y=480)
-//    function multiplyentity($x, $y) {}
-
     function singlequoteopening() {
         $node = new StructuredNodeDoc(StructuredNodeDoc::SINGLEQUOTE_TYPE);
         $this->currentNode->addContent($node);
@@ -618,164 +630,8 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->currentNode = $this->currentNode->getOwner();                                                                        
     }
 
-//    function internalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
-//        global $ID;
-//        list($src, $hash) = explode('#', $src,2);
-//        resolve_mediaid(getNS($ID), $src, $exists);
-//
-//        list($ext, $mime) = mimetype($src);
-//        $type = substr($mime,0,5);
-//        if ($type === 'image'){
-//            $file = mediaFN($src);
-//            $this->_latexAddImage($file, $width, $height, $align, $title, $linking);
-//        }elseif($type === 'appli'){
-//            if (preg_match('/\.pdf$/', $src)){
-//                $_SESSION['qrcode'] = TRUE;
-//                $src = $this->_xmlEntities(DOKU_URL.'lib/exe/fetch.php?media='.$src);
-//                qrcode_media_url($this, $src, $title, 'pdf');
-//            }
-//        }else{
-//            if (!$_SESSION['u0']){
-//                $this->code('FIXME internalmedia ('.$type.'): '.$src);
-//            }
-//        }
-//    }
-//
-//    function externalmedia ($src, $title=NULL, $align=NULL, $width=NULL, $height=NULL, $cache=NULL, $linking=NULL) {
-//        list($ext, $mime) = mimetype($src);
-//        if (substr($mime,0,5) == 'image'){
-//            $tmp_name = tempnam($this->tmp_dir.'/media', 'ext');
-//            $client = new DokuHTTPClient;
-//            $img = $client->get($src);
-//            if (!$img) {
-//                $this->externallink($src, $title);
-//            } else {
-//                $tmp_img = fopen($tmp_name, "w") or die("Can't create temp file $tmp_img");
-//                fwrite($tmp_img, $img);
-//                fclose($tmp_img);
-//		//Add and convert image to pdf
-//                $this->_latexAddImage($tmp_name, $width, $height, $align, $title, $linking, TRUE);
-//            }
-//        }else{
-//            $this->externallink($src, $title);
-//        }
-//    }
-
-//    function camelcaselink($link) {
-//        $this->internallink($link, $link);
-//    }
-//
-//    /**
-//     * Render an internal Wiki Link
-//     */
-//    function internallink($id, $name = NULL) {
-//        // default name is based on $id as given
-//        $default = $this->_simpleTitle($id);
-//        // now first resolve and clean up the $id
-//        resolve_pageid(getNS($this->id),$id,$exists);
-//        $name = $this->_getLinkTitle($name, $default, $isImage, $id);
-//        list($page, $section) = preg_split('/#/', $id, 2);
-//        if (!empty($section)){
-//            $cleanid = noNS(cleanID($section, TRUE));
-//        }else{
-//            $cleanid = noNS(cleanID($id, TRUE));
-//        }
-//        $md5 = md5($cleanid);
-//
-//        $this->doc .= '\hyperref[';
-//        $this->doc .= $md5;
-//        $this->doc .= ']{';
-//        $this->doc .= $name;
-//        $this->doc .= '}';
-//    }
-
-//    /**
-//     * Add external link
-//     */
-//    function externallink($url, $title = NULL) {
-//        //Escape # only inside iocelem
-//        if ($_SESSION['iocelem']){
-//            $url = preg_replace('/(#|%)/','\\\\$1', $url);
-//        }
-//        if (!$title){
-//            $this->doc .= '\url{'.$url.'}';
-//        }else{
-//            $title = $this->_getLinkTitle($title, $url, $isImage);
-//            if (is_string($title)){
-//                $this->doc .= '\href{'.$url.'}{'.$title.'}';
-//            }else{//image
-//                if (preg_match('/http|https|ftp/', $title['src'])){
-//                    $this->externalmedia($title['src'],null,$title['align'],$title['width'],null,null,$url);
-//                }else{
-//                    $this->internalmedia($title['src'],null,$title['align'],$title['width'],null,null,$url);
-//                }
-//            }
-//        }
-//   }
-
-//    /**
-//     * Just print local links
-//     * @fixme add image handling
-//     */
-//    function locallink($hash, $name = NULL){
-//        $name = $this->_getLinkTitle($name, $hash, $isImage);
-//        $this->doc .= $name;
-//    }
-
-//    /**
-//     * InterWiki links
-//     */
-//    function interwikilink($match, $name = NULL, $wikiName, $wikiUri) {}
-//
-//    /**
-//     * Just print WindowsShare links
-//     * @fixme add image handling
-//     */
-//    function windowssharelink($url, $name = NULL) {
-//        $this->unformatted('[['.$url.'|'.$name.']]');
-//    }
-//
-//    /**
-//     * Just print email links
-//     * @fixme add image handling
-//     */
-//    function emaillink($address, $name = NULL) {
-//        $this->doc .= '\href{mailto:'.$this->_xmlEntities($address).'}{'.$this->_xmlEntities($address).'}';
-//    }
-//
-//    /**
-//     * Construct a title and handle images in titles
-//     * @author Harry Fuecks <hfuecks@gmail.com>
-//     */
-//    function _getLinkTitle($title, $default, & $isImage, $id=null) {
-//        global $conf;
-//
-//        $isImage = FALSE;
-//        if ( is_null($title) ) {
-//            if ($conf['useheading'] && $id) {
-//                $heading = p_get_first_heading($id);
-//                if ($heading) {
-//                      return $this->_latexEntities($heading);
-//                }
-//            }
-//            return $this->_latexEntities($default);
-//        } else if ( is_string($title) ) {
-//            return $this->_latexEntities($title);
-//        } else if ( is_array($title) ) {
-//            $isImage = TRUE;
-//            if (isset($title['caption'])) {
-//                $title['title'] = $title['caption'];
-//            } else {
-//                $title['title'] = $default;
-//            }
-//            return $title;
-//        }
-//    }
-    
-//    function rss ($url,$params) {}
-
     function table_open($maxcols = null, $numrows = null, $pos = null){
-        $isBorderType = $this->_isBorderTypeTable($_SESSION["table_types"]);
+        $isBorderType = $this->_isBorderTypeTable();
         $node = new TableNodeDoc(TableNodeDoc::TABLE_TYPE, $isBorderType);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;                                                
@@ -796,7 +652,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function tableheader_open($colspan = 1, $align = null, $rowspan = 1){
-        $isBorderType = $this->_isBorderTypeTable($_SESSION["table_types"]);
+        $isBorderType = $this->_isBorderTypeTable();
         $node = new CellNodeDoc(CellNodeDoc::TABLEHEADER_TYPE, $colspan, $align, $rowspan, $isBorderType);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;                                                
@@ -807,7 +663,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function tablecell_open($colspan = 1, $align = null, $rowspan = 1){
-        $isBorderType = $this->_isBorderTypeTable($_SESSION["table_types"]);
+        $isBorderType = $this->_isBorderTypeTable();
         $node = new CellNodeDoc(CellNodeDoc::TABLECELL_TYPE, $colspan, $align, $rowspan, $isBorderType);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;                                                
@@ -817,7 +673,33 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->currentNode = $this->currentNode->getOwner();                                                                        
     }
     
-    private function _isBorderTypeTable($types){
+    private function _isBorderTypeTable($types=NULL){
+        if($types==NULL){
+            $types = $this->table_types;
+        }
         return count(array_intersect($types, self::BORDER_TYPES))!=0;
+    }
+
+    public function isBorderTypeTable($types=NULL){
+        return $this->_isBorderTypeTable($types);
+    }
+    
+    public function setTableTypes($types){
+        if(is_string($types)){            
+            $atypes = preg_split('/(\s*,\s*)*,+(\s*,\s*)*/', trim($types));
+        }elseif(is_array($types)){
+            $atypes = $types;
+        }else{
+            throw new IncorrectParametersException();
+        }
+        $this->table_types = $atypes;
+    }
+    
+    public function getCurrentNode(){
+        return $this->currentNode;
+    }
+
+    public function setCurrentNode($node){
+        return $this->currentNode = $node;
     }
 }
