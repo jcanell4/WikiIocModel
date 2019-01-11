@@ -11,7 +11,7 @@ class BasicGetProjectMetaDataAction extends BasicViewProjectMetaDataAction imple
         //Establecimiento del sistema de bloqueo
         if ( ! $this->params[PageKeys::KEY_REV] ) {
             $lockStruct = $this->requireResource(TRUE);
-            $this->messageLock = $this->generateLockInfo($lockStruct, $this->params[ProjectKeys::KEY_ID]);
+            $this->messageLock = $this->generateLockInfo($lockStruct, $this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
         }
         $response = parent::runAction();
         if ($lockStruct['state']) {
@@ -34,7 +34,7 @@ class BasicGetProjectMetaDataAction extends BasicViewProjectMetaDataAction imple
     /**
      * Genera un mensaje tipo 'info' como respuesta al tipo de boqueo
      */
-    private function generateLockInfo($lockStruct, $id) {
+    private function generateLockInfo($lockStruct, $id, $subSet) {
 
         switch ($lockStruct['state']) {
             case self::LOCKED:
@@ -59,7 +59,7 @@ class BasicGetProjectMetaDataAction extends BasicViewProjectMetaDataAction imple
         }
 
         if ($message) {
-            $message = self::generateInfo($infoType, $message, $id);
+            $message = self::generateInfo($infoType, $message, $id, -1, $subSet);
         }
         return $message;
     }
