@@ -485,8 +485,7 @@ class ProjectMetaDataQuery extends DataQuery {
         if ($resourceCreated) {
             $new_date = filemtime($projectFilePathName);
             if (!$prev_date) $prev_date = $new_date;
-            $idSubSet = $projectId . (($metaDataSubSet!==ProjectKeys::VAL_DEFAULTSUBSET) ? "-$metaDataSubSet" : "");
-            $this->_saveRevision($prev_date, $new_date, $projectId, $idSubSet, $projectFileName, $contentFile);
+            $this->_saveRevision($prev_date, $new_date, $projectId, $projectFileName, $contentFile);
         }
 
         return $resourceCreated;
@@ -626,7 +625,7 @@ class ProjectMetaDataQuery extends DataQuery {
         return $data;
     }
 
-    private function _saveRevision($prev_date, $new_date, $projectId, $idSubSet, $projectFileName, $old_content) {
+    private function _saveRevision($prev_date, $new_date, $projectId, $projectFileName, $old_content) {
         $resourceCreated = FALSE;
         $new_rev_file = $this->getProjectFilePath($projectId, $new_date) . "$projectFileName.$new_date.txt";
         $resourceCreated = io_saveFile("$new_rev_file.gz", $old_content);
@@ -636,7 +635,7 @@ class ProjectMetaDataQuery extends DataQuery {
             $summary = WikiIocLangManager::getLang('external_edit');
             $flags = array('ExternalEdit' => true);
         }
-        $resourceCreated &= $this->_addProjectLogEntry($new_date, $projectId, $idSubSet, self::LOG_TYPE_EDIT, $summary, $flags);
+        $resourceCreated &= $this->_addProjectLogEntry($new_date, $projectId, self::LOG_TYPE_EDIT, $summary, $flags);
         return ($resourceCreated) ? $new_date : "";
     }
 
@@ -649,7 +648,7 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param array $flags
      * @return boolean
      */
-    private function _addProjectLogEntry($mdate, $projectId, $idSubSet, $type=self::LOG_TYPE_EDIT, $summary="", $flags=NULL) {
+    private function _addProjectLogEntry($mdate, $projectId, $type=self::LOG_TYPE_EDIT, $summary="", $flags=NULL) {
         $strip  = array("\t", "\n");
         if (is_array($flags))
             $flagExternalEdit = isset($flags['ExternalEdit']);
@@ -657,7 +656,7 @@ class ProjectMetaDataQuery extends DataQuery {
             'date'  => $mdate,
             'ip'    => (!$flagExternalEdit) ? clientIP(true) : "127.0.0.1",
             'type'  => str_replace($strip, "", $type),
-            'id'    => str_replace("/", ":", $idSubSet),
+            'id'    => str_replace("/", ":", $projectId),
             'user'  => (!$flagExternalEdit) ? $_SERVER['REMOTE_USER'] : "",
             'sum'   => utf8_substr(str_replace($strip, "", $summary), 0, 255),
             'extra' => ""
