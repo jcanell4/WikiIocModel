@@ -370,10 +370,14 @@ class ProjectMetaDataQuery extends DataQuery {
      * @return boolean : true si el proyecto ya ha sido generado
      */
     public function isProjectGenerated() {
+        return $this->getProjectStateAtt("generated");
+    }
+    
+    public function getProjectStateAtt($att) {
         $sysfilename = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
         $jsonArr = $this->_getMeta("state", $this->getProjectFilePath().$sysfilename);
         $data = json_decode($jsonArr, true);
-        return $data['generated'];
+        return $data[$att];
     }
 
     /**
@@ -381,11 +385,15 @@ class ProjectMetaDataQuery extends DataQuery {
      * @return boolean : true si el estado del proyecto se ha establecido con éxito
      */
     public function setProjectGenerated() {
+        return $this->setProjectStateAtt("generated", TRUE);
+    }
+    
+    public function setProjectStateAtt($att, $value) {
         $projectSystemDataFile = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
         $subSet = "state";
         $jSysArr = $this->_getMeta($subSet, $projectSystemDataFile);
         $sysValue = json_decode($jSysArr, true);
-        $sysValue['generated'] = true;
+        $sysValue[$att] = $value;
         $success = $this->_setMeta($subSet, $projectSystemDataFile, json_encode($sysValue));
         return $success;
     }

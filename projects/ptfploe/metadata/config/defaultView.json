@@ -50,26 +50,6 @@
         }        
     },
     "fields": {
-      "tipusPla": {
-        "type":"select",
-        "n_columns": 3,
-        "label": "Tipus de pla (tipusPla)",
-        "group": "main",
-        "props": {
-          "required": true,
-          "title" : "indiqueu el tipus de pla que voleu generar."
-        },
-         "config":{
-            "options":[
-                {"value":"fct"}, 
-                {"value":"loe"}, 
-                {"value":"loe_me"}, 
-                {"value":"logse"}, 
-                {"value":"logse_me"}, 
-                {"value":"sintesi"}
-            ]
-         }
-      },
       "tipusBlocModul":{
         "type":"select",
         "n_columns": 5,

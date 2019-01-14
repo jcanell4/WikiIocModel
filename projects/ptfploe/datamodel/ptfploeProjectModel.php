@@ -27,21 +27,19 @@ class ptfploeProjectModel extends AbstractProjectModel {
 
     public function getTemplateContentDocumentId($responseData){
         $plantilla = $responseData['projectMetaData']["plantilla"]['value'];
-        preg_match("/##.*?##/s", $plantilla, $matches);
-        $field = substr($matches[0],2,-2);
-        $plantilla = preg_replace("/##.*?##/s", $responseData['projectMetaData'][$field]['value'], $plantilla);
+//        preg_match("/##.*?##/s", $plantilla, $matches);
+//        $field = substr($matches[0],2,-2);
+//        $plantilla = preg_replace("/##.*?##/s", $responseData['projectMetaData'][$field]['value'], $plantilla);
+        $plantilla = preg_replace("/##.*?##/s", "loe", $plantilla);
         return $plantilla;
     }
 
     public function generateProject() {
         //0. Obtiene los datos del proyecto
         $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
-
-        $plantilla = $this->getTemplateContentDocumentId($ret);
-        $destino = $this->getContentDocumentId($ret);
-
-        //1.1 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
-        $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
+//        
+//        //1.1 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
+//        $this->createTemplateDocument($ret);
 
         //2. Establece la marca de 'proyecto generado'
         $this->projectMetaDataQuery->setProjectGenerated();
@@ -66,6 +64,14 @@ class ptfploeProjectModel extends AbstractProjectModel {
         $this->includePageProjectToUserShortcut($params);
 
         return $ret;
+    }
+    
+    public function createTemplateDocument($ret){
+        $plantilla = $this->getTemplateContentDocumentId($ret);
+        $destino = $this->getContentDocumentId($ret);
+
+        //1.1 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
+        $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
     }
 
     /**

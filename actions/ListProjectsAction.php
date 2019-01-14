@@ -31,9 +31,9 @@ class ListProjectsAction extends AbstractWikiAction {
             $aList=[];
             foreach ($listProjectTypes as $pTypes) {
                 if(WikiGlobalConfig::getConf("projectname_$pTypes")){
-                    $aList[] = ['id' => "id_$pTypes", 'name' => WikiGlobalConfig::getConf("projectname_$pTypes")];
+                    $aList[] = ['id' => "$pTypes", 'name' => WikiGlobalConfig::getConf("projectname_$pTypes")];
                 }else{
-                    $aList[] = ['id' => "id_$pTypes", 'name' => $pTypes];
+                    $aList[] = ['id' => "$pTypes", 'name' => $pTypes];
                 }
             }
             $ret = json_encode($aList);

@@ -16,17 +16,6 @@
                 "collapsed":false
             }
         },
-        "main": {
-            "parent": "",
-            "label": "Sobre la tipologia",
-            "n_columns": 12,
-            "n_rows": 1,
-            "frame": true,
-            "config":{
-                "collapsable":true,
-                "collapsed":false
-            }
-        },
         "dadesBasiques": {
             "parent": "",
             "label":"Dades bàsiques",
@@ -51,31 +40,11 @@
         }        
     },
     "fields": {
-      "tipusPla": {
-        "type":"select",
-        "n_columns": 3,
-        "label": "Tipus de pla (tipusPla)",
-        "group": "main",
-        "props": {
-          "required": true,
-          "title" : "indiqueu el tipus de pla que voleu generar."
-        },
-         "config":{
-            "options":[
-                {"value":"fct"}, 
-                {"value":"loe"}, 
-                {"value":"loe_me"}, 
-                {"value":"logse"}, 
-                {"value":"logse_me"}, 
-                {"value":"sintesi"}
-            ]
-         }
-      },
       "tipusBlocModul":{
         "type":"select",
         "n_columns": 5,
         "label": "Bloc o mòdul (tipusBlocModul)",
-        "group": "main",
+        "group": "dadesBasiques",
         "props": {
           "required": true,
           "title" : "indiqueu si es tracta d'un bloc o d'un mòdul."
@@ -489,6 +458,7 @@
         "n_columns": 12,
         "type": "editableObject",
         "group": "dadesBasiques",
+        "n_rows": 12,
         "props": {
           "data-editable-element": "table",
           "title": "Detalleu les activitats d'aprenentatge."
@@ -575,14 +545,50 @@
             "qualificació": {
               "type": "date"
             }
-          }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "21%",
+                "editable": true
+              },
+              "cells": [
+                {
+                  "name": "id",
+                  "field": "id",
+                  "width": "5%"
+                },
+                {
+                  "name": "unitat",
+                  "field": "unitat",
+                  "width": "5%"
+                },
+                {
+                  "name": "enunciat",
+                  "field": "enunciat"
+                },
+                {
+                  "name": "lliurament",
+                  "field": "lliurament"
+                },
+                {
+                  "name": "solució",
+                  "field": "solució"
+                },
+                {
+                  "name": "qualificació",
+                  "field": "qualificació"
+                }
+              ]
+            }
+          ]          
         }
       },
       "datesEAF": {
         "label":"Dates importants. EAF (datesEAF)",
         "n_columns": 12,
         "type": "editableObject",
-        "group": "actualitzables",
+        "group": "avaluacio",
         "n_rows": 4,
         "props": {
           "data-editable-element": "table",
@@ -624,43 +630,166 @@
             "qualificació recuperació": {
                 "type": "date"
             }
-          }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "11%",
+                "editable": true
+              },
+              "cells": [
+                {
+                  "name": "id",
+                  "field": "id",
+                  "width": "5%"
+                },
+                {
+                  "name": "unitat",
+                  "field": "unitat",
+                  "width": "5%"
+                },
+                {
+                  "name": "enunciat",
+                  "field": "enunciat"
+                },
+                {
+                  "name": "lliurament",
+                  "field": "lliurament"
+                },
+                {
+                  "name": "solució",
+                  "field": "solució"
+                },
+                {
+                  "name": "qualificació",
+                  "field": "qualificació"
+                },
+                {
+                  "name": "enunciat recuperació",
+                  "field": "enunciat recuperació"
+                },
+                {
+                  "name": "lliurament recuperació",
+                  "field": "lliurament recuperació"
+                },
+                {
+                  "name": "solució recuperació",
+                  "field": "solució recuperació"
+                },
+                {
+                  "name": "qualificació recuperació",
+                  "field": "qualificació recuperació"
+                }
+              ]
+            }
+          ]    
         }
       },
-      "dataPaf1": {
-        "label": "Data de la PAF 1 (dataPaf1)",
-        "n_columns":6,
+      "datesJT": {
+        "label":"Dates importants. JT (datesJT)",
+        "n_columns": 12,
+        "type": "editableObject",
         "group": "avaluacio",
+        "n_rows": 4,
         "props": {
-          "required": true,
-          "title": "Indiqueu la data en que es realitzarà la PAF 1"
-        }
-      },
-      "dataQualificacioPaf1": {
-        "label": "Data de la qualificació de la PAF 1 (dataQualificacioPaf1)",
-        "n_columns":6,
-        "group": "avaluacio",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la data en que es realitzarà la PAF 1"
-        }
-      },
-      "dataPaf2": {
-        "label": "Data de la PAF 2 (dataPaf2)",
-        "n_columns":6,
-        "group": "avaluacio",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la data en que es realitzarà la PAF 2"
-        }
-      },
-      "dataQualificacioPaf2": {
-        "label": "Data de la qualificació de la PAF 2 (dataQualificacioPaf2)",
-        "n_columns":6,
-        "group": "avaluacio",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la data en que es realitzarà la PAF 2"
+          "data-editable-element": "table",
+          "title": "Detalleu les dates importants de  les JT"
+        },
+        "config": {
+          "actions": {
+            "add_default_row": "Afegir una nova JT",
+            "remove_rows": "Eliminar les JT seleccionades"        
+          },
+          "fields": {
+            "id": {
+              "type": "string"
+            },
+            "inscripció": {
+                "type": "date"
+            },
+            "llista provisional": {
+                "type": "date"
+            },
+            "llista definitiva": {
+                "type": "date"
+            },
+            "data JT": {
+                "type": "date"
+            },
+            "qualificació": {
+                "type": "date"
+            },
+            "inscripció recuperació": {
+                "type": "date"
+            },
+            "llista provisional recuperació": {
+                "type": "date"
+            },
+            "llista definitiva recuperació": {
+                "type": "date"
+            },
+            "data JT recuperació": {
+                "type": "date"
+            },
+            "qualificació recuperació": {
+                "type": "date"
+            }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "9%",
+                "editable": true
+              },
+              "cells": [
+                {
+                  "name": "id",
+                  "field": "id",
+                  "width": "5%"
+                },
+                {
+                  "name": "inscripció",
+                  "field": "inscripció"
+                },
+                {
+                  "name": "llista provisional",
+                  "field": "llista provisional"
+                },
+                {
+                  "name": "llista definitiva",
+                  "field": "llista definitiva"
+                },
+                {
+                  "name": "data JT",
+                  "field": "data JT"
+                },
+                {
+                  "name": "qualificació",
+                  "field": "qualificació"
+                },
+                {
+                  "name": "inscripció recuperació",
+                  "field": "inscripció recuperació"
+                },
+                {
+                  "name": "llista provisional recuperació",
+                  "field": "llista provisional recuperació"
+                },
+                {
+                  "name": "llista definitiva recuperació",
+                  "field": "llista definitiva recuperació"
+                },
+                {
+                  "name": "data JT recuperació",
+                  "field": "data JT recuperació"
+                },
+                {
+                  "name": "qualificació recuperació",
+                  "field": "qualificació recuperació"
+                }
+              ]
+            }
+          ]  
         }
       },
       "notaMinimaPAF": {
@@ -748,6 +877,18 @@
       },
       "dadesExtres": {
         "type" : "hidden"
+      },
+      "dataPaf1": {
+        "type" : "hidden"
+      },
+      "dataQualificacioPaf1": {
+        "type" : "hidden"
+      },
+      "dataPaf2": {
+        "type" : "hidden"
+      },
+      "dataQualificacioPaf2": {
+        "type" : "hidden"            
       }
     }
 }

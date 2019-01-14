@@ -398,11 +398,6 @@
                             "mandatory": true,
                             "default":1
                         },
-                        "tipusPla": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default":"loe"
-                        },
                         "tipusBlocModul":{
                             "type":"string",
                             "mandatory": true,

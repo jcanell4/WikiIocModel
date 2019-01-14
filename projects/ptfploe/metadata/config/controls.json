@@ -76,7 +76,8 @@
                    "autor"
                 ],
                 "conditions": {
-                    "page.updateButton": "'1'"
+                    "page.updateButton": "'1'",
+                    "page.generated":"true"
                 }
             }
         }
@@ -115,7 +116,9 @@
                    "responsable"
                 ],
                 "conditions": {
-                    "page.action": "'project_view'"
+                    "page.action": "'project_view'",
+                    "page.generated":"true",
+                    "page.updateButton": "'0'"
                 }
             }
         }
