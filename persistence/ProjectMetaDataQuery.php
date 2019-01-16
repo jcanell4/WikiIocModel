@@ -383,7 +383,7 @@ class ProjectMetaDataQuery extends DataQuery {
         $sysfilename = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
         $jsonArr = $this->_getMeta("state", $this->getProjectFilePath().$sysfilename);
         $data = json_decode($jsonArr, true);
-        return $data['generated'];
+        return isset($data[ProjectKeys::KEY_GENERATED]) ? $data[ProjectKeys::KEY_GENERATED] : FALSE;
     }
 
     /**

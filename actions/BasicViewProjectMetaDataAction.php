@@ -56,7 +56,7 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
 
         //Añadir propiedades/restricciones del configMain para la creación de elementos dentro del proyecto
         parent::addResponseProperties($response);
-        $response['generated'] = $this->getModel()->isProjectGenerated();
+        $response[ProjectKeys::KEY_GENERATED] = $this->getModel()->isProjectGenerated();
         return $response;
     }
 
