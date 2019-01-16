@@ -8,13 +8,15 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
 
     protected function runAction() {
 
-        if (!$this->getModel()->isProjectGenerated()) {
-            $this->getModel()->setViewConfigName("firstView");
+        $projectModel = $this->getModel();
+        $isProjectGenerated = $projectModel->isProjectGenerated();
+
+        if (!$isProjectGenerated) {
+            $projectModel->setViewConfigName("firstView");
         }
         $response = parent::runAction();
-        $projectModel = $this->getModel();
 
-        if ($projectModel->isProjectGenerated()) {
+        if ($isProjectGenerated) {
             $metaDataSubSet = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
             $confProjectType = $this->modelManager->getConfigProjectType();
 
