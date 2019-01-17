@@ -13,6 +13,7 @@ require_once (WIKI_IOC_MODEL."persistence/DataQuery.php");
 
 class ProjectMetaDataQuery extends DataQuery {
 
+    const VAL_SUBSET_STATE = "state";
     const PATH_METADATA_CONFIG = "metadata/config/";
     const FILE_CONFIGMAIN      = "configMain.json";
     const FILE_DEFAULTVIEW     = "defaultView.json";
@@ -394,23 +395,41 @@ class ProjectMetaDataQuery extends DataQuery {
      * @return boolean : true si el proyecto ya ha sido generado
      */
     public function isProjectGenerated() {
-        $sysfilename = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
-        $jsonArr = $this->_getMeta("state", $this->getProjectFilePath().$sysfilename);
-        $data = json_decode($jsonArr, true);
-        return isset($data[ProjectKeys::KEY_GENERATED]) ? $data[ProjectKeys::KEY_GENERATED] : FALSE;
+        return $this->getProjectStateAtt("generated");
+    }
+    
+    public function getProjectStateAtt($att) {
+        $jsSystem = $this->getSystemData(self::VAL_SUBSET_STATE);
+        $data = json_decode($jsSystem, true);
+        return $data[$att];
     }
 
+    public function getProjectSystemAtt($att, $subset=FALSE) {
+        $jsSystem = $this->getSystemData($subset);
+        $data = json_decode($jsSystem, true);
+        return $data[$att];
+    }
+    
     /**
      * Establece el estado 'generated'=true del proyecto
      * @return boolean : true si el estado del proyecto se ha establecido con éxito
      */
     public function setProjectGenerated() {
-        $projectSystemDataFile = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
-        $subSet = "state";
-        $jSysArr = $this->_getMeta($subSet, $projectSystemDataFile);
-        $sysValue = json_decode($jSysArr, true);
-        $sysValue['generated'] = true;
-        $success = $this->_setMeta($subSet, $projectSystemDataFile, json_encode($sysValue));
+        return $this->setProjectStateAtt("generated", TRUE);
+    }
+    
+    public function setProjectStateAtt($att, $value) {
+        $jsSystem = $this->getSystemData(self::VAL_SUBSET_STATE);
+        $sysValue[$att] = $value;
+        $success = $this->setSystemData($sysValue, self::VAL_SUBSET_STATE);
+        return $success;
+    }
+
+    public function setProjectSystemAtt($att, $value, $subset=FALSE) {
+        $jsSystem = $this->getSystemData($subset);
+        $sysValue = json_decode($jsSystem, true);
+        $sysValue[$att] = $value;
+        $success = $this->setSystemData($subset);
         return $success;
     }
 
@@ -520,6 +539,27 @@ class ProjectMetaDataQuery extends DataQuery {
         return $resourceCreated;
     }
 
+    public function getSystemData($metadataSubset=FALSE) {
+        if(!$metadataSubset){
+            $metadataSubset = $this->getProjectSubset();
+        }
+        $dirProject = $this->getProjectFilePath();
+        $file = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];        
+        $systemContent = json_decode(file_get_contents($dirProject.$file), true);
+        return $systemContent[$metadataSubset];
+    }
+    
+    public function setSystemData($data, $metadataSubset=FALSE) {
+        if(!$metadataSubset){
+            $metadataSubset = $this->getProjectSubset();
+        }
+        $dirProject = $this->getProjectFilePath();
+        $file = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
+        $systemContent = json_decode(file_get_contents($dirProject.$file), true);       
+        $systemContent[$metadataSubset] = $data;
+        $succes = io_saveFile("$dirProject$file", json_encode($systemContent));
+        return $succes;
+    }
     /**
      * Crea el archivo de sistema del proyecto y guarda datos de estado
      * @param string $id (ruta ns del proyecto)

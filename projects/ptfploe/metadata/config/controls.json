@@ -1,0 +1,128 @@
+{
+    "generateProject": {
+        "parms": { 
+            "DOM": {
+               "id": "generateProjectButton"
+            }
+        },
+
+        "scripts": {
+            "updateHandler": {
+                "conditions": {
+                    "page.action": "'never'"
+                }
+            }
+        }
+
+    },
+    "ptfploeConsolidateData": {
+        "class": "WikiIocButton",
+        "parms": { 
+            "DOM": {
+               "id": "ptfploeConsolidateData",
+               "title": "Consolidació de les dades",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocIconFactory'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+        "scripts": {
+            "getFunctions": {
+                "path": "ConsolidateDataGetFunction.js"
+            },
+            "updateHandler": {
+                "rols": [
+                   "responsable",
+                   "autor"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'",
+                    "page.generated":"false"
+                }
+            }
+        }
+
+    },
+    "ptfploeUpdateDataProject": {
+        "class": "WikiIocButton",
+        "parms": { 
+            "DOM": {
+               "id": "ptfploeUpdateDataProject",
+               "title": "Actualització del Projecte",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocUpdateDataIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectUpdate'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+
+        "scripts": {
+            "getFunctions": {
+                "path": "UpdateGetFunction.js"
+            },
+            "updateHandler": {
+                "rols": [
+                   "responsable",
+                   "autor"
+                ],
+                "conditions": {
+                    "page.updateButton": "'1'",
+                    "page.generated":"true"
+                }
+            }
+        }
+
+    },
+    "ptfploeHtmlExport": {
+        "class": "WikiIocButton",
+        "parms": {
+            "DOM": {
+               "id": "ptfploeHtmlExport",
+               "title": "ptfploeHtmlExport",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportHtmlIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectExport'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+       
+        "scripts": {
+            "getFunctions": {
+                "path": "HtmlExportGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'",
+                    "page.generated":"true",
+                    "page.updateButton": "'0'"
+                }
+            }
+        }
+    }
+}

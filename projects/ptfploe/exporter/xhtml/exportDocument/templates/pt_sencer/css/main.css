@@ -1,0 +1,604 @@
+/* General rules */
+
+body {
+    font-family: "Lato", sans-serif;
+    color: #01172f;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+}
+
+p, a, li {
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+h1 {
+    margin-top: 20px;
+    margin-bottom: 36px;
+    font-size: 30px;
+}
+
+h2 {
+    margin-top: 26px;
+    margin-bottom: 17px;
+    font-size: 18px;
+}
+
+h3 {
+    margin-top: 24px;
+    margin-bottom: 15px;
+    font-style: italic;
+    font-size: 17px;
+}
+
+h4 {
+    margin-top: 34px;
+    margin-bottom: 14px;
+    font-weight: bold;
+    font-size: 19px;
+}
+
+.container {
+    max-width: 94%;
+    margin: 0 auto;
+}
+
+p.formula {
+    text-align: center;
+    font-weight: 700;
+    font-size: 90%;
+    letter-spacing: .7px;
+}
+
+p.llegenda {
+    text-align: center;
+    font-size: 90%;
+    line-height: 1;
+}
+
+.titletable {
+    display: none;
+}
+
+/* Sidebar navigation */
+
+.sidenav {
+    height: 100vh;
+    width: 250px;
+    box-sizing: border-box;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #FAFAFA;
+    overflow-x: hidden;
+    transition: transform .4s ease-in-out;
+    padding-top: 60px;
+    border-right: 1px solid #E4E4E4;
+}
+
+.sidenav a:hover {
+    color: #ffffff;
+    background-color: #202B47;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 14px;
+    font-size: 36px;
+    margin-left: 50px;
+    cursor: pointer;
+}
+
+.hamburger {
+    position: fixed;
+    top: 8px;
+    left: -4px;
+    font-size: 30px;
+    cursor: pointer;
+    margin-left: 14px;
+    color: #fdf0f6;
+    opacity: 1;
+    transition: opacity .1s;
+    transition-delay: .3s;
+}
+
+.hamburger.visible {
+    opacity: 1;
+}
+
+.hamburger.hidden {
+    opacity: 0;
+}
+
+.sidenav.open {
+    transform: translateX(0);
+}
+
+.sidenav.close {
+    transform: translateX(-250px);
+}
+
+.content_index {
+    margin-top: -10px;
+}
+
+.content_index a {
+    font-weight: 400;
+    font-size: 16px !important;
+    text-decoration: none;
+    color: #01172f;
+    display: block;
+    background-color: #FAFAFA;
+    border-top: 1px solid #FAFAFA;
+    padding: 12px 8px 12px 32px !important;
+}
+
+.content_index.fade_in {
+    opacity: 1;
+}
+
+.content_index.fade_out {
+    opacity: 0;
+}
+
+
+/* Header*/
+
+.main_header {
+    background-color: #be176b;
+    padding-bottom: 10px;
+}
+ 
+.main_header h1 {
+    font-size: 22px;
+    font-weight: bold;
+    font-style: normal;
+    margin: 0;
+    padding-top: 40px;
+    color: #ffffff;
+}
+
+.main_header h2 {
+    font-size: 17px;
+    font-weight: bold;
+    font-style: normal;
+    margin: 0;
+    padding-top: 30px;
+    color: #ffffff;
+}
+
+.main_header h2:last-of-type {
+    font-size: 15px;
+    font-weight: bold;
+    font-style: normal;
+    margin: 0;
+    padding-top: 8px;
+    color: #ffffff;
+}
+
+.separador_impr {
+    display: none;
+}
+
+/* Intro */
+
+#intro {
+    background-color: #fdf0f6;
+}
+
+#intro p {
+    margin: 0;
+    font-size: 14px;
+}
+
+#intro span {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .7px;
+}
+
+#intro .container {
+    padding: 20px 0 20px 0;
+}
+
+/* Contingut */
+
+.container:not(:first-child) h1 {
+    margin-top: 43px;
+    margin-bottom: 19px;
+    font-size: 22px;
+}
+
+.container:not(:first-child) h2 {
+    opacity: .7;
+}
+
+
+.pt_taula {
+    width: 100%;
+    margin: 18px auto 38px auto;
+    font-size: 13px; 
+}
+
+.pt_taula th {
+    color: #ffffff;
+    background-color: #BE176B;
+    text-transform: uppercase;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: .7px;
+    padding: 12px 6px;
+    text-align: center;
+}
+
+.pt_taula.pt_planif td {
+    text-align: left;
+}
+
+.pt_taula td {
+    padding: 8px 6px;
+    background-color: #F4F4F4;
+    text-align: center;
+}
+
+.pt_taula td ul,
+.pt_taula td ol {
+    text-align: left;
+    padding-right: 10px;
+}
+.pt_taula td ul li,
+.pt_taula td ol li {
+    font-size: 13px; 
+}
+
+
+.pt_taula th.nivell1 {
+    background-color: #BE176B;
+}
+
+.pt_taula th.nivell2 {
+    color: #ffffff;
+    background-color: #B6A1AA;
+}
+
+.pt_taula th.nivell3 {
+    color: #182C41;
+    background-color: #E1E1E4;
+}
+
+.pt_taula td.semititol {
+    color: #182C41;
+    text-transform: uppercase;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: .7px;
+    padding: 12px 6px;
+    text-align: center;
+}
+
+
+/* Botó imprimir*/
+
+#printbtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 42px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
+    background-color: #be176b;
+    width: 200px;
+    margin: 32px auto 46px auto;
+    cursor: pointer;
+}
+
+#printbtn:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.17);
+}
+
+#printbtn:active {
+    box-shadow: none;
+}
+
+#printbtn span{
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.8px;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+
+
+/* Layout media queries */
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) { 
+
+    .container {
+        max-width: 520px;
+        margin: 0 auto;
+    }
+
+    p, a, li {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    h1 {
+        margin-top: 30px;
+        margin-bottom: 66px;
+    }
+
+    h2 {
+        margin-top: 32px;
+        font-size: 26px;
+    }
+    
+    h3 {
+        margin-top: 28px;
+        font-size: 21px;
+    }
+    
+    h4 {
+        margin-top: 34px;
+        margin-bottom: 16px;
+        font-weight: bold;
+    }
+
+    .sidenav a {
+        font-weight: 400;
+        font-size: 18px;
+        padding: 4px 4px 8px 32px;
+        text-decoration: none;
+        font-size: 18px;
+        color: #01172f;
+        display: block;
+    }
+
+    .main_header {
+        height: 240px;
+    }
+
+    .main_header h1 {
+        font-size: 34px;
+        padding-top: 60px;
+    }
+    
+    .main_header h2 {
+        font-size: 19px;
+        padding-top: 50px;
+    }
+    
+    .main_header h2:last-of-type {
+        font-size: 17px;
+        padding-top: 8px;
+    }
+
+    #intro p {
+        font-size: 16px;
+    }
+    
+    #intro span {
+        font-size: 12px;
+    }
+    
+    #intro .container {
+        padding: 32px 0 32px 0;
+    }
+
+    .pt_taula {
+        margin: 26px auto 46px auto;
+        font-size: 15px; 
+    }
+    
+    .pt_taula th {
+        font-size: 13px !important;
+        padding: 16px 6px;
+    }
+    
+    .pt_taula td {
+        padding: 12px 6px;
+    }
+    
+
+    .pt_taula td ul li,
+    .pt_taula td ol li {
+        font-size: 15px; 
+    }
+
+    .pt_taula td.semititol {
+        font-size: 13px !important;
+        padding: 18px 6px;
+    }
+
+    #printbtn {
+        margin: 62px auto 76px auto;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+
+    p, a, li {
+        font-size: 18px;
+    }
+
+    .container:not(:first-child) h1 {
+        margin-top: 56px;
+        margin-bottom: 26px;
+        font-size: 30px;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+    .container {
+        max-width: 610px;
+        margin: 0 auto;
+    }
+
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+
+}
+
+@page {
+    size: A4;
+    margin-top: 80px;
+    margin-bottom: 46px;
+}
+
+@media print {
+
+
+    /* General */
+
+    html, body {
+        width: 210mm;
+        height: 267mm;
+    }
+
+    body {
+        color: #01172f;
+        background-color: #ffffff;
+        
+    }
+
+    div.ioctable {
+        page-break-inside: avoid !important;
+    }
+    
+    h1, h2, h3, h4 {
+        page-break-after: avoid !important;
+        color: #01172f !important;
+        windows: 2;
+        orphans: 2;
+    }
+
+    p, a, li {
+        font-size: 16px;
+        line-height: 1.6;
+        windows: 2;
+        orphans: 2;
+    }
+
+    #mySidenav {
+        display: none;
+    }
+
+    .container {
+        width: 610px;
+    }
+
+    table {
+        page-break-inside: avoid;
+    }
+
+    #printbtn {
+        display: none;
+    }
+
+    .hamburger {
+        display: none;
+    }
+
+    /* Capçalera */
+
+    .main_header {
+        padding-bottom: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #ffffff !important;
+    }
+
+    .main_header h1 {
+        font-size: 22px;
+        font-weight: bold;
+        font-style: normal;
+        margin: 0;
+        padding-top: 40px;
+        color: #ffffff;
+    }
+    
+    .main_header h2 {
+        font-size: 17px;
+        font-weight: bold;
+        font-style: normal;
+        margin: 0;
+        padding-top: 30px;
+        color: #ffffff;
+    }
+    
+    .main_header h2:last-of-type {
+        font-size: 15px;
+        font-weight: bold;
+        font-style: normal;
+        margin: 0;
+        padding-top: 8px;
+        color: #ffffff;
+    }
+    
+    #intro {
+        background-color: #ffffff !important;
+    }
+
+    .separador_impr {
+        display: block;
+        width: 610px;
+        margin: 12px auto 0 auto;
+        height: 1px;
+        color: #5D6B7A;
+        background: #5D6B7A;
+        border: 0;
+    }
+    
+    .salt_impr{
+        page-break-after: always
+    }
+
+    .pt_taula {
+        width: 100%;
+        margin: 26px auto 46px auto;
+        font-size: 15px;         
+    }
+    
+    .pt_taula th {
+        color: #ffffff !important;
+        background-color: #6D6A7B !important;
+    }
+    
+    .pt_taula td {
+        background-color: #F7F7F6 !important;
+    }
+    
+    .pt_taula th.nivell1 {
+        background-color: #5F5C6E !important;
+    }
+    
+    .pt_taula th.nivell2 {
+        background-color: #9997A2 !important;
+    }
+    
+    .pt_taula th.nivell3 {
+        color: #5F5C6E !important;
+        background-color: #E1E1E4 !important;
+    }
+    
+    .pt_taula td.semititol {
+        color: #5F5C6E;
+    }
+
+    .pt_taula td,
+    .pt_taula tr,
+    .pt_taula th {
+        border: 1px solid #5E5E5E;
+    } 
+}
