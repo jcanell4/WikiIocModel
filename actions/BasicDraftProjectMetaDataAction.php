@@ -50,7 +50,7 @@ class BasicDraftProjectMetaDataAction extends ProjectMetadataAction {
             $response["lockInfo"] = $this->resourceLocker->updateLock()["info"];
 
             $draft = json_decode($this->params['draft'], true);
-            $draft['date'] = $this->params['date'];
+            $draft['date'] = $this->params['date']; //ATENCIÓN: En principio parecen el mismo dato
             $this->getModel()->saveDraft($draft);
             $response[ProjectKeys::KEY_ID] = $id;
             $response['info'] = self::generateInfo("info", "S'ha desat l'esborrany", $id, self::$infoDuration);

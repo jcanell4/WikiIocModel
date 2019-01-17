@@ -31,6 +31,7 @@ class ProjectMetaDataQuery extends DataQuery {
     private $projectFileName = FALSE;   //Nom de l'arxiu de dades corresponent a aquest tipus de projecte
     private $projectTypeDir = FALSE;    //Ruta completa al directori del tipus de projecte
     private $revision = FALSE;          //Data de l'arxiu de revisió
+    private $actual_ver = FALSE;        //Indica si es volen obtenir les dades de la versió actual del projecte
 
     public function __construct($projectId=FALSE, $projectSubset=FALSE, $projectType=FALSE, $revision=FALSE) {
         if($projectId || $projectSubset || $projectType){
@@ -61,8 +62,12 @@ class ProjectMetaDataQuery extends DataQuery {
         $this->projectSubset = $projectSubset;
     }
 
+    public function setActualVer($actual_ver){
+        $this->actual_ver = $actual_ver;
+    }
+
     public function getRevision(){
-        return $this->revision;
+        return ($this->getActualVer()) ? NULL : $this->revision;
     }
 
     public function getProjectId(){
@@ -71,20 +76,25 @@ class ProjectMetaDataQuery extends DataQuery {
 
     public function getProjectSubset(){
         if (!$this->projectSubset){
-            $this->projectSubset = AjaxKeys::VAL_DEFAULTSUBSET;
+            $this->setProjectSubset(AjaxKeys::VAL_DEFAULTSUBSET);
         }
         return $this->projectSubset;
+    }
+
+    public function getActualVer(){
+        return $this->actual_ver;
     }
 
     public function getProjectType(){
         if (!$this->projectType){
             //obtenir el projectType del directori
             $dir = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $this->getProjectId())."/";
+            $ext = WikiGlobalConfig::getConf('mdextension');
             $dirList = scandir($dir) ;
             $found = false;
             for ($i=0; !$found && $i<count($dirList); $i++){
                 if (is_dir($dirList[$i])){
-                    if (preg_grep("/.*\.mdpr/", scandir($dir.$dirList[$i]))){
+                    if (preg_grep("/.*\.$ext/", scandir($dir.$dirList[$i]))){
                         $this->projectType = $dirList[$i];
                         $found = true;
                     }
@@ -201,10 +211,10 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     /**
-     * Obtiene el array correspondiente a la clave $configMainKey del archivo FILE_CONFIGMAIN
+     * Obtiene el array correspondiente a la clave $configMainKey del subSet actual del archivo FILE_CONFIGMAIN
      * @param string $configMainKey : conjunto principal requerido
      * @param string $projectType
-     * @return Json con el array correspondiente a la clave $configMainKey del archivo FILE_CONFIGMAIN
+     * @return Json con el array correspondiente a la clave $configMainKey del subSet actual del archivo FILE_CONFIGMAIN
      */
     public function getMetaDataConfig($configMainKey, $projectType=FALSE) {
         if (!$projectType){
@@ -474,31 +484,29 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     private function _setMeta($metaDataSubSet, $projectFilePath, $projectFileName, $metaDataValue) {
         $projectFilePathName = $projectFilePath . $projectFileName;
+        $projectId = $this->getProjectId();
 
-        if (is_file($projectFilePathName)) {
-            $old_contentFile = file_get_contents($projectFilePathName);
-            //Aquí, ya existe, como mínimo, una versión previa de los archivos del proyecto y un subSet
-            if ($old_contentFile != false) {
-                $contentFileArray = json_decode($old_contentFile, true);
-                $prev_date = filemtime($projectFilePathName);
-                $contentFileArray[$metaDataSubSet] = json_decode($metaDataValue, true);
-                $resourceCreated = io_saveFile($projectFilePathName, str_replace("\\r\\n", "\\n", json_encode($contentFileArray)));
-                $new_date = filemtime($projectFilePathName);
-                //Guardamos el archivo existente (la versión previa) como revisión
-                $this->_saveRevision($prev_date, $new_date, $this->getProjectId(), $projectFileName, $old_contentFile);
-            }
-        }else {
+        if (!is_file($projectFilePathName)) {
+            //Entramos aquí cuando se trata de la primera modificación de los datos del subset
             $resourceCreated = $this->_createResource($projectFilePath, $projectFileName);
             if ($resourceCreated) {
-                $resourceCreated = $this->_setSystemData($this->getProjectId(), $projectFilePath);
-                if ($resourceCreated) {
-                    $resourceCreated = io_saveFile($projectFilePathName, "{\"$metaDataSubSet\":$metaDataValue}");
-                }
+                $resourceCreated = $this->_setSystemData($projectId, $projectFilePath);
             }
             if (!$resourceCreated) {
-                $resourceCreated = '{"error":"5090"}';
+                return '{"error":"5090"}';
             }
+        }else {
+            $prev_date = filemtime($projectFilePathName);
         }
+
+        $contentFile = str_replace("\\r\\n", "\\n", "{\"$metaDataSubSet\":$metaDataValue}");
+        $resourceCreated = io_saveFile($projectFilePathName, $contentFile);
+        if ($resourceCreated) {
+            $new_date = filemtime($projectFilePathName);
+            if (!$prev_date) $prev_date = $new_date;
+            $this->_saveRevision($prev_date, $new_date, $projectId, $projectFileName, $contentFile);
+        }
+
         return $resourceCreated;
     }
 
@@ -554,7 +562,7 @@ class ProjectMetaDataQuery extends DataQuery {
         }
         $data['state'] = $state;
         $file = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
-        $succes = io_saveFile("$dirProject/$file", json_encode($data));
+        $succes = io_saveFile("$dirProject$file", json_encode($data));
         return $succes;
     }
 
@@ -575,24 +583,25 @@ class ProjectMetaDataQuery extends DataQuery {
      * Devuelve el nombre del archivo de datos para este tipo de proyecto
      */
     public function getProjectFileName($metadataSubset=FALSE, $projectType=FALSE, $revision=FALSE) {
-        $ret;
         if (!$revision){
             $revision = $this->getRevision();
         }
+        if (!$metadataSubset){
+            $metadataSubset = $this->getProjectSubset();
+        }
         if (!$this->projectFileName){
-            if(!$metadataSubset){
-                $metadataSubset = $this->getProjectSubset();
-            }
             if (!$projectType){
                 $projectType = $this->getProjectType();
             }
             $struct = $this->getMetaDataDefinition(ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $projectType);
             $this->projectFileName = $struct[$metadataSubset];
         }
+        $ret = $this->projectFileName;
+        if ($metadataSubset !== ProjectKeys::VAL_DEFAULTSUBSET) {
+            $ret = "$metadataSubset-$ret";
+        }
         if ($revision){
-            $ret = "{$this->projectFileName}.$revison.txt.gz";
-        }else{
-            $ret = $this->projectFileName;
+            $ret = "$ret.$revision.txt.gz";
         }
         return $ret;
     }
@@ -643,16 +652,14 @@ class ProjectMetaDataQuery extends DataQuery {
      * @return array Con los datos del proyecto correspondientes a la clave '$metaDataSubSet'
      */
     public function getDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE) {
-        if (!$id){
+        if (!$id)
             $id = $this->getProjectId();
-        }
-        if (!$projectType){
+        if (!$projectType)
             $projectType = $this->getProjectType();
-        }
-        if (!$metaDataSubSet){
+        if (!$metaDataSubSet)
             $metaDataSubSet = $this->getProjectSubset();
-        }
-        $filename = $this->getFileName($id, [ProjectKeys::KEY_PROJECT_TYPE => $projectType, ProjectKeys::KEY_METADATA_SUBSET => $metaDataSubSet]);
+
+        $filename = $this->getFileName($id, [ProjectKeys::KEY_PROJECT_TYPE=>$projectType, ProjectKeys::KEY_METADATA_SUBSET=>$metaDataSubSet]);
         $jsonData = $this->_getMeta($metaDataSubSet, $filename);
         $data = json_decode($jsonData, true);
         return $data;
@@ -663,12 +670,12 @@ class ProjectMetaDataQuery extends DataQuery {
         $new_rev_file = $this->getProjectFilePath($projectId, $new_date) . "$projectFileName.$new_date.txt";
         $resourceCreated = io_saveFile("$new_rev_file.gz", $old_content);
 
-        $last_rev_date = $this->getProjectRevisionList($projectId, $projectFileName, 1)[0]['date'];
+        $last_rev_date = key($this->getProjectRevisionList(1));
         if ($last_rev_date && $last_rev_date < $prev_date) {
             $summary = WikiIocLangManager::getLang('external_edit');
             $flags = array('ExternalEdit' => true);
         }
-        $resourceCreated &= $this->_addProjectLogEntry($new_date, $projectId, self::LOG_TYPE_EDIT, $summary, "", $flags);
+        $resourceCreated &= $this->_addProjectLogEntry($new_date, $projectId, self::LOG_TYPE_EDIT, $summary, $flags);
         return ($resourceCreated) ? $new_date : "";
     }
 
@@ -678,11 +685,10 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param string $projectId ruta relativa del proyecto
      * @param string $type      tipo de modificación
      * @param string $summary
-     * @param string $extra
      * @param array $flags
      * @return boolean
      */
-    private function _addProjectLogEntry($mdate, $projectId, $type=self::LOG_TYPE_EDIT, $summary="", $extra="", $flags=NULL) {
+    private function _addProjectLogEntry($mdate, $projectId, $type=self::LOG_TYPE_EDIT, $summary="", $flags=NULL) {
         $strip  = array("\t", "\n");
         if (is_array($flags))
             $flagExternalEdit = isset($flags['ExternalEdit']);
@@ -693,7 +699,7 @@ class ProjectMetaDataQuery extends DataQuery {
             'id'    => str_replace("/", ":", $projectId),
             'user'  => (!$flagExternalEdit) ? $_SERVER['REMOTE_USER'] : "",
             'sum'   => utf8_substr(str_replace($strip, "", $summary), 0, 255),
-            'extra' => str_replace($strip, "", $extra)
+            'extra' => ""
             );
 
         //meta log
@@ -844,7 +850,10 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getProjectRevisionList($num=1, $chunk_size=1024) {
         $revs = array();
-        $file = $this->_metaProjectFN($this->getProjectId(), $this->getProjectFileName(), ".changes");
+        $actver = $this->getActualVer(); //¿A QUE MOLA MUCHO?
+        $this->setActualVer(TRUE);
+        $file = $this->_metaProjectFN($this->getProjectId(), "", ".changes");
+        $this->setActualVer($actver);
 
         if (@file_exists($file)) {
             if (filesize($file) < $chunk_size || $num==0 || $chunk_size==0) {

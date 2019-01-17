@@ -23,7 +23,6 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
      * @return array con la estructura y los valores del proyecto
      */
     protected function responseProcess() {
-        $dataProject = $this->params;
         $extraProject = $this->params['extraProject'];
         $model = $this->getModel();
         $modelAttrib = $model->getModelAttributes();
@@ -31,7 +30,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
         //sólo se ejecuta si existe el proyecto
         if ($model->existProject()) {
 
-            $metaDataValues = $this->netejaKeysFormulari($dataProject);
+            $metaDataValues = $this->netejaKeysFormulari($this->params);
             if (!$model->validaNom($metaDataValues['autor']))
                 throw new UnknownUserException($metaDataValues['autor']." (indicat al camp 'autor') ");
             if (!$model->validaNom($metaDataValues['responsable']))
@@ -44,15 +43,15 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
                 ProjectKeys::KEY_PERSISTENCE => $this->persistenceEngine,
                 ProjectKeys::KEY_PROJECT_TYPE => $modelAttrib[ProjectKeys::KEY_PROJECT_TYPE],
                 ProjectKeys::KEY_METADATA_SUBSET => $modelAttrib[ProjectKeys::KEY_METADATA_SUBSET],
-                ProjectKeys::KEY_FILTER => $dataProject[ProjectKeys::KEY_FILTER],  //opcional
+                ProjectKeys::KEY_FILTER => $this->params[ProjectKeys::KEY_FILTER],  //opcional
                 ProjectKeys::KEY_METADATA_VALUE => str_replace("\\r\\n", "\\n", json_encode($metaDataValues))
             ];
 
             $model->setData($metaData);
             $response = $model->getData();  //obtiene la estructura y el contenido del proyecto
-            $response["generated"] = $model->isProjectGenerated();
-            
-            if ($model->isProjectGenerated()) {
+            $response[ProjectKeys::KEY_GENERATED] = $model->isProjectGenerated();
+
+            if ($response[ProjectKeys::KEY_GENERATED]) {
                 $include = [
                      'id' => $modelAttrib[ProjectKeys::KEY_ID]
                     ,'link_page' => $modelAttrib[ProjectKeys::KEY_ID].":".end(explode(":", $response['projectMetaData']["plantilla"]['value']))
@@ -65,11 +64,11 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
                 ];
                 $model->modifyACLPageToUser($include);
             }
-            if (!$dataProject[ProjectKeys::KEY_KEEP_DRAFT]) {
+            if (!$this->params[ProjectKeys::KEY_KEEP_DRAFT]) {
                 $model->removeDraft();
             }
 
-            if ($dataProject[ProjectKeys::KEY_NO_RESPONSE]) {
+            if ($this->params[ProjectKeys::KEY_NO_RESPONSE]) {
                 $response[ProjectKeys::KEY_CODETYPE] = 0;
             }else{
                 $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $modelAttrib[ProjectKeys::KEY_ID]);

@@ -46,8 +46,8 @@ abstract class AbstractWikiAction {
         return $this->modelManager;
     }
 
-    public static function generateInfo($type, $message, $id='', $duration=-1) {
-        return IocCommon::generateInfo($type, $message, $id, $duration);
+    public static function generateInfo($type, $message, $id='', $duration=-1, $subSet=NULL) {
+        return IocCommon::generateInfo($type, $message, $id, $duration, $subSet);
     }
 
     protected function addInfoToInfo( $infoA, $infoB ) {

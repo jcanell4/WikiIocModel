@@ -45,10 +45,9 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
         //Pot existir un draft local i sense draft remot
         $response['originalLastmod'] = $this->projectModel->getLastModFileDate();
 
-        $response[ProjectKeys::KEY_ID] = $this->idToRequestId($this->params[ProjectKeys::KEY_ID]);
+        $response[ProjectKeys::KEY_ID] = $this->idToRequestId($this->params[ProjectKeys::KEY_ID].$this->projectModel->getIdSuffix($this->params[ProjectKeys::KEY_REV]));
 
         if ($this->params[ProjectKeys::KEY_REV]) {
-            $response[ProjectKeys::KEY_ID] .= ProjectKeys::REVISION_SUFFIX;
             if ($response['meta']) {
                 // Corregim els ids de les metas per indicar que és una revisió
                 $this->addRevisionSuffixIdToArray($response['meta']);
@@ -57,7 +56,7 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
 
         //Añadir propiedades/restricciones del configMain para la creación de elementos dentro del proyecto
         parent::addResponseProperties($response);
-        $response['generated'] = $this->getModel()->isProjectGenerated();
+        $response[ProjectKeys::KEY_GENERATED] = $this->getModel()->isProjectGenerated();
         return $response;
     }
 
@@ -73,9 +72,9 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
             $new_message = $this->generateInfo("warning", WikiIocLangManager::getLang('project_revision'), $response[ProjectKeys::KEY_ID]);
             $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
         }else {
-            $new_message = $this->generateInfo("info", WikiIocLangManager::getLang('project_loaded'), $response[ProjectKeys::KEY_ID]);
+            $new_message = $this->generateMessageInfoForSubSetProject($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_loaded');
             $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
-            $new_message = $this->generateInfo("info", WikiIocLangManager::getLang('project_view'), $response[ProjectKeys::KEY_ID]);
+            $new_message = $this->generateMessageInfoForSubSetProject($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_view');
             $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
         }
     }

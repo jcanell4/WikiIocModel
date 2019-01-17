@@ -28,7 +28,6 @@ class BasicDiffProjectMetaDataAction extends ProjectMetadataAction {
         if (!$this->projectModel->existProject()) {
             throw new PageNotFoundException($this->ProjectKeys[ProjectKeys::KEY_ID]);
         }
-
         $id = $this->idToRequestId($this->params[ProjectKeys::KEY_ID]);
         //$this->params['rev2'] contiene un array de fechas correspondientes a las revisiones a comparar
         if ($this->params['rev2']) {
@@ -42,9 +41,12 @@ class BasicDiffProjectMetaDataAction extends ProjectMetadataAction {
         }
         else {
             $revTrev = false;
+            $aver = $this->projectModel->getActualVer();
+            $this->projectModel->setActualVer(TRUE); //fuerza la obtención de datos de la versión actual (no revisión)
             //array de datos del proyecto actual
             $rev1 = $this->projectModel->getDataProject();
-            $date_rev1 = $this->projectModel->getLastModFileDate();
+            $date_rev1 = (string)$this->projectModel->getLastModFileDate();
+            $this->projectModel->setActualVer($aver); //regenera al estado anterior la obtención de datos de la versión actual
             //array de datos de la revisión
             $rev2 = $this->projectModel->getDataRevisionProject($this->params[ProjectKeys::KEY_REV]);
             $date_rev2 = $this->params[ProjectKeys::KEY_REV];
