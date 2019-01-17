@@ -24,7 +24,6 @@
                "class": "iocDisplayBlock"
             },
             "DJO": {
-               "query": "'do=generate'",
                "autoSize": true,
                "visible": false,
                "iconClass": "'iocIconFactory'",
@@ -34,6 +33,9 @@
             }
         },
         "scripts": {
+            "getFunctions": {
+                "path": "ConsolidateDataGetFunction.js"
+            },
             "updateHandler": {
                 "rols": [
                    "responsable",
