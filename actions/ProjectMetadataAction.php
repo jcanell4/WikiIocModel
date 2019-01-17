@@ -35,9 +35,12 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
         $response[ProjectKeys::KEY_CREATE][ProjectKeys::KEY_MD_CT_FOLDERS] = $this->projectModel->getMetaDataComponent($this->params[ProjectKeys::KEY_PROJECT_TYPE], ProjectKeys::KEY_MD_CT_FOLDERS); //valores permitidos para el elemento 'create folder': true (all) | false (none)
     }
 
+    protected function preResponseProcess() {
+        $version_project = $this->projectModel->getProjectSubSetAttr("version", $this->params[ProjectKeys::KEY_METADATA_SUBSET]); //versión guardada en el subset del fichero system del proyecto
+    }
+
     protected function postResponseProcess(&$response) {
         if ($this->params[ProjectKeys::KEY_METADATA_SUBSET]!=="undefined" && $this->params[ProjectKeys::KEY_METADATA_SUBSET] !== ProjectKeys::VAL_DEFAULTSUBSET) {
-            //$response[ProjectKeys::KEY_ID] = $this->projectModel->addSubSetSufix($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
             $response[ProjectKeys::KEY_PROJECT_EXTRADATA][ProjectKeys::KEY_METADATA_SUBSET] = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
             $response['isSubSet'] = TRUE;
         }

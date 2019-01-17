@@ -15,7 +15,6 @@ abstract class AbstractWikiAction {
         if ($params) $this->params = $params;
     }
 
-
     public function __destruct() {
         if (get_class($this) === self::$flagMainAction) {
             self::$flagMainAction = NULL;
@@ -35,6 +34,7 @@ abstract class AbstractWikiAction {
             $this->triggerStartEvents();
         if (!empty($paramsArr))
             $this->setParams($paramsArr);
+        $this->preResponseProcess();
         $ret = $this->responseProcess();
         $this->postResponseProcess($ret);
         if ($jomateix)
@@ -72,6 +72,9 @@ abstract class AbstractWikiAction {
 
     protected function setParams($paramsArr){
         $this->params = $paramsArr;
+    }
+
+    protected function preResponseProcess() {
     }
 
     protected abstract function responseProcess();

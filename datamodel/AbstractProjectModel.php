@@ -72,12 +72,12 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return ($key) ? $attr[$key] : $attr;
     }
 
-    public function setActualVer($actual_ver){
-        $this->projectMetaDataQuery->setActualVer($actual_ver);
+    public function setActualRevision($actual_revision){
+        $this->projectMetaDataQuery->setActualRevision($actual_revision);
     }
 
-    public function getActualVer(){
-        return $this->projectMetaDataQuery->getActualVer();
+    public function getActualRevision(){
+        return $this->projectMetaDataQuery->getActualRevision();
     }
 
     public function getMetaDataSubSet() {
@@ -257,6 +257,13 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
     public abstract function generateProject();
 
+    /*
+     * Del fichero _wikiIocSystem_.mdpr del proyecto en curso, obtiene un atributo del subSet solicitado
+     */
+    public function getProjectSubSetAttr($attr, $subSet=NULL) {
+        return $this->projectMetaDataQuery->getProjectSubSetAttr($attr, $subSet);
+    }
+
     /**
      * @param integer $num Número de revisiones solicitadas El valor 0 significa obtener todas las revisiones
      * @return array  Contiene $num elementos de la lista de revisiones del fichero de proyecto obtenidas del log .changes
@@ -268,10 +275,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             if (count($revs) > $amount) {
                 $revs['show_more_button'] = true;
             }
-            $v = $this->getActualVer();
-            $this->setActualVer(TRUE);
+            $r = $this->getActualRevision();
+            $this->setActualRevision(TRUE);
             $revs['current'] = @filemtime($this->projectMetaDataQuery->getFileName($this->id));
-            $this->setActualVer($v);
+            $this->setActualRevision($r);
             $revs['docId'] = $this->id;
             $revs['position'] = -1;
             $revs['amount'] = $amount;

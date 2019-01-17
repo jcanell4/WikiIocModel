@@ -30,7 +30,7 @@ class ProjectMetaDataQuery extends DataQuery {
     private $projectFileName = FALSE;   //Nom de l'arxiu de dades corresponent a aquest tipus de projecte
     private $projectTypeDir = FALSE;    //Ruta completa al directori del tipus de projecte
     private $revision = FALSE;          //Data de l'arxiu de revisió
-    private $actual_ver = FALSE;        //Indica si es volen obtenir les dades de la versió actual del projecte
+    private $actual_revision = FALSE;   //Indica si es volen obtenir les dades de la versió actual del projecte
 
     public function __construct($projectId=FALSE, $projectSubset=FALSE, $projectType=FALSE, $revision=FALSE) {
         if($projectId || $projectSubset || $projectType){
@@ -61,12 +61,12 @@ class ProjectMetaDataQuery extends DataQuery {
         $this->projectSubset = $projectSubset;
     }
 
-    public function setActualVer($actual_ver){
-        $this->actual_ver = $actual_ver;
+    public function setActualRevision($actual_revision){
+        $this->actual_revision = $actual_revision;
     }
 
     public function getRevision(){
-        return ($this->getActualVer()) ? NULL : $this->revision;
+        return ($this->getActualRevision()) ? NULL : $this->revision;
     }
 
     public function getProjectId(){
@@ -80,8 +80,8 @@ class ProjectMetaDataQuery extends DataQuery {
         return $this->projectSubset;
     }
 
-    public function getActualVer(){
-        return $this->actual_ver;
+    public function getActualRevision(){
+        return $this->actual_revision;
     }
 
     public function getProjectType(){
@@ -269,6 +269,20 @@ class ProjectMetaDataQuery extends DataQuery {
         return $this->getMetaDataDefinition(ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE);
     }
 
+    public function getMetaDataAny($configMainKey=NULL) {
+        $configMainKey = ($configMainKey===NULL) ? ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE : $configMainKey;
+        return $this->getMetaDataDefinition($configMainKey);
+    }
+
+    /*
+     * Obtiene la versión
+     */
+    public function getMetaDataSubSetVersion() {
+        $ret = $this->getMetaDataDefinition(ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE);
+        $type = $ret['mainType']['typeDef'];
+        return json_encode($ret['typesDefinition'][$type]['keys']);
+    }
+
     /**
      * Obtiene un array con un conjunto de subSets, extraidos de la clave 'metaDataClassesNameSpaces', del archivo FILE_CONFIGMAIN
      * @param string $projectType
@@ -402,9 +416,8 @@ class ProjectMetaDataQuery extends DataQuery {
 
     /**
      * Extrae, del contenido del fichero, los datos correspondientes a la clave
-     * @param string $idProject : wikiRuta del proyecto
-     * @param string $projectType : tipo de proyecto
      * @param string $subSet : clave del contenido
+     * @param string $revision : fecha unix de la revisión
      * @return JSON conteniendo el array de la clave 'metadatasubset' con los datos del proyecto
      */
     public function getMeta($subSet=FALSE, $revision=FALSE) {
@@ -412,10 +425,10 @@ class ProjectMetaDataQuery extends DataQuery {
             $subSet = $this->getProjectSubset();
         }
         return $this->_getMeta($subSet,
-                                $this->getFileName($this->getProjectId(),
-                                                    array(ProjectKeys::KEY_REV => $revision,
-                                                          ProjectKeys::KEY_PROJECT_TYPE => $this->getProjectType(),
-                                                          ProjectKeys::KEY_METADATA_SUBSET => $subSet)));
+                               $this->getFileName($this->getProjectId(),
+                                                  array(ProjectKeys::KEY_REV => $revision,
+                                                        ProjectKeys::KEY_PROJECT_TYPE => $this->getProjectType(),
+                                                        ProjectKeys::KEY_METADATA_SUBSET => $subSet)));
     }
     /**
      * Extrae, del contenido del fichero, los datos correspondientes a la clave
@@ -810,10 +823,10 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getProjectRevisionList($num=1, $chunk_size=1024) {
         $revs = array();
-        $actver = $this->getActualVer(); //¿A QUE MOLA MUCHO?
-        $this->setActualVer(TRUE);
+        $actrev = $this->getActualRevision(); //¿A QUE MOLA MUCHO?
+        $this->setActualRevision(TRUE);
         $file = $this->_metaProjectFN($this->getProjectId(), "", ".changes");
-        $this->setActualVer($actver);
+        $this->setActualRevision($actrev);
 
         if (@file_exists($file)) {
             if (filesize($file) < $chunk_size || $num==0 || $chunk_size==0) {
