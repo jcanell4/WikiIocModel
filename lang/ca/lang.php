@@ -29,6 +29,8 @@ $lang['project_revision'] = "Aquesta és una revisió antiga del projecte";
 $lang['project_saved'] = "S'ha desat correctament el projecte.";
 $lang['form_compare'] = "Es mostren les dades comparades del projecte i la revisió seleccionada: ";
 $lang['form_compare_rev'] = "Es mostren les dades comparades de les dos revisions seleccionades: ";
+$lang['project_generated'] = "Ha finalitzat amb èxit la generació del projecte";
+$lang['project_not_generated'] = "No s'ha pogut generar el projecte";
 
 $lang['auth_CreatePage'] = "No teniu permís per a Crear la pàgina %s";
 $lang['auth_EditPage'] = "No teniu permís per a Editar la pàgina %s";
