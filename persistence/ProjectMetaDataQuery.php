@@ -399,14 +399,12 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     public function getProjectStateAtt($att) {
-        $jsSystem = $this->getSystemData(self::VAL_SUBSET_STATE);
-        $data = json_decode($jsSystem, true);
+        $data = $this->getSystemData(self::VAL_SUBSET_STATE);
         return $data[$att];
     }
 
-    public function getProjectSubSetAttr($att, $subset=FALSE) {
-        $jsSystem = $this->getSystemData($subset);
-        $data = json_decode($jsSystem, true);
+    public function getProjectSystemAtt($att, $subset=FALSE) {
+        $data = $this->getSystemData($subset);
         return $data[$att];
     }
 
