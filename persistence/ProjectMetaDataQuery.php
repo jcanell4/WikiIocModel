@@ -13,7 +13,7 @@ require_once (WIKI_IOC_MODEL."persistence/DataQuery.php");
 
 class ProjectMetaDataQuery extends DataQuery {
 
-    const VAL_SUBSET_STATE = "state";
+    const KEY_STATE            = "state";
     const PATH_METADATA_CONFIG = "metadata/config/";
     const FILE_CONFIGMAIN      = "configMain.json";
     const FILE_DEFAULTVIEW     = "defaultView.json";
@@ -242,7 +242,7 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     //["""overwrite"""] copia de MetaDataDaoConfig.php
-    //Devuelve un array con el contenido de la clave principal especificada del archivo configMain.json
+    //Devuelve un array con el contenido, del subset actual, de la clave principal especificada del archivo configMain.json
     private function getMetaDataDefinition($configMainKey=NULL, $projectType=FALSE) {
         if ($configMainKey === NULL) {
             $configMainKey = ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE;
@@ -270,18 +270,13 @@ class ProjectMetaDataQuery extends DataQuery {
         return $this->getMetaDataDefinition(ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE);
     }
 
-    public function getMetaDataAny($configMainKey=NULL) {
-        $configMainKey = ($configMainKey===NULL) ? ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE : $configMainKey;
-        return $this->getMetaDataDefinition($configMainKey);
-    }
-
     /*
-     * Obtiene la versión
+     * Obtiene el atributo solicitado de la clave principal solicidada del archivo configMain.json
      */
-    public function getMetaDataSubSetVersion() {
-        $ret = $this->getMetaDataDefinition(ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE);
-        $type = $ret['mainType']['typeDef'];
-        return json_encode($ret['typesDefinition'][$type]['keys']);
+    public function getMetaDataAnyAttr($attr=NULL, $configMainKey=NULL) {
+        $configMainKey = ($configMainKey===NULL) ? ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE : $configMainKey;
+        $arrconfig = $this->getMetaDataDefinition($configMainKey);
+        return ($attr) ? $arrconfig[$attr] : $arrconfig;
     }
 
     /**
@@ -395,15 +390,15 @@ class ProjectMetaDataQuery extends DataQuery {
      * @return boolean : true si el proyecto ya ha sido generado
      */
     public function isProjectGenerated() {
-        return $this->getProjectStateAtt("generated");
+        return $this->getProjectSystemStateAttr("generated");
     }
 
-    public function getProjectStateAtt($att) {
-        $data = $this->getSystemData(self::VAL_SUBSET_STATE);
+    public function getProjectSystemStateAttr($att) {
+        $data = $this->getSystemData(self::KEY_STATE);
         return $data[$att];
     }
 
-    public function getProjectSystemAtt($att, $subset=FALSE) {
+    public function getProjectSystemSubSetAttr($att, $subset=FALSE) {
         $data = $this->getSystemData($subset);
         return $data[$att];
     }
@@ -413,21 +408,28 @@ class ProjectMetaDataQuery extends DataQuery {
      * @return boolean : true si el estado del proyecto se ha establecido con éxito
      */
     public function setProjectGenerated() {
-        return $this->setProjectStateAtt("generated", TRUE);
+        return $this->setProjectSystemStateAttr("generated", TRUE);
     }
 
-    public function setProjectStateAtt($att, $value) {
-        $jsSystem = $this->getSystemData(self::VAL_SUBSET_STATE);
-        $sysValue[$att] = $value;
-        $success = $this->setSystemData($sysValue, self::VAL_SUBSET_STATE);
+    /**
+     * Establece el atributo con el valor especificado en la clave KEY_STATE del archivo de sistema de un proyecto
+     * @return boolean : true si el atributo se ha establecido con éxito
+     */
+    public function setProjectSystemStateAttr($att, $value) {
+        $jsSystem = $this->getSystemData(self::KEY_STATE);
+        $jsSystem[$att] = $value;
+        $success = $this->setSystemData($jsSystem, self::KEY_STATE);
         return $success;
     }
 
-    public function setProjectSubSetAttr($att, $value, $subset=FALSE) {
+    /**
+     * Establece el atributo con el valor especificado en la clave $subset del archivo de sistema de un proyecto
+     * @return boolean : true si el atributo se ha establecido con éxito
+     */
+    public function setProjectSystemSubSetAttr($att, $value, $subset=FALSE) {
         $jsSystem = $this->getSystemData($subset);
-        $sysValue = json_decode($jsSystem, true);
-        $sysValue[$att] = $value;
-        $success = $this->setSystemData($subset);
+        $jsSystem[$att] = $value;
+        $success = $this->setSystemData($jsSystem, $subset);
         return $success;
     }
 
