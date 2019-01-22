@@ -36,16 +36,21 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
     }
 
     protected function preResponseProcess() {
-        $ver_project = $this->projectModel->getProjectSystemSubSetAttr("version", $this->params[ProjectKeys::KEY_METADATA_SUBSET]); //versión guardada en el subset del fichero system del proyecto
-        if ($ver_project == NULL) $ver_project = 0;
-        $ver_config = $this->projectModel->getMetaDataAnyAttr("version"); //versión establecida en el archivo configMain.json del tipo de proyecto
-        if ($ver_config == NULL) $ver_config = 0;
-        if ($ver_project > $ver_config) {
-            throw new Exception ("La versió del projecte és major que la versió definida al tipus de projecte: $ver_project > $ver_config");
-        }
-        if ($ver_project !== $ver_config) {
-            $upgader = new UpgradeManager($this->projectModel, $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_METADATA_SUBSET], $ver_project, $ver_config);
-            $upgader->process($ver_project, $ver_config);
+        if ($this->projectModel->getDataProject()) {
+            //versión guardada en el subset del fichero system del proyecto
+            $ver_project = $this->projectModel->getProjectSystemSubSetAttr("version", $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
+            if ($ver_project == NULL) $ver_project = 0;
+            //versión establecida en el archivo configMain.json (subset correspondiente) del tipo de proyecto
+            $ver_config = $this->projectModel->getMetaDataAnyAttr("version");
+            if ($ver_config == NULL) $ver_config = 0;
+
+            if ($ver_project > $ver_config) {
+                throw new Exception ("La versió del projecte és major que la versió definida al tipus de projecte: $ver_project > $ver_config");
+            }
+            if ($ver_project !== $ver_config) {
+                $upgader = new UpgradeManager($this->projectModel, $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_METADATA_SUBSET], $ver_project, $ver_config);
+                $upgader->process($ver_project, $ver_config);
+            }
         }
     }
 
