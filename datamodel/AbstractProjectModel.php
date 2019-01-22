@@ -173,6 +173,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $this->metaDataService->setMeta($toSet);
     }
 
+    public function setDataProject($dataProject, $summary="") {
+        $this->projectMetaDataQuery->setMeta($dataProject, $this->getMetaDataSubSet(), $summary);
+    }
+
     public function getDraft($peticio=NULL) {
         //un draft distinto por cada subset de un proyecto (mismo id para todo el proyecto)
         $draft = $this->draftDataQuery->getFull($this->id.$this->getMetaDataSubSet());
