@@ -275,7 +275,7 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function getMetaDataAnyAttr($attr=NULL, $configMainKey=NULL) {
         $configMainKey = ($configMainKey===NULL) ? ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE : $configMainKey;
-        $arrconfig = $this->getMetaDataDefinition($configMainKey);
+        $arrconfig = $this->getMetaDataDefinition($configMainKey, FALSE);
         return ($attr) ? $arrconfig[$attr] : $arrconfig;
     }
 
@@ -478,14 +478,15 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param JSON   $metaDataValue   Nou contingut de l'arxiu de dades del projecte
      * @return string
      */
-    public function setMeta($metaDataValue, $metadataSubset=FALSE) {
-        if(!$metadataSubset){
+    public function setMeta($metaDataValue, $metadataSubset=FALSE, $summary="") {
+        if (!$metadataSubset){
             $metadataSubset = $this->getProjectSubset();
         }
         return $this->_setMeta($metadataSubset,
-                                $this->getProjectFilePath($this->getProjectId()),
-                                $this->getProjectFileName($metadataSubset, $this->getProjectType()),
-                                $metaDataValue);
+                               $this->getProjectFilePath($this->getProjectId()),
+                               $this->getProjectFileName($metadataSubset, $this->getProjectType()),
+                               $metaDataValue,
+                               $summary);
     }
 
     /**
@@ -495,7 +496,7 @@ class ProjectMetaDataQuery extends DataQuery {
      * @param JSON   $metaDataValue   Nou contingut de l'arxiu de dades del projecte
      * @return string
      */
-    private function _setMeta($metaDataSubSet, $projectFilePath, $projectFileName, $metaDataValue) {
+    private function _setMeta($metaDataSubSet, $projectFilePath, $projectFileName, $metaDataValue, $summary="") {
         $projectFilePathName = $projectFilePath . $projectFileName;
         $projectId = $this->getProjectId();
 
@@ -517,7 +518,7 @@ class ProjectMetaDataQuery extends DataQuery {
         if ($resourceCreated) {
             $new_date = filemtime($projectFilePathName);
             if (!$prev_date) $prev_date = $new_date;
-            $this->_saveRevision($prev_date, $new_date, $projectId, $projectFileName, $contentFile);
+            $this->_saveRevision($prev_date, $new_date, $projectId, $projectFileName, $contentFile, $summary);
         }
 
         return $resourceCreated;
@@ -674,18 +675,17 @@ class ProjectMetaDataQuery extends DataQuery {
 
         $filename = $this->getFileName($id, [ProjectKeys::KEY_PROJECT_TYPE=>$projectType, ProjectKeys::KEY_METADATA_SUBSET=>$metaDataSubSet]);
         $jsonData = $this->_getMeta($metaDataSubSet, $filename);
-        $data = json_decode($jsonData, true);
-        return $data;
+        return ($jsonData) ? json_decode($jsonData, TRUE) : NULL;
     }
 
-    private function _saveRevision($prev_date, $new_date, $projectId, $projectFileName, $old_content) {
+    private function _saveRevision($prev_date, $new_date, $projectId, $projectFileName, $old_content, $summary="") {
         $resourceCreated = FALSE;
         $new_rev_file = $this->getProjectFilePath($projectId, $new_date) . "$projectFileName.$new_date.txt";
         $resourceCreated = io_saveFile("$new_rev_file.gz", $old_content);
 
         $last_rev_date = key($this->getProjectRevisionList(1));
         if ($last_rev_date && $last_rev_date < $prev_date) {
-            $summary = WikiIocLangManager::getLang('external_edit');
+            $summary = WikiIocLangManager::getLang('external_edit') . ". $summary";
             $flags = array('ExternalEdit' => true);
         }
         $resourceCreated &= $this->_addProjectLogEntry($new_date, $projectId, self::LOG_TYPE_EDIT, $summary, $flags);
