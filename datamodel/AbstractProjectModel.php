@@ -255,6 +255,14 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $this->projectMetaDataQuery->isProjectGenerated();
     }
 
+    public function getProjectSubSetAttr($att) {
+        return $this->projectMetaDataQuery->getProjectSubSetAttr($att);        
+    }
+    
+    public function setProjectSubSetAttr($att, $value) {
+        return $this->projectMetaDataQuery->setProjectSubSetAttr($att, $value);
+    }
+
     public abstract function generateProject();
 
     /*

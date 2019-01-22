@@ -120,9 +120,11 @@ class exportDocument extends MainRender {
         $document = WiocclParser::getValue($tmplt, [], $data);
         foreach ($this->cfgExport->toc as $tocKey => $tocItem) {
             $toc ="";
-            foreach ($tocItem as $elem) {
-                if($elem['level']==1){
-                    $toc .= "<a href='{$elem['link']}'>".htmlentities($elem['title'])."</a>\n";
+            if($tocItem){
+                foreach ($tocItem as $elem) {
+                    if($elem['level']==1){
+                        $toc .= "<a href='{$elem['link']}'>".htmlentities($elem['title'])."</a>\n";
+                    }
                 }
             }
             $document = str_replace("@@TOC($tocKey)@@", $toc, $document);

@@ -52,6 +52,8 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                     ProjectKeys::KEY_METADATA_VALUE => json_encode($response)
                 ];
                 $projectModel->setData($metaData);    //actualiza el contenido en 'mdprojects/'
+                
+                $projectModel->setProjectSubSetAttr("updatedDate", time());
 
                 $response = parent::runAction();
                 if($this->getModel()->isProjectGenerated()){
