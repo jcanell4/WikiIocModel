@@ -58,7 +58,9 @@ p.llegenda {
 }
 
 .titletable {
-    display: none;
+    text-align: center;
+    font-weight: 700;
+    font-size: 120%
 }
 
 /* Sidebar navigation */
@@ -313,6 +315,14 @@ p.llegenda {
     text-transform: uppercase;
 }
 
+    table {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    section p{
+        text-align: justify;
+    }
 
 
 /* Layout media queries */

@@ -136,7 +136,7 @@ class renderObject extends renderComposite {
                     $dataField = $this->getDataField($item["value"]);
                     $render->init($item["name"]);
 
-                    $arrayDeDatosParaLaPlantilla[$item["name"]] = $render->process($dataField);
+                    $arrayDeDatosParaLaPlantilla[$item["name"]] = $render->process($dataField, $item["name"]);
                 }
             }
         }

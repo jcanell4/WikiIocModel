@@ -66,7 +66,7 @@ class renderRenderizableText extends AbstractRenderer {
 
     public function process($data) {
         $instructions = p_get_instructions($data);
-        $html = p_render('wikiiocmodel_ptxhtml', $instructions);
+        $html = p_render('wikiiocmodel_ptxhtml', $instructions, $info);
         return $html;
     }
 }
@@ -89,7 +89,7 @@ class renderFileToPsDom extends renderFile {
 
 class renderFile extends AbstractRenderer {
 
-    public function process($data) {
+    public function process($data, $alias="") {
         global $plugin_controller;
 
         if (session_status() == PHP_SESSION_NONE) {
@@ -120,7 +120,10 @@ class renderFile extends AbstractRenderer {
         $instructions = p_get_instructions($text);
         $renderData = array();
         $html = $this->render($instructions, $renderData);
-        $this->cfgExport->toc[$data] = $renderData["tocItems"];
+        if(empty($alias)){
+            $alias=$data;
+        }
+        $this->cfgExport->toc[$alias] = $renderData["tocItems"];
         if ($startedHere) session_destroy();
 
         return $html;
