@@ -72,12 +72,12 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return ($key) ? $attr[$key] : $attr;
     }
 
-    public function setActualVer($actual_ver){
-        $this->projectMetaDataQuery->setActualVer($actual_ver);
+    public function setActualRevision($actual_ver){
+        $this->projectMetaDataQuery->setActualRevision($actual_ver);
     }
 
-    public function getActualVer(){
-        return $this->projectMetaDataQuery->getActualVer();
+    public function getActualRevision(){
+        return $this->projectMetaDataQuery->getActualRevision();
     }
 
     public function getMetaDataSubSet() {
@@ -255,6 +255,14 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $this->projectMetaDataQuery->isProjectGenerated();
     }
 
+    public function getProjectSubSetAttr($att) {
+        return $this->projectMetaDataQuery->getProjectSubSetAttr($att);        
+    }
+    
+    public function setProjectSubSetAttr($att, $value) {
+        return $this->projectMetaDataQuery->setProjectSubSetAttr($att, $value);
+    }
+
     public abstract function generateProject();
 
     /**
@@ -268,10 +276,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             if (count($revs) > $amount) {
                 $revs['show_more_button'] = true;
             }
-            $v = $this->getActualVer();
-            $this->setActualVer(TRUE);
+            $v = $this->getActualRevision();
+            $this->setActualRevision(TRUE);
             $revs['current'] = @filemtime($this->projectMetaDataQuery->getFileName($this->id));
-            $this->setActualVer($v);
+            $this->setActualRevision($v);
             $revs['docId'] = $this->id;
             $revs['position'] = -1;
             $revs['amount'] = $amount;

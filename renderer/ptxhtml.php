@@ -31,6 +31,11 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
      * @param array $params
      */
     public function init($params) {}
+    
+    function reset(){
+        $this->doc = '';
+    }
+
 
     /**
      * Register a new edit section range

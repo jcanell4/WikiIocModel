@@ -419,9 +419,100 @@
     </table>
 <WIOCCL:IF condition="{##notaMinimaAC##}\>0">
     <p>No es tindrà en compte la qualificació de l’avaluació contínua si no s’obté com a mínim un <span>{##notaMinimaAC##},00</span> en l’EAC.</p>
-</WIOCCL:IF>        
     <br/>
+</WIOCCL:IF>        
     <p>Compte! El sistema no permet fer lliuraments passades les <span>23’55h</span> de la data prevista.</p>
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
+    <hr>
+    <br/>
+    <h2>Jornades tècniques</h2>
+    <p>Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul##}</WIOCCL:IF> reqereix la realització de jornades tècniques (JT). A continuació es detallen les dates importants:</p>
+    <table class="own_table">
+      <tr>
+        <th>Inscrició</th>
+        <th>Llista provisional</th>
+        <th>Llista definitiva</th>
+        <th>Data de la JT</th>
+        <th>Qualificació</th>
+      </tr>
+<WIOCCL:FOREACH var="item" array="{##datesJT##}">
+      <tr>
+        <td>{#_DATE("{##item[inscripció]##}")_#}</td>
+        <td>{#_DATE("{##item[llista provisional]##}")_#}</td>
+        <td>{#_DATE("{##item[llista definitiva]##}")_#}</td>
+        <td>{#_DATE("{##item[data JT]##}")_#}</td>
+        <td>{#_DATE("{##item[qualificació]##}")_#}</td>
+      </tr>
+</WIOCCL:FOREACH>            
+    </table>
+    <p>Si suspeneu la JT podreu fer la recuperació. Les dates importants són:</p>    
+    <table class="own_table">
+      <caption>recuperacions</caption>
+      <tr>
+        <th>Inscrició</th>
+        <th>Llista provisional</th>
+        <th>Llista definitiva</th>
+        <th>Data de la JT</th>
+        <th>Qualificació</th>
+      </tr>
+<WIOCCL:FOREACH var="item" array="{##datesJT##}">
+      <tr>
+        <td>{#_DATE("{##item[inscripció recuperació]##}")_#}</td>
+        <td>{#_DATE("{##item[llista provisional recuperació]##}")_#}</td>
+        <td>{#_DATE("{##item[llista definitiva recuperació]##}")_#}</td>
+        <td>{#_DATE("{##item[data JT recuperació]##}")_#}</td>
+        <td>{#_DATE("{##item[qualificació recuperació]##}")_#}</td>
+      </tr>
+</WIOCCL:FOREACH>            
+    </table>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
+    <hr>
+    <br/>
+    <h2>Exercicis d'avaluació final</h2>
+    <p>Aquest mòdul també inclou <span>{#_ARRAY_LENGTH({##datesEAF##})_#} EAF</span>, distribuïts de la següent manera:</p>
+    <table class="own_table">
+      <tr>
+        <th></th>
+        <th>Publicació</th>
+        <th>Lliurament</th>
+        <th>Solució</th>
+        <th>Qualificació</th>
+      </tr>
+<WIOCCL:FOREACH var="item" array="{##datesEAF##}">
+      <tr>
+        <th>U{##item[unitat]##}</th>
+        <td>{#_DATE("{##item[enunciat]##}")_#}</td>
+        <td>{#_DATE("{##item[lliurament]##}")_#}</td>
+        <td>{#_DATE("{##item[solució]##}")_#}</td>
+        <td>{#_DATE("{##item[qualificació]##}")_#}</td>
+      </tr>
+</WIOCCL:FOREACH>            
+    </table>
+    <p>És oblogatori realitzar els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
+    <br/>
+    <p>Si suspeneu algun EAF diposeu de la recuperació:</p>
+    <table class="own_table">
+      <caption>recuperacions</caption>
+      <tr>
+        <th></th>
+        <th>Publicació</th>
+        <th>Lliurament</th>
+        <th>Solució</th>
+        <th>Qualificació</th>
+      </tr>
+<WIOCCL:FOREACH var="item" array="{##datesEAF##}">
+      <tr>
+        <th>U{##item[unitat]##}</th>
+        <td>{#_DATE("{##item[enunciat recuperació]##}")_#}</td>
+        <td>{#_DATE("{##item[lliurament recuperació]##}")_#}</td>
+        <td>{#_DATE("{##item[solució recuperació]##}")_#}</td>
+        <td>{#_DATE("{##item[qualificació recuperació]##}")_#}</td>
+      </tr>
+</WIOCCL:FOREACH>            
+    </table>
+    <p>És oblogatori realitzar els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
+</WIOCCL:IF>
   </div>
 </section>
 <!-- /Secció 6 -->

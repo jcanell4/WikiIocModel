@@ -13,9 +13,9 @@ class ProjectUpdateResponseHandler extends ProjectResponseHandler {
     }
 
     protected function response($requestParams, $responseData, &$ajaxCmdResponseGenerator) {
-        if (isset($responseData['activarUpdateButton'])) {
-            $ajaxCmdResponseGenerator->addExtraContentStateResponse($responseData[ProjectKeys::KEY_ID], "updateButton", $responseData['activarUpdateButton']);
-        }
+//        if (isset($responseData['activarUpdateButton'])) {
+//            $ajaxCmdResponseGenerator->addExtraContentStateResponse($responseData[ProjectKeys::KEY_ID], "updateButton", $responseData['activarUpdateButton']);
+//        }
         $this->remoteViewResponse($requestParams, $responseData, $ajaxCmdResponseGenerator);
     }
 
