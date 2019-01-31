@@ -584,51 +584,75 @@ hr {
       align-content: center;
 }
 
-#puzzle1 {
+.puzzle.puzzle_dalt {
   width: 280px;
   height: 90px;
   background-image: url("img/puzzle-dalt.svg");
-  background-size: cover;
-  position: absolute;
-  top: 0px;
+  background-size: cover;    
+  background-repeat: no-repeat;
 }
 
-#puzzle2 {
+.puzzle.puzzle_mig {
   width: 281px;
   height: 92px;
   background-image: url("img/puzzle-mig.svg");
   background-size: cover;
   background-repeat: no-repeat;
-  position: absolute;
-  top: 72px;
 }
 
-#puzzle3 {
-  width: 281px;
-  height: 92px;
-  background-image: url("img/puzzle-mig.svg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  position: absolute;
-  top: 146px;
-}
-
-#puzzle4 {
-  width: 281px;
-  height: 92px;
-  background-image: url("img/puzzle-mig.svg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  position: absolute;
-  top: 220px;
-}
-
-#puzzle5 {
+.puzzle.puzzle_baix {
   width: 282px;
   height: 74px;
   background-image: url("img/puzzle-baix.svg");
   background-size: contain;
   background-repeat: no-repeat;
+}
+
+#puzzle1 {
+/*  width: 280px;
+  height: 90px;
+  background-image: url("img/puzzle-dalt.svg");
+  background-size: cover;*/
+  position: absolute;
+  top: 0px;
+}
+
+#puzzle2 {
+/*  width: 281px;
+  height: 92px;
+  background-image: url("img/puzzle-mig.svg");
+  background-size: cover;
+  background-repeat: no-repeat;*/
+  position: absolute;
+  top: 72px;
+}
+
+#puzzle3 {
+/*  width: 281px;
+  height: 92px;
+  background-image: url("img/puzzle-mig.svg");
+  background-size: cover;
+  background-repeat: no-repeat;*/
+  position: absolute;
+  top: 146px;
+}
+
+#puzzle4 {
+/*  width: 281px;
+  height: 92px;
+  background-image: url("img/puzzle-mig.svg");
+  background-size: cover;
+  background-repeat: no-repeat;*/
+  position: absolute;
+  top: 220px;
+}
+
+#puzzle5 {
+/*  width: 282px;
+  height: 74px;
+  background-image: url("img/puzzle-baix.svg");
+  background-size: contain;
+  background-repeat: no-repeat;*/
   position: absolute;
   top: 294.5px;
   left: 0px;
@@ -1079,16 +1103,19 @@ hr {
   font-size: 12px;
   line-height: .9;
   text-align: center;
-  -webkit-transform: translateY(28px);
+/*  -webkit-transform: translateY(28px);
       -ms-transform: translateY(28px);
-          transform: translateY(28px);
+          transform: translateY(28px);*/
+  -webkit-transform: rotate(-90deg);
+      -ms-transform: rotate(-90deg);
+          transform: rotate(-90deg);
 }
 
-[id*="title_row"] .smallCell span:before {
+/*[id*="title_row"] .smallCell span:before {
   content: "↑ ";
   display: block;
   font-size: 20px;
-}
+}*/
 
 /* Media queries */
 
@@ -1391,45 +1418,65 @@ hr {
         align-content: center;
   }
 
+    .puzzle.puzzle_dalt {
+        height: 120px;
+        background-image: url("img/puzzle-dalt.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .puzzle.puzzle_mig {
+        height: 123.5px;
+        background-image: url("img/puzzle-mig.svg");
+        background-size: contain;
+    }
+
+    .puzzle.puzzle_baix {
+      height: 120px;
+      background-image: url("img/puzzle-baix.svg");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
   #puzzle1 {
     width: 372px;
-    height: 120px;
+/*    height: 120px;
     background-image: url("img/puzzle-dalt.svg");
-    background-size: contain;
+    background-size: contain;*/
     top: -1px;
-    background-repeat: no-repeat;
+    /*background-repeat: no-repeat;*/
   }
 
   #puzzle2 {
     width: 372px;
-    height: 123.5px;
+/*    height: 123.5px;
     background-image: url("img/puzzle-mig.svg");
-    background-size: contain;
+    background-size: contain;*/
     top: 95px;
   }
 
   #puzzle3 {
     width: 373.5px;
-    height: 123.5px;
+/*    height: 123.5px;
     background-image: url("img/puzzle-mig.svg");
-    background-size: contain;
+    background-size: contain;*/
     top: 194px;
   }
 
   #puzzle4 {
     width: 371px;
-    height: 122.5px;
+/*    height: 122.5px;
     background-image: url("img/puzzle-mig.svg");
-    background-size: cover;
+    background-size: cover;*/
     top: 292.5px;
     left: 1.5px;
   }
 
   #puzzle5 {
     width: 371px;
-    height: 120px;
+/*    height: 120px;
     background-image: url("img/puzzle-baix.svg");
-    background-size: contain;
+    background-size: contain;*/
     top: 392px;
     left: 2.1px;
   }

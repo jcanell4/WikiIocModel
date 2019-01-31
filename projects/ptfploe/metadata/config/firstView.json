@@ -53,7 +53,8 @@
             "options":[
                 {"value":"mòdul"},
                 {"value":"1r. bloc"}, 
-                {"value":"2n. bloc"}
+                {"value":"2n. bloc"},
+                {"value":"3r. bloc"}
             ]
         }
       },
@@ -503,7 +504,7 @@
          }            
       },
       "notaMinimaAC": {
-        "label": "Nota minima de l'AC (notaMinimaAC)",
+        "label": "Nota mínima de l'AC (notaMinimaAC)",
         "n_columns":6,
         "group": "avaluacio",
         "props": {
@@ -793,7 +794,7 @@
         }
       },
       "notaMinimaPAF": {
-        "label": "Nota minima a la PAF (notaMinimaPAF)",
+        "label": "Nota mínima a la PAF (notaMinimaPAF)",
         "n_columns":6,
         "group": "avaluacio",
         "props": {

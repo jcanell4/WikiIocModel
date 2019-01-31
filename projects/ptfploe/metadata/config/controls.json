@@ -26,7 +26,7 @@
             "DJO": {
                "autoSize": true,
                "visible": false,
-               "iconClass": "'iocIconFactory'",
+               "iconClass": "'iocConsolidateIcon'",
                "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
                "standbyId": "'bodyContent'",
                "disableOnSend": true
