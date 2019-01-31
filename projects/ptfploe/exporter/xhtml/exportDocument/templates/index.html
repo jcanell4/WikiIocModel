@@ -61,13 +61,11 @@
       </div>
 <WIOCCL:IF condition="{##requerimentsMatricula##}!=''''">  
       <div class="section1_content_row3">
-        <div class="section1_element">
           <div class="franja_color">
             <div class="section1_icona" id="requisits_icona"></div>
           </div>
           <h3>Requeriments i incompatibilitats de la matrícula</h3>
           <p>{##requerimentsMatricula##}</p>
-        </div>
       </div>      
 </WIOCCL:IF>
     </div>
@@ -227,8 +225,10 @@
 /* Es poden modificar les dades, afegint qualsevol sèries de valors de la llargada que calgui.*/
 (function(){
     var dataArray = [
-            [<WIOCCL:FOR from="{#_FIRST({##taulaDadesUnitats##}, ''FIRST[unitat formativa]'')_#}" to="{#_LAST({##taulaDadesUnitats##}, ''LAST[unitat formativa]'')_#}" counter="idUf"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##idUf##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[hores]")_#},</WIOCCL:SUBSET></WIOCCL:FOR>], /* Num. hores per cada UF */
-            [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[hores]##},</WIOCCL:FOREACH>] /* Num. hores per cada U */
+            [<WIOCCL:FOR from="{#_MIN({##taulaDadesUnitats##}, ''MIN[unitat formativa]'')_#}" to="{#_MAX({##taulaDadesUnitats##}, ''MAX[unitat formativa]'')_#}" counter="idUf"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##idUf##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[hores]")_#},</WIOCCL:SUBSET></WIOCCL:FOR>], /* Num. hores per cada UF */
+            [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[hores]##},</WIOCCL:FOREACH>], /* Num. hores per cada U */
+            [<WIOCCL:FOR from="{#_MIN({##taulaDadesUnitats##}, ''MIN[unitat formativa]'')_#}" to="{#_MAX({##taulaDadesUnitats##}, ''MAX[unitat formativa]'')_#}" counter="idUf"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##idUf##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[unitat formativa]")_#},</WIOCCL:SUBSET></WIOCCL:FOR>], /* ID. de cada UF */
+            [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[unitat]##},</WIOCCL:FOREACH>] /* ID de cada U */
         ];
 
     /*****************/
@@ -237,13 +237,13 @@
     /* Creem fila total hores per UF */
 
     var totalHoresUFs = 0;
-    for(var i = 0; i <= dataArray[0].length-1; i++) {
+    for(var i = 0; i < dataArray[0].length; i++) {
           totalHoresUFs += dataArray[0][i];
     }
 
     var rowDistribHoraria2 = document.getElementById("rowDistribHoraria2");
 
-    for(var i = 0; i <= dataArray[0].length-1; i++) {
+    for(var i = 0; i < dataArray[0].length; i++) {
          var percentWidth = dataArray[0][i]*100/totalHoresUFs + "%";
          var textCell = dataArray[0][i] + "h"
          createCell(rowDistribHoraria2, percentWidth, textCell);
@@ -254,13 +254,13 @@
     /* Creem fila total hores per U */
 
     var totalHoresUs = 0;
-    for(var i = 0; i <= dataArray[1].length-1; i++) {
+    for(var i = 0; i < dataArray[1].length; i++) {
           totalHoresUs += dataArray[1][i];
     }
 
     var rowDistribHoraria3 = document.getElementById("rowDistribHoraria3");
 
-    for(var i = 0; i <= dataArray[1].length-1; i++) {
+    for(var i = 0; i < dataArray[1].length; i++) {
          var percentWidth = dataArray[1][i]*100/totalHoresUs + "%";
          var textCell = dataArray[1][i] + "h"
          createCell(rowDistribHoraria3, percentWidth, textCell);
@@ -276,9 +276,9 @@
 
     var rowDistribHoraria1 = document.getElementById("rowDistribHoraria1");
 
-    for(var i = 0; i <= dataArray[0].length-1; i++) {
+    for(var i = 0; i < dataArray[0].length; i++) {
          var percentWidth = dataArray[0][i]*100/totalHoresUFs + "%";
-         var textCell = "UF" + (i+1);
+         var textCell = "UF" + dataArray[2][i];//(i+1);
          createCell(rowDistribHoraria1, percentWidth, textCell);
     }
 
@@ -294,7 +294,7 @@
 
     for(var i = 0; i <= dataArray[1].length-1; i++) {
          var percentWidth = dataArray[1][i]*100/totalHoresUs + "%";
-         var textCell = "U" + (i+1);
+         var textCell = "U" + dataArray[3][i]//(i+1);
          createCell(rowDistribHoraria4, percentWidth, textCell);
     }
 
@@ -371,7 +371,7 @@
         <th>Inici</th>
         <th>Final</th>
       </tr>
-<WIOCCL:FOR from="{#_FIRST({##calendari##}, ''FIRST[unitat]'')_#}" to="{#_LAST({##calendari##}, ''LAST[unitat]'')_#}" counter="idUnitat">
+<WIOCCL:FOR from="{#_MIN({##calendari##}, ''MIN[unitat]'')_#}" to="{#_MAX({##calendari##}, ''MAX[unitat]'')_#}" counter="idUnitat">
 <WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[unitat]##}=={##idUnitat##}">     
 <WIOCCL:FOREACH  var="itemCal" array="{##filtered##}" counter="cont">
       <tr>
@@ -409,7 +409,7 @@
       </tr>
 <WIOCCL:FOREACH var="item" array="{##datesAC##}">
       <tr>
-        <th>U{##item[unitat]##}</th>
+        <th>U{##item[unitat]##} ({##item[id]##})</th>
         <td>{#_DATE("{##item[enunciat]##}")_#}</td>
         <td>{#_DATE("{##item[lliurament]##}")_#}</td>
         <td>{#_DATE("{##item[solució]##}")_#}</td>
@@ -565,15 +565,17 @@
     <script type="text/javascript"> 
 (function(){
     var dataArray1 = [
-<WIOCCL:FOR from="{#_FIRST({##dadesQualificacioUFs##}, ''FIRST[unitat formativa]'')_#}" to="{#_LAST({##dadesQualificacioUFs##}, ''LAST[unitat formativa]'')_#}" counter="idUF">        
+<WIOCCL:FOR from="{#_MIN({##dadesQualificacioUFs##}, ''MIN[unitat formativa]'')_#}" to="{#_MAX({##dadesQualificacioUFs##}, ''MAX[unitat formativa]'')_#}" counter="idUF">        
                       [
                         { 
                           title :"UF{##idUF##}",
+                          name :"UF{##idUF##}",
                           percent: 0
                         },                        
 <WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##idUF##}">                        
                        { 
                           title :"{##item[descripció qualificació]##}",
+                          name :"{##item[abreviació qualificació]##}",
                           percent: {##item[ponderació]##}
                         },
 </WIOCCL:FOREACH>
@@ -582,11 +584,13 @@
                       [
                         { 
                           title :"FINAL",
+                          name :"FINAL",
                           percent: 0
                         },
 <WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">                        
                        { 
                           title :"UF{##item[unitat formativa]##}",
+                          name :"UF{##item[unitat formativa]##}",
                           percent: {##item[ponderació]##}
                         },
 </WIOCCL:FOREACH>                        
@@ -621,8 +625,9 @@
           /* Creem cel·les de títol */
           var newTitleCell =  document.createElement("div");
           var newTitleContentCell =  document.createElement("span");
-          var titleCellContent = document.createTextNode(dataArray1[i][j].title);
+          var titleCellContent = document.createTextNode(dataArray1[i][j].name);
           newTitleCell.setAttribute("class", "cellQualificacio");
+          newTitleCell.setAttribute("title", dataArray1[i][j].title);
           newTitleContentCell.appendChild(titleCellContent);
           newTitleCell.appendChild(newTitleContentCell);
           newTitleCell.style.width = dataArray1[i][j].percent + "%";
@@ -657,7 +662,7 @@
     }
 })();
     </script>
-    <a href="pt_sencer/pt.html">Consulteu aquí la programació completa</a>
+    <a target="_blank" href="pt_sencer/pt.html">Consulteu aquí la programació completa</a>
   </div>
 </section>
 <!-- /Secció 8 -->
