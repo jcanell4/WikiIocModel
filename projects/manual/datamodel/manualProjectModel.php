@@ -1,6 +1,6 @@
 <?php
 /**
- * ptfploeProjectModel
+ * manualProjectModel
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
@@ -9,7 +9,7 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocm
 require_once (WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
 require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
 
-class ptfploeProjectModel extends AbstractProjectModel {
+class manualProjectModel extends AbstractProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
@@ -37,24 +37,34 @@ class ptfploeProjectModel extends AbstractProjectModel {
     public function generateProject() {
         $ret = array();
         //0. Obtiene los datos del proyecto
+//        $data = $this->getData();   //obtiene la estructura y el contenido del proyecto
         $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
+//        
+//        //1.1 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
+//        $this->createTemplateDocument($data);
 
         //2. Establece la marca de 'proyecto generado'
         $ret[ProjectKeys::KEY_GENERATED] = $this->projectMetaDataQuery->setProjectGenerated();
-        if ($ret[ProjectKeys::KEY_GENERATED]){
+        if($ret[ProjectKeys::KEY_GENERATED]){
             //3a. Otorga, al Autor, permisos sobre el directorio de proyecto
+//            PagePermissionManager::updatePagePermission($this->id.":*", $data['projectMetaData']["autor"]['value'], AUTH_UPLOAD);
             PagePermissionManager::updatePagePermission($this->id.":*", $ret['projectMetaData']["autor"]['value'], AUTH_UPLOAD);
 
             //3b. Otorga, al Responsable, permisos sobre el directorio de proyecto
+//            if ($data['projectMetaData']["autor"]['value'] !== $data['projectMetaData']["responsable"]['value'])
             if ($ret['projectMetaData']["autor"]['value'] !== $ret['projectMetaData']["responsable"]['value'])
+//                PagePermissionManager::updatePagePermission($this->id.":*", $data['projectMetaData']["responsable"]['value'], AUTH_UPLOAD);
                 PagePermissionManager::updatePagePermission($this->id.":*", $ret['projectMetaData']["responsable"]['value'], AUTH_UPLOAD);
 
             //4a. Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
+//            $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$data['projectMetaData']["autor"]['value'].":";
             $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$ret['projectMetaData']["autor"]['value'].":";
+//            PagePermissionManager::updatePagePermission($ns."*", $data['projectMetaData']["autor"]['value'], AUTH_DELETE, TRUE);
             PagePermissionManager::updatePagePermission($ns."*", $ret['projectMetaData']["autor"]['value'], AUTH_DELETE, TRUE);
             //4b. Incluye la página del proyecto en el archivo de atajos del Autor
             $params = [
                  'id' => $this->id
+//                ,'autor' => $data['projectMetaData']["autor"]['value']
                 ,'autor' => $ret['projectMetaData']["autor"]['value']
                 ,'link_page' => $this->id
                 ,'user_shortcut' => $ns.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
@@ -64,7 +74,7 @@ class ptfploeProjectModel extends AbstractProjectModel {
 
         return $ret;
     }
-
+    
     public function createTemplateDocument($data){
         $plantilla = $this->getTemplateContentDocumentId($data);
         $destino = $this->getContentDocumentId($data);

@@ -36,7 +36,7 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
     }
 
     protected function preResponseProcess() {
-        if ($this->projectModel->getDataProject()) {
+        if ($this->projectModel->getDataProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_METADATA_SUBSET])) {
             //versión guardada en el subset del fichero system del proyecto
             $ver_project = $this->projectModel->getProjectSystemSubSetAttr("version", $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
             if ($ver_project == NULL) $ver_project = 0;
@@ -60,7 +60,7 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
             $response[ProjectKeys::KEY_PROJECT_EXTRADATA][ProjectKeys::KEY_METADATA_SUBSET] = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
             $response['isSubSet'] = TRUE;
         }
-        $response[ProjectKeys::KEY_GENERATED] = $this->getModel()->isProjectGenerated();        
+        $response[ProjectKeys::KEY_GENERATED] = $this->getModel()->isProjectGenerated();
     }
 
     public function generateMessageInfoForSubSetProject($id, $subSet, $message) {

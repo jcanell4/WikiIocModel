@@ -113,8 +113,8 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     //Obtiene un array [key, value] con los datos del proyecto solicitado
-    public function getDataProject() {
-        return $this->projectMetaDataQuery->getDataProject();
+    public function getDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE) {
+        return $this->projectMetaDataQuery->getDataProject($id, $projectType, $metaDataSubSet);
     }
 
     /**
@@ -260,9 +260,9 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     public function getProjectSubSetAttr($att) {
-        return $this->projectMetaDataQuery->getProjectSystemSubSetAttr($att);        
+        return $this->projectMetaDataQuery->getProjectSystemSubSetAttr($att);
     }
-    
+
     public function setProjectSubSetAttr($att, $value) {
         return $this->projectMetaDataQuery->setProjectSystemSubSetAttr($att, $value);
     }

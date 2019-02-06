@@ -1,0 +1,390 @@
+Detall de l'ús de configMain.json
+=================================
+
+El fitxer configMain.json conté les dades de configuració per poder crear i manipular dades estructurades dels projectes del tipus al qual pertany la configuració. 
+Les dades de configuració contemplen dos camps específics, per una banda, sota el nom de "metaDataClassesNameSpaces" es defineixen quines són les classes que faran 
+el tractament i per altra, sota el nom de "metaDataProjectStructure" trobarem la configuració referent a l'estructura de les dades i el seu emmagatzematge.
+
+metaDataClassesNameSpaces
+-------------------------
+El camp "metaDataClassesNameSpaces" està compost de diversos subconjunts de dades, cada un dels quals defineix quines són les classes que cal usar per tractar les dades 
+del subconjunt especificat. Els subconjunts poden tenir qualsevol nom tot i que per defecte l'actual codificació estableix el nom "main" com a únic subconjunt de dades.
+
+Dins de cada subconjunt es defineix la ubicació de les les classes MetaDataDAO, MetaDataEntity i MetaDataRender, necessàries per gestionar les dades del projecte. El 
+valor de la configuració indica de quin projecte es farà servir la classe. Aixi per exemple, en una configuració com la següent  
+
+{
+    "metaDataClassesNameSpaces": [
+        {
+            "main": {
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "manual"
+            }
+        }
+    ],
+    ...
+}
+
+es defineix, pel subconjunt "main",  que la classe MetaDataDao i MetaDataEntity a implementar són les que es troben al projecte "defaultProject", mentre per que la 
+classe MetaDataRender cal instanciar la que es troba al projecte manual. La raó d'aquesta configuració és per poder reutilitzar des d'altres projectes, classes 
+ja implementades en projectes diferents. 
+
+metaDataComponentTypes
+-----------------------
+
+{
+    ...
+    "metaDataComponentTypes": [
+        {
+            "main": {
+                "subprojects":["taulasubs", "anotherProject"] | true | false,   //Array => tipus de projectes acceptats, true => qualsevol projecte, false o undefined (absència) => no presenta aquest tipus de component 
+                "documents":["fp:plantilles:plantillaX", "fp:plantilles:plantillaY"] | true | false,  //Array => quines plantilles són acceptades, true => qualsevol plantilla, flase o undefined(absència) => no presenta aquest tipus de component 
+                "folders": true | false, //true => true => accepta crear carpetes i subpcarpetes, false o undefined (absència) => no presenta aquest tipus de component 
+            }
+        }
+        
+    ],
+    ...
+}
+
+
+metaDataProjectStructure
+------------------------
+El camp "metaDataProjectStructure" defienix un array que conté tants elments com subconjunts de dades es necessitin definir. Per defecte n'hi haurà d'haber un. Cada 
+element de l'array contindrà els següents camps:
+    * Un camp anomenat igual que el nom del subconjunt de dades, el valor del qual indicarà el nom del fitxer on s'emmagatzemaran les dades estructurads del subconjunt
+    * El camp anomenat mainType, els valor del qual conté la descripció del tipus de valor corresponent a l'estructura de dades del subconjunt. La descripció del tipus 
+    està definit en algun dels possibles formats que es descriuen en el segúent apartat.
+    * El camp "typesDefinition" que conté la descripció dels diferents tipus compostos de dades necessaris per poder definit l'estructura principal en un dels formats descripts 
+    en el següent apartat.
+
+
+Formats possibles per definir els diferents tipus compostos de dades
+--------------------------------------------------------------------
+
+En aquest apartat es definexen els formats que poden usar-se per definir els diferents tipus de dades. En general un tipus compost s'identifica amb un nom el qual conté diverses 
+propietats que el defineixen. Al següent exemple s'observen dos tipus compostos anomenats objecte2-de-prova i objecte3-de-prova.
+
+"typesDefinition": {
+    "objecte2-de-prova": {
+        "type":"object",
+        "keys": {
+            "o2att1": {
+                "type": "string",
+                "mandatory": true
+            }
+            "o2att2": {
+                "type": "string",
+                "mandatory": true
+            }
+        }                    
+    },
+    "objecte3-de-prova": {
+        "type":"objectArray",
+        "keys": {
+            "o3att1": {
+                "type": "string",
+                "mandatory": true
+            }
+            "o3att2": {
+                "type": "object",
+                "typeDef": "objecte2-de-prova"
+                "mandatory": true
+            }
+        }                    
+    },
+    ...
+}
+
+Els tipus compostos poden classificar-se, per la seva naturalesa com objectes (type: object), col·lecció d'objectes (type: objectArray), taula o matriu bidimensional de 
+dades bàsiques (type: table) o col·lecció de dades bàsiques (type: array). La propietat type identifica aquesta naturalesa. 
+
+Segons la seva naturalesa (propietat type) les dades compostes es definiran de la següent manera:
+
+**type object**
+Les dades compostes de tipus objecte, a més del type contindran la descripció dels atributs o "keys" que les composen. La definició de keys s'agrupa sota el nom "keys" i 
+per dada key contempla:
+    * El type de la key. La propietat "type" identifica el tipus de dada (simple o composta) que representa. Pot prendre els següents valors:
+        * string
+        * number
+        * boolean
+        * object
+        * objectArray
+        * table
+        * array
+        * NOM_ESPECIFIC_DE_TIPUS_COMPOST
+    * Si la key representa un tipus de dada compost identificat amb el type object, objectArray, table o array pot contenir la propietat typeDef per identificar 
+    el tipus especific que representarà aquest camp. 
+    * De forma alternativa, els tipos compostos identificats amb el type object o objectArray podran substituir la propietat typeDef per una descripció detallada de 
+    les keys que definirien l'objecte o els ítems de les col·leccions de tipus objectArray. Aquesta forma alternativa pot ser útil per definir keys compostes particulars 
+    el tipus de les quals no es faci servir en cap altre key.
+
+De forma opcional les keys accepten també qualsevol de les propietats descrites aquí:
+    * mandatory: pot prendre el valor true o false i indica si estracta d'un camp obligatori o opcional. Per defecte mandatory és fals.
+    * struc_chars": pren valors numerics i indica el nombre de caràcters o dígits que pot prendre un camp de tipus identificat per una dada de tipus string o number. 
+    Aquesta propietat no té valor per defecte.
+    * n_rows": També pren valors numèrics i indica el número de files que es preveu  que ocupi. Bàsicament es fa sevir indicar si estracta d'un camp de tipus string al 
+    qual se li permet contenir text amb múltiples línies. Per defecte el nombre de files és 1.
+    * Pels tipus table, caldrà definir de forma obligatoria la propietat array_columns per indicar quantes columnes tindrà aquesta taula.
+    * També pels tipus table, però de forma opcional, es pot especificar el nombre de files. Això crearà una taula amb el nombre de files prefixat. Si es vol que le nombre 
+    de files variï caldria deixar aquesta propitat sense definir.
+    
+Així són definicions vàlides qualsevol de les següents definicions de keys
+
+"typesDefinition": {
+    "objecte1-de-prova": {
+        "type":"object",
+        "keys": {
+            "o3att1": {
+                "type": "string",
+                "mandatory": true
+            },
+            "o3att2": {
+                "type": "object",
+                "typeDef": "objecte2-de-prova"
+                "mandatory": false
+            },
+            "o3att3": {
+                "type": "objecte2-de-prova",
+                "mandatory": true
+            },
+            "o3att4": {
+                "type": "objectArray",
+                "typeDef": "objecte4-de-prova"
+            },
+            "o3att5": {
+                "type": "objectArray"
+                "keys": {
+                    "a1":{
+                        "type":"string",
+                        "struc_chars":30
+                    },
+                    "a2":{
+                        "type":"string"
+                    }
+                }
+            },
+            "o3att6": {
+                "type": "object"
+                "keys": {
+                    "o1":{
+                        "type":"number",
+                        "struc_chars":5
+                    },
+                    "o2":{
+                        "type":"string"
+                    }
+                }
+            },
+            "o3att7": {
+                "type": "array",
+                "typeDef": "string"
+            },
+            "o3att8": {
+                "type": "table".
+                "typeDef": "string",
+                "cols": 3
+            }
+            ...
+        }
+    },
+    ...
+}
+
+Existeix encara una altra propietat anomenda renderAsMultifield. Es trcata d'una propietat específica per keys de tipus object, objectArray, table i array. Aquesta 
+indica si el valor de la key cal obtenir-lo com ún valor indivisible o cal identificar cada una de les parts compotses (keys de l'objecte key) com si fossin keys 
+individuals. En el cas de keys de tipus object, el valor per defecte de renderAsMultifield és true, però per la resta de casos (objectArray, table i array) el 
+valor per defecte és false.
+    
+En el següent exemple es poden veure els diferents elements de configuració descrits:
+
+{
+    "metaDataClassesNameSpaces": [
+        {
+            "main": {
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "manual"
+            }
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+            "mainType": {
+                "type": "object",
+                "typeDef": "document"
+            },
+            "typesDefinition": {
+                "objecte2-de-prova": {
+                    "type":"object",
+                    "keys": {
+                        "o2att1": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "o2att2": {
+                            "type": "string"
+                        }
+                    }                    
+                },
+                "objecte3-de-prova": {
+                    "type":"object",
+                    "keys": {
+                        "o3att1": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "o3att2": {
+                            "type": "string",
+                            "mandatory": true
+                        }
+                    }                    
+                },
+                "entry-de-prova": {
+                    "type":"object",
+                    "keys": {
+                        "key": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "value1": {
+                            "type": "string"
+                        },
+                        "value2": {
+                            "type": "string"
+                        }
+                    }                    
+                },
+                "taula-de-prova": {
+                    "type": "objectArray",
+                    "typeDef":"entry-de-prova"
+                },
+                "objecte1-de-prova": {
+                    "type": "object",
+                    "keys": {
+                        "o1att1": {
+                            "type": "string"
+                        },
+                        "o1att2": {
+                            "type": "string"
+                        }
+                    }                    
+                },
+                "document": {
+                    "type": "object",
+                    "keys": {
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "default": "write a brief project description here"
+                        },
+                        "nsproject": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "plantilla": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "plantilles:projects:continguts"
+                        },
+                        "fitxercontinguts": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "n_rows": "1",
+                            "mandatory": true
+                        },
+                        "titol": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Dades generals del projecte"
+                        },
+                        "media_address": {
+                            "type": "string",
+                            "default": "../media"
+                        },
+                        "nom1-de-prova": {
+                            "type": "objectArray",
+                            "typeDef": "objecte2-de-prova",
+                            "array_rows": "2",
+                            "mandatory": true
+                        },
+                        "nom2-de-prova": {
+                            "type": "objectArray",
+                            "keys":{
+                                "a1":{
+                                    "type":"string"
+                                },
+                                "a2":{
+                                    "type":"string"
+                                }
+                            },
+                            "renderAsMultiField":true,
+                            "array_rows": "2",
+                            "mandatory": true
+                        },
+                        "nom3A-de-prova": {
+                            "type": "objecte2-de-prova",
+                            "renderAsMultiField":true
+                        },
+                        "nom3B-de-prova": {
+                            "type": "objecte1-de-prova",
+                            "renderAsMultiField":true,
+                            "mandatory": true
+                        },
+                        "nom4-de-prova": {
+                            "type": "object",
+                            "typeDef": "objecte3-de-prova",
+                            "mandatory": true
+                        },
+                        "nom5-de-prova": {
+                            "type": "object",
+                            "keys":{
+                                "a5":{
+                                    "type":"string"
+                                }
+                            },
+                            "mandatory": true
+                        },
+                        "nom6-de-prova": {
+                            "type": "array",
+                            "typeDef":"string"
+                        },
+                        "nom7-de-prova": {
+                            "type": "array",
+                            "typeDef":"string",
+                            "array_rows": "3",
+                            "renderAsMultiField":true,
+                            "mandatory": true
+                        },
+                        "nom8-de-prova": {
+                            "type": "table",
+                            "typeDef":"string",
+                            "array_columns": "3"
+                        },
+                        "nom9-de-prova": {
+                            "type": "table",
+                            "typeDef":"string",
+                            "array_columns": "3",
+                            "array_rows": "3",
+                            "renderAsMultiField":true,
+                            "mandatory": true
+                        },
+                        "nom-de-prova": {
+                            "type": "taula-de-prova",
+                            "mandatory": true
+                        }                        
+                    }
+                }
+            }
+        }
+    ]
+}
