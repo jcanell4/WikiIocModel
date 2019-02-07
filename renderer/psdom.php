@@ -56,9 +56,9 @@ class TableFrame extends StructuredNodeDoc{
     }
     
     public function getEncodeJson() {
-        $ret = "{\"type\":\"".$this->type."\",\"id\":\"".$this->id."\",\"title\":\"".$this->title."\",\"footer\":\"".$this->footer."\",\"widths\":\""
-                    .$this->widths."\",\"types\":\"".$this->types."\",\"hasBorder\":\"".$this->hasBorder."\",\"content\":".$this->getContentEncodeJson();
-        $ret .= "}";
+        $ret = "{\n\"type\":\"".trim($this->type)."\",\n\"id\":\"".trim($this->id)."\",\n\"title\":\"".trim($this->title)."\",\n\"footer\":\"".trim($this->footer)."\",\n\"widths\":\""
+                    .trim($this->widths)."\",\n\"types\":\"".trim($this->types)."\",\n\"hasBorder\":\"".trim($this->hasBorder)."\",\n\"content\":".trim($this->getContentEncodeJson());
+        $ret .= "\n}";
         return $ret;
     }    
 }
@@ -81,9 +81,9 @@ class CellNodeDoc extends StructuredNodeDoc{
     }
     
     public function getEncodeJson() {
-        $ret = "{\"type\":\"".$this->type."\",\"colspan\":\"".$this->colspan."\",\"rowspan\":\"".$this->rowspan."\",\"align\":\"".$this->align."\",\"hasBorder\":\""
-                    .$this->hasBorder."\",\"content\":".$this->getContentEncodeJson();
-        $ret .= "}";
+        $ret = "{\n\"type\":\"".$this->type."\",\n\"colspan\":\"".$this->colspan."\",\n\"rowspan\":\"".$this->rowspan."\",\n\"align\":\"".$this->align."\",\n\"hasBorder\":\""
+                    .$this->hasBorder."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= "\n}";
         return $ret;
     }    
 }
@@ -99,8 +99,8 @@ class TableNodeDoc extends StructuredNodeDoc{
     }
     
     public function getEncodeJson() {
-        $ret = "{\"type\":\"".$this->type."\",\"hasBorder\":\"".$this->hasBorder."\",\"content\":".$this->getContentEncodeJson();
-        $ret .= "}";
+        $ret = "{\n\"type\":\"".$this->type."\",\n\"hasBorder\":\"".$this->hasBorder."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= "\n}";
         return $ret;
     }    
 }
@@ -150,20 +150,20 @@ class StructuredNodeDoc extends AbstractNodeDoc{
 
     public function getContentEncodeJson() {
         $sep="";
-        $ret .= "[";
+        $ret .= "[\n";
         foreach ($this->content as $child){
             $ret .= $sep.$child->getEncodeJson();
             if(empty($sep)){
-               $sep="," ;
+               $sep=",\n" ;
             }
         }
-        $ret .= "]";
+        $ret .= "\n]";
         return $ret;        
     }
     
     public function getEncodeJson() {
-        $ret = "{\"type\":\"".$this->type."\",\"content\":".$this->getContentEncodeJson();
-        $ret .= "}";
+        $ret = "{\n\"type\":\"".$this->type."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= "\n}";
         return $ret;
     }
 
@@ -183,8 +183,8 @@ class ListItemNodeDoc extends StructuredNodeDoc{
       return $this->level;  
     }
     public function getEncodeJson() {
-        $ret = "{\"type\":\"".$this->type."\",\"level\":\"".$this->getLevel()."\",\"content\":".$this->getContentEncodeJson();
-        $ret .= "}";
+        $ret = "{\n\"type\":\"".$this->type."\",\n\"level\":\"".$this->getLevel()."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= "\n}";
         return $ret;
     }
 }
@@ -230,14 +230,14 @@ class LeveledNodeDoc extends StructuredNodeDoc{
 
     public function getChildrenEncodeJson() {
         $sep="";
-        $ret .= "[";
+        $ret .= "[\n";
         foreach ($this->children as $child){
             $ret .= $sep.$child->getEncodeJson();
             if(empty($sep)){
-               $sep="," ;
+               $sep=",\n" ;
             }
         }
-        $ret .= "]";
+        $ret .= "\n]";
         return $ret;        
     }    
 }
@@ -252,9 +252,9 @@ class HeaderNodeDoc extends LeveledNodeDoc{
     }    
 
     public function getEncodeJson() {
-        $ret = "{\"type\":\"".$this->type."\",\"title\":\"".$this->title."\",\"level\":\"".$this->getLevel()."\",\"content\":".$this->getContentEncodeJson();
-        $ret .= ",\"children\":". $this->getChildrenEncodeJson();
-        $ret .= "}";
+        $ret = "{\n\"type\":\"".$this->type."\",\n\"title\":\"".$this->title."\",\n\"level\":\"".$this->getLevel()."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= ",\n\"children\":". $this->getChildrenEncodeJson();
+        $ret .= "\n}";
         return $ret;
     }
 }
@@ -301,7 +301,7 @@ class CodeNodeDoc extends TextNodeDoc{
     }
     
     public function getEncodeJson() {
-        return "{\"type\":\"".$this->type."\",\"language\":\"".$this->language."\",\"text\":\"".$this->text."\"}";
+        return "{\n\"type\":\"".$this->type."\",\n\"language\":\"".$this->language."\",\n\"text\":\"".$this->text."\"\n}";
     }        
 }
 
@@ -319,7 +319,7 @@ class ReferenceNodeDoc extends AbstractNodeDoc{
     }
     
     public function getEncodeJson() {
-        return "{\"type\":\"".$this->type."\",\"referenceId\":\"".$this->referenceId."\",\"referenceType\":\"".$this->referenceType."\"}";
+        return "{\n\"type\":\"".$this->type."\",\n\"referenceId\":\"".$this->referenceId."\",\n\"referenceType\":\"".$this->referenceType."\"\n}";
     }
 
 }
@@ -338,7 +338,11 @@ class TextNodeDoc extends AbstractNodeDoc{
     }
     
     public function getEncodeJson() {
-        return "{\"type\":\"".$this->type."\",\"text\":\"".$this->text."\"}";
+        $text = trim($this->text);
+        if(empty($text)){
+            $text=" ";
+        }
+        return "{\n\"type\":\"".$this->type."\",\n\"text\":\"".$text."\"\n}";
     }
 
 }
