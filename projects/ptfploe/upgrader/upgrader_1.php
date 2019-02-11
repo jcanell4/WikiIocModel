@@ -44,7 +44,10 @@ class upgrader_1 extends CommonUpgrader {
                     ["{#_DATE\(\"{##itemc\[inici\]##}\", \"\.\"\)_#}-{#_DATE\(\"{##itemc\[inici\]##}",
                      "{#_DATE(\"{##itemc[inici]##}\", \".\")_#}-{#_DATE(\"{##itemc[final]##}"]];
         $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
-        @file_put_contents($docFile, $dataChanged);
+        if (!empty($dataChanged)) {
+            $ret = @file_put_contents($docFile, $dataChanged);
+        }
+        return $ret && !empty($dataChanged);
     }
 
 }
