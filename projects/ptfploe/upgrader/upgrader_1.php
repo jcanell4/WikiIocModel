@@ -36,18 +36,17 @@ class upgrader_1 extends CommonUpgrader {
 //        @file_put_contents($docFile, $dataChanged);
 
         //Versión basada en la función updateTemplateByReplace()
-        $base = WikiGlobalConfig::getConf('datadir');
-        $docFile = $base."/".str_replace(":", "/", $this->model->getId()). "/continguts.txt";
-        $doc = @file_get_contents($docFile);
+        $filename = $this->model->getProjectDocumentName();
+        $doc = $this->model->getRawProjectDocument($filename);
         $aTokRep = [["\s+:title:Taula Unitats",
                      "  :title:Apartats"],
                     ["{#_DATE\(\"{##itemc\[inici\]##}\", \"\.\"\)_#}-{#_DATE\(\"{##itemc\[inici\]##}",
                      "{#_DATE(\"{##itemc[inici]##}\", \".\")_#}-{#_DATE(\"{##itemc[final]##}"]];
         $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
         if (!empty($dataChanged)) {
-            $ret = @file_put_contents($docFile, $dataChanged);
+            $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
         }
-        return $ret && !empty($dataChanged);
+        return !empty($dataChanged);
     }
 
 }

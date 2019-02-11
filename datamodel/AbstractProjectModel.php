@@ -104,6 +104,18 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $ret;
     }
 
+    public function getRawProjectDocument($filename) {
+        $content = $this->getPageDataQuery()->getRaw("{$this->id}:$filename");
+        return $content;
+    }
+
+    public function setRawProjectDocument($filename, $text, $summary) {
+        $toSet = [ProjectKeys::KEY_ID => "{$this->id}:$filename",
+                  PageKeys::KEY_WIKITEXT => $text,
+                  PageKeys::KEY_SUM => $summary];
+        $this->dokuPageModel->setData($toSet);
+    }
+
     /**
      * Obtiene los datos del archivo de datos (meta.mdpr) de un proyecto
      */
