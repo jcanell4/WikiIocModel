@@ -276,6 +276,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $this->projectMetaDataQuery->getProjectSystemSubSetAttr($attr, $subSet);
     }
 
+    public function setProjectSystemSubSetAttr($attr, $value, $subSet=NULL) {
+        return $this->projectMetaDataQuery->setProjectSystemSubSetAttr($attr, $value, $subSet);
+    }
+
     /*
      * Del archivo configMain.json, obtiene el atributo solicitado de la clave principal solicidada
      */
