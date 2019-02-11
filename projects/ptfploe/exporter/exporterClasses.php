@@ -347,13 +347,15 @@ class StaticPdfRenderer{
         }
         
         $iocTcPdf->AddPage();
-        foreach ($params["data"]["contingut"] as $itemsDoc){
-            self::resolveReferences($itemsDoc);
+
+        $len = count($params["data"]["contingut"]);
+        for($i=0; $i<$len; $i++){
+            self::resolveReferences($params["data"]["contingut"][$i]);
         }
-        foreach ($params["data"]["contingut"] as $itemsDoc){
-            self::renderHeader($itemsDoc, $iocTcPdf);
+        for($i=0; $i<$len; $i++){
+            self::renderHeader($params["data"]["contingut"][$i], $iocTcPdf);
         }
-        
+
         // add a new page for TOC
         $iocTcPdf->addTOCPage();
 

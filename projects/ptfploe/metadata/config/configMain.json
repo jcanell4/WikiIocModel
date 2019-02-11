@@ -18,6 +18,7 @@
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
+            "version": 1,
             "mainType": {
                 "type": "object",
                 "typeDef": "pla"
