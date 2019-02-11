@@ -15,6 +15,9 @@ class ptfploeProjectModel extends AbstractProjectModel {
         parent::__construct($persistenceEngine);
     }
 
+    public function getId(){
+        return $this->id;
+    }
 
     public function getContentDocumentId($responseData){
         if ($responseData['projectMetaData']["fitxercontinguts"]['value']){

@@ -40,6 +40,10 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
 
             $model->setData($metaData);    //crea la estructura y el contenido en 'mdprojects/'
             $model->createDataDir($id);    //crea el directori del projecte a 'data/pages/'
+            $v_conf = $model->getMetaDataAnyAttr("version");
+            if($v_conf){
+                $model->setProjectSystemSubSetAttr("version", $v_conf, $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
+            }
 
             $ret = $model->getData();      //obtiene la estructura y el contenido del proyecto
 

@@ -544,7 +544,7 @@ class ProjectMetaDataQuery extends DataQuery {
         if(!$metadataSubset){
             $metadataSubset = $this->getProjectSubset();
         }
-        $dirProject = $this->getProjectFilePath();
+        $dirProject = $this->getProjectFilePath(NULL, FALSE);
         $file = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
         $systemContent = json_decode(file_get_contents($dirProject.$file), true);
         return $systemContent[$metadataSubset];
@@ -554,7 +554,7 @@ class ProjectMetaDataQuery extends DataQuery {
         if(!$metadataSubset){
             $metadataSubset = $this->getProjectSubset();
         }
-        $dirProject = $this->getProjectFilePath();
+        $dirProject = $this->getProjectFilePath(NULL, FALSE);
         $file = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
         $systemContent = json_decode(file_get_contents($dirProject.$file), true);
         $systemContent[$metadataSubset] = $data;
@@ -620,12 +620,12 @@ class ProjectMetaDataQuery extends DataQuery {
         return $ret;
     }
 
-    private function getProjectFilePath($id=FALSE, $revision=FALSE) {
-        if (!$id){
+    private function getProjectFilePath($id=NULL, $revision=NULL) {
+        if ($id===NULL){
             $id = $this->getProjectId();
         }
         $id = utf8_encodeFN(str_replace(":", "/", $id));
-        if (!$revision){
+        if ($revision===NULL){
             $revision = $this->getRevision();
         }
         if ($revision){
