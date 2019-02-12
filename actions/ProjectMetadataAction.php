@@ -37,23 +37,58 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
 
     protected function preResponseProcess() {
         if ($this->projectModel->getDataProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_METADATA_SUBSET])) {
-            //versión guardada en el subset del fichero system del proyecto
-            $ver_project = $this->projectModel->getProjectSystemSubSetAttr("version", $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
-            if ($ver_project == NULL) $ver_project = 0;
-            //versión establecida en el archivo configMain.json (subset correspondiente) del tipo de proyecto
-            $ver_config = $this->projectModel->getMetaDataAnyAttr("version");
-            if ($ver_config == NULL) $ver_config = 0;
 
-            if ($ver_project > $ver_config) {
-                throw new Exception ("La versió del projecte és major que la versió definida al tipus de projecte: $ver_project > $ver_config");
+            //Actualiza el la estructura y datos del archivo de sistema del proyecto
+            if (!UpgradeManager::preUpgrade($this->projectModel, $this->params[ProjectKeys::KEY_METADATA_SUBSET])) {
+                throw new Exception ("Error en l'actualització de la versió de l'arxiu de sistema del projecte");
             }
-            if ($ver_project !== $ver_config) {
-                $upgader = new UpgradeManager($this->projectModel, $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_METADATA_SUBSET], $ver_project, $ver_config);
-                $new_ver = $upgader->process($ver_project, $ver_config);
-                $this->projectModel->setProjectSystemSubSetAttr("version", $new_ver, $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
-                if ($new_ver < $ver_config){
-                    throw new Exception("Error en l'actualització completa de la versió del projecte.");
+
+            //colección de versiones guardada en el subset del fichero system del proyecto
+            $versions_project = $this->projectModel->getProjectSystemSubSetAttr("versions", $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
+
+            //colección de versiones establecida en el archivo configMain.json (subset correspondiente) del tipo de proyecto
+            $versions_config = $this->projectModel->getMetaDataAnyAttr("versions");
+            if ($versions_config) {
+                foreach ($versions_config as $key => $value) {
+                    $type = $key;
+                    if (is_array($value)) {
+                        foreach ($value as $k => $v) {
+                            $this->_processVersionChange($v, $versions_project[$key][$k], $versions_project, $type, $k);
+                        }
+                    }else {
+                        $this->_processVersionChange($value, $versions_project[$key], $versions_project, $type);
+                    }
                 }
+            }
+        }
+    }
+    /**
+     * Preparación de parámetros y datos para ser enviados al proceso Upgrader
+     * @param int $ver_config  : valor de versión del elemento tratado (del archivo de configuración del tipo de proyecto)
+     * @param int $ver_project : valor de versión del elemento tratado (del archivo de sistema del proyecto)
+     * @param array $versions_project : array completo del elemento "versions" del archivo de sistema del proyecto
+     * @param string $type : tipo de elemento a tratar: "fields", "templates", ...
+     * @param string $key : elemento específico del tipo a tratar: por ejemplo, nombre de la plantilla concreta del grupo "templates"
+     */
+    private function _processVersionChange($ver_config, $ver_project, $versions_project, $type, $key=NULL) {
+        if ($ver_config == NULL) $ver_config = 0;
+        if ($ver_project == NULL) $ver_project = 0;
+
+        if ($ver_project > $ver_config) {
+            throw new Exception ("La versió de tipus $type del projecte és major que la versió corresponent definida al tipus de projecte: $ver_project > $ver_config");
+        }
+
+        if ($ver_project !== $ver_config) {
+            $upgader = new UpgradeManager($this->projectModel, $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_METADATA_SUBSET], $ver_project, $ver_config, $type);
+            $new_ver = $upgader->process($ver_project, $ver_config, $type, $key);
+            if ($key) {
+                $versions_project[$type][$key] = $new_ver;
+            }else {
+                $versions_project[$type] = $new_ver;
+            }
+            $this->projectModel->setProjectSystemSubSetAttr("versions", $versions_project, $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
+            if ($new_ver < $ver_config){
+                throw new Exception("Error en l'actualització completa de la versió del projecte.");
             }
         }
     }
