@@ -18,35 +18,28 @@ class upgrader_1 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process() {
-        /***********************************************************
-         * Canvis a la plantilla:
-         * Línia 96.  Es canvia "  :title:Taula Unitats" per "  :title:Apartats"
-         * Línia 102. Es canvia "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[inici]##}" per "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[final]##}"
-         */
+    public function process($type, $filename=NULL) {
+        switch ($type) {
+            case "fields":
+                break;
 
-        //Versión basada en la comparación de plantillas a partir de su conversión en arrays por token
-//        $base = WikiGlobalConfig::getConf('datadir');
-//        $baset = "$base/plantilles/docum_ioc/pla_treball_fp/loe/continguts";
-//        $t0 = @file_get_contents("$baset.v0");
-//        $t1 = @file_get_contents("$baset.txt");
-//        $docFile = $base."/".str_replace(":", "/", $this->model->getId()). "/continguts.txt";
-//        $doc = @file_get_contents($docFile);
-//        $dataChanged = $this->updateDocToNewTemplate($t0, $t1, $doc);
-//        @file_put_contents($docFile, $dataChanged);
-
-        //Versión basada en la función updateTemplateByReplace()
-        $filename = $this->model->getProjectDocumentName();
-        $doc = $this->model->getRawProjectDocument($filename);
-        $aTokRep = [["\s+:title:Taula Unitats",
-                     "  :title:Apartats"],
-                    ["{#_DATE\(\"{##itemc\[inici\]##}\", \"\.\"\)_#}-{#_DATE\(\"{##itemc\[inici\]##}",
-                     "{#_DATE(\"{##itemc[inici]##}\", \".\")_#}-{#_DATE(\"{##itemc[final]##}"]];
-        $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
-        if (!empty($dataChanged)) {
-            $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
+            case "templates":
+                // Línia 96.  Es canvia "  :title:Taula Unitats" per "  :title:Apartats"
+                // Línia 102. Es canvia "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[inici]##}" per "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[final]##}"
+                if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
+                    $filename = $this->model->getProjectDocumentName();
+                }
+                $doc = $this->model->getRawProjectDocument($filename);
+                $aTokRep = [["\s+:title:Taula Unitats",
+                             "  :title:Apartats"],
+                            ["{#_DATE\(\"{##itemc\[inici\]##}\", \"\.\"\)_#}-{#_DATE\(\"{##itemc\[inici\]##}",
+                             "{#_DATE(\"{##itemc[inici]##}\", \".\")_#}-{#_DATE(\"{##itemc[final]##}"]];
+                $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
+                if (!empty($dataChanged)) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
+                }
+                return !empty($dataChanged);
         }
-        return !empty($dataChanged);
     }
 
 }
