@@ -51,8 +51,8 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
                 $upgader = new UpgradeManager($this->projectModel, $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_METADATA_SUBSET], $ver_project, $ver_config);
                 $new_ver = $upgader->process($ver_project, $ver_config);
                 $this->projectModel->setProjectSystemSubSetAttr("version", $new_ver, $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
-                if($new_ver<$ver_config){
-                    throw new Exception("Error actualitzant la versió del projecte.");
+                if ($new_ver < $ver_config){
+                    throw new Exception("Error en l'actualització completa de la versió del projecte.");
                 }
             }
         }

@@ -19,32 +19,34 @@ class upgrader_1 extends CommonUpgrader {
     }
 
     public function process() {
-        /***************************************************************************************
+        /***********************************************************
          * Canvis a la plantilla:
-         * 
-         * Línia 96. Es canvia "  :title:Taula Unitats" per "  :title:Apartats"
-         * Línia 102. Es canvia "|  {##itemc[tipus període]##} {##itemc[període]##}:{##itemc[descripció període]##}   |  {#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[inici]##}", ".")_#}  |" per "|  {##itemc[tipus període]##} {##itemc[període]##}:{##itemc[descripció període]##}   |  {#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[final]##}", ".")_#}  |"
-         * 
+         * Línia 96.  Es canvia "  :title:Taula Unitats" per "  :title:Apartats"
+         * Línia 102. Es canvia "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[inici]##}" per "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[final]##}"
          */
-        //LECTURA DE LOS FICHEROS ORIGINALES
-        $base = WikiGlobalConfig::getConf('datadir');
-        $baset = "$base/plantilles/docum_ioc/pla_treball_fp/loe/continguts";
-        $t0 = @file_get_contents("$baset.v0");
-        $t1 = @file_get_contents("$baset.txt");
-        $docFile = $base."/".str_replace(":", "/", $this->model->getId()). "/continguts.txt";
-        $doc = @file_get_contents($docFile);
-        $dataChanged = $this->updateDocToNewTemplate($t0, $t1, $doc);
-        @file_put_contents($docFile, $dataChanged);
+
+        //Versión basada en la comparación de plantillas a partir de su conversión en arrays por token
+//        $base = WikiGlobalConfig::getConf('datadir');
+//        $baset = "$base/plantilles/docum_ioc/pla_treball_fp/loe/continguts";
+//        $t0 = @file_get_contents("$baset.v0");
+//        $t1 = @file_get_contents("$baset.txt");
+//        $docFile = $base."/".str_replace(":", "/", $this->model->getId()). "/continguts.txt";
+//        $doc = @file_get_contents($docFile);
+//        $dataChanged = $this->updateDocToNewTemplate($t0, $t1, $doc);
+//        @file_put_contents($docFile, $dataChanged);
+
+        //Versión basada en la función updateTemplateByReplace()
+        $filename = $this->model->getProjectDocumentName();
+        $doc = $this->model->getRawProjectDocument($filename);
+        $aTokRep = [["\s+:title:Taula Unitats",
+                     "  :title:Apartats"],
+                    ["{#_DATE\(\"{##itemc\[inici\]##}\", \"\.\"\)_#}-{#_DATE\(\"{##itemc\[inici\]##}",
+                     "{#_DATE(\"{##itemc[inici]##}\", \".\")_#}-{#_DATE(\"{##itemc[final]##}"]];
+        $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
+        if (!empty($dataChanged)) {
+            $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
+        }
+        return !empty($dataChanged);
     }
 
-
-    public function processProves() {
-        ////build array
-        //$data = array();
-        //$this->buildArrayFromStringTokenized($data, $name0);
-        ////get value
-        //$value = $this->getValueArrayFromIndexString($data, $name0);
-
-        //$pathresult = $this->getKeyPathArray($arrayDataProject, "eina");
-    }
 }

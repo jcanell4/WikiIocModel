@@ -19,6 +19,11 @@ class ptfploeProjectModel extends AbstractProjectModel {
         return $this->id;
     }
 
+    public function getProjectDocumentName() {
+        $ret = $this->getMetaDataProject();
+        return $ret['fitxercontinguts'];
+    }
+
     public function getContentDocumentId($responseData){
         if ($responseData['projectMetaData']["fitxercontinguts"]['value']){
             $contentName = $responseData['projectMetaData']["fitxercontinguts"]['value'];
