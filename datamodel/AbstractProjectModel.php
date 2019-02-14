@@ -163,7 +163,38 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             }
         }
         $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->viewConfigName);
+
+        $this->mergeFieldConfig($ret['projectMetaData'], $ret['projectViewData']['fields']);
+
         return $ret;
+    }
+
+    protected function mergeFieldConfig($projectMetaData, &$projectViewDataFields) {
+        foreach ($projectMetaData as $key=>$value) {
+            if (!$value['keys']) {
+                continue;
+            }
+            if (!isset($projectViewDataFields[$key]['config']) || !isset($projectViewDataFields[$key]['config']['fields'])) {
+                $projectViewDataFields[$key]['config']['fields'] = [];
+            }
+
+            foreach ($value['keys'] as $field=>$fieldConfig) {
+                // Si el camp no es troba al view, s'afegeix completament
+                if (!isset($projectViewDataFields[$key]['config']['fields'][$field])) {
+                    $projectViewDataFields[$key]['config']['fields'][$field] = $fieldConfig;
+                } else {
+                    // Si es troba al view, es comprova que el valor no estigui configurat, i en aquest cas s'afegeix la configuració del config
+                    foreach ($fieldConfig as $fieldConfigKey=>$fieldConfigValue) {
+                        if (!isset($projectViewDataFields[$key]['config']['fields'][$field][$fieldConfigKey])) {
+
+                        } // si ja es troba establert a la view no fem res, perquè aquest te prioritat
+                        $projectViewDataFields[$key]['config']['fields'][$field][$fieldConfigKey] = $fieldConfigValue;
+                    }
+                }
+            }
+
+        }
+
     }
 
     public function getProjectType() {
