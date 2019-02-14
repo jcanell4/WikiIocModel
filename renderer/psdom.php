@@ -690,7 +690,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     
     public function setTableTypes($types){
         if(is_string($types)){            
-            $atypes = preg_split('/(\s*,\s*)*,+(\s*,\s*)*/', trim($types));
+            $atypes = preg_split('/(\s*,\s*)*,+(\s*,\s*)*/', trim(str_replace("\t", "    ", $types)));
         }elseif(is_array($types)){
             $atypes = $types;
         }else{
