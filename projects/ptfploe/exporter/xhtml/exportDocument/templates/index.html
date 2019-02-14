@@ -224,13 +224,14 @@
 
 /* Es poden modificar les dades, afegint qualsevol sèries de valors de la llargada que calgui.*/
 (function(){
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">    
     var dataArray = [
-            [<WIOCCL:FOR from="{#_MIN({##taulaDadesUnitats##}, ''MIN[unitat formativa]'')_#}" to="{#_MAX({##taulaDadesUnitats##}, ''MAX[unitat formativa]'')_#}" counter="idUf"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##idUf##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[hores]")_#},</WIOCCL:SUBSET></WIOCCL:FOR>], /* Num. hores per cada UF */
+            [<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemUf[unitat formativa]##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[hores]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* Num. hores per cada UF */
             [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[hores]##},</WIOCCL:FOREACH>], /* Num. hores per cada U */
-            [<WIOCCL:FOR from="{#_MIN({##taulaDadesUnitats##}, ''MIN[unitat formativa]'')_#}" to="{#_MAX({##taulaDadesUnitats##}, ''MAX[unitat formativa]'')_#}" counter="idUf"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##idUf##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[unitat formativa]")_#},</WIOCCL:SUBSET></WIOCCL:FOR>], /* ID. de cada UF */
+            [<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemUf[unitat formativa]##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[unitat formativa]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* ID. de cada UF */
             [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[unitat]##},</WIOCCL:FOREACH>] /* ID de cada U */
         ];
-
+</WIOCCL:SET>
     /*****************/
 
 
@@ -564,15 +565,16 @@
     </div>
     <script type="text/javascript"> 
 (function(){
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
     var dataArray1 = [
-<WIOCCL:FOR from="{#_MIN({##dadesQualificacioUFs##}, ''MIN[unitat formativa]'')_#}" to="{#_MAX({##dadesQualificacioUFs##}, ''MAX[unitat formativa]'')_#}" counter="idUF">        
+<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
                       [
                         { 
-                          title :"UF{##idUF##}",
-                          name :"UF{##idUF##}",
+                          title :"UF{##itemUf[unitat formativa]##}",
+                          name :"UF{##itemUf[unitat formativa]##}",
                           percent: 0
                         },                        
-<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##idUF##}">                        
+<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}">                        
                        { 
                           title :"{##item[descripció qualificació]##}",
                           name :"{##item[abreviació qualificació]##}",
@@ -580,7 +582,7 @@
                         },
 </WIOCCL:FOREACH>
                       ],
-</WIOCCL:FOR>
+</WIOCCL:FOREACH>
                       [
                         { 
                           title :"FINAL",
@@ -596,6 +598,7 @@
 </WIOCCL:FOREACH>                        
                       ]
                     ];
+</WIOCCL:SET>
 
 
     /*****************/
