@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_1: Transforma los datos del proyecto "platreballfp"
+ * upgrader_1: Transforma los datos del proyecto "ptfploe"
  *             desde la estructura de la versión 0 a la estructura de la versión 1
  * @author rafael
  */
