@@ -18,12 +18,14 @@ class DokuModelManager extends AbstractModelManager{
 
     const MOD = WIKI_IOC_MODEL;
     const DEF = WIKI_IOC_PROJECT;
+
     static $defDirClass = array (
                'Action'        => array(self::MOD."actions/", self::DEF."actions/extra/"),
                 //'Authorization' =>  Está inactivo porque los ficheros de estas clases no están en directorios ajenos a este proyecto.
                 //                    Si algún fichero de clase está fuera del directorio de proyecto, éste es el lugar adecuado para indicarlo
                 //'Model' => array(self::MOD."datamodel/") En este caso el modelo se encuentra directamente en el directorio datamodel de wikiiocmodel, y no es necesario especificar la ruta, pues se coge por defecto.
-               'MetaData'      => array(self::MOD."metadata/")
+               'MetaData'      => array(self::MOD."metadata/"),
+               'Upgrader'      => array(self::DEF."upgrader/")
            );
     static $defMainClass = array(
                 'DokuModelAdapter'     => self::DEF."DokuModelAdapter.php",

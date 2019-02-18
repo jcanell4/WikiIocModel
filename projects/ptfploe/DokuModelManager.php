@@ -26,7 +26,8 @@ class DokuModelManager extends AbstractModelManager{
                'Action'        => array(self::MOD."actions/", self::DEF."actions/extra/"),
                'Model'         => array(self::MOD."datamodel/", self::CFG."datamodel/"),
                'MetaData'      => array(self::DEF."metadata/", self::MOD."metadata/"),
-               'Renderer'      => array(self::PRJ."renderer/")
+               'Renderer'      => array(self::PRJ."renderer/"),
+               'Upgrader'      => array(self::PRJ."upgrader/")
            );
     static $defMainClass = array(
                'DokuModelAdapter'     => self::MOD."BasicModelAdapter.php",
