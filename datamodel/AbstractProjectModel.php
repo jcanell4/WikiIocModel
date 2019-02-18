@@ -104,8 +104,19 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $ret;
     }
 
+    //Obtiene el contenido de un archivo wiki, es decir, está en pages/$id:nombre y tienen extensión .txt
     public function getRawProjectDocument($filename) {
         $content = $this->getPageDataQuery()->getRaw("{$this->id}:$filename");
+        return $content;
+    }
+
+    /**
+     * Obtiene el contenido del archivo wiki indicado en $filename. Está en pages/$filename con extensión .txt
+     * @param string $filename : ruta wiki (con :) del archivo (a partir de pages/)
+     * @return string : contenido del archivo
+     */
+    public function getRawDocument($filename) {
+        $content = $this->getPageDataQuery()->getRaw($filename);
         return $content;
     }
 
