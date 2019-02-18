@@ -109,6 +109,13 @@ class MetaDataRender extends \MetaDataRenderAbstract {
                     $properties['type']=$td['type'] ;
                     if(isset($td['typeDef'])){
                         $properties['typeDef']=$td['typeDef'];
+
+                        // Comprovem si existeixen les claus per l'objecte i si es així les afegim a les propietats
+                        if (isset($types[$td['typeDef']]) && (isset($types[$td['typeDef']]['keys']))) {
+                            $properties['keys'] = $types[$td['typeDef']]['keys'];
+                        }
+
+
 //                    }else if(isset($td['keys'])){
 //                        $properties['keys']=$td['keys'];
                     }else{

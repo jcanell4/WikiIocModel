@@ -18,7 +18,10 @@
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
-            "version": 1,
+            "versions": {
+                "templates": {"continguts":1},
+                "fields": 0
+            },
             "mainType": {
                 "type": "object",
                 "typeDef": "pla"
