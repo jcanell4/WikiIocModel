@@ -38,10 +38,10 @@ class ptfploeProjectModel extends AbstractProjectModel {
     }
 
     public function getTemplateContentDocumentId($responseData){
-        $plantilla = $responseData['projectMetaData']["plantilla"]['value'];
-//        preg_match("/##.*?##/s", $plantilla, $matches);
-//        $field = substr($matches[0],2,-2);
-//        $plantilla = preg_replace("/##.*?##/s", $responseData['projectMetaData'][$field]['value'], $plantilla);
+        $plantilla = $responseData["plantilla"];
+        if ($plantilla === NULL) {
+            $plantilla = $responseData['projectMetaData']["plantilla"]['value'];
+        }
         $plantilla = preg_replace("/##.*?##/s", "loe", $plantilla);
         return $plantilla;
     }
