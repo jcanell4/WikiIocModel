@@ -312,9 +312,16 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
     public abstract function generateProject();
 
-    /*
-     * Del fichero _wikiIocSystem_.mdpr del proyecto en curso, obtiene un atributo del subSet solicitado
-     */
+    //Del fichero _wikiIocSystem_.mdpr, del proyecto en curso, el elemento subSet solicitado
+    public function getSystemData($subSet=FALSE) {
+        return $this->projectMetaDataQuery->getSystemData($subSet);
+    }
+
+    public function setSystemData($data, $subSet=FALSE) {
+        $this->projectMetaDataQuery->setSystemData($data, $subSet);
+    }
+
+    //Del fichero _wikiIocSystem_.mdpr del proyecto en curso, obtiene un atributo del subSet solicitado
     public function getProjectSystemSubSetAttr($attr, $subSet=NULL) {
         return $this->projectMetaDataQuery->getProjectSystemSubSetAttr($attr, $subSet);
     }
