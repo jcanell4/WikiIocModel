@@ -84,7 +84,7 @@ class renderRenderizableText extends AbstractRenderer {
 class renderFileToPsDom extends renderFile {
     protected function render($instructions, &$renderData){
         $ret = p_latex_render('wikiiocmodel_psdom', $instructions, $renderData);
-//        Logger::debug("psDom: $ret", $err, $line, $file);
+        Logger::debug("psDom: $ret", 0, 0, 0, 0);
         return $ret;
     }
 }

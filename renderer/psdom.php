@@ -57,7 +57,7 @@ class TableFrame extends StructuredNodeDoc{
 
     public function getEncodeJson() {
         $ret = "{\n\"type\":\"".trim($this->type)."\",\n\"id\":\"".trim($this->id)."\",\n\"title\":\"".trim($this->title)."\",\n\"footer\":\"".trim($this->footer)."\",\n\"widths\":\""
-                    .trim($this->widths)."\",\n\"types\":\"".trim($this->types)."\",\n\"hasBorder\":\"".trim($this->hasBorder)."\",\n\"content\":".trim($this->getContentEncodeJson());
+                    .trim($this->widths)."\",\n\"types\":\"".trim($this->types)."\",\n\"hasBorder\":\"".trim($this->hasBorder)."\",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
@@ -279,6 +279,7 @@ class LeafNodeDoc extends AbstractNodeDoc{
     const LINE_BREAK_TYPE = "lb";
     const HORIZONTAL_RULE_TYPE = "hr";
     const APOSTROPHE_TYPE = "apostrophe";
+    const BACKSLASH_TYPE = "backslash";
 //    const QUOTE_TYPE = "quote";
 
     public function __construct($type) {
@@ -338,10 +339,7 @@ class TextNodeDoc extends AbstractNodeDoc{
     }
 
     public function getEncodeJson() {
-        $text = trim($this->text);
-        if(empty($text)){
-            $text=" ";
-        }
+        $text = preg_replace(array("/\t/", "/\n/", "/\r/"), array("    ", " ", ""), $this->text);
         return "{\n\"type\":\"".$this->type."\",\n\"text\":\"".$text."\"\n}";
     }
 
@@ -425,7 +423,16 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function cdata($text) {
-        $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::PLAIN_TEXT_TYPE, $text));
+        if(preg_match("/.*\\.*/", $text)){
+            $atext = explode("\\", $text);
+            $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::PLAIN_TEXT_TYPE, $atext[0]));
+            for($i=1; $i<count($atext); $i++) {
+                $this->currentNode->addContent(new LeafNodeDoc(LeafNodeDoc::BACKSLASH_TYPE));                
+                $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::PLAIN_TEXT_TYPE, $atext[$i]));                
+            }
+        }else{                
+            $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::PLAIN_TEXT_TYPE, $text));
+        }
     }
 
     function p_open() {
@@ -705,5 +712,9 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     public function setCurrentNode($node){
         return $this->currentNode = $node;
+    }
+
+    private function _xmlEntities($string) {
+        return htmlspecialchars($string,ENT_QUOTES,'UTF-8');
     }
 }

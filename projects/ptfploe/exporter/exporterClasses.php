@@ -594,6 +594,9 @@ class StaticPdfRenderer{
             case LeafNodeDoc::APOSTROPHE_TYPE:
                 $ret = "'";
                 break;
+            case LeafNodeDoc::BACKSLASH_TYPE:
+                $ret = "\\";
+                break;
         }
         return $ret;
     }
