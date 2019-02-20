@@ -176,8 +176,40 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->viewConfigName);
 
         $this->mergeFieldConfig($ret['projectMetaData'], $ret['projectViewData']['fields']);
+        $this->mergeFieldNameToLayout($ret['projectViewData']['fields']);
 
         return $ret;
+    }
+
+    protected function mergeFieldNameToLayout(&$projectViewDataFields) {
+        // S'afegeix la informació dels fields al layout si no existeix
+        // Per ara només cal afegir la informació 'name'
+        foreach ($projectViewDataFields as $tableKey => $table) {
+            // $value es el camp o taula
+
+            if (!isset($table['config']) || !isset($table['config']['layout'])) {
+                continue;
+            }
+
+            // Recorrem tots els layouts
+
+            for ($i = 0; $i<count ($table['config']['layout']); $i++) {
+
+                // Recorrem totes les cel·les
+                for ($j = 0; $j<count ($table['config']['layout'][$i]['cells']); $j++)
+
+                    // Si no s'ha assignat el name al layout es cerca el name al field
+                    if (!isset($table['config']['layout'][$i]['cells'][$j]['name'])) {
+                        $fieldName = $table['config']['layout'][$i]['cells'][$j]['field'];
+
+                        // TODO[Xavi] Valorar si es preferible assignar el valor del field quan no existeixi 'name' al camp
+                        $layoutName = $table['config']['fields'][$fieldName]['name'];
+                        $projectViewDataFields[$tableKey]['config']['layout'][$i]['cells'][$j]['name'] = $layoutName;
+                    }
+
+                }
+            }
+
     }
 
     protected function mergeFieldConfig($projectMetaData, &$projectViewDataFields) {
@@ -197,9 +229,9 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                     // Si es troba al view, es comprova que el valor no estigui configurat, i en aquest cas s'afegeix la configuració del config
                     foreach ($fieldConfig as $fieldConfigKey=>$fieldConfigValue) {
                         if (!isset($projectViewDataFields[$key]['config']['fields'][$field][$fieldConfigKey])) {
-
+                            $projectViewDataFields[$key]['config']['fields'][$field][$fieldConfigKey] = $fieldConfigValue;
                         } // si ja es troba establert a la view no fem res, perquè aquest te prioritat
-                        $projectViewDataFields[$key]['config']['fields'][$field][$fieldConfigKey] = $fieldConfigValue;
+
                     }
                 }
             }
