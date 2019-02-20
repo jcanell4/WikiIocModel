@@ -63,6 +63,11 @@ class PageDataQuery extends DataQuery {
 
     }
 
+    public function getTemplateRaw($id, $version){
+        $file = $this->getFileName($id).".$version";
+        return io_readFile($file);
+    }
+    
     public function getRaw($id, $rev=NULL){
         return rawWiki($id, $rev);
     }
