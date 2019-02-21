@@ -27,7 +27,7 @@ abstract class AbstractRenderer {
             $this->cfgExport = new cfgExporter();
         }
     }
-    
+
     public function getTocs(){
         return $this->cfgExport->tocs;
     }
@@ -132,7 +132,7 @@ class renderObject extends renderComposite {
                     $typedefKeyField = $this->getTypedefKeyField($item["value"]);
                     $renderKeyField = $this->getRenderKeyField($item["name"]);
                     $render = $this->createRender($typedefKeyField, $renderKeyField);
-                    
+
                     $dataField = $this->getDataField($item["value"]);
                     $render->init($item["name"]);
 
@@ -140,7 +140,7 @@ class renderObject extends renderComposite {
                 }
             }
         }
-        
+
         $ret = $this->cocinandoLaPlantillaConDatos($arrayDeDatosParaLaPlantilla);
         return $ret;
     }
@@ -157,7 +157,7 @@ class renderObject extends renderComposite {
                     $allKeys = array_keys($this->typedef["keys"]);
                     foreach ($allKeys as $key) {
                         if($this->typedef["keys"][$key]["mandatory"]){
-                          $ret [] = $key;  
+                          $ret [] = $key;
                         }
                     }
                     break;
@@ -216,7 +216,7 @@ require_once (DOKU_INC.'inc/inc_ioc/tcpdf/tcpdf_include.php');
 
 class IocTcPdf extends TCPDF{
     private $header_logo_hight=10;
-    
+
     public function __construct($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = true, $encoding = 'UTF-8', $diskcache = false, $pdfa = false) {
         parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
         $this->header_logo_width = 8;
@@ -225,7 +225,7 @@ class IocTcPdf extends TCPDF{
         $this->header_font = "helvetica";
 
         }
-    
+
     //Page header
     public function Header() {
         if($this->PageNo()==1){
@@ -233,11 +233,11 @@ class IocTcPdf extends TCPDF{
         }
 
         $margins = $this->getMargins();
-        
+
         // Logo
-        $image_file = K_PATH_IMAGES.$this->header_logo;        
+        $image_file = K_PATH_IMAGES.$this->header_logo;
         $this->Image($image_file, $margins['left'], 5, $this->header_logo_width, $this->header_logo_hight, 'JPG', '', 'T', true, 300, '', false, false, 0, false, false, false);
-        
+
         $cell_height = $this->getCellHeight($headerfont[2] / $this->k);
         $header_x = $margins['left'] + $margins['padding_left'] + ($this->header_logo_width * 1.1);
         $header_w = 105 - $header_x;
@@ -247,7 +247,7 @@ class IocTcPdf extends TCPDF{
         $this->SetFont($this->header_font[0], $this->header_font[1], $this->header_font[2]);
         $this->SetX($header_x);
         $this->MultiCell($header_w, $cell_height, $this->header_title, 0, 'L', 0, 0, "", "", true);
-        
+
         // header string
         $this->MultiCell(65, $cell_height, $this->header_string, 0, 'R', 0, 0, "", "", true);
         $this->Line(5, 19, 180,19);
@@ -266,16 +266,16 @@ class IocTcPdf extends TCPDF{
         // Page number
         $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
     }
-    
+
     public function setHeaderData($ln='', $lw=0, $lh=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)) {
         parent::setHeaderData($ln, $lw, $ht, $hs, $tc, $lc);
         $this->header_logo_hight = $lh;
-    }    
+    }
  }
 
 /**
- * 
- * 
+ *
+ *
  * params = hashArray:{
  *      id: string  //id del projecte
  *      path_templates:string,  // directori on es troben les plantilles latex usades per crear el pdf
@@ -286,7 +286,7 @@ class IocTcPdf extends TCPDF{
  *              titol:array os string    // linies de títol del document (cada ítem és una línia)
  *              contingut: string   //contingut latex ja rendaritzat
  */
-class StaticPdfRenderer{    
+class StaticPdfRenderer{
     static $tableCounter = 0;
     static $tableReferences = array();
     static $headerNum = array(0,0,0,0,0,0);
@@ -296,21 +296,21 @@ class StaticPdfRenderer{
     static $footerFontSize = 8;
     static $firstPageFont = "Times";
     static $pagesFont = "helvetica";
-    
+
     static $state = ["table" =>["type" => "table"]];
-    
+
     public static function renderDocument($params, $output_filename="") {
         $style = ["B", "BI", "I", "I", ""];
         if(empty($output_filename)){
             $output_filename = str_replace(":", "_", $params["id"]);
         }
-        
+
         $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        
+
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
-        
+
         $iocTcPdf->setHeaderData( $params["data"]["header_page_logo"], $params["data"]["header_page_wlogo"], $params["data"]["header_page_hlogo"], $params["data"]["header_ltext"], $params["data"]["header_rtext"]);
-        
+
         // set header and footer fonts
         $iocTcPdf->setHeaderFont(Array(self::$headerFont, '', self::$headerFontSize));
         $iocTcPdf->setFooterFont(Array(self::$footerFont, '', self::$footerFontSize));
@@ -345,7 +345,7 @@ class StaticPdfRenderer{
         for($i=2; $i<count($params["data"]["titol"]); $i++){
             $iocTcPdf->Cell(0, 0, $params["data"]["titol"][$i], 0, 1);
         }
-        
+
         $iocTcPdf->AddPage();
         foreach ($params["data"]["contingut"] as $itemsDoc){
             self::resolveReferences($itemsDoc);
@@ -353,7 +353,7 @@ class StaticPdfRenderer{
         foreach ($params["data"]["contingut"] as $itemsDoc){
             self::renderHeader($itemsDoc, $iocTcPdf);
         }
-        
+
         // add a new page for TOC
         $iocTcPdf->addTOCPage();
 
@@ -376,8 +376,8 @@ class StaticPdfRenderer{
         $result = array();
 
         return $result;
-    }    
-    
+    }
+
     private static function getHeaderCounter($level){
         $ret = "";
         for($i=0; $i<=$level; $i++){
@@ -385,7 +385,7 @@ class StaticPdfRenderer{
         }
         return $ret." ";
     }
-    
+
     private static function incHeaderCounter($level){
         self::$headerNum[$level]++;
         for($i=$level+1; $i<count(self::$headerNum); $i++){
@@ -393,12 +393,12 @@ class StaticPdfRenderer{
         }
         return self::getHeaderCounter($level);
     }
-    
+
     private static function resolveReferences($content){
         if($content["type"]===TableFrame::TABLEFRAME_TYPE_TABLE
                 || $content["type"]===TableFrame::TABLEFRAME_TYPE_ACCOUNTING){
             self::$tableCounter++;
-            self::$tableReferences[$content["id"]] = self::$tableCounter;            
+            self::$tableReferences[$content["id"]] = self::$tableCounter;
         }
         for ($i=0; $i<count($content["content"]); $i++){
             self::resolveReferences($content["content"][$i]);
@@ -407,14 +407,14 @@ class StaticPdfRenderer{
             self::resolveReferences($content["children"][$i]);
         }
     }
-    
+
     private static function renderHeader($header, IocTcPdf &$iocTcPdf){
         $level = $header["level"]-1;
         $iocTcPdf->SetFont('Times', 'B', 12);
         $title = self::incHeaderCounter($level).$header["title"];
         $iocTcPdf->Bookmark($title, $level, 0);
         $iocTcPdf->Ln(5);
-        $iocTcPdf->Cell(0, 0, $title, 0,1, "L");              
+        $iocTcPdf->Cell(0, 0, $title, 0,1, "L");
         $iocTcPdf->Ln(3);
         for ($i=0; $i<count($header["content"]); $i++){
             self::renderContent($header["content"][$i], $iocTcPdf);
@@ -423,10 +423,10 @@ class StaticPdfRenderer{
             self::renderHeader($header["children"][$i], $iocTcPdf);
         }
     }
-    
+
     private static function renderContent($content, IocTcPdf &$iocTcPdf, $pre="", $post=""){
         $iocTcPdf->SetFont('helvetica', '', 10);
-        $iocTcPdf->writeHTML( self::getContent($content), TRUE, FALSE);      
+        $iocTcPdf->writeHTML( self::getContent($content), TRUE, FALSE);
         if($content["type"] == StructuredNodeDoc::ORDERED_LIST_TYPE
                 || $content["type"] == StructuredNodeDoc::UNORDERED_LIST_TYPE
                 || $content["type"] == StructuredNodeDoc::PARAGRAPH_TYPE){
@@ -508,10 +508,10 @@ class StaticPdfRenderer{
                         $ret .= "<p style=\"text-align:justify; font-size:80%;\"> Taula ".self::$tableReferences[$content["id"]].". ".$content["footer"]."</p>";
                     }
                 }
-                $ret .= "</div>";                
+                $ret .= "</div>";
                 break;
             case TableNodeDoc::TABLE_TYPE:
-               
+
                 $ret = "<table$style   cellpadding=\"5\" nobr=\"true\">";
                 $ret .= self::getStructuredContent($content)."</table>";
                 break;
@@ -523,7 +523,7 @@ class StaticPdfRenderer{
                 $style = $content["hasBorder"]?' style="border:1px solid black; border-collapse:collapse; '.$align.' font-weight:bold; background-color:#808080;"':"style=\"$align font-weight:bold; background-color:#808080;\"";
                 $colspan = $content["colspan"]>1?' colspan="'.$content["colspan"].'"':"";
                 $rowspan = $content["rowspan"]>1?' rowspan="'.$content["rowspan"].'"':"";
-                
+
                 $ret = "<th$colspan$rowspan$style>".self::getStructuredContent($content)."</th>";
                 break;
             case CellNodeDoc::TABLECELL_TYPE:
@@ -562,16 +562,16 @@ class StaticPdfRenderer{
         }
         return $ret;
     }
-    
+
     private static function getStructuredContent($content){
         $ret = "";
         $limit = count($content["content"]);
         for ($i=0; $i<$limit; $i++){
             $ret .= self::getContent($content["content"][$i]);
-        }        
+        }
         return $ret;
     }
-    
+
     private static function getTextContent($content){
         if(!empty($content["text"]) && empty(trim($content["text"]))){
             $ret = " ";
@@ -591,6 +591,9 @@ class StaticPdfRenderer{
                 break;
             case LeafNodeDoc::APOSTROPHE_TYPE:
                 $ret = "'";
+                break;
+            case LeafNodeDoc::BACKSLASH_TYPE:
+                $ret = "\\";
                 break;
         }
         return $ret;
