@@ -33,26 +33,59 @@ abstract class AbstractNodeDoc{
     public abstract function getEncodeJson();
 }
 
-class TableFrame extends StructuredNodeDoc{
+class FigureFrame extends StructuredNodeDoc {
+    const FRAME_TYPE_FIGURE = "frameFigure";
+
+    protected $id = false;
+    protected $title;
+    protected $footer;
+    protected $hasBorder;
+
+     public function __construct($type, $id="", $title="", $footer="", $hasBorder=FALSE) {
+        parent::__construct($type);
+        $this->id       = $id;
+        $this->title    = $title;
+        $this->footer   = $footer;
+        $this->hasBorder= $hasBorder;
+    }
+
+   public function setNodeParams($title="", $footer="", $hasBorder=FALSE) {
+        $this->title  = $title;
+        $this->footer = $footer;
+        $this->hasBorder= $hasBorder;
+    }
+
+    public function getEncodeJson() {
+        $ret = "{\n\"type\":\"".trim($this->type)."\""
+                .",\n\"id\":\"".trim($this->id)."\""
+                .",\n\"title\":\"".trim($this->title)."\""
+                .",\n\"footer\":\"".trim($this->footer)."\""
+                .",\n\"hasBorder\":\"".trim($this->hasBorder)."\""
+                .",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= "\n}";
+        return $ret;
+    }
+}
+
+class TableFrame extends StructuredNodeDoc {
     const TABLEFRAME_TYPE_TABLE= "tableframetypetable";
     const TABLEFRAME_TYPE_ACCOUNTING = "tableframetypeaccounting";
 
-    var $id = false;
-    var $title;
-    var $footer;
-    var $widths;
-    var $types;
-    var $hasBorder;
+    protected $id = false;
+    protected $title;
+    protected $footer;
+    protected $widths;
+    protected $types;
+    protected $hasBorder;
 
-
-    public function __construct($type, $Id = "", $title = "", $footer = "", $widths="", $types="", $hasBorder=FALSE) {
+    public function __construct($type, $id="", $title="", $footer="", $widths="", $types="", $hasBorder=FALSE) {
         parent::__construct($type);
-        $this->id = $Id==NULL?"":$Id;
-        $this->title = $title==NULL?"":$title;
-        $this->footer = $footer==NULL?"":$footer;
-        $this->widths = $widths==NULL?"":$widths;
-        $this->types = $types==NULL?"":$types;
-        $this->hasBorder = $hasBorder==NULL?FALSE:$hasBorder;
+        $this->id       = $id==NULL ? "" : $id;
+        $this->title    = $title==NULL ? "" : $title;
+        $this->footer   = $footer==NULL ? "" : $footer;
+        $this->widths   = $widths==NULL ? "" : $widths;
+        $this->types    = $types==NULL ? "" : $types;
+        $this->hasBorder= $hasBorder==NULL ? FALSE : $hasBorder;
     }
 
     public function getEncodeJson() {
@@ -91,15 +124,21 @@ class CellNodeDoc extends StructuredNodeDoc{
 class TableNodeDoc extends StructuredNodeDoc{
     const TABLE_TYPE = "table";
 
-    var $hasBorder = false;
+    private $hasBorder = false;
+    private $maxcols;
+    private $numrows;
+    private $pos;
 
-    public function __construct($type, $hasBorder=FALSE) {
+    public function __construct($type, $hasBorder = FALSE, $maxcols = NULL, $numrows = NULL, $pos = NULL) {
         parent::__construct($type);
         $this->hasBorder= $hasBorder;
+        $this->maxcols= $maxcols;
+        $this->numrows= $numrows;
+        $this->pos= $pos;
     }
 
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"".$this->type."\",\n\"hasBorder\":\"".$this->hasBorder."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret = "{\n\"type\":\"{$this->type}\",\n\"hasBorder\":\"{$this->hasBorder}\",\n\"maxcols\":\"{$this->maxcols}\",\n\"numrows\":\"{$this->numrows}\",\n\"pos\":\"{$this->pos}\",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
@@ -280,14 +319,32 @@ class LeafNodeDoc extends AbstractNodeDoc{
     const HORIZONTAL_RULE_TYPE = "hr";
     const APOSTROPHE_TYPE = "apostrophe";
     const BACKSLASH_TYPE = "backslash";
-//    const QUOTE_TYPE = "quote";
+    const SMILEY_TYPE = "smiley";
+    const ACRONYM_TYPE = "acronym";
+    private $smiley;
+    private $acronym;
 
     public function __construct($type) {
         parent::__construct($type);
     }
 
+    public function convertSmiley($smiley) {
+        $this->smiley = $this->smileys[$smiley];
+    }
+
+    public function convertAcronym($acronym) {
+        $this->acronym = $this->acronyms[$acronym];
+    }
+
     public function getEncodeJson() {
-        $ret = "{\"type\":\"".$this->type."\"}";
+        $ret = "{\"type\":\"".$this->type."\"";
+        if ($this->smiley) {
+            $ret .= ",\n\"smiley\":\"{$this->smiley}\"";
+        }
+        if ($this->acronym) {
+            $ret .= ",\n\"acronym\":\"{$this->acronym}\"";
+        }
+        $ret.= "\n}";
         return $ret;
     }
 }
@@ -310,17 +367,22 @@ class ReferenceNodeDoc extends AbstractNodeDoc{
     const REFERENCE_TYPE = "reference";
     const REF_FIGURE_TYPE = "fig";
     const REF_TABLE_TYPE = "tab";
-    var $referenceId;
-    var $referenceType;
+    const REF_WIKI_LINK = "wikilink";
+    const REF_INTERNAL_LINK = "internallink";
+    const REF_EXTERNAL_LINK = "externallink";
+    private $refId;
+    private $refType;
+    private $refTitle;
 
-    public function __construct($refId, $refType="") {
+    public function __construct($refId, $refType="", $refTitle="") {
         parent::__construct(self::REFERENCE_TYPE);
-        $this->referenceId = $refId;
-        $this->referenceType = $refType;
+        $this->refId = $refId;
+        $this->refType = $refType;
+        $this->refTitle = $refTitle;
     }
 
     public function getEncodeJson() {
-        return "{\n\"type\":\"".$this->type."\",\n\"referenceId\":\"".$this->referenceId."\",\n\"referenceType\":\"".$this->referenceType."\"\n}";
+        return "{\n\"type\":\"".$this->type."\",\n\"referenceId\":\"".$this->refId."\",\n\"referenceType\":\"".$this->refType."\"\n,\n\"referenceTitle\":\"".$this->refTitle."\"\n}";
     }
 
 }
@@ -345,6 +407,48 @@ class TextNodeDoc extends AbstractNodeDoc{
 
 }
 
+class ImageNodeDoc extends AbstractNodeDoc {
+    const IMAGE_TYPE = "img";
+
+    protected $id;
+    protected $src;
+    protected $title;
+    protected $align;
+    protected $width;
+    protected $height;
+    protected $cache;
+    protected $linking;
+
+     public function __construct($ns, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
+        parent::__construct(self::IMAGE_TYPE);
+        $this->id      = preg_replace("/^:/", "", $ns);
+        $this->src     = mediaFN($this->id);
+        $this->title   = $title;
+        $this->align   = $align;
+        $this->width   = $width;
+        $this->height  = $height;
+        $this->cache   = $cache;
+        $this->linking = $linking;
+    }
+
+    public function getEncodeJson() {
+        $ret = "{\n\"type\":\"".trim($this->type)."\""
+                .",\n\"id\":\"".trim($this->id)."\""
+                .",\n\"src\":\"".trim($this->src)."\""
+                .",\n\"title\":\"".trim($this->title)."\""
+                .",\n\"align\":\"".trim($this->align)."\""
+                .",\n\"width\":\"".trim($this->width)."\""
+                .",\n\"height\":\"".trim($this->height)."\""
+                .",\n\"cache\":\"".trim($this->cache)."\""
+                .",\n\"linking\":\"".trim($this->linking)."\"";
+        $ret .= "\n}";
+        return $ret;
+    }
+}
+
+/**
+ * class renderer_plugin_wikiiocmodel_psdom
+ */
 class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     const BORDER_TYPES = ["pt_taula"];
 
@@ -353,7 +457,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     var $currentNode = NULL;
     var $table_types = "";
 
-//    var $pdfBuilder;
     /**
      * Esta función construye el renderer a partir de las parámetros de configuración recibidos
      * @param array $params
@@ -376,8 +479,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->init($params);
     }
 
-
-
     function document_start() {
         if(!isset($this->rootNode)){
             $this->rootNode = new RootNodeDoc();
@@ -388,10 +489,12 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->doc = $this->rootNode->getEncodeJson();
     }
 
-    function render_TOC() { return ''; }
+    function render_TOC() {
+        return '';
+    }
 
     function toc_additem($id, $text, $level) {
-
+        $this->toc[] = ['id'=>$id, 'text'=>$text, 'level'=>$level];
     }
 
     function header($text, $level, $pos) {
@@ -427,10 +530,10 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
             $atext = explode("\\", $text);
             $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::PLAIN_TEXT_TYPE, $atext[0]));
             for($i=1; $i<count($atext); $i++) {
-                $this->currentNode->addContent(new LeafNodeDoc(LeafNodeDoc::BACKSLASH_TYPE));                
-                $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::PLAIN_TEXT_TYPE, $atext[$i]));                
+                $this->currentNode->addContent(new LeafNodeDoc(LeafNodeDoc::BACKSLASH_TYPE));
+                $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::PLAIN_TEXT_TYPE, $atext[$i]));
             }
-        }else{                
+        }else{
             $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::PLAIN_TEXT_TYPE, $text));
         }
     }
@@ -539,7 +642,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->currentNode = $node;
     }
 
-
     function listu_close() {
         $this->currentNode = $this->currentNode->getOwner();
     }
@@ -549,7 +651,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->currentNode->addContent($node);
         $this->currentNode = $node;
     }
-
 
     function listo_close() {
         $this->currentNode = $this->currentNode->getOwner();
@@ -574,11 +675,11 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         if ($conf['phpok']){
             ob_start();
             eval($text);
-            $ntext = ob_get_contents();
+            $next = ob_get_contents();
             ob_end_clean();
             $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::HTML_TEXT_TYPE, $next));
         } else {
-            $ntext = p_xhtml_cached_geshi($text, 'php', $wrapper);
+            $next = p_xhtml_cached_geshi($text, 'php', $wrapper);
             $this->currentNode->addContent(new CodeNodeDoc(CodeNodeDoc::CODE_TEXT_TYPE, $next, "php"));
         }
     }
@@ -589,7 +690,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     function html($text, $wrapper="code") {
         global $conf;
-
         if ($conf['htmlok']){
             $next = $text;
             $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::HTML_TEXT_TYPE, $next));
@@ -631,6 +731,18 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->currentNode->addContent(new LeafNodeDoc(LeafNodeDoc::APOSTROPHE_TYPE));
     }
 
+    function acronym($acronym) {
+        $node = new LeafNodeDoc(LeafNodeDoc::ACRONYM_TYPE);
+        $node->convertAcronym($acronym);
+        $this->currentNode->addContent($node);
+    }
+
+    function smiley($smiley) {
+        $node = new LeafNodeDoc(LeafNodeDoc::SMILEY_TYPE);
+        $node->convertSmiley($smiley);
+        $this->currentNode->addContent($node);
+    }
+
     function doublequoteopening() {
         $node = new StructuredNodeDoc(StructuredNodeDoc::DOUBLEQUOTE_TYPE);
         $this->currentNode->addContent($node);
@@ -641,9 +753,40 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->currentNode = $this->currentNode->getOwner();
     }
 
-    function table_open($maxcols = null, $numrows = null, $pos = null){
+    //Es un link a un ID de la propia página. Ejemplo: <a href="#id_top">
+    function locallink($hash, $name = null){
+        $hash = urldecode($hash);
+        $this->currentNode->addContent(new ReferenceNodeDoc($hash, ReferenceNodeDoc::REF_INTERNAL_LINK, $name));
+    }
+
+    // $link like 'wiki:syntax', $title could be an array (media)
+    function internallink($link, $title = null) {
+        $this->currentNode->addContent(new ReferenceNodeDoc($link, ReferenceNodeDoc::REF_WIKI_LINK, $title));
+    }
+
+    // $link is full URL with scheme, $title could be an array (media)
+    function externallink($link, $title = null) {
+        $link = urldecode($link);
+        $this->currentNode->addContent(new ReferenceNodeDoc($link, ReferenceNodeDoc::REF_EXTERNAL_LINK, $title));
+        if (is_array($title)) {
+            //is a image
+        }
+    }
+
+    //Es una imagen definida como, por ejemplo: {{:common:chip.png?100|mostra de chip en circuit}}
+    function internalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
+        $node = new ImageNodeDoc($src, $title, $align, $width, $height, $cache, $linking);
+        $this->currentNode->addContent($node);
+    }
+
+    function externalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
+        list($src, $hash) = explode('#',$src,2);
+
+    }
+
+    function table_open($maxcols = NULL, $numrows = NULL, $pos = NULL){
         $isBorderType = $this->_isBorderTypeTable();
-        $node = new TableNodeDoc(TableNodeDoc::TABLE_TYPE, $isBorderType);
+        $node = new TableNodeDoc(TableNodeDoc::TABLE_TYPE, $isBorderType, $maxcols, $numrows, $pos);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;
     }
@@ -695,13 +838,13 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         return $this->_isBorderTypeTable($types);
     }
 
-    public function setTableTypes($types){
-        if(is_string($types)){            
+    public function setTableTypes($types=""){
+        if (is_string($types)) {
             $atypes = preg_split('/(\s*,\s*)*,+(\s*,\s*)*/', trim(str_replace("\t", "    ", $types)));
-        }elseif(is_array($types)){
+        }elseif(is_array($types)) {
             $atypes = $types;
-        }else{
-            throw new IncorrectParametersException();
+        }else {
+            $atypes = [[]];
         }
         $this->table_types = $atypes;
     }
@@ -716,5 +859,9 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     private function _xmlEntities($string) {
         return htmlspecialchars($string,ENT_QUOTES,'UTF-8');
+    }
+
+    private function _media ($src, $title=null, $align=null, $width=null, $height=null) {
+
     }
 }
