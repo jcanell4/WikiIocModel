@@ -426,4 +426,12 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $ret;
     }
 
+    public function preUpgradeProject($subSet) {
+        if(class_exists("systemUpgrader")){
+            $ret = systemUpgrader::preUpgrade($this, $subSet);
+        }else{
+            $ret = true;
+        }
+        return $ret;
+    }
 }
