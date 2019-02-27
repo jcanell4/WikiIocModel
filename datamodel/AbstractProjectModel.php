@@ -110,6 +110,11 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $content;
     }
 
+    public function getRawTemplate($filename, $version) {
+        $content = $this->getPageDataQuery()->getTemplateRaw($filename, $version);
+        return $content;        
+    }
+    
     /**
      * Obtiene el contenido del archivo wiki indicado en $filename. Está en pages/$filename con extensión .txt
      * @param string $filename : ruta wiki (con :) del archivo (a partir de pages/)
@@ -421,4 +426,12 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $ret;
     }
 
+    public function preUpgradeProject($subSet) {
+        if(class_exists("systemUpgrader")){
+            $ret = systemUpgrader::preUpgrade($this, $subSet);
+        }else{
+            $ret = true;
+        }
+        return $ret;
+    }
 }

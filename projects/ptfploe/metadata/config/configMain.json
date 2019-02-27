@@ -19,7 +19,7 @@
         {
             "main": "meta.mdpr",
             "versions": {
-                "templates": {"continguts":2}
+                "templates": {"continguts":3}
             },
             "mainType": {
                 "type": "object",

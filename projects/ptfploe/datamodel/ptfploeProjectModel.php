@@ -19,10 +19,6 @@ class ptfploeProjectModel extends AbstractProjectModel {
         return $this->id;
     }
 
-    public function preUpgradeProject($subSet) {
-        return systemUpgrader::preUpgrade($this, $subSet);
-    }
-
     public function getProjectDocumentName() {
         $ret = $this->getMetaDataProject();
         return $ret['fitxercontinguts'];
