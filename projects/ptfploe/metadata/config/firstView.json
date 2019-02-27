@@ -331,6 +331,7 @@
               "type": "number"
             }
           },
+          "display_fields": ["hores", "unitat formativa", "unitat", "nom"],
           "layout": [
             {
               "defaultCell": {
@@ -338,26 +339,26 @@
               },
               "cells": [
                 {
-                  "name": "unitat formativa",
+                  "name": "Unitat Formativa",
                   "field": "unitat formativa",
                   "editable": true
                 },
 
                 {
-                  "name": "unitat",
+                  "name": "Unitat",
                   "field": "unitat",
                   "editable": true
                 },
 
                 {
-                  "name": "nom",
+                  "name": "Nom",
                   "field": "nom",
-                   "width":"55%",
+                  "width":"55%",
                   "editable": true
                 },
 
                 {
-                  "name": "hores",
+                  "name": "Hores",
                   "field": "hores",
                   "editable": false
                 }
