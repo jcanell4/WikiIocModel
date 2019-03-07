@@ -352,7 +352,7 @@
                 {
                   "name": "nom",
                   "field": "nom",
-                   "width":"55%",
+                  "width":"55%",
                   "editable": true
                 },
 
