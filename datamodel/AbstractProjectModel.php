@@ -384,6 +384,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     public function getMetaDataAnyAttr($attr=NULL, $configMainKey=NULL) {
         return $this->projectMetaDataQuery->getMetaDataAnyAttr($attr, $configMainKey);
     }
+    
 
     /**
      * @param integer $num Número de revisiones solicitadas El valor 0 significa obtener todas las revisiones
@@ -433,5 +434,9 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             $ret = true;
         }
         return $ret;
+    }
+    
+    public function createTemplateDocument($data){
+        //NO HI HA TEMPLATES A CREAR
     }
 }
