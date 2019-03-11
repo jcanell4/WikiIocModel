@@ -88,8 +88,14 @@ class TableFrame extends StructuredNodeDoc {
     }
 
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"".trim($this->type)."\",\n\"id\":\"".trim($this->id)."\",\n\"title\":\"".trim($this->title)."\",\n\"footer\":\"".trim($this->footer)."\",\n\"widths\":\""
-                    .trim($this->widths)."\",\n\"types\":\"".trim($this->types)."\",\n\"hasBorder\":\"".trim($this->hasBorder)."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret = "{\n\"type\":\"".trim($this->type)."\""
+                .",\n\"id\":\"".trim($this->id)."\""
+                .",\n\"title\":\"".trim($this->title)."\""
+                .",\n\"footer\":\"".trim($this->footer)."\""
+                .",\n\"widths\":\"".trim($this->widths)."\""
+                .",\n\"types\":\"".trim($this->types)."\""
+                .",\n\"hasBorder\":\"".trim($this->hasBorder)."\""
+                .",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
@@ -113,8 +119,12 @@ class CellNodeDoc extends StructuredNodeDoc{
     }
 
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"".$this->type."\",\n\"colspan\":\"".$this->colspan."\",\n\"rowspan\":\"".$this->rowspan."\",\n\"align\":\"".$this->align."\",\n\"hasBorder\":\""
-                    .$this->hasBorder."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret = "{\n\"type\":\"".$this->type."\""
+                .",\n\"colspan\":\"".$this->colspan."\""
+                .",\n\"rowspan\":\"".$this->rowspan."\""
+                .",\n\"align\":\"".$this->align."\""
+                .",\n\"hasBorder\":\"".$this->hasBorder."\""
+                .",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
@@ -137,7 +147,12 @@ class TableNodeDoc extends StructuredNodeDoc{
     }
 
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"{$this->type}\",\n\"hasBorder\":\"{$this->hasBorder}\",\n\"maxcols\":\"{$this->maxcols}\",\n\"numrows\":\"{$this->numrows}\",\n\"pos\":\"{$this->pos}\",\n\"content\":".$this->getContentEncodeJson();
+        $ret = "{\n\"type\":\"{$this->type}\""
+                .",\n\"hasBorder\":\"{$this->hasBorder}\""
+                .",\n\"maxcols\":\"{$this->maxcols}\""
+                .",\n\"numrows\":\"{$this->numrows}\""
+                .",\n\"pos\":\"{$this->pos}\""
+                .",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
