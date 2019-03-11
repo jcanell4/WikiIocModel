@@ -1,0 +1,20 @@
+{
+    "typesDefinition": {
+        "quality": {
+            "render": {
+                "typeDef":"quality",
+                "class": "exportDocument",
+                "fields": "ALL",
+                "extraFields": [{"name":"pdfDocument", "valueType":"field", "value":"fitxercontinguts"}]
+            },
+            "keys": {
+                "descripcio": {
+                    "render": {"class": "renderRenderizableText"}
+                },
+                "fitxercontinguts": {
+                    "render": {"class": "renderFileToPsDom"}
+                }
+            }
+        }
+    }
+}

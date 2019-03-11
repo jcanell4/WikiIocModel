@@ -1,0 +1,58 @@
+{
+    "generateProject": {
+        "parms": { 
+            "DOM": {
+               "id": "generateProjectButton",
+               "title": "Generar Projecte Qualitat"
+            }
+        },
+
+        "scripts": {
+            "updateHandler": {
+                "conditions": {
+                    "page.action": "'never'"
+                }
+            }
+        }
+
+    },
+    "qdocPdfExport": {
+        "class": "WikiIocButton",
+        "parms": {
+            "DOM": {
+               "id": "qdocPdfExport",
+               "title": "qdoc PDF Export",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportPdfIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectExport'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+       
+        "scripts": {
+            "getFunctions": {
+                "path": "PdfExportGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'",
+                    "page.generated":"true"
+                }
+            }
+        }
+    }
+}
