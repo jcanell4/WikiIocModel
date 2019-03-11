@@ -31,6 +31,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
         if ($model->existProject()) {
 
             $metaDataValues = $this->netejaKeysFormulari($this->params);
+            $metaDataValues = $this->donaEstructuraALesDadesPlanes($metaDataValues, $model->getMetaDataAnyAttr());
             if (!$model->validaNom($metaDataValues['autor']))
                 throw new UnknownUserException($metaDataValues['autor']." (indicat al camp 'autor') ");
             if (!$model->validaNom($metaDataValues['responsable']))
@@ -54,7 +55,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
             if ($response[ProjectKeys::KEY_GENERATED]) {
                 $include = [
                      'id' => $modelAttrib[ProjectKeys::KEY_ID]
-                    ,'link_page' => $modelAttrib[ProjectKeys::KEY_ID].":".end(explode(":", $response['projectMetaData']["plantilla"]['value']))
+                    ,'link_page' => $modelAttrib[ProjectKeys::KEY_ID] //$modelAttrib[ProjectKeys::KEY_ID].":".end(explode(":", $response['projectMetaData']["plantilla"]['value']))
                     ,'old_autor' => $extraProject['old_autor']
                     ,'old_responsable' => $extraProject['old_responsable']
                     ,'new_autor' => $response['projectMetaData']['autor']['value']
@@ -94,5 +95,33 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
             }
         }
         return $cleanArray;
+    }
+    
+    private function donaEstructuraALesDadesPlanes($array, $metadataConfig){
+        $newArray = array();
+        if($metadataConfig["mainType"]["typeDef"]){
+            $currentType = $metadataConfig["mainType"];
+        }else{
+            $currentType = $metadataConfig["mainType"];
+        }
+        foreach ($array as $key => $value) {
+            if(strpos($key,"#")!==FALSE){
+                $akeys = explode("#", $key);
+                $lim = count($akeys)-1;
+                $currentArray = &$newArray;
+                for($ind=0; $ind<$lim; $ind++){
+                    $k = is_numeric($akeys[$ind])?(int)$akeys[$ind]:$akeys[$ind];
+                    if(!isset($currentArray[$k])){
+                        $currentArray[$k] = array();
+                    }
+                    $currentArray = &$currentArray[$k];
+                }
+                $k = is_numeric($akeys[$lim])?(int)$akeys[$lim]:$akeys[$lim];
+                $currentArray[$k] = $value;                        
+            }else{
+                $newArray[$key] = $value;
+            }
+        }
+        return $newArray;
     }
 }

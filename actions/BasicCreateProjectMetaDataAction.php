@@ -52,7 +52,7 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
             }
             $include = [
                  'id' => $id
-                ,'link_page' => $id.$link_page
+                ,'link_page' => $id
                 ,'old_autor' => ""
                 ,'old_responsable' => ""
                 ,'new_autor' => $ret['projectMetaData']['autor']['value']
