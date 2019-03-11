@@ -6,7 +6,6 @@
  */
 if(!defined('DOKU_INC')) die();
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
-if (!defined('EXPORT_TMP')) define('EXPORT_TMP', DOKU_PLUGIN."tmp/latex/");
 require_once DOKU_INC.'inc/parser/renderer.php';
 require_once(DOKU_PLUGIN.'iocexportl/lib/renderlib.php');
 
@@ -89,8 +88,14 @@ class TableFrame extends StructuredNodeDoc {
     }
 
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"".trim($this->type)."\",\n\"id\":\"".trim($this->id)."\",\n\"title\":\"".trim($this->title)."\",\n\"footer\":\"".trim($this->footer)."\",\n\"widths\":\""
-                    .trim($this->widths)."\",\n\"types\":\"".trim($this->types)."\",\n\"hasBorder\":\"".trim($this->hasBorder)."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret = "{\n\"type\":\"".trim($this->type)."\""
+                .",\n\"id\":\"".trim($this->id)."\""
+                .",\n\"title\":\"".trim($this->title)."\""
+                .",\n\"footer\":\"".trim($this->footer)."\""
+                .",\n\"widths\":\"".trim($this->widths)."\""
+                .",\n\"types\":\"".trim($this->types)."\""
+                .",\n\"hasBorder\":\"".trim($this->hasBorder)."\""
+                .",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
@@ -114,8 +119,12 @@ class CellNodeDoc extends StructuredNodeDoc{
     }
 
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"".$this->type."\",\n\"colspan\":\"".$this->colspan."\",\n\"rowspan\":\"".$this->rowspan."\",\n\"align\":\"".$this->align."\",\n\"hasBorder\":\""
-                    .$this->hasBorder."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret = "{\n\"type\":\"".$this->type."\""
+                .",\n\"colspan\":\"".$this->colspan."\""
+                .",\n\"rowspan\":\"".$this->rowspan."\""
+                .",\n\"align\":\"".$this->align."\""
+                .",\n\"hasBorder\":\"".$this->hasBorder."\""
+                .",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
@@ -138,29 +147,34 @@ class TableNodeDoc extends StructuredNodeDoc{
     }
 
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"{$this->type}\",\n\"hasBorder\":\"{$this->hasBorder}\",\n\"maxcols\":\"{$this->maxcols}\",\n\"numrows\":\"{$this->numrows}\",\n\"pos\":\"{$this->pos}\",\n\"content\":".$this->getContentEncodeJson();
+        $ret = "{\n\"type\":\"{$this->type}\""
+                .",\n\"hasBorder\":\"{$this->hasBorder}\""
+                .",\n\"maxcols\":\"{$this->maxcols}\""
+                .",\n\"numrows\":\"{$this->numrows}\""
+                .",\n\"pos\":\"{$this->pos}\""
+                .",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
 }
 
 class StructuredNodeDoc extends AbstractNodeDoc{
-    const PARAGRAPH_TYPE = "p";
-    const STRONG_TYPE = "strong";
-    const EMPHASIS_TYPE = "em";
-    const UNDERLINE_TYPE = "u";
-    const MONOSPACE_TYPE = "mono";
-    const SUBSCRIPT_TYPE = "sub";
-    const SUPERSCRIPT_TYPE = "sup";
-    const DELETED_TYPE = "del";
-    const FOOT_NOTE_TYPE = "footnote";
-    const UNORDERED_LIST_TYPE = "ul";
-    const ORDERED_LIST_TYPE = "ol";
-    const LIST_CONTENT_TYPE = "listcontent";
-    const QUOTE_TYPE = "quote";
-    const SINGLEQUOTE_TYPE = "singlequote";
-    const DOUBLEQUOTE_TYPE = "doublequote";
-    const TABLEROW_TYPE = "tablerow";
+    const PARAGRAPH_TYPE        = "p";
+    const STRONG_TYPE           = "strong";
+    const EMPHASIS_TYPE         = "em";
+    const UNDERLINE_TYPE        = "u";
+    const MONOSPACE_TYPE        = "mono";
+    const SUBSCRIPT_TYPE        = "sub";
+    const SUPERSCRIPT_TYPE      = "sup";
+    const DELETED_TYPE          = "del";
+    const FOOT_NOTE_TYPE        = "footnote";
+    const UNORDERED_LIST_TYPE   = "ul";
+    const ORDERED_LIST_TYPE     = "ol";
+    const LIST_CONTENT_TYPE     = "listcontent";
+    const QUOTE_TYPE            = "quote";
+    const SINGLEQUOTE_TYPE      = "singlequote";
+    const DOUBLEQUOTE_TYPE      = "doublequote";
+    const TABLEROW_TYPE         = "tablerow";
 
     var $content;
 
@@ -204,6 +218,18 @@ class StructuredNodeDoc extends AbstractNodeDoc{
         $ret = "{\n\"type\":\"".$this->type."\",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
+    }
+
+}
+
+class SpecialBlockNodeDoc extends StructuredNodeDoc{
+    const HIDDENCONTAINER_TYPE  = "hiddenContainer";
+    const NEWCONTENT_TYPE       = 'newcontent';
+    const VERD_TYPE             = "verd";
+    const BLOCVERD_TYPE         = "blocverd";
+
+    public function __construct($type) {
+        parent::__construct($type);
     }
 
 }
@@ -319,28 +345,21 @@ class LeafNodeDoc extends AbstractNodeDoc{
     const HORIZONTAL_RULE_TYPE = "hr";
     const APOSTROPHE_TYPE = "apostrophe";
     const BACKSLASH_TYPE = "backslash";
-    const SMILEY_TYPE = "smiley";
+    const DOUBLEHYPHEN_TYPE = "doublehyphen";
     const ACRONYM_TYPE = "acronym";
-    private $smiley;
+
     private $acronym;
 
     public function __construct($type) {
         parent::__construct($type);
     }
 
-    public function convertSmiley($smiley) {
-        $this->smiley = $this->smileys[$smiley];
-    }
-
     public function convertAcronym($acronym) {
-        $this->acronym = $this->acronyms[$acronym];
+        $this->acronym = $acronym;
     }
 
     public function getEncodeJson() {
         $ret = "{\"type\":\"".$this->type."\"";
-        if ($this->smiley) {
-            $ret .= ",\n\"smiley\":\"{$this->smiley}\"";
-        }
         if ($this->acronym) {
             $ret .= ",\n\"acronym\":\"{$this->acronym}\"";
         }
@@ -388,12 +407,11 @@ class ReferenceNodeDoc extends AbstractNodeDoc{
 }
 
 class TextNodeDoc extends AbstractNodeDoc{
-    const PLAIN_TEXT_TYPE = "TEXT";
-    const UNFORMATED_TEXT_TYPE = "unformatedText";
-    const HTML_TEXT_TYPE = "htmlText";
+    const PLAIN_TEXT_TYPE       = "TEXT";
+    const UNFORMATED_TEXT_TYPE  = "unformatedText";
+    const HTML_TEXT_TYPE        = "htmlText";
     const PREFORMATED_TEXT_TYPE = "preformatedText";
-     var $text;
-
+    protected $text;
 
     public function __construct($type, $text) {
         parent::__construct($type);
@@ -402,7 +420,10 @@ class TextNodeDoc extends AbstractNodeDoc{
 
     public function getEncodeJson() {
         $text = preg_replace(array("/\t/", "/\n/", "/\r/"), array("    ", " ", ""), $this->text);
-        return "{\n\"type\":\"".$this->type."\",\n\"text\":\"".$text."\"\n}";
+        $ret = "{\n\"type\":\"".$this->type."\""
+                .",\n\"text\":\"".$text."\"";
+        $ret .= "\n}";
+        return $ret;
     }
 
 }
@@ -446,6 +467,26 @@ class ImageNodeDoc extends AbstractNodeDoc {
     }
 }
 
+class SmileyNodeDoc extends AbstractNodeDoc {
+    const SMILEY_TYPE = "smiley";
+    const SMILEYS_PATH = DOKU_INC."lib/images/smileys/";
+    protected $src;
+    protected $file;
+
+     public function __construct($smiley) {
+        parent::__construct(self::SMILEY_TYPE);
+        $this->src = self::SMILEYS_PATH.$smiley;
+        $this->file = $smiley;
+    }
+
+    public function getEncodeJson() {
+        $ret = "{\n\"type\":\"".trim($this->type)."\""
+                .",\n\"src\":\"".trim($this->src)."\""
+                .",\n\"file\":\"".trim($this->file)."\"";
+        $ret .= "\n}";
+        return $ret;
+    }
+}
 /**
  * class renderer_plugin_wikiiocmodel_psdom
  */
@@ -475,7 +516,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         return 'wikiiocmodel_psdom';
     }
 
-    function reset(){
+    function reset($params=NULL){
         $this->init($params);
     }
 
@@ -526,7 +567,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function cdata($text) {
-        if(preg_match("/.*\\.*/", $text)){
+        if (strpos($text, "\\") !== FALSE) {
             $atext = explode("\\", $text);
             $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::PLAIN_TEXT_TYPE, $atext[0]));
             for($i=1; $i<count($atext); $i++) {
@@ -540,6 +581,9 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     function p_open() {
         $paragraph = new StructuredNodeDoc(StructuredNodeDoc::PARAGRAPH_TYPE);
+        if ($this->currentNode === NULL) {
+            $this->currentNode = $this->rootNode;
+        }
         $this->currentNode->addContent($paragraph);
         $this->currentNode = $paragraph;
     }
@@ -733,13 +777,12 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     function acronym($acronym) {
         $node = new LeafNodeDoc(LeafNodeDoc::ACRONYM_TYPE);
-        $node->convertAcronym($acronym);
+        $node->convertAcronym($this->acronyms[$acronym]);
         $this->currentNode->addContent($node);
     }
 
     function smiley($smiley) {
-        $node = new LeafNodeDoc(LeafNodeDoc::SMILEY_TYPE);
-        $node->convertSmiley($smiley);
+        $node = new SmileyNodeDoc($this->smileys[$smiley]);
         $this->currentNode->addContent($node);
     }
 

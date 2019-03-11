@@ -584,6 +584,11 @@
                             "struc_chars": "40",
                             "mandatory": true
                         },
+                        "supervisor": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true
+                        },
                         "fitxercontinguts": {
                             "type": "string",
                             "mandatory": true,

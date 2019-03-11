@@ -1,0 +1,82 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 4,
+        "chars_column": 10, 
+        "rows_row": 1
+    },
+    "groups": {
+        "main": {
+            "parent": "",
+            "label": "Autoria",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":false,
+                "collapsed":false
+            }
+        },
+        "peu": {
+            "parent": "",
+            "label": "Peu",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":false,
+                "collapsed":false
+            }
+        }
+    },
+    "fields": {
+        "creador": {
+            "label": "Creador (creador)",
+            "n_columns": 4,
+            "group": "main",
+            "props": {"required": true},
+            "config":{
+               "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]}
+            }
+        },
+        "autor": {
+            "label": "Autor (autor)",
+            "n_columns": 4,
+            "group": "main",
+            "props": {"required": true},
+            "config":{
+               "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]}
+            }
+        },
+        "responsable": {
+            "label": "Responsable de la creació (responsable)",
+            "n_columns": 4,
+            "group": "main",
+            "props": {"required": true},
+            "config":{
+               "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]}
+            }        
+        },
+        "titol": {
+            "label": "Títol",
+            "n_columns": 4,
+            "group": "peu"
+        },
+        "codi": {
+            "label": "Codi",
+            "n_columns": 4,
+            "group": "peu"
+        },
+        "versio": {
+            "label": "Versió",
+            "n_columns": 4,
+            "group": "peu"
+        },
+        "plantilla": {
+            "type" : "hidden"
+        },
+        "fitxercontinguts": {
+            "type" : "hidden"
+        }
+    }
+}

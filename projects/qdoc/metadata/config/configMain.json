@@ -1,0 +1,66 @@
+{
+    "metaDataClassesNameSpaces": [
+        {
+            "main": {
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "qdoc"
+            }
+        }
+    ],
+    "metaDataProjectConfig": [
+        {
+            "main": {
+                "projectTypeConfigFile": "admconfig:qdoc"
+            }
+        }        
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+            "mainType": {
+                "type": "object",
+                "typeDef": "quality"
+            },
+            "typesDefinition": {
+                "quality": {
+                    "type": "object",
+                    "keys": {
+                        "creador": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true
+                        },
+                        "titol": {
+                            "type": "string"
+                        },
+                        "codi": {
+                            "type": "string"
+                        },
+                        "versio": {
+                            "type": "string"
+                        },
+                        "plantilla": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "plantilles:projects:continguts"
+                        },
+                        "fitxercontinguts": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "continguts"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
