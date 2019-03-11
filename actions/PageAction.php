@@ -160,76 +160,7 @@ abstract class PageAction extends DokuAction implements ResourceLockerInterface,
         $list = PagePermissionManager::getListUsersPagePermission($ns, AUTH_EDIT);
         $list = $this->generateUsernameNamePair($list);
 
-        $response['meta'][] = [
-            "id" => $ns . "_metaNotifications",
-            "title" => WikiIocLangManager::getLang('notification_form_title'),
-            "content" => [
-                'action' => 'lib/exe/ioc_ajax.php',
-                'method' => 'post',
-                'fields' => [
-                    [
-                        'type' => 'hidden',
-                        'name' => 'call',
-                        'value' => 'notify',
-                    ],
-                    [
-                        'type' => 'hidden',
-                        'name' => 'do',
-                        'value' => 'add_message',
-                    ],
-                    [
-                        'type' => 'hidden',
-                        'name' => 'type',
-                        'value' => 'warning',
-                    ],
-                    [
-                        'type' => 'amd',
-                        'data' => [
-                            //ALERTA[Xavi] Dades de prova, això haurà d'arribar d'algun lloc!
-                            'ns' => $ns,
-                            'data' => $list,
-                            'buttonLabel' => WikiIocLangManager::getLang('search'),
-                            'fieldName' => 'to',
-                            'searchDataUrl' => 'lib/exe/ioc_ajax.php?call=user_list',
-                            'token' => getSecurityToken()
-                        ],
-                        'class' => 'IocFilteredList',
-                        'label' => WikiIocLangManager::getLang('notification_form_to'), // Optional
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'id',
-                        'value' => $ns,
-                        'label' => sprintf(WikiIocLangManager::getLang('notification_form_check_add_id'), $response['id']), // Optional
-                        'properties' => ['checked'] // Optional
-                    ],
-                    [
-                        'type' => 'hidden',
-                        'name' => 'rev',
-                        'value' => $rev,
-                    ],
-                    [
-                        'type' => 'checkbox',
-                        'name' => 'send_email',
-                        'value' => true,
-                        'label' => WikiIocLangManager::getLang('notification_form_check_add_email'), // Optional
-                        'properties' => ['checked'] // Optional
-                    ],
-                    [
-                        'type' => 'textarea',
-                        'name' => 'message',
-                        'value' => '',
-                        'label' => WikiIocLangManager::getLang('notification_form_message'), // Optional
-                        'properties' => ['required'] // Optional
-                    ]
-
-                ],
-                'send_button' => WikiIocLangManager::getLang('notification_form_button_send')
-            ],
-
-            "type" => "request_form" // aixó no se si es necessari
-        ];
-
+        parent::addNotificationsMetaToResponse($response, $ns, $rev, $list);
     }
 
     protected function addRevisionSuffixIdToArray(&$elements) {

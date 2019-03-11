@@ -53,6 +53,8 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
                 $this->addRevisionSuffixIdToArray($response['meta']);
             }
         }
+        
+        $this->addNotificationsMetaToResponse($response);
 
         //Añadir propiedades/restricciones del configMain para la creación de elementos dentro del proyecto
         parent::addResponseProperties($response);
