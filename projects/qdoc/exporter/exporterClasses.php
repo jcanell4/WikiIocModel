@@ -511,10 +511,10 @@ class StaticPdfRenderer{
                 $ret = '<li style="text-align:justify;">'.self::getStructuredContent($content)."</li>";
                 break;
             case StructuredNodeDoc::DELETED_TYPE:
-                $ret = " <del>".self::getStructuredContent($content)."</del>";
+                $ret = "<del>".self::getStructuredContent($content)."</del>";
                 break;
             case StructuredNodeDoc::EMPHASIS_TYPE:
-                $ret = " <em>".self::getStructuredContent($content)."</em>";
+                $ret = "<em>".self::getStructuredContent($content)."</em>";
                 break;
             case StructuredNodeDoc::FOOT_NOTE_TYPE:
                 //unsupported
@@ -584,12 +584,11 @@ class StaticPdfRenderer{
 
             case SpecialBlockNodeDoc::NEWCONTENT_TYPE:
                 //$ret = '<div style="border:1px solid red; padding:0 10px; margin:5px 0;">' . self::getStructuredContent($content) . "</div>";
-                $ret = self::getStructuredContent($content);
-                break;
             case SpecialBlockNodeDoc::BLOCVERD_TYPE:
                 //$ret = '<span style="background-color:lightgreen;">' . self::getStructuredContent($content) . '</span>';
-                $ret = self::getStructuredContent($content);
-                break;
+            case SpecialBlockNodeDoc::PROTECTED_TYPE:
+            case SpecialBlockNodeDoc::SOL_TYPE:
+            case SpecialBlockNodeDoc::SOLUCIO_TYPE:
             case SpecialBlockNodeDoc::VERD_TYPE:
                 $ret = self::getStructuredContent($content);
                 break;
@@ -710,6 +709,9 @@ class StaticPdfRenderer{
                 break;
             case LeafNodeDoc::DOUBLEHYPHEN_TYPE:
                 $ret = "&mdash;";
+                break;
+            case LeafNodeDoc::GRAVE_TYPE:
+                $ret = "&#96;";
                 break;
         }
         return $ret;

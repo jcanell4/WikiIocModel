@@ -223,10 +223,13 @@ class StructuredNodeDoc extends AbstractNodeDoc{
 }
 
 class SpecialBlockNodeDoc extends StructuredNodeDoc{
+    const BLOCVERD_TYPE         = "blocverd";
     const HIDDENCONTAINER_TYPE  = "hiddenContainer";
     const NEWCONTENT_TYPE       = 'newcontent';
+    const PROTECTED_TYPE        = 'protected';
+    const SOL_TYPE              = 'sol';
+    const SOLUCIO_TYPE          = 'solucio';
     const VERD_TYPE             = "verd";
-    const BLOCVERD_TYPE         = "blocverd";
 
     public function __construct($type) {
         parent::__construct($type);
@@ -346,6 +349,7 @@ class LeafNodeDoc extends AbstractNodeDoc{
     const APOSTROPHE_TYPE = "apostrophe";
     const BACKSLASH_TYPE = "backslash";
     const DOUBLEHYPHEN_TYPE = "doublehyphen";
+    const GRAVE_TYPE = "grave";
     const ACRONYM_TYPE = "acronym";
 
     private $acronym;
