@@ -342,6 +342,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir eina",
+            "add_default_row_before": "Afegir eina abans",
+            "add_default_row_after": "Afegir eina després",
             "remove_rows": "Eliminar eines seleccionades"        
           },
           "fields": {

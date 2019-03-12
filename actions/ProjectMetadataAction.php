@@ -113,4 +113,24 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
         return $new_message;
     }
 
+    protected function addNotificationsMetaToResponse(&$response) {
+        if (!isset($response['meta'])) {
+            $response['meta'] = array();
+        }
+        $ns = isset($response['ns']) ? $response['ns'] : $this->params['id'];
+        $rev = $this->params['rev'];
+ 
+        $list = $this->involvedUserList($response);
+        parent::addNotificationsMetaToResponse($response, $ns, $rev, $list);
+    }
+    
+    protected function involvedUserList($response){
+        $list = array();
+        
+        $list []=['username' => $response["projectMetaData"]["responsable"]["value"], 'name' => ""];
+        if($response["projectMetaData"]["responsable"]["value"]!=$response["projectMetaData"]["autor"]["value"]){
+            $list []=['username' => $response["projectMetaData"]["autor"]["value"], 'name' => ""];        
+        }
+        return $list;
+    }
 }
