@@ -120,10 +120,10 @@ abstract class AbstractWikiAction {
                             'searchDataUrl' => 'lib/exe/ioc_ajax.php?call=user_list', //
                             'dialogTitle' => 'Cerca usuaris per afegir', // TODO: localitzar
                             'dialogButtonLabel' => 'Afegir', // TODO[Xavi] Localitzar
-//                            'fields' => [
-//                                'username' => 'Nom d\'usuari', // TODO: Localitzar
-//                                'name' => 'Nom' // TODO: Localitzar
-//                            ],
+                            'fields' => [
+                                'username' => 'Nom d\'usuari', // TODO: Localitzar
+                                'name' => 'Nom' // TODO: Localitzar
+                            ],
                             'fieldId' => 'username',
                             'defaultEntryField' => 'name',
                             'data' => $list,
