@@ -8,6 +8,9 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once WIKI_IOC_MODEL . "authorization/PagePermissionManager.php";
 
+// ALERTA[Xavi] Sembla que no funciona el autoload
+require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
+
 class UserListAction  extends AbstractWikiAction {
 
     const OF_A_PROJECT = "ofAProject";
