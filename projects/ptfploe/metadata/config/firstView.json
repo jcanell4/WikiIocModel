@@ -40,6 +40,42 @@
         }        
     },
     "fields": {
+      "testWidgetUsuaris": {
+        "type": "amd",
+        "n_columns": 12,
+        "label" : "TestWidgetUsuaris",
+        "group": "dadesBasiques",
+        "props": {
+          "required": true
+        },
+        "config": {
+          "class" : {
+            "edit": "IocFilteredList"
+          },
+          "data": {
+            "ns":"",
+            "buttonLabel": "Cercar",
+            "fieldName": "testWidgetUsuaris",
+            "dialogTitle" : "Cerca usuaris per afegir",
+            "dialogButtonLabel" : "Afegir",
+            "data": [
+              {
+                "username": "admin",
+                "name": "Admin"
+              }
+            ],
+            "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+            "fields": {
+              "username": "Nom d'usuari",
+              "name": "Nom"
+            },
+            "fieldId": "username",
+            "defaultEntryField": "name",
+            "valueFormat":"json"
+          }
+
+        }
+      },
       "testWidget": {
         "type": "amd",
         "n_columns": 12,
@@ -49,9 +85,10 @@
           "required": true
         },
         "config": {
-          "class" : "IocFilteredList",
+          "class" : {
+            "edit": "IocFilteredList"
+          },
           "data": {
-            "ns" : "això_no_se_si_es_necessari",
             "buttonLabel": "Cercar",
             "fieldName": "testWidget",
             "dialogTitle" : "Cerca usuaris per afegir",
@@ -73,7 +110,8 @@
               "fieldn": "Field N"
             },
             "fieldId": "field2",
-            "defaultEntryField" : "field1"
+            "defaultEntryField": "field1",
+            "itemHtmlTemplate": "** <b>${field1}</b> **"
           }
 
         }

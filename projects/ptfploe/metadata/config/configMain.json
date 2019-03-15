@@ -411,7 +411,11 @@
                             "mandatory": true,
                             "default":""
                         },
-
+                        "testWidgetUsuaris":{
+                            "type":"string",
+                            "mandatory": true,
+                            "default":""
+                        },
                         "cicle": {
                             "type": "string",
                             "default": "Indiqueu el cicle",
