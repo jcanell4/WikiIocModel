@@ -50,7 +50,8 @@
         },
         "config": {
           "class" : {
-            "edit": "IocFilteredList"
+            "edit": "IocFilteredList",
+            "view": "IocListSelectedItems"
           },
           "data": {
             "ns":"",
@@ -86,7 +87,8 @@
         },
         "config": {
           "class" : {
-            "edit": "IocFilteredList"
+            "edit": "IocFilteredList",
+            "view": "IocListSelectedItems"
           },
           "data": {
             "buttonLabel": "Cercar",
