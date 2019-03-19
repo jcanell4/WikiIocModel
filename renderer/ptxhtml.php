@@ -31,7 +31,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
      * @param array $params
      */
     public function init($params) {}
-    
+
     function reset(){
         $this->doc = '';
     }
@@ -1041,7 +1041,9 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 return $title;
             }
             //add image tag
-            $ret .= '<img src="img/'.basename(str_replace(':', '/', $src)).'"';
+            //versión anterior que eliminaba la wikiruta del archivo
+            //$ret .= '<img src="img/'.basename(str_replace(':', '/', $src)).'"';
+            $ret .= '<img src="img/'.str_replace(':', '/', $src).'"';
             $ret .= ' class="media'.$align.'"';
 
             if ($title) {
