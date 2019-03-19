@@ -10,6 +10,7 @@ class FactoryExporter {
     protected $filetype; //tipo de fichero que se desea generar [zip | pdf]
     protected $typesDefinition = array();
     protected $typesRender = array();
+    protected $defaultValueForObjectFields="";
     /**
      * @param array $typesDefinition : array con todos los tipos (clave 'typesDefinition') del archivo configMain.json
      * @param array $typesRender : array con todos los tipos del archivo configRender.json
@@ -19,6 +20,7 @@ class FactoryExporter {
         $this->filetype        = $params['filetype'];
         $this->typesDefinition = $params['typesDefinition'];
         $this->typesRender     = $params['typesRender'];
+        $this->defaultValueForObjectFields = $params['defaultValueForObjectFields'];
     }
 
     /**
