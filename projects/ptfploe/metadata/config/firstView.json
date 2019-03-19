@@ -40,84 +40,6 @@
         }        
     },
     "fields": {
-      "testWidgetUsuaris": {
-        "type": "amd",
-        "n_columns": 12,
-        "label" : "TestWidgetUsuaris",
-        "group": "dadesBasiques",
-        "props": {
-          "required": true
-        },
-        "config": {
-          "class" : {
-            "edit": "IocFilteredList",
-            "view": "IocListSelectedItems"
-          },
-          "data": {
-            "ns":"",
-            "buttonLabel": "Cercar",
-            "fieldName": "testWidgetUsuaris",
-            "dialogTitle" : "Cerca usuaris per afegir",
-            "dialogButtonLabel" : "Afegir",
-            "data": [
-              {
-                "username": "admin",
-                "name": "Admin"
-              }
-            ],
-            "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
-            "fields": {
-              "username": "Nom d'usuari",
-              "name": "Nom"
-            },
-            "fieldId": "username",
-            "defaultEntryField": "name",
-            "valueFormat":"json"
-          }
-
-        }
-      },
-      "testWidget": {
-        "type": "amd",
-        "n_columns": 12,
-        "label" : "TestWidget",
-        "group": "dadesBasiques",
-        "props": {
-          "required": true
-        },
-        "config": {
-          "class" : {
-            "edit": "IocFilteredList",
-            "view": "IocListSelectedItems"
-          },
-          "data": {
-            "buttonLabel": "Cercar",
-            "fieldName": "testWidget",
-            "dialogTitle" : "Cerca usuaris per afegir",
-            "dialogButtonLabel" : "Afegir",
-            "data": [
-              {
-                "field1": "test1",
-                "field2": "Test 1"
-              },
-              {
-                "field1": "test2",
-                "field2": "Test 2"
-              }
-            ],
-            "searchDataUrl": "lib/exe/ioc_ajax.php?call=test_list",
-            "fields": {
-              "field1": "Field 1",
-              "field2": "Field 2",
-              "fieldn": "Field N"
-            },
-            "fieldId": "field2",
-            "defaultEntryField": "field1",
-            "itemHtmlTemplate": "** <b>${field1}</b> **"
-          }
-
-        }
-      },
       "tipusBlocModul":{
         "type":"select",
         "n_columns": 5,
@@ -294,8 +216,6 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir eina",
-            "add_default_row_before": "Afegir eina abans",
-            "add_default_row_after": "Afegir eina després",
             "remove_rows": "Eliminar eines seleccionades"        
           },
           "fields": {

@@ -406,16 +406,6 @@
                             "mandatory": true,
                             "default":"mòdul"
                         },
-                        "testWidget":{
-                            "type":"string",
-                            "mandatory": true,
-                            "default":""
-                        },
-                        "testWidgetUsuaris":{
-                            "type":"string",
-                            "mandatory": true,
-                            "default":""
-                        },
                         "cicle": {
                             "type": "string",
                             "default": "Indiqueu el cicle",
