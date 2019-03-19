@@ -23,6 +23,7 @@ class ProjectExportAction  extends ProjectMetadataAction{
     protected $dataArray = array();
     protected $typesRender = array();
     protected $typesDefinition = array();
+    protected $defaultValueForObjectFields = "";
     protected $mode;
     protected $filetype;
     protected $projectType;
@@ -46,7 +47,9 @@ class ProjectExportAction  extends ProjectMetadataAction{
         $this->projectNS   = $params[ProjectKeys::KEY_NS]?$params[ProjectKeys::KEY_NS]:$this->projectID;
         
         $this->typesRender = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
-            $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $this->metaDataSubSet);
+        $this->defaultValueForObjectFields = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "defaultValueForObjectFields");
+            
+        $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $this->metaDataSubSet);
         $this->mainTypeName = $cfgArray['mainType']['typeDef'];
         $this->typesDefinition = $cfgArray['typesDefinition'];
 //            $projectfilename = $cfgArray[$this->metaDataSubSet];
@@ -64,7 +67,8 @@ class ProjectExportAction  extends ProjectMetadataAction{
         $fRenderer->init(['mode'            => $this->mode,
                           'filetype'        => $this->filetype,
                           'typesDefinition' => $this->typesDefinition,
-                          'typesRender'     => $this->typesRender]);
+                          'typesRender'     => $this->typesRender,
+                          'defaultValueForObjectFields'     => $this->defaultValueForObjectFields ]);
         $render = $fRenderer->createRender($this->typesDefinition[$this->mainTypeName],
                                            $this->typesRender[$this->mainTypeName],
                                            array(ProjectKeys::KEY_ID => $this->projectID));

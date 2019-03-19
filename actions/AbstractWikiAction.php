@@ -113,13 +113,31 @@ abstract class AbstractWikiAction {
                     [
                         'type' => 'amd',
                         'data' => [
-                            //ALERTA[Xavi] Dades de prova, això haurà d'arribar d'algun lloc!
                             'ns' => $ns,
-                            'data' => $list,
                             'buttonLabel' => WikiIocLangManager::getLang('search'),
                             'fieldName' => 'to',
-                            'searchDataUrl' => 'lib/exe/ioc_ajax.php?call=user_list',
-                            'token' => getSecurityToken()
+                            'token' => getSecurityToken(),
+                            'searchDataUrl' => 'lib/exe/ioc_ajax.php?call=user_list', //
+                            'dialogTitle' => 'Cerca usuaris per afegir', // TODO: localitzar
+                            'dialogButtonLabel' => 'Afegir', // TODO[Xavi] Localitzar
+                            'fields' => [
+                                'username' => 'Nom d\'usuari', // TODO: Localitzar
+                                'name' => 'Nom' // TODO: Localitzar
+                            ],
+                            'fieldId' => 'username',
+                            'defaultEntryField' => 'name',
+                            'data' => $list,
+
+
+//                            'data' => [['username'=>'test1', 'name'=>'Test 1'], ['username'=>'test2', 'name'=>'Test 2']],
+//                            'searchDataUrl' => 'lib/exe/ioc_ajax.php?call=test_list',
+//                            'fields' => [
+//                                'field1' => 'Field 1',
+//                                'field2' => 'Field 2',
+//                                'fieldn' => 'Field N',
+//                            ],
+//                            'fieldId' => 'field2',
+
                         ],
                         'class' => 'IocFilteredList',
                         'label' => WikiIocLangManager::getLang('notification_form_to'), // Optional
