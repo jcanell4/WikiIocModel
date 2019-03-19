@@ -21,7 +21,7 @@ class exportDocument extends MainRender {
             $this->cfgExport->lang = (!isset($params['ioclanguage'])) ? 'ca' : strtolower(preg_replace('/\n/', '', $params['ioclanguage']));
             $this->log = isset($params['log']);
         }
-        $this->export_html = TRUE;
+        $this->cfgExport->export_html = TRUE;
         parent::initParams();
     }
 

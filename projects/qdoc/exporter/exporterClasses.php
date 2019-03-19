@@ -21,14 +21,14 @@ abstract class AbstractRenderer {
         $this->rendererPath = dirname(realpath(__FILE__));
         $this->mode = $factory->getMode();
         $this->filetype = $factory->getFileType();
-        if ($cfgExport){
+        if ($cfgExport) {
             $this->cfgExport = $cfgExport;
-        }else{
+        }else {
             $this->cfgExport = new cfgExporter();
         }
     }
 
-    public function getTocs(){
+    public function getTocs() {
         return $this->cfgExport->tocs;
     }
 
@@ -64,6 +64,7 @@ class cfgExporter {
     public $toc=NULL;
     public $tocs=array();
     public $permissionToExport = TRUE;
+    public $export_html = TRUE;
 
     public function __construct() {
         $this->tmp_dir = realpath(EXPORT_TMP)."/".rand();;
@@ -127,9 +128,9 @@ class renderObject extends renderComposite {
             $arrayDeDatosParaLaPlantilla[$keyField] = $render->process($dataField);
         }
         $extres = $this->getRenderExtraFields();
-        if ($extres){
+        if ($extres) {
             foreach ($extres as $item) {
-                if ($item["valueType"] == "field" ){
+                if ($item["valueType"] == "field" ) {
                     $typedefKeyField = $this->getTypedefKeyField($item["value"]);
                     $renderKeyField = $this->getRenderKeyField($item["name"]);
                     $render = $this->createRender($typedefKeyField, $renderKeyField);
@@ -148,8 +149,8 @@ class renderObject extends renderComposite {
 
     public function getRenderFields() { //devuelve el array de campos establecidos para el render
         $ret = $this->getRenderDef('render')['fields'];
-        if (is_string($ret)){
-            switch (strtoupper($ret)){
+        if (is_string($ret)) {
+            switch (strtoupper($ret)) {
                 case "ALL":
                     $ret = array_keys($this->typedef["keys"]);
                     break;
@@ -157,7 +158,7 @@ class renderObject extends renderComposite {
                     $ret = array();
                     $allKeys = array_keys($this->typedef["keys"]);
                     foreach ($allKeys as $key) {
-                        if($this->typedef["keys"][$key]["mandatory"]){
+                        if ($this->typedef["keys"][$key]["mandatory"]) {
                           $ret [] = $key;
                         }
                     }
@@ -220,13 +221,12 @@ class IocTcPdf extends TCPDF{
     private $header_logo_height = 10;
     private $peu = array();
 
-    public function __construct($orientation='P', $unit='mm', $format='A4', $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false, $tmp_dir='') {
+    public function __construct($orientation='P', $unit='mm', $format='A4', $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false) {
         parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
         $this->header_logo_width = 8;
         $this->SetMargins(20, 20);
-        $this->head =20;
+        $this->head = 20;
         $this->header_font = "helvetica";
-        define('K_PATH_IMAGES', $tmp_dir);
     }
 
     //Page header
@@ -249,7 +249,7 @@ class IocTcPdf extends TCPDF{
         $this->MultiCell($header_w, $cell_height, $this->header_title, 0, 'L', 0, 0, "", "", true);
 
         // header string
-        $this->MultiCell(65, $cell_height, $this->header_string, 0, 'R', 0, 0, "", "", true);
+        $this->MultiCell(0, $cell_height, $this->header_string, 0, 'R', 0, 0, "", "", true);
         $this->Line($margins['left'], 19, $this->getPageWidth()-$margins['right'], 19);
     }
 
@@ -302,8 +302,6 @@ class StaticPdfRenderer{
     static $firstPageFont = "Times";
     static $pagesFont = "helvetica";
     static $state = ["table" =>["type" => "table"]];
-    static $tmp_dir;
-    static $img_dir;
 
     /**
      * params = hashArray:{
@@ -317,14 +315,11 @@ class StaticPdfRenderer{
      *              string 'contingut' //contingut latex ja rendaritzat
      */
     public static function renderDocument($params, $output_filename="") {
-        if (empty($output_filename)){
+        if (empty($output_filename)) {
             $output_filename = str_replace(":", "_", $params["id"]);
         }
-        self::$tmp_dir = $params['tmp_dir']."/";
-        preg_match("|.*".DOKU_BASE."(.*)|", $params['tmp_dir'], $t);
-        self::$img_dir = DOKU_BASE . $t[1] . "/";
 
-        $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, false, $params['tmp_dir']);
+        $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, false);
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
         $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
         $iocTcPdf->setFooterData($params["data"]["peu"]);
@@ -351,10 +346,10 @@ class StaticPdfRenderer{
         $iocTcPdf->AddPage();
 
         $len = count($params["data"]["contingut"]);
-        for ($i=0; $i<$len; $i++){
+        for ($i=0; $i<$len; $i++) {
             self::resolveReferences($params["data"]["contingut"][$i]);
         }
-        for ($i=0; $i<$len; $i++){
+        for ($i=0; $i<$len; $i++) {
             self::renderHeader($params["data"]["contingut"][$i], $iocTcPdf);
         }
 
@@ -363,39 +358,39 @@ class StaticPdfRenderer{
         return TRUE;
     }
 
-    private static function getHeaderCounter($level){
+    private static function getHeaderCounter($level) {
         $ret = "";
-        for ($i=0; $i<=$level; $i++){
+        for ($i=0; $i<=$level; $i++) {
             $ret .= self::$headerNum[$i].".";
         }
         return $ret." ";
     }
 
-    private static function incHeaderCounter($level){
+    private static function incHeaderCounter($level) {
         self::$headerNum[$level]++;
-        for ($i=$level+1; $i<count(self::$headerNum); $i++){
+        for ($i=$level+1; $i<count(self::$headerNum); $i++) {
             self::$headerNum[$i]=0;
         }
         return self::getHeaderCounter($level);
     }
 
-    private static function resolveReferences($content){
-        if ($content["type"]===TableFrame::TABLEFRAME_TYPE_TABLE || $content["type"]===TableFrame::TABLEFRAME_TYPE_ACCOUNTING){
+    private static function resolveReferences($content) {
+        if ($content["type"]===TableFrame::TABLEFRAME_TYPE_TABLE || $content["type"]===TableFrame::TABLEFRAME_TYPE_ACCOUNTING) {
             self::$tableCounter++;
             self::$tableReferences[$content["id"]] = self::$tableCounter;
         }elseif ($content["type"]===FigureFrame::FRAME_TYPE_FIGURE) {
             self::$figureCounter++;
             self::$figureReferences[$content["id"]] = self::$figureCounter;
         }
-        for ($i=0; $i<count($content["content"]); $i++){
+        for ($i=0; $i<count($content["content"]); $i++) {
             self::resolveReferences($content["content"][$i]);
         }
-        for ($i=0; $i<count($content["children"]); $i++){
+        for ($i=0; $i<count($content["children"]); $i++) {
             self::resolveReferences($content["children"][$i]);
         }
     }
 
-    private static function renderHeader($header, IocTcPdf &$iocTcPdf){
+    private static function renderHeader($header, IocTcPdf &$iocTcPdf) {
         $level = $header["level"]-1;
         $iocTcPdf->SetFont('Times', 'B', 12);
         $title = self::incHeaderCounter($level).$header["title"];
@@ -403,15 +398,15 @@ class StaticPdfRenderer{
         $iocTcPdf->Ln(5);
         $iocTcPdf->Cell(0, 0, $title, 0,1, "L");
         $iocTcPdf->Ln(3);
-        for ($i=0; $i<count($header["content"]); $i++){
+        for ($i=0; $i<count($header["content"]); $i++) {
             self::renderContent($header["content"][$i], $iocTcPdf);
         }
-        for ($i=0; $i<count($header["children"]); $i++){
+        for ($i=0; $i<count($header["children"]); $i++) {
             self::renderHeader($header["children"][$i], $iocTcPdf);
         }
     }
 
-    private static function renderContent($content, IocTcPdf &$iocTcPdf, $pre="", $post=""){
+    private static function renderContent($content, IocTcPdf &$iocTcPdf, $pre="", $post="") {
         $iocTcPdf->SetFont('helvetica', '', 10);
         if ($content['type'] === FigureFrame::FRAME_TYPE_FIGURE) {
             self::getFrameContent($content, $iocTcPdf);
@@ -429,15 +424,15 @@ class StaticPdfRenderer{
             $iocTcPdf->writeHTML(self::getContent($content), TRUE, FALSE);
         }
 
-        if($content["type"] == StructuredNodeDoc::ORDERED_LIST_TYPE
+        if ($content["type"] == StructuredNodeDoc::ORDERED_LIST_TYPE
                 || $content["type"] == StructuredNodeDoc::UNORDERED_LIST_TYPE
-                || $content["type"] == StructuredNodeDoc::PARAGRAPH_TYPE){
+                || $content["type"] == StructuredNodeDoc::PARAGRAPH_TYPE) {
             $iocTcPdf->Ln(3);
         }
     }
 
-    private static function getFrameContent($content, IocTcPdf &$iocTcPdf){
-        switch ($content['type']){
+    private static function getFrameContent($content, IocTcPdf &$iocTcPdf) {
+        switch ($content['type']) {
             case ImageNodeDoc::IMAGE_TYPE:
                 self::renderImage($content, $iocTcPdf);
                 break;
@@ -448,15 +443,15 @@ class StaticPdfRenderer{
                     $style = $center . " border:1px solid gray;";
                 }
                 $ret = "<div $style nobr=\"true\">";
-                if ($content['title']){
+                if ($content['title']) {
                     $ret .= "<p $center font-weight:bold;\">Figura ".self::$figureReferences[$content['id']].". ".$content['title']."</p>";
                 }
                 $iocTcPdf->writeHTML($ret, TRUE, FALSE);
                 $ret = self::getFrameStructuredContent($content, $iocTcPdf);
-                if ($content['footer']){
-                    if ($content['title']){
+                if ($content['footer']) {
+                    if ($content['title']) {
                         $ret .= "<p $center font-size:80%;\">".$content['footer']."</p>";
-                    }else{
+                    }else {
                         $ret .= "<p $center font-size:80%;\">Figura ".self::$figureReferences[$content['id']].". ".$content['footer']."</p>";
                     }
                 }
@@ -471,10 +466,10 @@ class StaticPdfRenderer{
         return "";
     }
 
-    private static function getFrameStructuredContent($content, IocTcPdf &$iocTcPdf){
+    private static function getFrameStructuredContent($content, IocTcPdf &$iocTcPdf) {
         $ret = "";
         $limit = count($content['content']);
-        for ($i=0; $i<$limit; $i++){
+        for ($i=0; $i<$limit; $i++) {
             $ret .= self::getFrameContent($content['content'][$i], $iocTcPdf);
         }
         return $ret;
@@ -485,7 +480,6 @@ class StaticPdfRenderer{
         $ext = ($match) ? $match[1] : "JPG";
         $iocTcPdf->Image($content['src'], '', '', 0, 0, $ext, '', 'T');
     }
-
 
     private static function renderImage($content, IocTcPdf &$iocTcPdf) {
         preg_match('/\.(.+)$/', $content['src'], $match);
@@ -503,10 +497,11 @@ class StaticPdfRenderer{
         $text = "<p $center font-size:80%;\">{$content['title']}</p>";
         $iocTcPdf->writeHTML($text, TRUE, FALSE);
     }
-    private static function getContent($content){
+
+    private static function getContent($content) {
         $char = "";
         $ret = "";
-        switch ($content["type"]){
+        switch ($content["type"]) {
             case ListItemNodeDoc::LIST_ITEM_TYPE:
                 $ret = '<li style="text-align:justify;">'.self::getStructuredContent($content)."</li>";
                 break;
@@ -517,11 +512,8 @@ class StaticPdfRenderer{
                 $ret = "<em>".self::getStructuredContent($content)."</em>";
                 break;
             case StructuredNodeDoc::FOOT_NOTE_TYPE:
-                //unsupported
-                $ret = "";
                 break;
             case StructuredNodeDoc::LIST_CONTENT_TYPE:
-                $ret = "";
                 break;
             case StructuredNodeDoc::MONOSPACE_TYPE:
                 $ret = "<code>".self::getStructuredContent($content)."</code>";
@@ -535,8 +527,8 @@ class StaticPdfRenderer{
             case StructuredNodeDoc::SINGLEQUOTE_TYPE:
                 $char = "'";
             case StructuredNodeDoc::DOUBLEQUOTE_TYPE:
-                $char = empty($char)?"\"":$char;
-                $ret = " $char".self::getStructuredContent($content)."$char ";
+                $char = empty($char) ? "\"" : $char;
+                $ret = $char.self::getStructuredContent($content).$char;
                 break;
             case StructuredNodeDoc::QUOTE_TYPE:
                 $ret = "<blockquote>".self::getStructuredContent($content)."</blockquote>";
@@ -595,16 +587,15 @@ class StaticPdfRenderer{
 
             case TableFrame::TABLEFRAME_TYPE_TABLE:
             case TableFrame::TABLEFRAME_TYPE_ACCOUNTING:
-                $style ="";
-                $ret = "<div $style nobr=\"true\">";
-                if ($content["title"]){
+                $ret = "<div nobr=\"true\">";
+                if ($content["title"]) {
                     $ret .= "<h4 style=\"text-align:center;\"> Taula ".self::$tableReferences[$content["id"]].". ".$content["title"]."</h4>";
                 }
                 $ret .= self::getStructuredContent($content);
-                if ($content["footer"]){
-                    if ($content["title"]){
+                if ($content["footer"]) {
+                    if ($content["title"]) {
                         $ret .= "<p style=\"text-align:justify; font-size:80%;\">".$content["footer"]."</p>";
-                    }else{
+                    }else {
                         $ret .= "<p style=\"text-align:justify; font-size:80%;\"> Taula ".self::$tableReferences[$content["id"]].". ".$content["footer"]."</p>";
                     }
                 }
@@ -675,26 +666,26 @@ class StaticPdfRenderer{
         return $ret;
     }
 
-    private static function getStructuredContent($content){
+    private static function getStructuredContent($content) {
         $ret = "";
         $limit = count($content["content"]);
-        for ($i=0; $i<$limit; $i++){
+        for ($i=0; $i<$limit; $i++) {
             $ret .= self::getContent($content["content"][$i]);
         }
         return $ret;
     }
 
-    private static function getTextContent($content){
-        if(!empty($content["text"]) && empty(trim($content["text"]))){
+    private static function getTextContent($content) {
+        if (!empty($content["text"]) && empty(trim($content["text"]))) {
             $ret = " ";
-        }else{
+        }else {
             $ret = preg_replace("/\s\s+/", " ", $content["text"]);
         }
         return $ret;
     }
 
-    private static function getLeafContent($content){
-        switch($content["type"]){
+    private static function getLeafContent($content) {
+        switch($content["type"]) {
             case LeafNodeDoc::HORIZONTAL_RULE_TYPE:
                 $ret = "<hr>";
                 break;

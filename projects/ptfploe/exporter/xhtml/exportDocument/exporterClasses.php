@@ -24,7 +24,7 @@ class exportDocument extends MainRender {
             $this->cfgExport->lang = preg_replace('/\n/', '', $this->cfgExport->lang);
             $this->log = isset($params['log']);
         }
-        $this->export_html = TRUE;
+        $this->cfgExport->export_html = TRUE;
         parent::initParams();
     }
 
@@ -52,15 +52,15 @@ class exportDocument extends MainRender {
 //                $parsedDocument = $this->getParsedDocument($data, "$pathTemplate/pt_sencer/pt.tpl");
                 $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/pt_sencer/pt.tpl");
                 $zip->addFromString('/pt_sencer/pt.html', $ptSencer);
-                
-                $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");                
+
+                $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
                 $cicle = html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
                 $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
                 $tipusBlocModul = html_entity_decode(htmlspecialchars_decode($data["tipusBlocModul"], ENT_COMPAT|ENT_QUOTES));
                 $durada = html_entity_decode(htmlspecialchars_decode($data["durada"], ENT_COMPAT|ENT_QUOTES));
                 $professors = html_entity_decode(htmlspecialchars_decode($data["professors"], ENT_COMPAT|ENT_QUOTES));
                 $coordinador = html_entity_decode(htmlspecialchars_decode($data["coordinador"], ENT_COMPAT|ENT_QUOTES));
-                
+
                 $params = array(
                     "id" => $this->cfgExport->id,
                     "path_templates" => $this->rendererPath . "/pdf/exportDocument/templates",  // directori on es troben les plantilles latex usades per crear el pdf
@@ -85,7 +85,7 @@ class exportDocument extends MainRender {
                 );
                 StaticPdfRenderer::renderDocument($params, "pt.pdf");
                 $zip->addFile($this->cfgExport->tmp_dir."/pt.pdf", "/pt_sencer/pt.pdf");
-                
+
                 $this->attachMediaFiles($zip);
 
                 $result["zipFile"] = $zipFile;
@@ -114,7 +114,7 @@ class exportDocument extends MainRender {
 //        $ret["toc"] = $this->cfgExport->toc;
 //        return $ret;
 //    }
-    
+
     private function replaceInTemplate($data, $file) {
         $tmplt = $this->loadTemplateFile($file);
         $document = WiocclParser::getValue($tmplt, [], $data);
@@ -199,7 +199,7 @@ class exportDocument extends MainRender {
         }
         return $files;
     }
-    
+
     private function getDirFiles($dir){
         $files = array();
         if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
@@ -216,7 +216,7 @@ class exportDocument extends MainRender {
         return $files;
     }
 }
-   
+
 //class render_title extends renderField {
 //    public function process($data) {
 //        $ret = parent::process($data);

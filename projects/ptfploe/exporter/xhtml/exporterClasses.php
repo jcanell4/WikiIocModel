@@ -17,8 +17,6 @@ class MainRender extends renderObject {
     protected $tree_names = array();
     protected $web_folder = 'WebContent';
     protected $initialized = FALSE;
-    protected $export_html = TRUE;
-
 
     public function initParams(){
         $langFile = $this->cfgExport->langDir.$this->cfgExport->lang.'.conf';
@@ -35,12 +33,12 @@ class MainRender extends renderObject {
 
 class renderDate extends AbstractRenderer {
     private $sep;
-    
+
     public function __construct($factory, $cfgExport=NULL, $sep="-") {
         parent::__construct($factory, $cfgExport);
         $this->sep = $sep;
     }
-    
+
     public function process($date) {
         $dt = strtotime(str_replace('/', '-', $date));
         return date("d". $this->sep."m".$this->sep."Y", $dt);
@@ -70,14 +68,14 @@ class renderRenderizableText extends AbstractRenderer {
         return $html;
     }
 }
-        
+
 //        if($this->viewMode &&  $plugin_controller->getProjectOwner()){
 //            $counter = 0;
 //            $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $event->result, 1, $counter);
 //            if($counter>0){
 //                $dataSource = $plugin_controller->getCurrentProjectDataSource();
 //                $parser = new WiocclParser($text, [], $dataSource);
-//                $event->result = $parser->getValue();                
+//                $event->result = $parser->getValue();
 //            }
 //        }
 
@@ -98,7 +96,7 @@ class renderFile extends AbstractRenderer {
             session_start();
             $startedHere = true;
         }
-        $_SESSION['export_html'] = $this->export_html;
+        $_SESSION['export_html'] = $this->cfgExport->export_html;
         $_SESSION['tmp_dir'] = $this->cfgExport->tmp_dir;
         $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
         $_SESSION['media_files'] = &$this->cfgExport->media_files;
@@ -111,7 +109,7 @@ class renderFile extends AbstractRenderer {
         }
         $file = wikiFN($fns);
         $text = io_readFile($file);
-        
+
         $counter = 0;
         $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $text, 1, $counter);
         if($counter>0){
@@ -130,7 +128,7 @@ class renderFile extends AbstractRenderer {
 
         return $html;
     }
-    
+
     protected function render($instructions, &$renderData){
         return p_render('wikiiocmodel_ptxhtml', $instructions, $renderData);
     }

@@ -15,7 +15,6 @@ class MainRender extends renderObject {
     protected $tree_names = array();
     protected $web_folder = 'WebContent';
     protected $initialized = FALSE;
-    protected $export_html = TRUE;
 
     public function initParams(){
         $langFile = $this->cfgExport->langDir.$this->cfgExport->lang.'.conf';
@@ -84,7 +83,7 @@ class renderFile extends AbstractRenderer {
             session_start();
             $startedHere = true;
         }
-        $_SESSION['export_html'] = $this->export_html;
+        $_SESSION['export_html'] = $this->cfgExport->export_html;
         $_SESSION['tmp_dir'] = $this->cfgExport->tmp_dir;
         $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
         $_SESSION['media_files'] = &$this->cfgExport->media_files;
