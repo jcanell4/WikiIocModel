@@ -70,7 +70,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     }
 
     function getFormat(){
-        return 'iocxhtml';
+        return 'wikiiocmodel_ptxhtml';
     }
 
     function document_start() {
@@ -413,7 +413,6 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
      * @author Andreas Gohr <andi@splitbrain.org>
      */
     function _highlight($type, $text, $language=null, $filename=null) {
-        global $conf;
         global $ID;
         global $lang;
 
@@ -690,7 +689,6 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
      */
     function windowssharelink($url, $name = null) {
         global $conf;
-        global $lang;
         //simple setup
         $link['target'] = $conf['target']['windows'];
         $link['pre']    = '';
@@ -750,45 +748,16 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
 
     function internalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
         global $ID;
-        list($src, $hash) = explode('#', $src,2);
+        list($src) = explode('#', $src, 2);
         resolve_mediaid(getNS($ID), $src, $exists);
 
-        $noLink = false;
         $render = ($linking == 'linkonly') ? false : true;
         $link = $this->_getMediaLinkConf($src, $title, $align, $width, $height, $cache, $render);
 
-        list($ext, $mime, $dl) = mimetype($src, false);
-        if (substr($mime,0,5) == 'image' && $render){
-            $link['url'] = ml($src,array('id'=>$ID, 'cache'=>$cache), ($linking=='direct'));
-        }elseif ($mime == 'application/x-shockwave-flash' && $render){
-            $noLink = true; //don't link flash movies
-        }else{
-            // add file icons
-            $class = preg_replace('/[^_\-a-z0-9]+/i','_',$ext);
-            $link['class'] .= ' mediafile mf_'.$class;
-            $link['url'] = ml($src,array('id'=>$ID, 'cache'=>$cache), true);
-            if ($exists)
-                $link['title'] .= ' (' . filesize_h(filesize(mediaFN($src))).')';
-        }
-
-        if ($hash) $link['url'] .= '#'.$hash;
-
-        //markup non existing files
-        if (!$exists) {
-            $link['class'] .= ' wikilink2';
-        }
-        /* LOS ARCHIVOS PARA LA EXPORTACIÓN NO NECESITAN INCLUIR 'LINK' A LAS IMÁGENES
-        //output formatted
-        if ($linking == 'nolink' || $noLink)
-            $this->doc .= $link['name'];
-        else
-            $this->doc .= $this->_formatLink($link);
-         */
         $this->doc .= $link['name'];
     }
 
-    function externalmedia ($src, $title=null, $align=null, $width=null,
-                            $height=null, $cache=null, $linking=null) {
+    function externalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
         list($src,$hash) = explode('#',$src,2);
         $noLink = false;
         $render = ($linking == 'linkonly') ? false : true;
@@ -812,8 +781,10 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         if ($hash) $link['url'] .= '#'.$hash;
 
         //output formatted
-        if ($linking == 'nolink' || $noLink) $this->doc .= $link['name'];
-        else $this->doc .= $this->_formatLink($link);
+        if ($linking == 'nolink' || $noLink)
+            $this->doc .= $link['name'];
+        else
+            $this->doc .= $this->_formatLink($link);
     }
 
     /**
@@ -899,15 +870,13 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
 
     // $numrows not yet implemented
     function table_open($maxcols = null, $numrows = null, $pos = null){
-        global $lang;
         // initialize the row counter used for classes
         $this->_counter['row_counter'] = 0;
         $class = 'table';
         if ($pos !== null) {
             $class .= ' ' . $this->startSectionEdit($pos, 'table');
         }
-        $this->doc .= '<div class="' . $class . '"><table class="taula">' .
-                      DOKU_LF;
+        $this->doc .= '<div class="'.$class.'"><table class="taula">' . DOKU_LF;
     }
 
     function table_close($pos = null){
@@ -1118,8 +1087,6 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
      * @author Harry Fuecks <hfuecks@gmail.com>
      */
     function _getLinkTitle($title, $default, & $isImage, $id=null, $linktype='content') {
-        global $conf;
-
         $isImage = false;
         if ( is_array($title) ) {
             $isImage = true;
