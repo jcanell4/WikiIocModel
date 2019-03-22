@@ -73,41 +73,26 @@ class IocTcPdf extends TCPDF {
         $this->header_logo_hight = $lh;
     }
  }
+class StaticPdfRenderer extends BasicStaticPdfRenderer {
 
-/**
- * params = hashArray:{
- *      id: string  //id del projecte
- *      path_templates:string,  // directori on es troben les plantilles latex usades per crear el pdf
- *      tmp_dir: string,    //directori temporal on crear el pdf
- *      lang: string  // idioma usat (CA, EN, ES, ...)
- *      mode: string  // pdf o zip
- *      data: hashArray:{
- *              titol:array os string    // linies de títol del document (cada ítem és una línia)
- *              contingut: string   //contingut latex ja rendaritzat
- */
-class StaticPdfRenderer{
-    static $tableCounter = 0;
-    static $tableReferences = array();
-    static $headerNum = array(0,0,0,0,0,0);
-    static $headerFont = "helvetica";
-    static $headerFontSize = 10;
-    static $footerFont = "helvetica";
-    static $footerFontSize = 8;
-    static $firstPageFont = "Times";
-    static $pagesFont = "helvetica";
-
-    static $state = ["table" =>["type" => "table"]];
-
+    /**
+     * params = hashArray:{
+     *      id: string  //id del projecte
+     *      path_templates:string,  // directori on es troben les plantilles latex usades per crear el pdf
+     *      tmp_dir: string,    //directori temporal on crear el pdf
+     *      lang: string  // idioma usat (CA, EN, ES, ...)
+     *      mode: string  // pdf o zip
+     *      data: hashArray:{
+     *              titol:array os string    // linies de títol del document (cada ítem és una línia)
+     *              contingut: string   //contingut latex ja rendaritzat
+     */
     public static function renderDocument($params, $output_filename="") {
-        $style = ["B", "BI", "I", "I", ""];
         if(empty($output_filename)){
             $output_filename = str_replace(":", "_", $params["id"]);
         }
 
         $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
-
         $iocTcPdf->setHeaderData( $params["data"]["header_page_logo"], $params["data"]["header_page_wlogo"], $params["data"]["header_page_hlogo"], $params["data"]["header_ltext"], $params["data"]["header_rtext"]);
 
         // set header and footer fonts
@@ -132,13 +117,11 @@ class StaticPdfRenderer{
         $iocTcPdf->SetFont(self::$firstPageFont, 'B', 35);
         $iocTcPdf->AddPage();
         $iocTcPdf->SetX(100);
-        $y = 100;
-        $iocTcPdf->SetY($y);
+        $iocTcPdf->SetY($y=100);
         for($i=0; $i<2; $i++){
             $iocTcPdf->Cell(0, 0, $params["data"]["titol"][$i], 0, 1);
         }
-        $y +=100;
-        $iocTcPdf->SetY($y);
+        $iocTcPdf->SetY($y+=100);
 
         $iocTcPdf->SetFont(self::$firstPageFont, 'B', 20);
         for($i=2; $i<count($params["data"]["titol"]); $i++){
@@ -171,225 +154,9 @@ class StaticPdfRenderer{
         // end of TOC page
         $iocTcPdf->endTOCPage();
 
-        $params["id"];
         $iocTcPdf->Output("{$params['tmp_dir']}/$output_filename", 'F');
 
-        $result = array();
-
-        return $result;
+        return TRUE;
     }
 
-    private static function getHeaderCounter($level){
-        $ret = "";
-        for($i=0; $i<=$level; $i++){
-            $ret .= self::$headerNum[$i].".";
-        }
-        return $ret." ";
-    }
-
-    private static function incHeaderCounter($level){
-        self::$headerNum[$level]++;
-        for($i=$level+1; $i<count(self::$headerNum); $i++){
-            self::$headerNum[$i]=0;
-        }
-        return self::getHeaderCounter($level);
-    }
-
-    private static function resolveReferences($content){
-        if($content["type"]===TableFrame::TABLEFRAME_TYPE_TABLE
-                || $content["type"]===TableFrame::TABLEFRAME_TYPE_ACCOUNTING){
-            self::$tableCounter++;
-            self::$tableReferences[$content["id"]] = self::$tableCounter;
-        }
-        for ($i=0; $i<count($content["content"]); $i++){
-            self::resolveReferences($content["content"][$i]);
-        }
-        for ($i=0; $i<count($content["children"]); $i++){
-            self::resolveReferences($content["children"][$i]);
-        }
-    }
-
-    private static function renderHeader($header, IocTcPdf &$iocTcPdf){
-        $level = $header["level"]-1;
-        $iocTcPdf->SetFont('Times', 'B', 12);
-        $title = self::incHeaderCounter($level).$header["title"];
-        $iocTcPdf->Bookmark($title, $level, 0);
-        $iocTcPdf->Ln(5);
-        $iocTcPdf->Cell(0, 0, $title, 0,1, "L");
-        $iocTcPdf->Ln(3);
-        for ($i=0; $i<count($header["content"]); $i++){
-            self::renderContent($header["content"][$i], $iocTcPdf);
-        }
-        for ($i=0; $i<count($header["children"]); $i++){
-            self::renderHeader($header["children"][$i], $iocTcPdf);
-        }
-    }
-
-    private static function renderContent($content, IocTcPdf &$iocTcPdf, $pre="", $post=""){
-        $iocTcPdf->SetFont('helvetica', '', 10);
-        $iocTcPdf->writeHTML( self::getContent($content), TRUE, FALSE);
-        if($content["type"] == StructuredNodeDoc::ORDERED_LIST_TYPE
-                || $content["type"] == StructuredNodeDoc::UNORDERED_LIST_TYPE
-                || $content["type"] == StructuredNodeDoc::PARAGRAPH_TYPE){
-            $iocTcPdf->Ln(3);
-        }
-    }
-
-    private static function getContent($content){
-        $char = "";
-        $ret = "";
-        switch ($content["type"]){
-            case ListItemNodeDoc::LIST_ITEM_TYPE:
-                $ret = '<li  style="text-align:justify;">'.self::getStructuredContent($content)."</li>";
-                break;
-            case StructuredNodeDoc::DELETED_TYPE:
-                $ret = " <del>".self::getStructuredContent($content)."</del> ";
-                break;
-            case StructuredNodeDoc::EMPHASIS_TYPE:
-                $ret = " <em>".self::getStructuredContent($content)."</em> ";
-                break;
-            case StructuredNodeDoc::FOOT_NOTE_TYPE:
-                //unsupported
-                $ret = "";
-                break;
-            case StructuredNodeDoc::LIST_CONTENT_TYPE:
-                $ret = "";
-                break;
-            case StructuredNodeDoc::MONOSPACE_TYPE:
-                $ret = "<code>".self::getStructuredContent($content)."</code>";
-                break;
-            case StructuredNodeDoc::ORDERED_LIST_TYPE:
-                $ret = "<ol>".self::getStructuredContent($content)."</ol>";
-                break;
-            case StructuredNodeDoc::PARAGRAPH_TYPE:
-                $ret = '<p style="text-align:justify;">'.self::getStructuredContent($content).'</p>';
-                break;
-            case StructuredNodeDoc::SINGLEQUOTE_TYPE:
-                $char = "'";
-            case StructuredNodeDoc::DOUBLEQUOTE_TYPE:
-                $char = empty($char)?"\"":$char;
-                $ret = " $char".self::getStructuredContent($content)."$char ";
-                break;
-            case StructuredNodeDoc::QUOTE_TYPE:
-                $ret = "<blockquote>".self::getStructuredContent($content)."</blockquote>";
-                break;
-            case StructuredNodeDoc::STRONG_TYPE:
-                $ret = " <strong>".self::getStructuredContent($content)."</strong> ";
-                break;
-            case StructuredNodeDoc::SUBSCRIPT_TYPE:
-                $ret = " <sub>".self::getStructuredContent($content)."</sub> ";
-                break;
-            case StructuredNodeDoc::SUPERSCRIPT_TYPE:
-                $ret = " <sup>".self::getStructuredContent($content)."</sup> ";
-                break;
-            case StructuredNodeDoc::UNDERLINE_TYPE:
-                $ret = " <u>".self::getStructuredContent($content)."</u> ";
-                break;
-            case StructuredNodeDoc::UNORDERED_LIST_TYPE:
-                $ret = "<ul>".self::getStructuredContent($content)."</ul>";
-                break;
-            case TableFrame::TABLEFRAME_TYPE_TABLE:
-            case TableFrame::TABLEFRAME_TYPE_ACCOUNTING:
-                $ret = "<div nobr=\"true\">";
-                if($content["title"]){
-                    $ret .= "<h4  style=\"text-align:center;\"> Taula ".self::$tableReferences[$content["id"]].". ".$content["title"]."</h4>";
-                }
-                $ret .= self::getStructuredContent($content);
-                if($content["footer"]){
-                    if($content["title"]){
-                        $ret .= "<p style=\"text-align:justify; font-size:80%;\">".$content["footer"]."</p>";
-                    }else{
-                        $ret .= "<p style=\"text-align:justify; font-size:80%;\"> Taula ".self::$tableReferences[$content["id"]].". ".$content["footer"]."</p>";
-                    }
-                }
-                $ret .= "</div>";
-                break;
-            case TableNodeDoc::TABLE_TYPE:
-
-                $ret = "<table$style   cellpadding=\"5\" nobr=\"true\">";
-                $ret .= self::getStructuredContent($content)."</table>";
-                break;
-            case StructuredNodeDoc::TABLEROW_TYPE:
-                $ret = "<tr>".self::getStructuredContent($content)."</tr>";
-                break;
-            case CellNodeDoc::TABLEHEADER_TYPE:
-                $align = $content["align"]?"text-align:{$content["align"]};":"text-align:center;";
-                $style = $content["hasBorder"]?' style="border:1px solid black; border-collapse:collapse; '.$align.' font-weight:bold; background-color:#808080;"':"style=\"$align font-weight:bold; background-color:#808080;\"";
-                $colspan = $content["colspan"]>1?' colspan="'.$content["colspan"].'"':"";
-                $rowspan = $content["rowspan"]>1?' rowspan="'.$content["rowspan"].'"':"";
-
-                $ret = "<th$colspan$rowspan$style>".self::getStructuredContent($content)."</th>";
-                break;
-            case CellNodeDoc::TABLECELL_TYPE:
-                $align = $content["align"]?"text-align:{$content["align"]};":"text-align:center";
-                $style = $content["hasBorder"]?' style="border:1px solid black; border-collapse:collapse; '.$align.'"':"style=\"$align\"";
-                $style = $content["hasBorder"]?' style="border:1px solid black; border-collapse:collapse; '.$align.'"':"";
-                $colspan = $content["colspan"]>1?' colspan="'.$content["colspan"].'"':"";
-                $rowspan = $content["rowspan"]>1?' rowspan="'.$content["rowspan"].'"':"";
-                $ret = "<td$colspan$rowspan$style>".self::getStructuredContent($content)."</td>";
-                break;
-            case CodeNodeDoc::CODE_TEXT_TYPE:
-                $ret = self::getTextContent($content);
-                break;
-            case TextNodeDoc::HTML_TEXT_TYPE:
-                $ret = self::getTextContent($content);
-                break;
-            case TextNodeDoc::PLAIN_TEXT_TYPE:
-                $ret = self::getTextContent($content);
-                break;
-            case ReferenceNodeDoc::REFERENCE_TYPE:
-                if($content["referenceType"] === ReferenceNodeDoc::REF_TABLE_TYPE){
-                    $ret = " <em>Taula ".self::$tableReferences[trim($content["referenceId"])]."</em> ";
-                }else{
-                    //figure
-                    //$ret = " <em>Figura ".self::$figureReferences[trim($content["referenceId"])]."</em> ";
-                }
-                break;
-            case TextNodeDoc::PREFORMATED_TEXT_TYPE:
-                $ret = self::getTextContent($content);
-                break;
-            case TextNodeDoc::UNFORMATED_TEXT_TYPE:
-                $ret = self::getTextContent($content);
-                break;
-            default :
-                $ret = self::getLeafContent($content);
-        }
-        return $ret;
-    }
-
-    private static function getStructuredContent($content){
-        $ret = "";
-        $limit = count($content["content"]);
-        for ($i=0; $i<$limit; $i++){
-            $ret .= self::getContent($content["content"][$i]);
-        }
-        return $ret;
-    }
-
-    private static function getTextContent($content){
-        if(!empty($content["text"]) && empty(trim($content["text"]))){
-            $ret = " ";
-        }else{
-            $ret = trim($content["text"]);
-        }
-        return $ret;
-    }
-
-    private static function getLeafContent($content){
-        switch($content["type"]){
-            case LeafNodeDoc::HORIZONTAL_RULE_TYPE:
-                $ret = "<hr>";
-                break;
-            case LeafNodeDoc::LINE_BREAK_TYPE:
-                $ret = "<br>";
-                break;
-            case LeafNodeDoc::APOSTROPHE_TYPE:
-                $ret = "'";
-                break;
-            case LeafNodeDoc::BACKSLASH_TYPE:
-                $ret = "\\";
-                break;
-        }
-        return $ret;
-    }
 }
