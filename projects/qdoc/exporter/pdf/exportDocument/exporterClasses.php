@@ -22,6 +22,7 @@ class exportDocument extends MainRender {
             $this->log = isset($params['log']);
         }
         $this->cfgExport->export_html = TRUE;
+        $this->cfgExport->rendererPath = dirname(realpath(__FILE__));
         parent::initParams();
     }
 
@@ -41,7 +42,7 @@ class exportDocument extends MainRender {
             "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
             "mode" => isset($this->mode) ? $this->mode : $this->filetype,
             "data" => array(
-                "header" => ["logo"  => $this->rendererPath . "/resources/escutGene.jpg",
+                "header" => ["logo"  => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                              "wlogo" => 9.9,
                              "hlogo" => 11.1,
                              "ltext" => "Generalitat de Catalunya\nDepartament d'Ensenyament\nInstitut Obert de Catalunya"],

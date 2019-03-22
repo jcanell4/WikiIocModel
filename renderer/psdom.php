@@ -876,7 +876,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     private function _isBorderTypeTable($types=NULL){
         if($types==NULL){
-            $types = $this->table_types;
+            $types = is_array($this->table_types) ? $this->table_types : array();
         }
         return count(array_intersect($types, self::BORDER_TYPES))!=0;
     }
