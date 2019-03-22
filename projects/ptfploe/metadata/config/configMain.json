@@ -573,7 +573,7 @@
                         "plantilla": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "plantilles:docum_ioc:pla_treball_fp:##tipusPla##:continguts"
+                            "default": "plantilles:docum_ioc:pla_treball_fp:loe:continguts"
                         },
                         "autor": {
                             "type": "string",
