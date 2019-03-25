@@ -8,6 +8,6 @@ if (!defined('DOKU_INC')) die();
 class FactoryExporter extends BasicFactoryExporter {
 
     public function __construct() {
-        $this->path = dirname(__FILE__);
+        parent::__construct(dirname(__FILE__));
     }
 }
