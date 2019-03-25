@@ -11,7 +11,13 @@ class BasicFactoryExporter {
     protected $path;     //ruta absoluta del directorio exporter del proyecto
     protected $typesDefinition = array();
     protected $typesRender = array();
-    protected $defaultValueForObjectFields="";
+    protected $projectModel = NULL;
+    protected $defaultValueForObjectFields = "";
+
+    public function __construct($path) {
+        $this->path = $path;
+    }
+
     /**
      * @param array $typesDefinition : array con todos los tipos (clave 'typesDefinition') del archivo configMain.json
      * @param array $typesRender : array con todos los tipos del archivo configRender.json
@@ -21,6 +27,7 @@ class BasicFactoryExporter {
         $this->filetype        = $params['filetype'];
         $this->typesDefinition = $params['typesDefinition'];
         $this->typesRender     = $params['typesRender'];
+        $this->projectModel    = $params['projectModel'];
         $this->defaultValueForObjectFields = $params['defaultValueForObjectFields'];
     }
 
@@ -67,6 +74,10 @@ class BasicFactoryExporter {
 
     public function getFileType() {
         return $this->filetype;
+    }
+
+    public function getProjectModel() {
+        return $this->projectModel;
     }
 
     public function getDefaultValueForObjectFields() {
