@@ -12,6 +12,11 @@ require_once DOKU_PLUGIN."wikiiocmodel/exporter/BasicExporterClasses.php";
 
 class renderObject extends BasicRenderObject {
 
+    public function __construct($factory, $typedef, $renderdef) {
+        parent::__construct($factory, $typedef, $renderdef);
+        $this->cfgExport->rendererPath = dirname(realpath(__FILE__));
+    }
+
 }
 
 /**

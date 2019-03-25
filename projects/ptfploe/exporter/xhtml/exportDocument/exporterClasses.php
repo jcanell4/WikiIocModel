@@ -24,7 +24,6 @@ class exportDocument extends MainRender {
             $this->log = isset($params['log']);
         }
         $this->cfgExport->export_html = TRUE;
-        $this->cfgExport->rendererPath = dirname(realpath(__FILE__));
         parent::initParams();
     }
 
@@ -35,7 +34,7 @@ class exportDocument extends MainRender {
             mkdir($this->cfgExport->tmp_dir, 0775, TRUE);
         }
         $output_filename = str_replace(':','_',$this->cfgExport->id);
-        $pathTemplate = "templates";
+        $pathTemplate = "xhtml/exportDocument/templates";
 
         $zip = new ZipArchive;
         $zipFile = $this->cfgExport->tmp_dir."/$output_filename.zip";

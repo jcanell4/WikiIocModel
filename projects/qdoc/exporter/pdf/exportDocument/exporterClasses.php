@@ -22,7 +22,6 @@ class exportDocument extends MainRender {
             $this->log = isset($params['log']);
         }
         $this->cfgExport->export_html = TRUE;
-        $this->cfgExport->rendererPath = dirname(realpath(__FILE__));
         parent::initParams();
     }
 
