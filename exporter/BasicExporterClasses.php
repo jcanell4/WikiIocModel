@@ -36,7 +36,8 @@ abstract class AbstractRenderer {
 
     public function loadTemplateFile($file) {
         $tmplt = @file_get_contents("{$this->cfgExport->rendererPath}/$file");
-        if ($tmplt == FALSE) throw new Exception("Error en la lectura de l'arxiu de plantilla: $file");
+        if ($tmplt == FALSE)
+            throw new Exception("Error en la lectura de l'arxiu de plantilla: $file");
         return $tmplt;
     }
 
@@ -99,13 +100,11 @@ abstract class renderComposite extends AbstractRenderer {
         return ($key === NULL) ? $this->renderdef : $this->renderdef[$key];
     }
     public function getTypedefKeyField($field) { //@return array : objeto key solicitado (del configMain.json)
-        return $this->getTypeDef('keys')[$field];
-//        $ret = $this->getTypeDef('keys')[$field];
-//        //No comprendo por qué hay que añadir el type si ya del objeto se recoge el objeto completo
-//        while($this->getTypesDefinition($ret["type"])){
-//            $ret = array_merge($ret, $this->getTypesDefinition($ret["type"]));
-//        }
-//        return $ret;
+        $ret = $this->getTypeDef('keys')[$field];
+        while ($typeDef = $this->getTypesDefinition($ret["type"])) {
+            $ret = array_merge($ret, $typeDef);
+        }
+        return $ret;
     }
     public function getRenderKeyField($field) { //@return array : objeto key solicitado (del configRender.json)
         return $this->getRenderDef('keys')[$field];
@@ -253,7 +252,22 @@ class BasicStaticPdfRenderer {
     static $footerFontSize = 8;
     static $firstPageFont = "Times";
     static $pagesFont = "helvetica";
-    static $state = ["table" =>["type" => "table"]];
+    static $state = ["table" => ["type" => "table"]];
+
+    protected function resetStaticDataRender() {
+        self::$tableCounter = 0;
+        self::$tableReferences = array();
+        self::$figureCounter = 0;
+        self::$figureReferences = array();
+        self::$headerNum = array(0,0,0,0,0,0);
+        self::$headerFont = "helvetica";
+        self::$headerFontSize = 10;
+        self::$footerFont = "helvetica";
+        self::$footerFontSize = 8;
+        self::$firstPageFont = "Times";
+        self::$pagesFont = "helvetica";
+        self::$state = ["table" => ["type" => "table"]];
+    }
 
     protected static function resolveReferences($content) {
         if ($content["type"]===TableFrame::TABLEFRAME_TYPE_TABLE || $content["type"]===TableFrame::TABLEFRAME_TYPE_ACCOUNTING) {
