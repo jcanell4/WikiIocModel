@@ -414,7 +414,7 @@ class BasicStaticPdfRenderer {
         $ret = "";
         switch ($content["type"]) {
             case ListItemNodeDoc::LIST_ITEM_TYPE:
-                $ret = '<li  style="text-align:justify;">'.self::getStructuredContent($content)."</li>";
+                $ret = "<li style=\"text-align:justify;\">".trim(self::getStructuredContent($content), " ")."</li>";
                 break;
             case StructuredNodeDoc::DELETED_TYPE:
                 $ret = "<del>".self::getStructuredContent($content)."</del>";
@@ -433,7 +433,7 @@ class BasicStaticPdfRenderer {
                 $ret = "<ol>".self::getStructuredContent($content)."</ol>";
                 break;
             case StructuredNodeDoc::PARAGRAPH_TYPE:
-                $ret = '<p style="text-align:justify;">'.self::getStructuredContent($content).'</p>';
+                $ret = '<p style="text-align:justify;">'.trim(self::getStructuredContent($content), " ").'</p>';
                 break;
             case StructuredNodeDoc::SINGLEQUOTE_TYPE:
                 $char = "'";
