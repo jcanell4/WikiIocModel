@@ -188,8 +188,8 @@ class StructuredNodeDoc extends AbstractNodeDoc{
         $node->setOwner($this);
     }
 
-    public function getContent($i=-1){
-        if($i==-1){
+    public function getContent($i = -1){
+        if ($i === -1) {
             $ret = $this->content;
         }else{
             $ret = $this->content[$i];
@@ -202,12 +202,12 @@ class StructuredNodeDoc extends AbstractNodeDoc{
     }
 
     public function getContentEncodeJson() {
-        $sep="";
+        $sep = "";
         $ret .= "[\n";
         foreach ($this->content as $child){
             $ret .= $sep.$child->getEncodeJson();
-            if(empty($sep)){
-               $sep=",\n" ;
+            if (empty($sep)) {
+                $sep = ",\n" ;
             }
         }
         $ret .= "\n]";
@@ -215,7 +215,8 @@ class StructuredNodeDoc extends AbstractNodeDoc{
     }
 
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"".$this->type."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret = "{\n\"type\":\"".$this->type."\""
+                .",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
@@ -239,7 +240,6 @@ class SpecialBlockNodeDoc extends StructuredNodeDoc{
 
 class ListItemNodeDoc extends StructuredNodeDoc{
     const LIST_ITEM_TYPE = "li";
-
     var $level;
 
     public function __construct($level) {
@@ -251,7 +251,9 @@ class ListItemNodeDoc extends StructuredNodeDoc{
       return $this->level;
     }
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"".$this->type."\",\n\"level\":\"".$this->getLevel()."\",\n\"content\":".$this->getContentEncodeJson();
+        $ret = "{\n\"type\":\"".$this->type."\""
+                .",\n\"level\":\"".$this->getLevel()."\""
+                .",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
@@ -297,12 +299,12 @@ class LeveledNodeDoc extends StructuredNodeDoc{
     }
 
     public function getChildrenEncodeJson() {
-        $sep="";
+        $sep = "";
         $ret .= "[\n";
         foreach ($this->children as $child){
             $ret .= $sep.$child->getEncodeJson();
-            if(empty($sep)){
-               $sep=",\n" ;
+            if (empty($sep)) {
+               $sep = ",\n" ;
             }
         }
         $ret .= "\n]";
@@ -320,8 +322,11 @@ class HeaderNodeDoc extends LeveledNodeDoc{
     }
 
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"".$this->type."\",\n\"title\":\"".$this->title."\",\n\"level\":\"".$this->getLevel()."\",\n\"content\":".$this->getContentEncodeJson();
-        $ret .= ",\n\"children\":". $this->getChildrenEncodeJson();
+        $ret = "{\n\"type\":\"".$this->type."\""
+                .",\n\"title\":\"".$this->title."\""
+                .",\n\"level\":\"".$this->getLevel()."\""
+                .",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= ",\n\"children\":".$this->getChildrenEncodeJson();
         $ret .= "\n}";
         return $ret;
     }
@@ -382,7 +387,10 @@ class CodeNodeDoc extends TextNodeDoc{
     }
 
     public function getEncodeJson() {
-        return "{\n\"type\":\"".$this->type."\",\n\"language\":\"".$this->language."\",\n\"text\":\"".$this->text."\"\n}";
+        return "{\n\"type\":\"".$this->type."\""
+                .",\n\"language\":\"".$this->language."\""
+                .",\n\"text\":\"".$this->text."\""
+                ."\n}";
     }
 }
 
@@ -405,7 +413,11 @@ class ReferenceNodeDoc extends AbstractNodeDoc{
     }
 
     public function getEncodeJson() {
-        return "{\n\"type\":\"".$this->type."\",\n\"referenceId\":\"".$this->refId."\",\n\"referenceType\":\"".$this->refType."\"\n,\n\"referenceTitle\":\"".$this->refTitle."\"\n}";
+        return "{\n\"type\":\"".$this->type."\""
+                .",\n\"referenceId\":\"".$this->refId."\""
+                .",\n\"referenceType\":\"".$this->refType."\"\n"
+                .",\n\"referenceTitle\":\"".$this->refTitle."\""
+                ."\n}";
     }
 
 }
