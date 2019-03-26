@@ -28,7 +28,12 @@ class BasicGenerateProjectMetaDataAction extends ProjectMetadataAction {
                 if (!isset($ret[ProjectKeys::KEY_GENERATED])) {
                     $ret[ProjectKeys::KEY_GENERATED] = $this->projectModel->isProjectGenerated();
                 }
-                $msg = ($ret[ProjectKeys::KEY_GENERATED]) ? "project_generated" : "project_not_generated";
+                if ($ret[ProjectKeys::KEY_GENERATED]) {
+                    $ret[ProjectKeys::KEY_ACTIVA_UPDATE_BTN] = 1;
+                    $msg = "project_generated";
+                }else {
+                    $msg = "project_not_generated";
+                }
                 $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang($msg), $responseId);  //añade info para la zona de mensajes
                 $ret[ProjectKeys::KEY_ID] = $responseId;
             }
