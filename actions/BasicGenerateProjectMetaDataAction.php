@@ -25,12 +25,12 @@ class BasicGenerateProjectMetaDataAction extends ProjectMetadataAction {
                 throw new ProjectExistException($this->params[ProjectKeys::KEY_ID], 'projectAlreadyGenerated');
             } else {
                 $ret = $this->projectModel->generateProject();  //crea el contenido del proyecto en 'pages/'
-                if($ret[ProjectKeys::KEY_GENERATED]){
-                    $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_generated'), $responseId);  //añade info para la zona de mensajes
-                }else{
-                    $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_not_generated'), $responseId);  //añade info para la zona de mensajes
+                if (!isset($ret[ProjectKeys::KEY_GENERATED])) {
+                    $ret[ProjectKeys::KEY_GENERATED] = $this->projectModel->isProjectGenerated();
                 }
-                $ret[ProjectKeys::KEY_ID] = $responseId;                    
+                $msg = ($ret[ProjectKeys::KEY_GENERATED]) ? "project_generated" : "project_not_generated";
+                $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang($msg), $responseId);  //añade info para la zona de mensajes
+                $ret[ProjectKeys::KEY_ID] = $responseId;
             }
         }
 

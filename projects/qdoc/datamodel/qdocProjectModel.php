@@ -28,28 +28,28 @@ class qdocProjectModel extends AbstractProjectModel {
         $destino = $this->id.":".end(explode(":", $plantilla));
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
 
-        //2. Establece la marca de 'proyecto generado'
-        $ret = $this->projectMetaDataQuery->setProjectGenerated();
-        if ($ret){
-            //3a. Otorga, al Autor, permisos sobre el directorio de proyecto
-            PagePermissionManager::updatePagePermission($this->id.":*", $data['projectMetaData']["autor"]['value'], AUTH_UPLOAD);
+        //2a. Otorga, al Autor, permisos sobre el directorio de proyecto
+        PagePermissionManager::updatePagePermission($this->id.":*", $data['projectMetaData']["autor"]['value'], AUTH_UPLOAD);
 
-            //3b. Otorga, al Responsable, permisos sobre el directorio de proyecto
-            if ($data['projectMetaData']["autor"]['value'] !== $data['projectMetaData']["responsable"]['value'])
-                PagePermissionManager::updatePagePermission($this->id.":*", $data['projectMetaData']["responsable"]['value'], AUTH_UPLOAD);
+        //2b. Otorga, al Responsable, permisos sobre el directorio de proyecto
+        if ($data['projectMetaData']["autor"]['value'] !== $data['projectMetaData']["responsable"]['value'])
+            PagePermissionManager::updatePagePermission($this->id.":*", $data['projectMetaData']["responsable"]['value'], AUTH_UPLOAD);
 
-            //4a. Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
-            $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$data['projectMetaData']["autor"]['value'].":";
-            PagePermissionManager::updatePagePermission($ns."*", $data['projectMetaData']["autor"]['value'], AUTH_DELETE, TRUE);
-            //4b. Incluye la página del proyecto en el archivo de atajos del Autor
-            $params = [
-                 'id' => $this->id
-                ,'autor' => $data['projectMetaData']["autor"]['value']
-                ,'link_page' => $this->id
-                ,'user_shortcut' => $ns.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
-            ];
-            $this->includePageProjectToUserShortcut($params);
-        }
+        //3a. Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
+        $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$data['projectMetaData']["autor"]['value'].":";
+        PagePermissionManager::updatePagePermission($ns."*", $data['projectMetaData']["autor"]['value'], AUTH_DELETE, TRUE);
+        //3b. Incluye la página del proyecto en el archivo de atajos del Autor
+        $params = [
+             'id' => $this->id
+            ,'autor' => $data['projectMetaData']["autor"]['value']
+            ,'link_page' => $this->id
+            ,'user_shortcut' => $ns.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
+        ];
+        $this->includePageProjectToUserShortcut($params);
+
+        //4. Establece la marca de 'proyecto generado'
+        $ret[ProjectKeys::KEY_GENERATED] = $this->projectMetaDataQuery->setProjectGenerated();
+
         return $ret;
     }
 

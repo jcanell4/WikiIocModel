@@ -25,26 +25,26 @@ class configurationProjectModel extends AbstractProjectModel{
         //1. Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
 
-        //2. Establece la marca de 'proyecto generado'
-        $this->projectMetaDataQuery->setProjectGenerated();
-
-        //3a. Otorga, al Autor, permisos sobre el directorio de proyecto
+        //2a. Otorga, al Autor, permisos sobre el directorio de proyecto
         PagePermissionManager::updatePagePermission($this->id.":*", $ret['projectMetaData']["autor"]['value'], AUTH_UPLOAD);
 
-        //3b. Otorga, al Responsable, permisos sobre el directorio de proyecto
+        //2b. Otorga, al Responsable, permisos sobre el directorio de proyecto
         if ($ret['projectMetaData']["autor"]['value'] !== $ret['projectMetaData']["responsable"]['value'])
             PagePermissionManager::updatePagePermission($this->id.":*", $ret['projectMetaData']["responsable"]['value'], AUTH_UPLOAD);
 
-        //4a. Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
+        //3a. Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
         $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$ret['projectMetaData']["autor"]['value'].":";
         PagePermissionManager::updatePagePermission($ns."*", $ret['projectMetaData']["autor"]['value'], AUTH_DELETE, TRUE);
-        //4b. Incluye la página del proyecto en el archivo de atajos del Autor
+        //3b. Incluye la página del proyecto en el archivo de atajos del Autor
         $params = [
              'id' => $this->id
             ,'autor' => $ret['projectMetaData']["autor"]['value']
             ,'user_shortcut' => $ns.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
         ];
         $this->includePageProjectToUserShortcut($params);
+
+        //4. Establece la marca de 'proyecto generado'
+        $ret[ProjectKeys::KEY_GENERATED] = $this->projectMetaDataQuery->setProjectGenerated();
 
         return $ret;
     }
