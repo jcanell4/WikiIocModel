@@ -503,6 +503,23 @@ class SmileyNodeDoc extends AbstractNodeDoc {
         return $ret;
     }
 }
+
+class LatexMathNodeDoc extends AbstractNodeDoc {
+    const TYPE = "LATEX_MATH";
+    protected $src;
+
+     public function __construct($filePath) {
+        parent::__construct(self::TYPE);
+        $this->src = $filePath;
+    }
+
+    public function getEncodeJson() {
+        $ret = "{\n\"type\":\"".trim($this->type)."\""
+                .",\n\"src\":\"".trim($this->src)."\"";
+        $ret .= "\n}";
+        return $ret;
+    }
+}
 /**
  * class renderer_plugin_wikiiocmodel_psdom
  */
