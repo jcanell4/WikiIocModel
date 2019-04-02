@@ -332,7 +332,8 @@ class BasicStaticPdfRenderer {
             self::renderSmiley($content, $iocTcPdf);
         }*/
         else {
-            $iocTcPdf->writeHTML(self::getContent($content), TRUE, FALSE);
+            $ret = self::getContent($content);
+            $iocTcPdf->writeHTML($ret, TRUE, FALSE);
         }
 
         if ($content["type"] == StructuredNodeDoc::ORDERED_LIST_TYPE
@@ -463,6 +464,22 @@ class BasicStaticPdfRenderer {
                 $ret = '<span style="color:gray; font-size:80%;">' . self::getStructuredContent($content) . '</span>';
                 break;
 
+            case LatexMathNodeDoc::LATEX_MATH_TYPE:
+                $div = $nodiv = "";
+                if ($content['class'] === 'blocklatex') {
+                    $div = "<div style=\"margin:auto; text-align:center;\">";
+                    $nodiv = "</div>";
+                }
+                preg_match("|.*".DOKU_BASE."(.*)|", $content["src"], $t);
+                $ret = $div . ' <img src="'.DOKU_BASE.$t[1].'"';
+                if ($content["title"])
+                    $ret.= ' alt="'.$content["title"].'"';
+                if ($content["width"])
+                    $ret.= ' width="'.$content["width"].'"';
+                if ($content["height"])
+                    $ret.= ' height="'.$content["height"].'"';
+                $ret.= '> ' . $nodiv;
+                break;
             case ImageNodeDoc::IMAGE_TYPE:
                 if (preg_match("|\.gif$|", $content["src"], $t)) {
                     //El formato GIF no está soportado

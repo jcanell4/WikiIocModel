@@ -505,17 +505,23 @@ class SmileyNodeDoc extends AbstractNodeDoc {
 }
 
 class LatexMathNodeDoc extends AbstractNodeDoc {
-    const TYPE = "LATEX_MATH";
+    const LATEX_MATH_TYPE = "latex_math";
     protected $src;
+    protected $title;
+    protected $class;
 
-     public function __construct($filePath) {
-        parent::__construct(self::TYPE);
+     public function __construct($filePath, $title="", $class="inlinelatex") {
+        parent::__construct(self::LATEX_MATH_TYPE);
         $this->src = $filePath;
+        $this->title = $title;
+        $this->class = $class;
     }
 
     public function getEncodeJson() {
-        $ret = "{\n\"type\":\"".trim($this->type)."\""
-                .",\n\"src\":\"".trim($this->src)."\"";
+        $ret = "{\n\"type\":\"".$this->type."\""
+                .",\n\"src\":\"".trim($this->src)."\""
+                .",\n\"title\":\"".trim($this->title)."\""
+                .",\n\"class\":\"".$this->class."\"";
         $ret .= "\n}";
         return $ret;
     }
