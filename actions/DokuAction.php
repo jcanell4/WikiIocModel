@@ -126,14 +126,15 @@ abstract class DokuAction extends AbstractWikiAction{
         }
         if(isset($MSG)){
             $shown = array();
-            foreach($MSG as $msg){
-                $hash = md5($msg['msg']);
-                if(isset($shown[$hash])) continue; // skip double messages
-                    if(isset($response["info"])){
-                        $response["info"] = $this->addInfoToInfo($response["info"], $this->generateInfo($MSG['lvl'], $MSG['msg']));
-                    }else{
-                        $response["info"] = $this->generateInfo($MSG['lvl'], $MSG['msg']);
-                    }
+            foreach($MSG as $missatge){
+                $hash = md5($missatge['msg']);
+                if (isset($shown[$hash]))
+                    continue; // skip double messages
+                if (isset($response["info"])){
+                    $response["info"] = $this->addInfoToInfo($response["info"], $this->generateInfo($missatge['lvl'], $missatge['msg']));
+                }else{
+                    $response["info"] = $this->generateInfo($missatge['lvl'], $missatge['msg']);
+                }
                 $shown[$hash] = 1;
             }
             unset($GLOBALS['MSG']);
