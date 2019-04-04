@@ -137,7 +137,7 @@ class BasicRenderObject extends renderComposite {
         $extres = $this->getRenderExtraFields();
         if ($extres) {
             foreach ($extres as $item) {
-                if($item["valueType"] == "page" ){
+                if ($item["valueType"] == "page" ){
                     $typedefKeyField = ["type" => "string"];
                     $renderKeyField = $this->getRenderKeyField($item["name"]);
                     $render = $this->createRender($typedefKeyField, $renderKeyField);
@@ -146,7 +146,8 @@ class BasicRenderObject extends renderComposite {
                     $render->init($item["name"]);
 
                     $arrayDeDatosParaLaPlantilla[$item["name"]] = $render->process($dataField, $item["name"]);
-                }else if ($item["valueType"] == "field") {
+                }
+                else if ($item["valueType"] == "field") {
                     $typedefKeyField = $this->getTypedefKeyField($item["value"]);
                     $renderKeyField = $this->getRenderKeyField($item["name"]);
                     $render = $this->createRender($typedefKeyField, $renderKeyField);
@@ -155,6 +156,22 @@ class BasicRenderObject extends renderComposite {
                     $render->init($item["name"]);
 
                     $arrayDeDatosParaLaPlantilla[$item["name"]] = $render->process($dataField, $item["name"]);
+                }
+                else if ($item["valueType"] == "arrayFields") {
+                    $typedefKeyField = $this->getTypedefKeyField($item["value"]);
+                    $renderKeyField = $this->getRenderKeyField($item["name"]);
+                    $render = $this->createRender($typedefKeyField, $renderKeyField);
+                    $render->init($item["name"]);
+
+                    $arrayDataField = json_decode($this->getDataField($item["value"]), true);
+                    foreach ($arrayDataField as $key) {
+                        $arrDataField[$key['ordre']] = $key['nom'];
+                    }
+                    ksort($arrDataField);
+
+                    foreach ($arrDataField as $dataField) {
+                        $arrayDeDatosParaLaPlantilla[$item["name"]] .= $render->process($dataField, $item["name"]);
+                    }
                 }
             }
         }
