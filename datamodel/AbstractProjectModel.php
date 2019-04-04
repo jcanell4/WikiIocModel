@@ -71,6 +71,18 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $attr[ProjectKeys::KEY_METADATA_SUBSET] = $this->getMetaDataSubSet();
         return ($key) ? $attr[$key] : $attr;
     }
+    
+    public function getContentDocumentId($docId){
+        if(is_array($docId)){
+            return $this->getContentDocumentIdFormResponse($docId);
+        }
+        return $this->id.":".$docId;
+    }
+    
+    protected function getContentDocumentIdFromResponse($responseData){        
+//        Cal fer abstracta aquesta funció
+    }
+
 
     public function setActualRevision($actual_revision){
         $this->projectMetaDataQuery->setActualRevision($actual_revision);
