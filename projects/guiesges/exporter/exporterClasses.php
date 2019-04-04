@@ -68,6 +68,10 @@ class IocTcPdf extends TCPDF {
 
     // Page footer
     public function Footer() {
+        if ($this->PageNo() === 1) {
+            return;
+        }
+
         $margins = $this->getMargins();
         $footerfont = $this->getFooterFont();
         $cell_height = $this->getCellHeight($footerfont[2]) / 2;
@@ -127,6 +131,8 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
 
         $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
         $iocTcPdf->setFooterData($params["data"]["peu"]);
+
+        $iocTcPdf->setStartingPageNumber(0);
 
         // set header and footer fonts
         $iocTcPdf->setHeaderFont(Array(self::$headerFont, '', self::$headerFontSize));

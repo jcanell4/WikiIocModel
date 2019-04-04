@@ -24,6 +24,7 @@ class action_plugin_wikiiocmodel_projects_guiesges extends WikiIocPluginAction {
         $controller->register_hook('ADD_TPL_CONTROLS', "AFTER", $this, "addWikiIocButtons", array());
         $controller->register_hook('ADD_TPL_CONTROL_SCRIPTS', "AFTER", $this, "addControlScripts", array());
         $controller->register_hook('WIOC_PROCESS_RESPONSE_project', "AFTER", $this, "setExtraMeta", array());
+        $controller->register_hook('WIOC_PROCESS_RESPONSE_projectUpdate', "AFTER", $this, "setExtraMeta", array());
     }
 
     /**

@@ -99,10 +99,12 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
         $iocTcPdf->setHeaderData( $params["data"]["header_page_logo"], $params["data"]["header_page_wlogo"], $params["data"]["header_page_hlogo"], $params["data"]["header_ltext"], $params["data"]["header_rtext"]);
-
+        
         // set header and footer fonts
         $iocTcPdf->setHeaderFont(Array(self::$headerFont, '', self::$headerFontSize));
         $iocTcPdf->setFooterFont(Array(self::$footerFont, '', self::$footerFontSize));
+
+        $iocTcPdf->setStartingPageNumber(0);
 
         // set default monospaced font
         $iocTcPdf->SetDefaultMonospacedFont("Courier");
