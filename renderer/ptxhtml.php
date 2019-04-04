@@ -11,6 +11,8 @@ if (!defined('DOKU_TAB')) define ('DOKU_TAB',"\t");
 require_once DOKU_INC."inc/parser/renderer.php";
 require_once DOKU_INC."inc/html.php";
 
+//[TODO:Josep]revisar els canvis que hi ha entre aquet renderer i el iocxhtml de iocexporterl
+
 class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
 
     var $doc = '';        // will contain the whole document
@@ -881,9 +883,9 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
 
     function table_close($pos = null){
         $this->doc .= '</table></div>'.DOKU_LF;
-        if ($pos !== null) {
-            $this->finishSectionEdit($pos);
-        }
+//        if ($pos !== null) {
+//            $this->finishSectionEdit($pos);
+//        }
     }
 
     function tablerow_open(){
