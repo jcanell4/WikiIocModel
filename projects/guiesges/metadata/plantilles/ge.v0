@@ -1,0 +1,90 @@
+~~USE:WIOCCL~~
+====== Guia d'estudi {##codi_modul##} ======
+
+
+===== Què hi aprendreu? =====
+
+Heu jugat mai al joc del telèfon? Sí, aquell en què aneu passant a cau d'orella una paraula entre els membres d'un grup i, quan s'arriba al final, la paraula que escolta l'últim membre no té res a veure amb la inicial. Per què passa això? Doncs perquè en la comunicació oral tot passa molt ràpid i sense elements que fixin allò que diem o escoltem. 
+
+Si el mateix joc l'haguéssiu fet per escrit, ¿creieu que s'haurien produït tantes malinterpretacions? Si hi reflexioneu i responeu a aquesta pregunta de forma argumentada, fareu un primer pas per establir quines són les característiques de la llengua oral.
+La llengua oral o parlada és la primera forma de qualsevol llengua. Totes les llengües primer es parlen i, només després, arriben a ser escrites. En aquest mòdul, parlarem i investigarem quines són les característiques del català parlat.
+
+I ho farem d'una manera activa, és a dir, produint els vostres propis discursos i escoltant els d'altres perquè aprengueu a:
+  * Participar de forma autocrítica en interaccions orals, escrites i audiovisuals. 
+  * Realitzar exposicions orals senzilles amb una pronunciació al més justada possible als estàndards de la llengua catalana. 
+  * Produir textos utilitzant procediments de planificació i gravar-los. 
+  * Mostrar interès per la millora de l'expressió oral, escrita i audiovisual tant pròpia com aliena. 
+  * Reconèixer i valorar la diversitat lingüística d'Europa i del món, amb especial atenció a la realitat de la família lingüística romànica.
+  * Participar activament i reflexivament en la vostra pròpia avaluació
+  
+===== Com es treballa en aquest mòdul? =====
+
+En aquest mòdul els recursos i les activitats estan totes vinculades unes amb les altres. El que apreneu en un lliurament ho heu de fer servir i ampliar en el següent. Els temes que tractem es van interrelacionant entre tots els lliuraments. Per tant, és molt important tenir present la feina feta en els lliuraments anteriors, així com les indicacions de correcció del professorat.
+
+==== Activitats ====
+
+L'eix central del mòdul són les activitats d'avaluació contínua. Recordeu que cal fer-les totes, en especial, les orals. 
+
+A l'enunciat de cada activitat o a les instruccions està explicat com s'han de fer. De totes maneres, si hi ha alguna qüestió que no entengueu, ja sigui dels exercicis o dels apunts, pregunteu al Fòrum del mòdul.
+
+Les activitats centrals del mòdul són activitats orals. Això vol dir que la resposta s'ha de lliurar en format d'àudio. Per tant, és important que us familiaritzeu amb les eines d'enregistrament i comunicació. Heu de dedicar una part del temps de les activitats a la preparació tècnica que no és gaire complicada, però cal que hi pareu esment.
+
+Cal dedicar temps a fer les activitats. I cal fer-les seguint les pautes i l'ordre que se us marquen. D'aquesta manera, en el fons, estalviareu temps (perquè no ho haureu de repetir) i obtindreu més bons resultats.
+
+Les pautes que se us donen a cada activitat (instruccions, rúbriques...) han de servir perquè vosaltres sapigueu què és exactament el que se us demana, de quina manera ho heu de fer i, un cop fet i abans d'enviar-ho, tenir elements per a valorar si allò ja està ben fet o cal millorar-ho abans de ser tramès per a qualificar.
+
+==== Recursos ====
+
+Per acompanyar el vostre aprenentatge, us trobareu amb tot un seguit de recursos, que expliquen detalls d'allò que treballarem i també expliquen altres casos o aspectes, que ens serveixen per a comparar i entendre allò que treballem.
+
+Aquest material d'estudi s'ha de mirar, escoltar, llegir i comprendre, però no s'ha de memoritzar literalment. Això és molt important. Els materials de consulta no són continguts que calgui aprendre's de memòria per abocar en cap examen, sinó eines per anar fent els exercicis correctament i aprendre un munt. 
+
+===== Com s'avalua aquest mòdul? =====
+**Aquest mòdul s'aprova només fent les activitats. És a dir, el mòdul no té prova de validació final.** Per poder aprovar el mòdul cal complir tots dos objectius següents:
+Haver fet tots els lliuraments orals.
+
+Tenir una nota mitjana final igual o superior a 5.
+
+==== Com s'obté la nota de cada lliurament? ====
+
+El pes de les activitats en el sí de cada lliurament és diferent, segons la seva complexitat. El percentatge que cada activitat aporta a la nota final del lliurament és el següent:
+
+:###
+LLIURAMENT 1: <WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament1#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{##item[ponderacio]##}% {##item[id]##}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>
+
+
+LLIURAMENT 2: <WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament2#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{##item[ponderacio]##}% {##item[id]##}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>
+
+
+LLIURAMENT 3: <WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament3#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{##item[ponderacio]##}% {##item[id]##}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>
+
+
+LLIURAMENT 4: <WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament4#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{##item[ponderacio]##}% {##item[id]##}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>
+###:
+
+
+==== Com s'obté la nota final del mòdul? ====
+
+Cada lliurament té una nota global del lliurament. La nota final del mòdul és la mitjana aritmètica de les notes dels quatre lliuraments, sempre i quan s'hagin fet tots quatre: (L1 + L2 + L3 + L4) / 4 <note> --- //[[jcanell4@ioc.cat|Administrador Admin Admin]] 2019/03/15 09:23// Això és així? A les trobades i al document parlem de percentatge de cada lliurament! Cal adpatar aquesta frase o cal eliminar el percentatge?</note>
+
+Recordeu que per aprovar no n'hi ha prou que la mitjana global del mòdul doni 5, sinó que cal haver fet els exercicis. Si algú té un lliurament sense nota perquè no l'ha fet, no podrà aprovar el mòdul encara que tingui una mitjana superior a 5.
+
+==== Recuperació? ====
+
+No hi haurà cap prova de recuperació al final del trimestre atès que l'assoliment dels objectius i les competències es materialitza i evidencia en la realització i presentació de les activitats d'avaluació contínua.
+
+===== Calendari =====
+
+Les dates de cada lliurament són:
+
+:###
+^ Lliurament   ^ data d'inici                            ^ data final                              ^
+| Lliurament 1 | {#_DATE(''{##lliuraments#lliurament1#dataInici##}'')_#} | {#_DATE(''{##lliuraments#lliurament1#dataFinal##}'')_#} |
+| Lliurament 2 | {#_DATE(''{##lliuraments#lliurament2#dataInici##}'')_#} | {#_DATE(''{##lliuraments#lliurament2#dataFinal##}'')_#} |
+| Lliurament 3 | {#_DATE(''{##lliuraments#lliurament3#dataInici##}'')_#} | {#_DATE(''{##lliuraments#lliurament3#dataFinal##}'')_#} |
+| Lliurament 4 | {#_DATE(''{##lliuraments#lliurament4#dataInici##}'')_#} | {#_DATE(''{##lliuraments#lliurament4#dataFinal##}'')_#} |
+
+<WIOCCL:IF condition="{##hiHaPValidacio##}==true">
+La prova de validació del mòdul es realitzarà el dia **{#_DATE("{##dataPValidacio##}")_#}**
+</WIOCCL:IF>
+###:

@@ -1,0 +1,238 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Guia d'estudi</title>
+  <meta name="description" content="Guia d'estudi">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<!-- Capçalera -->
+<header class="main_header">
+  <div>
+      <img class="logo" src="img/logo-ioc-petit.svg" alt="Institut Obert de Catalunya">
+  </div>
+  <div class="own_container">
+    <h1>{##modul##}</h1>
+  </div>
+</header>
+<!-- /Capçalera -->
+
+<!-- Títol -->
+<header class="secondary_header">
+
+  <div class="own_container">
+    <div class="focus_stripe"></div>
+    <h2>Informació bàsica del mòdul</h2>
+  </div>
+</header>
+<!-- /Títol -->
+
+
+<!-- Secció 1 -->
+<!--section class="section section1">
+  <div class="own_container">
+    <div class="section1_container">
+      <div class="section1_content_row2">
+        <div class="section1_element">
+          <div class="section1_icona" id="dedicacio_icona"></div>
+          <h3>Durada</h3>
+          <p>{##dedicacio##} hores</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /Secció 1 -->
+
+<!-- Secció 5 -->
+<section class="section section5">
+  <div class="own_container">
+    <h2>Calendari d’estudi</h2>
+    <table class="own_table">
+      <tr>
+        <th></th>
+        <th>Inici</th>
+        <th>Final</th>
+      </tr>
+      <tr>
+        <td>Lliurament 1</td>
+        <td>{#_DATE("{##lliuraments#lliurament1#dataInici##}")_#}</td>
+        <td>{#_DATE("{##lliuraments#lliurament1#dataFinal##}")_#}</td>
+      </tr>
+      <tr>
+        <td>Lliurament 2</td>
+        <td>{#_DATE("{##lliuraments#lliurament2#dataInici##}")_#}</td>
+        <td>{#_DATE("{##lliuraments#lliurament2#dataFinal##}")_#}</td>
+      </tr>
+      <tr>
+        <td>Lliurament 3</td>
+        <td>{#_DATE("{##lliuraments#lliurament3#dataInici##}")_#}</td>
+        <td>{#_DATE("{##lliuraments#lliurament3#dataFinal##}")_#}</td>
+      </tr>
+      <tr>
+        <td>Lliurament 4</td>
+        <td>{#_DATE("{##lliuraments#lliurament4#dataInici##}")_#}</td>
+        <td>{#_DATE("{##lliuraments#lliurament4#dataFinal##}")_#}</td>
+      </tr>
+    </table>
+  </div>
+</section>
+<!-- /Secció 5 -->
+
+<hr>
+
+<!-- Secció 7 -->
+<section class="section section7">
+  <div class="own_container">
+    <h3>Prova de validació</h3>
+<WIOCCL:IF condition="{##hiHaPValidacio##}==true">    
+    <div class="panell_pafs">
+      <div class="paf_1">
+        <div class="section7_icona" id="paf-1-icona"></div>
+        <h3>{#_DATE("{##dataPValidacio##}")_#}</h3>
+        <div class="horizontal_separator"></div>
+      </div>
+    </div>
+    <div class="tyJCtd mGzaTb baZpAe">
+        <p id="h.p_0aRYLRUMQkoG" class="zfr3Q">Aquest mòdul té prova de validació final. Per accedir-hi, cal haver aprovat l’avaluació contínua i complir la resta de requisits establerts.</p>
+    </div>
+</WIOCCL:IF>    
+<WIOCCL:IF condition="{##hiHaPValidacio##}==false">    
+    <div class="tyJCtd mGzaTb baZpAe">
+        <p id="h.p_0aRYLRUMQkoG" class="zfr3Q">No n’hi ha.</p>
+    </div>
+</WIOCCL:IF>    
+  </div>
+</section>
+<!-- /Secció 7 -->
+
+
+<hr>
+
+<!-- Secció 8 -->
+<section class="section section8">
+  <div class="own_container">
+    <h2 id="qualificació">Qualificació</h2>
+     <div class="containerQualificacio" id="contenidorQualificacio">
+
+    </div>
+    <script type="text/javascript"> 
+(function(){
+    var dataArray1 = [
+        <WIOCCL:IF condition="0\<{#_ARRAY_LENGTH({##lliuraments#lliurament1#sequenciaDidactica##})_#}">[{title:"{##lliuraments#lliurament1#id##}", percent:0},<WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament1#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{title:"{##item[id]##}", percent:"{##item[ponderacio]##}"}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> , </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>],</WIOCCL:IF>
+        <WIOCCL:IF condition="0\<{#_ARRAY_LENGTH({##lliuraments#lliurament2#sequenciaDidactica##})_#}">[{title:"{##lliuraments#lliurament2#id##}", percent:0},<WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament2#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{title:"{##item[id]##}", percent:"{##item[ponderacio]##}"}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> , </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>],</WIOCCL:IF>
+        <WIOCCL:IF condition="0\<{#_ARRAY_LENGTH({##lliuraments#lliurament3#sequenciaDidactica##})_#}">[{title:"{##lliuraments#lliurament3#id##}", percent:0},<WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament3#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{title:"{##item[id]##}", percent:"{##item[ponderacio]##}"}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> , </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>],</WIOCCL:IF>
+        <WIOCCL:IF condition="0\<{#_ARRAY_LENGTH({##lliuraments#lliurament4#sequenciaDidactica##})_#}">[{title:"{##lliuraments#lliurament4#id##}", percent:0},<WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament4#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{title:"{##item[id]##}", percent:"{##item[ponderacio]##}"}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> , </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>],</WIOCCL:IF>
+        [{title:"Mòdul", percent:0}, {title:"{##lliuraments#lliurament1#id##}", percent:"{##lliuraments#lliurament1#percentatge##}"}, {title:"{##lliuraments#lliurament2#id##}", percent:"{##lliuraments#lliurament2#percentatge##}"}, {title:"{##lliuraments#lliurament3#id##}", percent:"{##lliuraments#lliurament3#percentatge##}"}, {title:"{##lliuraments#lliurament4#id##}", percent:"{##lliuraments#lliurament4#percentatge##}"} ]];
+
+
+    /*****************/
+
+    var numberOfRows = 0;
+    var numberOfCells = [];
+
+    for(var i = 0; i <= dataArray1.length - 1; i++) {
+        createPercentRow(i);
+        createTitleRow(i);
+        numberOfRows += 2;
+        numberOfCells += dataArray1[i].length;
+        }
+
+    for(var i = 0; i <= numberOfRows - 1; i++) {
+        for(var j = 0; j <= numberOfCells[i] - 1; j++) {
+          /* Creem cel·les de percentatge */
+          var newPercentCell =  document.createElement("div");
+          var newPercentContentCell =  document.createElement("span");
+          var percentCellContent = document.createTextNode(dataArray1[i][j].percent + "%");
+          document.createTextNode(dataArray1[i][j].percent + "%");
+          newPercentCell.setAttribute("class", "cellQualificacio");
+          newPercentContentCell.appendChild(percentCellContent);
+          newPercentCell.appendChild(newPercentContentCell);
+          newPercentCell.style.width = dataArray1[i][j].percent + "%";
+          document.getElementById("percent_row" + i).appendChild(newPercentCell);
+          /* Creem cel·les de títol */
+          var newTitleCell =  document.createElement("div");
+          var newTitleContentCell =  document.createElement("span");
+          var titleCellContent = document.createTextNode(dataArray1[i][j].title);
+          newTitleCell.setAttribute("class", "cellQualificacio");
+          newTitleContentCell.appendChild(titleCellContent);
+          newTitleCell.appendChild(newTitleContentCell);
+          newTitleCell.style.width = dataArray1[i][j].percent + "%";
+          document.getElementById("title_row" + i).appendChild(newTitleCell);
+        }
+    }
+
+    var allCells = document.querySelectorAll(".cellQualificacio");
+
+    for(var k = 0; k <= allCells.length - 1; k++) {
+
+      if (parseInt(allCells[k].style.width) > 0 && parseInt(allCells[k].style.width) < 25) {
+            allCells[k].classList.add("smallCell");
+            var textHolder = allCells[k].innerHTML;
+          }
+    }
+
+    /* Funcions per crear files */
+
+    function createPercentRow(index) {
+        var newPercentRow =  document.createElement("div");
+        newPercentRow.setAttribute("class", "rowQualificacio");
+        newPercentRow.setAttribute("id", "percent_row" + index);
+        document.getElementById("contenidorQualificacio").appendChild(newPercentRow);
+    }
+
+    function createTitleRow(index) {
+        var newTitleRow =  document.createElement("div");
+        newTitleRow.setAttribute("class", "rowQualificacio");
+        newTitleRow.setAttribute("id", "title_row" + index);
+        document.getElementById("contenidorQualificacio").appendChild(newTitleRow);
+    }
+})();
+    </script>
+  </div>
+</section>
+<!-- /Secció 8 -->
+
+<hr>
+
+<!-- Secció 9 -->
+<section class="section section5">
+  <div class="own_container">
+    <div class="section5_container">
+      <div class="section5_content_row2">
+        <div class="section5_element">
+          <h2>Com comunicar-se</h2>
+          <p>Si teniu cap dubte, exposeu-lo al Fòrum del mòdul o envieu-lo per missatgeria interna. També podeu posar-vos en contacte amb el vostre tutor del Centre de suport o a través de la tutoria de l’IOC, segons on estigueu matriculats.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /Secció 1 -->
+<hr>
+
+<section class="section section5">
+  <div class="own_container">
+    <div class="section5_container">
+      <div class="section5_content_row2">
+        <div class="section5_element">
+            <a target="_blank" href="ge_sencera/ge.html">Consulteu aquí la guia d'estudi completa</a>            
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+~~USE:WIOCCL~~
+
+====== Què hi aprendreu? ======
+
+  
+====== Com es treballa en aquest mòdul? ======
+
+
+===== Activitats =====
+
+[##TODO: Cal explicar-hi què són les activitats, si cal fer-les totes /no i com s'han de fer. També què cal fer en cas de dubtes i com són i el temps que s'hi ha de dedicar.##]
+
+
+
+===== Recursos =====
+[##TODO: Cal explicar-hi què són els recursos, quina utilitat tenen, com s'han de fer servir i quin rol tenen en el procés d'aprenentatge. ##]
+
+
+
+====== Com s'avalua aquest mòdul? ======
+[##TODO:Cal optar entre una de les dues fórmules que consten aquí sota##]
+
+**Aquest mòdul s'aprova només fent les activitats. És a dir, el mòdul no té prova de validació final.** Per poder aprovar el mòdul cal complir tots dos objectius següents [##TODO:Els requisits ↓ poden variar segons els mòduls. Enumereu els requisits en un llista de pics.##]
+
+_________
+
+
+**Aquest mòdul s'aprova fent les activitats i la prova de validació final.**
+
+Per accedir a la prova de validació final, cal complir els requisits següents:
+
+[##TODO:Enumereu els requisits en un llista de pics##]
+
+===== Com s'obté la nota de cada lliurament? =====
+
+El pes de les activitats és diferent en cada lliurament, segons la seva complexitat. El percentatge que cada activitat aporta a la nota final del lliurament és el següent:
+
+:###
+LLIURAMENT 1: <WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament1#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{##item[ponderacio]##}% {##item[id]##}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>
+
+
+LLIURAMENT 2: <WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament2#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{##item[ponderacio]##}% {##item[id]##}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>
+
+
+LLIURAMENT 3: <WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament3#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{##item[ponderacio]##}% {##item[id]##}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>
+
+
+LLIURAMENT 4: <WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament4#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{##item[ponderacio]##}% {##item[id]##}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>
+###:
+
+
+===== Com s'obté la nota final del mòdul? =====
+
+Cada lliurament té una nota global del lliurament. La nota final del mòdul és la mitjana ponderada de les notes dels quatre lliuraments, sempre i quan s'hagin fet tots quatre: [##TODO:Escriviu la vostra fórmula de ponderació entre els lliuraments ##]
+
+[##TODO: Afegiu els matisos que calgui reforçar, p.e.: Recordeu que per aprovar no n'hi ha prou que la mitjana global del mòdul doni 5, sinó que cal haver fet els exercicis. Si algú té un lliurament sense nota perquè no l'ha fet, no podrà aprovar el mòdul encara que tingui una mitjana superior a 5.##]
+
+===== Recuperació? =====
+
+No hi haurà cap prova de recuperació al final del trimestre atès que l'assoliment dels objectius i les competències es materialitza i evidencia en la realització i presentació de les activitats d'avaluació contínua.
+
+====== Calendari ======
+
+Les dates de cada lliurament són:
+
+:###
+^ Lliurament   ^ data d'inici                            ^ data final                              ^
+| Lliurament 1 | {#_DATE(''{##lliuraments#lliurament1#dataInici##}'')_#} | {#_DATE(''{##lliuraments#lliurament1#dataFinal##}'')_#} |
+| Lliurament 2 | {#_DATE(''{##lliuraments#lliurament2#dataInici##}'')_#} | {#_DATE(''{##lliuraments#lliurament2#dataFinal##}'')_#} |
+| Lliurament 3 | {#_DATE(''{##lliuraments#lliurament3#dataInici##}'')_#} | {#_DATE(''{##lliuraments#lliurament3#dataFinal##}'')_#} |
+| Lliurament 4 | {#_DATE(''{##lliuraments#lliurament4#dataInici##}'')_#} | {#_DATE(''{##lliuraments#lliurament4#dataFinal##}'')_#} |
+
+<WIOCCL:IF condition="{##hiHaPValidacio##}==true">
+La prova de validació del mòdul es realitzarà el dia **{#_DATE("{##dataPValidacio##}")_#}**
+</WIOCCL:IF>
+###:

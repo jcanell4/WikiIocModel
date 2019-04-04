@@ -1,0 +1,28 @@
+{
+    "typesDefinition": {
+        "dadesguies": {
+            "render": {
+                "typeDef":"dadesguies",
+                "class": "exportDocument",
+                "fields": "ALL",
+                "extraFields": [
+                    {"name":"ge", "valueType":"page", "value":"ge"},
+                    {"name":"pdfge", "valueType":"page", "value":"ge"},
+                    {"name":"pdfgd", "valueType":"page", "value":"gd"}
+                ]                
+            },
+            "keys": {
+                "ge": {
+                    "render": {"class": "renderFile"}
+                },
+                "pdfge": {
+                    "render": {"class": "renderFileToPsDom"}
+                },
+                "pdfgd": {
+                    "render": {"class": "renderFileToPsDom"}
+                }                
+            }
+        }
+    },
+    "defaultValueForObjectFields":"ALL"
+}
