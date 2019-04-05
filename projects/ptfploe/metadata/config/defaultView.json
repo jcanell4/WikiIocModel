@@ -153,12 +153,12 @@
       },
       "descripcio": {
         "n_columns": 12,
-        "label" : "Descripció (descripcio)",
+        "label" : "Aquest bloc/mòdul tracta de... (descripcio)",
         "type": "textarea",
         "n_rows": 6,
         "props": {
           "data-editable-element": "textarea",
-          "title": "descriviu breument el mòdul"
+          "title": "continua la frase a fí de descriure breument el contingut del bloc/mòdul"
         },
         "config": {
             "renderable": true,
@@ -211,7 +211,8 @@
         "config": {
           "actions": {
             "set_multiple_default_rows": "Definir el nombre d'Unitats Formatives del mòdul",
-            "remove_rows": "Eliminar les Unitats Formatives seleccionades"
+            "remove_rows": "Eliminar les Unitats Formatives seleccionades",
+            "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
           },
           "fields": {
             "bloc":{
@@ -278,7 +279,8 @@
         "config": {
           "actions": {
             "set_multiple_default_rows": "Definir el nombre d'unitats",
-            "remove_rows": "Eliminar les unitats seleccionades"
+            "remove_rows": "Eliminar les unitats seleccionades",
+            "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
           },
           "fields": {
             "unitat formativa": {
@@ -342,9 +344,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir eina",
-            "add_default_row_before": "Afegir eina abans",
-            "add_default_row_after": "Afegir eina després",
-            "remove_rows": "Eliminar eines seleccionades"        
+            "remove_rows": "Eliminar eines seleccionades",
+            "add_default_row_before": "Afegir eina abans de la fila seleccionada"
           },
           "fields": {
             "tipus": {
@@ -376,7 +377,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir RA",
-            "remove_rows": "Eliminar els RA seleccionats"        
+            "remove_rows": "Eliminar els RA seleccionats",
+            "add_default_row_before": "Afegir RA abans de la fila seleccionada"
           },
           "fields": {
             "id": {
@@ -401,7 +403,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir activitat",
-            "remove_rows": "Eliminar les activitats seleccionades"        
+            "remove_rows": "Eliminar les activitats seleccionades",
+            "add_default_row_before": "Afegir activitat abans de la fila seleccionada"
           },
           "fields": {
             "unitat": {
@@ -450,7 +453,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir període",
-            "remove_rows": "Eliminar períodes seleccionats"        
+            "remove_rows": "Eliminar períodes seleccionats",
+            "add_default_row_before": "Afegir període abans de la fila seleccionada"
           },
           "fields": {
             "unitat": {
@@ -547,7 +551,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir un nou lliurament",
-            "remove_rows": "Eliminar els lliuraments seleccionats"        
+            "remove_rows": "Eliminar els lliuraments seleccionats",
+            "add_default_row_before": "Afegir lliurament abans de la fila seleccionada"
           },
           "fields": {
             "id": {
@@ -620,7 +625,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir un nou EAF",
-            "remove_rows": "Eliminar els EAF seleccionats"        
+            "remove_rows": "Eliminar els EAF seleccionats",
+            "add_default_row_before": "Afegir EAF abans de la fila seleccionada"
           },
           "fields": {
             "id": {
@@ -721,7 +727,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir una nova JT",
-            "remove_rows": "Eliminar les JT seleccionades"        
+            "remove_rows": "Eliminar les JT seleccionades",
+            "add_default_row_before": "Afegir JT abans de la fila seleccionada"
           },
           "fields": {
             "id": {
@@ -882,7 +889,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir una nova dada",
-            "remove_rows": "Eliminar les dades seleccionades"        
+            "remove_rows": "Eliminar les dades seleccionades",
+            "add_default_row_before": "Afegir dada abans de la fila seleccionada"
           },
           "fields": {
             "unitat formativa": {
@@ -915,7 +923,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir una nova dada",
-            "remove_rows": "Eliminar les dades seleccionades"        
+            "remove_rows": "Eliminar les dades seleccionades",
+            "add_default_row_before": "Afegir dada abans de la fila seleccionada"
           },
           "fields": {
             "nom": {
