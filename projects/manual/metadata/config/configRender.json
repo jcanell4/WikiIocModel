@@ -1,0 +1,22 @@
+{
+    "typesDefinition": {
+        "manual": {
+            "render": {
+                "typeDef":"manual",
+                "class": "exportDocument",
+                "fields": "ALL",
+                "extraFields": [
+                    {"name":"documentPartsPdf", "valueType":"arrayFields", "value":"documents", "type":"psdom"}, 
+                    {"name":"documentPartsHtml", "valueType":"arrayFields", "value":"documents", "type":"html"}]
+            },
+            "keys": {
+                "documentPartsPdf": {
+                    "render": {"class": "renderFileToPsDom"}
+                },
+                "documentPartsHtml": {
+                    "render": {"class": "renderFile"}
+                }
+            }
+        }
+    }
+}
