@@ -30,7 +30,7 @@ class upgrader_1 extends CommonUpgrader {
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename);
-                $aTokRep = [["\s+:title:Taula Unitats",
+                $aTokRep = [[" +:title:Taula Unitats",
                              "  :title:Apartats"],
                             ["{#_DATE\(\"{##itemc\[inici\]##}\", \"\.\"\)_#}-{#_DATE\(\"{##itemc\[inici\]##}",
                              "{#_DATE(\"{##itemc[inici]##}\", \".\")_#}-{#_DATE(\"{##itemc[final]##}"]];

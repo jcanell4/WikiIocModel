@@ -33,14 +33,18 @@ class ptfploeProjectModel extends AbstractProjectModel {
         return $this->id.":" .$contentName;
     }
 
-    public function getTemplateContentDocumentId($responseData){
-        $plantilla = $responseData["plantilla"];
-        if ($plantilla === NULL) {
-            $plantilla = $responseData['projectMetaData']["plantilla"]['value'];
-        }
-        $plantilla = preg_replace("/##.*?##/s", "loe", $plantilla);
-        return $plantilla;
-    }
+//    public function getTemplateContentDocumentId($responseData){
+//
+//        if (is_string($responseData)) {
+//            return $responseData;
+//        }
+//
+//        $plantilla = $responseData["plantilla"];
+//        if ($plantilla === NULL) {
+//            $plantilla = $responseData['projectMetaData']["plantilla"]['value'];
+//        }
+//        return $plantilla;
+//    }
 
     public function generateProject() {
         $ret = array();
@@ -80,13 +84,42 @@ class ptfploeProjectModel extends AbstractProjectModel {
         return $ret;
     }
 
-    public function createTemplateDocument($data){
-        $plantilla = $this->getTemplateContentDocumentId($data);
-        $destino = $this->getContentDocumentId($data);
+//    public function createTemplateDocument($data){
+//        $plantilla = $this->getTemplateContentDocumentId($data);
+//        $destino = $this->getContentDocumentId($data);
+//
+//        //1.1 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
+//        $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
+//    }
 
-        //1.1 Crea el archivo 'continguts', en la carpeta del proyecto, a partir de la plantilla especificada
-        $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
+
+    public function createTemplateDocument($data){
+        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
+        // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
+        $file = $this->getTemplateContentDocumentId($data) . ".txt";
+
+
+//        $scdir = scandir($pdir);
+//        foreach($scdir as $file){
+//            if($file !== '.' && $file !== '..' && substr($file, -4)===".txt") {
+                $plantilla = file_get_contents($pdir.$file);
+                $name = substr($file, 0, -4);
+                $destino = $this->getContentDocumentId($name);
+
+                // Això no funciona perqué com a plantilla s'esperava un ns
+//                $this->createPageFromTemplate([PageKeys::KEY_ID => $this->id.":".$name, PageKeys::KEY_WIKITEXT => $plantilla, NULL, PageKeys::KEY_SUM => "generate project"]);
+
+
+
+//                $this->dokuPageModel->setData([PageKeys::KEY_ID => $this->id.":".$name,
+                $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
+                    PageKeys::KEY_WIKITEXT => $plantilla,
+                    PageKeys::KEY_SUM => "generate project"]);
+//            }
+//        }
     }
+
+
 
     /**
      * Modifica los permisos en el fichero de ACL y la página de atajos del autor
@@ -121,7 +154,7 @@ class ptfploeProjectModel extends AbstractProjectModel {
             $params = [
                  'id' => $parArr['id']
                 ,'autor' => $parArr['new_autor']
-                ,'link_page' => $link_page
+                ,'link_page' => ':' . $link_page
                 ,'user_shortcut' => $ns.$parArr['shortcut_name']
             ];
             $this->includePageProjectToUserShortcut($params);
