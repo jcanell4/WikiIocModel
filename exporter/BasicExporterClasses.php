@@ -169,8 +169,29 @@ class BasicRenderObject extends renderComposite {
                     }
                     ksort($arrDataField);
 
-                    foreach ($arrDataField as $dataField) {
-                        $arrayDeDatosParaLaPlantilla[$item["name"]] .= $render->process($dataField, $item["name"]);
+                    if ($item["type"] == "psdom") {
+                        $arrDocument = array();
+                        foreach ($arrDataField as $dataField) {
+                            $jsonPart = $render->process($dataField, $item["name"]);
+                            $arrDocument = array_merge($arrDocument, json_decode($jsonPart));
+                        }
+                        $arrayDeDatosParaLaPlantilla[$item["name"]] = json_encode($arrDocument);
+                    }
+                    else {
+                        // Renderiza cada uno de los documentos
+                        $htmlDocument = "";
+                        foreach ($arrDataField as $dataField) {
+                            $htmlDocument .= $render->process($dataField, $item["name"]);
+                            $toc[] = $this->cfgExport->toc[$item["name"]];
+                        }
+                        // Une los TOCs de todos los documentos
+                        $aux = array();
+                        foreach ($toc as $t) {
+                            $aux = array_merge($aux, $t);
+                        }
+                        $this->cfgExport->toc[$item["name"]] = $aux;
+
+                        $arrayDeDatosParaLaPlantilla[$item["name"]] = $htmlDocument;
                     }
                 }
             }

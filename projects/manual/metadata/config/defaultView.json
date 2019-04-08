@@ -1,0 +1,237 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10,
+        "rows_row": 1
+    },
+    "groups": {
+        "main": {
+            "parent": "",
+            "label": "Dades de llarga durada",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+        "authorship": {
+            "parent": "",
+            "label": "Dades d'autoria",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+        "config": {
+            "parent": "",
+            "label": "Configuració",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+        "docs": {
+            "parent": "",
+            "label": "Documents",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+        "extres": {
+            "parent": "",
+            "label": "Dades extres",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        }
+    },
+    "fields": {
+        "titol":{
+            "n_columns": 6,
+            "label": "Títol del manual (titol)",
+            "group": "main",
+            "props": {
+                "required": true,
+                "title" : "indiqueu el títol del manual."
+            }
+        },
+        "subtitol": {
+            "label" : "Subtítol del manual (subtitol)",
+            "n_columns": 6,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "indiqueu el suntítol del manual"
+            }
+        },
+        "responsable": {
+            "label": "Responsable de la creació (responsable)",
+            "n_columns": 6,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {
+                    "and":[
+                        {"class":"ValidationByRoles",
+                         "data":{"roles":["responsable"], "deniedResponse":true}},
+                        {"class":"ValidationByInfoPerm",
+                         "data":{"perm":4, "deniedResponse":true}}
+                    ]
+                }
+            }
+        },
+        "autor": {
+            "label": "Autor (autor)",
+            "n_columns": 6,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {
+                    "and":[
+                        {"class":"ValidationByRoles",
+                         "data":{"roles":["responsable"], "deniedResponse":true}},
+                        {"class":"ValidationByInfoPerm", 
+                         "data":{"perm":4, "deniedResponse":true}}
+                    ]
+                }
+            }
+        },
+        "estil":{
+            "type":"select",
+            "n_columns": 6,
+            "label": "estil",
+            "group": "config",
+            "props": {
+                "required": true,
+                "title" : "indiqueu l'estil a aplicar."
+            },
+            "config":{
+                "options":[
+                    {"description":"estil normal", "value":"main.css"}
+                ]
+            }
+        },
+        "nivells":{
+            "type":"select",
+            "n_columns": 6,
+            "label": "nivells",
+            "group": "config",
+            "props": {
+                "required": true,
+                "title" : "indiqueu els nivells de TOC."
+            },
+            "config":{
+                "options":[
+                    {"description":"1", "value":"1"},
+                    {"description":"2", "value":"2"},
+                    {"description":"3", "value":"3"},
+                    {"description":"4", "value":"4"},
+                    {"description":"5", "value":"5"},
+                    {"description":"6", "value":"6"}
+                ]
+            }
+        },
+        "documents": {
+            "label": "Llista de documents",
+            "n_columns": 12,
+            "group": "docs",
+            "n_rows": 4,
+            "type": "editableObject",
+            "props": {
+                "data-editable-element": "table"
+            },
+            "config": {
+                "actions": {
+                    "add_default_row": "Afegir un nou document",
+                    "remove_rows": "Eliminar un document"
+                },
+                "fields": {
+                    "ordre": {
+                        "type": "number"
+                    },
+                    "nom": {
+                        "type": "string"
+                    }
+                },
+                "layout": [
+                    {
+                        "cells": [
+                            {
+                                "name": "Número d'ordre",
+                                "field": "ordre",
+                                "width": "25%",
+                                "editable": true
+                            },
+                            {
+                                "name": "Nom del document",
+                                "field": "nom",
+                                "width": "75%",
+                                "editable": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "dadesExtres": {
+            "n_columns": 12,
+            "group": "extres",
+            "n_rows": 4,
+            "type": "editableObject",
+            "props": {
+                "data-editable-element": "table"
+            },
+            "config": {
+                "actions": {
+                    "add_default_row": "Afegir una nova dada",
+                    "remove_rows": "Eliminar les dades seleccionades"
+                },
+                "fields": {
+                    "nom": {
+                        "type": "string"
+                    },
+                    "tipus": {
+                        "type": "select",
+                        "options": ["dada"]
+                    },
+                    "valor": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "plantilla": {
+            "type" : "hidden"
+        },
+        "fitxercontinguts": {
+            "type" : "hidden"
+        },
+        "nom_real": {
+            "type" : "hidden"
+        },
+        "data_fitxercontinguts": {
+            "type" : "hidden"
+        }
+    }
+}

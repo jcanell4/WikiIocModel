@@ -1,0 +1,41 @@
+{
+    "manualHtmlExport": {
+        "class": "WikiIocButton",
+        "parms": {
+            "DOM": {
+               "id": "manualHtmlExport",
+               "title": "manualHtmlExport",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportHtmlIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectExport'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+
+        "scripts": {
+            "getFunctions": {
+                "path": "HtmlExportGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'",
+                    "page.generated":"true"
+                }
+            }
+        }
+    }
+}
