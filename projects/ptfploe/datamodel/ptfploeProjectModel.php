@@ -174,6 +174,27 @@ class ptfploeProjectModel extends AbstractProjectModel {
             if (!$ret) $retError[] = "Error en assignar permissos a '${parArr['new_responsable']}' sobre '$project_ns'";
         }
 
+        // TODO: Afegir el link a les dreceres? (com a l'autor)
+
+        //Se ha modificado el Responsable del proyecto
+        if ($parArr['old_supervisor'] !== $parArr['new_supervisor']) {
+            if ($parArr['old_supervisor'] !== $parArr['old_supervisor']) {
+                //Elimina ACL de old_responsable sobre la página del proyecto
+                if ($parArr['old_supervisor']!=="") {
+                    $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $parArr['old_supervisor']);
+                    if (!$ret) $retError[] = "Error en eliminar permissos a '${parArr['old_supervisor']}' sobre '$project_ns'";
+                }
+            }
+            //Crea ACL para new_responsable sobre la página del proyecto
+            $ret = PagePermissionManager::updatePagePermission($project_ns, $parArr['new_supervisor'], AUTH_READ, TRUE);
+            if (!$ret) $retError[] = "Error en assignar permissos a '${parArr['new_supervisor']}' sobre '$project_ns'";
+        }
+
+
+
+
+
+
         if ($retError) {
             foreach ($retError as $e) {
                 throw new UnknownProjectException($project_ns, $e);
