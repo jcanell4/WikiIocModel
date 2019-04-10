@@ -14,6 +14,7 @@ abstract class AbstractRenderer {
     protected $extra_data;
     protected $mode;
     protected $filetype;
+    protected $styletype;
 
     public function __construct($factory, $cfgExport=NULL) {
         $this->factory = $factory;
@@ -30,8 +31,10 @@ abstract class AbstractRenderer {
         return $this->cfgExport->tocs;
     }
 
-    public function init($extra) {
+    public function init($extra, $styletype=NULL) {
         $this->extra_data = $extra;
+        $this->styletype = $styletype;
+        $this->cfgExport->styletype = $styletype;
     }
 
     public function loadTemplateFile($file) {
@@ -65,6 +68,7 @@ class cfgExporter {
     public $rendererPath;
     public $toc = NULL;
     public $tocs = array();
+    public $styletype = NULL;
 
     public function __construct() {
         $this->tmp_dir = realpath(EXPORT_TMP)."/".rand();;
@@ -131,8 +135,11 @@ class BasicRenderObject extends renderComposite {
             $render = $this->createRender($typedefKeyField, $renderKeyField);
 
             $dataField = $this->getDataField($keyField);
-            $render->init($keyField);
+            $render->init($keyField, $renderKeyField['render']['styletype']);
+
+            $this->_createSessionStyle($renderKeyField['render']);
             $arrayDeDatosParaLaPlantilla[$keyField] = $render->process($dataField);
+            $this->_destroySessionStyle();
         }
         $extres = $this->getRenderExtraFields();
         if ($extres) {
@@ -143,9 +150,11 @@ class BasicRenderObject extends renderComposite {
                     $render = $this->createRender($typedefKeyField, $renderKeyField);
 
                     $dataField = $item["value"]; //$this->factory->getProjectModel()->getRawProjectDocument($item["value"]);
-                    $render->init($item["name"]);
+                    $render->init($item["name"], $renderKeyField['render']['styletype']);
 
+                    $this->_createSessionStyle($renderKeyField['render']);
                     $arrayDeDatosParaLaPlantilla[$item["name"]] = $render->process($dataField, $item["name"]);
+                    $this->_destroySessionStyle();
                 }
                 else if ($item["valueType"] == "field") {
                     $typedefKeyField = $this->getTypedefKeyField($item["value"]);
@@ -153,15 +162,17 @@ class BasicRenderObject extends renderComposite {
                     $render = $this->createRender($typedefKeyField, $renderKeyField);
 
                     $dataField = $this->getDataField($item["value"]);
-                    $render->init($item["name"]);
+                    $render->init($item["name"], $renderKeyField['render']['styletype']);
 
+                    $this->_createSessionStyle($renderKeyField['render']);
                     $arrayDeDatosParaLaPlantilla[$item["name"]] = $render->process($dataField, $item["name"]);
+                    $this->_destroySessionStyle();
                 }
                 else if ($item["valueType"] == "arrayFields") {
                     $typedefKeyField = $this->getTypedefKeyField($item["value"]);
                     $renderKeyField = $this->getRenderKeyField($item["name"]);
                     $render = $this->createRender($typedefKeyField, $renderKeyField);
-                    $render->init($item["name"]);
+                    $render->init($item["name"], $renderKeyField['render']['styletype']);
 
                     $arrayDataField = json_decode($this->getDataField($item["value"]), true);
                     foreach ($arrayDataField as $key) {
@@ -172,7 +183,9 @@ class BasicRenderObject extends renderComposite {
                     if ($item["type"] == "psdom") {
                         $arrDocument = array();
                         foreach ($arrDataField as $dataField) {
+                            $this->_createSessionStyle($renderKeyField['render']);
                             $jsonPart = $render->process($dataField, $item["name"]);
+                            $this->_destroySessionStyle();
                             $arrDocument = array_merge($arrDocument, json_decode($jsonPart));
                         }
                         $arrayDeDatosParaLaPlantilla[$item["name"]] = json_encode($arrDocument);
@@ -181,7 +194,9 @@ class BasicRenderObject extends renderComposite {
                         // Renderiza cada uno de los documentos
                         $htmlDocument = "";
                         foreach ($arrDataField as $dataField) {
+                            $this->_createSessionStyle($renderKeyField['render']);
                             $htmlDocument .= $render->process($dataField, $item["name"]);
+                            $this->_destroySessionStyle();
                             $toc[] = $this->cfgExport->toc[$item["name"]];
                         }
                         // Une los TOCs de todos los documentos
@@ -200,6 +215,13 @@ class BasicRenderObject extends renderComposite {
         $ret = $this->cocinandoLaPlantillaConDatos($arrayDeDatosParaLaPlantilla);
         self::$deepLevel--;
         return $ret;
+    }
+
+    protected function _createSessionStyle($keyRender) {
+        $_SESSION['styletype'] = $keyRender['styletype'];
+    }
+    protected function _destroySessionStyle() {
+        unset($_SESSION['styletype']);
     }
 
     public function getRenderFields() { //devuelve el array de campos establecidos para el render
