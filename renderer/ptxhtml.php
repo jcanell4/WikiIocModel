@@ -169,7 +169,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         if ($level <= $conf['maxseclevel']) {
             $this->doc .= ' class="' . $this->startSectionEdit($pos, 'section', $text) . '"';
         }
-        $this->doc .= '">';            //$this->doc .= ' id="'.$hid.'">';
+        $this->doc .= '>';            //$this->doc .= ' id="'.$hid.'">';
         $this->doc .= $this->_xmlEntities($text);
         $this->doc .= "</h$level>".DOKU_LF;
     }
