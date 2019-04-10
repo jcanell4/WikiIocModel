@@ -74,7 +74,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     
     public function getContentDocumentId($docId){
         if(is_array($docId)){
-            return $this->getContentDocumentIdFormResponse($docId);
+            return $this->getContentDocumentIdFromResponse($docId);
         }
         return $this->id.":".$docId;
     }
