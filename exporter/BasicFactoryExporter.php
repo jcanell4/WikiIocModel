@@ -41,29 +41,18 @@ class BasicFactoryExporter {
 
         require_once $this->path."/exporterClasses.php";
         require_once $this->path."/".$this->mode."/exporterClasses.php";
-        if (@file_exists($this->path."/".$this->mode."/".$class."/exporterClasses.php")){
+        if ($class && @file_exists($this->path."/".$this->mode."/".$class."/exporterClasses.php")){
             require_once $this->path."/".$this->mode."/".$class."/exporterClasses.php";
         }
-
         $class = $this->validateClass($class, $typedef['type']);
 
         //creamos una instancia del render correspontiente al tipo de elemento
-        if($params){
-            switch ($typedef['type']) {
-                case "array":  $render = new $class($this, $typedef, $renderdef, $params); break;
-                case "object": $render = new $class($this, $typedef, $renderdef, $params); break;
-                case "file":   $render = new $class($this, $params); break;
-                case "date":   $render = new $class($this, $params, "/"); break;
-                default:       $render = new $class($this, $params); break;
-            }
-        }else{
-            switch ($typedef['type']) {
-                case "array":  $render = new $class($this, $typedef, $renderdef); break;
-                case "object": $render = new $class($this, $typedef, $renderdef); break;
-                case "file":   $render = new $class($this); break;
-                case "date":   $render = new $class($this, NULL, "/"); break;
-                default:       $render = new $class($this); break;
-            }
+        switch ($typedef['type']) {
+            case "array":  $render = new $class($this, $typedef, $renderdef, $params); break;
+            case "object": $render = new $class($this, $typedef, $renderdef, $params); break;
+            case "file":   $render = new $class($this, $params); break;
+            case "date":   $render = new $class($this, $params, "/"); break;
+            default:       $render = new $class($this, $params); break;
         }
         return $render;
     }
