@@ -57,6 +57,8 @@ class exportDocument extends MainRender {
                 $nom_real = html_entity_decode(htmlspecialchars_decode($data["nom_real"], ENT_COMPAT|ENT_QUOTES));
                 $data_fitxer = html_entity_decode(htmlspecialchars_decode($data["data_fitxercontinguts"], ENT_COMPAT|ENT_QUOTES));
 
+                $estils = $this->getPdfStyleAttributes($this->cfgExport->rendererPath . "/xhtml/exportDocument/pdf");
+
                 $params = array(
                     "id" => $this->cfgExport->id,
                     "path_templates" => $this->cfgExport->rendererPath . "/pdf/exportDocument/templates",  // directori on es troben les plantilles latex usades per crear el pdf
@@ -73,6 +75,7 @@ class exportDocument extends MainRender {
                                     'subtitol' => $subtitol,
                                     'autor'    => $nom_real,
                                     'data'     => $data_fitxer],
+                        "estil" => $estils['style'],
                         "contingut" => json_decode($data["documentPartsPdf"], TRUE)   //contingut latex ja rendaritzat
                     )
                 );
@@ -199,5 +202,23 @@ class exportDocument extends MainRender {
             closedir($dh);
         }
         return $files;
+    }
+
+    private function getPdfStyleAttributes($dir) {
+        $estils = array();
+        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
+            $dh = opendir($dir);
+            while ($file = readdir($dh)) {
+                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
+                    if (preg_match('/.*?\.stypdf|.*?\.css/', $file)){
+                        $json = file_get_contents("$dir/$file");
+                        $estils = array_merge($estils, json_decode($json, true));
+                    }
+                }
+            }
+            closedir($dh);
+        }
+
+        return $estils;
     }
 }
