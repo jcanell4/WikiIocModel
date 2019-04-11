@@ -2,7 +2,7 @@
     "definition": {
         "n_columns": 12,
         "n_rows": 10,
-        "chars_column": 10, 
+        "chars_column": 10,
         "rows_row": 1
     },
     "groups": {
@@ -37,7 +37,7 @@
                 "collapsable":true,
                 "collapsed":false
             }
-        }        
+        }
     },
     "fields": {
       "tipusBlocModul":{
@@ -52,7 +52,7 @@
         "config":{
             "options":[
                 {"value":"mòdul"},
-                {"value":"1r. bloc"}, 
+                {"value":"1r. bloc"},
                 {"value":"2n. bloc"},
                 {"value":"3r. bloc"}
             ]
@@ -140,7 +140,7 @@
           "required": true,
           "min":0,
           "max":8,
-          "title": "Indiqueu en quin semestre es recomana realitzar aquest mòdul o bloc havent començat el cicle al setembre. Poseu-lo a zero si el cicle no té itinerari"                
+          "title": "Indiqueu en quin semestre es recomana realitzar aquest mòdul o bloc havent començat el cicle al setembre. Poseu-lo a zero si el cicle no té itinerari"
         }
       },
       "itinerariRecomanatS2": {
@@ -151,17 +151,17 @@
           "required": true,
           "min":0,
           "max":8,
-          "title": "Indiqueu en quin semestre es recomana realitzar aquest mòdul o bloc havent començat el cicle al febrer. Poseu-lo a zero si el cicle no té itinerari"                      
+          "title": "Indiqueu en quin semestre es recomana realitzar aquest mòdul o bloc havent començat el cicle al febrer. Poseu-lo a zero si el cicle no té itinerari"
         }
       },
       "descripcio": {
         "n_columns": 12,
-        "label" : "Descripció (descripcio)",
+        "label" : "Aquest bloc/mòdul tracta de... (descripcio)",
         "type": "textarea",
         "n_rows": 6,
         "props": {
           "data-editable-element": "textarea",
-          "title": "descriviu breument el mòdul"
+          "title": "continua la frase a fí de descriure breument el contingut del bloc/mòdul"
         },
         "config": {
             "renderable": true,
@@ -191,7 +191,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir RA",
-            "remove_rows": "Eliminar els RA seleccionats"        
+            "remove_rows": "Eliminar els RA seleccionats",
+            "add_default_row_before": "Afegir RA abans de la fila seleccionada"
           },
           "fields": {
             "id": {
@@ -216,12 +217,13 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir eina",
-            "remove_rows": "Eliminar eines seleccionades"        
+            "remove_rows": "Eliminar eines seleccionades",
+            "add_default_row_before": "Afegir eina abans de la fila seleccionada"
           },
           "fields": {
             "tipus": {
               "type": "select",
-              "options": ["lectura", "autoavaluació", "fòrum", "qüestionari", "exercicis"]                        
+              "options": ["lectura", "autoavaluació", "fòrum", "qüestionari", "exercicis"]
             },
             "eina": {
               "type": "string"
@@ -243,17 +245,18 @@
         "n_rows": 5,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les dades de cada UF. No cal que ompliu les hores de les UFs detallades en aquest bloc o mòdul, es calculen automàticament."      
+          "title": "Detalleu les dades de cada UF. No cal que ompliu les hores de les UFs detallades en aquest bloc o mòdul, es calculen automàticament."
         },
         "config": {
           "actions": {
             "set_multiple_default_rows": "Definir el nombre d'Unitats Formatives del mòdul",
-            "remove_rows": "Eliminar les Unitats Formatives seleccionades"
+            "remove_rows": "Eliminar les Unitats Formatives seleccionades",
+            "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
           },
           "fields": {
             "bloc":{
-              "type": "number"         
-            },        
+              "type": "number"
+            },
             "unitat formativa": {
               "type": "number"
             },
@@ -310,12 +313,13 @@
         "n_rows": 8,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les dades referents a cada unitat. No heu d'omplir les hores de les unitat, es calculen automàticament"      
+          "title": "Detalleu les dades referents a cada unitat. No heu d'omplir les hores de les unitat, es calculen automàticament"
         },
         "config": {
           "actions": {
             "set_multiple_default_rows": "Definir el nombre d'unitats",
-            "remove_rows": "Eliminar les unitats seleccionades"
+            "remove_rows": "Eliminar les unitats seleccionades",
+            "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
           },
           "fields": {
             "unitat formativa": {
@@ -379,7 +383,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir període",
-            "remove_rows": "Eliminar períodes seleccionats"        
+            "remove_rows": "Eliminar períodes seleccionats",
+            "add_default_row_before": "Afegir període abans de la fila seleccionada"
           },
           "fields": {
             "unitat": {
@@ -413,13 +418,13 @@
                 {
                   "name": "unitat",
                   "field": "unitat",
-                  "width": "8%",               
+                  "width": "8%",
                   "editable": true
                 },
                 {
                   "name": "període",
                   "field": "període",
-                  "width": "8%",               
+                  "width": "8%",
                   "editable": true
                 },
                 {
@@ -430,13 +435,13 @@
                 {
                   "name": "descripció període",
                   "field": "descripció període",
-                  "width": "46%",               
+                  "width": "46%",
                   "editable": true
                 },
                 {
                   "name": "hores",
                   "field": "hores",
-                  "width": "8%",               
+                  "width": "8%",
                   "editable": true
                 },
                 {
@@ -467,7 +472,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir activitat",
-            "remove_rows": "Eliminar les activitats seleccionades"        
+            "remove_rows": "Eliminar les activitats seleccionades",
+            "add_default_row_before": "Afegir activitat abans de la fila seleccionada"
           },
           "fields": {
             "unitat": {
@@ -478,7 +484,7 @@
             },
             "eina": {
               "type": "select",
-              "options": ["lectura", "autoavaluació", "fòrum", "qüestionari", "exercicis", "altres"]                        
+              "options": ["lectura", "autoavaluació", "fòrum", "qüestionari", "exercicis", "altres"]
             },
             "descripció": {
                 "type": "string"
@@ -493,15 +499,15 @@
         "group": "avaluacio",
         "props": {
           "required": true,
-          "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada UF"      
+          "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada UF"
         },
          "config":{
             "options":[
-                {"description":"No es fa","value":"NO"}, 
-                {"description":"A l'inci","value":"INICI"}, 
+                {"description":"No es fa","value":"NO"},
+                {"description":"A l'inci","value":"INICI"},
                 {"description":"Per cada UF","value":"PER_UF"}
             ]
-         }            
+         }
       },
       "notaMinimaAC": {
         "label": "Nota mínima de l'AC (notaMinimaAC)",
@@ -525,7 +531,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir un nou lliurament",
-            "remove_rows": "Eliminar els lliuraments seleccionats"        
+            "remove_rows": "Eliminar els lliuraments seleccionats",
+            "add_default_row_before": "Afegir lliurament abans de la fila seleccionada"
           },
           "fields": {
             "id": {
@@ -582,7 +589,7 @@
                 }
               ]
             }
-          ]          
+          ]
         }
       },
       "datesEAF": {
@@ -598,7 +605,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir un nou EAF",
-            "remove_rows": "Eliminar els EAF seleccionats"        
+            "remove_rows": "Eliminar els EAF seleccionats",
+            "add_default_row_before": "Afegir EAF abans de la fila seleccionada"
           },
           "fields": {
             "id": {
@@ -683,7 +691,7 @@
                 }
               ]
             }
-          ]    
+          ]
         }
       },
       "datesJT": {
@@ -699,7 +707,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir una nova JT",
-            "remove_rows": "Eliminar les JT seleccionades"        
+            "remove_rows": "Eliminar les JT seleccionades",
+            "add_default_row_before": "Afegir JT abans de la fila seleccionada"
           },
           "fields": {
             "id": {
@@ -790,7 +799,7 @@
                 }
               ]
             }
-          ]  
+          ]
         }
       },
       "notaMinimaPAF": {
@@ -824,7 +833,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir una nova dada",
-            "remove_rows": "Eliminar les dades seleccionades"        
+            "remove_rows": "Eliminar les dades seleccionades",
+            "add_default_row_before": "Afegir dada abans de la fila seleccionada"
           },
           "fields": {
             "unitat formativa": {
@@ -846,6 +856,7 @@
         }
       },
       "responsable": {
+        "type": "amd",
         "label": "Responsable de la creació (responsable)",
         "n_columns": 4,
         "group": "authorship",
@@ -853,10 +864,33 @@
             "required": true
         },
         "config":{
-           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]}
+           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+          "class" : {
+            "edit": "IocFilteredList",
+            "view": "IocListSelectedItems"
+          },
+          "data": {
+            "ns":"",
+            "buttonLabel": "Cercar",
+            "fieldName": "responsable",
+            "dialogTitle" : "Cercar responsable",
+            "dialogButtonLabel" : "Afegir responsable",
+            "data": "",
+            "dataQuery": {
+              "filter": ""
+            },
+            "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+            "fields": {
+              "username": "Nom d'usuari",
+              "name": "Nom"
+            },
+            "fieldId": "username",
+            "defaultEntryField": "name"
+          }
         }
       },
       "autor": {
+        "type": "amd",
         "label": "Autor (autor)",
         "n_columns": 4,
         "group": "authorship",
@@ -864,10 +898,33 @@
             "required": true
         },
         "config":{
-           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]}
+           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+          "class" : {
+            "edit": "IocFilteredList",
+            "view": "IocListSelectedItems"
+          },
+          "data": {
+            "ns":"",
+            "buttonLabel": "Cercar",
+            "fieldName": "autor",
+            "dialogTitle" : "Cercar autor",
+            "dialogButtonLabel" : "Afegir autor",
+            "data": "",
+            "dataQuery": {
+              "filter": ""
+            },
+            "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+            "fields": {
+              "username": "Nom d'usuari",
+              "name": "Nom"
+            },
+            "fieldId": "username",
+            "defaultEntryField": "name"
+          }
         }
       },
       "supervisor": {
+        "type": "amd",
         "label": "Cap de departatment (supervisor)",
         "n_columns": 4,
         "group": "authorship",
@@ -875,7 +932,29 @@
             "required": true
         },
         "config":{
-           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]}
+           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+          "class" : {
+            "edit": "IocFilteredList",
+            "view": "IocListSelectedItems"
+          },
+          "data": {
+            "ns":"",
+            "buttonLabel": "Cercar",
+            "fieldName": "supervisor",
+            "dialogTitle" : "Cercar supervisor",
+            "dialogButtonLabel" : "Afegir supervior",
+            "data": "",
+            "dataQuery": {
+              "filter": ""
+            },
+            "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+            "fields": {
+              "username": "Nom d'usuari",
+              "name": "Nom"
+            },
+            "fieldId": "username",
+            "defaultEntryField": "name"
+          }
         }
       },
       "plantilla": {
@@ -900,7 +979,7 @@
         "type" : "hidden"
       },
       "dataQualificacioPaf2": {
-        "type" : "hidden"            
+        "type" : "hidden"
       }
     }
 }

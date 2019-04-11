@@ -30,6 +30,11 @@ class upgrader_1 extends CommonUpgrader {
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename);
+
+                // ALERTA[Xavi] \s captura també els salts de línia així que el title es coloca a la fila anterior
+                // com que el resultat sembla que era correcte ho hem deixat com estava, si trobem que es perd el salt
+                // de línia s'ha de canviar per la línia comentada:
+//                $aTokRep = [[" +:title:Taula Unitats",
                 $aTokRep = [["\s+:title:Taula Unitats",
                              "  :title:Apartats"],
                             ["{#_DATE\(\"{##itemc\[inici\]##}\", \"\.\"\)_#}-{#_DATE\(\"{##itemc\[inici\]##}",

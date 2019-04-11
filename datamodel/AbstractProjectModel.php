@@ -74,7 +74,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     
     public function getContentDocumentId($docId){
         if(is_array($docId)){
-            return $this->getContentDocumentIdFormResponse($docId);
+            return $this->getContentDocumentIdFromResponse($docId);
         }
         return $this->id.":".$docId;
     }
@@ -451,4 +451,45 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     public function createTemplateDocument($data){
         //NO HI HA TEMPLATES A CREAR
     }
+
+    /**
+     * Retorna el nom e la plantilla corresponent al document.
+     *
+     * @param array|string $responseData ruta de la plantilla, nom de la plantilla o objecte de configuració
+     * @return string nom de la plantilla
+     */
+    public function getTemplateContentDocumentId($responseData){
+
+        // Pot tractar-se del nom de la plantilla o una ruta, extraiem el nom i el retornem
+        if (is_string($responseData)) {
+            $plantilla = $responseData;
+
+        } else {
+            $plantilla = $responseData["plantilla"];
+
+            if ($plantilla === NULL) {
+                $plantilla = $responseData['projectMetaData']["plantilla"]['value'];
+            }
+        }
+
+        $lastPos = strrpos($plantilla, ':');
+
+        if ($lastPos) {
+            $plantilla = substr($plantilla, $lastPos+1);
+        }
+
+        return $plantilla;
+
+    }
+
+    public function getTemplatePath($templateName, $version = null){
+        $path = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/" . $templateName . ".txt";
+
+        if ($version) {
+            $path .= "." . $version;
+        } ;
+
+        return $path;
+    }
+
 }

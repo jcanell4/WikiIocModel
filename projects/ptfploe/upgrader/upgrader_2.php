@@ -56,7 +56,15 @@ class upgrader_2 extends CommonUpgrader {
                 }
                 $data = $this->model->getDataProject();
                 $template_name = $this->model->getTemplateContentDocumentId($data);
-                $doc0 = $this->model->getRawTemplate($template_name, "v2");
+
+                $file = $this->model->getTemplatePath($template_name, 'v2');
+                $doc0  = io_readFile($file);
+
+
+
+
+
+
                 $doc1 = $this->model->getRawProjectDocument($filename);
                 $aTokSub = ["(::table:T03\n\s+:title:Unitats\s+:type:pt_taula\n)(.*\n)*(:::)",
                             "(L'AC es realitza a distància, es concreta en:\n)(.*\n)*(Les activitats de l'avaluació contínua)",

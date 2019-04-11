@@ -69,7 +69,7 @@ class exportDocument extends MainRender {
                         "header" => ["logo"  => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                                      "wlogo" => 9.9,
                                      "hlogo" => 11.1,
-                                     "ltext" => "Generalitat de Catalunya\nDepartament d'Ensenyament\nInstitut Obert de Catalunya",
+                                     "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
                                      "rtext" => $titol],
                         "titol" => ['titol'    => $titol,
                                     'subtitol' => $subtitol,
