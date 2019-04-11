@@ -92,8 +92,9 @@ class renderFile extends AbstractRenderer {
         $_SESSION['gif_images'] = &$this->cfgExport->gif_images;
         $_SESSION['alternateAddress'] = TRUE;
         $_SESSION['dir_images'] = "img/";
+        $_SESSION['styletype'] = $this->cfgExport->styletype;
 
-        if(preg_match("/".$this->cfgExport->id."/", $data)!=1){
+        if (preg_match("/".$this->cfgExport->id."/", $data)!=1){
             $fns = $this->cfgExport->id.":".$data;
         }
         $file = wikiFN($fns);
@@ -101,7 +102,7 @@ class renderFile extends AbstractRenderer {
 
         $counter = 0;
         $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $text, 1, $counter);
-        if($counter>0){
+        if ($counter>0){
             $dataSource = $plugin_controller->getCurrentProjectDataSource($this->cfgExport->id, $plugin_controller->getCurrentProject());
             $text = WiocclParser::getValue($text, [], $dataSource);
         }
@@ -109,9 +110,8 @@ class renderFile extends AbstractRenderer {
         $instructions = p_get_instructions($text);
         $renderData = array();
         $html = $this->render($instructions, $renderData);
-        if(empty($alias)){
-            $alias=$data;
-        }
+
+        if (empty($alias)) $alias = $data;
         $this->cfgExport->toc[$alias] = $renderData["tocItems"];
         if ($startedHere) session_destroy();
 

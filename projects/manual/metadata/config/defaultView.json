@@ -8,23 +8,12 @@
     "groups": {
         "main": {
             "parent": "",
-            "label": "Dades de llarga durada",
+            "label": "Dades bàsiques",
             "n_columns": 12,
             "n_rows": 1,
             "frame": true,
             "config":{
-                "collapsable":true,
-                "collapsed":false
-            }
-        },
-        "authorship": {
-            "parent": "",
-            "label": "Dades d'autoria",
-            "n_columns": 12,
-            "n_rows": 1,
-            "frame": true,
-            "config":{
-                "collapsable":true,
+                "collapsable":false,
                 "collapsed":false
             }
         },
@@ -35,13 +24,13 @@
             "n_rows": 1,
             "frame": true,
             "config":{
-                "collapsable":true,
+                "collapsable":false,
                 "collapsed":false
             }
         },
-        "docs": {
+        "authorship": {
             "parent": "",
-            "label": "Documents",
+            "label": "Dades d'autoria",
             "n_columns": 12,
             "n_rows": 1,
             "frame": true,
@@ -58,14 +47,14 @@
             "frame": true,
             "config":{
                 "collapsable":true,
-                "collapsed":false
+                "collapsed":true
             }
         }
     },
     "fields": {
         "titol":{
             "n_columns": 6,
-            "label": "Títol del manual (titol)",
+            "label": "Títol del manual",
             "group": "main",
             "props": {
                 "required": true,
@@ -73,7 +62,7 @@
             }
         },
         "subtitol": {
-            "label" : "Subtítol del manual (subtitol)",
+            "label" : "Subtítol del manual",
             "n_columns": 6,
             "group": "main",
             "props": {
@@ -82,7 +71,7 @@
             }
         },
         "responsable": {
-            "label": "Responsable de la creació (responsable)",
+            "label": "Responsable de la creació",
             "n_columns": 6,
             "group": "authorship",
             "props": {
@@ -100,7 +89,7 @@
             }
         },
         "autor": {
-            "label": "Autor (autor)",
+            "label": "Autor",
             "n_columns": 6,
             "group": "authorship",
             "props": {
@@ -120,8 +109,8 @@
         "estil":{
             "type":"select",
             "n_columns": 6,
-            "label": "estil",
-            "group": "config",
+            "label": "Estil",
+            "group": "main",
             "props": {
                 "required": true,
                 "title" : "indiqueu l'estil a aplicar."
@@ -135,11 +124,11 @@
         "nivells":{
             "type":"select",
             "n_columns": 6,
-            "label": "nivells",
-            "group": "config",
+            "label": "nivells de la taula de continguts",
+            "group": "main",
             "props": {
                 "required": true,
-                "title" : "indiqueu els nivells de TOC."
+                "title" : "indiqueu els nivells de la taula de continguts."
             },
             "config":{
                 "options":[
@@ -155,7 +144,7 @@
         "documents": {
             "label": "Llista de documents",
             "n_columns": 12,
-            "group": "docs",
+            "group": "main",
             "n_rows": 4,
             "type": "editableObject",
             "props": {

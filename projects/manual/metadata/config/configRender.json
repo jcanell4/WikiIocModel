@@ -11,10 +11,10 @@
             },
             "keys": {
                 "documentPartsPdf": {
-                    "render": {"class": "renderFileToPsDom"}
+                    "render": {"class": "renderFileToPsDom", "styletype":"pt_taula"}
                 },
                 "documentPartsHtml": {
-                    "render": {"class": "renderFile"}
+                    "render": {"class": "renderFile", "styletype":"pt_taula"}
                 }
             }
         }
