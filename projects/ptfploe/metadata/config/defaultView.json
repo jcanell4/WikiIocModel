@@ -951,7 +951,8 @@
         "config":{
            "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
           "class" : {
-            "edit": "IocFieldWithSearch"
+            "edit": "IocFilteredList",
+            "view": "IocListSelectedItems"
           },
           "data": {
             "ns":"",
@@ -959,7 +960,7 @@
             "fieldName": "responsable",
             "dialogTitle" : "Cercar responsable",
             "dialogButtonLabel" : "Afegir responsable",
-            "data": "lib/exe/ioc_ajax.php?call=user_list",
+            "data": "",
             "dataQuery": {
               "filter": ""
             },
@@ -968,7 +969,8 @@
               "username": "Nom d'usuari",
               "name": "Nom"
             },
-            "fieldId": "username"
+            "fieldId": "username",
+            "defaultEntryField": "name"
           }
         }        
       },
@@ -983,7 +985,8 @@
         "config":{
            "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
           "class" : {
-            "edit": "IocFieldWithSearch"
+            "edit": "IocFilteredList",
+            "view": "IocListSelectedItems"
           },
           "data": {
             "ns":"",
@@ -991,7 +994,7 @@
             "fieldName": "autor",
             "dialogTitle" : "Cercar autor",
             "dialogButtonLabel" : "Afegir autor",
-            "data": "lib/exe/ioc_ajax.php?call=user_list",
+            "data": "",
             "dataQuery": {
               "filter": ""
             },
@@ -1000,7 +1003,8 @@
               "username": "Nom d'usuari",
               "name": "Nom"
             },
-            "fieldId": "username"
+            "fieldId": "username",
+            "defaultEntryField": "name"
           }
         }
       },
@@ -1015,7 +1019,8 @@
         "config":{
           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
           "class" : {
-            "edit": "IocFieldWithSearch"
+            "edit": "IocFilteredList",
+            "view": "IocListSelectedItems"
           },
           "data": {
             "ns":"",
@@ -1023,7 +1028,7 @@
             "fieldName": "supervisor",
             "dialogTitle" : "Cercar supervisor",
             "dialogButtonLabel" : "Afegir supervior",
-            "data": "lib/exe/ioc_ajax.php?call=user_list",
+            "data": "",
             "dataQuery": {
               "filter": ""
             },
@@ -1032,7 +1037,8 @@
               "username": "Nom d'usuari",
               "name": "Nom"
             },
-            "fieldId": "username"
+            "fieldId": "username",
+            "defaultEntryField": "name"
           }
         }
       },
