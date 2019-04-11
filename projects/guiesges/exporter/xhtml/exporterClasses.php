@@ -64,7 +64,7 @@ class renderRenderizableText extends AbstractRenderer {
 
     public function process($data) {
         $instructions = p_get_instructions($data);
-        $html = p_render('wikiiocmodel_ptxhtml', $instructions);
+        $html = p_render('wikiiocmodel_ptxhtml', $instructions, $info);
         return $html;
     }
 }
