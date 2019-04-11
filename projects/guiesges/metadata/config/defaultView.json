@@ -556,6 +556,7 @@
         }
       },
       "responsable": {
+        "type" : "amd",
         "label": "Responsable de la creació",
         "n_columns": 6,
         "group": "authorship",
@@ -563,31 +564,66 @@
             "required": true
         },
         "config":{
-           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]}
-        }
+           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+          "class" : {
+            "edit": "IocFieldWithSearch"
+          },
+          "data": {
+            "ns":"",
+            "buttonLabel": "Cercar",
+            "fieldName": "responsable",
+            "dialogTitle" : "Cercar responsable",
+            "dialogButtonLabel" : "Afegir responsable",
+            "data": "lib/exe/ioc_ajax.php?call=user_list",
+            "dataQuery": {
+              "filter": ""
+            },
+            "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+            "fields": {
+              "username": "Nom d'usuari",
+              "name": "Nom"
+            },
+            "fieldId": "username"
+          }
+        }        
       },
       "autor": {
+        "type": "amd",
         "label": "Autor",
         "n_columns": 6,
         "group": "authorship",
         "props": {
-            "required": true
+           "required": true
         },
         "config":{
-           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]}
+           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+          "class" : {
+            "edit": "IocFieldWithSearch"
+          },
+          "data": {
+            "ns":"",
+            "buttonLabel": "Cercar",
+            "fieldName": "autor",
+            "dialogTitle" : "Cercar autor",
+            "dialogButtonLabel" : "Afegir autor",
+            "data": "lib/exe/ioc_ajax.php?call=user_list",
+            "dataQuery": {
+              "filter": ""
+            },
+            "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+            "fields": {
+              "username": "Nom d'usuari",
+              "name": "Nom"
+            },
+            "fieldId": "username"
+          }
         }
       },
       "codi": {
-        "label": "Codi",
-        "type": "hidden",
-        "n_columns": 4,
-        "group": "authorship"
+        "type": "hidden"
       },
       "versio": {
-        "label": "Versió",
-        "type": "hidden",
-        "n_columns": 4,
-        "group": "authorship"
+        "type": "hidden"
       }
     }
 }
