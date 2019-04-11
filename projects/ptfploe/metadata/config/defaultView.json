@@ -943,7 +943,7 @@
       "responsable": {
         "type" : "amd",
         "label": "Responsable de la creació (responsable)",
-        "n_columns": 6,
+        "n_columns": 4,
         "group": "authorship",
         "props": {
             "required": true
@@ -977,7 +977,7 @@
       "autor": {
         "type": "amd",
         "label": "Autor (autor)",
-        "n_columns": 6,
+        "n_columns": 4,
         "group": "authorship",
         "props": {
            "required": true

@@ -173,7 +173,7 @@ class ptfploeProjectModel extends AbstractProjectModel {
             if ($parArr['old_supervisor'] !== $parArr['new_autor']
                 && $parArr['old_supervisor'] !== $parArr['new_responsable']) {
                 //Elimina ACL de old_responsable sobre la página del proyecto
-                if ($parArr['old_supervisor']!=="") {
+                if ($parArr['old_supervisor'] && $parArr['old_supervisor']!=="") {
                     $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $parArr['old_supervisor']);
                     if (!$ret) $retError[] = "Error en eliminar permissos a '${parArr['old_supervisor']}' sobre '$project_ns'";
                 }
