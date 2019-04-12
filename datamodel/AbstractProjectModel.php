@@ -212,36 +212,28 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             //Elimina el acceso a la página del proyecto en el archivo dreceres de de old_autor
             $old_usershortcut = $parArr['userpage_ns'].$old_autor.":".$parArr['shortcut_name'];
             $this->removeProjectPageFromUserShortcut($old_usershortcut, $parArr['link_page']);
-
-            $ret = $this->_modifyACLPageToNewAutor($parArr, $project_ns, $old_autor);
-            if ($ret) $retError[] = $ret;
         }
         return $retError;
     }
 
-    private function _modifyACLPageToNewAutor($parArr, $project_ns, $old_autor="") {
-        //lista de nuevos Autores
-        $nAutors = preg_split("/[\s,]+/", $parArr['new_autor']);
+    private function _modifyACLPageToNewAutor($new_autor, $parArr, $project_ns) {
+        //Crea ACL para new_autor sobre la página del proyecto
+        $ret = PagePermissionManager::updatePagePermission($project_ns, $new_autor, AUTH_UPLOAD, TRUE);
+        if (!$ret) $retError[] = "Error en assignar permissos a '$new_autor' sobre '$project_ns'";
 
-        foreach ($nAutors as $new_autor) {
-            //Crea ACL para new_autor sobre la página del proyecto
-            $ret = PagePermissionManager::updatePagePermission($project_ns, $new_autor, AUTH_UPLOAD, TRUE);
-            if (!$ret) $retError[] = "Error en assignar permissos a '$new_autor' sobre '$project_ns'";
+        //Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
+        $ns = $parArr['userpage_ns'].$new_autor.":";
+        PagePermissionManager::updatePagePermission($ns."*", $new_autor, AUTH_DELETE, TRUE);
 
-            //Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
-            $ns = $parArr['userpage_ns'].$new_autor.":";
-            PagePermissionManager::updatePagePermission($ns."*", $new_autor, AUTH_DELETE, TRUE);
+        //Escribe un acceso a la página del proyecto en el archivo de atajos de de new_autor
+        $params = [
+             'id' => $parArr['id']
+            ,'autor' => $new_autor
+            ,'link_page' => $parArr['link_page']
+            ,'user_shortcut' => $ns.$parArr['shortcut_name']
+        ];
+        $this->includePageProjectToUserShortcut($params);
 
-            //Escribe un acceso a la página del proyecto en el archivo de atajos de de new_autor
-            $link_page = ($old_autor!=="") ? $parArr['link_page'] : $parArr['id'];
-            $params = [
-                 'id' => $parArr['id']
-                ,'autor' => $new_autor
-                ,'link_page' => $link_page
-                ,'user_shortcut' => $ns.$parArr['shortcut_name']
-            ];
-            $this->includePageProjectToUserShortcut($params);
-        }
         return $retError;
     }
 
@@ -256,20 +248,6 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                 $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $old_responsable);
                 if (!$ret) $retError[] = "Error en eliminar permissos a '$old_responsable' sobre '$project_ns'";
             }
-            //Crea ACL para new_responsable sobre la página del proyecto
-            $ret = $this->_modifyACLPageToNewResponsable($parArr, $project_ns);
-            if ($ret) $retError[] = $ret;
-        }
-        return $retError;
-    }
-
-    private function _modifyACLPageToNewResponsable($parArr, $project_ns) {
-        //lista de nuevos Responsables
-        $nResponsables = preg_split("/[\s,]+/", $parArr['new_responsable']);
-        foreach ($nResponsables as $new_responsable) {
-            //Crea ACL para new_responsable sobre la página del proyecto
-            $ret = PagePermissionManager::updatePagePermission($project_ns, $new_responsable, AUTH_UPLOAD, TRUE);
-            if (!$ret) $retError[] = "Error en assignar permissos a '$new_responsable' sobre '$project_ns'";
         }
         return $retError;
     }
@@ -282,27 +260,35 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     protected function modifyACLPageToUser($parArr) {
         $project_ns = $parArr['id'].":*";
 
+        $oAutors = preg_split("/[\s,]+/", $parArr['old_autor']);
         //Si se ha modificado el Autor del proyecto ...
         if ($parArr['old_autor'] !== NULL && $parArr['old_autor'] !== "") {
-            $oAutors = preg_split("/[\s,]+/", $parArr['old_autor']);
             foreach ($oAutors as $old_autor) {
                 $this->_modifyACLPageToOldAutor($old_autor, $parArr, $project_ns);
             }
-        }else {
-            $ret = $this->_modifyACLPageToNewAutor($parArr, $project_ns);
+        }
+        //establece la auténtica lista de nuevos Autores
+        $nAutors = preg_split("/[\s,]+/", $parArr['new_autor']);
+        $newAutors = array_diff($nAutors, $oAutors);
+        foreach ($newAutors as $new_autor) {
+            $ret = $this->_modifyACLPageToNewAutor($new_autor, $parArr, $project_ns);
             if ($ret) $retError[] = $ret;
         }
 
+        $oResponsables = preg_split("/[\s,]+/", $parArr['old_responsable']);
         //Si se ha modificado el Responsable del proyecto ...
         if ($parArr['old_responsable'] !== NULL && $parArr['old_responsable'] !== "") {
-            $oResponsables = preg_split("/[\s,]+/", $parArr['old_responsable']);
             foreach ($oResponsables as $old_responsable) {
                 $ret = $this->_modifyACLPageToOldResponsable($old_responsable, $parArr, $project_ns);
             }
-        }else {
+        }
+        //establece la auténtica lista de nuevos Responsables
+        $nResponsables = preg_split("/[\s,]+/", $parArr['new_responsable']);
+        $newResponsables = array_diff($nResponsables, $oResponsables);
+        foreach ($newResponsables as $new_responsable) {
             //Crea ACL para new_responsable sobre la página del proyecto
-            $ret = $this->_modifyACLPageToNewResponsable($parArr, $project_ns);
-            if ($ret) $retError[] = $ret;
+            $ret = PagePermissionManager::updatePagePermission($project_ns, $new_responsable, AUTH_UPLOAD, TRUE);
+            if (!$ret) $retError[] = "Error en assignar permissos a '$new_responsable' sobre '$project_ns'";
         }
 
         if ($retError) {
