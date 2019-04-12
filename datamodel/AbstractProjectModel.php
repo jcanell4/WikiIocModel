@@ -71,15 +71,15 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $attr[ProjectKeys::KEY_METADATA_SUBSET] = $this->getMetaDataSubSet();
         return ($key) ? $attr[$key] : $attr;
     }
-    
+
     public function getContentDocumentId($docId){
         if(is_array($docId)){
             return $this->getContentDocumentIdFromResponse($docId);
         }
         return $this->id.":".$docId;
     }
-    
-    protected function getContentDocumentIdFromResponse($responseData){        
+
+    protected function getContentDocumentIdFromResponse($responseData){
 //        Cal fer abstracta aquesta funció
     }
 
@@ -124,9 +124,9 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
     public function getRawTemplate($filename, $version) {
         $content = $this->getPageDataQuery()->getTemplateRaw($filename, $version);
-        return $content;        
+        return $content;
     }
-    
+
     /**
      * Obtiene el contenido del archivo wiki indicado en $filename. Está en pages/$filename con extensión .txt
      * @param string $filename : ruta wiki (con :) del archivo (a partir de pages/)
@@ -198,22 +198,168 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $ret;
     }
 
+    private function _modifyACLPageToOldAutor($old_autor, $parArr, $project_ns) {
+        //lista de nuevos Autores
+        $nAutors = preg_split("/[\s,]+/", $parArr['new_autor']);
+
+        if (! in_array($old_autor, $nAutors)) {
+            $oResponsable = preg_split("/[\s,]+/", $parArr['old_responsable']);
+            if (! in_array($old_autor, $oResponsable)) {
+                //Elimina ACL de old_autor sobre la página del proyecto
+                $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $old_autor);
+                if (!$ret) $retError[] = "Error en eliminar permissos a '$old_autor' sobre '$project_ns'";
+            }
+            //Elimina el acceso a la página del proyecto en el archivo dreceres de de old_autor
+            $old_usershortcut = $parArr['userpage_ns'].$old_autor.":".$parArr['shortcut_name'];
+            $this->removeProjectPageFromUserShortcut($old_usershortcut, $parArr['link_page']);
+
+            $ret = $this->_modifyACLPageToNewAutor($parArr, $project_ns, $old_autor);
+            if ($ret) $retError[] = $ret;
+        }
+        return $retError;
+    }
+
+    private function _modifyACLPageToNewAutor($parArr, $project_ns, $old_autor="") {
+        //lista de nuevos Autores
+        $nAutors = preg_split("/[\s,]+/", $parArr['new_autor']);
+
+        foreach ($nAutors as $new_autor) {
+            //Crea ACL para new_autor sobre la página del proyecto
+            $ret = PagePermissionManager::updatePagePermission($project_ns, $new_autor, AUTH_UPLOAD, TRUE);
+            if (!$ret) $retError[] = "Error en assignar permissos a '$new_autor' sobre '$project_ns'";
+
+            //Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
+            $ns = $parArr['userpage_ns'].$new_autor.":";
+            PagePermissionManager::updatePagePermission($ns."*", $new_autor, AUTH_DELETE, TRUE);
+
+            //Escribe un acceso a la página del proyecto en el archivo de atajos de de new_autor
+            $link_page = ($old_autor!=="") ? $parArr['link_page'] : $parArr['id'];
+            $params = [
+                 'id' => $parArr['id']
+                ,'autor' => $new_autor
+                ,'link_page' => $link_page
+                ,'user_shortcut' => $ns.$parArr['shortcut_name']
+            ];
+            $this->includePageProjectToUserShortcut($params);
+        }
+        return $retError;
+    }
+
+    private function _modifyACLPageToOldResponsable($old_responsable, $parArr, $project_ns) {
+        //lista de nuevos Responsables
+        $nResponsables = preg_split("/[\s,]+/", $parArr['new_responsable']);
+
+        if (! in_array($old_responsable, $nResponsables)) {
+            $oAutor = preg_split("/[\s,]+/", $parArr['old_autor']);
+            if (! in_array($old_responsable, $oAutor)) {
+                //Elimina ACL de old_responsable sobre la página del proyecto
+                $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $old_responsable);
+                if (!$ret) $retError[] = "Error en eliminar permissos a '$old_responsable' sobre '$project_ns'";
+            }
+            //Crea ACL para new_responsable sobre la página del proyecto
+            $ret = $this->_modifyACLPageToNewResponsable($parArr, $project_ns);
+            if ($ret) $retError[] = $ret;
+        }
+        return $retError;
+    }
+
+    private function _modifyACLPageToNewResponsable($parArr, $project_ns) {
+        //lista de nuevos Responsables
+        $nResponsables = preg_split("/[\s,]+/", $parArr['new_responsable']);
+        foreach ($nResponsables as $new_responsable) {
+            //Crea ACL para new_responsable sobre la página del proyecto
+            $ret = PagePermissionManager::updatePagePermission($project_ns, $new_responsable, AUTH_UPLOAD, TRUE);
+            if (!$ret) $retError[] = "Error en assignar permissos a '$new_responsable' sobre '$project_ns'";
+        }
+        return $retError;
+    }
+
+    /**
+     * Modifica los permisos en el fichero de ACL y la página de atajos del autor
+     * cuando se modifica el autor o el responsable del proyecto
+     * @param array $parArr ['id','link_page','old_autor','old_responsable','new_autor','new_responsable','userpage_ns','shortcut_name']
+     */
+    protected function modifyACLPageToUser($parArr) {
+        $project_ns = $parArr['id'].":*";
+
+        //Si se ha modificado el Autor del proyecto ...
+        if ($parArr['old_autor'] !== NULL && $parArr['old_autor'] !== "") {
+            $oAutors = preg_split("/[\s,]+/", $parArr['old_autor']);
+            foreach ($oAutors as $old_autor) {
+                $this->_modifyACLPageToOldAutor($old_autor, $parArr, $project_ns);
+            }
+        }else {
+            $ret = $this->_modifyACLPageToNewAutor($parArr, $project_ns);
+            if ($ret) $retError[] = $ret;
+        }
+
+        //Si se ha modificado el Responsable del proyecto ...
+        if ($parArr['old_responsable'] !== NULL && $parArr['old_responsable'] !== "") {
+            $oResponsables = preg_split("/[\s,]+/", $parArr['old_responsable']);
+            foreach ($oResponsables as $old_responsable) {
+                $ret = $this->_modifyACLPageToOldResponsable($old_responsable, $parArr, $project_ns);
+            }
+        }else {
+            //Crea ACL para new_responsable sobre la página del proyecto
+            $ret = $this->_modifyACLPageToNewResponsable($parArr, $project_ns);
+            if ($ret) $retError[] = $ret;
+        }
+
+        if ($retError) {
+            foreach ($retError as $e) {
+                throw new UnknownProjectException($project_ns, $e);
+            }
+        }
+    }
+
+    /**
+     * Inserta en la página de dreceres del usuario un texto con enlace al proyecto
+     * Si la página dreceres.txt del usuario no existe, se crea a partir de la plantilla 'userpage_shortcuts_ns'
+     * @param array $parArr ['id', 'autor', 'link_page', 'user_shortcut']
+     */
+    protected function includePageProjectToUserShortcut($parArr) {
+        $summary = "include Page Project To User Shortcut";
+        $comment = ($parArr['link_page'] === $parArr['id']) ? "al" : "als continguts del";
+        $shortcutText = "\n[[${parArr['link_page']}|accés $comment projecte ${parArr['id']}]]\n";
+        $text = $this->getPageDataQuery()->getRaw($parArr['user_shortcut']);
+        if ($text == "") {
+            //La página dreceres.txt del usuario no existe
+            $this->createPageFromTemplate($parArr['user_shortcut'], WikiGlobalConfig::getConf('template_shortcuts_ns', 'wikiiocmodel'), $shortcutText, $summary);
+        }else {
+            if (preg_match("/${parArr['link_page']}/", $text) === 1) {
+                $eliminar = "/\[\[${parArr['link_page']}\|.*]]/";
+                $text = preg_replace($eliminar, "", $text); //texto hallado -> eliminamos antiguo
+            }
+            $this->createPageFromTemplate($parArr['user_shortcut'], NULL, $text.$shortcutText, $summary);
+        }
+    }
+
+    /**
+     * Elimina el link al proyecto contenido en el archivo dreceres del usuario
+     */
+    private function removeProjectPageFromUserShortcut($usershortcut, $link_page) {
+        $text = $this->getPageDataQuery()->getRaw($usershortcut);
+        if ($text !== "" ) {
+            if (preg_match("/$link_page/", $text) === 1) {  //subtexto hallado
+                $eliminar = "/\[\[$link_page\|.*]]/";
+                $text = preg_replace($eliminar, "", $text);
+                $this->createPageFromTemplate($usershortcut, NULL, $text, "removeProjectPageFromUserShortcut");
+            }
+        }
+    }
+
     protected function mergeFieldNameToLayout(&$projectViewDataFields) {
         // S'afegeix la informació dels fields al layout si no existeix
         // Per ara només cal afegir la informació 'name'
         foreach ($projectViewDataFields as $tableKey => $table) {
-            // $value es el camp o taula
-
             if (!isset($table['config']) || !isset($table['config']['layout'])) {
                 continue;
             }
-
             // Recorrem tots els layouts
-
-            for ($i = 0; $i<count ($table['config']['layout']); $i++) {
+            for ($i = 0; $i < count($table['config']['layout']); $i++) {
 
                 // Recorrem totes les cel·les
-                for ($j = 0; $j<count ($table['config']['layout'][$i]['cells']); $j++)
+                for ($j = 0; $j < count($table['config']['layout'][$i]['cells']); $j++)
 
                     // Si no s'ha assignat el name al layout es cerca el name al field
                     if (!isset($table['config']['layout'][$i]['cells'][$j]['name'])) {
@@ -223,10 +369,8 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                         $layoutName = $table['config']['fields'][$fieldName]['name'];
                         $projectViewDataFields[$tableKey]['config']['layout'][$i]['cells'][$j]['name'] = $layoutName;
                     }
-
                 }
             }
-
     }
 
     protected function mergeFieldConfig($projectMetaData, &$projectViewDataFields) {
@@ -396,7 +540,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     public function getMetaDataAnyAttr($attr=NULL, $configMainKey=NULL) {
         return $this->projectMetaDataQuery->getMetaDataAnyAttr($attr, $configMainKey);
     }
-    
+
 
     /**
      * @param integer $num Número de revisiones solicitadas El valor 0 significa obtener todas las revisiones
@@ -447,7 +591,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         }
         return $ret;
     }
-    
+
     public function createTemplateDocument($data){
         //NO HI HA TEMPLATES A CREAR
     }
