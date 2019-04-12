@@ -348,6 +348,16 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         }
     }
 
+    /**
+     * Crea el archivo $destino a partir de una plantilla
+     */
+    protected function createPageFromTemplate($destino, $plantilla=NULL, $extra=NULL, $summary="generate project") {
+        $text = ($plantilla) ? $this->getPageDataQuery()->getRaw($plantilla) : "";
+        $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
+                                       PageKeys::KEY_WIKITEXT => $text . $extra,
+                                       PageKeys::KEY_SUM => $summary]);
+    }
+
     protected function mergeFieldNameToLayout(&$projectViewDataFields) {
         // S'afegeix la informació dels fields al layout si no existeix
         // Per ara només cal afegir la informació 'name'

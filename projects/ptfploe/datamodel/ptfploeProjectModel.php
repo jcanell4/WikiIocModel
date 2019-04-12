@@ -139,14 +139,4 @@ class ptfploeProjectModel extends AbstractProjectModel {
         }
     }
 
-    /**
-     * Crea el archivo $destino a partir de una plantilla
-     */
-    private function createPageFromTemplate($destino, $plantilla=NULL, $extra=NULL, $summary="generate project") {
-        $text = ($plantilla) ? $this->getPageDataQuery()->getRaw($plantilla) : "";
-        $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
-                                       PageKeys::KEY_WIKITEXT => $text . $extra,
-                                       PageKeys::KEY_SUM => $summary]);
-    }
-
 }
