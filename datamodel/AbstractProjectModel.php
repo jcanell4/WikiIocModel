@@ -257,7 +257,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * cuando se modifica el autor o el responsable del proyecto
      * @param array $parArr ['id','link_page','old_autor','old_responsable','new_autor','new_responsable','userpage_ns','shortcut_name']
      */
-    protected function modifyACLPageToUser($parArr) {
+    public function modifyACLPageToUser($parArr) {
         $project_ns = $parArr['id'].":*";
 
         $oAutors = preg_split("/[\s,]+/", $parArr['old_autor']);
