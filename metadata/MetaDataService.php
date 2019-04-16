@@ -95,7 +95,7 @@ class MetaDataService {
             $this->setMetaDataElements(json_encode([$idResource => $projectType]));
             $this->metaDataEntityWrapper = array();
             $metaDataResponseGet = null;
-            $this->render = MetaDataRenderFactory::getObject($projectType, $mdSubSet, $persistence);
+                $this->render = MetaDataRenderFactory::getObject($projectType, $mdSubSet, $persistence);
 
             $metaDataEntity = $this->metaDataRepository->getMeta($MetaDataRequest);
 
