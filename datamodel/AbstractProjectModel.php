@@ -473,9 +473,13 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     //Obtiene un array [key, value] con los datos de una revisión específica del proyecto solicitado
     public function getDataRevisionProject($rev) {
         $file_revision = $this->projectMetaDataQuery->getFileName($this->id, [ProjectKeys::KEY_REV => $rev]);
+        $subSet = $this->getMetaDataSubSet();
         $jrev = gzfile($file_revision);
-        $a = json_decode($jrev[0], TRUE);
-        return $a[$this->getMetaDataSubSet()];
+        $todo = "";
+        foreach ($jrev as $part)
+            $todo .= $part;
+        $a = json_decode($todo, TRUE);
+        return $a[$subSet];
     }
 
     //TODO PEL RAFA: AIXÒ HA DE PASSAR AL ProjectDataQuery
