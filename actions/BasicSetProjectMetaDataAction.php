@@ -9,15 +9,6 @@ include_once (WIKI_IOC_MODEL . 'actions/ProjectMetadataAction.php');
  */
 class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
 
-    protected function setParams($params) {
-        parent::setParams($params);
-        $this->getModel()->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
-                                 ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
-                                 ProjectKeys::KEY_REV             => $this->params[ProjectKeys::KEY_REV],
-                                 ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
-                               ]);
-    }
-
     /**
      * Envía los datos $metaData del proyecto al ProjectModel y obtiene la estructura y los valores del proyecto
      * @return array con la estructura y los valores del proyecto
@@ -96,7 +87,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
         }
         return $cleanArray;
     }
-    
+
     private function donaEstructuraALesDadesPlanes($array, $metadataConfig){
         $newArray = array();
         if($metadataConfig["mainType"]["typeDef"]){
@@ -117,7 +108,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
                     $currentArray = &$currentArray[$k];
                 }
                 $k = is_numeric($akeys[$lim])?(int)$akeys[$lim]:$akeys[$lim];
-                $currentArray[$k] = $value;                        
+                $currentArray[$k] = $value;
             }else{
                 $newArray[$key] = $value;
             }

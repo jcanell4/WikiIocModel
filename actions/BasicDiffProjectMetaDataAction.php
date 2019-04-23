@@ -16,14 +16,6 @@ class BasicDiffProjectMetaDataAction extends ProjectMetadataAction {
         parent::init($modelManager);
     }
 
-    protected function startProcess() {
-        $this->projectModel->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
-                                   ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
-                                   ProjectKeys::KEY_REV             => $this->params[ProjectKeys::KEY_REV],
-                                   ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
-                                ]);
-    }
-
     protected function runProcess() {
         if (!$this->projectModel->existProject()) {
             throw new PageNotFoundException($this->ProjectKeys[ProjectKeys::KEY_ID]);
@@ -77,7 +69,6 @@ class BasicDiffProjectMetaDataAction extends ProjectMetadataAction {
     }
 
     protected function responseProcess() {
-        $this->startProcess();
         $ret = $this->runProcess();
         return $ret;
     }

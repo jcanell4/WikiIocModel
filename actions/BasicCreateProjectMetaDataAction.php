@@ -6,14 +6,6 @@ include_once WIKI_IOC_MODEL."actions/ProjectMetadataAction.php";
 
 class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
 
-    protected function setParams($params) {
-        parent::setParams($params);
-        $this->getModel()->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
-                                 ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
-                                 ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
-                               ]);
-    }
-
     /**
      * Crea una estructura de directorios para el nuevo proyecto (tipo de proyecto)
      * a partir del archivo de configuración configMain.json correspondiente

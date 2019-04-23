@@ -8,12 +8,6 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
 
     protected function setParams($params) {
         parent::setParams($params);
-        $this->projectModel->init([ProjectKeys::KEY_ID              => $this->params[ProjectKeys::KEY_ID],
-                                   ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
-                                   ProjectKeys::KEY_REV             => $this->params[ProjectKeys::KEY_REV],
-                                   ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
-                                ]);
-
         if (!$this->params[ProjectKeys::KEY_DATE]) {
             $draft_date = $this->projectModel->getDraft('date');
             if ($draft_date) {
@@ -53,7 +47,7 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
                 $this->addRevisionSuffixIdToArray($response['meta']);
             }
         }
-        
+
         $this->addNotificationsMetaToResponse($response);
 
         //Añadir propiedades/restricciones del configMain para la creación de elementos dentro del proyecto
