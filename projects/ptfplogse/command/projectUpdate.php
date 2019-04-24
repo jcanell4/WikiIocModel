@@ -5,7 +5,7 @@
  */
 if (!defined('DOKU_INC')) die();
 
-class command_plugin_projectdevs_projects_ptfplogse_projectUpdate extends abstract_project_command_class {
+class command_plugin_wikiiocmodel_projects_ptfplogse_projectUpdate extends abstract_project_command_class {
 
     public function __construct() {
         parent::__construct();

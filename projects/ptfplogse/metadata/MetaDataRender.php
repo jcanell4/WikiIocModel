@@ -9,7 +9,7 @@ class MetaDataRender extends \MetaDataRenderAbstract {
 
     protected function processValues($values){
         $taulaDadesUnitats = json_decode($values["taulaDadesUD"], true);
-        $taulaCalendari = json_decode($values["taulaDadesNuclisActivitat"], true);
+        $taulaCalendari = json_decode($values["calendari"], true);
         if($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
             $hores = array();
             $hores[0] = 0;

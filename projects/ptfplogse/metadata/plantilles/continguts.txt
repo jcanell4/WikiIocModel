@@ -90,7 +90,7 @@ Cada Unitat Didàctica es divideix en diferents nuclis d'activitat:
 <WIOCCL:FOREACH var="itemUD" array="{##taulaDadesUD##}" filter="{##itemUD[bloc]##}=={##nbloc##}">
 ^UD{##itemUD[unitat didàctica]##} ^^^^
 ^  NA  ^  Nom  ^  Durada  ^  Temporalització  ^
-<WIOCCL:FOREACH var="item" array="{##taulaDadesNuclisActivitat##}" filter="{##item[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
+<WIOCCL:FOREACH var="item" array="{##calendari##}" filter="{##item[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
 |  NA{##item[nucli activitat]##}  | {##item[nom]##}  |  {##item[hores]##} h  |  <WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##item[nucli activitat]##}=={##itemsub[nucli activitat]##}"> {#_DATE("{#_FIRST({##filtered##}, "FIRST[inici]")_#}", ".")_#}-{#_DATE("{#_LAST({##filtered##}, "LAST[final]")_#}", ".")_#} </WIOCCL:SUBSET>  |
 </WIOCCL:FOREACH>
 </WIOCCL:FOREACH>
@@ -329,7 +329,7 @@ La planificació establerta per a la UD{#_SUMA({##ind##}, 1)_#} és la següent:
   :type:pt_taula, pt_planif
 
 [^ UD{##itemUD[unitat didàctica]##} ^  <WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUD##}" arrayitem="itemsub" filter="{##itemsub[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">{#_FIRST({##filtered##}, "FIRST[nom]")_#} ({#_FIRST({##filtered##}, "FIRST[hores]")_#} h)</WIOCCL:SUBSET>  ^
-<WIOCCL:FOREACH var="itemu" array="{##taulaDadesNuclisActivitat##}" filter="{##itemu[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
+<WIOCCL:FOREACH var="itemu" array="{##calendari##}" filter="{##itemu[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
 <WIOCCL:SUBSET subsetvar="activitatsPerUD" array="{##activitatsAprenentatge##}" arrayitem="itemsub" filter="{##itemsub[unitat didàctica]##}=={##itemu[unitat didàctica]##}">
 ^**NA{##itemu[nucli activitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h).     Activitats d'aprenentatge**  ^^
 | <WIOCCL:FOREACH  var="item_act" array="{##activitatsPerUD##}" filter="{##item_act[nucli activitat]##}=={##itemu[nucli activitat]##}&&{##item_act[període]##}=={##itemu[període]##}">{##item_act[eina]##}: {##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||

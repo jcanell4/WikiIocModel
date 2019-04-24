@@ -263,8 +263,8 @@
           ]
         }
       },
-      "taulaDadesNuclisActivitat": {
-        "label": "Nuclis d'Activitat (taulaDadesNuclisActivitat)",
+      "calendari": {
+        "label": "Nuclis d'Activitat (calendari)",
         "n_columns": 12,
         "type": "editableObject",
         "group": "main",

@@ -241,43 +241,6 @@
                     "type": "objectArray",
                     "typeDef":"entradaDatesJT"
                 },
-                "entradaCalendari": {
-                    "type": "object",
-                    "keys": {
-                        "nucli activitat": {
-                            "type": "number",
-                            "mandatory": true
-                        },
-                        "període": {
-                            "type": "number",
-                            "mandatory": true
-                        },
-                        "tipus període": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "descripció període": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "hores": {
-                            "type": "number",
-                            "mandatory": true
-                        },
-                        "inici": {
-                            "type": "date",
-                            "mandatory": true
-                        },
-                        "final": {
-                            "type": "date",
-                            "mandatory": true
-                        }
-                    }
-                },
-                "defCalendari": {
-                    "type": "objectArray",
-                    "typeDef":"entradaCalendari"
-                },
                 "entradaEinesAprenentatge": {
                     "type": "object",
                     "keys": {
@@ -482,7 +445,7 @@
                             "type": "defTaulaDadesUD",
                             "mandatory": true
                         },                                                
-                        "taulaDadesNuclisActivitat": {
+                        "calendari": {
                             "type": "defTaulaDadesNuclisActivitat",
                             "mandatory": true
                         },                                                
