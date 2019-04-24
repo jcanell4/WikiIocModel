@@ -1,0 +1,256 @@
+~~USE:WIOCCL~~
+<WIOCCL:SET var="tipus" type="map" value="{##tipusCicle##}" map="{''LOE'':''mòdul'',''LOGSE'':''crèdit''}">
+====== Presentació ======
+
+El currículum dels ensenyaments de formació professional específica inclou una fase de formació en els centres de treball (FCT), de la qual podran quedar totalment o parcialment exempts els alumnes que acreditin experiència professional d’acord amb allò que estableix la normativa.
+
+A l’IOC, aquest {##tipus##} es cursa de forma presencial, es a dir, l’alumne ha d’anar a fer les pràctiques a una empresa, però el seguiment és virtual. **Per poder realitzar les pràctiques l’alumne ha de tenir tramitat l’acord de col·laboració**.
+
+L’acord de col·laboració és un acord subscrit, d’acord amb un model oficial, entre el centre docent i l’empresa, a fi que l’alumne d’ensenyaments postobligatoris pugui realitzar pràctiques formatives, no retribuïdes, que completen la seva formació.
+Un acord de col·laboració no és un contracte de treball, i l’alumne en pràctiques no té la consideració de treballador per compte d’altri; per tant, no pot ser aplicada cap normativa laboral que reguli les relacions laborals.
+
+**Els objectius de la formació pràctica en centres de treball són:**
+  - Desenvolupar, en un context laboral, els aprenentatges curriculars adquirits.
+  - Contrastar les capacitats i els interessos amb un entorn real de treball com a suport a l’orientació professional.
+  - Integrar-se en les funcions i els processos de treball i en el marc de relacions socials i laborals que tenen lloc en les empreses i entitats.
+  - Assolir nous coneixements i capacitats relacionats amb els objectius d’aprenentatge establerts en el currículum dels ensenyaments que s’estan cursant.
+  - Adquirir coneixements i habilitats que facilitin la transició a la vida activa i la inserció laboral.
+
+L'IOC està incorporat a la plataforma **qBid**, com la resta d'instituts d'FP de Catalunya. Això comporta que les entitats on faran pràctiques els alumnes han d'estar **homologades** pel Departament d'Ensenyament. L'homologació d'una entitat significa que reuneix les condicions d'idoneïtat per a la realització de les pràctiques.
+
+===== Assegurances =====
+**Assegurança escolar**
+
+L'alumne menor de 28 anys està cobert per l'assegurança escolar. L'atenció sanitària serà oferta a través dels centres sanitaris públics i concertats.
+
+Com indica la Normativa de la formació en centres de treball, instruccions d'aplicació curs 2017-2018: //"per a l'alumnat menor de 28 anys i immigrant és requisit indispensable el permís de residència, és a dir, la residència legal a Espanya"//.
+
+Els alumnes més grans de 28 anys i els alumnes majors de 18 anys sense residència legal a Espanya, que estiguin matriculats en estudis d’ensenyaments professionals, batxillerat i en altres programes formatius autoritzats o organitzats pel Departament d’Ensenyament, que no treballin i no disposin de cap cobertura assistencial, han de disposar d’una pòlissa d’assegurança particular o col·lectiva amb la mateixa cobertura assistencial per accidents que tenen a l’assegurança escolar i presentar-ne una còpia al centre. Mireu l’enllaç següent:
+
+[[http://catsalut.gencat.cat/ca/detalls/articles/article_access_no_assegurats-00001]]
+
+Els alumnes que disposin de la targeta sanitària del Servei Català de la Salut tenen coberta l’assistència sanitària, i poden iniciar les pràctiques, però no tenen dret a les prestacions singulars que dóna l’assegurança escolar obligatòria.
+
+**Assegurança escolar per a alumnes en pràctiques fora d'Espanya**
+
+L’assegurança escolar és vàlida en el territori nacional, els desplaçaments a qualsevol país **no estan protegits per l’assegurança escolar**. En aquests casos, tots els alumnes han de subscriure una **assegurança d’assistència en viatge** per garantir les cobertures de l’assegurança escolar i de despeses de repatriació, trasllats de familiars en cas d’estades hospitalàries llargues, pèrdua d’equipatge, etc.
+
+A més a més, en  desplaçaments als estats membres de la Unió Europea, d’acord amb el Reglament 307/99, esmentat anteriorment, cal tramitar la targeta sanitària europea (TSE).
+
+En el cas concret d'**Andorra**, consulteu amb el vostre/a tutor de pràctiques.
+
+**Pòlisses complementàries**
+
+El Departament d'Ensenyament té subscrites dues pòlisses complementàries:
+  * **Pòlissa d'assegurança d'accidents personals**: Mort o invalidesa durant l'activitat ocupacional, així com //in itinere//. Per a alumnes d'ensenyaments secundaris postobligatoris que facin pràctiques en empreses.
+  * **Pòlissa d'assegurança de responsabilitat civil i patrimonial**: Danys corporals o materials patits per terceres persones i causats, per acció o per omissió, per a l'alumne en practiques, cobrint les conseqüències econòmiques que se'n deriven. Cobreix tots els alumnes de centres públics de titularitat de la Generalitat de Catalunya.
+
+====== Drets i obligacions de l'alumne (nou) ======
+
+Tal com es recull a l'ordre ENS/241/2015, de 27 de juliol, l'article 19 indica:
+  - L'alumne no té, en cap cas, vinculació o relació laboral amb l'empresa.
+  - L'alumne no ha de percebre cap quantitat econòmica de l'empresa o entitat en concepte de retribució per la realització de la formació en centres de treball.
+  - L'alumne està obligat a:
+    - Assistir a les pràctiques acordades, complir l'horari establert i informar de les activitats diàries executades d'entre les previstes en el pla d'activitats.
+    - Complimentar el quadern de pràctiques i tenir el control de les hores realitzades i de les hores pendents per poder finalitzar el mòdul de l'FCT.
+    - Respectar les normes, la política de protecció de dades i de confidencialitat i la imatge corporativa establerta per l'empresa o entitat col·laboradora.
+    - Respectar la legislació aplicable en matèria de prevenció de riscos laborals.
+
+====== Planificació ======
+::table:T01
+  :title:Planificació
+  :type:pt_taula
+[^ Fase 1 ^ Preparació de les pràctiques ^^
+^ Recerca d'empresa ^^^
+<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">| **Resultat d'aprenentatge** | **Activitats i/o tasques** | **Recursos** |
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##tipusCicle##}==''LOGSE''">| **Objectius** | **Activitats i/o tasques** | **Recursos** |
+</WIOCCL:IF>
+|<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">Identifica les característiques del mercat o entorn, tipus d'usuaris i proveïdors.</WIOCCL:IF>
+<WIOCCL:IF condition="{##tipusCicle##}==''LOGSE''">Participar en la recerca del lloc de pràctiques.</WIOCCL:IF>
+|\\
+  - Certificat negatiu del Registre central de delinqüents sexuals
+    * En el cas que feu la **formació en centres de treball (FCT) en una empresa o entitat en què l’activitat impliqui**, per la seva naturalesa intrínseca, **un contacte habitual amb menors**, ha d’acreditar davant d’aquesta, amb caràcter previ a l’inici de les pràctiques, que disposa del certificat negatiu del Registre central de delinqüents sexuals, d’acord amb el que estableix la Llei 26/2015, de 28 de juliol, de modificació del sistema de protecció a la infància i l’adolescència. A l'aula disposeu d'informació per aconseguir aquest certificat.
+    * Aquest certificat es pot obtenir presencialment o per via telemàtica. Si l'alumne obté el certificat presencialment, haurà de presentar a l'IOC l'original i una còpia, que serà compulsada i arxivada a l'expedient de l'alumne. Un cop obtinguda la còpia compulsada, aquesta s'haurà de deixar en el mateix centre a l'atenció del/la coordinador/a de cicle d'FCT.\\ Si el certificat és digital, atès que el document es pot validar de forma telemàtica, no caldrà la compulsa del mateix i únicament l'haurà d'enviar per correu intern al seu tutor d'FCT de l'IOC. L'IOC l’arxivarà al seu expedient. A partir d'aquest moment es podà procedir a gestionar l’acord de col·laboració.
+    * **En cas de no disposar d'aquest certificat, l’alumne no pot iniciar les pràctiques.**
+  - Proposeu una empresa per realitzar les pràctiques:
+    * En el llistat d'empreses homologades per al vostre cicle que us haurem facilitat des de tutoria, busqueu alguna que us pot anar bé.
+    * Les empreses homologades poden anar variant al llarg del curs i una empresa homologada pot passar a deshomologar-se automàticament, si fa un temps que no rep alumne en pràctiques. Escriviu al vostre tutor d'FCT, indicant-li en quina empresa i centre de treball voleu fer les pràctiques, per tal que us confirmi l'homologació de l'empresa.
+    * Poseu-vos en contacte amb l'empresa que us hagi confirmat el vostre tutor, dient que sou estudiant de l'IOC i que voleu fer-hi pràctiques. Si l'empresa us dóna el vist i plau, acordeu un dia per fer una entrevista i pacteu les dates, horaris i activitats a realitzar durant el període de pràctiques. A l'entrevista porteu el **document formalització d’acord de col·laboració** i empleneu-lo amb ells. Porteu també el **Pla d'activitats** del vostre cicle que teniu a l'aula d'FCT i, si és possible, que l'empresa seleccioni les activitats que dureu a terme durant les vostres pràctiques, si no és així, hauran d'omplir el pla d'activitats més endavant.
+    * Aviseu al vostre tutor d'FCT de l'IOC i envieu-li el document de formalització de l’acord de col·laboració, perquè es posi en contacte amb l'empresa i iniciï les gestions per tramitar l’acord de col·laboració.
+    * El temps que pot trigar un acord de col·laboració des de que aviseu al vostre tutor fins que està tramitat pot ser **de dues o tres setmanes**.
+    * Si proposeu una empresa que no estigui al llistat facilitat pel vostre tutor i, per tant, que no estigui homologada, aquesta s'haurà de validar i homologar. A l'entrevista també haureu de portar els documents REF 01, REF02, REF03C- Compromís. El procés d'homologació d'empreses no depèn directament de l'IOC i hi participen altres agents. Per aquest motiu no us podem assegurar quan començareu les pràctiques; aquestes es poden veure endarrerides entre 15 dies i 1 mes.
+    * Quan l’acord de col·laboració estigui tramitat, des de tutoria d'FCT us avisaran, així com a l'empresa. Us l'enviarem al vostre domicili. Un cop el rebeu, podreu començar les pràctiques a partir de la data d'inici de l’acord de col·laboració.
+**Recordeu: No podeu començar les pràctiques fins que rebeu l’acord al vostre domicili.**| Enllaços a l'aula per obtenir el certificat negatiu del registre central de delinqüents sexuals
+Llistat d'empreses homologades
+Document formalització d’acord de col·laboració
+Pla d'activitats del cicle
+REF00, REF01, REF02, REF03C|
+^Tramitació de l’acord de col·laboració^^^
+<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">| **Resultat d'aprenentatge** | **Activitats i/o tasques** | **Recursos** |
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##tipusCicle##}==''LOGSE''">| **Objectius** | **Activitats i/o tasques** | **Recursos** |
+</WIOCCL:IF>
+| Col·labora en les gestions per la tramitació de l’acord de col·laboració.<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">
+
+Aplica les normes internes i externes vinculades a l’activitat. </WIOCCL:IF>
+| Un cop rebeu l’acord de col·laboració i el pla d'activitats per mitjà del correu ordinari, haureu de fer el següent:
+  - Reviseu que les dades siguin correctes. Si no és així comuniqueu-ho el més ràpidament possible al vostre tutor d'FCT.
+  - Signeu les 3 còpies de l’acord de col·laboració.
+  - Porteu l’acord i el pla d'activitats a l'empresa per signar i posar-hi segell de l'empresa a les 3 còpies:
+    * Una còpia de l’acord de col·laboració i pla d'activitats és per a l'empresa.
+    * Una altra és per a l'alumne i
+    * Una altra és per al centre.
+Reviseu que a totes les còpies hi hagi les 3 signatures i el segell de l'empresa.
+  - Retorneu una de les còpies de l’acord de col·laboració, per correu ordinari, a l'IOC:
+
+Institut Obert de Catalunya\\
+A/A {##coordinador##}\\
+Av. Paral·lel, 71\\
+08004 Barcelona\\
+\\
+Recordeu:
+  * Per començar les pràctiques ha d’estar gestionat l’acord de col·laboració i l'heu hagut de rebre al vostre domicili.
+  * L’FCT es fa en un **sol acord de col·laboració**, només s’acceptarà un segon acord quan suposi formació en un àmbit diferent del que cobria el primer acord de col·laboració.
+  * Només es comptabilitzaran les pràctiques realitzades dins de les dates i horari que figura en l’acord de col·laboració.
+  * Per ser vàlid, l’acord de col·laboració ha d’estar signat per les tres parts implicades.
+  * Abans o a l'inici de les pràctiques, aprofiteu per presentar-vos i interessar-vos per l'empresa.
+  | Acord de col·laboració i pla d'activitats del cicle.\\ Tutor d’FCT|
+^ Fase 2 ^ Desenvolupament de les pràctiques a l'empresa ^^
+^ Pla d'activitats formatives a l'empresa^^^
+<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">| **Resultat d'aprenentatge** | **Activitats i/o tasques** | **Recursos** |
+</WIOCCL:IF><WIOCCL:IF condition="{##tipusCicle##}==''LOGSE''">| **Objectius** | **Activitats i/o tasques** | **Recursos** |
+</WIOCCL:IF>|<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">\\
+  - Identifica l'estructura, l'organització i les condicions de treball de l'empresa, centre o servei, relacionant-ho amb les activitats que realitza</WIOCCL:IF><WIOCCL:IF condition="{##tipusCicle##}==''LOGSE''">\\
+  - Objectius terminals del corresponent cicle formatiu.</WIOCCL:IF>\\
+|\\
+  - Presenteu-vos a l'empresa en la data d'inici indicada al vostre acord de col·laboració de pràctiques, sempre que l'hagueu rebut prèviament a casa.\\
+  - Recordeu que heu de:
+    * Mostrar interès i bona disposició en la realització de les activitats a l'empresa acordades pels vostres tutors/es.
+    * Prestar atenció als missatges del vostre tutor al tauler i a la vostra bústia personal.
+| Comunicació amb el tutor\\
+Pla d'activitats per al cicle formatiu consensuat amb l'empresa |
+^ Quadern virtual de pràctiques ^^^
+<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">| **Resultat d'aprenentatge** | **Activitats i/o tasques** | **Recursos** |
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##tipusCicle##}==''LOGSE''">| **Objectius** | **Activitats i/o tasques** | **Recursos** |
+</WIOCCL:IF>
+|<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">\\
+  - Desenvolupa actituds ètiques i laborals pròpies de l’activitat professional d’acord amb les característiques del lloc de treball i els procediments establerts pel centre de treball.
+  - Realitza les activitats formatives de referència seguint protocols establerts pel centre de treball.</WIOCCL:IF>
+<WIOCCL:IF condition="{##tipusCicle##}==''LOGSE''">Complimentar el quadern virtual de pràctiques.</WIOCCL:IF>\\
+| Quan el vostre tutor hagi tramitat l’acord de col·laboració, rebreu les claus d'accés a través del vostre correu electrònic extern (gmail, hotmail,...) per accedir a la plataforma qBID. En aquesta plataforma trobareu el vostre quadern de pràctiques: [[https://www.empresaiformacio.org/sBIDAlumne/]].
+A partir de la data d'inici de pràctiques que s'indica a l’acord de col·laboració, haureu d'**omplir diàriament el quadern de pràctiques, informant de les activitats del pla d'activitats pactat realitzades**, gestionant els informes periòdics, etc. A l'aula d'FCT trobareu un Manual d'instruccions de la plataforma qBID per l'alumne, amb instruccions sobre com gestionar les pràctiques a través de la plataforma qBID.
+Quan es tramita l’acord de col·laboració, s'hi afegeixen més hores de pràctiques de les què realment correspondrien, per si us poseu malalt/a o hi ha alguna altra incidència. Podria ser que finalitzeu les pràctiques abans o després de la data final que figura en l’acord de col·laboració.
+  * En cas que **finalitzeu el total d'hores d'FCT abans de la data de finalització de l’acord de col·laboració**, comunique-ho als vostres dos tutors (IOC i empresa) amb una o dues setmanes d'antelació, per poder preparar el tancament del quadern de pràctiques.
+  * Si preveieu que **en la data final de l’acord de col·laboració no haureu realitzat el total d'hores de pràctiques** que us corresponen, comuniqueu-ho als tutors/es amb 1 o 2 setmanes d'antelació, per tal que hi hagi temps suficient per tramitar una **pròrroga de l’acord de col·laboració** per poder finalitzar les pràctiques
+**Un cop finalitzada el total d'hores, acomiadeu-vos** del vostre tutor d'empresa i de les persones amb les quals heu tingut relació. Les pràctiques acostumen a ser una experiència personal i professional molt positiva, tant per a l'alumne com per a l'empresa. A la vegada, són una via molt important de trobar feina per als titulats en FP. Si ho considereu oportú, aquest és un bon moment per deixar el vostre currículum. L'empresa ha tingut l'opció de veure-us “in situ”, posant en pràctica moltes de les competències que heu adquirit al llarg del cicle.| Quadern de pràctiques
+Manual d'instruccions de la plataforma qBID per l'alumne|
+^ Fase 3 ^ Valoració del mòdul^^
+<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">| **Resultat d'aprenentatge** | **Activitats i/o tasques** | **Recursos** |
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##tipusCicle##}==''LOGSE''">| **Objectius** | **Activitats i/o tasques** | **Recursos** |
+</WIOCCL:IF>
+| Valora la formació adquirida durant el procés de pràctiques. | **Empleneu el qüestionari final de l'FCT**. Es tracta d'un qüestionari anònim que trobareu a la plataforma qBid per valorar la formació pràctica a l'empresa.| Qüestionari satisfacció alumnes |]
+
+:::
+
+====== Temporització ======
+La durada del {##tipus##} d’FCT és l’especificada en el disseny curricular de cada cicle formatiu, per a aquest cicle és de {##durada##} hores. Aquesta durada serà inferior si l’alumne té concedida una exempció parcial. La durada de les pràctiques de cada alumne quedarà establerta en el seu quadern virtual.
+
+Només es podran computar les hores de pràctiques realitzades dintre dels terminis i de l’horari que figurin en l’acord de col·laboració. En cap cas es poden fer pràctiques fora de les dates o de l’horari establert,  l'assegurança no les cobreix i no computen com a fetes.
+
+Les pràctiques s’han de fer des de les 8 hores fins a les 22 hores i es podran dur a terme de dilluns a dissabte, màxim 5 dies a la setmana, excepte els dies festius.
+
+**Distribució temporal estàndard:** fins a quatre hores diàries, de manera simultània amb les hores lectives del cicle, sense ultrapassar les vint hores setmanals.
+
+**Distribució temporal intensiva:**
+  * **L'alumne només cursa el {##tipus##} d'FCT**. Pot fer fins a vuit hores diàries, sense ultrapassar les quaranta hores setmanals.
+  * **L'alumne cursa altres {##tipus##}s a l'IOC i vol fer més de 4 hores de pràctiques al dia**. Pot fer fins a quaranta-cinc hores a la setmana en el conjunt d’hores d'FCT i hores dels altres {##tipus##}s. Cal que l'alumne indiqui al document de formalització de l’acord de col·laboració a quins {##tipus##}s està matriculat i les hores de dedicació setmanal per a cada {##tipus##}.
+
+Es podran fer pràctiques des del setembre (a partir de la data d'obertura de l'aula d'FCT) fins a finals de juny. Durant els mesos de juliol i agost no es poden fer pràctiques. En alguns casos, de forma excepcional i prèvia valoració de cada cas particular, es podran fer pràctiques al juliol, atenent als requisits que a continuació s'indiquen:
+
+  - **Horari laboral de l'alumne:** Si per motius laborals l'alumne no pot realitzar pràctiques del setembre fins al juny, haurà de presentar un certificat de l'empresa on es faci constar el seu horari laboral en què s'acrediti que no pot fer pràctiques durant la franja horària de 8:00 a 22:00 hores.
+  - **Hores de pràctiques pendents:** Si queden poques hores per finalitzar la totalitat de les hores de pràctiques del {##tipus##}.
+
+L'inici del {##tipus##} no suposa l'inici de les pràctiques a l'empresa. Les pràctiques s'iniciaran en el moment en què s'hagi gestionat l’acord de col·laboració, d'acord amb les dates d'inici i final de  l’acord de col·laboració.
+
+Les pràctiques es podran realitzar al llarg de quatre semestres. Transcorreguts aquests, si no s'han realitzat les hores de pràctiques corresponents, l'alumne es podrà matricular novament del {##tipus##} per completar les hores de pràctiques pendents.
+
+Si durant tot un semestre no es realitzen pràctiques, l'alumne s'haurà de matricular novament del {##tipus##} en el semestre que les vulgui començar.
+
+**La data màxima per poder començar les pràctiques aquest semestre serà el dia {##dataMaxIniciFCT##}**, per tant, les gestions prèvies per tramitar l’acord de col·laboració s'hauran de realitzar dues o tres setmanes abans.
+
+
+
+====== Metodología ======
+L'alumne en relació al {##tipus##} d'FCT disposa de 2 tutors/es, el del centre i el de l'empresa. Prèviament a l'inici de les pràctiques els dos tutors es posen en contacte i acorden el pla d’activitats, en funció del currículum del cicle i de les possibilitats de l’empresa.
+
+El pla d’activitats comprèn tot allò que l’alumne ha d’experimentar en el lloc de pràctiques i queda registrat en el **Quadern de seguiment virtual**. El pla d’activitats d’un alumne es pot portar a terme en una o més empreses i s'obrirà un acord de col·laboració/quadern per cada empresa.
+
+Les tasques de les persones que intervenen en el {##tipus##} d'FCT són les que figuren a continuació:
+
+  - Tutor del centre:
+    * És la persona de referència per a l'alumne en tots els aspectes relacionats amb l'FCT. Per tant l’alumne consultarà amb el seu tutor d’FCT qualsevol dubte o incidència relacionada amb les pràctiques.
+    * És el responsable de fer el seguiment, l'avaluació i el control de la fase de formació pràctica en el centre de treball.
+  - Tutor de l'empresa:
+    * És la persona responsable de l'alumne a l'empresa i li encomanarà les tasques relacionades amb l'especialitat segons el seu nivell professional i el pla d'activitats establert.
+    * És qui manté els contactes periòdics amb el tutor del centre en els quals es valorarà l'estada de l'alumne a l'empresa.
+    * És qui fa el seguiment de les activitats formatives en el quadern virtual de pràctiques de l'alumne.
+    * És qui farà una valoració dels resultats d'aprenentatge/objectius terminals de l'alumne i de les activitats realitzades d'acord amb el pla d'activitats acordat. Aquesta valoració quedarà reflectida en el quadern virtual.
+  - Alumne:
+L’actuació de l’alumne es concreta en:
+    * Col·laborar en la gestió de les seves pràctiques.
+    * Anar a l’empresa a fer les pràctiques de forma presencial, realitzant les activitats pactades pels dos tutors i que figuren en el seu pla d’activitats, dintre de l’horari establert en l’acord de col·laboració.
+    * Entrar periòdicament a la plataforma en la qual es troba el seu quadern virtual ([[https://www.empresaiformacio.org/sBIDAlumne/]]) i complimentar-ho d’acord amb les instruccions donades.
+    * Comunicar qualsevol dubte o incidència en relació al {##tipus##} al seu tutor de pràctiques del centre.
+
+L’alumne durant el període de pràctiques haurà de respectar les següents **normes**:
+    * L'assistència a l'empresa durant el període de pràctiques és obligatòria.
+    * En cas d'absència ineludible, s'haurà de comunicar al tutor d'empresa i, si aquest així ho demana, se li haurà de lliurar el justificant corresponent. Si l’absència és d’una setmana o més, l'alumne també informarà de l'absència al tutor del centre.
+    * No es poden recuperar les absències fora de l'horari establert, l'assegurança no les cobreix.
+    * L’alumne seguirà sempre les indicacions de la persona responsable i tindrà un tracte educat i respectuós amb el personal de l’empresa i, si és el cas, amb els clients, proveïdors, etc. També tindrà cura de les instal·lacions i del material de l’empresa.
+    * En cas d’accident en hores de pràctiques s’ha d’anar al centre sanitari de la xarxa pública o concertada més proper. L’assegurança escolar cobreix els alumnes menors de 28 anys; els majors de 28 anys han de disposar de cobertura sanitària pròpia que cobreixi l’assistència mèdica en cas d’accident.
+    * El mal comportament de l’alumne a l’empresa serà motiu de falta greu amb la corresponent sanció i/o l’anul·lació de l’acord de col·laboració i amb la possibilitat d'una qualificació negativa (E) en el {##tipus##} d’FCT.
+
+====== Avaluació ======
+En l'avaluació de l'alumne el tutor d'FCT tindrà en compte:
+  * La valoració del tutor d’empresa en relació a les actituds (assistència, puntualitat, responsabilitat, etc.), <WIOCCL:IF condition="{##tipusCicle##}==''LOE''">als resultats d'aprenentatge</WIOCCL:IF><WIOCCL:IF condition="{##tipusCicle##}==''LOGSE''">els objectius terminals</WIOCCL:IF> i a les activitats formatives acordades en el pla d'activitats. Aquestes valoracions s’especificaran en el quadern de seguiment virtual de les  pràctiques segons el barem establert:
+
+    * A: Molt bona
+    * B: Bona/bé
+    * C: Suficient
+    * D: Passiva
+    * E: Negativa
+
+  * El grau d'implicació i participació de l'alumne al llarg de tot el {##tipus##} (emplenant el quadern de seguiment puntualment, lliurant la documentació sol·licitada, col·laborant en la tramitació de l’acord de col·laboració i en tot allò que els tutors/es li demanin).
+
+**Qualificació:**
+La qualificació del {##tipus##} de Formació en centres de treball s’expressarà en els termes “Apte” o “No apte”.
+
+La superació del {##tipus##} d'FCT requereix haver realitzat la totalitat de les hores de formació a l’empresa i haver estat avaluat com a “Apte”. En aquest cas la qualificació anirà acompanyada d’una valoració orientadora del nivell d’assoliment de les competències professionals recollides en el quadern de seguiment, en els termes de “Suficient”, “Bé” i “Molt bé”.
+
+En el cas d'obtenir una **valoració negativa** a un dossier d'FCT, l'alumne haurà de recuperar les hores realitzades i valorades en aquell dossier. L'alumne podrà ser avaluat negativament d'un dossier d'FCT, en el mateix centre i en un mateix cicle formatiu, un màxim de dues vegades. L'alumne que hagi tingut dues avaluacions negatives s'haurà de matricular d'FCT en un altre centre educatiu.
+
+La qualificació del {##tipus##} es podrà consultar en el mateix  en l'expedient acadèmic de Secretaria.
+
+Per poder obtenir la qualificació d'Apte l'alumne ha de:
+
+    * Realitzar el total d'hores del {##tipus##}, o lecons hores necessàries en funció de l'exempció atorgada.
+    * Realitzar totes les gestions del quadern de pràctiques
+    * Obtenir una valoració positiva per part de l'empresa i del tutor d'FCT de l'IOC del total de les hores del {##tipus##} de FCT.
+    * Retornar a l'IOC tota la documentació signada i segellada relativa a  acords de col·laboració, pròrrogues, plans d'activitats i en cas necessari, REF02 i REF03 de compromís.
+
+La data límit per obtenir la qualificació d'Apte del {##tipus##} de FCT el <WIOCCL:IF condition="{##semestre##}==''1''">primer</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==''2''">segon</WIOCCL:IF> semestre del curs {##anyCursInici##} - {##anyCursFinal##} és {##dataMaxApteFCT##}. L'alumne que obtingui la qualificació d'Apte més enllà d'aquesta data, haurà d'esperar per obtenir l'apte al termini extraordinari d'aquest semestre o al termini ordinari del semestre següent.
+
+====== Dates Clau ======
+A continuació teniu el calendari de les dates clau del {##tipus##}.
+
+::table:T02
+  :title:Dates clau
+  :type:pt_taula
+^  Data inici FCT  ^  Data màxima per iniciar FCT al <WIOCCL:IF condition="{##semestre##}==''1''">primer</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==''2''">segon</WIOCCL:IF> semestre  ^  Data màxima per obtenir apte a secretaria  ^
+| {##dataIniciFCT##} |  {##dataMaxIniciFCT##}  |  {##dataMaxApteFCT##}  |
+:::
+
+</WIOCCL:SET>

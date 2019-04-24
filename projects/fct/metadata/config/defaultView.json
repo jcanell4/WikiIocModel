@@ -1,0 +1,180 @@
+{
+  "definition": {
+    "n_columns": 12,
+    "n_rows": 10,
+    "chars_column": 10,
+    "rows_row": 1
+  },
+  "groups": {
+    "authorship": {
+      "parent": "",
+      "label": "Autoria",
+      "n_columns": 12,
+      "frame": true,
+      "config":{
+        "collapsable":true,
+        "collapsed":false
+      }
+    },
+    "dadesBasiques": {
+      "parent": "",
+      "label":"Dades bàsiques",
+      "n_columns": 12,
+      "n_rows": 1,
+      "frame": true,
+      "config":{
+        "collapsable":true,
+        "collapsed":false
+      }
+    },
+    "avaluacio": {
+      "parent": "",
+      "label": "Sobre l'avaluació",
+      "n_columns": 12,
+      "n_rows": 1,
+      "frame": true,
+      "config":{
+        "collapsable":true,
+        "collapsed":false
+      }
+    }
+  },
+  "fields": {
+    "tipusCicle":{
+      "type":"select",
+      "n_columns": 3,
+      "label": "LOE o LOGSE (tipusCicle)",
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title" : "indiqueu si es tracta d'un cicle LOE o LOGSE."
+      },
+      "config":{
+        "options":[
+          {"value":"LOE"},
+          {"value":"LOGSE"}
+        ]
+      }
+    },
+    "cicle": {
+      "label" : "Nom del cicle (cicle)",
+      "n_columns": 3,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "indiqueu el nom del cicle"
+      }
+    },
+    "durada": {
+      "label" : "Durada (durada)",
+      "n_columns": 3,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Indiqueu la durada en hores"
+      }
+    },
+    "responsable": {
+      "type": "amd",
+      "label": "Responsable de la creació (responsable)",
+      "n_columns": 4,
+      "group": "authorship",
+      "props": {
+        "required": true
+      },
+      "config":{
+        "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+        "class" : {
+          "edit": "IocFilteredList",
+          "view": "IocListSelectedItems"
+        },
+        "data": {
+          "ns":"",
+          "buttonLabel": "Cercar",
+          "fieldName": "responsable",
+          "dialogTitle" : "Cercar responsable",
+          "dialogButtonLabel" : "Afegir responsable",
+          "data": "",
+          "dataQuery": {
+            "filter": ""
+          },
+          "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+          "fields": {
+            "username": "Nom d'usuari",
+            "name": "Nom"
+          },
+          "fieldId": "username",
+          "defaultEntryField": "name"
+        }
+      }
+    },
+    "autor": {
+      "type": "amd",
+      "label": "Autor (autor)",
+      "n_columns": 4,
+      "group": "authorship",
+      "props": {
+        "required": true
+      },
+      "config":{
+        "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+        "class" : {
+          "edit": "IocFilteredList",
+          "view": "IocListSelectedItems"
+        },
+        "data": {
+          "ns":"",
+          "buttonLabel": "Cercar",
+          "fieldName": "autor",
+          "dialogTitle" : "Cercar autor",
+          "dialogButtonLabel" : "Afegir autor",
+          "data": "",
+          "dataQuery": {
+            "filter": ""
+          },
+          "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+          "fields": {
+            "username": "Nom d'usuari",
+            "name": "Nom"
+          },
+          "fieldId": "username",
+          "defaultEntryField": "name"
+        }
+      }
+    },
+    "coordinador": {
+      "label" : "Coordinador (coordinador)",
+      "n_columns": 4,
+      "group": "authorship",
+      "props": {
+        "required": true,
+        "title": "Indiqueu el nom del coordinador"
+      }
+    },
+    "plantilla": {
+      "type" : "hidden"
+    },
+    "fitxercontinguts": {
+      "type" : "hidden"
+    },
+    "semestre": {
+      "type" : "hidden"
+    },
+    "dataIniciFCT": {
+      "type" : "hidden"
+    },
+    "dataMaxIniciFCT": {
+      "type" : "hidden"
+    },
+    "dataMaxApteFCT": {
+      "type" : "hidden"
+    },
+    "anyCursInici": {
+      "type" : "hidden"
+    },
+    "anyCursFinal": {
+      "type" : "hidden"
+    }
+
+  }
+}

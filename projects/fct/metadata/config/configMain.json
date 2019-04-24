@@ -1,0 +1,115 @@
+{
+  "metaDataClassesNameSpaces": [
+    {
+      "main": {
+        "MetaDataDAO": "defaultProject",
+        "MetaDataEntity": "defaultProject",
+        "MetaDataRender": "fct"
+      }
+    }
+  ],
+  "metaDataProjectConfig": [
+    {
+      "main": {
+        "projectTypeConfigFile": "admconfig:fct"
+      }
+    }
+  ],
+  "metaDataProjectStructure": [
+    {
+      "main": "meta.mdpr",
+      "versions": {
+        "templates": {
+          "continguts": 0
+        }
+      },
+      "mainType": {
+        "type": "object",
+        "typeDef": "pla"
+      },
+      "typesDefinition": {
+        "pla": {
+          "type": "object",
+          "keys": {
+            "semestre": {
+              "type": "number",
+              "mandatory": true,
+              "default": 1
+            },
+            "tipusCicle": {
+              "type": "string",
+              "mandatory": true,
+              "default": "LOE"
+            },
+            "cicle": {
+              "type": "string",
+              "default": "MXX Indiqueu el nom crèdit o mòdul",
+              "mandatory": true
+            },
+            "durada": {
+              "type": "string",
+              "mandatory": true,
+              "default": 0,
+              "props": {
+                "readonly": true
+              }
+            },
+            "any": {
+              "type": "number",
+              "mandatory": true,
+              "default": 2019
+            },
+            "anyCursInici": {
+              "type": "number",
+              "mandatory": true,
+              "default": 0
+            },
+            "anyCursFinal": {
+              "type": "number",
+              "mandatory": true,
+              "default": 0
+            },
+            "dataIniciFCT": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "dataMaxIniciFCT": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "dataMaxApteFCT": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "plantilla": {
+              "type": "string",
+              "mandatory": true,
+              "default": "plantilles:docum_ioc:pla_treball_fp:logse:continguts"
+            },
+            "autor": {
+              "type": "string",
+              "mandatory": true
+            },
+            "responsable": {
+              "type": "string",
+              "struc_chars": "40",
+              "mandatory": true
+            },
+            "coordinador": {
+              "type": "string",
+              "mandatory": true
+            },
+            "fitxercontinguts": {
+              "type": "string",
+              "mandatory": true,
+              "default": "continguts"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
