@@ -19,6 +19,8 @@ require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataExceptions.php');
 
 abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     public static $DEFAULT_SINGLE_VALUES = ["string"=>"", "number"=>0, "boolean"=>false, "date"=>""];
+    private $projectId;
+    private $values;
     
 //
 //    /**
@@ -43,12 +45,13 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
      */    
     public function render($metaDataEntityWrapper) {
         $objAux = json_decode($metaDataEntityWrapper[0]->getArrayFromModel(), true);
+        $this->projectId = $objAux["idResource"];
         $structure = json_decode($objAux['metaDataStructure'], true);
         $types = json_decode($objAux['metaDataTypesDefinition'], true);
-        $values = $this->processValues(json_decode($objAux['metaDataValue'], true));
+        $this->values = $this->processValues(json_decode($objAux['metaDataValue'], true));
 
         $returnTree = [];
-        $returnTree = $this->runParser($values, $structure, $types);
+        $returnTree = $this->runParser($this->values, $structure, $types);
 
         return $returnTree;
     }
@@ -58,6 +61,7 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     }
     
     protected function runParser($values, $structure, $types){
+        //retorna els valors estructurats d'acord amb el seu tipus, el valor emmagatzemat, el valor per defecte i les seves propietats
         return $this->_runParser($values, $structure, $types, "");
     }
 
@@ -218,7 +222,9 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     }
 
     private function _getDefaultSingleArray($properties, $types, $defaultRow){
-        if(isset($properties['default'])){
+        if(isset($properties["calculatedDefault"])){
+            $_values = $this->getCalculateValue($properties["calculatedDefault"]);
+        }elseif(isset($properties['default'])){
             $_values = $properties['default'];
         }else{
             $_values= [];
@@ -245,7 +251,11 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
 
     private function _getSingleValue($values, $properties, $types, $dv){
         $_values = [];
-        $_values['default'] = isset($properties['default'])?$properties['default']:$dv;
+        if(isset($properties["calculatedDefault"])){
+            $_values['default'] = $this->getCalculateValue($properties["calculatedDefault"]);
+        }else{
+            $_values['default'] = isset($properties['default'])?$properties['default']:$dv;
+        }
         if ($values) {
             $_values['value'] = $values;
         }else{
@@ -255,8 +265,12 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     }
 
     private function _getDefaultObjectValue($properties, $types, $defRow=FALSE){
-        if(!$defRow && isset($properties['default'])){
-            $_values = $properties['default'];
+        if(!$defRow && (isset($properties['default']) || isset($properties['calculatedDefault']))){
+            if(isset($properties['calculatedDefault'])){
+                $_values = $this->getCalculateValue($properties["calculatedDefault"]);
+            }else{
+                $_values = $properties['default'];
+            }
         }else{
             $_structure = $this->_getObjectStructureKeys($properties, $types);
             $_values = [];
@@ -279,7 +293,9 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     }
 
     private function _getDefaultObjectArrayValue($properties, $types, $defaultRow){
-        if(isset($properties['default'])){
+        if(isset($properties["calculatedDefault"])){
+            $_values = $this->getCalculateValue($properties["calculatedDefault"]);
+        }elseif(isset($properties['default'])){
             $_values = $properties['default'];
         }else{
             $_values= [];
@@ -303,4 +319,22 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
         }
         return $_values;
     }
+    
+    private function getCalculateValue($calcDefProp) {
+        if (isset($calcDefProp)) {
+            $className = $calcDefProp['class'];
+            $calculator = new $className;
+            if ($calculator) {
+                switch ($calculator->getCalculatorTypeData()){
+                    case "from_values":
+                        $calculator->init($this->projectId);
+                        $value = $calculator->calculate($this->values[$calcDefProp['data']]);
+                        break;
+                    default :
+                        $value = $calculator->calculate($calcDefProp['data']);
+                }
+            }
+        }
+        return $value;
+    }    
 }
