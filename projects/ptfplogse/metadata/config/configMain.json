@@ -465,7 +465,7 @@
                         },                                                
                         "avaluacioInicial": {
                             "type": "string",
-                            "default":"no",
+                            "default":"NO",
                             "mandatory": true
                         },
                         "datesAC": {
@@ -530,11 +530,6 @@
                         "dadesExtres": {
                             "type": "defExtres",
                             "mandatory": true
-                        },                                                
-                        "plantilla": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "plantilles:docum_ioc:pla_treball_fp:logse:continguts"
                         },
                         "autor": {
                             "type": "string",
