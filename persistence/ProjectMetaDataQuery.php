@@ -147,6 +147,27 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     /**
+     * Devuelve un array [name,path] de plantillas, obtenido a partir de la lectura
+     * del directorio de plantillas indicado
+     */
+    public function getListTemplateDirFiles($nsDirTemplates) {
+        $dirTemplates = WikiGlobalConfig::getConf('datadir'). "/" . str_replace(":", "/", $nsDirTemplates). "/";
+        if (($list = @opendir($dirTemplates))) {
+            while ($template = readdir($list)) {
+                if ($template !== '.' && $template !== '..') {
+                    $template = preg_replace("/.txt$/", "", $template);
+                    if (is_dir($dirTemplates.$template)) {
+                        $ret = $this->getListTemplateDirFiles("$nsDirTemplates:$template");
+                    }else {
+                        $ret[] = ['name' => $template, 'path' => "$nsDirTemplates:$template"];
+                    }
+                }
+            }
+        }
+        return $ret;
+    }
+
+    /**
      * Devuelve una lista ordenada con los tipos de proyecto contenidos en el plugin
      */
     public function getPluginProjectTypes($plugin) {
@@ -253,6 +274,7 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     //[TRASPASO] Viene de MetaDataDaoConfig.php
+    //Retorna el contenido de la subclave $metaDataubset de la clave 'metaDataComponentTypes' del configMain.json
     public function getMetaDataComponentTypes($metaDataSubset, $projectType=FALSE) {
         $ret = $this->getMetaDataDefinition(ProjectKeys::KEY_METADATA_COMPONENT_TYPES, $projectType);
         return ($ret) ? $ret[$metaDataSubset] : NULL;
