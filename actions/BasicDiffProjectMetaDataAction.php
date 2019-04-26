@@ -38,10 +38,12 @@ class BasicDiffProjectMetaDataAction extends ProjectMetadataAction {
             //array de datos del proyecto actual
             $rev1 = $this->projectModel->getDataProject();
             $date_rev1 = (string)$this->projectModel->getLastModFileDate();
+            //$rev1 = $this->revisionToTree($rev1, $this->params[ProjectKeys::KEY_ID], $date_rev1);
             $this->projectModel->setActualRevision($arev); //regenera al estado anterior la obtención de datos de la versión actual
             //array de datos de la revisión
             $rev2 = $this->projectModel->getDataRevisionProject($this->params[ProjectKeys::KEY_REV]);
             $date_rev2 = $this->params[ProjectKeys::KEY_REV];
+            //$rev2 = $this->revisionToTree($rev2, $this->params[ProjectKeys::KEY_ID], $date_rev2);
         }
 
         $rdata = [
@@ -71,6 +73,28 @@ class BasicDiffProjectMetaDataAction extends ProjectMetadataAction {
     protected function responseProcess() {
         $ret = $this->runProcess();
         return $ret;
+    }
+
+    private function revisionToTree($rev, $id, $date) {
+        $revision[] = ['id'   => "root",
+                       'name' => "$id - $date"];
+        foreach ($rev as $key => $value) {
+            $value = json_decode($value, TRUE);
+            if (is_array($value)) {
+                foreach ($value as $k2 => $v2) {
+                    $revision[] = ['id'     => $k2,
+                                   'name'   => "$k2: $v2",
+                                   'value'  => $v2,
+                                   'parent' => $key];
+                }
+            }else {
+                $revision[] = ['id'     => $key,
+                               'name'   => "$key: $value",
+                               'value'  => $value,
+                               'parent' => "root"];
+            }
+        }
+        return $revision;
     }
 
 }
