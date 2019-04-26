@@ -578,7 +578,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function header($text, $level, $pos) {
-        if($this->currentNode!=NULL){
+        if($this->currentNode!=NULL && method_exists($this->currentNode, "getLevel")){
             if($this->currentNode->getLevel()<$level){
                 //fill
                 $father = $this->currentNode;

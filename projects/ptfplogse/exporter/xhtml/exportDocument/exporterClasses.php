@@ -56,8 +56,8 @@ class exportDocument extends MainRender {
 
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
                 $cicle = html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
-                $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
-                $tipusBlocModul = html_entity_decode(htmlspecialchars_decode($data["tipusBlocModul"], ENT_COMPAT|ENT_QUOTES));
+                $credit = html_entity_decode(htmlspecialchars_decode($data["credit"], ENT_COMPAT|ENT_QUOTES));
+                $tipusBlocCredit = html_entity_decode(htmlspecialchars_decode($data["tipusBlocCredit"], ENT_COMPAT|ENT_QUOTES));
                 $durada = html_entity_decode(htmlspecialchars_decode($data["durada"], ENT_COMPAT|ENT_QUOTES));
                 $professors = html_entity_decode(htmlspecialchars_decode($data["professors"], ENT_COMPAT|ENT_QUOTES));
                 $coordinador = html_entity_decode(htmlspecialchars_decode($data["coordinador"], ENT_COMPAT|ENT_QUOTES));
@@ -72,13 +72,13 @@ class exportDocument extends MainRender {
                         "header_page_logo" => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                         "header_page_wlogo" => 9.9,
                         "header_page_hlogo" => 11.1,
-                        "header_ltext" => "Generalitat de Catalunya\nDepartament d'Ensenyament\nInstitud Obert de Catalunya",
-                        "header_rtext" => $cicle."\n".$modul."-".$tipusBlocModul."\n".$semestre,
+                        "header_ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitud Obert de Catalunya",
+                        "header_rtext" => $cicle."\n".$credit."-".$tipusBlocCredit."\n".$semestre,
                         "titol" => array(
                             "Formació Professional",
                             "Pla de Treball",
                             $cicle,
-                            $modul."-".$tipusBlocModul,
+                            $credit."-".$tipusBlocCredit,
                             $semestre,
                         ),    //títol del document
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
