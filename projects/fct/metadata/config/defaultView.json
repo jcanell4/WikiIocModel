@@ -6,16 +6,6 @@
     "rows_row": 1
   },
   "groups": {
-    "authorship": {
-      "parent": "",
-      "label": "Autoria",
-      "n_columns": 12,
-      "frame": true,
-      "config":{
-        "collapsable":true,
-        "collapsed":false
-      }
-    },
     "dadesBasiques": {
       "parent": "",
       "label":"Dades bàsiques",
@@ -27,11 +17,10 @@
         "collapsed":false
       }
     },
-    "avaluacio": {
+    "authorship": {
       "parent": "",
-      "label": "Sobre l'avaluació",
+      "label": "Autoria",
       "n_columns": 12,
-      "n_rows": 1,
       "frame": true,
       "config":{
         "collapsable":true,
@@ -58,7 +47,7 @@
     },
     "cicle": {
       "label" : "Nom del cicle (cicle)",
-      "n_columns": 3,
+      "n_columns": 6,
       "group": "dadesBasiques",
       "props": {
         "required": true,
@@ -72,6 +61,60 @@
       "props": {
         "required": true,
         "title": "Indiqueu la durada en hores"
+      }
+    },
+    "semestre": {
+      "label" : "Semestre actual (any)",
+      "n_columns": 3,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Aquesta dada canviarà en actualitzar el projecte"
+      }
+    },
+    "any": {
+      "label" : "Any del semestre actual (any)",
+      "n_columns": 3,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Aquesta dada canviarà en actualitzar el projecte"
+      }
+    },
+    "coordinador": {
+      "label" : "Coordinador (coordinador)",
+      "n_columns": 6,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Indiqueu el nom del coordinador"
+      }
+    },
+    "dataIniciFCT": {
+      "label" : "Data d'inici de la FCT (dataIniciFCT)",
+      "n_columns": 4,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Aquesta dada canviarà en actualitzar el projecte"
+      }
+    },
+    "dataMaxIniciFCT": {
+      "label" : "Data màxima d'inici de la FCT (dataMaxIniciFCT)",
+      "n_columns": 4,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Aquesta dada canviarà en actualitzar el projecte"
+      }
+    },
+    "dataMaxApteFCT": {
+      "label" : "Data màxima per obtenir l'apte de la FCT (dataMaxApteFCT)",
+      "n_columns": 4,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Aquesta dada canviarà en actualitzar el projecte"
       }
     },
     "responsable": {
@@ -142,39 +185,42 @@
         }
       }
     },
-    "coordinador": {
-      "label" : "Coordinador (coordinador)",
+    "supervisor": {
+      "type": "amd",
+      "label": "Cap de Departament (supervisor)",
       "n_columns": 4,
       "group": "authorship",
       "props": {
-        "required": true,
-        "title": "Indiqueu el nom del coordinador"
+        "required": true
+      },
+      "config":{
+        "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+        "class" : {
+          "edit": "IocFilteredList",
+          "view": "IocListSelectedItems"
+        },
+        "data": {
+          "ns":"",
+          "buttonLabel": "Cercar",
+          "fieldName": "supervisor",
+          "dialogTitle" : "Cercar Cap de Departament",
+          "dialogButtonLabel" : "Afegir Cap de Departament",
+          "data": "",
+          "dataQuery": {
+            "filter": ""
+          },
+          "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+          "fields": {
+            "username": "Nom d'usuari",
+            "name": "Nom"
+          },
+          "fieldId": "username",
+          "defaultEntryField": "name"
+        }
       }
-    },
-    "plantilla": {
-      "type" : "hidden"
     },
     "fitxercontinguts": {
       "type" : "hidden"
-    },
-    "semestre": {
-      "type" : "hidden"
-    },
-    "dataIniciFCT": {
-      "type" : "hidden"
-    },
-    "dataMaxIniciFCT": {
-      "type" : "hidden"
-    },
-    "dataMaxApteFCT": {
-      "type" : "hidden"
-    },
-    "anyCursInici": {
-      "type" : "hidden"
-    },
-    "anyCursFinal": {
-      "type" : "hidden"
     }
-
   }
 }

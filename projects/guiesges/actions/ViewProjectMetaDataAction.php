@@ -36,38 +36,52 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
                 $dataActual = new DateTime();
 
                 foreach ($arraytaula as $elem) {
-                    if ($response['projectMetaData']['trimestre']['value'] == "1") { //$response['projectMetaData']['trimestre']['value'] Semestre actual indicado en los datos del proyecto
-                        if ($elem['key']==="inici_trimestre_1") {
-                            $inici_trimestre = $this->_obtenirData($elem['value'], $anyActual);
-                        }
-                        else if ($elem['key']==="fi_trimestre_1") {
-                            $fi_trimestre = $this->_obtenirData($elem['value'], $anyActual);
-                        }
+                    if ($elem['key']==="inici_trimestre_1") {
+                        $inici_1 = $this->_obtenirData($elem['value'], $anyActual);
+                    }else if ($elem['key']==="fi_trimestre_1") {
+                        $fi_1 = $this->_obtenirData($elem['value'], $anyActual);
                     }
-                    else if ($response['projectMetaData']['trimestre']['value'] == "2") {
-                        if ($elem['key']==="inici_trimestre_2") {
-                            $inici_trimestre = $this->_obtenirData($elem['value'], $anyActual);
-                        }
-                        else if ($elem['key']==="fi_trimestre_2") {
-                            $fi_trimestre = $this->_obtenirData($elem['value'], $anyActual);
-                        }
+                    if ($elem['key']==="inici_trimestre_2") {
+                        $inici_2 = $this->_obtenirData($elem['value'], $anyActual);
+                    }else if ($elem['key']==="fi_trimestre_2") {
+                        $fi_2 = $this->_obtenirData($elem['value'], $anyActual);
                     }
-                    else if ($response['projectMetaData']['trimestre']['value'] == "3") {
-                        if ($elem['key']==="inici_trimestre_3") {
-                            $inici_trimestre = $this->_obtenirData($elem['value'], $anyActual);
-                        }
-                        else if ($elem['key']==="fi_trimestre_3") {
-                            $fi_trimestre = $this->_obtenirData($elem['value'], $anyActual);
-                        }
+                    if ($elem['key']==="inici_trimestre_3") {
+                        $inici_3 = $this->_obtenirData($elem['value'], $anyActual);
+                    }else if ($elem['key']==="fi_trimestre_3") {
+                        $fi_3 = $this->_obtenirData($elem['value'], $anyActual);
                     }
                 }
+                if ($inici_1 > $fi_1) {
+                    $inici_1 = date_sub($inici_1, new DateInterval('P1Y'));
+                }
+                if ($inici_2 > $fi_2) {
+                    $inici_2 = date_sub($inici_2, new DateInterval('P1Y'));
+                }
+                if ($inici_3 > $fi_3) {
+                    $inici_3 = date_sub($inici_3, new DateInterval('P1Y'));
+                }
+                $finestraOberta = $dataActual >= $inici_1 && $dataActual <= $fi_1;
+                if($finestraOberta){
+                    $inici = $inici_1;
+                    $fi= $fi_1;
+                }else{
+                    $finestraOberta = $dataActual >= $inici_2 && $dataActual <= $fi_2;
+                    if($finestraOberta){
+                        $inici = $inici_2;
+                        $fi= $fi_2;
+                    }else{
+                        $finestraOberta = $dataActual >= $inici_3 && $dataActual <= $fi_3;
+                        if($finestraOberta){
+                            $inici = $inici_3;
+                            $fi= $fi_3;
+                        }                    
+                    }                    
+                }
 
-                if ($inici_trimestre) {
-                    if ($inici_trimestre > $fi_trimestre) {
-                        $inici_trimestre = date_sub($inici_trimestre, new DateInterval('P1Y'));
-                    }
+                if ($finestraOberta) {
                     $updetedDate = $projectModel->getProjectSubSetAttr("updatedDate");
-                    $interval = (!$updetedDate  || $updetedDate < $inici_trimestre->getTimestamp()) && !($dataActual >= $inici_trimestre && $dataActual <= $fi_trimestre);
+                    $interval = (!$updetedDate  || $updetedDate < $inici->getTimestamp());
                     $response[ProjectKeys::KEY_ACTIVA_UPDATE_BTN] = ($interval) ? "1" : "0";
                 }
             }

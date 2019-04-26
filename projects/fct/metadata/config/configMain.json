@@ -43,7 +43,7 @@
             },
             "cicle": {
               "type": "string",
-              "default": "MXX Indiqueu el nom crèdit o mòdul",
+              "default": "Indiqueu el nom del cicle",
               "mandatory": true
             },
             "durada": {
@@ -57,17 +57,10 @@
             "any": {
               "type": "number",
               "mandatory": true,
-              "default": 2019
-            },
-            "anyCursInici": {
-              "type": "number",
-              "mandatory": true,
-              "default": 0
-            },
-            "anyCursFinal": {
-              "type": "number",
-              "mandatory": true,
-              "default": 0
+              "calculatedDefault": {
+                    "class": "CalculateByCurrentDate",
+                    "data": "Y"
+                }
             },
             "dataIniciFCT": {
               "type": "date",
@@ -84,11 +77,6 @@
               "mandatory": true,
               "default": "01/01/2000"
             },
-            "plantilla": {
-              "type": "string",
-              "mandatory": true,
-              "default": "plantilles:docum_ioc:pla_treball_fp:logse:continguts"
-            },
             "autor": {
               "type": "string",
               "mandatory": true
@@ -97,6 +85,11 @@
               "type": "string",
               "struc_chars": "40",
               "mandatory": true
+            },
+            "supervisor": {
+                "type": "string",
+                "struc_chars": "40",
+                "mandatory": true
             },
             "coordinador": {
               "type": "string",

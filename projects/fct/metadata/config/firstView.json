@@ -12,7 +12,7 @@
       "n_columns": 12,
       "frame": true,
       "config":{
-        "collapsable":true,
+        "collapsable":false,
         "collapsed":false
       }
     },
@@ -23,18 +23,7 @@
       "n_rows": 1,
       "frame": true,
       "config":{
-        "collapsable":true,
-        "collapsed":false
-      }
-    },
-    "avaluacio": {
-      "parent": "",
-      "label": "Sobre l'avaluació",
-      "n_columns": 12,
-      "n_rows": 1,
-      "frame": true,
-      "config":{
-        "collapsable":true,
+        "collapsable":false,
         "collapsed":false
       }
     }
@@ -58,7 +47,7 @@
     },
     "cicle": {
       "label" : "Nom del cicle (cicle)",
-      "n_columns": 3,
+      "n_columns": 6,
       "group": "dadesBasiques",
       "props": {
         "required": true,
@@ -74,9 +63,27 @@
         "title": "Indiqueu la durada en hores"
       }
     },
+    "any": {
+      "label" : "Any del semestre actual (any)",
+      "n_columns": 4,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Indiqueu l'any del semestre actual"
+      }
+    },
+    "coordinador": {
+      "label" : "Coordinador (coordinador)",
+      "n_columns": 8,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Indiqueu el nom del coordinador"
+      }
+    },
     "responsable": {
       "type": "amd",
-      "label": "Responsable de la creació (responsable)",
+      "label": "Responsable (responsable)",
       "n_columns": 4,
       "group": "authorship",
       "props": {
@@ -142,13 +149,38 @@
         }
       }
     },
-    "coordinador": {
-      "label" : "Coordinador (coordinador)",
+    "supervisor": {
+      "type": "amd",
+      "label": "Cap de Departament (supervisor)",
       "n_columns": 4,
       "group": "authorship",
       "props": {
-        "required": true,
-        "title": "Indiqueu el nom del coordinador"
+        "required": true
+      },
+      "config":{
+        "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+        "class" : {
+          "edit": "IocFilteredList",
+          "view": "IocListSelectedItems"
+        },
+        "data": {
+          "ns":"",
+          "buttonLabel": "Cercar",
+          "fieldName": "supervisor",
+          "dialogTitle" : "Cercar Cap de Departament",
+          "dialogButtonLabel" : "Afegir Cap de Departament",
+          "data": "",
+          "dataQuery": {
+            "filter": ""
+          },
+          "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+          "fields": {
+            "username": "Nom d'usuari",
+            "name": "Nom"
+          },
+          "fieldId": "username",
+          "defaultEntryField": "name"
+        }
       }
     },
     "plantilla": {
@@ -167,12 +199,6 @@
       "type" : "hidden"
     },
     "dataMaxApteFCT": {
-      "type" : "hidden"
-    },
-    "anyCursInici": {
-      "type" : "hidden"
-    },
-    "anyCursFinal": {
       "type" : "hidden"
     }
 

@@ -32,10 +32,10 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
             $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
             $restoreData = !$projectModel->getProjectSubSetAttr("updatedDate");
             if($restoreData){
-                $calendari = $response["calendari"];
-                $datesAC = $response["datesAC"];
-                $datesEAF = $response["datesEAF"];
-                $datesJT = $response["datesJT"];
+//                $calendari = $response["calendari"];
+//                $datesAC = $response["datesAC"];
+//                $datesEAF = $response["datesEAF"];
+//                $datesJT = $response["datesJT"];
             }
             $processArray = array();
 
@@ -50,10 +50,10 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                 }
             }
             if($restoreData){
-                $response["calendari"] = $calendari;
-                $response["datesAC"] = $datesAC;
-                $response["datesEAF"] = $datesEAF;
-                $response["datesJT"] = $datesJT;
+//                $response["calendari"] = $calendari;
+//                $response["datesAC"] = $datesAC;
+//                $response["datesEAF"] = $datesEAF;
+//                $response["datesJT"] = $datesJT;
             }
 
             if ($elem) {
