@@ -413,11 +413,21 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         // $toSet es genera a l'Action corresponent
         // JOSEPPPPP MIRA ESTOO
         //$this->projectMetaDataQuery->setMeta($toSet, $this->getMetaDataSubSet()); //acortando caminos, jejejeje
-        $this->metaDataService->setMeta($toSet);
+        $calculatedData = $this->updateCalculatedFields($toSet);
+
+        $this->metaDataService->setMeta($calculatedData);
     }
 
     public function setDataProject($dataProject, $summary="") {
-        $this->projectMetaDataQuery->setMeta($dataProject, $this->getMetaDataSubSet(), $summary);
+
+        $calculatedData = $this->updateCalculatedFields($dataProject);
+
+        $this->projectMetaDataQuery->setMeta($calculatedData, $this->getMetaDataSubSet(), $summary);
+    }
+
+    public function updateCalculatedFields($data) {
+        // A implementar a les subclasses, per defecte no es fa res
+        return $data;
     }
 
     public function getDraft($peticio=NULL) {
@@ -635,5 +645,4 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
         return $path;
     }
-
 }

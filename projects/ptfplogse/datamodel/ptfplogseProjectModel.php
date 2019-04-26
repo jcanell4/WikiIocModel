@@ -132,4 +132,39 @@ class ptfplogseProjectModel extends AbstractProjectModel {
             }
         }
     }
+
+    public function updateCalculatedFields($data)
+    {
+
+        $values = json_decode($data['metaDataValue'], true);
+
+        $taulaDadesUnitats = json_decode($values["taulaDadesUD"], true);
+        $taulaCalendari = json_decode($values["calendari"], true);
+        if($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
+            $hores = array();
+            $hores[0] = 0;
+            for($i=0; $i<count($taulaCalendari);$i++){
+                $idU = intval($taulaCalendari[$i]["unitat didàctica"]);
+                if(!isset($hores[$idU])){
+                    $hores[$idU]=0;
+                }
+                $hores[$idU]+= $taulaCalendari[$i]["hores"];
+                $hores[0] += $taulaCalendari[$i]["hores"];
+            }
+
+            for($i=0; $i<count($taulaDadesUnitats);$i++){
+                $idU = intval($taulaDadesUnitats[$i]["unitat didàctica"]);
+                if(isset($hores[$idU])){
+                    $taulaDadesUnitats[$i]["hores"]=$hores[$idU];
+                }
+            }
+            $values["durada"] = $hores[0];
+            $values["taulaDadesUD"] = $taulaDadesUnitats;
+        }
+
+
+        $data['metaDataValue'] = json_encode($values);
+
+        return parent::updateCalculatedFields($data);
+    }
 }
