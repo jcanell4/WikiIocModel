@@ -543,7 +543,7 @@ hr {
 
 .requadre_eines {
   width: 280px;
-  height: 400px;
+/*  height: 400px;*/
   margin: 0 auto;
   position: relative;
 }
@@ -604,6 +604,14 @@ hr {
   width: 282px;
   height: 74px;
   background-image: url("img/puzzle-baix.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.puzzle.puzzle_baix.puzzle_dalt {
+  width: 282px;
+  height: 90px;
+  background-image: url("img/puzzle-dalt-baix.svg");
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -765,7 +773,7 @@ hr {
 
 .section6 .own_table th {
   height: 40px;
-  width: 145px;
+/*  width: 145px;*/
   background-color: #be176b;
   color: #ffffff;
   font-size: 10.5px;
@@ -782,7 +790,7 @@ hr {
 }
 
 .section6 .own_table th:first-of-type {
-  width: 65px;
+/*  width: 65px;*/
   font-size: 12px;
   padding: 0 5px;
 }
@@ -1377,7 +1385,7 @@ hr {
 
   .requadre_eines {
     width: 370px;
-    height: 600px;
+    /*height: 600px;*/
     margin: 0 auto;
     position: relative;
   }

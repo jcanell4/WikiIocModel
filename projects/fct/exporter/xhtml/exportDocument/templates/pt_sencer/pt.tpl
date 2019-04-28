@@ -31,7 +31,7 @@
     <div class="container">
       <h1>Pla de treball</h1>
       <h2>{##cicle##}</h2>
-      <h2>{##modul##}. {##tipusBlocModul##}</h2>
+      <h2>formació en el centre de treball.</h2>
     </div>
   </header>
 
@@ -39,8 +39,7 @@
   
   <section id="intro">
     <div class="container">
-      <p><span>Durada del <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">bloc</WIOCCL:IF><WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF></span>: {##durada##} hores</p>
-      <p><span>Professors</span>: {##professors##}</p>
+      <p><span>Durada del mòdul</span>: {##durada##} hores</p>
       <p><span>Coordinador/a</span>: {##coordinador##}</p>
       <p><span><WIOCCL:IF condition="{##semestre##}==1">Setembre</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">Febrer</WIOCCL:IF> {#_YEAR()_#}</span></p>
     </div>

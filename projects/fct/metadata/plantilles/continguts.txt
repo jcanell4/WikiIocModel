@@ -179,7 +179,7 @@ Les pràctiques es podran realitzar al llarg de quatre semestres. Transcorreguts
 
 Si durant tot un semestre no es realitzen pràctiques, l'alumne s'haurà de matricular novament del {##tipus##} en el semestre que les vulgui començar.
 
-**La data màxima per poder començar les pràctiques aquest semestre serà el dia {##dataMaxIniciFCT##}**, per tant, les gestions prèvies per tramitar l’acord de col·laboració s'hauran de realitzar dues o tres setmanes abans.
+**La data màxima per poder començar les pràctiques aquest semestre serà el dia {#_DATE("{##dataMaxIniciFCT##}")_#}**, per tant, les gestions prèvies per tramitar l’acord de col·laboració s'hauran de realitzar dues o tres setmanes abans.
 
 
 
@@ -241,7 +241,7 @@ Per poder obtenir la qualificació d'Apte l'alumne ha de:
     * Obtenir una valoració positiva per part de l'empresa i del tutor d'FCT de l'IOC del total de les hores del {##tipus##} de FCT.
     * Retornar a l'IOC tota la documentació signada i segellada relativa a  acords de col·laboració, pròrrogues, plans d'activitats i en cas necessari, REF02 i REF03 de compromís.
 
-La data límit per obtenir la qualificació d'Apte del {##tipus##} de FCT el <WIOCCL:IF condition="{##semestre##}==''1''">primer</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==''2''">segon</WIOCCL:IF> semestre del curs {##anyCursInici##} - {##anyCursFinal##} és {##dataMaxApteFCT##}. L'alumne que obtingui la qualificació d'Apte més enllà d'aquesta data, haurà d'esperar per obtenir l'apte al termini extraordinari d'aquest semestre o al termini ordinari del semestre següent.
+La data límit per obtenir la qualificació d'Apte del {##tipus##} de FCT el <WIOCCL:IF condition="{##semestre##}==''1''">primer</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==''2''">segon</WIOCCL:IF> semestre del curs {##any##} - {#_SUMA({##anyCursFinal##},1)_#} és {#_DATE("{##dataMaxApteFCT##}")_#}. L'alumne que obtingui la qualificació d'Apte més enllà d'aquesta data, haurà d'esperar per obtenir l'apte al termini extraordinari d'aquest semestre o al termini ordinari del semestre següent.
 
 ====== Dates Clau ======
 A continuació teniu el calendari de les dates clau del {##tipus##}.
@@ -250,7 +250,7 @@ A continuació teniu el calendari de les dates clau del {##tipus##}.
   :title:Dates clau
   :type:pt_taula
 ^  Data inici FCT  ^  Data màxima per iniciar FCT al <WIOCCL:IF condition="{##semestre##}==''1''">primer</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==''2''">segon</WIOCCL:IF> semestre  ^  Data màxima per obtenir apte a secretaria  ^
-| {##dataIniciFCT##} |  {##dataMaxIniciFCT##}  |  {##dataMaxApteFCT##}  |
+| {#_DATE("{##dataIniciFCT##}")_#} |  {#_DATE("{##dataMaxIniciFCT##}")_#}  |  {#_DATE("{##dataMaxApteFCT##}")_#}  |
 :::
 
 </WIOCCL:SET>
