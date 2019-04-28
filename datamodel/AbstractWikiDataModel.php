@@ -75,6 +75,10 @@ abstract class AbstractWikiDataModel extends AbstractWikiModel{
         return $this->getProjectMetaDataQuery()->getListProjectTypes($all);
     }
 
+    public function getListTemplateDirFiles($nsDirTemplates) {
+        return $this->getProjectMetaDataQuery()->getListTemplateDirFiles($nsDirTemplates);
+    }
+
     public function getListMetaDataComponentTypes($metaDataPrincipal, $component) {
         return $this->getProjectMetaDataQuery()->getListMetaDataComponentTypes($metaDataPrincipal, $component);
     }
