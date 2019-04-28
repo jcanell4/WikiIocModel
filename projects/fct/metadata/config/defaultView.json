@@ -64,7 +64,7 @@
       }
     },
     "semestre": {
-      "label" : "Semestre actual (any)",
+      "label" : "Semestre actual (semestre)",
       "n_columns": 3,
       "group": "dadesBasiques",
       "props": {
