@@ -11,7 +11,7 @@
     "metaDataComponentTypes": [
         {
             "main": {
-                "documents": ["plantilles:manual","plantilles:sensecommon:cicle:m99"],
+                "documents": ["plantilles:manual"],
                 "folders": false
             }
         }
