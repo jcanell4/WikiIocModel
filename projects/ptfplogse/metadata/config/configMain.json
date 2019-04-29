@@ -19,7 +19,7 @@
         {
             "main": "meta.mdpr",
             "versions": {
-                "templates": {"continguts":1}
+                "templates": {"continguts":2}
             },
             "mainType": {
                 "type": "object",
@@ -530,6 +530,11 @@
                         "dadesExtres": {
                             "type": "defExtres",
                             "mandatory": true
+                        },
+                        "plantilla": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "continguts"
                         },
                         "autor": {
                             "type": "string",

@@ -15,7 +15,7 @@
 <!-- Capçalera -->
 <header class="main_header">
   <div class="own_container">
-    <h1>{##modul##}</h1>
+    <h1>{##credit##}</h1>
   </div>
 </header>
 <!-- /Capçalera -->
@@ -39,7 +39,7 @@
         <div class="section1_element">
           <div class="section1_icona" id="durada_icona"></div>
           <h3>Durada</h3>
-          <p>{##durada##} hores</p>       
+          <p>{##durada##} hores</p>
         </div>
         <div class="section1_element">
           <div class="section1_icona" id="professor_icona"></div>
@@ -59,14 +59,14 @@
           <p>{##dedicacio##} hores</p>
         </div>
       </div>
-<WIOCCL:IF condition="{##requerimentsMatricula##}!=''''">  
+<WIOCCL:IF condition="{##requerimentsMatricula##}!=''''">
       <div class="section1_content_row3">
           <div class="franja_color">
             <div class="section1_icona" id="requisits_icona"></div>
           </div>
           <h3>Requeriments i incompatibilitats de la matrícula</h3>
           <p>{##requerimentsMatricula##}</p>
-      </div>      
+      </div>
 </WIOCCL:IF>
     </div>
   </div>
@@ -77,7 +77,7 @@
 <section class="section section2">
   <hr>
   <div class="own_container">
-    Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul##} del</WIOCCL:IF> mòdul {##modul##} tracta de {##descripcio##}
+    Aquest <WIOCCL:IF condition="''crèdit''!={##tipusBlocCodul##}">{##tipusBlocCredit##} del</WIOCCL:IF> mòdul {##credit##} tracta de {##descripcio##}
   </div>
 </section>
 <!-- /Secció 2 -->
@@ -224,28 +224,28 @@
 
 /* Es poden modificar les dades, afegint qualsevol sèries de valors de la llargada que calgui.*/
 (function(){
-<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">    
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocCredit##}" map="{''crèdit'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
     var dataArray = [
-            [<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemUf[unitat formativa]##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[hores]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* Num. hores per cada UF */
+            [<WIOCCL:FOREACH var="itemUd" array="{##taulaDadesUD##}" filter="{##itemUd[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUD##}" arrayitem="itemsub" filter="{##itemUd[unitat didàctica]##}=={##itemsub[unitat didàctica]##}">{#_FIRST({##filtered##}, "FIRST[hores]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* Num. hores per cada UD */
             [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[hores]##},</WIOCCL:FOREACH>], /* Num. hores per cada U */
-            [<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemUf[unitat formativa]##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[unitat formativa]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* ID. de cada UF */
-            [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[unitat]##},</WIOCCL:FOREACH>] /* ID de cada U */
+            [<WIOCCL:FOREACH var="itemUd" array="{##taulaDadesUD##}" filter="{##itemUd[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUD##}" arrayitem="itemsub" filter="{##itemUd[unitat didàctica]##}=={##itemsub[unitat didàctica]##}">{#_FIRST({##filtered##}, "FIRST[unitat didàctica]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* ID. de cada UD */
+            [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[nucli activitat]##},</WIOCCL:FOREACH>] /* ID de cada U */
         ];
 </WIOCCL:SET>
     /*****************/
 
 
-    /* Creem fila total hores per UF */
+    /* Creem fila total hores per UD */
 
-    var totalHoresUFs = 0;
+    var totalHoresUDs = 0;
     for(var i = 0; i < dataArray[0].length; i++) {
-          totalHoresUFs += dataArray[0][i];
+          totalHoresUDs += dataArray[0][i];
     }
 
     var rowDistribHoraria2 = document.getElementById("rowDistribHoraria2");
 
     for(var i = 0; i < dataArray[0].length; i++) {
-         var percentWidth = dataArray[0][i]*100/totalHoresUFs + "%";
+         var percentWidth = dataArray[0][i]*100/totalHoresUDs + "%";
          var textCell = dataArray[0][i] + "h"
          createCell(rowDistribHoraria2, percentWidth, textCell);
     }
@@ -268,18 +268,18 @@
     }
 
 
-    /* Creem fila títols UFs*/
+    /* Creem fila títols UDs*/
 
-    var totalHoresUFs = 0;
+    var totalHoresUDs = 0;
     for(var i = 0; i <= dataArray[0].length-1; i++) {
-          totalHoresUFs += dataArray[0][i];
+          totalHoresUDs += dataArray[0][i];
     }
 
     var rowDistribHoraria1 = document.getElementById("rowDistribHoraria1");
 
     for(var i = 0; i < dataArray[0].length; i++) {
-         var percentWidth = dataArray[0][i]*100/totalHoresUFs + "%";
-         var textCell = "UF" + dataArray[2][i];//(i+1);
+         var percentWidth = dataArray[0][i]*100/totalHoresUDs + "%";
+         var textCell = "UD" + dataArray[2][i];//(i+1);
          createCell(rowDistribHoraria1, percentWidth, textCell);
     }
 
@@ -311,8 +311,8 @@
         parent.appendChild(newCell);
     }
 })();
-        
-    </script>    
+
+    </script>
   </div>
 </section>
 <!-- /Secció 3 -->
@@ -368,18 +368,20 @@
     <h2>Calendari d’estudi</h2>
     <table class="own_table">
       <tr>
-        <th colspan="2"></th>
+          <th></th>
+        <th colspan="2">Nuclis d'activitat</th>
         <th>Inici</th>
         <th>Final</th>
       </tr>
-<WIOCCL:FOR from="{#_MIN({##calendari##}, ''MIN[unitat]'')_#}" to="{#_MAX({##calendari##}, ''MAX[unitat]'')_#}" counter="idUnitat">
-<WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[unitat]##}=={##idUnitat##}">     
+<WIOCCL:FOR from="{#_MIN({##calendari##}, ''MIN[unitat didàctica]'')_#}" to="{#_MAX({##calendari##}, ''MAX[unitat didàctica]'')_#}" counter="idUnitat">
+<WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[unitat didàctica]##}=={##idUnitat##}">
 <WIOCCL:FOREACH  var="itemCal" array="{##filtered##}" counter="cont">
       <tr>
 <WIOCCL:IF condition="{##cont##}==0">
-        <th rowspan="{#_ARRAY_LENGTH({##filtered##})_#}">U{##itemCal[unitat]##}</th>
+        <th rowspan="{#_ARRAY_LENGTH({##filtered##})_#}">U{##itemCal[unitat didàctica]##}</th>
 </WIOCCL:IF>
-        <td>{#_UPPERCASE("{##itemCal[tipus període]##}", 1)_#} {##itemCal[període]##}</td>
+          <td>{##itemCal[nucli activitat]##}</td>
+        <td>{##itemCal[nom]##}</td>
         <td>{#_DATE("{##itemCal[inici]##}")_#}</td>
         <td>{#_DATE("{##itemCal[final]##}")_#}</td>
       </tr>
@@ -410,24 +412,24 @@
       </tr>
 <WIOCCL:FOREACH var="item" array="{##datesAC##}">
       <tr>
-        <th>U{##item[unitat]##} ({##item[id]##})</th>
+        <th>U{##item[unitat didàctica]##} ({##item[id]##})</th>
         <td>{#_DATE("{##item[enunciat]##}")_#}</td>
         <td>{#_DATE("{##item[lliurament]##}")_#}</td>
         <td>{#_DATE("{##item[solució]##}")_#}</td>
         <td>{#_DATE("{##item[qualificació]##}")_#}</td>
       </tr>
-</WIOCCL:FOREACH>            
+</WIOCCL:FOREACH>
     </table>
 <WIOCCL:IF condition="{##notaMinimaAC##}\>0">
     <p>No es tindrà en compte la qualificació de l’avaluació contínua si no s’obté com a mínim un <span>{##notaMinimaAC##},00</span> en l’EAC.</p>
     <br/>
-</WIOCCL:IF>        
+</WIOCCL:IF>
     <p>Compte! El sistema no permet fer lliuraments passades les <span>23’55h</span> de la data prevista.</p>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
     <hr>
     <br/>
     <h2>Jornades tècniques</h2>
-    <p>Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul##}</WIOCCL:IF> reqereix la realització de jornades tècniques (JT). A continuació es detallen les dates importants:</p>
+    <p>Aquest <WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">{##tipusBlocCredit##}</WIOCCL:IF> reqereix la realització de jornades tècniques (JT). A continuació es detallen les dates importants:</p>
     <table class="own_table">
       <tr>
         <th>Inscrició</th>
@@ -444,9 +446,9 @@
         <td>{#_DATE("{##item[data JT]##}")_#}</td>
         <td>{#_DATE("{##item[qualificació]##}")_#}</td>
       </tr>
-</WIOCCL:FOREACH>            
+</WIOCCL:FOREACH>
     </table>
-    <p>Si suspeneu la JT podreu fer la recuperació. Les dates importants són:</p>    
+    <p>Si suspeneu la JT podreu fer la recuperació. Les dates importants són:</p>
     <table class="own_table">
       <caption>recuperacions</caption>
       <tr>
@@ -464,7 +466,7 @@
         <td>{#_DATE("{##item[data JT recuperació]##}")_#}</td>
         <td>{#_DATE("{##item[qualificació recuperació]##}")_#}</td>
       </tr>
-</WIOCCL:FOREACH>            
+</WIOCCL:FOREACH>
     </table>
 </WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
@@ -482,13 +484,13 @@
       </tr>
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
       <tr>
-        <th>U{##item[unitat]##}</th>
+        <th>U{##item[unitat didàctica]##}</th>
         <td>{#_DATE("{##item[enunciat]##}")_#}</td>
         <td>{#_DATE("{##item[lliurament]##}")_#}</td>
         <td>{#_DATE("{##item[solució]##}")_#}</td>
         <td>{#_DATE("{##item[qualificació]##}")_#}</td>
       </tr>
-</WIOCCL:FOREACH>            
+</WIOCCL:FOREACH>
     </table>
     <p>És obligatori realitzar els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
     <br/>
@@ -504,13 +506,13 @@
       </tr>
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
       <tr>
-        <th>U{##item[unitat]##}</th>
+          <th>U{##item[unitat didàctica]##}</th>
         <td>{#_DATE("{##item[enunciat recuperació]##}")_#}</td>
         <td>{#_DATE("{##item[lliurament recuperació]##}")_#}</td>
         <td>{#_DATE("{##item[solució recuperació]##}")_#}</td>
         <td>{#_DATE("{##item[qualificació recuperació]##}")_#}</td>
       </tr>
-</WIOCCL:FOREACH>            
+</WIOCCL:FOREACH>
     </table>
     <p>És obligatori realitzar els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
 </WIOCCL:IF>
@@ -563,39 +565,23 @@
      <div class="containerQualificacio" id="contenidorQualificacio">
 
     </div>
-    <script type="text/javascript"> 
+    <script type="text/javascript">
 (function(){
-<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocCredit##}" map="{''crèdit'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
     var dataArray1 = [
-<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
                       [
-                        { 
-                          title :"UF{##itemUf[unitat formativa]##}",
-                          name :"UF{##itemUf[unitat formativa]##}",
-                          percent: 0
-                        },                        
-<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}">                        
-                       { 
-                          title :"{##item[descripció qualificació]##}",
-                          name :"{##item[abreviació qualificació]##}",
-                          percent: {##item[ponderació]##}
-                        },
-</WIOCCL:FOREACH>
-                      ],
-</WIOCCL:FOREACH>
-                      [
-                        { 
+                        {
                           title :"FINAL",
                           name :"FINAL",
                           percent: 0
-                        },
-<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">                        
-                       { 
-                          title :"UF{##item[unitat formativa]##}",
-                          name :"UF{##item[unitat formativa]##}",
+                        }
+<WIOCCL:FOREACH var="item" array="{##dadesQualificacio##}">
+                       ,{
+                          title :"{##item[descripció qualificació]##}",
+                          name :"{##item[abreviació qualificació]##}",
                           percent: {##item[ponderació]##}
-                        },
-</WIOCCL:FOREACH>                        
+                        }
+</WIOCCL:FOREACH>
                       ]
                     ];
 </WIOCCL:SET>
