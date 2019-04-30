@@ -156,7 +156,7 @@
       },
       "descripcio": {
         "n_columns": 12,
-        "label" : "Aquest bloc/mòdul tracta de... (descripcio)",
+        "label" : "Aquest bloc/mòdul ... (descripcio)",
         "type": "textarea",
         "n_rows": 6,
         "props": {
