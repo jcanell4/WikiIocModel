@@ -122,9 +122,9 @@
                             "mandatory": true
                         },
                         "nivell": {
-                            "type": "number",
+                            "type": "string",
                             "mandatory": true,
-                            "default":1
+                            "default":"1"
                         },
                         "opcionalitat": {
                             "type": "string",

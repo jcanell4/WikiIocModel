@@ -97,7 +97,7 @@
             "options":[
                 {"description":"Àmbit científic", "value":"A_CIEN"},
                 {"description":"Àmbit social", "value":"A_SOCI"}, 
-                {"description":"Àmbit comunicatiu", "value":"A_COMU"}
+                {"description":"Àmbit comunicació", "value":"A_COMU"}
             ]
         }
       },
@@ -165,13 +165,14 @@
         },
          "config":{
             "options":[
-                {"description":"1","value":1}, 
-                {"description":"2","value":2}
+                {"description":"1","value":"1"}, 
+                {"description":"2","value":"2"},
+                {"description":"1 o 2","value":"1/2"}
             ]
          }            
       },
       "opcionalitat":{
-        "label": "Comú/Opcional",
+        "label": "Comú/Optatiu",
         "type":"select",
         "n_columns":3,
         "group": "dadesBasiques",
@@ -182,7 +183,7 @@
          "config":{
             "options":[
                 {"description":"Comú","value":"COMU"}, 
-                {"description":"Opcional","value":"OPCI"}
+                {"description":"Optatiu","value":"OPCI"}
             ]
          }            
       },
