@@ -32,7 +32,7 @@
                         "id": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "OTn"
+                            "default": "OT{#_INC(1)_#}"
                         },
                         "descripcio": {
                             "type": "string",
@@ -51,7 +51,7 @@
                         "unitat didàctica": {
                             "type": "number",
                             "mandatory": true,
-                            "default": "1"
+                            "default": 1
                         },
                         "tipus qualificació": {
                             "type": "string",
@@ -106,7 +106,7 @@
                     "keys": {
                         "id": {
                             "type": "string",
-                            "default": "EACX",
+                            "default": "EAC{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "unitat didàctica": {
@@ -141,7 +141,7 @@
                     "keys": {
                         "id": {
                             "type": "string",
-                            "default": "EAFX",
+                            "default": "EAF{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "unitat didàctica": {
@@ -192,7 +192,7 @@
                     "keys": {
                         "id": {
                             "type": "string",
-                            "default": "JTX",
+                            "default": "JT{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "inscripció": {
@@ -278,7 +278,7 @@
                         "unitat didàctica": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 1
+                            "default": "{#_INC(1)_#}"
                         },
                         "nom": {
                             "type": "string",
