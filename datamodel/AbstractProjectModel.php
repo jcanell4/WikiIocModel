@@ -418,10 +418,12 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $this->metaDataService->setMeta($calculatedData);
     }
 
+    /**
+     * Guarda los datos del proyecto
+     * @param JSON $dataProject Nou contingut de l'arxiu de dades del projecte
+     */
     public function setDataProject($dataProject, $summary="") {
-
         $calculatedData = $this->updateCalculatedFields($dataProject);
-
         $this->projectMetaDataQuery->setMeta($calculatedData, $this->getMetaDataSubSet(), $summary);
     }
 
