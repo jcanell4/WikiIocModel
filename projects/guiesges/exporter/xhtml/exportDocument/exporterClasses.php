@@ -116,7 +116,7 @@ class exportDocument extends MainRender {
             if ($tocItem) {
                 $toc ="";
                 foreach ($tocItem as $elem) {
-                    if($elem['level']<=2){
+                    if($elem['level']<2){
                         $toc .= "<a href='{$elem['link']}'>".htmlentities($elem['title'])."</a>\n";
                     }
                 }
