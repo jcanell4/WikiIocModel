@@ -71,7 +71,7 @@ class cfgExporter {
     public $styletype = NULL;
 
     public function __construct() {
-        $this->tmp_dir = realpath(EXPORT_TMP)."/".rand();;
+        $this->tmp_dir = realpath(EXPORT_TMP)."/".rand();
     }
 }
 
@@ -303,6 +303,8 @@ class renderArray extends renderComposite {
 class BasicStaticPdfRenderer {
     static $tableCounter = 0;
     static $tableReferences = array();
+    static $tablewidths = array();
+    static $nColInRow = 0;
     static $figureCounter = 0;
     static $figureReferences = array();
     static $headerNum = array(0,0,0,0,0,0);
@@ -317,6 +319,8 @@ class BasicStaticPdfRenderer {
     protected function resetStaticDataRender() {
         self::$tableCounter = 0;
         self::$tableReferences = array();
+        self::$tablewidths = array();
+        self::$nColInRow = 0;
         self::$figureCounter = 0;
         self::$figureReferences = array();
         self::$headerNum = array(0,0,0,0,0,0);
@@ -575,6 +579,12 @@ class BasicStaticPdfRenderer {
 
             case TableFrame::TABLEFRAME_TYPE_TABLE:
             case TableFrame::TABLEFRAME_TYPE_ACCOUNTING:
+                if ($content['widths']) {
+                    $e = explode(',', $content['widths']);
+                    $t = 0;
+                    for ($i=0; $i<count($e); $i++) $t += $e[$i];
+                    for ($i=0; $i<count($e); $i++) self::$tablewidths[$i] = $e[$i] * 100 / $t;
+                }
                 $ret = "<div nobr=\"true\">";
                 if ($content["title"]) {
                     $ret .= "<h4 style=\"text-align:center;\"> Taula ".self::$tableReferences[$content["id"]].". ".$content["title"]."</h4>";
@@ -594,6 +604,7 @@ class BasicStaticPdfRenderer {
                 break;
             case StructuredNodeDoc::TABLEROW_TYPE:
                 $ret = "<tr>".self::getStructuredContent($content)."</tr>";
+                self::$nColInRow = 0;
                 break;
             case CellNodeDoc::TABLEHEADER_TYPE:
                 $align = $content["align"] ? "text-align:{$content["align"]};" : "text-align:center;";
@@ -607,7 +618,8 @@ class BasicStaticPdfRenderer {
                 $style = $content["hasBorder"] ? ' style="border:1px solid black; border-collapse:collapse; '.$align.'"' : " style=\"$align\"";
                 $colspan = $content["colspan"]>1 ? ' colspan="'.$content["colspan"].'"' : "";
                 $rowspan = $content["rowspan"]>1 ? ' rowspan="'.$content["rowspan"].'"' : "";
-                $ret = "<td$colspan$rowspan$style>".self::getStructuredContent($content)."</td>";
+                $width =  (self::$tablewidths[self::$nColInRow++]) ? ' with="'.self::$tablewidths[self::$nColInRow++].'%"' : "";
+                $ret = "<td$colspan$rowspan$style$width>".self::getStructuredContent($content)."</td>";
                 break;
             case CodeNodeDoc::CODE_TEXT_TYPE:
                 $ret = self::getTextContent($content);

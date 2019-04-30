@@ -48,11 +48,6 @@
                 "entradaQualificacioUD": {
                     "type":"object",
                     "keys": {
-                        "unitat didàctica": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": 1
-                        },
                         "tipus qualificació": {
                             "type": "string",
                             "mandatory": true,

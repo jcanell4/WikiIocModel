@@ -32,8 +32,16 @@ class ListTemplatesAction extends AbstractWikiAction {
                                            ProjectKeys::KEY_PROJECT_TYPE    => $this->params[ProjectKeys::KEY_PROJECT_TYPE],
                                            ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
                                         ]);
-                $list = $this->projectModel->getListMetaDataComponentTypes(ProjectKeys::KEY_METADATA_COMPONENT_TYPES,
-                                                                           ProjectKeys::KEY_MD_CT_DOCUMENTS);
+                $aDirs = $this->projectModel->getListMetaDataComponentTypes(ProjectKeys::KEY_METADATA_COMPONENT_TYPES,
+                                                                            ProjectKeys::KEY_MD_CT_DOCUMENTS);
+                foreach($aDirs as $dir) {
+                    $temp = $this->projectModel->getListTemplateDirFiles($dir);
+                    if ($temp && $llista)
+                        $llista = array_merge($llista, $temp);
+                    elseif ($temp)
+                        $llista = $temp;
+                }
+                $list = json_encode($llista);
             }
         }
         if (!isset($list)) {

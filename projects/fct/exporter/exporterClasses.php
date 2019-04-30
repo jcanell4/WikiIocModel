@@ -34,16 +34,16 @@ class IocTcPdf extends TCPDF {
 
     //Page header
     public function Header() {
-        if($this->PageNo()==1){
+        if ($this->PageNo() == 1) {
             return;
         }
-
         $margins = $this->getMargins();
 
         // Logo
         $image_file = K_PATH_IMAGES.$this->header_logo;
         $this->Image($image_file, $margins['left'], 5, $this->header_logo_width, $this->header_logo_hight, 'JPG', '', 'T', true, 300, '', false, false, 0, false, false, false);
 
+        $headerfont = $this->getHeaderFont();
         $cell_height = $this->getCellHeight($headerfont[2] / $this->k);
         $header_x = $margins['left'] + $margins['padding_left'] + ($this->header_logo_width * 1.1);
         $header_w = 105 - $header_x;
@@ -61,16 +61,12 @@ class IocTcPdf extends TCPDF {
 
     // Page footer
     public function Footer() {
-        if($this->PageNo()==1){
+        if ($this->PageNo() == 1) {
             return;
         }
-
-        // Position at 15 mm from bottom
-        $this->SetY(-15);
-        // Set font
+        $this->SetY(-15);  //Position at 15 mm from bottom
         $this->SetFont($this->footer_font[0], $this->footer_font[1], $this->footer_font[2]);
-        // Page number
-        $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');  //Page number
     }
 
     public function setHeaderData($ln='', $lw=0, $lh=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)) {
@@ -78,6 +74,7 @@ class IocTcPdf extends TCPDF {
         $this->header_logo_hight = $lh;
     }
  }
+ 
 class StaticPdfRenderer extends BasicStaticPdfRenderer {
 
     /**
@@ -99,7 +96,7 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
         $iocTcPdf->setHeaderData( $params["data"]["header_page_logo"], $params["data"]["header_page_wlogo"], $params["data"]["header_page_hlogo"], $params["data"]["header_ltext"], $params["data"]["header_rtext"]);
-        
+
         // set header and footer fonts
         $iocTcPdf->setHeaderFont(Array(self::$headerFont, '', self::$headerFontSize));
         $iocTcPdf->setFooterFont(Array(self::$footerFont, '', self::$footerFontSize));

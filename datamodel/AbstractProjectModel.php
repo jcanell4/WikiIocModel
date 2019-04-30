@@ -641,7 +641,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
         if ($version) {
             $path .= "." . $version;
-        } ;
+        }
 
         return $path;
     }
