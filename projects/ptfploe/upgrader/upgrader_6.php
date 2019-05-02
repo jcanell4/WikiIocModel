@@ -45,9 +45,6 @@ class upgrader_6 extends CommonUpgrader {
 
                 //Segunda parte: modificación de los datos del proyecto (archivo .mdpr que está en data/mdprojects/)
                 $dataProject = $this->model->getDataProject();
-                //Ejemplo:
-                //original: "descripcio":"En aquest bloc aprendreu a programar aplicacions d'escriptori amb el llenguatge Java."
-                //resultado: "descripcio":"tracta de En aquest bloc aprendreu a programar aplicacions d'escriptori amb el llenguatge Java."
                 $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
                 $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 5 to 6");
 

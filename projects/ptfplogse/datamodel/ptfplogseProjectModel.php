@@ -133,28 +133,32 @@ class ptfplogseProjectModel extends AbstractProjectModel {
         }
     }
 
-    public function updateCalculatedFields($data)
-    {
+    /**
+     * Calcula el valor de los campos calculables
+     * @param JSON $data
+     */
+    public function updateCalculatedFields($data) {
 
-        $values = json_decode($data['metaDataValue'], true);
+        $values = json_decode($data, true);
 
         $taulaDadesUnitats = json_decode($values["taulaDadesUD"], true);
         $taulaCalendari = json_decode($values["calendari"], true);
-        if($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
+
+        if ($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
             $hores = array();
             $hores[0] = 0;
-            for($i=0; $i<count($taulaCalendari);$i++){
+            for ($i=0; $i<count($taulaCalendari);$i++){
                 $idU = intval($taulaCalendari[$i]["unitat didàctica"]);
-                if(!isset($hores[$idU])){
+                if (!isset($hores[$idU])){
                     $hores[$idU]=0;
                 }
                 $hores[$idU]+= $taulaCalendari[$i]["hores"];
                 $hores[0] += $taulaCalendari[$i]["hores"];
             }
 
-            for($i=0; $i<count($taulaDadesUnitats);$i++){
+            for ($i=0; $i<count($taulaDadesUnitats);$i++){
                 $idU = intval($taulaDadesUnitats[$i]["unitat didàctica"]);
-                if(isset($hores[$idU])){
+                if (isset($hores[$idU])){
                     $taulaDadesUnitats[$i]["hores"]=$hores[$idU];
                 }
             }
@@ -162,9 +166,7 @@ class ptfplogseProjectModel extends AbstractProjectModel {
             $values["taulaDadesUD"] = $taulaDadesUnitats;
         }
 
-
-        $data['metaDataValue'] = json_encode($values);
-
+        $data = json_encode($values);
         return parent::updateCalculatedFields($data);
     }
 }

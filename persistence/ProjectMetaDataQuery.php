@@ -535,7 +535,7 @@ class ProjectMetaDataQuery extends DataQuery {
             $prev_date = filemtime($projectFilePathName);
         }
 
-        $contentFile = str_replace("\\r\\n", "\\n", "{\"$metaDataSubSet\":$metaDataValue}");
+        $contentFile = str_replace("\\r\\n", "\n", "{\"$metaDataSubSet\":$metaDataValue}");
         $resourceCreated = io_saveFile($projectFilePathName, $contentFile);
         if ($resourceCreated) {
             $new_date = filemtime($projectFilePathName);
