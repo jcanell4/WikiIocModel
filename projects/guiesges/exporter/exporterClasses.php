@@ -84,20 +84,15 @@ class IocTcPdf extends TCPDF {
         $versio = " versió: ".$this->peu['versio'];
         $w1 = max(10, strlen($codi), strlen($versio)) * 2;
         $w1 = min(30, $w1);
-        $w2 = 22;
+        $w2 = 28;
 
         $this->MultiCell($w1, $cell_height, $codi, 1, 'L', 0, 1, "", "", true, 0, false, true, $cell_height, 'M');
         $this->MultiCell($w1, $cell_height, $versio, 1, 'L', 0, 0, "", "", true, 0, false, true, $cell_height, 'M');
         $this->SetY($y_position);
-        $titol_w = $this->getPageWidth()-$margins['right']-($w1+$w2-5);
+        $titol_w = $this->getPageWidth()-$margins['right']-($w1+$w2-13);
         $this->MultiCell($titol_w, $cell_height*2, $this->peu['titol'], 1, 'C', 0, 0, "", "", true, 0, false, true, $cell_height*2, 'M');
-        $page_number = "pàgina ".$this->getPage()."/".$this->getNumPages()." ";
-        $page_number = "pàgina {".$this->getAliasNumPage()."}/{".$this->getAliasNbPages()."}";
-        $this->MultiCell($w2, $cell_height*2, $this->setPageFooter($page_number), 1, 'R', 0, 0, "", "", true, 0, false, true, $cell_height*2, 'M'); //se pone aparte poque la interpretación {:pnp:} añade salto de línea
-    }
-
-    public function setPageFooter($page_number) {
-        return preg_replace("\n", "", trim($page_number));
+        $page_number = 'pàgina '.$this->getAliasNumPage().'/'.$this->getAliasNbPages();
+        $this->Cell($w2, $cell_height*2, $page_number, 1, 0, 'R', false, '', 0, false, 'T', 'M'); // Page number
     }
 
     public function setHeaderData($ln='', $lw=0, $lh=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)) {
