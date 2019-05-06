@@ -24,6 +24,7 @@ class upgrader_1 extends CommonUpgrader {
                 break;
 
             case "templates":
+                //Primera parte: modificación del fichero de proyecto (el .txt que está en data/pages/ y que, originalmente, proviene de una plantilla)
                 /*
                     linea 7:
                     buscar
@@ -41,6 +42,12 @@ class upgrader_1 extends CommonUpgrader {
                 if (!empty($dataChanged)) {
                     $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
                 }
+
+                //Segunda parte: modificación de los datos del proyecto (archivo .mdpr que está en data/mdprojects/)
+                $dataProject = $this->model->getDataProject();
+                $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 0 to 1");
+
                 return !empty($dataChanged);
         }
     }

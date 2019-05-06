@@ -139,18 +139,23 @@ class ptfploeProjectModel extends AbstractProjectModel {
         }
     }
 
+    /**
+     * Calcula el valor de los campos calculables
+     * @param JSON $data
+     */
     public function updateCalculatedFields($data) {
 
-        $values = json_decode($data['metaDataValue'], true);
+        $values = json_decode($data, true);
 
         $taulaDadesUF = json_decode($values["taulaDadesUF"], true);
         $taulaDadesUnitats = json_decode($values["taulaDadesUnitats"], true);
         $taulaCalendari = json_decode($values["calendari"], true);
-        if($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
+
+        if ($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
             $hores = array();
-            for($i=0; $i<count($taulaCalendari);$i++){
+            for ($i=0; $i<count($taulaCalendari);$i++){
                 $idU = intval($taulaCalendari[$i]["unitat"]);
-                if(!isset($hores[$idU])){
+                if (!isset($hores[$idU])){
                     $hores[$idU]=0;
                 }
                 $hores[$idU]+= $taulaCalendari[$i]["hores"];
@@ -158,23 +163,23 @@ class ptfploeProjectModel extends AbstractProjectModel {
 
             $horesUF = array();
             $horesUF[0] = 0;
-            for($i=0; $i<count($taulaDadesUnitats);$i++){
+            for ($i=0; $i<count($taulaDadesUnitats);$i++){
                 $idU = intval($taulaDadesUnitats[$i]["unitat"]);
-                if(isset($hores[$idU])){
+                if (isset($hores[$idU])){
                     $taulaDadesUnitats[$i]["hores"]=$hores[$idU];
                 }
                 $idUf = intval($taulaDadesUnitats[$i]["unitat formativa"]);
-                if(!isset($horesUF[$idUf])){
+                if (!isset($horesUF[$idUf])){
                     $horesUF[$idUf]=0;
                 }
                 $horesUF[0]+= $taulaDadesUnitats[$i]["hores"];
                 $horesUF[$idUf]+= $taulaDadesUnitats[$i]["hores"];
             }
 
-            if($taulaDadesUF!=NULL){
-                for($i=0; $i<count($taulaDadesUF);$i++){
+            if ($taulaDadesUF!=NULL){
+                for ($i=0; $i<count($taulaDadesUF);$i++){
                     $idUf = intval($taulaDadesUF[$i]["unitat formativa"]);
-                    if(isset($horesUF[$idUf])){
+                    if (isset($horesUF[$idUf])){
                         $taulaDadesUF[$i]["hores"]=$horesUF[$idUf];
                     }
                 }
@@ -184,8 +189,7 @@ class ptfploeProjectModel extends AbstractProjectModel {
             $values["taulaDadesUF"] = $taulaDadesUF;
         }
 
-        $data['metaDataValue'] = json_encode($values);
-
+        $data = json_encode($values);
         return parent::updateCalculatedFields($data);
     }
 

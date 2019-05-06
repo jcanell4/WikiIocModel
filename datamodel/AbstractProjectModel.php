@@ -409,19 +409,21 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $this->viewConfigName = $viewConfigName;
     }
 
+    /**
+     * Guarda los datos
+     * @param array $toSet (s'ha generat a l'Action corresponent)
+     */
     public function setData($toSet) {
-        // $toSet es genera a l'Action corresponent
-        // JOSEPPPPP MIRA ESTOO
-        //$this->projectMetaDataQuery->setMeta($toSet, $this->getMetaDataSubSet()); //acortando caminos, jejejeje
-        $calculatedData = $this->updateCalculatedFields($toSet);
-
-        $this->metaDataService->setMeta($calculatedData);
+        $toSet[ProjectKeys::KEY_METADATA_VALUE] = $this->updateCalculatedFields($toSet[ProjectKeys::KEY_METADATA_VALUE]);
+        $this->metaDataService->setMeta($toSet);
     }
 
+    /**
+     * Guarda los datos del proyecto
+     * @param JSON $dataProject Nou contingut de l'arxiu de dades del projecte
+     */
     public function setDataProject($dataProject, $summary="") {
-
         $calculatedData = $this->updateCalculatedFields($dataProject);
-
         $this->projectMetaDataQuery->setMeta($calculatedData, $this->getMetaDataSubSet(), $summary);
     }
 
