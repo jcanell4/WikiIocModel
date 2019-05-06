@@ -101,6 +101,9 @@ class fctProjectModel extends AbstractProjectModel {
 
     }
 
+    public function getTemplateContentDocumentId($responseData){
+        return "continguts";
+    }
 
     public function modifyACLPageToSupervisor($parArr) {
         $project_ns = $parArr['id'].":*";
