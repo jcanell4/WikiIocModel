@@ -692,6 +692,9 @@ class BasicStaticPdfRenderer {
             case LeafNodeDoc::LINE_BREAK_TYPE:
                 $ret = "<br>";
                 break;
+            case LeafNodeDoc::DOUBLEAPOSTROPHE_TYPE:
+                $ret = "\"";
+                break;
             case LeafNodeDoc::APOSTROPHE_TYPE:
                 $ret = "'";
                 break;

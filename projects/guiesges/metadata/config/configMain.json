@@ -51,7 +51,7 @@
                         "id":{
                             "type": "string",
                             "mandatory": true,
-                            "default": "LL99"
+                            "default": "L99"
                         },
                         "nom":{
                             "type": "string",
