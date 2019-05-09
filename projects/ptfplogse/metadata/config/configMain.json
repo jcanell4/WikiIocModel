@@ -32,7 +32,7 @@
                         "id": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "OTn"
+                            "default": "OT{#_INC(1)_#}"
                         },
                         "descripcio": {
                             "type": "string",
@@ -101,12 +101,12 @@
                     "keys": {
                         "id": {
                             "type": "string",
-                            "default": "EACX",
+                            "default": "EAC{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "unitat didàctica": {
                             "type": "number",
-                            "default": 1,
+                            "default": "{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "enunciat": {
@@ -136,12 +136,12 @@
                     "keys": {
                         "id": {
                             "type": "string",
-                            "default": "EAFX",
+                            "default": "EAF{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "unitat didàctica": {
                             "type": "number",
-                            "default": 1,
+                            "default": "{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "enunciat": {
@@ -187,7 +187,7 @@
                     "keys": {
                         "id": {
                             "type": "string",
-                            "default": "JTX",
+                            "default": "JT",
                             "mandatory": true
                         },
                         "inscripció": {
@@ -268,12 +268,12 @@
                         "bloc": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 0
+                            "default": "{#_COPY(0)_#}"
                         },
                         "unitat didàctica": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 1
+                            "default": "{#_INC(1)_#}"
                         },
                         "nom": {
                             "type": "string",
@@ -297,12 +297,12 @@
                         "unitat didàctica": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 1
+                            "default": "{#_COPY(1)_#}"
                         },
                         "nucli activitat": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 1
+                            "default": "{#_INC(1)_#}"
                         },
                         "nom": {
                             "type": "string",
@@ -333,10 +333,12 @@
                     "keys": {
                         "unitat didàctica": {
                             "type": "number",
+                            "default": "{#_COPY(1)_#}",
                             "mandatory": true
                         },
                         "nucli activitat": {
                             "type": "number",
+                            "default": "{#_COPY(1)_#}",
                             "mandatory": true
                         },
                         "eina": {
