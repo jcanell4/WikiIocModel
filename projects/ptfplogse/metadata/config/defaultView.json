@@ -930,7 +930,7 @@
       },
       "supervisor": {
         "type": "amd",
-        "label": "Cap de departatment (supervisor)",
+        "label": "Supervisor (supervisor)",
         "n_columns": 4,
         "group": "authorship",
         "props": {

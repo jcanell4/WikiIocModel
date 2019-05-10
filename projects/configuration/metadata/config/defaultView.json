@@ -49,10 +49,11 @@
                   "type": "string"
                 }
               },
+              "display_fields":["key", "value"],
               "layout": [
                 {
                   "defaultCell": {
-                    "width" : "10%"
+                    "width" : "50%"
                   },
                   "cells": [
                     {
