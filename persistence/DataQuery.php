@@ -181,12 +181,12 @@ abstract class DataQuery {
 
         if ( $currentnode ) {
             $node  = $currentnode;
-            $aname = split(":", $node);
+            $aname = explode(":", $node);
             $level = count($aname);
             $name  = $aname[$level - 1]; //ns (espacio de nombres, es decir, padre)
         } else {
             $node  = ($root) ? $root : "";
-            $aname = split( ":", $node );
+            $aname = explode( ":", $node );
             $level = ($root) ? count($aname) : 0;
             $name  = ($root) ? $root : "";
         }
