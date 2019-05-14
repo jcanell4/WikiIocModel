@@ -647,4 +647,8 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
         return $path;
     }
+    
+    public function filesToExportList(){
+        return NULL;
+    }
 }

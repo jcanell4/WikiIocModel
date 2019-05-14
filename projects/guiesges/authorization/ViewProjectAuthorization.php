@@ -9,13 +9,13 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once (WIKI_IOC_MODEL . "authorization/ProjectCommandAuthorization.php");
 
-class EditProjectAuthorization extends ProjectCommandAuthorization {
+class ViewProjectAuthorization extends ProjectCommandAuthorization {
 
     public function canRun() {
         if (parent::canRun()) {
-            if(!$this->isUserGroup(array("editorges", "admin"))
-                    && ($this->permission->getInfoPerm() < ATH_EDIT || !$this->isUserGroup(array("projectmanager")))
-                    && !$this->isResponsable() && !$this->isAuthor()) {
+            if(!$this->isUserGroup(array("editorges"))
+                    && ($this->permission->getInfoPerm() < AUTH_READ || !$this->isUserGroup(array("ges","admin")))
+                    && ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(array("projectmanager")))) {
                 $this->errorAuth['error'] = TRUE;
                 $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
                 $this->errorAuth['extra_param'] = $this->permission->getIdPage();
