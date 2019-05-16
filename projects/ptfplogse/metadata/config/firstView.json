@@ -318,6 +318,7 @@
             "remove_rows": "Eliminar els nuclis d'activitat seleccionats",
             "add_default_row_before": "Afegir nucli d'activitat abans de la fila seleccionada"
           },
+
           "fields": {
             "unitat didàctica": {
               "type": "number"

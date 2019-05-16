@@ -396,7 +396,7 @@ class BasicStaticPdfRenderer {
             self::renderSmiley($content, $iocTcPdf);
         }*/
         else {
-            $ret = self::getContent($content);
+            $ret = static::getContent($content);
             $iocTcPdf->writeHTML($ret, TRUE, FALSE);
         }
 
@@ -670,7 +670,7 @@ class BasicStaticPdfRenderer {
         $ret = "";
         $limit = count($content["content"]);
         for ($i=0; $i<$limit; $i++) {
-            $ret .= self::getContent($content["content"][$i]);
+            $ret .= static::getContent($content["content"][$i]);
         }
         return $ret;
     }
