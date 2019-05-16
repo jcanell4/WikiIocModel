@@ -61,7 +61,7 @@
                         "ordre": {
                             "type": "number",
                             "mandatory": true,
-                            "default": "NNN"
+                            "default": "{#_INC(1)_#}" 
                         },
                         "nom": {
                             "type": "string",

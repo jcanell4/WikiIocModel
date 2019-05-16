@@ -39,9 +39,6 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
 
             $ret = $model->getData();      //obtiene la estructura y el contenido del proyecto
 
-            if ($ret['projectMetaData']["plantilla"]['value']) {
-                $link_page = ":".end(explode(":", $ret['projectMetaData']["plantilla"]['value']));
-            }
             $include = [
                  'id' => $id
                 ,'link_page' => $id

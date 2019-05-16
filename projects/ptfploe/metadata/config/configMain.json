@@ -32,7 +32,7 @@
                         "id": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "RAn"
+                            "default": "RA{#_INC(1)_#}"
                         },
                         "descripcio": {
                             "type": "string",
@@ -51,7 +51,7 @@
                         "unitat formativa": {
                             "type": "number",
                             "mandatory": true,
-                            "default": "1"
+                            "default": "{#_INC(1)_#}"
                         },
                         "tipus qualificació": {
                             "type": "string",
@@ -106,28 +106,32 @@
                     "keys": {
                         "id": {
                             "type": "string",
-                            "default": "EACX",
+                            "default": "EAC{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "unitat": {
                             "type": "number",
-                            "default": 1,
+                            "default": "{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "enunciat": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "lliurament": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "solució": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "qualificació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         }
                     }
@@ -141,44 +145,52 @@
                     "keys": {
                         "id": {
                             "type": "string",
-                            "default": "EAFX",
+                            "default": "EAF{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "unitat": {
                             "type": "number",
-                            "default": 1,
+                            "default": "{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "enunciat": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "lliurament": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "solució": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "qualificació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "enunciat recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "lliurament recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "solució recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "qualificació recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         }
                     }
@@ -192,47 +204,57 @@
                     "keys": {
                         "id": {
                             "type": "string",
-                            "default": "JTX",
+                            "default": "JT",
                             "mandatory": true
                         },
                         "inscripció": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "llista provisional": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "llista definitiva": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "data JT": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "qualificació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "inscripció recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "llista provisional recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "llista definitiva recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "data JT recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "qualificació recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         }
                     }
@@ -246,10 +268,12 @@
                     "keys": {
                         "unitat": {
                             "type": "number",
+                            "default": "{#_COPY(1)_#}",
                             "mandatory": true
                         },
                         "període": {
                             "type": "number",
+                            "default": "{#_INC(1)_#}",
                             "mandatory": true
                         },
                         "tipus període": {
@@ -266,10 +290,12 @@
                         },
                         "inici": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "final": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         }
                     }
@@ -310,12 +336,12 @@
                         "bloc": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 0
+                            "default": "{#_COPY(0)_#}"
                         },
                         "unitat formativa": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 1
+                            "default": "{#_INC(1)_#}"
                         },
                         "nom": {
                             "type": "string",
@@ -344,12 +370,12 @@
                         "unitat formativa": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 1
+                            "default": "{#_INC(1)_#}"
                         },
                         "unitat": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 1
+                            "default": "{#_INC(1)_#}"
                         },
                         "nom": {
                             "type": "string",
@@ -372,10 +398,12 @@
                     "keys": {
                         "unitat": {
                             "type": "number",
+                            "default": "{#_COPY(1)_#}",
                             "mandatory": true
                         },
                         "període": {
                             "type": "number",
+                            "default": "{#_COPY(1)_#}",
                             "mandatory": true
                         },
                         "eina": {

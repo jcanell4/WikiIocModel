@@ -352,6 +352,7 @@ class LeafNodeDoc extends AbstractNodeDoc{
     const LINE_BREAK_TYPE = "lb";
     const HORIZONTAL_RULE_TYPE = "hr";
     const APOSTROPHE_TYPE = "apostrophe";
+    const DOUBLEAPOSTROPHE_TYPE = "doubleapostrophe";
     const BACKSLASH_TYPE = "backslash";
     const DOUBLEHYPHEN_TYPE = "doublehyphen";
     const GRAVE_TYPE = "grave";
@@ -578,7 +579,8 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function header($text, $level, $pos) {
-        if($this->currentNode!=NULL && method_exists($this->currentNode, "getLevel")){
+//        if($this->currentNode!=NULL && method_exists($this->currentNode, "getLevel")){
+        if($this->currentNode!=NULL){
             if($this->currentNode->getLevel()<$level){
                 //fill
                 $father = $this->currentNode;
@@ -807,7 +809,11 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function singlequoteclosing() {
-        $this->currentNode = $this->currentNode->getOwner();
+        if($this->currentNode->type==StructuredNodeDoc::SINGLEQUOTE_TYPE){
+            $this->currentNode = $this->currentNode->getOwner();
+        }else{
+            $this->apostrophe();
+        }
     }
 
     function apostrophe() {
@@ -832,7 +838,11 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function doublequoteclosing() {
-        $this->currentNode = $this->currentNode->getOwner();
+        if($this->currentNode->type == StructuredNodeDoc::DOUBLEQUOTE_TYPE){
+            $this->currentNode = $this->currentNode->getOwner();
+        }else{
+            $this->currentNode->addContent(new LeafNodeDoc(LeafNodeDoc::DOUBLEAPOSTROPHE_TYPE));
+        }
     }
 
     //Es un link a un ID de la propia página. Ejemplo: <a href="#id_top">
