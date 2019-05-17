@@ -15,26 +15,21 @@ class manualProjectModel extends AbstractProjectModel {
         parent::__construct($persistenceEngine);
     }
 
-    public function getProjectDocumentName() {
-        $ret = $this->getMetaDataProject();
-        return $ret['fitxercontinguts'];
-    }
-
-    // Obtiene un array de claves=>valores (datos ampliados) para unirlos a los datos del proyecto
-    public function getExtendedData($id, $autor, $fitxercontinguts) {
-        $nom_real = PagePermissionManager::getUserList($autor)['values'][0]['name'];
-        $fitxer = $this->getPageDataQuery()->getFileName("$id:$fitxercontinguts");
-        $data = date("d/m/Y", filemtime($fitxer));
-        return ['nom_real' => $nom_real, 'data_fitxercontinguts' => $data];
-    }
+//    // Obtiene un array de claves=>valores (datos ampliados) para unirlos a los datos del proyecto
+//    public function getExtendedData($id, $autor, $fitxercontinguts) {
+//        $nom_real = PagePermissionManager::getUserList($autor)['values'][0]['name'];
+//        $fitxer = $this->getPageDataQuery()->getFileName("$id:$fitxercontinguts");
+//        $data = date("d/m/Y", filemtime($fitxer));
+//        return ['nom_real' => $nom_real, 'data_fitxercontinguts' => $data];
+//    }
 
     public function generateProject() {} //abstract obligatorio
 
     public function directGenerateProject($data) {
         //1. $data
-        $plantilla = $data['projectMetaData']["plantilla"]['value'];
-        $destino = $this->id.":".end(explode(":", $plantilla));
-        $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
+//        $plantilla = $this->getListMetaDataComponentTypes(ProjectKeys::KEY_METADATA_COMPONENT_TYPES, ProjectKeys::KEY_MD_CT_DOCUMENTS)[0];
+//        $destino = $this->id.":".end(explode(":", $plantilla));
+//        $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
 
         $aAutors = preg_split("/[\s,]+/", $data['projectMetaData']["autor"]['value']);
         foreach ($aAutors as $autor) {

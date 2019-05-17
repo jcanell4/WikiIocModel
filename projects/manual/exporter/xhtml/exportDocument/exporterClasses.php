@@ -56,6 +56,7 @@ class exportDocument extends MainRender {
                 $subtitol = html_entity_decode(htmlspecialchars_decode($data["subtitol"], ENT_COMPAT|ENT_QUOTES));
                 $nom_real = html_entity_decode(htmlspecialchars_decode($data["nom_real"], ENT_COMPAT|ENT_QUOTES));
                 $data_fitxer = html_entity_decode(htmlspecialchars_decode($data["data_fitxercontinguts"], ENT_COMPAT|ENT_QUOTES));
+                $entitat_responsable = html_entity_decode(htmlspecialchars_decode($data["entitatResponsable"], ENT_COMPAT|ENT_QUOTES));
 
                 $estils = $this->getPdfStyleAttributes($this->cfgExport->rendererPath . "/xhtml/exportDocument/pdf");
 
@@ -73,7 +74,8 @@ class exportDocument extends MainRender {
                                      "rtext" => $titol],
                         "titol" => ['titol'    => $titol,
                                     'subtitol' => $subtitol,
-                                    'autor'    => $nom_real,
+                                    'autor'    => $data['mostrarAutor']==="true" || $data['mostrarAutor']===true?$nom_real:"",
+                                    'entitatResponsable'    => $entitat_responsable,
                                     'data'     => $data_fitxer],
                         "estil" => $estils['style'],
                         "contingut" => json_decode($data["documentPartsPdf"], TRUE)   //contingut latex ja rendaritzat

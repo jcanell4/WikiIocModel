@@ -25,17 +25,6 @@ class upgrader_1 extends CommonUpgrader {
 
             case "templates":
                 break;
-//                if ($filename===NULL) {
-//                    $filename = $this->model->getProjectDocumentName();
-//                }
-//                $doc = $this->model->getRawProjectDocument($filename);
-//                $aTokRep = [["texto original",
-//                             "texto nuevo"]];
-//                $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
-//                if (!empty($dataChanged)) {
-//                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
-//                }
-//                return !empty($dataChanged);
         }
     }
 

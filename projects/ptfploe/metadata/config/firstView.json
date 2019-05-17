@@ -509,13 +509,22 @@
             ]
          }
       },
-      "notaMinimaAC": {
-        "label": "Nota mínima de l'AC (notaMinimaAC)",
-        "n_columns":6,
+      "notaMinimaPAF": {
+        "label": "Nota mínima a la PAF (notaMinimaPAF)",
+        "n_columns":4,
         "group": "avaluacio",
         "props": {
           "required": true,
-          "title": "Indiqueu quina ha de ser la nota mínima de l'AC per tenir-la en compte en la ponderació"
+          "title": "Indiqueu la nota mínima que cal treure a la PAF per tal de poder ponderar l'AC"
+        }
+      },
+      "duradaPAF": {
+        "label": "Durada de la PAF (duradaPAF)",
+        "n_columns":4,
+        "group": "avaluacio",
+        "props": {
+          "required": true,
+          "title": "Indiqueu la durada màxima de la PAF"
         }
       },
       "datesAC": {
@@ -802,24 +811,6 @@
           ]
         }
       },
-      "notaMinimaPAF": {
-        "label": "Nota mínima a la PAF (notaMinimaPAF)",
-        "n_columns":6,
-        "group": "avaluacio",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la nota mínima que cal treure a la PAF per tal de poder ponderar l'AC"
-        }
-      },
-      "duradaPAF": {
-        "label": "Durada de la PAF (duradaPAF)",
-        "n_columns":6,
-        "group": "avaluacio",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la durada màxima de la PAF"
-        }
-      },
       "dadesQualificacioUFs": {
         "label": "Qualificació de les UF (dadesQualificacioUFs)",
         "n_columns": 12,
@@ -956,6 +947,9 @@
             "defaultEntryField": "name"
           }
         }
+      },
+      "notaMinimaAC": {
+        "type":"hidden"
       },
       "plantilla": {
         "type" : "hidden"

@@ -15,8 +15,35 @@ class WikiPageSystemManager {
     public static $DEFAULT_FORMAT = 0;
     public static $SHORT_FORMAT = 1;
 
-
+    public static function getRealDirFromPages($ns, $clean=true){
+        return self::getRealDir($ns, "datadir", $clean);
+    }
     
+    public static function getRealDirFromMeta($ns, $clean=true){
+        return self::getRealDir($ns, "metadir", $clean);
+    }
+    
+    public static function getRealDirFromMediaMeta($ns, $clean=true){
+        return self::getRealDir($ns, "mediametadir", $clean);
+    }
+    
+    public static function getRealDirFromMedia($ns, $clean=true){
+        return self::getRealDir($ns, "mediadir", $clean);
+    }
+    
+    public static function getRealDirFromMediaOld($ns, $clean=true){
+        return self::getRealDir($ns, "mediaolddir", $clean);
+    }
+    
+    public static function getRealDir($ns, $repositoryType, $clean=true){
+        $id = $ns;
+
+        if ($clean) $id = cleanID($id);
+        $id = str_replace(':','/',$id);
+        $dir = WikiGlobalConfig::getConf("datadir").'/'.$id.'/';
+        return $dir;
+    }
+
     public static function cleanPageID( $raw_id) {
         return cleanID($raw_id);
     }

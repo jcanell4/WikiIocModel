@@ -22,7 +22,7 @@ class BasicCreateDocumentAction extends CreatePageAction {
         if ($thisProject['nsproject'] !== $projectId) {
             throw new CantCreatePageInProjectException($this->params['espai']);
         }
-        $arrTmp = split(":", $id);
+        $arrTmp = explode(":", $id);
         $file = array_pop($arrTmp) . ".txt";
         if ($this->dokuPageModel->fileExistsInProject($projectId, $file)) {
             throw new PageAlreadyExistsException($id, "pageExists");
