@@ -38,7 +38,12 @@
   
   <section id="intro">
     <div class="container">
+<WIOCCL:IF condition="{##mostrarAutor##}==true">        
       <p>autor: {##nom_real##}</p>
+</WIOCCL:IF>      
+<WIOCCL:IF condition="{#_IS_STR_EMPTY(''{##entitatResponsable##}'')_#}!=true">        
+      <p>Editat per: {##entitatResponsable##}</p>
+</WIOCCL:IF>      
       <p>data: {##data_fitxercontinguts##}</p>
     </div>
   </section>

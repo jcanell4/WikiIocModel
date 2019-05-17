@@ -426,7 +426,7 @@
       "avaluacioInicial":{
         "label": "Avaluació inicial (avaluacioInicial)",
         "type":"select",
-        "n_columns":6,
+        "n_columns":4,
         "group": "main",
         "props": {
           "required": true,
@@ -527,15 +527,6 @@
               ]
             }
           ]
-        }
-      },
-      "notaMinimaAC": {
-        "label": "Nota mínima de l'AC (notaMinimaAC)",
-        "n_columns":6,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "Indiqueu quina ha de ser la nota mínima de l'AC per tenir-la en compte en la ponderació"
         }
       },
       "datesAC": {
@@ -860,7 +851,7 @@
       },
       "notaMinimaPAF": {
         "label": "Nota mínima a la PAF (notaMinimaPAF)",
-        "n_columns":6,
+        "n_columns":4,
         "group": "main",
         "props": {
           "required": true,
@@ -869,7 +860,7 @@
       },
       "duradaPAF": {
         "label": "Durada de la PAF (duradaPAF)",
-        "n_columns":6,
+        "n_columns":4,
         "group": "main",
         "props": {
           "required": true,
@@ -1041,6 +1032,9 @@
             "defaultEntryField": "name"
           }
         }
+      },
+      "notaMinimaAC": {
+        "type":"hidden"
       },
       "plantilla": {
         "type" : "hidden"

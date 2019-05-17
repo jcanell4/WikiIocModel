@@ -110,15 +110,13 @@
                             "mandatory": true,
                             "default": "3"
                         },                                                
-                        "plantilla": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "plantilles:projects:continguts"
+                        "entitatResponsable": {
+                            "type": "string"
                         },
-                        "fitxercontinguts": {
-                            "type": "string",
+                        "mostrarAutor": {
+                            "type": "boolean",
                             "mandatory": true,
-                            "default": "continguts"
+                            "default":true
                         },
                         "documents": {
                             "type": "extraDoc",
@@ -136,8 +134,8 @@
                             "type": "string",
                             "mandatory": true,
                             "calculate": {
-                                "class": "CalculateDateFromFile",
-                                "data": "fitxercontinguts"
+                                "class": "CalculateMaxPageDateFromNs",
+                                "data": ""
                             }
                         }
                     }

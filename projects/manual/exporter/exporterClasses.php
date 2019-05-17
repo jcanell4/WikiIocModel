@@ -121,7 +121,12 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"]["subtitol"], 0, 'L');
         $iocTcPdf->SetY($y+=80);
         $iocTcPdf->SetFont(self::$firstPageFont, 'B', 15);
-        $iocTcPdf->Cell(0, 0, $params["data"]["titol"]['autor'], 0, 1);
+        if(!empty($params["data"]["titol"]['autor'])){
+            $iocTcPdf->Cell(0, 0, $params["data"]["titol"]['autor'], 0, 1);
+        }
+        if(!empty($params["data"]["titol"]['entitatResponsable'])){
+            $iocTcPdf->Cell(0, 0, $params["data"]["titol"]['entitatResponsable'], 0, 1);
+        }
         $iocTcPdf->Cell(0, 0, $params["data"]["titol"]['data'], 0, 1);
 
         //continguts

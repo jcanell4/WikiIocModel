@@ -242,11 +242,23 @@
                 }
             }
         },
-        "plantilla": {
-            "type" : "hidden"
+        "entitatResponsable": {
+            "label" : "Entitat responsable del document final (opcional)",
+            "n_columns": 7,
+            "group": "authorship",
+            "props": {
+                "title": "Indiqueu si cal quim és el departament o entitat responsable del document final. Podeu deixar el valor en blanc."
+            }
         },
-        "fitxercontinguts": {
-            "type" : "hidden"
+        "mostrarAutor": {
+            "type" : "checkbox",
+            "label" : "Mostrar l'autor en el document final?",
+            "n_columns": 5,
+            "group": "authorship",
+            "props": {
+                "required": true,
+                "title": "Indiqueu si voleu mostrar el nom de l'autor en el document final"
+            }
         },
         "nom_real": {
             "type" : "hidden"
