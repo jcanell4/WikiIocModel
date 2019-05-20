@@ -5,8 +5,6 @@
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
 require_once(DOKU_PLUGIN.'iocexportl/lib/renderlib.php');
-//define('WIKI_IOC_PROJECT', DOKU_PLUGIN."wikiiocmodel/projects/ptfploe/");
-//require_once WIKI_IOC_PROJECT."exporter/exporterClasses.php";
 
 class MainRender extends renderObject {
 
@@ -19,7 +17,7 @@ class MainRender extends renderObject {
 
     public function initParams(){
         $this->ioclangcontinue = array('CA'=>'continuació', 'DE'=>'fortsetzung', 'EN'=>'continued','ES'=>'continuación','FR'=>'suite','IT'=>'continua');
-        $this->path_templates = WIKI_IOC_PROJECT."exporter/pdf/".$this->factory->getDocumentClass()."/templates";
+        $this->path_templates = realpath(__DIR__)."/".$this->factory->getDocumentClass()."/templates";
     }
 
     /**
