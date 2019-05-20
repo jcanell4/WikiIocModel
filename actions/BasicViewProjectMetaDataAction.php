@@ -53,6 +53,8 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
         //Añadir propiedades/restricciones del configMain para la creación de elementos dentro del proyecto
         parent::addResponseProperties($response);
         $response[ProjectKeys::KEY_GENERATED] = $this->getModel()->isProjectGenerated();
+        $ftp_files = $this->get_ftp_metadata($this->params[ProjectKeys::KEY_ID]);
+        $response[ProjectKeys::KEY_ACTIVA_FTPSEND_BTN] = is_array($ftp_files);
         return $response;
     }
 
@@ -98,6 +100,18 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
     public function leaveResource($unlock = FALSE) {
         $this->resourceLocker->init($this->params);
         return $this->resourceLocker->leaveResource($unlock);
+    }
+
+    public function get_ftp_metadata($ns) {
+        $path = WikiGlobalConfig::getConf('mediadir')."/". str_replace(':', '/', $ns);
+        if (($dir = @opendir($path))) {
+            while ($file = readdir($dir)) {
+                if (!is_dir("$path/$file")) {
+                    $ret[] = "$path/$file";
+                }
+            }
+        }
+        return $ret;
     }
 
 }
