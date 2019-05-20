@@ -1,6 +1,6 @@
 {
     "generateProject": {
-        "parms": { 
+        "parms": {
             "DOM": {
                "id": "generateProjectButton",
                "title": "Generar Projecte Qualitat"
@@ -14,8 +14,8 @@
                 }
             }
         }
-
     },
+
     "qdocPdfExport": {
         "class": "WikiIocButton",
         "parms": {
