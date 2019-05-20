@@ -17,20 +17,16 @@ class FtpSendAction extends DokuAction{
 
     protected function startProcess() {
         //afegir a la llista d'objectes a enviar quins fitxers i sota quins paràmetres caldrà fer-ho
+        $filename = str_replace(':', '_', $this->params[ProjectKeys::KEY_ID]).".zip";
+        $dest = str_replace(':', '/', $this->params[ProjectKeys::KEY_ID]);
+        $dest = dirname($dest)."/";
+        $local = WikiGlobalConfig::getConf('mediadir')."/".$dest;
 
-        $path = WikiGlobalConfig::getConf('mediadir')."/". str_replace(':', '/', $ns);
-        if (($dir = @opendir($path))) {
-            while ($file = readdir($dir)) {
-                if (!is_dir("$path/$file")) {
-                    $ret[] = end(explode(".", $file));
-                }
-            }
-        }
-        return $ret;
+        $this->ftpSender->addObjectToSendList($filename, $local, "remoteBase/", $dest, [0,1]);
     }
 
-    public function addObjectToSendList($file, $remoteBase, $remoteDir, $action=0){
-        $this->ftpSender->addObjectToSendList($file, $remoteBase, $remoteDir, $action);
+    public function addObjectToSendList($file, $local, $remoteBase, $remoteDir, $action){
+        $this->ftpSender->addObjectToSendList($file, $local, $remoteBase, $remoteDir, $action);
     }
 
     protected function responseProcess() {
