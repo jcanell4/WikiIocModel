@@ -143,7 +143,15 @@ class ptfplogseProjectModel extends AbstractProjectModel {
 
         $taulaDadesUnitats = json_decode($values["taulaDadesUD"], true);
         $taulaCalendari = json_decode($values["calendari"], true);
+        $taulaJT = json_decode($values["datesJT"], true);
 
+        if ($taulaJT!=NULL){
+            $hiHaRecuperacio = FALSE;
+            for ($i=0; !$hiHaRecuperacio && $i<count($taulaJT);$i++){
+                $hiHaRecuperacio = $taulaJT[$i]["hiHaRecuperacio"];
+            }
+            $values["hiHaRecuperacioPerJT"]=$hiHaRecuperacio;
+        }
         if ($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
             $hores = array();
             $hores[0] = 0;

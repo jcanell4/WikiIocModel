@@ -210,6 +210,11 @@
                         },
                         "qualificació": {
                             "type": "date",
+                            "mandatory": true,
+                            "default":true
+                        },
+                        "hiHaRecuperacio": {
+                            "type": "boolean",
                             "mandatory": true
                         },
                         "inscripció recuperació": {
@@ -513,11 +518,34 @@
                             "type": "defDatesEAF",
                             "mandatory": false
                         },
+                        "hiHaRecuperacioPerJT": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
                         "datesJT": {
                             "type": "defDatesJT",
                             "mandatory": false
                         },
                         "notaMinimaAC": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min": 0,
+                                "max": 10
+                            },
+                            "default": 0
+                        },
+                        "notaMinimaEAF": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min": 0,
+                                "max": 10
+                            },
+                            "default": 4
+                        },
+                        "notaMinimaJT": {
                             "type": "number",
                             "mandatory": true,
                             "props": {
