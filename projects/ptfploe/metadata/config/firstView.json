@@ -738,6 +738,9 @@
             "qualificació": {
                 "type": "date"
             },
+            "hiHaRecuperacio": {
+                "type": "boolean"
+            },
             "inscripció recuperació": {
                 "type": "date"
             },
@@ -785,6 +788,10 @@
                 {
                   "name": "qualificació",
                   "field": "qualificació"
+                },
+                {
+                  "name": "recuperació?",
+                  "field": "hiHaRecuperacio"
                 },
                 {
                   "name": "inscripció recuperació",
@@ -973,6 +980,9 @@
         "type" : "hidden"
       },
       "dataQualificacioPaf2": {
+        "type" : "hidden"
+      },
+      "hiHaRecuperacioPerJT":{
         "type" : "hidden"
       }
     }

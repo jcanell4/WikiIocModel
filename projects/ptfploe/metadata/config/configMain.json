@@ -232,6 +232,10 @@
                             "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
+                        "hiHaRecuperacio": {
+                            "type": "boolean",
+                            "mandatory": true
+                        },
                         "inscripció recuperació": {
                             "type": "date",
                             "default":"{#_TODAY()_#}",
@@ -542,6 +546,11 @@
                             "type": "defDatesEAF",
                             "mandatory": false
                         },                                                
+                        "hiHaRecuperacioPerJT": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
                         "datesJT": {
                             "type": "defDatesJT",
                             "mandatory": false
