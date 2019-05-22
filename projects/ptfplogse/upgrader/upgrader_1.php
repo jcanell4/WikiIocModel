@@ -21,6 +21,15 @@ class upgrader_1 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
+                //Transforma los datos del proyecto "ptfplogse" desde la estructura de la versión 0 a la versión 1
+                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+                //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
+                $dataProject = $this->addFieldInMultiRow($dataProject, "datesJT", "hiHaRecuperacio", TRUE);
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 0 to 1");
+                $status = TRUE;
                 break;
 
             case "templates":
@@ -48,8 +57,10 @@ class upgrader_1 extends CommonUpgrader {
                 $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
                 $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 0 to 1");
 
-                return !empty($dataChanged);
+                $status = !empty($dataChanged);
+                break;
         }
+        return $status;
     }
 
 }
