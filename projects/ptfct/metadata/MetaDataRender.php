@@ -2,7 +2,7 @@
 /**
  * Component: Project / MetaData
  */
-namespace fct;
+namespace ptfct;
 require_once(DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderAbstract.php');
 
 class MetaDataRender extends \MetaDataRenderAbstract {

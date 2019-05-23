@@ -4,7 +4,7 @@
       "main": {
         "MetaDataDAO": "defaultProject",
         "MetaDataEntity": "defaultProject",
-        "MetaDataRender": "fct"
+        "MetaDataRender": "ptfct"
       }
     }
   ],

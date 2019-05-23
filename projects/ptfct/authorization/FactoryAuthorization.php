@@ -1,6 +1,6 @@
 <?php
 /**
- * FactoryAuthorization: carga las clases de autorización de los comandos del proyecto "fct"
+ * FactoryAuthorization: carga las clases de autorización de los comandos del proyecto "ptfct"
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
@@ -10,7 +10,7 @@ require_once(WIKI_IOC_MODEL."authorization/ProjectFactoryAuthorization.php");
 
 class FactoryAuthorization extends ProjectFactoryAuthorization {
 
-    //const PROJECT_AUTH = DOKU_PLUGIN."wikiiocmodel/projects/fct/authorization/";
+    //const PROJECT_AUTH = DOKU_PLUGIN."wikiiocmodel/projects/ptfct/authorization/";
     const PROJECT_AUTH = __DIR__ . "/";
 
     public function __construct() {

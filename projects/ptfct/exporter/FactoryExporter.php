@@ -1,6 +1,6 @@
 <?php
 /**
- * FactoryExporter (projecte 'fct')
+ * FactoryExporter (projecte 'ptfct')
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
