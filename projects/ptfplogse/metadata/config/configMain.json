@@ -19,8 +19,9 @@
         {
             "main": "meta.mdpr",
             "versions": {
+                "fields": 1,
                 "templates": {
-                    "continguts": 2
+                    "continguts": 3
                 }
             },
             "mainType": {

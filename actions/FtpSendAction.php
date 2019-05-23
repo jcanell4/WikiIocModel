@@ -25,13 +25,15 @@ class FtpSendAction extends DokuAction{
         $this->ftpSender->addObjectToSendList($filename, $local, "remoteBase/", $dest, [0,1]);
     }
 
-    public function addObjectToSendList($file, $local, $remoteBase, $remoteDir, $action){
-        $this->ftpSender->addObjectToSendList($file, $local, $remoteBase, $remoteDir, $action);
-    }
-
     protected function responseProcess() {
-        //tractar $this->response amb la resposta emmagatzemada a $this->ftpResponse;
-        return $this->response;
+        $id = $this->params[ProjectKeys::KEY_ID];
+        if ($this->response) {
+            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('ftp_send_success')." ($id)", $id);
+        }else {
+            $response['info'] = $this->generateInfo("error", WikiIocLangManager::getLang('ftp_send_error')." ($id)", $id);
+            $response['alert'] = WikiIocLangManager::getLang('ftp_send_error')." ($id)";
+        }
+        return $response;
     }
 
     protected function runProcess() {

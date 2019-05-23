@@ -726,7 +726,8 @@
                 },
                 {
                   "name": "recuperació?",
-                  "field": "hiHaRecuperacio"
+                  "field": "hiHaRecuperacio",
+                  "width": "6%"
                 },
                 {
                   "name": "inscripció recuperació",

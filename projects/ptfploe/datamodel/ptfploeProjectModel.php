@@ -147,13 +147,13 @@ class ptfploeProjectModel extends AbstractProjectModel {
 
         $values = json_decode($data, true);
 
-        $taulaDadesUF = json_decode($values["taulaDadesUF"], true);
-        $taulaDadesUnitats = json_decode($values["taulaDadesUnitats"], true);
-        $taulaCalendari = json_decode($values["calendari"], true);
+        $taulaDadesUF = (is_array($values["taulaDadesUF"])) ? $values["taulaDadesUF"] : json_decode($values["taulaDadesUF"], true);
+        $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
+        $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
 
         if ($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
             $hores = array();
-            for ($i=0; $i<count($taulaCalendari);$i++){
+            for ($i=0; $i<count($taulaCalendari); $i++){
                 $idU = intval($taulaCalendari[$i]["unitat"]);
                 if (!isset($hores[$idU])){
                     $hores[$idU]=0;
@@ -163,7 +163,7 @@ class ptfploeProjectModel extends AbstractProjectModel {
 
             $horesUF = array();
             $horesUF[0] = 0;
-            for ($i=0; $i<count($taulaDadesUnitats);$i++){
+            for ($i=0; $i<count($taulaDadesUnitats); $i++){
                 $idU = intval($taulaDadesUnitats[$i]["unitat"]);
                 if (isset($hores[$idU])){
                     $taulaDadesUnitats[$i]["hores"]=$hores[$idU];
@@ -177,7 +177,7 @@ class ptfploeProjectModel extends AbstractProjectModel {
             }
 
             if ($taulaDadesUF!=NULL){
-                for ($i=0; $i<count($taulaDadesUF);$i++){
+                for ($i=0; $i<count($taulaDadesUF); $i++){
                     $idUf = intval($taulaDadesUF[$i]["unitat formativa"]);
                     if (isset($horesUF[$idUf])){
                         $taulaDadesUF[$i]["hores"]=$horesUF[$idUf];
