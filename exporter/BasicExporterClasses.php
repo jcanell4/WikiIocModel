@@ -316,7 +316,7 @@ class BasicStaticPdfRenderer {
     static $pagesFont = "helvetica";
     static $state = ["table" => ["type" => "table"]];
 
-    protected function resetStaticDataRender() {
+    public static function resetStaticDataRender() {
         self::$tableCounter = 0;
         self::$tableReferences = array();
         self::$tablewidths = array();
