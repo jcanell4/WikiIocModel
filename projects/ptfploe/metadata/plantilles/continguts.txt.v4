@@ -334,7 +334,7 @@ Si la qualificació de la PAF és inferior a {##notaMinimaPAF##},00, el càlcul 
 
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
 <WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
-<WIOCCL:SUBSET subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[unitat formativa]##}=={##ind##}&&{##itemsub[tipus qualificació]##}==''PAF''">
+<WIOCCL:SUBSET subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}&&{##itemsub[tipus qualificació]##}==''PAF''">
   ***QF{##itemUf[unitat formativa]##} = {#_FIRST({##filtered##}, ''FIRST[ponderació]'')_#}% de la nota de la UF{##itemUf[unitat formativa]##} obtinguda a la PAF**.
 </WIOCCL:SUBSET>
 </WIOCCL:FOREACH>

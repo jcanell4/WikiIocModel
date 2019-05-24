@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_1: Transforma los datos del proyecto "ptfploe"
- *             desde la estructura de la versión 0 a la estructura de la versión 1
+ * upgrader_4: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ *             desde la versión 3 a la versión 4
  * @author rafael
  */
 if (!defined("DOKU_INC")) die();
@@ -21,21 +21,29 @@ class upgrader_4 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
+                $ret = TRUE;
                 break;
 
             case "templates":
-                if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
+                /*
+                  Buscar y reemplazar texto (Línea 337)
+                  buscar    : filter="{##itemsub[unitat formativa]##}=={##ind##}
+                  reemplazar: filter="{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}
+                */
+                if ($filename===NULL) {
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename);
                 $aTokRep = [["filter\=\"\{\#\#itemsub\[unitat formativa\]\#\#\}\=\=\{\#\#ind\#\#\}",
                              "filter=\"{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}"]];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
+
                 if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 2 to 3");
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 3 to 4");
                 }
-                return !empty($dataChanged);
+                $ret = !empty($dataChanged);
         }
+        return $ret;
     }
 
 }
