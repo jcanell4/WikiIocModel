@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_1: Transforma los datos del proyecto "ptfploe"
- *             desde la estructura de la versión 0 a la estructura de la versión 1
+ * upgrader_3: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ *             desde la versión 2 a la versión 3
  * @author rafael
  */
 if (!defined("DOKU_INC")) die();
@@ -21,23 +21,33 @@ class upgrader_3 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
+                $ret = TRUE;
                 break;
 
             case "templates":
-                // Línia 96.  Es canvia "  :title:Taula Unitats" per "  :title:Apartats"
-                // Línia 102. Es canvia "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[inici]##}" per "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[final]##}"
-                if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
+                /*
+                  Línia 372. Es canvia "{##item_act[descripció]##} \ </WIOCCL:FOREACH>     ||"
+                                   per "{##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||"
+                */
+                /*
+                Ara ja no és necessari corregir aquest error donat que ja no es propdueix
+                -------------------------------------------------------------------------
+                if ($filename===NULL) {
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename);
                 $aTokRep = [["\{\#\#item_act\[descripció\]\#\#\} \\\\ \<\/WIOCCL:FOREACH\>",
                              "{##item_act[descripció]##} \\\\\\\\ </WIOCCL:FOREACH>"]];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
+
                 if (!empty($dataChanged)) {
                     $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 2 to 3");
                 }
-                return !empty($dataChanged);
+                $ret = !empty($dataChanged);
+                */
+                $ret = TRUE;
         }
+        return $ret;
     }
 
 }

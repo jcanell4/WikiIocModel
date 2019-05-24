@@ -1,7 +1,7 @@
 ~~USE:WIOCCL~~
 ====== Presentació ======
 
-Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul##} del</WIOCCL:IF> mòdul {##modul##} tracta de {##descripcio##}
+Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul##} del</WIOCCL:IF> mòdul {##modul##} {##descripcio##}
 
 Té una assignació de {##durada##} h de les {##duradaCicle##}h del cicle de {##cicle##}. El  coodinador del mòdul és {##coordinador##}, els professors són: {##professors##}.
 

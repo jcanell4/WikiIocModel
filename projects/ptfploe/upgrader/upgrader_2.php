@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_2: Transforma los datos del proyecto "ptfploe"
- *             desde la estructura de la versión 1 a la estructura de la versión 2
+ * upgrader_2: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ *             desde la versión 1 a la versión 2
  * @author rafael
  */
 if (!defined("DOKU_INC")) die();
@@ -21,6 +21,7 @@ class upgrader_2 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
+                $ret = TRUE;
                 break;
 
             case "templates":
@@ -58,13 +59,7 @@ class upgrader_2 extends CommonUpgrader {
                 $template_name = $this->model->getTemplateContentDocumentId($data);
 
                 $file = $this->model->getTemplatePath($template_name, 'v2');
-                $doc0  = io_readFile($file);
-
-
-
-
-
-
+                $doc0 = io_readFile($file);
                 $doc1 = $this->model->getRawProjectDocument($filename);
                 $aTokSub = ["(::table:T03\n\s+:title:Unitats\s+:type:pt_taula\n)(.*\n)*(:::)",
                             "(L'AC es realitza a distància, es concreta en:\n)(.*\n)*(Les activitats de l'avaluació contínua)",
@@ -72,11 +67,13 @@ class upgrader_2 extends CommonUpgrader {
                             "(Si la qualificació de la PAF és inferior a .* el càlcul de cada QUF serà:\n)(.*\n)*(En cas de no superar la UF,)",
                             "(====== Planificació ======\n)(.*\n)*"];
                 $dataChanged = $this->updateTemplateBySubstitute($doc0, $doc1, $aTokSub);
+
                 if (!empty($dataChanged)) {
                     $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 1 to 2");
                 }
-                return !empty($dataChanged);
+                $ret = !empty($dataChanged);
         }
+        return $ret;
     }
 
 }

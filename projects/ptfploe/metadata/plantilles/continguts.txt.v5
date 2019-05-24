@@ -366,9 +366,9 @@ La planificació establerta per a la UF{##ind##} és la següent: (veure:table:T
   :type:pt_taula, pt_planif
 [^ UF{##itemUf[unitat formativa]##} ^  <WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[nom]")_#} ({#_FIRST({##filtered##}, "FIRST[hores]")_#} h)</WIOCCL:SUBSET>  ^
 <WIOCCL:FOREACH  var="itemu" array="{##taulaDadesUnitats##}" filter="{##itemu[unitat formativa]##}=={##itemUf[unitat formativa]##}">
-^  **Unitat {##itemu[unitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h)**^^
+^  **Unitat {##itemu[unitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h)**  ^^
 <WIOCCL:FOREACH  var="item_per" array="{##calendari##}" filter="{##item_per[unitat]##}=={##itemu[unitat]##}">
-^  **Apartat {##item_per[període]##}: {##item_per[descripció període]##} ({##item_per[hores]##} h).     Activitats d'aprenentatge**  ^^
+^**Apartat {##item_per[període]##}: {##item_per[descripció període]##} ({##item_per[hores]##} h).     Activitats d'aprenentatge**  ^^
 | <WIOCCL:FOREACH  var="item_act" array="{##activitatsAprenentatge##}" filter="{##item_act[unitat]##}=={##item_per[unitat]##}&&{##item_act[període]##}=={##item_per[període]##}">{##item_act[eina]##}: {##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||
 </WIOCCL:FOREACH>
 </WIOCCL:FOREACH>

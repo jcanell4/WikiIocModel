@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_6: Transforma los datos del proyecto "ptfploe"
- *             desde la estructura de la versión 5 a la estructura de la versión 6
+ * upgrader_6: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ *             desde la versión 5 a la versión 6
  * @author rafael
  */
 if (!defined("DOKU_INC")) die();
@@ -21,6 +21,7 @@ class upgrader_6 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
+                $ret = TRUE;
                 break;
 
             case "templates":
@@ -39,6 +40,7 @@ class upgrader_6 extends CommonUpgrader {
                 $aTokRep[] = ["(Aquest \<WIOCCL:IF condition.*tipusBlocModul.*tipusBlocModul.*del.*mòdul.*modul.*)( tracta de )(.*descripcio.*\n)",
                               "$1 $3"];
                 $dataChanged = $this->updateTemplateByReplace($doc1, $aTokRep);
+
                 if (!empty($dataChanged)) {
                     $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 5 to 6");
                 }
@@ -48,8 +50,9 @@ class upgrader_6 extends CommonUpgrader {
                 $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
                 $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 5 to 6");
 
-                return !empty($dataChanged);
+                $ret = !empty($dataChanged);
         }
+        return $ret;
     }
 
 }

@@ -229,7 +229,7 @@ L'exercici proposa una activitat relacionada amb continguts procedimentals de la
   * la seva realització és **obligatòria** per aprovar  la unitat formativa.
   * és de caràcter [##TODO: escolliu "individual" o "grupal" segons sigui el cas##].  
   * té una ponderació en la **qualificació final** <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">del mòdul (vegeu l'apartat "Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">de la UF (vegeu l'apartat "Qualificació final de cada UF"</WIOCCL:IF>).
-  * s'ha d'obtenir una qualificació **mínima de 4,00 sense arrodoniment** per poder aplicar el càlcul de la qualificació final.
+  * s'ha d'obtenir una qualificació **mínima de {##notaMinimaEAF##},00 sense arrodoniment** per poder aplicar el càlcul de la qualificació final.
 
 [##TODO: Definiu i determineu les característiques del treball en equip, si és el cas.##]
 
@@ -264,19 +264,21 @@ Jornades presencials procedimentals de de la unitat formativa:
   * té una durada màxima de [##TODO: X dies. Cada dia té una durada màxima de X h. (si ho considereu oportú)##].
   * s'avalua numèricament  de entre el 0 i el 10, amb dos decimals.
   * té una ponderació en la **qualificació final** <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">del mòdul (vegeu l'apartat "Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">de la UF (vegeu l'apartat "Qualificació final de cada UF"</WIOCCL:IF>).
-  * es necessita una nota mínima de [##TODO: X##],00 sense arrodoniment per poder aplicar el càlcul de la QF.
+  * es necessita una nota mínima de {##notaMinimaJT##},00 sense arrodoniment per poder aplicar el càlcul de la QF.
 
 Per assistir a la JT és imprescindible:
 
   * apuntar-se a l'espai indicat pel professor dins dels terminis establerts (si ho considereu)
 [##TODO: Afegiu altres punts amb les consideracions que considereu oprotunes##]
 
+<WIOCCL:IF condition="{##hiHaRecuperacioPerJT##}==true">
 S'ofereixen dues convocatòries ordinàries cada semestre: JT i recuperació JT. Només es té accés a la convocatòria ordinària de recuperació JT si l'alumne:
 
-  - Ha suspès la convocatòria JT amb una nota inferior a 4,00.
+  - Ha suspès la convocatòria JT amb una nota inferior a {##notaMinimaJT##},00.
   - Ha patit un accident greu, un ingrés hospitalari, la mort d'un familiar fins a 2n grau (el mateix dia de la jornada) o ha  d'assistir a un judici (el mateix dia de la jornada)  que impossibiliti l'assistència  a la convocatòria JT.
 
 [##TODO: Indiqueu aquí els justificants que han de presentar, allò que considereu oportú. Per exemple: En el supòsit 2 s'ha d'aportar obligatòriament la documentació acreditativa (justificants o altres documents oficials degudament segellats i signats. Si no s'aporten els originals, han de ser fotocòpies compulsades). Aquesta documentació s'ha de lliurar a l'IOC a l'atenció del departament XXXX. La data límit per lliurar la documentació és: XX/XX/XXXX. En qualsevol dels casos, l'equip docent és qui resol si l'alumne té dret a assistir a la recuperació JT. No hi haurà possibilitat d'elecció de centre, ni d'horari, només s'oferirà una opció que sortirà publicada en el tauler de l'aula##].
+</WIOCCL:IF>
 </WIOCCL:IF>
 
 ===== Prova d'avaluació final (PAF) =====
