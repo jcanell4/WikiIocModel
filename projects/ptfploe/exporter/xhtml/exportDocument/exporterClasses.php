@@ -72,7 +72,7 @@ class exportDocument extends MainRender {
                         "header_page_logo" => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                         "header_page_wlogo" => 9.9,
                         "header_page_hlogo" => 11.1,
-                        "header_ltext" => "Generalitat de Catalunya\nDepartament d'Educació\ninstitut Obert de Catalunya",
+                        "header_ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
                         "header_rtext" => $cicle."\n".$modul."-".$tipusBlocModul."\n".$semestre,
                         "titol" => array(
                             "Formació Professional",
