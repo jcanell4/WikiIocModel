@@ -131,8 +131,29 @@
         <WIOCCL:IF condition="0\<{#_ARRAY_LENGTH({##lliuraments#lliurament4#sequenciaDidactica##})_#}">[{title:"{##lliuraments#lliurament4#id##}", percent:0},<WIOCCL:SUBSET subsetvar="filtered" array="{##lliuraments#lliurament4#sequenciaDidactica##}" arrayitem="itemsub" filter="{##itemsub[ponderacio]##}!=0"><WIOCCL:FOREACH var="item" array="{##filtered##}" counter="ind">{title:"{##item[id]##}", percent:"{##item[ponderacio]##}"}<WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}"> , </WIOCCL:IF></WIOCCL:FOREACH></WIOCCL:SUBSET>],</WIOCCL:IF>
         [{title:"Mòdul", percent:0}, {title:"{##lliuraments#lliurament1#id##}", percent:"{##lliuraments#lliurament1#percentatge##}"}, {title:"{##lliuraments#lliurament2#id##}", percent:"{##lliuraments#lliurament2#percentatge##}"}, {title:"{##lliuraments#lliurament3#id##}", percent:"{##lliuraments#lliurament3#percentatge##}"}, {title:"{##lliuraments#lliurament4#id##}", percent:"{##lliuraments#lliurament4#percentatge##}"} ]];
 
-
     /*****************/
+
+    /* 1. Obtener el % de variación que incluya a todos los percent por debajo del 10% */
+    var variation = [];
+    for(var i = 0; i <= dataArray1.length - 1; i++) {
+        variation[i] = 0;
+        for(var j = 0; j <= dataArray1[i].length - 1; j++) {
+            if (dataArray1[i][j].percent == 0) {
+                dataArray1[i][j].view_percent = 0;
+            }else if (dataArray1[i][j].percent <= 10) {
+                variation[i] = variation[i] + (10 - dataArray1[i][j].percent);
+                dataArray1[i][j].view_percent = 10;
+            }
+        }
+    }
+    /* 2. Reducir todos los percent superiores al 10% en el % de variation */
+    for(var i = 0; i <= dataArray1.length - 1; i++) {
+        for(var j = 0; j <= dataArray1[i].length - 1; j++) {
+            if (dataArray1[i][j].percent > 10) {
+                dataArray1[i][j].view_percent = dataArray1[i][j].percent - (variation[i] * dataArray1[i][j].percent / 100);
+            }
+        }
+    }
 
     var numberOfRows = 0;
     var numberOfCells = [];
@@ -154,7 +175,7 @@
           newPercentCell.setAttribute("class", "cellQualificacio");
           newPercentContentCell.appendChild(percentCellContent);
           newPercentCell.appendChild(newPercentContentCell);
-          newPercentCell.style.width = dataArray1[i][j].percent + "%";
+          newPercentCell.style.width = dataArray1[i][j].view_percent + "%";
           document.getElementById("percent_row" + i).appendChild(newPercentCell);
           /* Creem cel·les de títol */
           var newTitleCell =  document.createElement("div");
@@ -163,7 +184,7 @@
           newTitleCell.setAttribute("class", "cellQualificacio");
           newTitleContentCell.appendChild(titleCellContent);
           newTitleCell.appendChild(newTitleContentCell);
-          newTitleCell.style.width = dataArray1[i][j].percent + "%";
+          newTitleCell.style.width = dataArray1[i][j].view_percent + "%";
           document.getElementById("title_row" + i).appendChild(newTitleCell);
         }
     }
