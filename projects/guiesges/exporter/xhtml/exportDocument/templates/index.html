@@ -135,21 +135,22 @@
 
     /* 1. Obtener el % de variación que incluya a todos los percent por debajo del 10% */
     var variation = [];
+    var minim = 10; /* amplada visual mínima */
     for(var i = 0; i <= dataArray1.length - 1; i++) {
         variation[i] = 0;
         for(var j = 0; j <= dataArray1[i].length - 1; j++) {
             if (dataArray1[i][j].percent == 0) {
                 dataArray1[i][j].view_percent = 0;
-            }else if (dataArray1[i][j].percent <= 10) {
-                variation[i] = variation[i] + (10 - dataArray1[i][j].percent);
-                dataArray1[i][j].view_percent = 10;
+            }else if (dataArray1[i][j].percent <= minim) {
+                variation[i] = variation[i] + (minim - dataArray1[i][j].percent);
+                dataArray1[i][j].view_percent = minim;
             }
         }
     }
     /* 2. Reducir todos los percent superiores al 10% en el % de variation */
     for(var i = 0; i <= dataArray1.length - 1; i++) {
         for(var j = 0; j <= dataArray1[i].length - 1; j++) {
-            if (dataArray1[i][j].percent > 10) {
+            if (dataArray1[i][j].percent > minim) {
                 dataArray1[i][j].view_percent = dataArray1[i][j].percent - (variation[i] * dataArray1[i][j].percent / 100);
             }
         }
