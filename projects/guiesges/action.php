@@ -41,8 +41,8 @@ class action_plugin_wikiiocmodel_projects_guiesges extends WikiIocPluginAction {
                 $dest = preg_replace('/:/', '/', $result['ns']);
                 $path_dest = WikiGlobalConfig::getConf('mediadir').'/'.$dest;
                 $result['dest'] = array($path_dest."/{$result['id']}.zip", $path_dest."/{$result['id']}_gd.pdf");
-                if (class_exists("ProjectExportAction", TRUE)){
-                    $html = ProjectExportAction::get_html_metadata($result) ;
+                if (class_exists("ResultsWithFiles", TRUE)){
+                    $html = ResultsWithFiles::get_html_metadata($result) ;
                 }
 
                 $event->data["ajaxCmdResponseGenerator"]->addExtraMetadata(

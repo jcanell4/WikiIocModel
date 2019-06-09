@@ -36,8 +36,8 @@ class action_plugin_wikiiocmodel_projects_qdoc extends WikiIocPluginAction {
             if (!isset($event->data['responseData'][ProjectKeys::KEY_CODETYPE])) {
                 $result['ns'] = getID();
                 $result['id'] = str_replace(':', '_', $result['ns']);
-                if (class_exists("ProjectExportAction", TRUE)){
-                    $html = ProjectExportAction::get_html_metadata($result) ;
+                if (class_exists("ResultsWithFiles", TRUE)){
+                    $html = ResultsWithFiles::get_html_metadata($result) ;
                 }
 
                 $event->data["ajaxCmdResponseGenerator"]->addExtraMetadata(

@@ -947,10 +947,12 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     public function controlMalFormedJson($jsonVar, $typeReturn="object") {
-        $t = ($typeReturn==="array") ? TRUE : FALSE;
-        $obj = json_decode($jsonVar, $t);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new MalFormedJSON();
+        if ($jsonVar) {
+            $t = ($typeReturn==="array") ? TRUE : FALSE;
+            $obj = json_decode($jsonVar, $t);
+            if (json_last_error() != JSON_ERROR_NONE) {
+                throw new MalFormedJSON();
+            }
         }
         return $obj;
     }

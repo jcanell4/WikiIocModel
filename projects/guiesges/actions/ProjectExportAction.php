@@ -68,7 +68,7 @@ class ProjectExportAction  extends ProjectMetadataAction{
         $ret['ns'] = $this->projectNS;
 
         if ($this->mode === 'xhtml') {
-            $ret["meta"] = self::get_html_metadata($result);
+            $ret["meta"] = ResultsWithFiles::get_html_metadata($result);
         }else {
             throw new Exception("ProjectExportAction: mode incorrecte.");
         }
@@ -117,83 +117,85 @@ class ProjectExportAction  extends ProjectMetadataAction{
     }
 
     public static function get_html_metadata($result){
-        if ($result['error']) {
-            throw new Exception ("Error");
-        }else{
-            if (!$result["dest"]) {
-                if (!self::copyFiles($result)) {
-                    throw new Exception("Error en la còpia dels arxius d 'esportació des de la ubicació temporal");
-                }
-            }
-//            $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $result['ns']) .'/'.preg_replace('/:/', '_', $result['ns']);
-            $ret = self::_getHtmlMetadata($result);
-        }
-        return $ret;
+        return ResultsWithFiles::get_html_metadata($result);
+//        if ($result['error']) {
+//            throw new Exception ("Error");
+//        }else{
+//            if (!$result["dest"]) {
+//                if (!self::copyFiles($result)) {
+//                    throw new Exception("Error en la còpia dels arxius d 'esportació des de la ubicació temporal");
+//                }
+//            }
+////            $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $result['ns']) .'/'.preg_replace('/:/', '_', $result['ns']);
+//            $ret = self::_getHtmlMetadata($result);
+//        }
+//        return $ret;
     }
 
-    private static function _getHtmlMetadata($result) {
-        $P = "";
-        $nP = "";
-
-        $ret = '';
-        $ret.= $P.'<span id="exportacio" style="word-wrap: break-word;">';
-        for($i=0; $i<count($result["fileNames"]); $i++){
-            if (isset($result["dest"][$i]) && @file_exists($result["dest"][$i])) {
-                $filename = $result["fileNames"][$i];
-                $media_path = "lib/exe/fetch.php?media={$result['ns']}:$filename";
-                $data = date("d/m/Y H:i:s", filemtime($result["dest"][$i]));
-                $class = "mf_".substr($filename, -3);
-
-                $ret.= '<p><a class="media mediafile '.$class.'" href="'.$media_path.'" target="_blank">'.$filename.'</a> ';
-                $ret.= '<span style="white-space: nowrap;">'.$data.'</span></p>';
-            }else{
-                $ret.= '<p class="media mediafile '.$class.'">No hi ha cap exportació feta del fitxer'.$filename.'</p>';
-            }
-        }
-        $ret.= '</span>'.$nP;
-        return $ret;
-    }
-
-    private static function copyFiles(&$result){
-        $result["dest"]=array();
-        $ok=false;
-        $dest = preg_replace('/:/', '/', $result['ns']);
-        $path_dest = WikiGlobalConfig::getConf('mediadir').'/'.$dest;
-        if (!file_exists($path_dest)){
-            mkdir($path_dest, 0755, TRUE);
-        }
-        if(is_array($result["files"])){
-            $ok=true;
-            for($i=0; $i<count($result["files"]); $i++) {
-                $ok = $ok && copy($result["files"][$i], $path_dest.'/'.$result["fileNames"][$i]);
-                $result["dest"][$i]=$path_dest.'/'.$result["fileNames"][$i];
-            }
-        }
-        return $ok;
-    }
-
-    /**
-     * Remove specified dir
-     * @param string $directory
-     */
+//    private static function _getHtmlMetadata($result) {
+//        $P = "";
+//        $nP = "";
+//
+//        $ret = '';
+//        $ret.= $P.'<span id="exportacio" style="word-wrap: break-word;">';
+//        for($i=0; $i<count($result["fileNames"]); $i++){
+//            if (isset($result["dest"][$i]) && @file_exists($result["dest"][$i])) {
+//                $filename = $result["fileNames"][$i];
+//                $media_path = "lib/exe/fetch.php?media={$result['ns']}:$filename";
+//                $data = date("d/m/Y H:i:s", filemtime($result["dest"][$i]));
+//                $class = "mf_".substr($filename, -3);
+//
+//                $ret.= '<p><a class="media mediafile '.$class.'" href="'.$media_path.'" target="_blank">'.$filename.'</a> ';
+//                $ret.= '<span style="white-space: nowrap;">'.$data.'</span></p>';
+//            }else{
+//                $ret.= '<p class="media mediafile '.$class.'">No hi ha cap exportació feta del fitxer'.$filename.'</p>';
+//            }
+//        }
+//        $ret.= '</span>'.$nP;
+//        return $ret;
+//    }
+//
+//    private static function copyFiles(&$result){
+//        $result["dest"]=array();
+//        $ok=false;
+//        $dest = preg_replace('/:/', '/', $result['ns']);
+//        $path_dest = WikiGlobalConfig::getConf('mediadir').'/'.$dest;
+//        if (!file_exists($path_dest)){
+//            mkdir($path_dest, 0755, TRUE);
+//        }
+//        if(is_array($result["files"])){
+//            $ok=true;
+//            for($i=0; $i<count($result["files"]); $i++) {
+//                $ok = $ok && copy($result["files"][$i], $path_dest.'/'.$result["fileNames"][$i]);
+//                $result["dest"][$i]=$path_dest.'/'.$result["fileNames"][$i];
+//            }
+//        }
+//        return $ok;
+//    }
+//
+//    /**
+//     * Remove specified dir
+//     * @param string $directory
+//     */
     private function removeDir($directory) {
-        if (file_exists($directory) && is_dir($directory) && is_readable($directory)) {
-            $dh = opendir($directory);
-            while ($contents = readdir($dh)) {
-                if ($contents != '.' && $contents != '..') {
-                    $path = "$directory/$contents";
-                    if (is_dir($path)) {
-                        $this->removeDir($path);
-                    }else {
-                        unlink($path);
-                    }
-                }
-            }
-            closedir($dh);
-
-            if (file_exists($directory)) {
-                rmdir($directory);
-            }
+        return IocCommon::removeDir($directory);
+//        if (file_exists($directory) && is_dir($directory) && is_readable($directory)) {
+//            $dh = opendir($directory);
+//            while ($contents = readdir($dh)) {
+//                if ($contents != '.' && $contents != '..') {
+//                    $path = "$directory/$contents";
+//                    if (is_dir($path)) {
+//                        $this->removeDir($path);
+//                    }else {
+//                        unlink($path);
+//                    }
+//                }
+//            }
+//            closedir($dh);
+//
+//            if (file_exists($directory)) {
+//                rmdir($directory);
+//            }
         }
-    }
+//    }
 }

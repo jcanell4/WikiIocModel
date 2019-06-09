@@ -52,8 +52,13 @@ class PageDataQuery extends DataQuery {
         return metaFiles($id);
     }
 
-    public function save($id, $text, $summary, $minor = false){
+    public function save($id, $text, $summary, $minor = false, $forceSave=false){
+        $fdt = filemtime(wikiFN($id));
         saveWikiText($id, $text, $summary, $minor);
+        if($forceSave && $fdt === filemtime(wikiFN($id))){
+            saveWikiText($id, " ", "");
+            saveWikiText($id, $text, $summary, $minor);
+        }
     }
 
     public function getHtml($id, $rev = null){
