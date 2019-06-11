@@ -84,6 +84,7 @@ class exportDocument extends MainRender {
                 StaticPdfRenderer::renderDocument($params, "ge.pdf");
                 $zip->addFile($this->cfgExport->tmp_dir."/ge.pdf", "/ge_sencera/ge.pdf");
 
+                StaticPdfRenderer::resetStaticDataRender();
                 $params["data"]["titol"]=array("Estudis de GES","Guia docent",$modul);
                 $params["data"]["contingut"]=json_decode($data["pdfgd"], TRUE);   //contingut latex ja rendaritzat
                 StaticPdfRenderer::renderDocument($params, "gd.pdf");
