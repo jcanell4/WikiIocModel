@@ -1,0 +1,344 @@
+/* General rules */
+
+body {
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #131515;
+}
+
+h1, h2, h3, h4, h5, h6, p, li, ul {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+h2 {
+  color: #f3a22d;
+}
+
+h3 {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(39, 33, 60, 0.45);
+}
+
+a {
+  color: #f3a22d;
+
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.own_container {
+  width: auto;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+/* Capçalera */
+
+.main_header {
+  width: 100%;
+  padding-bottom: 28px;
+  background-color: #f3a22d;
+}
+
+.main_header h1 {
+  padding-top: 38px;
+  font-size: 20px;
+  line-height: normal;
+  font-weight: bold;
+  letter-spacing: 0;
+  color: #ffffff;
+  -webkit-transition: padding-top .1s;
+  transition: padding-top .1s;
+}
+
+/* Títol (capçalera secundària) */
+
+.secondary_header {
+  position: relative;
+  width: 100%;
+  padding-top: 22px;
+}
+
+.secondary_header h2 {
+  font-size: 19px;
+  font-weight: bold;
+  color: #f3a22d;
+  text-align: left;
+}
+
+.focus_stripe {
+  display: none;
+}
+/* Section general rules */
+
+.section {
+  font-size: 15px;
+  line-height: 1.45;
+  text-align: center;
+  color: #131515;
+}
+
+hr {
+  width: 56px;
+  border: .5px solid #f3a22d;
+  -webkit-transition: width .4s;
+  transition: width .4s;
+}
+
+/* Section 1 */
+
+.section1 {
+  margin: 48px 0 0 0;
+}
+
+.section1_container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.section1_content_row1,
+.section1_content_row2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+
+.section1_content_row2,
+.section1_content_row3  {
+  margin-top: 32px;
+}
+
+.section1_content_row3  {
+  width: 78%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section1_container img.map {
+  max-width: 300px;
+}
+
+.section1_content_row3 .franja_color {
+  background-color: #fcebd4;
+  height: 45px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 25px;
+  border-top-left-radius: 27px;
+  border-top-right-radius: 27px;
+}
+
+
+.section1_element {
+  width: 96px;
+}
+
+.section1_icona {
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 123px;
+}
+
+
+
+.section1 a {
+  line-height: 1.4;
+  font-size: 15px;
+  line-height: normal;
+  font-weight: normal;
+}
+
+a.complete {
+  font-size: 15px;
+  display: block;
+  margin: 104px auto 0 auto;
+}
+
+#durada_icona {
+  height: 55px;
+  background-image: url("img/calendari-icona.svg");
+}
+
+.section1_element img {
+  width: 96px;
+}
+
+.section1 h3 {
+  font-size: 10px;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  height: 30px;
+}
+
+.section1 p {
+  font-size: 13px;
+}
+
+.section1 ul {
+  padding-left: 21px;
+}
+
+.section1 li {
+  font-size: 13px;
+  text-align: left;
+}
+
+
+/* Media queries */
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+  /* Own container media query */
+
+  .own_container {
+    width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    display:flex;
+  }
+
+  /* Capçalera media query */
+
+  .main_header h1 {
+    padding-top: 102px;
+    padding-bottom: 64px;
+    font-size: 23px;
+    font-weight: bold;
+    letter-spacing: .5px;
+    color: #ffffff;
+  }
+
+  /* Títol (capçalera secundària) media query */
+
+  .secondary_header {
+    padding-top: 83px;
+  }
+
+  .secondary_header h2 {
+    font-size: 23px;
+    text-align: left;
+  }
+
+  .focus_stripe {
+    display: block;
+    position: absolute;
+    top: 89px;
+    height: 19px;
+    width: 2000px;
+    background-color: #f3a22d;
+    margin-left: -2020px;
+  }
+
+  /* Section general rules media query */
+
+  .section {
+    font-size: 17px;
+    line-height: 1.45;
+    text-align: center;
+    color: #131515;
+  }
+
+  hr {
+    width: 138px;
+  }
+
+  /* Section 1 media query */
+
+  .section1 {
+    margin: 87px 0 0 0;
+  }
+
+  .section1_container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    width: 400px;
+  }
+
+
+  .section1_content_row2,
+  .section1_content_row3 {
+    margin-top: 56px;
+  }
+
+  .section1_element {
+    width: 123px;
+  }
+
+  .section1_icona {
+    width: 123px;
+  }
+
+  #durada_icona {
+    height: 70px;
+  }
+
+  .section1_content_row3 .franja_color {
+    height: 56px;
+    margin-bottom: 34px;
+  }
+
+  .section1 h3 {
+    font-size: 11px;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    height: 30px;
+  }
+
+  .section1 p {
+    font-size: 15px;
+  }
+
+
+  
+  .section1 li {
+    font-size: 15px;
+    text-align: left;
+  }
+}
+
+/*Barra de navegació principal*/
+nav {
+  width: 100%;
+  background-color: #fcebd4;
+  text-align: center;
+}
+
+nav ul{
+  list-style: none;
+}
+
+nav li {
+  display: inline-block;
+}
+
+nav a {
+  padding: 15px;
+  font-size: 12px;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+}
+
+nav a:hover {
+  background-color: #f3a22d;
+  color: #ffffff;
+}

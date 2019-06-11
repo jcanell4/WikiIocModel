@@ -1,0 +1,385 @@
+{
+  "definition": {
+    "n_columns": 12,
+    "n_rows": 10,
+    "chars_column": 10,
+    "rows_row": 1
+  },
+  "groups": {
+    "authorship": {
+      "parent": "",
+      "label": "Autoria",
+      "n_columns": 12,
+      "frame": true,
+      "config": {
+        "collapsable": true,
+        "collapsed": false
+      }
+    },
+    "dates": {
+      "parent": "",
+      "label": "Dates importants",
+      "n_columns": 12,
+      "n_rows": 1,
+      "frame": true,
+      "config": {
+        "collapsable": true,
+        "collapsed": false
+      }
+    },
+    "dadesBasiques": {
+      "parent": "",
+      "label": "Dades bàsiques",
+      "n_columns": 12,
+      "n_rows": 1,
+      "frame": true,
+      "config": {
+        "collapsable": true,
+        "collapsed": true
+      }
+    },
+    "titles": {
+      "parent": "dadesBasiques",
+      "label": "Títols",
+      "n_columns": 12,
+      "n_rows": 1,
+      "frame": true,
+      "config": {
+        "collapsable": true,
+        "collapsed": false
+      }
+    },
+    "correus": {
+      "parent": "dadesBasiques",
+      "label": "Correus",
+      "n_columns": 12,
+      "n_rows": 1,
+      "frame": true,
+      "config": {
+        "collapsable": true,
+        "collapsed": true
+      }
+    },
+    "externalLinks": {
+      "parent": "dadesBasiques",
+      "label": "Enllaços externs",
+      "n_columns": 12,
+      "n_rows": 1,
+      "frame": true,
+      "config": {
+        "collapsable": true,
+        "collapsed": true
+      }
+    }
+  },
+  "fields": {
+    "autor": {
+      "type": "amd",
+      "label": "Autor (autor)",
+      "n_columns": 6,
+      "group": "authorship",
+      "props": {
+        "required": true
+      },
+      "config": {
+        "readonly": {
+          "and": [
+            {
+              "class": "ValidationByRoles",
+              "data": {
+                "roles": [
+                  "responsable"
+                ],
+                "deniedResponse": true
+              }
+            },
+            {
+              "class": "ValidationByInfoPerm",
+              "data": {
+                "perm": 4,
+                "deniedResponse": true
+              }
+            }
+          ]
+        },
+        "class": {
+          "edit": "IocFilteredList",
+          "view": "IocListSelectedItems"
+        },
+        "data": {
+          "ns": "",
+          "buttonLabel": "Cercar",
+          "fieldName": "autor",
+          "dialogTitle": "Cercar autor",
+          "dialogButtonLabel": "Afegir autor",
+          "data": "",
+          "dataQuery": {
+            "filter": ""
+          },
+          "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+          "fields": {
+            "username": "Nom d'usuari",
+            "name": "Nom"
+          },
+          "fieldId": "username",
+          "defaultEntryField": "name"
+        }
+      }
+    },
+    "responsable": {
+      "type": "amd",
+      "label": "Responsable de la creació (responsable)",
+      "n_columns": 4,
+      "group": "authorship",
+      "props": {
+        "required": true
+      },
+      "config": {
+        "readonly": {
+          "and": [
+            {
+              "class": "ValidationByRoles",
+              "data": {
+                "roles": [
+                  "responsable"
+                ],
+                "deniedResponse": true
+              }
+            },
+            {
+              "class": "ValidationByInfoPerm",
+              "data": {
+                "perm": 4,
+                "deniedResponse": true
+              }
+            }
+          ]
+        },
+        "class": {
+          "edit": "IocFilteredList",
+          "view": "IocListSelectedItems"
+        },
+        "data": {
+          "ns": "",
+          "buttonLabel": "Cercar",
+          "fieldName": "responsable",
+          "dialogTitle": "Cercar responsable",
+          "dialogButtonLabel": "Afegir responsable",
+          "data": "",
+          "dataQuery": {
+            "filter": ""
+          },
+          "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+          "fields": {
+            "username": "Nom d'usuari",
+            "name": "Nom"
+          },
+          "fieldId": "username",
+          "defaultEntryField": "name"
+        }
+      }
+    },
+    "dataProva1": {
+      "label": "Data de la prova A2 i B1 (prova1)",
+      "n_columns": 6,
+      "group": "dates",
+      "props": {
+        "required": true,
+        "title": "Data de la prova A2 i B1"
+      }
+    },
+    "dataProva2": {
+      "label": "Data de la prova B2 (prova2)",
+      "n_columns": 6,
+      "group": "dates",
+      "props": {
+        "required": true,
+        "title": "Data de la prova B2"
+      }
+    },
+    "dataResultats": {
+      "label": "Data publicació dels resultats (dataResultats)",
+      "n_columns": 6,
+      "group": "dates",
+      "props": {
+        "required": true,
+        "title": "Data de la publicació dels resultats"
+      }
+    },
+    "dataReclamacions": {
+      "type": "hidden"
+    },
+    "dataDemandaNE": {
+      "label": "Data de sol·licitud NE (dataDemandaNE)",
+      "n_columns": 6,
+      "group": "dates",
+      "props": {
+        "required": true,
+        "title": "Data de la publicació dels resultats "
+      }
+    },
+    "dataProvaNE1": {
+      "type": "hidden"
+    },
+    "dataProvaNE2": {
+      "type": "hidden"
+    },
+    "plantilla": {
+      "type": "hidden"
+    },
+    "title_a2": {
+      "label": "Títol per la convocatòria del nivell A2 (title_a2)",
+      "n_columns": 6,
+      "group": "titles",
+      "props": {
+        "required": true,
+        "title": "Títol principal pel document de la convocatòria del nivell A2"
+      }
+    },
+    "title_b1": {
+      "label": "Títol per la convocatòria del nivell B1 (title_b1)",
+      "n_columns": 6,
+      "group": "titles",
+      "props": {
+        "required": true,
+        "title": "Títol principal pel document de la convocatòria del nivell B1"
+      }
+    },
+    "title_b2": {
+      "label": "Títol per la convocatòria del nivell B2 (title_b2)",
+      "n_columns": 6,
+      "group": "titles",
+      "props": {
+        "required": true,
+        "title": "Títol principal pel document de la convocatòria del nivell B2"
+      }
+    },
+    "urlMap_A2B1": {
+      "label": "Enllaç a GoogleMaps per la prova A2/B1 (urlMap_A2B1)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç a GoogleMaps per la prova A2/B1"
+      }
+    },
+    "urlMap_B2": {
+      "label": "Enllaç a GoogleMaps per la prova B2 (urlMap_B2)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç a GoogleMaps per la prova B2"
+      }
+    },
+    "14_EDU_34_2009": {
+      "label": "Enllaç a l'article 14 de la resolució EDU/34/2009 (14_EDU_34_2009)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç a l'article 14 de la resolució EDU/34/2009"
+      }
+    },
+    "EDU_4039_2010": {
+      "label": "Enllaç a la resolució EDU/4039/2010 (EDU_4039_2010)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç a la resolució EDU/4039/2010"
+      }
+    },
+    "EDU_34_2009": {
+      "label": "Enllaç a la resolució EDU/4039/2010 (EDU_34_2009)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç a la resolució EDU/4039/2010"
+      }
+    },
+    "Decret_4_2009": {
+      "label": "Enllaç al decret 4/2009 (Decret_4_2009)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç al decret 4/2009"
+      }
+    },
+    "Decret_73_2014": {
+      "label": "Enllaç al decret 73/2014 (Decret_73_2014)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç al decret 73/2014"
+      }
+    },
+    "ReialDecret_1041_2017": {
+      "label": "Enllaç al reial decret 1041/2017 (ReialDecret_1041_2017)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç al reial decret 1041/2017"
+      }
+    },
+    "model_i67": {
+      "label": "Enllaç al model I67 (model_i67)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç al model I67"
+      }
+    },
+    "provaCertificat_A2": {
+      "label": "Enllaç a la prova pel certificat A2 (provaCertificat_A2)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç a la prova pel certificat A2"
+      }
+    },
+    "provaCertificat_B1": {
+      "label": "Enllaç a la prova pel certificat B1 (provaCertificat_B1)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç a la prova pel certificat B1"
+      }
+    },
+    "provaCertificat_B2": {
+      "label": "Enllaç a la prova pel certificat B2 (provaCertificat_B2)",
+      "n_columns": 6,
+      "group": "externalLinks",
+      "props": {
+        "required": true,
+        "title": "Enllaç a la prova pel certificat B2"
+      }
+    },
+    "correu": {
+      "label": "Correu d'informació (correu)",
+      "n_columns": 6,
+      "group": "correus",
+      "props": {
+        "required": true,
+        "title": "Correu d'informació"
+      }
+    },
+    "correuReclamacio": {
+      "label": "Correu per reclamacions (correuReclamacio)",
+      "n_columns": 6,
+      "group": "correus",
+      "props": {
+        "required": true,
+        "title": "Correu per reclamacions"
+      }
+    }
+
+  }
+}

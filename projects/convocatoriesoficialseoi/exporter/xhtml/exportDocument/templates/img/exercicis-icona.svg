@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="43px" height="30px" viewBox="0 0 43 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>D8F11F7E-F3D5-40B9-86CA-EDDA99D95D68</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Pla-de-treball-nou-amb-text" transform="translate(-341.000000, -1980.000000)">
+            <g id="exercicis_icona" transform="translate(341.000000, 1980.000000)">
+                <path d="M6,0 C4.3920972,0 3.08413926,1.30229032 3.08413926,2.90322581 L3.08413926,24 L0.485976789,24 C0.146172099,24 0.00190016925,24.2910774 0,24.483871 L0,26.6129032 C0,28.4803548 1.5262587,30 3.40183752,30 L39.5981625,30 C41.4737413,30 43,28.4803548 43,26.6129032 L42.9859768,24.483871 C42.9859768,24.2305935 42.7543797,24 42.5,24 L39.9859768,24 L40,2.90322581 C40,1.30229032 38.6920421,0 37.0841393,0 L6,0 Z M5.94390716,0.967741935 L37.0560928,0.967741935 C38.1419594,0.967741935 39,1.82206452 39,2.90322581 L39,4 L4,4 L4,2.90322581 C4,1.82206452 4.85804062,0.967741935 5.94390716,0.967741935 Z M4,5 L39,5 L39,24 L4,24 L4,5 Z M0.971953578,25 L42,25 L42,26.6129032 C42,27.9624677 40.9255539,29.0322581 39.5701161,29.0322581 L3.40183752,29.0322581 C2.04639966,29.0322581 0.971953578,27.9624677 0.971953578,26.6129032 L0.971953578,25 Z" id="Fill-1" fill="#f3a22d"></path>
+                <g id="Group-10" transform="translate(12.000000, 7.000000)" stroke="#f3a22d">
+                    <path d="M5.5,1.5 L16.5,1.5" id="Line-6" stroke-linecap="round"></path>
+                    <path d="M5.5,3.5 L9.5,3.5" id="Line-6-Copy-3" stroke-linecap="round"></path>
+                    <rect id="Rectangle-12" x="0.5" y="1.5" width="2" height="2" rx="1"></rect>
+                </g>
+                <g id="Group-10-Copy" transform="translate(12.000000, 12.000000)" stroke="#f3a22d">
+                    <path d="M5.5,1.5 L16.5,1.5" id="Line-6" stroke-linecap="round"></path>
+                    <path d="M5.5,3.5 L9.5,3.5" id="Line-6-Copy-3" stroke-linecap="round"></path>
+                    <rect id="Rectangle-12" x="0.5" y="1.5" width="2" height="2" rx="1"></rect>
+                </g>
+                <g id="Group-10-Copy-2" transform="translate(12.000000, 17.000000)" stroke="#f3a22d">
+                    <path d="M5.5,1.5 L16.5,1.5" id="Line-6" stroke-linecap="round"></path>
+                    <path d="M5.5,3.5 L9.5,3.5" id="Line-6-Copy-3" stroke-linecap="round"></path>
+                    <rect id="Rectangle-12" x="0.5" y="1.5" width="2" height="2" rx="1"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

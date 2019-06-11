@@ -1,0 +1,168 @@
+{
+  "metaDataClassesNameSpaces": [
+    {
+      "main": {
+        "MetaDataDAO": "defaultProject",
+        "MetaDataEntity": "defaultProject",
+        "MetaDataRender": "convocatoriesoficialseoi"
+      }
+    }
+  ],
+  "metaDataProjectConfig": [
+    {
+      "main": {
+        "projectTypeConfigFile": ""
+      }
+    }
+  ],
+  "metaDataProjectStructure": [
+    {
+      "main": "meta.mdpr",
+      "mainType": {
+        "type": "object",
+        "typeDef": "convocatories"
+      },
+      "typesDefinition": {
+        "convocatories": {
+          "type": "object",
+          "keys": {
+            "dataProva1": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "dataProva2": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "dataResultats": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "dataReclamacions": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "dataDemandaNE": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "dataProvaNE1": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "dataProvaNE2": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "autor": {
+              "type": "string",
+              "mandatory": true
+            },
+            "responsable": {
+              "type": "string",
+              "struc_chars": "40",
+              "mandatory": true
+            },
+            "plantilla": {
+              "type": "string",
+              "mandatory": true,
+              "default": "convocatoria_a2,convocatoria_b1,convocatoria_b2"
+            },
+            "title_a2": {
+              "type": "string",
+              "mandatory": true,
+              "default": "EOI IOC. Prova per a l'obtenció del certificat de nivell bàsic A2"
+            },
+            "title_b1": {
+              "type": "string",
+              "mandatory": true,
+              "default": "EOI IOC. Prova per a l'obtenció del certificat de nivell intermedi B1"
+            },
+            "title_b2": {
+              "type": "string",
+              "mandatory": true,
+              "default": "EOI IOC. Prova per a l'obtenció del certificat de nivell intermedi B2"
+            },
+            "urlMap_A2B1": {
+              "type": "string",
+              "mandatory": true,
+              "default": "https://goo.gl/maps/PncUtYcbS252"
+            },
+            "urlMap_B2": {
+              "type": "string",
+              "mandatory": true,
+              "default": "https://goo.gl/maps/6g7m1mGwdTJ2"
+            },
+            "14_EDU_34_2009": {
+              "type": "string",
+              "mandatory": true,
+              "default": "http://cido.diba.cat/legislacio/1144481/ordre-edu342009-de-30-de-gener-per-la-qual-sorganitzen-les-proves-especifiques-de-certificacio-dels-nivells-intermedi-i-avancat-dels-ensenyaments-didiomes-de-regim-especial-que-simparteixen-a-les-escoles-oficials-didiomes"
+            },
+            "EDU_4039_2010": {
+              "type": "string",
+              "mandatory": true,
+              "default": "https://www.gencat.cat/diari/5781/10349020.htm"
+            },
+            "EDU_34_2009": {
+              "type": "string",
+              "mandatory": true,
+              "default": "https://dogc.gencat.cat/ca/pdogc_canals_interns/pdogc_resultats_fitxa/?action=fitxa&documentId=462817&language=ca_ES"
+            },
+            "Decret_4_2009": {
+              "type": "string",
+              "mandatory": true,
+              "default": "http://www.gencat.cat/diari/5297/09009001.htm"
+            },
+            "Decret_73_2014": {
+              "type": "string",
+              "mandatory": true,
+              "default": "https://portaljuridic.gencat.cat/ca/pjur_ocults/pjur_resultats_fitxa/?action=fitxa&mode=single&documentId=663362&language=ca_ES"
+            },
+            "ReialDecret_1041_2017": {
+              "type": "string",
+              "mandatory": true,
+              "default": "https://www.boe.es/boe/dias/2017/12/23/pdfs/BOE-A-2017-15367.pdf"
+            },
+            "model_i67": {
+              "type": "string",
+              "mandatory": true,
+              "default": "http://ioc.xtec.cat/materials/qualitat/Secretaria/Secretaria_IOC/Model_I67.pdf"
+            },
+            "provaCertificat_A2": {
+              "type": "string",
+              "mandatory": true,
+              "default": "https://ioc.xtec.cat/campus/course/view.php?id=6972&section=10"
+            },
+            "provaCertificat_B1": {
+              "type": "string",
+              "mandatory": true,
+              "default": "https://ioc.xtec.cat/campus/course/view.php?id=7086&section=10"
+            },
+            "provaCertificat_B2": {
+              "type": "string",
+              "mandatory": true,
+              "default": "https://ioc.xtec.cat/campus/course/view.php?id=6978&section=10"
+            },
+            "correu": {
+              "type": "string",
+              "mandatory": true,
+              "default": "eoiinfo@ioc.cat"
+            },
+            "correuReclamacio": {
+              "type": "string",
+              "mandatory": true,
+              "default": "ididacademica@ioc.cat"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

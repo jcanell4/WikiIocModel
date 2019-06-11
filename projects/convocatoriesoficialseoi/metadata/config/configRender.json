@@ -1,0 +1,40 @@
+{
+  "typesDefinition": {
+    "convocatories": {
+      "render": {
+        "typeDef": "convocatories",
+        "class": "exportDocument",
+        "fields": "ALL",
+        "extraFields": [
+            {"name":"convocatoria_a2", "valueType":"page", "value":"convocatoria_a2"},
+            {"name":"convocatoria_b1", "valueType":"page", "value":"convocatoria_b1"},
+            {"name":"convocatoria_b2", "valueType":"page", "value":"convocatoria_b2"},
+            {"name":"pdfconvocatoria_a2", "valueType":"page", "value":"convocatoria_a2"},
+            {"name":"pdfconvocatoria_b1", "valueType":"page", "value":"convocatoria_b1"},
+            {"name":"pdfconvocatoria_b2", "valueType":"page", "value":"convocatoria_b2"}
+        ]
+      },
+      "keys": {
+        "convocatoria_a2": {
+          "render": {"class": "renderFile"}
+        },
+        "convocatoria_b1": {
+          "render": {"class": "renderFile"}
+        },
+        "convocatoria_b2": {
+          "render": {"class": "renderFile"}
+        },
+        "pdfconvocatoria_a2": {
+          "render": {"class": "renderFileToPsDom"}
+        },
+        "pdfconvocatoria_b1": {
+          "render": {"class": "renderFileToPsDom"}
+        },
+        "pdfconvocatoria_b2": {
+          "render": {"class": "renderFileToPsDom"}
+        }
+      }
+
+    }
+  }
+}

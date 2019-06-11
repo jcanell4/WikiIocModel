@@ -1,0 +1,87 @@
+~~USE:WIOCCL~~
+====== Obtenció del certificat A2 ======
+L'Institut Obert de Catalunya organitza la prova per a l'obtenció del **certificat de nivell bàsic A2 d'anglès**.
+
+La prova consta d'una part escrita i una part oral.
+
+Per presentar-se a la prova cal estar matriculat en el mòdul 2B de l'EOI IOC.
+
+====== Lloc, data i horari de la prova ======
+La prova tindrà lloc a l'Escola Oficial d'Idiomes Barcelona Drassanes
+
+<map-table>
+|**EOI Barcelona Drassanes** \\ Av. Drassanes 14. \\ 08001 Barcelona \\ **Estacions Metro**: Drassanes; línia 3 (verda) \\ **BUS**: 120 (A prop: 59, 21, D20, H14, V11, V13)|<img-resource-prj height="250" width="250" align="right">mapa-prova-A2-B1.jpg</img-resource-prj>  |
+| |[[{##urlMap_A2B1##}|{##urlMap_A2B1##}]]  |
+</map-table>
+
+<block>
+__Prova escrita__
+
+ **{#_UCFIRST("{#_LONG_DATE("{##dataProva1##}", "true")_#}")_#}, de les 10:30h a les 13:10h** (cal ser-hi 30 minuts abans del començament de la prova).
+
+__Prova d'expressió i interacció oral__
+
+**{#_UCFIRST("{#_LONG_DATE("{##dataProva1##}", "true")_#}")_#}, de les 15:30 a les 20:00h** (cal ser-hi 30 minuts abans del començament de la prova).
+
+La prova dura aproximadament 20 minuts. Consisteix en un diàleg amb descripció d'una imatge amb una petita entrevista sobre un tema relacionat.
+
+Convocatòria individual: s'informa en el moment de fer la prova escrita en quina franja horària del mateix dia s'ha de fer la prova oral.
+
+Es convocarà a les persones que vinguin de fora de la província de Barcelona de manera que puguin fer la prova durant les primeres franges horàries.
+</block>
+
+====== Publicació de resultats ======
+
+Publicació dels resultats de les proves: **{#_LONG_DATE("{##dataResultats##}")_#}, a les 10 hores, a la Secretaria EOI/Qualificacions**.
+
+Termini per presentar reclamacions: **fins al {#_LONG_DATE("{##dataReclamacions##}")_#} a les 10 hores**.
+
+Les reclamacions respecte a les qualificacions finals es resoldran d’acord amb el procediment previst en l’article [[{##14_EDU_34_2009##}|14 de l'Ordre EDU/34/2009]].
+
+L'[[{##model_i67##}|imprès]] per presentar una reclamació es troba a la web de l'IOC, a la secció de formularis. Aquest és l'enllaç: [[{##model_i67##}|{##model_i67##}]]. Un cop complimentada la sol·licitud, s'ha d'enviar a la bústia [[{##correuReclamacio##}|{##correuReclamacio##}]] indicant com a Assumpte, //“Reclamació prova certificat nivell bàsic A2 anglès”//.
+
+<sub>**Nota: si per raons de calendari, la matrícula d'EOI IOC per a alumnes actuals, comencés durant el període de resolució de reclamacions, qualsevol incidència per qüestió de terminis de matrícula es resoldrà en benefici de l'alumne.**</sub>
+
+====== Descripció i pautes de qualificació de les proves ======
+La prova estarà constituïda per tasques de comprensió oral, comprensió escrita, ús de la llengua, expressió i interacció escrita i expressió i interacció oral.
+
+Cadascuna de les cinc parts que componen la prova, esmentades a l'apartat anterior, tindrà una ponderació del 20% sobre el total de la puntuació de la prova.
+
+La puntuació global per obtenir el certificat de nivell bàsic A2 ha de ser igual o superior al 65% de la puntuació total possible.
+
+Per tenir dret a l'obtenció de la qualificació global final cal haver dut a terme totes les parts de la prova.
+
+La qualificació final única de l'examen serà global i s'hi posarà Apte/a o No apte/a, segons correspongui.
+
+En cas que no s'hagi dut a terme alguna part de la prova es posarà No presentat/ada. (NP), en la part corresponent, i es posarà No qualificat/ada. (NQ) en els apartats de la puntuació global final i en la qualificació final.
+
+====== Mostres de les prova ======
+A les vostres aules, dins el bloc [[{##provaCertificat_A2##}|Prova Certificat Nivell Bàsic]] hi ha mostres i exemples de les diferents parts de la prova.
+
+====== Necessitats específiques ======
+Les persones aspirants amb necessitats específiques derivades de discapacitats físiques, psíquiques o sensorials o altres trastorns greus, que tinguin el reconeixement oficial de la situació de discapacitat, poden sol·licitar els recursos addicionals necessaris per desenvolupar la prova contactant amb l'IOC. No més tard del **{#_LONG_DATE("{##dataDemandaNE##}")_#}**, aquestes persones han de fer arribar  per correu certificat-missatgeria o personalment  a la seu central de l'IOC (Avinguda Paral.lel, 71 – 08004 Barcelona),una [[{##model_i67##}|sol·licitud general]] adreçada al director de l'IOC.
+
+A la sol·licitud, signada per la persona aspirant, o pels progenitors o la persona tutora legal, si és menor d'edat, cal adjuntar la documentació següent:
+  * El certificat de reconeixement de discapacitat del Departament de Benestar Social i Família, que informi del grau de discapacitat reconeguda i/o certificat mèdic oficial, acompanyat, si escau, d'un certificat emès per l'organisme acreditat corresponent, que informi de les característiques de la discapacitat o trastorn que pateix la persona aspirant.
+  * Documentació justificativa de modificacions i adaptacions curriculars, autoritzades pel Departament d'Ensenyament,durant els últims estudis cursats en el sistema educatiu, si escau.
+
+Les persones la sol·licitud de les quals hagi estat acceptada podran fer la prova adaptada el dia **{#_LONG_DATE("{##dataProvaNE1##}")_#}, de les 09:45 a les 14:00, a la seu central de l'IOC**.
+
+====== Incidències justificades ======
+Les persones aspirants que justifiquin documentalment la seva absència el dia de la prova per raons de força major podran accedir a la convocatòria d’incidències. Aquesta convocatòria d'incidències tindrà lloc el dia, **{#_LONG_DATE("{##dataProvaNE1##}")_#}, de les 09:45 a les 14:00, a la seu central de l'IOC**.
+
+Els alumnes que es trobin en aquesta situació, han de fer arribar adjunt, a la bústia [[{##correu##}]], no més tard del dia **{#_LONG_DATE("{##dataDemandaNE##}")_#}**, un [[{##model_i67##}|formulari]] de Sol·licitud general  que trobaràn a l'adreça [[{##model_i67##}|{##model_i67##}]] de la pàgina web de l'IOC. A l'assumpte del correu cal escriure //"Sol·licitud d'incidència prova certificat nivell bàsic A2 d’anglès"//.
+
+En cas d’incidència sobrevinguda el mateix dia de la prova, s’ha de seguir el mateix procediment, comunicant-ho en un termini màxim de 48 hores a partir de l’hora d’inici de les proves.
+
+====== Normativa ======
+
+[[{##EDU_4039_2010##}|RESOLUCIÓ EDU/4039/2010]], de 15 de desembre, per la qual s'implanta el nivell bàsic  i el nivell intermedi d'anglès dels ensenyaments d'idiomes a l'Institut Obert de Catalunya  ( DOGC Núm. 5781 de 23/12/2010).
+
+[[{##EDU_34_2009##}|RESOLUCIÓ EDU/34/2009]], per la qual s'organitzen les proves específiques de certificació dels nivells intermedi i avançat dels ensenyaments d'idiomes de règim especial que s'imparteixen a les escoles oficials d'idiomes.
+
+[[{##Decret_4_2009##}|Decret 4/2009]], de 13 de gener, pel qual s'estableix l'ordenació i el currículum dels ensenyaments d'idiomes de règim especial (DOGC núm. 5297, de 15.1.2009).
+
+[[{##Decret_73_2014##}|Decret 73/2014]], de 27 de maig, de modificació del Decret 4/2009, de 13 de gener, pel qual s'estableix l'ordenació i el currículum dels ensenyaments d'idiomes de règim especial.
+
+[[{##ReialDecret_1041_2017##}|Reial Decret 1041/2017]], de 22 de desembre por el que se fijan las exigencias mínimas del nivel básico a efectos de certificación, se establece el currículo básico de los niveles Intermedio B1, Intermedio B2, Avanzado C1, y Avanzado C2, de las Enseñanzas de idiomas de régimen especial reguladas por la Ley Orgánica 2/2006, de 3 de mayo, de Educación, y se establecen las equivalencias entre las Enseñanzas de idiomas de régimen especial reguladas en diversos planes de estudios y las de este real decreto.
