@@ -21,6 +21,14 @@ class upgrader_1 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
+                //Transforma los datos del proyecto "ptfploe" desde la estructura de la versión 0 a la versión 1
+                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+                //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
+                $dataProject = $this->addFieldInMultiRow($dataProject, "datesJT", "hiHaRecuperacio", TRUE);
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 0 to 1");
                 $ret = TRUE;
                 break;
 

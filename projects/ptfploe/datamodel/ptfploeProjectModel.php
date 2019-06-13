@@ -184,6 +184,17 @@ class ptfploeProjectModel extends AbstractProjectModel {
                     }
                 }
             }
+
+            $taulaJT = (is_array($values["datesJT"])) ? $values["datesJT"] : json_decode($values["datesJT"], true);
+
+            if ($taulaJT!=NULL){
+                $hiHaRecuperacio = FALSE;
+                for ($i=0; !$hiHaRecuperacio && $i<count($taulaJT); $i++){
+                    $hiHaRecuperacio = $taulaJT[$i]["hiHaRecuperacio"];
+                }
+                $values["hiHaRecuperacioPerJT"] = $hiHaRecuperacio;
+            }
+
             $values["durada"] = $horesUF[0];
             $values["taulaDadesUnitats"] = $taulaDadesUnitats;
             $values["taulaDadesUF"] = $taulaDadesUF;
