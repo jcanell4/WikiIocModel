@@ -212,7 +212,7 @@
                         "qualificació": {
                             "type": "date",
                             "mandatory": true,
-                            "default":true
+                            "default" : "{#_TODAY()_#}"
                         },
                         "hiHaRecuperacio": {
                             "type": "boolean",
