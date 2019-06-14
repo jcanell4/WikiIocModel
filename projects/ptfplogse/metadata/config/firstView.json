@@ -545,6 +545,9 @@
             "lliurament": {
               "type": "date"
             },
+            "hiHaSolucio": {
+              "type": "boolean"
+            },
             "solució": {
               "type": "date"
             },
@@ -588,6 +591,10 @@
                 {
                   "name": "lliurament",
                   "field": "lliurament"
+                },
+                {
+                  "name": "solució?",
+                  "field": "hiHaSolucio"
                 },
                 {
                   "name": "solució",
@@ -922,6 +929,9 @@
         "type" : "hidden"
       },
       "hiHaRecuperacioPerJT":{
+        "type" : "hidden"
+      },
+      "hiHaSolucioPerEAF":{
         "type" : "hidden"
       }
     }

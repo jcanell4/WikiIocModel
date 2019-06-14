@@ -164,6 +164,10 @@
                             "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
+                        "hiHaSolucio": {
+                            "type": "boolean",
+                            "mandatory": true
+                        },
                         "solució": {
                             "type": "date",
                             "default":"{#_TODAY()_#}",
@@ -546,7 +550,12 @@
                         "datesEAF": {
                             "type": "defDatesEAF",
                             "mandatory": false
-                        },                                                
+                        },
+                        "hiHaSolucioPerEAF": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
                         "hiHaRecuperacioPerJT": {
                             "type": "boolean",
                             "mandatory": false,

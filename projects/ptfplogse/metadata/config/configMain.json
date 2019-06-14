@@ -19,7 +19,7 @@
         {
             "main": "meta.mdpr",
             "versions": {
-                "fields": 1,
+                "fields": 2,
                 "templates": {
                     "continguts": 3
                 }
@@ -153,6 +153,10 @@
                         },
                         "lliurament": {
                             "type": "date",
+                            "mandatory": true
+                        },
+                        "hiHaSolucio": {
+                            "type": "boolean",
                             "mandatory": true
                         },
                         "solució": {
@@ -518,6 +522,11 @@
                         "datesEAF": {
                             "type": "defDatesEAF",
                             "mandatory": false
+                        },
+                        "hiHaSolucioPerEAF": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
                         },
                         "hiHaRecuperacioPerJT": {
                             "type": "boolean",

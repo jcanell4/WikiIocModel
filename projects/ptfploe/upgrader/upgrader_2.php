@@ -21,6 +21,13 @@ class upgrader_2 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
+                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+                //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
+                $dataProject = $this->addFieldInMultiRow($dataProject, "datesEAF", "hiHaSolucio", TRUE);
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 1 to 2");
                 $ret = TRUE;
                 break;
 
