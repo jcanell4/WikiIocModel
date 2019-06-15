@@ -250,7 +250,8 @@
                         },
                         "hiHaRecuperacio": {
                             "type": "boolean",
-                            "mandatory": true
+                            "mandatory": true,
+                            "default": true
                         },
                         "inscripció recuperació": {
                             "type": "date",
