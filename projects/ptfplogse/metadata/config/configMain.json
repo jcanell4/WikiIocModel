@@ -19,7 +19,7 @@
         {
             "main": "meta.mdpr",
             "versions": {
-                "fields": 2,
+                "fields": 3,
                 "templates": {
                     "continguts": 4
                 }
@@ -120,6 +120,11 @@
                             "type": "date",
                             "mandatory": true
                         },
+                        "hiHaSolucio": {
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default": true
+                        },
                         "solució": {
                             "type": "date",
                             "mandatory": true
@@ -157,7 +162,8 @@
                         },
                         "hiHaSolucio": {
                             "type": "boolean",
-                            "mandatory": true
+                            "mandatory": true,
+                            "default": true
                         },
                         "solució": {
                             "type": "date",
@@ -166,6 +172,11 @@
                         "qualificació": {
                             "type": "date",
                             "mandatory": true
+                        },
+                        "hiHaEnunciatRecuperacio": {
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default": true
                         },
                         "enunciat recuperació": {
                             "type": "date",
@@ -220,7 +231,9 @@
                         },
                         "hiHaRecuperacio": {
                             "type": "boolean",
-                            "mandatory": true
+                            "mandatory": true,
+                            "default": true
+
                         },
                         "inscripció recuperació": {
                             "type": "date",
@@ -519,11 +532,21 @@
                             "type": "defDatesAC",
                             "mandatory": true
                         },
+                        "hiHaSolucioPerAC": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
                         "datesEAF": {
                             "type": "defDatesEAF",
                             "mandatory": false
                         },
                         "hiHaSolucioPerEAF": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
+                        "hiHaEnunciatRecuperacioPerEAF": {
                             "type": "boolean",
                             "mandatory": false,
                             "default":false

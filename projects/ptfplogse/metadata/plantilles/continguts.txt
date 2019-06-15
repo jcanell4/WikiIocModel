@@ -107,9 +107,9 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 ::table:T05
   :title:Dates clau AC
   :type:pt_taula
-^ Id ^  unitat didàctica  ^  data de publicació de l'enunciat  ^ data de publicació del lliurament ^ data de publicació de la solució ^ data de publicació de la qualificació ^
+^ Id ^  unitat didàctica  ^  data de publicació de l'enunciat  ^ data de publicació del lliurament <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">^ data de publicació de la solució </WIOCCL:IF>^ data de publicació de la qualificació ^
 <WIOCCL:FOREACH var="item" array="{##datesAC##}" filter="{##item[unitat didàctica]##} in {##unitsFromBlock##}">
-| {##item[id]##} |  {##item[unitat didàctica]##}  | {#_DATE("{##item[enunciat]##}")_#} | {#_DATE("{##item[lliurament]##}")_#} | {#_DATE("{##item[solució]##}")_#} | {#_DATE("{##item[qualificació]##}")_#} |
+| {##item[id]##} |  {##item[unitat didàctica]##}  | {#_DATE("{##item[enunciat]##}")_#} | {#_DATE("{##item[lliurament]##}")_#} <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">| <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[qualificació]##}")_#} |
 </WIOCCL:FOREACH>
 :::
 
@@ -121,18 +121,18 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 ::table:T06
   :title:Dates clau EAF
   :type:pt_taula
-^ Id ^  unitat didàctica  ^  data de publicació de l'enunciat  ^ data de publicació del lliurament ^ data de publicació de la solució ^ data de publicació de la qualificació ^
+^ Id ^  unitat didàctica  ^  data de publicació de l'enunciat  ^ data de publicació del lliurament <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">^ data de publicació de la solució </WIOCCL:IF>^ data de publicació de la qualificació ^
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}" filter="{##item[unitat didàctica]##} in {##unitsFromBlock##}">
-| {##item[id]##} |  {##item[unitat didàctica]##}  | {#_DATE("{##item[enunciat]##}")_#} | {#_DATE("{##item[lliurament]##}")_#} | {#_DATE("{##item[solució]##}")_#} | {#_DATE("{##item[qualificació]##}")_#} |
+| {##item[id]##} |  {##item[unitat didàctica]##}  | {#_DATE("{##item[enunciat]##}")_#} | {#_DATE("{##item[lliurament]##}")_#} <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[qualificació]##}")_#} |
 </WIOCCL:FOREACH>
 :::
 
 ::table:T07
   :title:Dates clau recuperació EAF
   :type:pt_taula
-^ Id ^  unitat didàctica  ^  data de publicació de l'enunciat  ^ data de publicació del lliurament ^ data de publicació de la solució ^ data de publicació de la qualificació ^
+^ Id ^  unitat didàctica  <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">^  data de publicació de l'enunciat  </WIOCCL:IF>^ data de publicació del lliurament <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">^ data de publicació de la solució </WIOCCL:IF>^ data de publicació de la qualificació ^
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}" filter="{##item[unitat didàctica]##} in {##unitsFromBlock##}">
-| {##item[id]##} |  {##item[unitat didàctica]##}  | {#_DATE("{##item[enunciat recuperació]##}")_#} | {#_DATE("{##item[lliurament recuperació]##}")_#} | {#_DATE("{##item[solució recuperació]##}")_#} | {#_DATE("{##item[qualificació recuperació]##}")_#} |
+| {##item[id]##} |  {##item[unitat didàctica]##}  <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">| <WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==true">{#_DATE("{##item[enunciat recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[lliurament recuperació]##}")_#} <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[qualificació recuperació]##}")_#} |
 </WIOCCL:FOREACH>
 :::
 </WIOCCL:IF>
@@ -182,7 +182,7 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 
 Es planteja a l'inici del semestre. El seu objectiu és detectar i fer conscients els alumnes dels seus coneixements previs. Permet al professor adaptar l'ajuda pedagògica al grup i, si escau, de manera personalitzada a l'alumne que ho precisi
 </WIOCCL:IF>
-    
+
 ===== Avaluació contínua (AC) =====
 El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’alumne mitjançant l’AC. Està constatat que l’èxit en els estudis a distància està directament relacionat amb el ritme d’estudi continuat al llarg de tot el període acadèmic. Es recomana a tots els alumnes que segueixin l’avaluació contínua atès que forma part de la qualificació final.
 

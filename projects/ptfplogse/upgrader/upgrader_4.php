@@ -25,15 +25,6 @@ class upgrader_4 extends CommonUpgrader {
                 break;
 
             case "templates":
-                /* Buscar y Sustituir en el archivo 'continguts'
-                    * Afegir les següenst líneas:
-                 *
-                 * Añadir las siguientes líneas:
-                 * 4) antes de: \nS'ofereixen dues convocatòries ordinàries cada semestre: JT i recuperació JT
-                 * 4) añadir: <WIOCCL:IF condition="{##hiHaRecuperacioPerJT##}==true">
-                 * 5) antes de: \n\n===== Prova d'avaluació final (PAF) =====
-                 * 5) añadir: </WIOCCL:IF>
-                 */
                 $doc = $this->model->getRawProjectDocument($filename);
 
 
@@ -57,7 +48,7 @@ class upgrader_4 extends CommonUpgrader {
                 ];
                 $doc = $this->updateTemplateByInsert($doc, $aTokIns);
 
-
+                // S'ha de fer després o no funciona
                 $aTokIns = [
                     ['regexp' => "::table:T09.*?<WIOCCL:FOREACH var=\"item\" array=\"{##datesJT##}\">",
                         'text' => "<WIOCCL:IF condition=\"{##item[hiHaRecuperacio]##}==true\">",
@@ -66,6 +57,56 @@ class upgrader_4 extends CommonUpgrader {
                 ];
 
                 $doc = $this->updateTemplateByInsert($doc, $aTokIns);
+
+                // Replace
+                $aTokRep = [
+                    // Date EAF
+                    [
+                        "(::table:T06.*?)(\^ data de publicació de la solució \^)",
+                        "$1<WIOCCL:IF condition=\"{##hiHaSolucioPerEAF##}==true\">^ data de publicació de la solució </WIOCCL:IF>^",
+                        "s"
+                    ],
+                    [
+                        "(::table:T06.*?)(\| {#_DATE\(\"{##item\[solució\]##}\"\)_#} \|)",
+                        "$1<WIOCCL:IF condition=\"{##hiHaSolucioPerEAF##}==true\">| <WIOCCL:IF condition=\"{##item[hiHaSolucio]##}==true\">{#_DATE(\"{##item[solució recuperació]##}\")_#}</WIOCCL:IF><WIOCCL:IF condition=\"{##item[hiHaSolucio]##}==false\">--</WIOCCL:IF> </WIOCCL:IF>|",
+                        "s"
+                    ],
+                    [
+                        "(::table:T07.*?)(\^ data de publicació de la solució \^)",
+                        "$1<WIOCCL:IF condition=\"{##hiHaSolucioPerEAF##}==true\">^ data de publicació de la solució </WIOCCL:IF>^",
+                        "s"
+                    ],
+                    [
+                        "(::table:T07.*?)(\| {#_DATE\(\"{##item\[solució recuperació\]##}\"\)_#} \|)",
+                        "$1<WIOCCL:IF condition=\"{##hiHaSolucioPerEAF##}==true\">| <WIOCCL:IF condition=\"{##item[hiHaSolucio]##}==true\">{#_DATE(\"{##item[solució recuperació]##}\")_#}</WIOCCL:IF><WIOCCL:IF condition=\"{##item[hiHaSolucio]##}==false\">--</WIOCCL:IF> </WIOCCL:IF>|",
+                        "s"
+                    ],
+                    [
+                        "(::table:T07.*?)(\^  data de publicació de l'enunciat  \^)",
+                        "$1<WIOCCL:IF condition=\"{##hiHaEnunciatRecuperacioPerEAF##}==true\">^  data de publicació de l'enunciat  </WIOCCL:IF>^",
+                        "s"
+                    ],
+                    [
+                        "(::table:T07.*?)(\| {#_DATE\(\"{##item\[enunciat recuperació\]##}\"\)_#} \|)",
+                        "$1<WIOCCL:IF condition=\"{##hiHaEnunciatRecuperacioPerEAF##}==true\">| <WIOCCL:IF condition=\"{##item[hiHaEnunciatRecuperacio]##}==true\">{#_DATE(\"{##item[enunciat recuperació]##}\")_#}</WIOCCL:IF><WIOCCL:IF condition=\"{##item[hiHaEnunciatRecuperacio]##}==false\">--</WIOCCL:IF> </WIOCCL:IF>|",
+                        "s"
+                    ],
+
+                    // dateAC
+                    [
+                        "(::table:T05.*?)(\^ data de publicació de la solució \^)",
+                        "$1<WIOCCL:IF condition=\"{##hiHaSolucioPerAC##}==true\">^ data de publicació de la solució </WIOCCL:IF>^",
+                        "s"
+                    ],
+                    [
+                        "(::table:T05.*?)(\| {#_DATE\(\"{##item\[solució\]##}\"\)_#} \|)",
+                        "$1<WIOCCL:IF condition=\"{##hiHaSolucioPerAC##}==true\">| <WIOCCL:IF condition=\"{##item[hiHaSolucio]##}==true\">{#_DATE(\"{##item[solució]##}\")_#}</WIOCCL:IF><WIOCCL:IF condition=\"{##item[hiHaSolucio]##}==false\">--</WIOCCL:IF> </WIOCCL:IF>|",
+                        "s"
+                    ],
+
+                ];
+                $doc = $this->updateTemplateByReplace($doc, $aTokRep);
+
 
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 3 to 4");

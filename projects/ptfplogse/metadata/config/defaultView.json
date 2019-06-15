@@ -491,6 +491,9 @@
             "lliurament": {
               "type": "date"
             },
+            "hiHaSolucio": {
+              "type": "boolean"
+            },
             "solució": {
               "type": "date"
             },
@@ -522,6 +525,10 @@
                 {
                   "name": "lliurament",
                   "field": "lliurament"
+                },
+                {
+                  "name": "hiHaSolucio",
+                  "field": "solució?"
                 },
                 {
                   "name": "solució",
@@ -574,6 +581,9 @@
             "qualificació": {
               "type": "date"
             },
+            "hiHaEnunciatRecuperacio": {
+              "type": "boolean"
+            },
             "enunciat recuperació": {
                 "type": "date"
             },
@@ -623,6 +633,10 @@
                 {
                   "name": "qualificació",
                   "field": "qualificació"
+                },
+                {
+                  "name": "enunciat recuperació?",
+                  "field": "hiHaEnunciatRecuperacio"
                 },
                 {
                   "name": "enunciat recuperació",
@@ -1000,6 +1014,12 @@
         "type" : "hidden"
       },
       "hiHaSolucioPerEAF":{
+        "type" : "hidden"
+      },
+      "hiHaSolucioPerAC":{
+        "type" : "hidden"
+      },
+      "hiHaEnunciatRecuperacioPerEAF":{
         "type" : "hidden"
       }
     }

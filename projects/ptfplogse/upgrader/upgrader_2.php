@@ -25,7 +25,7 @@ class upgrader_2 extends CommonUpgrader {
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }
-                //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
+                //Añade el campo 'hiHaSolucio' a la tabla 'datesEAF'
                 $dataProject = $this->addFieldInMultiRow($dataProject, "datesEAF", "hiHaSolucio", TRUE);
                 $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 1 to 2");
                 return TRUE;
