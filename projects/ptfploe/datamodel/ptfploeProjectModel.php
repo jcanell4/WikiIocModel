@@ -199,10 +199,24 @@ class ptfploeProjectModel extends AbstractProjectModel {
 
             if ($taulaEAF!=NULL){
                 $hiHaSolucio = FALSE;
-                for ($i=0; !$hiHaSolucio && $i<count($taulaEAF); $i++){
-                    $hiHaSolucio = $taulaEAF[$i]["hiHaSolucio"];
+                $hiHaEnunciatRecuperacio = FALSE;
+                for ($i=0; $i<count($taulaEAF); $i++){
+                    $hiHaSolucio |= $taulaEAF[$i]["hiHaSolucio"];
+                    $hiHaEnunciatRecuperacio |= $taulaEAF[$i]["hiHaEnunciatRecuperacio"];
                 }
-                $values["hiHaSolucioPerEAF"] = $hiHaSolucio;
+
+                $values["hiHaSolucioPerEAF"] = $hiHaSolucio === 0 ? FALSE : TRUE ;
+                $values["hiHaEnunciatRecuperacioPerEAF"] = $hiHaEnunciatRecuperacio === 0 ? FALSE : TRUE ;
+            }
+
+            $taulaAC = (is_array($values["datesAC"])) ? $values["datesAC"] : json_decode($values["datesAC"], true);
+
+            if ($taulaAC!=NULL){
+                $hiHaSolucio = FALSE;
+                for ($i=0; !$hiHaSolucio && $i<count($taulaAC); $i++){
+                    $hiHaSolucio = $taulaAC[$i]["hiHaSolucio"];
+                }
+                $values["hiHaSolucioPerAC"] = $hiHaSolucio;
             }
 
             $values["durada"] = $horesUF[0];

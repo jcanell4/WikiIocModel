@@ -233,7 +233,6 @@
                             "type": "boolean",
                             "mandatory": true,
                             "default": true
-
                         },
                         "inscripció recuperació": {
                             "type": "date",
