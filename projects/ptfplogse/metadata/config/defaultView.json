@@ -527,8 +527,8 @@
                   "field": "lliurament"
                 },
                 {
-                  "name": "hiHaSolucio",
-                  "field": "solució?"
+                  "name": "solució?",
+                  "field": "hiHaSolucio"
                 },
                 {
                   "name": "solució",

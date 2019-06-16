@@ -592,6 +592,10 @@
                   "field": "lliurament"
                 },
                 {
+                  "name": "solució?",
+                  "field": "hiHaSolucio"
+                },
+                {
                   "name": "solució",
                   "field": "solució"
                 },
@@ -694,6 +698,10 @@
                 {
                   "name": "qualificació",
                   "field": "qualificació"
+                },
+                {
+                  "name": "enunciat recuperació?",
+                  "field": "hiHaEnunciatRecuperacio"
                 },
                 {
                   "name": "enunciat recuperació",
@@ -999,6 +1007,12 @@
         "type" : "hidden"
       },
       "hiHaSolucioPerEAF":{
+        "type" : "hidden"
+      },
+      "hiHaSolucioPerAC":{
+        "type" : "hidden"
+      },
+      "hiHaEnunciatRecuperacioPerEAF":{
         "type" : "hidden"
       }
     }
