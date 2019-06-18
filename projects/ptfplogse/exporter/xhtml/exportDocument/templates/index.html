@@ -77,7 +77,7 @@
 <section class="section section2">
   <hr>
   <div class="own_container">
-    Aquest <WIOCCL:IF condition="''crèdit''!={##tipusBlocCodul##}">{##tipusBlocCredit##} del</WIOCCL:IF> mòdul {##credit##} {##descripcio##}
+      Aquest <WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCodul##}">{##tipusBlocCredit##} del</WIOCCL:IF> mòdul {##credit##} {##descripcio##}
   </div>
 </section>
 <!-- /Secció 2 -->
@@ -224,7 +224,7 @@
 
 /* Es poden modificar les dades, afegint qualsevol sèries de valors de la llargada que calgui.*/
 (function(){
-<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocCredit##}" map="{''crèdit'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocCredit##}" map="{''cr&egrave;dit'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
     var dataArray = [
             [<WIOCCL:FOREACH var="itemUd" array="{##taulaDadesUD##}" filter="{##itemUd[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUD##}" arrayitem="itemsub" filter="{##itemUd[unitat didàctica]##}=={##itemsub[unitat didàctica]##}">{#_FIRST({##filtered##}, "FIRST[hores]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* Num. hores per cada UD */
             [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[hores]##},</WIOCCL:FOREACH>], /* Num. hores per cada U */
@@ -429,7 +429,7 @@
     <hr>
     <br/>
     <h2>Jornades tècniques</h2>
-    <p>Aquest <WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">{##tipusBlocCredit##}</WIOCCL:IF> reqereix la realització de jornades tècniques (JT). A continuació es detallen les dates importants:</p>
+    <p>Aquest <WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}">{##tipusBlocCredit##}</WIOCCL:IF> reqereix la realització de jornades tècniques (JT). A continuació es detallen les dates importants:</p>
     <table class="own_table">
       <tr>
         <th>Inscrició</th>
@@ -567,7 +567,7 @@
     </div>
     <script type="text/javascript">
 (function(){
-<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocCredit##}" map="{''crèdit'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocCredit##}" map="{''cr&egrave;dit'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
     var dataArray1 = [
                       [
                         {

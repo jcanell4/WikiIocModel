@@ -39,7 +39,7 @@
   
   <section id="intro">
     <div class="container">
-      <p><span>Durada del <WIOCCL:IF condition="''mòdul''!={##tipusBlocCredit##}">bloc</WIOCCL:IF><WIOCCL:IF condition="''mòdul''=={##tipusBlocCredit##}">mòdul</WIOCCL:IF></span>: {##durada##} hores</p>
+      <p><span>Durada del <WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}">bloc</WIOCCL:IF><WIOCCL:IF condition="''cr&egrave;dit''=={##tipusBlocCredit##}">cr&egrave;dit</WIOCCL:IF></span>: {##durada##} hores</p>
       <p><span>Professors</span>: {##professors##}</p>
       <p><span>Coordinador/a</span>: {##coordinador##}</p>
       <p><span><WIOCCL:IF condition="{##semestre##}==1">Setembre</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">Febrer</WIOCCL:IF> {#_YEAR()_#}</span></p>

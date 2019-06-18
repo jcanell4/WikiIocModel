@@ -80,7 +80,7 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
      * @param string $type : tipo de elemento a tratar: "fields", "templates", ...
      * @param string $key : elemento específico del tipo a tratar: por ejemplo, nombre de la plantilla concreta del grupo "templates"
      */
-    private function _processVersionChange($ver_config, $ver_project, $versions_project, $type, $key=NULL) {
+    private function _processVersionChange($ver_config, $ver_project, &$versions_project, $type, $key=NULL) {
         if ($ver_config == NULL) $ver_config = 0;
         if ($ver_project == NULL) $ver_project = 0;
 
