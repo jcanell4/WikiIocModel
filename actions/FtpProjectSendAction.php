@@ -17,9 +17,26 @@ class FtpProjectSendAction extends ProjectMetadataAction{
     private function addFilesToSend() {
         // $filesToSend es un array de n arrays con el formato ['file', 'local', 'action', 'remoteBase', 'remoteDir']
         $filesToSend = $this->getModel()->filesToExportList(); //crear la funció filesToExportList a cada projectModel amb les dades a tractar
+
+        // Obtenim la configuració i la passem al FtpSender // TODO
+        $projectType = $this->getModel()->getProjectType();
+
+        $connectionData = [
+            'sendftp_host' => WikiGlobalConfig::getConf('sendftp_host', 'wikiiocmodel', $projectType),
+            'sendftp_port' => WikiGlobalConfig::getConf('sendftp_port', 'wikiiocmodel', $projectType),
+            'sendftp_u' => WikiGlobalConfig::getConf('sendftp_u', 'wikiiocmodel', $projectType),
+            'sendftp_p' => WikiGlobalConfig::getConf('sendftp_p', 'wikiiocmodel', $projectType)
+        ];
+
+        $this->ftpSender->setConnectionData($connectionData);
+
+        // ALERTA[Xavi] perque ho pasem independentment en lloc de configurar-lo? Ho hagafem del project:config?
+        $remoteBase = WikiGlobalConfig::getConf('sendftp_remotebase', 'wikiiocmodel', $projectType);
+
         if ($filesToSend) {
             foreach ($filesToSend as $afile) {
-                $this->ftpSender->addObjectToSendList($afile['file'], $afile['local'], $afile['remoteBase'], $afile['remoteDir'], $afile['action']);
+//                $this->ftpSender->addObjectToSendList($afile['file'], $afile['local'], $afile['remoteBase'], $afile['remoteDir'], $afile['action']);
+                $this->ftpSender->addObjectToSendList($afile['file'], $afile['local'], $remoteBase, $afile['remoteDir'], $afile['action']);
             }
         }
     }

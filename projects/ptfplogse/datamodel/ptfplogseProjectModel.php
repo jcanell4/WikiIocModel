@@ -202,4 +202,37 @@ class ptfplogseProjectModel extends AbstractProjectModel {
         $data = json_encode($values);
         return parent::updateCalculatedFields($data);
     }
+
+    /**
+     * Averigua si hay fichero para enviar por FTP
+     * @return boolean
+     */
+    public function haveFilesToExportList() {
+        $ret = $this->filesToExportList();
+        return (!empty($ret));
+    }
+
+    /**
+     * Obtiene la lista de ficheros, y sus propiedades, (del configMain.json) que hay que enviar por FTP
+     * @return array
+     */
+    public function filesToExportList() {
+        $ret = array();
+        $metadata = $this->getProjectMetaDataQuery()->getMetaDataFtpSender();
+        foreach ($metadata as $n => $ofile) {
+            $path = ($ofile['local']==='mediadir') ? WikiGlobalConfig::getConf('mediadir')."/". str_replace(':', '/', $this->id)."/" : $ofile['local'];
+            if (($dir = @opendir($path))) {
+                while ($file = readdir($dir)) {
+                    if (!is_dir("$path/$file") && end(explode(".",$file))===$ofile['type']) {
+                        $ret[$n]['file'] = $file;
+                        $ret[$n]['local'] = $path;
+                        $ret[$n]['action'] = $ofile['action'];
+//                        $ret[$n]['remoteBase'] = $ofile['remoteBase'];
+                        $ret[$n]['remoteDir'] = $ofile['remoteDir'];
+                    }
+                }
+            }
+        }
+        return $ret;
+    }
 }

@@ -15,6 +15,14 @@
             }
         }
     ],
+    "metaDataFtpSender": [
+        {
+            "main": {
+                "file_1": {"local":"mediadir", "type":"zip", "action":[0,1], "remoteDir":"basic/"},
+                "file_2": {"local":"mediadir", "type":"pdf", "action":[0], "remoteDir":"basic/"}
+            }
+        }
+    ],
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
