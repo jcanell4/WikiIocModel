@@ -25,7 +25,7 @@
 
   <div class="own_container">
     <div class="focus_stripe"></div>
-    <h2>Com estudiar aquest mòdul</h2>
+    <h2>Com estudiar aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF></h2>
   </div>
 </header>
 <!-- /Títol -->
@@ -44,7 +44,7 @@
         <div class="section1_element">
           <div class="section1_icona" id="professor_icona"></div>
           <h3>Professor</h3>
-          <p>{##professors##}</p>
+          <p>{#_STR_REPLACE([",", ", ", " i "],"<br/>","{##professors##}")_#}</p>
         </div>
       </div>
       <div class="section1_content_row2">
@@ -77,7 +77,7 @@
 <section class="section section2">
   <hr>
   <div class="own_container">
-    Aquest <WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">{##tipusBlocModul##} del</WIOCCL:IF> mòdul {##modul##} {##descripcio##}
+    Aquest {##tipusBlocModul##} <WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">{##tipusBlocModul##} del mòdul</WIOCCL:IF> {##modul##} {##descripcio##}
   </div>
 </section>
 <!-- /Secció 2 -->
@@ -212,7 +212,7 @@
       </div>
     </div>
 </WIOCCL:IF>
-    <h2>Distribució horària del mòdul</h2>
+    <h2>Distribució horària del <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF></h2>
     <div class="containerDistribHoraria">
         <div class="rowDistribHoraria" id="rowDistribHoraria1"></div>
         <div class="rowDistribHoraria" id="rowDistribHoraria2"></div>
@@ -395,9 +395,9 @@
 <section class="section section6">
   <div class="own_container">
     <h2>Avaluació contínua</h2>
-    <p>És recomanable realitzar <strong>les activitats d’avaluació contínua</strong> ja que la seva nota incideix en la qualificació final (<a href="#qualificacio">consulteu l'apartat de qualificació</a>).</p>
+    <p>És recomanable fer <strong>les activitats d’avaluació contínua</strong>, ja que la nota incideix en la qualificació final (<a href="#qualificacio">consulteu l'apartat de qualificació</a>).</p>
     <br/>
-    <p>Els lliuraments s'han de realitzar dins dels terminis fixats, aquests són improrrogables. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data prevista per al lliurament (consulteu dates clau)</p>
+    <p>Els lliuraments s'han de realitzar dins dels terminis fixats i són improrrogables.</p>
     <br/>
     <p>L'AC inclou <span>{#_ARRAY_LENGTH({##datesAC##})_#} lliuraments</span>, distribuïts de la següent manera:</p>
     <table class="own_table">
@@ -427,7 +427,7 @@
     <hr>
     <br/>
     <h2>Jornades tècniques</h2>
-    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">{##tipusBlocModul##}</WIOCCL:IF> reqereix la realització de jornades tècniques (JT). A continuació es detallen les dates importants:</p>
+    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> requereix l'assistència a les jornades tècniques (JT). A continuació se'n detallen les dates importants:</p>
     <table class="own_table">
       <tr>
         <th>Inscrició</th>
@@ -446,7 +446,8 @@
       </tr>
 </WIOCCL:FOREACH>            
     </table>
-    <p>Si suspeneu la JT podreu fer la recuperació. Les dates importants són:</p>    
+<WIOCCL:IF condition="true=={##hiHaRecuperacioPerJT##}">
+    <p>Si suspeneu la JT, podreu fer la recuperació. Les dates importants són:</p>
     <table class="own_table">
       <caption>recuperacions</caption>
       <tr>
@@ -467,11 +468,12 @@
 </WIOCCL:FOREACH>            
     </table>
 </WIOCCL:IF>
+</WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
     <hr>
     <br/>
     <h2>Exercicis d'avaluació final</h2>
-    <p>Aquest mòdul també inclou <span>{#_ARRAY_LENGTH({##datesEAF##})_#} EAF</span>, distribuïts de la següent manera:</p>
+    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> també inclou <span>{#_ARRAY_LENGTH({##datesEAF##})_#} EAF</span>, distribuïts de la següent manera:</p>
     <table class="own_table">
       <tr>
         <th></th>
@@ -490,8 +492,9 @@
       </tr>
 </WIOCCL:FOREACH>            
     </table>
-    <p>És obligatori realitzar els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
+    <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
     <br/>
+<WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">
     <p>Si suspeneu algun EAF diposeu de la recuperació:</p>
     <table class="own_table">
       <caption>recuperacions</caption>
@@ -505,14 +508,20 @@
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
       <tr>
         <th>U{##item[unitat]##}</th>
+<WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==true">
         <td>{#_DATE("{##item[enunciat recuperació]##}")_#}</td>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==false">
+         <td>--</td>
+</WIOCCL:IF>
         <td>{#_DATE("{##item[lliurament recuperació]##}")_#}</td>
         <td>{#_DATE("{##item[solució recuperació]##}")_#}</td>
         <td>{#_DATE("{##item[qualificació recuperació]##}")_#}</td>
       </tr>
 </WIOCCL:FOREACH>            
     </table>
-    <p>És obligatori realitzar els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
+    <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
+</WIOCCL:IF>
 </WIOCCL:IF>
   </div>
 </section>
@@ -549,7 +558,7 @@
     <br/>
     <p>En cap cas no es pot fer servir la PAF 2 per pujar nota.</p>
     <br/>
-    <p>En cas de no presentar-vos a la PAF 1 perdreu la convocatòria (excepte si n’heu anul·lat la matrícula). En canvi, la convocatòria de la PAF 2 només s’esgota en cas que us hi presenteu.</p>
+    <p>En cas de no presentar-vos a la PAF 1, perdreu la convocatòria (excepte si n’heu anul·lat la matrícula). En canvi, la convocatòria de la PAF 2 només s’esgota en cas que us hi presenteu.</p>
   </div>
 </section>
 <!-- /Secció 7 -->
