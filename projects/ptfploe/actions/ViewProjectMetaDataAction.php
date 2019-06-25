@@ -13,8 +13,6 @@ class ViewProjectMetaDataAction extends BasicViewUpdatableProjectMetaDataAction{
         }
         $response = parent::runAction();
 
-        $response[ProjectKeys::KEY_ACTIVA_FTPSEND_BTN] = $this->getModel()->haveFilesToExportList();
-
         return $response;
     }
 
