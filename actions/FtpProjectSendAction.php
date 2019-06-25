@@ -19,8 +19,8 @@ class FtpProjectSendAction extends ProjectMetadataAction{
         $filesToSend = $this->getModel()->filesToExportList(); //crear la funció filesToExportList a cada projectModel amb les dades a tractar
 
         // Obtenim la configuració i la passem al FtpSender
-        $ftpId = $this->getModel()->getProjectMetaDataQuery()->getMetaDataFtpSender('ftpId'); // TODO: Convertir en constant
-        $ftpConfigs =  WikiGlobalConfig::getConf('ftp_config', 'wikiiocmodel');// TODO: Convertir en constant
+        $ftpId = $this->getModel()->getProjectMetaDataQuery()->getMetaDataFtpSender(ProjectKeys::KEY_FTPID); // TODO: Convertir en constant
+        $ftpConfigs =  WikiGlobalConfig::getConf(ProjectKeys::KEY_FTP_CONFIG, 'wikiiocmodel');// TODO: Convertir en constant
         $connectionData  = isset($ftpConfigs[$ftpId]) ? $ftpConfigs[$ftpId] : $ftpConfigs['default'];
         $this->ftpSender->setConnectionData($connectionData);
 
