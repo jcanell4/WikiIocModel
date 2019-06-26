@@ -91,6 +91,8 @@ class ProjectExportAction  extends ProjectMetadataAction{
 
         $ret[ProjectKeys::KEY_ACTIVA_FTPSEND_BTN] = $this->getModel()->haveFilesToExportList();
 
+        $ret['ftpsend_html'] = $this->getModel()->get_ftpsend_metadata();
+        
         return $ret;
     }
 

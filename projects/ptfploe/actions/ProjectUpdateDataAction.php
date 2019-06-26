@@ -79,4 +79,11 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
         return $response;
     }
 
+    public function responseProcess() {
+
+        $response = parent::responseProcess();
+        $response['ftpsend_html'] = $this->getModel()->get_ftpsend_metadata();
+
+        return $response;
+    }
 }

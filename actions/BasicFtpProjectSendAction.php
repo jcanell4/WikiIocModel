@@ -5,9 +5,9 @@
 if (!defined("DOKU_INC")) die();
 require_once DOKU_INC . "lib/lib_ioc/wikiiocmodel/FtpSender.php";
 
-class FtpProjectSendAction extends ProjectMetadataAction{
+class BasicFtpProjectSendAction extends ProjectMetadataAction{
 
-    private $ftpSender;
+    protected $ftpSender;
 
     public function __construct($params = NULL) {
         parent::__construct($params);
@@ -19,8 +19,8 @@ class FtpProjectSendAction extends ProjectMetadataAction{
         $filesToSend = $this->getModel()->filesToExportList(); //crear la funció filesToExportList a cada projectModel amb les dades a tractar
 
         // Obtenim la configuració i la passem al FtpSender
-        $ftpId = $this->getModel()->getProjectMetaDataQuery()->getMetaDataFtpSender(ProjectKeys::KEY_FTPID); // TODO: Convertir en constant
-        $ftpConfigs =  WikiGlobalConfig::getConf(ProjectKeys::KEY_FTP_CONFIG, 'wikiiocmodel');// TODO: Convertir en constant
+        $ftpId = $this->getModel()->getProjectMetaDataQuery()->getMetaDataFtpSender(ProjectKeys::KEY_FTPID);
+        $ftpConfigs =  WikiGlobalConfig::getConf(ProjectKeys::KEY_FTP_CONFIG, 'wikiiocmodel');
         $connectionData  = isset($ftpConfigs[$ftpId]) ? $ftpConfigs[$ftpId] : $ftpConfigs['default'];
         $this->ftpSender->setConnectionData($connectionData);
 

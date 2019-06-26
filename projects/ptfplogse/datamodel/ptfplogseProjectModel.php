@@ -203,5 +203,4 @@ class ptfplogseProjectModel extends AbstractProjectModel {
         return parent::updateCalculatedFields($data);
     }
 
-
 }

@@ -13,8 +13,19 @@ class ViewProjectMetaDataAction extends BasicViewUpdatableProjectMetaDataAction{
         }
         $response = parent::runAction();
 
+        $response['ftpsend_html'] = $this->getModel()->get_ftpsend_metadata();
+
         return $response;
     }
+
+    public function responseProcess() {
+
+        $response = parent::responseProcess();
+        $response['ftpsend_html'] = $this->getModel()->get_ftpsend_metadata();
+
+        return $response;
+    }
+
 
     /**
      * Retorna una data UNIX a partir de:

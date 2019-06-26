@@ -16,6 +16,14 @@ class ViewProjectMetaDataAction extends BasicViewUpdatableProjectMetaDataAction{
         return $response;
     }
 
+    public function responseProcess() {
+
+        $response = parent::responseProcess();
+        $response['ftpsend_html'] = $this->getModel()->get_ftpsend_metadata();
+
+        return $response;
+    }
+
     /**
      * Retorna una data UNIX a partir de:
      * @param string $diames en format "01/06"

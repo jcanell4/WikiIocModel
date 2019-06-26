@@ -19,7 +19,10 @@
         {
             "main": {
                 "file_1": {"local":"mediadir", "type":"zip", "action":[1], "remoteBase":"pla_treball/", "remoteDir":"logse/"}
-            }
+            },
+            "ftpId":"pla_treball",
+            "ftpsend_url":"/logse",
+            "ftpsend_index":"index.html"
         }
     ],
     "metaDataProjectStructure": [
