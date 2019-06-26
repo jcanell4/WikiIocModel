@@ -543,7 +543,7 @@ hr {
 
 .requadre_eines {
   width: 280px;
-  height: 400px;
+  /*height: 400px;*/
   margin: 0 auto;
   position: relative;
 }
@@ -585,7 +585,7 @@ hr {
 }
 
 .puzzle.puzzle_dalt {
-  width: 280px;
+  /*width: 280px;*/
   height: 90px;
   background-image: url("img/puzzle-dalt.svg");
   background-size: cover;    
@@ -593,7 +593,7 @@ hr {
 }
 
 .puzzle.puzzle_mig {
-  width: 281px;
+  /*width: 281px;*/
   height: 92px;
   background-image: url("img/puzzle-mig.svg");
   background-size: cover;
@@ -601,62 +601,32 @@ hr {
 }
 
 .puzzle.puzzle_baix {
-  width: 282px;
+  /*width: 282px;*/
   height: 74px;
   background-image: url("img/puzzle-baix.svg");
   background-size: contain;
   background-repeat: no-repeat;
 }
 
-#puzzle1 {
-/*  width: 280px;
-  height: 90px;
-  background-image: url("img/puzzle-dalt.svg");
-  background-size: cover;*/
-  position: absolute;
-  top: 0px;
+.puzzle_dalt {
+  margin-bottom: 0;
 }
 
-#puzzle2 {
-/*  width: 281px;
-  height: 92px;
-  background-image: url("img/puzzle-mig.svg");
-  background-size: cover;
-  background-repeat: no-repeat;*/
-  position: absolute;
-  top: 72px;
+.puzzle_mig {
+  margin-top: -18.5px;
 }
 
-#puzzle3 {
-/*  width: 281px;
-  height: 92px;
-  background-image: url("img/puzzle-mig.svg");
-  background-size: cover;
-  background-repeat: no-repeat;*/
-  position: absolute;
-  top: 146px;
+.puzzle_baix {
+  margin-top: -18px;
+  margin-left: 0.5px;
 }
 
-#puzzle4 {
-/*  width: 281px;
-  height: 92px;
-  background-image: url("img/puzzle-mig.svg");
-  background-size: cover;
-  background-repeat: no-repeat;*/
-  position: absolute;
-  top: 220px;
+.puzzle_dalt, .puzzle_mig, .puzzle_baix {
+  position: relative;
+  top: 0;
+  width: 100%;
 }
 
-#puzzle5 {
-/*  width: 282px;
-  height: 74px;
-  background-image: url("img/puzzle-baix.svg");
-  background-size: contain;
-  background-repeat: no-repeat;*/
-  position: absolute;
-  top: 294.5px;
-  left: 0px;
-}
 
 .section4_icona {
   background-size: contain;
@@ -1377,7 +1347,7 @@ hr {
 
   .requadre_eines {
     width: 370px;
-    height: 600px;
+    /*height: 600px;*/
     margin: 0 auto;
     position: relative;
   }
@@ -1438,47 +1408,18 @@ hr {
       background-repeat: no-repeat;
     }
 
-  #puzzle1 {
-    width: 372px;
-/*    height: 120px;
-    background-image: url("img/puzzle-dalt.svg");
-    background-size: contain;*/
-    top: -1px;
-    /*background-repeat: no-repeat;*/
+  .puzzle_dalt {
+    margin-left: -0.5px;
+    margin-bottom: 0.5px;
   }
 
-  #puzzle2 {
-    width: 372px;
-/*    height: 123.5px;
-    background-image: url("img/puzzle-mig.svg");
-    background-size: contain;*/
-    top: 95px;
+  .puzzle_mig {
+    margin-top: -25.5px;
   }
 
-  #puzzle3 {
-    width: 373.5px;
-/*    height: 123.5px;
-    background-image: url("img/puzzle-mig.svg");
-    background-size: contain;*/
-    top: 194px;
-  }
-
-  #puzzle4 {
-    width: 371px;
-/*    height: 122.5px;
-    background-image: url("img/puzzle-mig.svg");
-    background-size: cover;*/
-    top: 292.5px;
-    left: 1.5px;
-  }
-
-  #puzzle5 {
-    width: 371px;
-/*    height: 120px;
-    background-image: url("img/puzzle-baix.svg");
-    background-size: contain;*/
-    top: 392px;
-    left: 2.1px;
+  .puzzle_baix {
+    margin-top: -24.5px;
+    margin-left: 1px;
   }
 
   .section4_icona {
