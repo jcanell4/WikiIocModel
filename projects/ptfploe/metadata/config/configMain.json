@@ -31,7 +31,7 @@
 
             "versions": {
                 "fields" : 3,
-                "templates": {"continguts":9}
+                "templates": {"continguts":10}
             },
             "mainType": {
                 "type": "object",
@@ -604,6 +604,24 @@
                             "props": {
                                 "min":0,
                                 "max":10
+                            },
+                            "default": 0
+                        },
+                        "notaMinimaEAF": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min": 0,
+                                "max": 10
+                            },
+                            "default": 4
+                        },
+                        "notaMinimaJT": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min": 0,
+                                "max": 10
                             },
                             "default": 0
                         },                                                

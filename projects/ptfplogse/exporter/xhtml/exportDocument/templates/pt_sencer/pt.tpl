@@ -31,7 +31,7 @@
     <div class="container">
       <h1>Pla de treball</h1>
       <h2>{##cicle##}</h2>
-      <h2>{##credit##}. {##tipusBlocCredit##}</h2>
+      <h2>{##credit##}<WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}">-{##tipusBlocCredit##}</WIOCCL:IF></h2>
     </div>
   </header>
 

@@ -426,7 +426,7 @@
       "avaluacioInicial":{
         "label": "Avaluació inicial (avaluacioInicial)",
         "type":"select",
-        "n_columns":4,
+        "n_columns":6,
         "group": "main",
         "props": {
           "required": true,
@@ -877,6 +877,15 @@
           "title": "Indiqueu la data en que es realitzarà la PAF 2"
         }
       },
+      "duradaPAF": {
+        "label": "Durada de la PAF (duradaPAF)",
+        "n_columns":6,
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "Indiqueu la durada màxima de la PAF"
+        }
+      },
       "notaMinimaPAF": {
         "label": "Nota mínima a la PAF (notaMinimaPAF)",
         "n_columns":4,
@@ -886,13 +895,22 @@
           "title": "Indiqueu la nota mínima que cal treure a la PAF per tal de poder ponderar l'AC"
         }
       },
-      "duradaPAF": {
-        "label": "Durada de la PAF (duradaPAF)",
+      "notaMinimaEAF": {
+        "label": "Nota mínima a l'EAF (notaMinimaEAF)",
         "n_columns":4,
         "group": "main",
         "props": {
           "required": true,
-          "title": "Indiqueu la durada màxima de la PAF"
+          "title": "Indiqueu la nota mínima que cal treure a l'EAF per tal de poder ponderar la qualificació final"
+        }
+      },
+      "notaMinimaJT": {
+        "label": "Nota mínima a la JT (notaMinimaJT)",
+        "n_columns":4,
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "Indiqueu la nota mínima que cal treure a la JT per tal de poder ponderar la qualificació final"
         }
       },
       "dadesQualificacioUFs": {

@@ -45,14 +45,14 @@ class upgrader_9 extends CommonUpgrader {
                         "***QUF{##itemUf[unitat formativa]##} = {#_FIRST({##filtered##}, ''FIRST[ponderació]'')_#}% de la nota de la UF{##itemUf[unitat formativa]##} obtinguda a la PAF**."
                     ],
                     [
-                        "La planificació establerta per a la UF\\{##ind##\\} és la següent: \\(veure:table:T11-\\{##itemUf\\[unitat formativa\\]##\\}:\\)", 
+                        "La planificació establerta per a la UF\\{##ind##\\} és la següent: \\(veure ?:table:T11\\-\\{##itemUf\\[unitat formativa\\]##\\}:\\)", 
                         "La planificació establerta per a la UF{##itemUf[unitat formativa]##} és la següent: (veure :table:T11-{##itemUf[unitat formativa]##}:)"
                     ]
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 7 to 8");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 8 to 9");
                 }
                 $status = !empty($doc);
         }

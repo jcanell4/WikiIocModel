@@ -124,10 +124,12 @@
                         },
                         "enunciat": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "lliurament": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "hiHaSolucio": {
@@ -137,10 +139,12 @@
                         },
                         "solució": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "qualificació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         }
                     }
@@ -164,10 +168,12 @@
                         },
                         "enunciat": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "lliurament": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "hiHaSolucio": {
@@ -177,10 +183,12 @@
                         },
                         "solució": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "qualificació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "hiHaEnunciatRecuperacio": {
@@ -190,18 +198,22 @@
                         },
                         "enunciat recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "lliurament recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "solució recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "qualificació recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         }
                     }
@@ -220,18 +232,22 @@
                         },
                         "inscripció": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "llista provisional": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "llista definitiva": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "data JT": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "qualificació": {
@@ -246,22 +262,27 @@
                         },
                         "inscripció recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "llista provisional recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "llista definitiva recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "data JT recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         },
                         "qualificació recuperació": {
                             "type": "date",
+                            "default":"{#_TODAY()_#}",
                             "mandatory": true
                         }
                     }
