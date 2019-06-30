@@ -670,8 +670,83 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
         return $path;
     }
-    
-    public function filesToExportList(){
-        return NULL;
+
+    /**
+     * Obtiene la lista de ficheros, y sus propiedades, (del configMain.json) que hay que enviar por FTP
+     * @return array
+     */
+    public function filesToExportList() {
+        $ret = array();
+        $metadata = $this->getProjectMetaDataQuery()->getMetaDataFtpSender();
+        foreach ($metadata as $n => $ofile) {
+            $path = ($ofile['local']==='mediadir') ? WikiGlobalConfig::getConf('mediadir')."/". str_replace(':', '/', $this->id)."/" : $ofile['local'];
+            if (($dir = @opendir($path))) {
+                while ($file = readdir($dir)) {
+                    if (!is_dir("$path/$file") && end(explode(".",$file))===$ofile['type']) {
+                        $ret[$n]['file'] = $file;
+                        $ret[$n]['local'] = $path;
+                        $ret[$n]['action'] = $ofile['action'];
+                        $ret[$n]['remoteBase'] = $ofile['remoteBase'];
+                        $ret[$n]['remoteDir'] = $ofile['remoteDir'];
+                    }
+                }
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * Averigua si hay fichero para enviar por FTP
+     * @return boolean
+     */
+    public function haveFilesToExportList() {
+        $ret = $this->filesToExportList();
+        return (!empty($ret));
+    }
+
+    public function set_ftpsend_metadata() {
+        $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $this->id) .'/'.preg_replace('/:/', '_', $this->id) . '.zip';
+
+        $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_timestamp", filemtime($file));
+        $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_url", $this->getProjectMetaDataQuery()->getMetaDataFtpSender('ftpsend_url') . '/' . basename($file, '.zip'));
+        $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_index", $this->getProjectMetaDataQuery()->getMetaDataFtpSender('ftpsend_index'));
+
+    }
+
+    public function get_ftpsend_metadata() { // Nom del fitxer per comprovar la data
+        $ext = ".zip";
+        $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $this->id .'/'.preg_replace('/:/', '_', $this->id)). $ext;
+
+        $P = "";
+        $nP = "";
+        $class = "mf_zip";
+
+        $html = '';
+
+        $savedtime = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_timestamp");
+        $filetime = filemtime($file);
+
+
+        if (@file_exists($file) && $savedtime == $filetime) {
+
+            $index = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_index");
+
+            $url = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_url") . '/' . $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_index");
+
+            $data = date("d/m/Y H:i:s", $filetime);
+
+            $html.= $P.'<span id="ftpsend" style="word-wrap: break-word;">';
+            $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'. $index .'</a> ';
+            $html.= '<span style="white-space: nowrap;">'.$data.'</span>';
+            $html.= '</span>'.$nP;
+        }else{
+
+            $html.= '<span id="ftpsend">';
+            $html.= '<p class="media mediafile '.$class.'">No hi ha cap fitxer pujat al FTP</p>';
+            $html.= '</span>';
+        }
+
+        return $html;
+
     }
 }
