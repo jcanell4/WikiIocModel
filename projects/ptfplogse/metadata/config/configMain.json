@@ -29,7 +29,7 @@
         {
             "main": "meta.mdpr",
             "versions": {
-                "fields": 3,
+                "fields": 4,
                 "templates": {
                     "continguts": 5
                 }

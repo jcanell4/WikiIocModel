@@ -21,6 +21,21 @@ class upgrader_4 extends CommonUpgrader {
     public function process($type, $filename = NULL) {
         switch ($type) {
             case "fields":
+
+                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+
+                // cerquem les dades de la paf1 i paf 2 i les qualificacions son de l'any 2019 i canviar-les per la mateixa data però 2020
+
+                $dataProject['dataPaf1'] = str_replace("2019", "2020", $dataProject['dataPaf1']);
+                $dataProject['dataPaf2'] = str_replace("2019", "2020", $dataProject['dataPaf2']);
+                $dataProject['dataQualificacioPaf1'] = str_replace("2019", "2020", $dataProject['dataQualificacioPaf1']);
+                $dataProject['dataQualificacioPaf2'] = str_replace("2019", "2020", $dataProject['dataQualificacioPaf2']);
+
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 3 to 4");
+
                 $status = TRUE;
                 break;
 
