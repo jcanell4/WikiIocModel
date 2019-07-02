@@ -132,28 +132,6 @@
           "title": "indiqueu el número d'hores de dedicació setmanal"
         }
       },
-      "itinerariRecomanatS1": {
-        "label" : "Itinerari recomanat semestre 1 (itinerariRecomanatS1)",
-        "n_columns":6,
-        "group": "dadesBasiques",
-        "props": {
-          "required": true,
-          "min":0,
-          "max":8,
-          "title": "Indiqueu en quin semestre es recomana realitzar aquest crèdit o bloc havent començat el cicle al setembre. Poseu-lo a zero si el cicle no té itinerari"
-        }
-      },
-      "itinerariRecomanatS2": {
-        "label" : "Itinerari recomanat semestre 2 (itinerariRecomanatS2)",
-        "n_columns":6,
-        "group": "dadesBasiques",
-        "props": {
-          "required": true,
-          "min":0,
-          "max":8,
-          "title": "Indiqueu en quin semestre es recomana realitzar aquest crèdit o bloc havent començat el cicle al febrer. Poseu-lo a zero si el cicle no té itinerari"
-        }
-      },
       "descripcio": {
         "n_columns": 12,
         "label" : "Aquest bloc/crèdit ... (descripcio)",
@@ -168,6 +146,36 @@
             "mode": "xhtml"
         },
         "group": "dadesBasiques"
+      },
+
+      "itinerarisRecomanats": {
+        "label": "Taula dels itineraris recomanats (itinerarisRecomanats)",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "dadesBasiques",
+        "n_rows": 5,
+        "props": {
+          "data-editable-element": "table",
+          "title": "Itineraris recomanats"
+        },
+        "config": {
+          "actions": {
+            "add_default_row": "Afegir fila",
+            "remove_rows": "Eliminar files ",
+            "add_default_row_before": "Afegir fila abans de la fila seleccionada"
+          },
+          "fields": {
+            "mòduls": {
+              "type": "string"
+            },
+            "itinerariRecomanatS1": {
+              "type": "number"
+            },
+            "itinerariRecomanatS2": {
+              "type": "number"
+            }
+          }
+        }
       },
       "requerimentsMatricula": {
         "n_columns": 12,

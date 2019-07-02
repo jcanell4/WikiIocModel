@@ -29,7 +29,7 @@
         {
             "main": "meta.mdpr",
             "versions": {
-                "fields": 4,
+                "fields": 5,
                 "templates": {
                     "continguts": 5
                 }
@@ -291,6 +291,29 @@
                     "type": "objectArray",
                     "typeDef": "entradaDatesJT"
                 },
+                "defItinerarisRecomanats": {
+                    "type": "objectArray",
+                    "typeDef":"entradaItinerarisRecomanats"
+                },
+                "entradaItinerarisRecomanats" : {
+                    "type": "object",
+                    "keys": {
+                        "mòdul": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "itinerariRecomanatS1": {
+                            "type": "number",
+                            "default" : "1",
+                            "mandatory": true
+                        },
+                        "itinerariRecomanatS2": {
+                            "type": "number",
+                            "default" : "1",
+                            "mandatory": true
+                        }
+                    }
+                },
                 "entradaEinesAprenentatge": {
                     "type": "object",
                     "keys": {
@@ -475,23 +498,10 @@
                             "type": "string",
                             "mandatory": true
                         },
-                        "itinerariRecomanatS1": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": 1,
-                            "props": {
-                                "min": 0,
-                                "max": 8
-                            }
-                        },
-                        "itinerariRecomanatS2": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": 1,
-                            "props": {
-                                "min": 0,
-                                "max": 8
-                            }
+                        "itinerarisRecomanats": {
+                            "type": "defItinerarisRecomanats",
+                            "default":[{"mòdul":"--","itinerariRecomanatS1":"1","itinerariRecomanatS2":"1"}],
+                            "mandatory": true
                         },
                         "taulaDadesUD": {
                             "type": "defTaulaDadesUD",
