@@ -183,7 +183,7 @@
             "add_default_row_before": "Afegir fila abans de la fila seleccionada"
           },
           "fields": {
-            "mòduls": {
+            "mòdul": {
               "type": "string"
             },
             "itinerariRecomanatS1": {
