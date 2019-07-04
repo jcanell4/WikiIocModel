@@ -165,7 +165,7 @@
             "add_default_row_before": "Afegir fila abans de la fila seleccionada"
           },
           "fields": {
-            "mòdul": {
+            "crèdit": {
               "type": "string"
             },
             "itinerariRecomanatS1": {

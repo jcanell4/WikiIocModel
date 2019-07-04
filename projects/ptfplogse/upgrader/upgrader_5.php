@@ -28,7 +28,7 @@ class upgrader_5 extends CommonUpgrader {
 
                 $dataProject['itinerarisRecomanats'] = [
                     [
-                        "mòdul" => $dataProject['modul'],
+                        "crèdit" => $dataProject['credit'],
                         "itinerariRecomanatS1" => $dataProject['itinerariRecomanatS1'],
                         "itinerariRecomanatS2" => $dataProject['itinerariRecomanatS2'],
                     ]
