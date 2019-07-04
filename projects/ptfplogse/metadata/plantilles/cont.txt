@@ -1,0 +1,79 @@
+:###
+~~USE:WIOCCL~~
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocCredit##}" map="{''crèdit'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
+<WIOCCL:SUBSET subsetvar="unitsFromBlock" field="unitat didàctica" array="{##taulaDadesUD##}" arrayitem="itemsub" filter="{##itemsub[bloc]##}=={##nbloc##}">
+====== Eines d'aprenentatge  ======
+
+::table:T01
+  :title:Eines d'aprenentatge
+  :type:pt_taula
+^  tipus	^  eina	 ^  opcionalitat	 ^  puntuable  ^
+<WIOCCL:FOREACH var="item" array="{##einesAprenentatge##}">
+| {#_UCFIRST("{##item[tipus]##}")_#} | {##item[eina]##} | <WIOCCL:IF condition="{##item[puntuable]##}==true">Sí</WIOCCL:IF><WIOCCL:IF condition="{##item[puntuable]##}==false">No</WIOCCL:IF> |
+</WIOCCL:FOREACH>
+:::
+###:
+===== Exercici d'avaluació final (EAF) =====
+:###
+L'exercici proposa una activitat relacionada amb continguts procedimentals de la unitat didàctica:
+
+  * És **no presencial**, es realitza a distància al llarg del <WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">{##tipusBlocCredit##}</WIOCCL:IF> (consulteu taules :table:T06: i :table:T07:).
+###:
+  * És de caràcter [##TODO: escolliu "individual" o "grupal" segons sigui el cas##].
+:###
+  * Té una ponderació en la **qualificació final**.
+  * S'ha d'obtenir una qualificació **mínima de {##notaMinimaEAF##},00 sense arrodoniment** per poder aplicar.
+###:
+
+[##TODO: Definiu i determineu les característiques del treball en equip, si és el cas.##]
+
+[##TODO: Determineu els mecanismes que garanteixin, adaptats a la proposta d'exercici, si és el cas (vídeos...) .##]
+
+:###
+L'EAF ha de ser lliurat dins els terminis fixats.
+
+En el cas dels EAF establerts amb metodologia de treball en equip:
+
+  * La recuperació implica a tots els membres de l'equip.
+  * La recuperació individual fa referència al contingut.
+###:
+===== Jornada tècnica (JT) =====
+:###
+Jornada presencial procedimental del <WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">{##tipusBlocCredit##}</WIOCCL:IF>:
+
+  * És presencial.
+  * Es fa al llarg del semestre (consulteu dates clau a les taules :table:T08: i :table:T09:).
+  * Es confirma la identitat de l'alumne que la fa.
+###:
+  * Té una durada màxima de [##TODO: X dies. Cada dia té una durada màxima de X h. (si ho considereu oportú)##].
+:###
+  * S'avalua numèricament entre el 0 i el 10, amb dos decimals.
+  * Té una ponderació en la **qualificació final** <WIOCCL:IF condition="''crèdit''=={##tipusBlocCredit##}">del crèdit (vegeu l'apartat "Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">de la UD (vegeu l'apartat "Qualificació final de cada UD"</WIOCCL:IF>).
+
+Per assistir a la JT és imprescindible:
+
+  * Apuntar-se a l'espai indicat pel professor dins dels terminis establerts (si ho considereu)
+###:
+[##TODO: Afegiu altres punts amb les consideracions que considereu oprotunes##]
+:###
+<WIOCCL:IF condition="{##hiHaRecuperacioPerJT##}==true">
+S'ofereixen dues convocatòries ordinàries cada semestre: JT i recuperació JT:
+
+  - Ha suspès la convocatòria JT amb una nota inferior a {##notaMinimaJT##},00.
+  - Ha patit un accident greu, un ingrés hospitalari, la mort d'un familiar fins a 2n grau.
+
+</WIOCCL:IF>
+###:
+===== Prova d'avaluació final (PAF) =====
+:###
+La prova d'avaluació final (PAF):
+
+  * Té una durada d'**{##duradaPAF##}**
+  * Consistirà en diversos exercicis: frases V/F, preguntes obertes, resolució d'un cas pràctic, etc.
+  * Té una ponderació a la qualificació final (QF) (vegeu l'apartat <WIOCCL:IF condition="''crèdit''=={##tipusBlocCredit##}">"Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">"Qualificació final de cada bloc"</WIOCCL:IF>).
+
+</WIOCCL:SUBSET>
+</WIOCCL:SET>
+
+</WIOCCL:SET>
+###:
