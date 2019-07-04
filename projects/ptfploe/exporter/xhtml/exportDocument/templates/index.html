@@ -77,7 +77,7 @@
 <section class="section section2">
   <hr>
   <div class="own_container">
-    Aquest {##tipusBlocModul##} <WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">{##tipusBlocModul##} del mòdul</WIOCCL:IF> {##modul##} {##descripcio##}
+    Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">{##tipusBlocModul##} del mòdul</WIOCCL:IF> {##modul##} {##descripcio##}
   </div>
 </section>
 <!-- /Secció 2 -->
@@ -405,7 +405,9 @@
         <th></th>
         <th>Publicació</th>
         <th>Lliurament</th>
+<WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">
         <th>Solució</th>
+</WIOCCL:IF>
         <th>Qualificació</th>
       </tr>
 <WIOCCL:FOREACH var="item" array="{##datesAC##}">
@@ -413,7 +415,9 @@
         <th>U{##item[unitat]##} ({##item[id]##})</th>
         <td>{#_DATE("{##item[enunciat]##}")_#}</td>
         <td>{#_DATE("{##item[lliurament]##}")_#}</td>
-        <td>{#_DATE("{##item[solució]##}")_#}</td>
+<WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">
+        <td><WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF></td>
+</WIOCCL:IF>
         <td>{#_DATE("{##item[qualificació]##}")_#}</td>
       </tr>
 </WIOCCL:FOREACH>            
@@ -479,7 +483,9 @@
         <th></th>
         <th>Publicació</th>
         <th>Lliurament</th>
+<WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">
         <th>Solució</th>
+</WIOCCL:IF>
         <th>Qualificació</th>
       </tr>
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
@@ -487,22 +493,27 @@
         <th>U{##item[unitat]##}</th>
         <td>{#_DATE("{##item[enunciat]##}")_#}</td>
         <td>{#_DATE("{##item[lliurament]##}")_#}</td>
-        <td>{#_DATE("{##item[solució]##}")_#}</td>
+<WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">
+        <td><WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF></td>
+</WIOCCL:IF>
         <td>{#_DATE("{##item[qualificació]##}")_#}</td>
       </tr>
 </WIOCCL:FOREACH>            
     </table>
     <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
     <br/>
-<WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">
     <p>Si suspeneu algun EAF diposeu de la recuperació:</p>
     <table class="own_table">
       <caption>recuperacions</caption>
       <tr>
         <th></th>
+ <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">
         <th>Publicació</th>
+</WIOCCL:IF>
         <th>Lliurament</th>
+<WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">
         <th>Solució</th>
+</WIOCCL:IF>
         <th>Qualificació</th>
       </tr>
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
@@ -515,13 +526,14 @@
          <td>--</td>
 </WIOCCL:IF>
         <td>{#_DATE("{##item[lliurament recuperació]##}")_#}</td>
-        <td>{#_DATE("{##item[solució recuperació]##}")_#}</td>
+<WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">
+        <td><WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF></td>
+</WIOCCL:IF>
         <td>{#_DATE("{##item[qualificació recuperació]##}")_#}</td>
       </tr>
 </WIOCCL:FOREACH>            
     </table>
     <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
-</WIOCCL:IF>
 </WIOCCL:IF>
   </div>
 </section>

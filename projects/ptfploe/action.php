@@ -25,6 +25,8 @@ class action_plugin_wikiiocmodel_projects_ptfploe extends WikiIocPluginAction {
         $controller->register_hook('ADD_TPL_CONTROL_SCRIPTS', "AFTER", $this, "addControlScripts", array());
         $controller->register_hook('WIOC_PROCESS_RESPONSE_project', "AFTER", $this, "setExtraMeta", array());
         $controller->register_hook('WIOC_PROCESS_RESPONSE_projectUpdate', "AFTER", $this, "setExtraMeta", array());
+        $controller->register_hook('WIOC_PROCESS_RESPONSE_projectExport', "AFTER", $this, "setExtraMeta", array());
+        $controller->register_hook('WIOC_PROCESS_RESPONSE_ftpsend', "AFTER", $this, "setExtraMeta", array());
     }
 
     /**
@@ -48,6 +50,13 @@ class action_plugin_wikiiocmodel_projects_ptfploe extends WikiIocPluginAction {
                             WikiIocLangManager::getLang("metadata_export_title"),
                             $html
                             );
+
+                $event->data["ajaxCmdResponseGenerator"]->addExtraMetadata(
+                        $result['id'],
+                        $result['id']."_ftpsend",
+                        WikiIocLangManager::getLang("metadata_ftpsend_title"),
+                        $event->data['responseData']['ftpsend_html']
+                );
             }
         }
         return TRUE;

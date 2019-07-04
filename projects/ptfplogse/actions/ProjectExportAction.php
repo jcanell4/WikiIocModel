@@ -33,6 +33,7 @@ class ProjectExportAction  extends ProjectMetadataAction{
     public function __construct($factory=NULL){
         $this->factoryRender = $factory;
     }
+
     /**
      * Ejecuta los procesos_render de primer nivel definidos en el primer nivel
      * del archivo de configuración del proyecto
@@ -88,7 +89,11 @@ class ProjectExportAction  extends ProjectMetadataAction{
         if (!WikiGlobalConfig::getConf('plugin')['iocexportl']['saveWorkDir']){
                 $this->removeDir($result["tmp_dir"]);
         }
-        
+
+        $ret[ProjectKeys::KEY_ACTIVA_FTPSEND_BTN] = $this->getModel()->haveFilesToExportList();
+
+        $ret['ftpsend_html'] = $this->getModel()->get_ftpsend_metadata();
+
         return $ret;
     }
 

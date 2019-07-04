@@ -202,4 +202,5 @@ class ptfplogseProjectModel extends AbstractProjectModel {
         $data = json_encode($values);
         return parent::updateCalculatedFields($data);
     }
+
 }

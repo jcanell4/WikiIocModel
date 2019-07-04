@@ -88,7 +88,11 @@ class ProjectExportAction  extends ProjectMetadataAction{
         if (!WikiGlobalConfig::getConf('plugin')['iocexportl']['saveWorkDir']){
                 $this->removeDir($result["tmp_dir"]);
         }
-        
+
+        $ret[ProjectKeys::KEY_ACTIVA_FTPSEND_BTN] = $this->getModel()->haveFilesToExportList();
+
+        $ret['ftpsend_html'] = $this->getModel()->get_ftpsend_metadata();
+
         return $ret;
     }
 
@@ -241,5 +245,5 @@ class ProjectExportAction  extends ProjectMetadataAction{
 //            }
 //            return TRUE;
 //        }
-    }    
+    }
 }
