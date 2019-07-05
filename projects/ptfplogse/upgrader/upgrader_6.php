@@ -53,7 +53,7 @@ Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 10 to 11");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 5 to 6");
                 }
                 $status = !empty($doc);
         }
