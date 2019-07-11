@@ -7,6 +7,7 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC . "lib/lib_ioc/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_INC . "lib/plugins/wikiiocmodel/");
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL."projects/ptfplogse/");
 require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
 class upgrader_6 extends CommonUpgrader {
@@ -33,8 +34,8 @@ class upgrader_6 extends CommonUpgrader {
                 // Inserta etiquetas 'protected' en todo el documento
                 //$doc = $this->putProtectedTag($doc1);
 
-                $plantilla_5 = @file_get_contents(WIKI_IOC_MODEL."projects/ptfplogse/metadata/plantilles/continguts.txt.v5");
-                $plantilla_6 = @file_get_contents(WIKI_IOC_MODEL."projects/ptfplogse/metadata/plantilles/continguts.txt");
+                $plantilla_5 = @file_get_contents(WIKI_IOC_PROJECT."metadata/plantilles/continguts.txt.v5");
+                $plantilla_6 = @file_get_contents(WIKI_IOC_PROJECT."metadata/plantilles/continguts.txt.v6");
 
                 //actualiza el doc1 del usuario en base a la plantilla
                 $doc = $this->updateTemplateInsertTags($plantilla_5, $plantilla_6, $doc1);
@@ -47,6 +48,12 @@ class upgrader_6 extends CommonUpgrader {
         return $status;
     }
 
+    /**
+     * Inserta tags 'protected' en el documento alrededor de ciertos elementos
+     * NOTA: función actualmente sin uso
+     * @param string $doc
+     * @return string
+     */
     private function putProtectedTag($doc) {
         $pini = ":###\n";
         $pfin = "\n###:\n";
