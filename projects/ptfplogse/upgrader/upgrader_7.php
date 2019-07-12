@@ -35,7 +35,7 @@ class upgrader_7 extends CommonUpgrader {
                 $plantilla = @file_get_contents(WIKI_IOC_PROJECT."metadata/plantilles/continguts.txt.v7");
 
                 //actualiza el doc del usuario en base a la plantilla
-                $doc = $this->updateDocToNewTemplate($plantilla, $doc);
+                $doc = $this->updateDocFromTemplateUsingProtectecTags($plantilla, $doc);
 
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 6 to 7");

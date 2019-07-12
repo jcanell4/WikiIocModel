@@ -35,7 +35,7 @@ class upgrader_11 extends CommonUpgrader {
                 $plantilla_11 = @file_get_contents(WIKI_IOC_PROJECT."metadata/plantilles/continguts.txt.v11");
 
                 //actualiza el doc1 del usuario a partir de las diferencias entre las plantillas excluyendo los tags ##TODO
-                $doc = $this->updateTemplateInsertTags($plantilla_10, $plantilla_11, $doc1);
+                $doc = $this->updateFromTemplatesWithTodoTags($plantilla_10, $plantilla_11, $doc1);
 
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 10 to 11");
