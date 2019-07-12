@@ -37,6 +37,19 @@ class upgrader_11 extends CommonUpgrader {
                 //actualiza el doc1 del usuario a partir de las diferencias entre las plantillas excluyendo los tags ##TODO
                 $doc = $this->updateFromTemplatesWithTodoTags($plantilla_10, $plantilla_11, $doc1);
 
+                /*Correció  del doble slash!
+                /*
+                    Es canvia "{##item_act[descripció]##} \ </WIOCCL:FOREACH>     ||"
+                                   per "{##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||"
+                */
+                $aTokRep = [
+                    [
+                        "\\| \\<WIOCCL:FOREACH  var\\=\"item_act\" array\\=\"\\{##activitatsAprenentatge##\\}\" filter\\=\"\\{##item_act\\[unitat\\]##\\}\\=\\=\\{##item_per\\[unitat\\]##\\}\\&\\&\\{##item_act\\[període\\]##\\}\\=\\=\\{##item_per\\[període\\]##\\}\"\\>\\- \\{##item_act\\[descripció\\]##\\} \\\\ \<\/WIOCCL:FOREACH\>", 
+                        "| <WIOCCL:FOREACH  var=\"item_act\" array=\"{##activitatsAprenentatge##}\" filter=\"{##item_act[unitat]##}=={##item_per[unitat]##}&&{##item_act[període]##}=={##item_per[període]##}\">- {##item_act[descripció]##} \\\\\\\\ </WIOCCL:FOREACH>"
+                    ]
+                ];
+                $doc = $this->updateTemplateByReplace($doc, $aTokRep);
+
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 10 to 11");
                 }

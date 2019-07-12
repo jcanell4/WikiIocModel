@@ -63,7 +63,6 @@ Aquest mòdul està distribuït en les següents unitats formatives:
 :::
 
 </WIOCCL:IF>
-###:
 <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">
 El mòdul s'imparteix en dos blocs. Aquest pla de treball correspon al {##tipusBlocModul##} del  mòdul. Cada bloc està distribuït en les següents unitats formatives:
 
@@ -110,12 +109,15 @@ Cada unitat es divideix en diferents apartats:
 </WIOCCL:FOREACH>
 :::
 
+###:
 ====== Dates clau ======
+:###
 
 Les dates clau del semestre, que també podeu consultar al calendari de l'aula, són les següents.
 
+###:
 ===== Dates de l'AC =====
-
+:###
 
 ::table:T05
   :title:Dates clau AC
@@ -127,8 +129,9 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 :::
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
+###:
 ===== Dates dels EAF i les recuperacions =====
-
+:###
 
 ::table:T06
   :title:Dates clau EAF
@@ -151,7 +154,9 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
+###:
 ===== Dates de les JT i les recuperacions =====
+:###
 
 ::table:T08
   :title:Dates clau JT
@@ -176,7 +181,9 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 </WIOCCL:IF>
 
 
+###:
 ===== Dates de les PAF =====
+:###
 
 ::table:T10
   :title:Dates PAFs
@@ -187,20 +194,29 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 :::
 
 
+###:
 ====== Avaluació ======
+:###
 
 <WIOCCL:IF condition="{##avaluacioInicial##}==''INICI''">
+###:
 ===== Avaluació inicial =====
+:###
 
 Es planteja a l'inici del semestre. El seu objectiu és detectar i fer conscients els alumnes dels seus coneixements previs. Permet al professor adaptar l'ajuda pedagògica al grup i, si escau, de manera personalitzada a l'alumne que ho precisi
 </WIOCCL:IF>
 <WIOCCL:IF condition="{##avaluacioInicial##}==''PER_UF''">
+###:
 ===== Avaluació inicial =====
+:###
 
 Es planteja a l'inici de cada UF. El seu objectiu és detectar i fer conscients els alumnes dels seus coneixements previs. Permet al professor adaptar l'ajuda pedagògica al grup i, si escau, de manera personalitzada a l'alumne que ho precisi
 </WIOCCL:IF>
 
+###:
 ===== Avaluació contínua (AC) =====
+:###
+
 El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’alumne mitjançant l’AC. Està constatat que l’èxit en els estudis a distància està directament relacionat amb el ritme d’estudi continuat al llarg de tot el període acadèmic. Es recomana a tots els alumnes que segueixin l’avaluació contínua atès que forma part de la qualificació final. 
 
 L'AC es fa a distància i es concreta en:
@@ -228,15 +244,14 @@ Cal tenir en compte que:
   * La qualificació de l'AC es té en compte tant a la PAF 1 com a la PAF 2 del mateix semestre, però no es guarda d'un semestre a l'altre.
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
+###:
 ===== Exercici d'avaluació final (EAF) =====
 :###
 L'exercici proposa una activitat relacionada amb continguts procedimentals de la unitat formativa:
 
   * És** no presencial**, es realitza a distància al llarg de la unitat formativa (consulteu  dates clau a les taules :table:T06: i :table:T07:).
   * La seva realització és **obligatòria** per aprovar  la unitat formativa.
-###:
-  * És de caràcter [##TODO: escolliu "individual" o "grupal" segons sigui el cas##].  
-:###
+  * És de caràcter ###:[##TODO: escolliu "individual" o "grupal" segons sigui el cas##].:###  
   * Té una ponderació en la **qualificació final** <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">del mòdul (vegeu l'apartat "Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">de la UF (vegeu l'apartat "Qualificació final de cada UF"</WIOCCL:IF>).
   * S'ha d'obtenir una qualificació **mínima de {##notaMinimaEAF##},00 sense arrodoniment** per poder aplicar el càlcul de la qualificació final.
 ###:
@@ -262,10 +277,11 @@ En el cas dels EAF establerts amb metodologia de treball en equip, l'estudiant t
   * La recuperació implica tots els membres de l'equip, que han de lliurar de nou i conjuntament una mateixa tasca.
   * La recuperació individual fa referència al contingut de l'exercici i no a la recuperació de les competències de treball en equip, que només es poden superar treballant novament en grup.
 </WIOCCL:IF>
-###:
-:###
+
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
+###:
 ===== Jornada tècnica (JT) =====
+:###
 
 Jornada presencial procedimental de la unitat formativa:
 
@@ -273,9 +289,7 @@ Jornada presencial procedimental de la unitat formativa:
   * És obligatòria per aprovar la unitat formativa.
   * Es fa al llarg del semestre (consulteu dates clau  a les taules :table:T08: i :table:T09:). 
   * Es confirma la identitat de l'alumne que la fa. 
-###:
-  * Té una durada màxima de [##TODO: X dies. Cada dia té una durada màxima de X h. (si ho considereu oportú)##].
-:###
+  * Té una durada màxima de ###:[##TODO: X dies. Cada dia té una durada màxima de X h. (si ho considereu oportú)##].:###
   * S'avalua numèricament entre el 0 i el 10, amb dos decimals.
   * Té una ponderació en la **qualificació final** <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">del mòdul (vegeu l'apartat "Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">de la UF (vegeu l'apartat "Qualificació final de cada UF"</WIOCCL:IF>).
   * Es necessita una nota mínima de {##notaMinimaJT##},00 sense arrodoniment per poder aplicar el càlcul de la QF.
@@ -321,7 +335,9 @@ S'ofereixen dues convocatòries ordinàries cada semestre: PAF 1 i PAF 2 (consul
 
 La convocatòria corresponent a la PAF 1 s'esgota tant si l'estudiant s'hi presenta com si no (exceptuant  que l'alumne hagi anul·lat la matrícula). La convocatòria corresponent a PAF 2 només s'esgota si l'estudiant s'hi presenta. 
 
+###:
 ====== Qualificació final QF ======
+:###
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}==1">
 La qualificació final del {##tipusBlocModul##} (QF) es calcula a partir de l'aplicació de la fórmula següent:
 
@@ -329,7 +345,9 @@ La qualificació final del {##tipusBlocModul##} (QF) es calcula a partir de l'ap
 </WIOCCL:IF>
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}\>1">
+###:
 ===== Qualificació final de cada UF =====
+:###
 
 La qualificació final de les unitats formatives (QUF) es calcula a partir de l'aplicació de les fórmules següents:
 
@@ -365,7 +383,9 @@ Si la qualificació de la PAF és inferior a {##notaMinimaPAF##},00, el càlcul 
 En cas de no superar la UF, el següent semestre s'han de tornar a fer totes les activitats (PAF i AC). No es guardarà cap nota parcial de la UF per el següent semestre.
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}\>1">
+###:
 ===== Qualificació final del mòdul =====
+:###
 
 La superació del mòdul s’obté amb la superació de les UF que el componen. La qualificació final del mòdul (QFM) serà el resultat de la mitjana de les qualificacions de les diferents UF d'acord amb la següent ponderació:
 
@@ -374,9 +394,10 @@ La superació del mòdul s’obté amb la superació de les UF que el componen. 
 En cas de no superar alguna UF el mòdul quedarà pendent. Es consideren positives les qualificacions iguals o superiors a 5. <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">La qualificació final del bloc s’expressarà com a Superat o Pendent.</WIOCCL:IF>
 
 </WIOCCL:IF>
-
+###:
 ====== Planificació ======
 
+:###
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
 <WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}" counter="ind">
 La planificació establerta per a la UF{##itemUf[unitat formativa]##} és la següent (veure :table:T11-{##itemUf[unitat formativa]##}:):
