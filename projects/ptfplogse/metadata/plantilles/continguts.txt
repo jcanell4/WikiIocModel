@@ -10,7 +10,22 @@ Aquest <WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">{##tipusBlocCre
 
 Té una assignació de {##durada##} h de les {##duradaCicle##} h del cicle de {##cicle##}. El coodinador del crèdit és {##coordinador##}, els professors són: {##professors##}.
 
-Es recomana cursar-lo el semestre <WIOCCL:IF condition="{##semestre##}==1">{##itinerariRecomanatS1##}</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">{##itinerariRecomanatS2##}</WIOCCL:IF> de l'itinerari formatiu i suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
+<WIOCCL:CHOOSE id="itineraris" lExpression="{#_ARRAY_LENGTH({##itinerarisRecomanats##})_#}">
+<WIOCCL:CASE forchoose="itineraris" rExpression="0">Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**</WIOCCL:CASE>
+<WIOCCL:CASE forchoose="itineraris" rExpression="1">
+<WIOCCL:SET var="itinerari" type="literal" value="{##itinerarisRecomanats[0]##}">
+Es recomana cursar-lo el semestre <WIOCCL:IF condition="{##semestre##}==1">{##itinerari[itinerariRecomanatS1]##}</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">{##itinerari[itinerariRecomanatS2]##}</WIOCCL:IF> de l'itinerari formatiu i suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
+</WIOCCL:SET>
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="itineraris">
+Es recomana cursar-lo:
+<WIOCCL:FOREACH var="item" array="{##itinerarisRecomanats##}">
+  * Semestre <WIOCCL:IF condition="{##semestre##}==1">{##item[itinerariRecomanatS1]##}</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">{##item[itinerariRecomanatS2]##}</WIOCCL:IF> del crèdit {##item[crèdit]##}.
+</WIOCCL:FOREACH>
+
+Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
+</WIOCCL:CASE>
+</WIOCCL:CHOOSE>
 
 {##requerimentsMatricula##}
 
@@ -121,9 +136,19 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
   :title:Dates clau AC
   :type:pt_taula
 ^ Id ^  Unitat didàctica  ^  Data de publicació de l'enunciat  ^ Data de publicació del lliurament <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">^ Data de publicació de la solució </WIOCCL:IF>^ Data de publicació de la qualificació ^
+<WIOCCL:SET var="previousEAC" type="literal" value="">
 <WIOCCL:FOREACH var="item" array="{##datesAC##}" filter="{##item[unitat didàctica]##} in {##unitsFromBlock##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAC##}" rExpression="{##item[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+| ::: |  {##item[unitat didàctica]##}  | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">| ::: </WIOCCL:IF>| ::: |
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
 | {##item[id]##} |  {##item[unitat didàctica]##}  | {#_DATE("{##item[enunciat]##}")_#} | {#_DATE("{##item[lliurament]##}")_#} <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">| <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[qualificació]##}")_#} |
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAC" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
 </WIOCCL:FOREACH>
+</WIOCCL:SET>
 :::
 
 
@@ -136,18 +161,38 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
   :title:Dates clau EAF
   :type:pt_taula
 ^ Id ^  Unitat didàctica  ^  Data de publicació de l'enunciat  ^ Data de publicació del lliurament <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">^ Data de publicació de la solució </WIOCCL:IF>^ Data de publicació de la qualificació ^
+<WIOCCL:SET var="previousEAF" type="literal" value="">
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}" filter="{##item[unitat didàctica]##} in {##unitsFromBlock##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+| ::: |  {##item[unitat didàctica]##}  | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| ::: </WIOCCL:IF>| ::: |
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
 | {##item[id]##} |  {##item[unitat didàctica]##}  | {#_DATE("{##item[enunciat]##}")_#} | {#_DATE("{##item[lliurament]##}")_#} <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[qualificació]##}")_#} |
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
 </WIOCCL:FOREACH>
+</WIOCCL:SET>
 :::
 
 ::table:T07
   :title:Dates clau recuperació EAF
   :type:pt_taula
 ^ Id ^  Unitat didàctica  <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">^  Data de publicació de l'enunciat  </WIOCCL:IF>^ Data de publicació del lliurament <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">^ Data de publicació de la solució </WIOCCL:IF>^ Data de publicació de la qualificació ^
+<WIOCCL:SET var="previousEAF" type="literal" value="">
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}" filter="{##item[unitat didàctica]##} in {##unitsFromBlock##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+| ::: |  {##item[unitat didàctica]##}  | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| ::: </WIOCCL:IF>| ::: |
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
 | {##item[id]##} |  {##item[unitat didàctica]##}  <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">| <WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==true">{#_DATE("{##item[enunciat recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[lliurament recuperació]##}")_#} <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[qualificació recuperació]##}")_#} |
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
 </WIOCCL:FOREACH>
+</WIOCCL:SET>
 :::
 </WIOCCL:IF>
 
@@ -373,7 +418,7 @@ La planificació establerta per a la UD{##itemUD[unitat didàctica]##} és la se
 <WIOCCL:FOREACH var="itemu" array="{##calendari##}" filter="{##itemu[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
 <WIOCCL:SUBSET subsetvar="activitatsPerUD" array="{##activitatsAprenentatge##}" arrayitem="itemsub" filter="{##itemsub[unitat didàctica]##}=={##itemu[unitat didàctica]##}">
 ^**NA{##itemu[nucli activitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h).     Activitats d'aprenentatge**  ^^
-| <WIOCCL:FOREACH  var="item_act" array="{##activitatsPerUD##}" filter="{##item_act[nucli activitat]##}=={##itemu[nucli activitat]##}">- {##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||
+| <WIOCCL:FOREACH  var="item_act" array="{##activitatsPerUD##}" filter="{##item_act[nucli activitat]##}=={##itemu[nucli activitat]##}">- {##item_act[descripció]##} \ </WIOCCL:FOREACH>     ||
 </WIOCCL:SUBSET>
 </WIOCCL:FOREACH>
 <WIOCCL:SUBSET  subsetvar="filtered" array="{##dadesQualificacio##}" arrayitem="itemsub" filter="{##itemsub[unitat didàctica]##}=={##itemUD[unitat didàctica]##}&&{##itemsub[tipus qualificació]##}!=''PAF''">

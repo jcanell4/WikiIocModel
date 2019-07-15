@@ -37,15 +37,25 @@ class upgrader_7 extends CommonUpgrader {
                 //actualiza el doc del usuario en base a la plantilla
                 $doc = $this->updateDocFromTemplateUsingProtectecTags($plantilla, $doc);
 
-                /*Correció  del doble slash!
-                /*
-                    Es canvia "{##item_act[descripció]##} \ </WIOCCL:FOREACH>     ||"
-                                   per "{##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||"
-                */
                 $aTokRep = [
                     [
-                        "\\| \\<WIOCCL:FOREACH  var\\=\"item_act\" array\\=\"\\{##activitatsPerUD##\\}\" filter\\=\"\\{##item_act\\[nucli activitat\\]##\\}\\=\\=\\{##itemu\\[nucli activitat\\]##\\}\"\\>\\- \\{##item_act\\[descripció\\]##\\} \\\\ \<\/WIOCCL:FOREACH\>", 
-                        "| <WIOCCL:FOREACH  var=\"item_act\" array=\"{##activitatsPerUD##}\" filter=\"{##item_act[nucli activitat]##}=={##itemu[nucli activitat]##}\">- {##item_act[descripció]##} \\\\\\\\ </WIOCCL:FOREACH>"
+                        "Es recomana cursar-lo el semestre <WIOCCL:IF condition=\"{##semestre##}==1\">{##itinerariRecomanatS1##}<\/WIOCCL:IF><WIOCCL:IF condition=\"{##semestre##}==2\">{##itinerariRecomanatS2##}<\/WIOCCL:IF> de l'itinerari formatiu i suposa una \*\*dedicació setmanal mínima de {##dedicacio##} h\.\*\*",
+                        "<WIOCCL:CHOOSE id=\"itineraris\" lExpression=\"{#_ARRAY_LENGTH({##itinerarisRecomanats##})_#}\">
+<WIOCCL:CASE forchoose=\"itineraris\" rExpression=\"0\">Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**</WIOCCL:CASE>
+<WIOCCL:CASE forchoose=\"itineraris\" rExpression=\"1\">
+<WIOCCL:SET var=\"itinerari\" type=\"literal\" value=\"{##itinerarisRecomanats[0]##}\">
+Es recomana cursar-lo el semestre <WIOCCL:IF condition=\"{##semestre##}==1\">{##itinerari[itinerariRecomanatS1]##}</WIOCCL:IF><WIOCCL:IF condition=\"{##semestre##}==2\">{##itinerari[itinerariRecomanatS2]##}</WIOCCL:IF> de l'itinerari formatiu i suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
+</WIOCCL:SET>
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose=\"itineraris\">
+Es recomana cursar-lo:
+<WIOCCL:FOREACH var=\"item\" array=\"{##itinerarisRecomanats##}\">
+  * Semestre <WIOCCL:IF condition=\"{##semestre##}==1\">{##item[itinerariRecomanatS1]##}</WIOCCL:IF><WIOCCL:IF condition=\"{##semestre##}==2\">{##item[itinerariRecomanatS2]##}</WIOCCL:IF> del crèdit {##item[crèdit]##}.
+</WIOCCL:FOREACH>
+
+Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
+</WIOCCL:CASE>
+</WIOCCL:CHOOSE>"
                     ]
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);

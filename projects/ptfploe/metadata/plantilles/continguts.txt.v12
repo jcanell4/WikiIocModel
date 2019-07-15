@@ -123,9 +123,19 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
   :title:Dates clau AC
   :type:pt_taula
 ^ Id ^  Unitat  ^  Data de publicació de l'enunciat  ^ Data de publicació del lliurament <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">^ Data de publicació de la solució </WIOCCL:IF>^ Data de publicació de la qualificació ^
-<WIOCCL:FOREACH var="item" array="{##datesAC##}">
-| {##item[id]##} | U{##item[unitat]##} | {#_DATE("{##item[enunciat]##}")_#} | {#_DATE("{##item[lliurament]##}")_#} <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">| <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[qualificació]##}")_#} |
+<WIOCCL:SET var="previousEAC" type="literal" value="">
+<WIOCCL:FOREACH var="itemAC" array="{##datesAC##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAC##}" rExpression="{##itemAC[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+| ::: | U{##itemAC[unitat]##} | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">| ::: </WIOCCL:IF>| ::: |
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
+| {##itemAC[id]##} | U{##itemAC[unitat]##} | {#_DATE("{##itemAC[enunciat]##}")_#} | {#_DATE("{##itemAC[lliurament]##}")_#} <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">| <WIOCCL:IF condition="{##itemAC[hiHaSolucio]##}==true">{#_DATE("{##itemAC[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##itemAC[hiHaSolucio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##itemAC[qualificació]##}")_#} |
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAC" type="literal" value="{##itemAC[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
 </WIOCCL:FOREACH>
+</WIOCCL:SET>
 :::
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
@@ -137,18 +147,36 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
   :title:Dates clau EAF
   :type:pt_taula
 ^ Id ^  Unitat  ^  Data de publicació de l'enunciat  ^ Data de publicació del lliurament <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">^ Data de publicació de la solució </WIOCCL:IF>^ Data de publicació de la qualificació ^
+<WIOCCL:SET var="previousEAF" type="literal" value="">
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+| ::: | U{##item[unitat]##} | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| ::: </WIOCCL:IF>| ::: |
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
 | {##item[id]##} | U{##item[unitat]##} | {#_DATE("{##item[enunciat]##}")_#} | {#_DATE("{##item[lliurament]##}")_#} <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[qualificació]##}")_#} |
+<WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
 </WIOCCL:FOREACH>
+</WIOCCL:SET>
 :::
 
 ::table:T07
   :title:Dates clau recuperació EAF
   :type:pt_taula
 ^ Id ^  Unitat  <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">^  Data de publicació de l'enunciat  </WIOCCL:IF>^ Data de publicació del lliurament <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">^ Data de publicació de la solució </WIOCCL:IF>^ Data de publicació de la qualificació ^
+<WIOCCL:SET var="previousEAF" type="literal" value="">
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+| ::: | U{##item[unitat]##} | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| ::: </WIOCCL:IF>| ::: |
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
 | {##item[id]##} | U{##item[unitat]##} <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">| <WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==true">{#_DATE("{##item[enunciat recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[lliurament recuperació]##}")_#} <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF> </WIOCCL:IF>| {#_DATE("{##item[qualificació recuperació]##}")_#} |
+<WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
 </WIOCCL:FOREACH>
+</WIOCCL:SET>
 :::
 </WIOCCL:IF>
 
