@@ -39,29 +39,6 @@ class upgrader_12 extends CommonUpgrader {
                 $doc = $this->updateDocFromTemplateUsingProtectecTags($plantilla, $doc);
 
 
-                $aTokRep = [
-                    [
-                        "Es recomana cursar-lo el semestre <WIOCCL:IF condition=\"{##semestre##}==1\">{##itinerariRecomanatS1##}<\/WIOCCL:IF><WIOCCL:IF condition=\"{##semestre##}==2\">{##itinerariRecomanatS2##}<\/WIOCCL:IF> de l'itinerari formatiu i suposa una \*\*dedicació setmanal mínima de {##dedicacio##} h\.\*\*",
-                        "###:\n<WIOCCL:CHOOSE id=\"itineraris\" lExpression=\"{#_ARRAY_LENGTH({##itinerarisRecomanats##})_#}\">
-<WIOCCL:CASE forchoose=\"itineraris\" rExpression=\"0\">Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**</WIOCCL:CASE>
-<WIOCCL:CASE forchoose=\"itineraris\" rExpression=\"1\">
-<WIOCCL:SET var=\"itinerari\" type=\"literal\" value=\"{##itinerarisRecomanats[0]##}\">
-Es recomana cursar-lo el semestre <WIOCCL:IF condition=\"{##semestre##}==1\">{##itinerari[itinerariRecomanatS1]##}</WIOCCL:IF><WIOCCL:IF condition=\"{##semestre##}==2\">{##itinerari[itinerariRecomanatS2]##}</WIOCCL:IF> de l'itinerari formatiu i suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
-</WIOCCL:SET>
-</WIOCCL:CASE>
-<WIOCCL:DEFAULTCASE forchoose=\"itineraris\">
-Es recomana cursar-lo:
-<WIOCCL:FOREACH var=\"item\" array=\"{##itinerarisRecomanats##}\">
-  * Semestre <WIOCCL:IF condition=\"{##semestre##}==1\">{##item[itinerariRecomanatS1]##}</WIOCCL:IF><WIOCCL:IF condition=\"{##semestre##}==2\">{##item[itinerariRecomanatS2]##}</WIOCCL:IF> del crèdit {##item[mòdul]##}.
-</WIOCCL:FOREACH>
-
-Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
-</WIOCCL:CASE>
-</WIOCCL:CHOOSE>\n:###"
-                    ]
-                ];
-                $doc = $this->updateTemplateByReplace($doc, $aTokRep);
-
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 11 to 12");
                 }

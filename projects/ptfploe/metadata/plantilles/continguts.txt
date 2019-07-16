@@ -8,7 +8,6 @@ Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul
 
 Té una assignació de {##durada##} h de les {##duradaCicle##} h del cicle de {##cicle##}. El  coodinador del mòdul és {##coordinador##}, els professors són: {##professors##}.
 
-###:
 <WIOCCL:CHOOSE id="itineraris" lExpression="{#_ARRAY_LENGTH({##itinerarisRecomanats##})_#}">
 <WIOCCL:CASE forchoose="itineraris" rExpression="0">Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**</WIOCCL:CASE>
 <WIOCCL:CASE forchoose="itineraris" rExpression="1">
@@ -25,7 +24,6 @@ Es recomana cursar-lo:
 Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
 </WIOCCL:CASE>
 </WIOCCL:CHOOSE>
-:###
 
 {##requerimentsMatricula##}
 ###:
@@ -455,7 +453,7 @@ La planificació establerta per a la UF{##itemUf[unitat formativa]##} és la seg
 ^  **Unitat {##itemu[unitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h)**  ^^
 <WIOCCL:FOREACH  var="item_per" array="{##calendari##}" filter="{##item_per[unitat]##}=={##itemu[unitat]##}">
 ^**Apartat {##item_per[període]##}: {##item_per[descripció període]##} ({##item_per[hores]##} h).     Activitats d'aprenentatge**  ^^
-| <WIOCCL:FOREACH  var="item_act" array="{##activitatsAprenentatge##}" filter="{##item_act[unitat]##}=={##item_per[unitat]##}&&{##item_act[període]##}=={##item_per[període]##}">- {##item_act[descripció]##} \ </WIOCCL:FOREACH>     ||
+| <WIOCCL:FOREACH  var="item_act" array="{##activitatsAprenentatge##}" filter="{##item_act[unitat]##}=={##item_per[unitat]##}&&{##item_act[període]##}=={##item_per[període]##}">- {##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||
 </WIOCCL:FOREACH>
 </WIOCCL:FOREACH>
 <WIOCCL:SUBSET  subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}&&{##itemsub[tipus qualificació]##}!=''PAF''">
