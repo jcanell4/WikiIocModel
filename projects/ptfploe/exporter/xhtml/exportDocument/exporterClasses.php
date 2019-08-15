@@ -52,7 +52,7 @@ class exportDocument extends MainRender {
                 $this->addFilesToZip($zip, WIKI_IOC_MODEL."exporter/xhtml", "pt_sencer/", "css");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "pt_sencer", TRUE);
                 $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/pt_sencer/pt.tpl");
-                $zip->addFromString('/pt_sencer/pt.html', $ptSencer);
+                $zip->addFromString('pt_sencer/pt.html', $ptSencer);
 
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
                 $cicle = html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
@@ -85,7 +85,7 @@ class exportDocument extends MainRender {
                     )
                 );
                 StaticPdfRenderer::renderDocument($params, "pt.pdf");
-                $zip->addFile($this->cfgExport->tmp_dir."/pt.pdf", "/pt_sencer/pt.pdf");
+                $zip->addFile($this->cfgExport->tmp_dir."/pt.pdf", "pt_sencer/pt.pdf");
 
                 $this->attachMediaFiles($zip);
 

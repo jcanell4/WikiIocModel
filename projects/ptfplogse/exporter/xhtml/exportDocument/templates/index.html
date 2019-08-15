@@ -44,7 +44,7 @@
         <div class="section1_element">
           <div class="section1_icona" id="professor_icona"></div>
           <h3>Professor</h3>
-          <p>{#_STR_REPLACE([",", ", ", " i "],"<br/>","{##professors##}")_#}</p>
+          <p>{#_STR_REPLACE([",", ", ", " , "],"<br/>","{##professors##}")_#}</p>
         </div>
       </div>
       <div class="section1_content_row2">
@@ -87,64 +87,68 @@
 <!-- Secció 3 -->
 <section class="section section3">
   <div class="own_container">
+<WIOCCL:CHOOSE id="itineraris" lExpression="{#_ARRAY_LENGTH({##itinerarisRecomanats##})_#}">
+<WIOCCL:CASE forchoose="itineraris" rExpression="0"></WIOCCL:CASE>
+<WIOCCL:CASE forchoose="itineraris" rExpression="1">
+<WIOCCL:SET var="itinerari" type="literal" value="{##itinerarisRecomanats[0]##}">
     <h2>Itinerari formatiu recomanat</h2>
 <WIOCCL:IF condition="{##semestre##}==1">
     <div class="section3_itinerari">
       <div class="requadre_itinerari">
          <!-- /requadre semestre 1 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}==1">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}==1">
         <div class="rectangle rectangle_destacat">1r semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=1">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}!=1">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 2 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}==2">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}==2">
         <div class="rectangle rectangle_destacat">2n semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=2">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}!=2">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 3 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}==3">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}==3">
         <div class="rectangle rectangle_destacat">3r semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=3">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}!=3">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 4 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}==4">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}==4">
         <div class="rectangle rectangle_destacat">4t semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=4">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}!=4">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 5 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}==5">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}==5">
         <div class="rectangle rectangle_destacat">5è semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=5">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}!=5">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 6 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}==6">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}==6">
         <div class="rectangle rectangle_destacat">6è semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=6">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}!=6">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 7 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}==7">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}==7">
         <div class="rectangle rectangle_destacat">7è semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=7">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}!=7">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 8 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}==8">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}==8">
         <div class="rectangle rectangle_destacat">8è semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS1##}!=8">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS1]##}!=8">
         <div class="rectangle"></div>
 </WIOCCL:IF>
       </div>
@@ -154,64 +158,197 @@
     <div class="section3_itinerari">
       <div class="requadre_itinerari">
          <!-- /requadre semestre 1 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}==1">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}==1">
         <div class="rectangle rectangle_destacat">1r semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=1">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}!=1">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 2 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}==2">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}==2">
         <div class="rectangle rectangle_destacat">2n semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=2">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}!=2">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 3 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}==3">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}==3">
         <div class="rectangle rectangle_destacat">3r semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=3">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}!=3">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 4 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}==4">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}==4">
         <div class="rectangle rectangle_destacat">4t semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=4">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}!=4">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 5 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}==5">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}==5">
         <div class="rectangle rectangle_destacat">5è semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=5">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}!=5">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 6 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}==6">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}==6">
         <div class="rectangle rectangle_destacat">6è semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=6">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}!=6">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 7 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}==7">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}==7">
         <div class="rectangle rectangle_destacat">7è semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=7">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}!=7">
         <div class="rectangle"></div>
 </WIOCCL:IF>
          <!-- /requadre semestre 8 -->
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}==8">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}==8">
         <div class="rectangle rectangle_destacat">8è semestre</div>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##itinerariRecomanatS2##}!=8">
+<WIOCCL:IF condition="{##itinerari[itinerariRecomanatS2]##}!=8">
         <div class="rectangle"></div>
 </WIOCCL:IF>
       </div>
     </div>
 </WIOCCL:IF>
+</WIOCCL:SET>
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="itineraris">
+<WIOCCL:FOREACH var="item" array="{##itinerarisRecomanats##}">
+    <h2>Itinerari formatiu recomanat del crèdit {##item[crèdit]##}</h2>
+<WIOCCL:IF condition="{##semestre##}==1">
+    <div class="section3_itinerari">
+      <div class="requadre_itinerari">
+         <!-- /requadre semestre 1 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}==1">
+        <div class="rectangle rectangle_destacat">1r semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}!=1">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 2 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}==2">
+        <div class="rectangle rectangle_destacat">2n semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}!=2">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 3 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}==3">
+        <div class="rectangle rectangle_destacat">3r semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}!=3">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 4 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}==4">
+        <div class="rectangle rectangle_destacat">4t semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}!=4">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 5 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}==5">
+        <div class="rectangle rectangle_destacat">5è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}!=5">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 6 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}==6">
+        <div class="rectangle rectangle_destacat">6è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}!=6">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 7 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}==7">
+        <div class="rectangle rectangle_destacat">7è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}!=7">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 8 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}==8">
+        <div class="rectangle rectangle_destacat">8è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS1]##}!=8">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+      </div>
+    </div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##semestre##}==2">
+    <div class="section3_itinerari">
+      <div class="requadre_itinerari">
+         <!-- /requadre semestre 1 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}==1">
+        <div class="rectangle rectangle_destacat">1r semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}!=1">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 2 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}==2">
+        <div class="rectangle rectangle_destacat">2n semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}!=2">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 3 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}==3">
+        <div class="rectangle rectangle_destacat">3r semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}!=3">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 4 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}==4">
+        <div class="rectangle rectangle_destacat">4t semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}!=4">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 5 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}==5">
+        <div class="rectangle rectangle_destacat">5è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}!=5">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 6 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}==6">
+        <div class="rectangle rectangle_destacat">6è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}!=6">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 7 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}==7">
+        <div class="rectangle rectangle_destacat">7è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}!=7">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+         <!-- /requadre semestre 8 -->
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}==8">
+        <div class="rectangle rectangle_destacat">8è semestre</div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[itinerariRecomanatS2]##}!=8">
+        <div class="rectangle"></div>
+</WIOCCL:IF>
+      </div>
+    </div>
+</WIOCCL:IF>
+    <br/>
+</WIOCCL:FOREACH>
+</WIOCCL:DEFAULTCASE>
+</WIOCCL:CHOOSE>
     <h2>Distribució horària del <WIOCCL:IF condition="''cr&egrave;dit''=={##tipusBlocCredit##}">crèdit</WIOCCL:IF><WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}">bloc</WIOCCL:IF></h2>
     <div class="containerDistribHoraria">
         <div class="rowDistribHoraria" id="rowDistribHoraria1"></div>
@@ -404,7 +541,7 @@
     <p>L'AC inclou <span>{#_ARRAY_LENGTH({##datesAC##})_#} lliuraments</span>, distribuïts de la següent manera:</p>
     <table class="own_table">
       <tr>
-        <th></th>
+        <th colspan="2"></th>
         <th>Publicació</th>
         <th>Lliurament</th>
 <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">
@@ -412,22 +549,35 @@
 </WIOCCL:IF>
         <th>Qualificació</th>
       </tr>
+<WIOCCL:SET var="previousEAC" type="literal" value="">
+<WIOCCL:REPARSE>
 <WIOCCL:FOREACH var="item" array="{##datesAC##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAC##}" rExpression="{##item[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="{#_SUMA({##rowSpan_{##item[id]##}##},1)_#}"></WIOCCL:REPARSESET>
       <tr>
-        <th>U{##item[unitat didàctica]##} ({##item[id]##})</th>
-        <td>{#_DATE("{##item[enunciat]##}")_#}</td>
-        <td>{#_DATE("{##item[lliurament]##}")_#}</td>
-<WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">
-        <td><WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF></td>
-</WIOCCL:IF>
-        <td>{#_DATE("{##item[qualificació]##}")_#}</td>
+        <th>U{##item[unitat didàctica]##}</th>
       </tr>
-</WIOCCL:FOREACH>
-    </table>
-<WIOCCL:IF condition="{##notaMinimaAC##}\>0">
-    <p>No es tindrà en compte la qualificació de l’avaluació contínua si no s’obté com a mínim un <span>{##notaMinimaAC##},00</span> en l’EAC.</p>
-    <br/>
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
+      <tr>
+        <th>U{##item[unitat didàctica]##}</th>
+        <th rowspan="{%%rowSpan_{##item[id]##}%%}">{##item[id]##}</th>
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[enunciat]##}")_#}</td>
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[lliurament]##}")_#}</td>
+<WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}"><WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF></td>
 </WIOCCL:IF>
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[qualificació]##}")_#}</td>
+      </tr>
+<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:REPARSESET>
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAC" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
+</WIOCCL:FOREACH>
+</WIOCCL:REPARSE>
+</WIOCCL:SET>
+    </table>
     <p>Compte! El sistema no permet fer lliuraments passades les <span>23’55h</span> de la data prevista.</p>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
     <hr>
@@ -479,10 +629,12 @@
     <hr>
     <br/>
     <h2>Exercicis d'avaluació final</h2>
-    <p>Aquest <WIOCCL:IF condition="''cr&egrave;dit''=={##tipusBlocCredit##}">crèdit</WIOCCL:IF><WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}">bloc</WIOCCL:IF> també inclou <span>{#_ARRAY_LENGTH({##datesEAF##})_#} EAF</span>, distribuïts de la següent manera:</p>
+<WIOCCL:SET var="numEafs" type="literal" value="{#_COUNTDISTINCT({##datesEAF##},[''id''])_#}">
+    <p>Aquest <WIOCCL:IF condition="''cr&egrave;dit''=={##tipusBlocCredit##}">crèdit</WIOCCL:IF><WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}">bloc</WIOCCL:IF> també inclou <span>{##numEafs##} EAF</span> <WIOCCL:IF condition="1=={##numEafs##}">distribuït</WIOCCL:IF><WIOCCL:IF condition="1\>{##numEafs##}">distribuïts</WIOCCL:IF> de la següent manera:</p>
+</WIOCCL:SET>
     <table class="own_table">
       <tr>
-        <th></th>
+        <th colspan="2"></th>
         <th>Publicació</th>
         <th>Lliurament</th>
 <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">
@@ -490,17 +642,34 @@
 </WIOCCL:IF>
         <th>Qualificació</th>
       </tr>
+<WIOCCL:SET var="previousEAF" type="literal" value="">
+<WIOCCL:REPARSE>
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="{#_SUMA({##rowSpan_{##item[id]##}##},1)_#}"></WIOCCL:REPARSESET>
       <tr>
         <th>U{##item[unitat didàctica]##}</th>
-        <td>{#_DATE("{##item[enunciat]##}")_#}</td>
-        <td>{#_DATE("{##item[lliurament]##}")_#}</td>
-<WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">
-        <td><WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF></td>
-</WIOCCL:IF>
-        <td>{#_DATE("{##item[qualificació]##}")_#}</td>
       </tr>
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
+      <tr>
+        <th>U{##item[unitat]##}</th>
+        <th rowspan="{%%rowSpan_{##item[id]##}%%}">{##item[id]##}</th>
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[enunciat]##}")_#}</td>
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[lliurament]##}")_#}</td>
+<WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}"><WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF></td>
+</WIOCCL:IF>
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[qualificació]##}")_#}</td>
+      </tr>
+<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:REPARSESET>
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
 </WIOCCL:FOREACH>
+</WIOCCL:REPARSE>
+</WIOCCL:SET>
     </table>
     <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
     <br/>
@@ -508,32 +677,51 @@
     <table class="own_table">
       <caption>recuperacions</caption>
       <tr>
-        <th></th>
-<WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">
+        <th colspan="2"></th>
+ <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">
         <th>Publicació</th>
 </WIOCCL:IF>
         <th>Lliurament</th>
+<WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">
         <th>Solució</th>
+</WIOCCL:IF>
         <th>Qualificació</th>
       </tr>
+<WIOCCL:SET var="previousEAF" type="literal" value="">
+<WIOCCL:REPARSE>
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="{#_SUMA({##rowSpan_{##item[id]##}##},1)_#}"></WIOCCL:REPARSESET>
       <tr>
           <th>U{##item[unitat didàctica]##}</th>
-<WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">
+      </tr>
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
+      <tr>
+        <th>U{##item[unitat didàtica]##}</th>
+        <th rowspan="{%%rowSpan_{##item[id]##}%%}">{##item[id]##}</th>
+<WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">		
 <WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==true">
-        <td>{#_DATE("{##item[enunciat recuperació]##}")_#}</td>
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[enunciat recuperació]##}")_#}</td>
 </WIOCCL:IF>
 <WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==false">
-         <td>--</td>
+         <td rowspan="{%%rowSpan_{##item[id]##}%%}">--</td>
 </WIOCCL:IF>
 </WIOCCL:IF>
-        <td>{#_DATE("{##item[lliurament recuperació]##}")_#}</td>
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[lliurament recuperació]##}")_#}</td>
 <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">
-        <td><WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF></td>
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}"><WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF></td>
 </WIOCCL:IF>
-        <td>{#_DATE("{##item[qualificació recuperació]##}")_#}</td>
+        <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[qualificació recuperació]##}")_#}</td>
       </tr>
+<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:REPARSESET>
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
 </WIOCCL:FOREACH>
+</WIOCCL:REPARSE>
+</WIOCCL:SET>
     </table>
     <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
 </WIOCCL:IF>

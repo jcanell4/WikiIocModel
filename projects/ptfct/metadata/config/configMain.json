@@ -30,7 +30,7 @@
       "main": "meta.mdpr",
       "versions": {
         "templates": {
-          "continguts": 0
+          "continguts": 1
         }
       },
       "mainType": {
@@ -78,6 +78,11 @@
               "default": "01/01/2000"
             },
             "dataMaxIniciFCT": {
+              "type": "date",
+              "mandatory": true,
+              "default": "01/01/2000"
+            },
+            "dataApteFCT": {
               "type": "date",
               "mandatory": true,
               "default": "01/01/2000"

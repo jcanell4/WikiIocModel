@@ -724,10 +724,13 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $html = '';
 
         $savedtime = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_timestamp");
-        $filetime = filemtime($file);
 
+        $fileexists = @file_exists($file);
+        if ($fileexists){
+            $filetime = filemtime($file);
+        }
 
-        if (@file_exists($file) && $savedtime == $filetime) {
+        if ($fileexists && $savedtime === $filetime) {
 
             $index = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_index");
 

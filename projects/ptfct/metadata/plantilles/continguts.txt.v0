@@ -1,4 +1,3 @@
-:###
 ~~USE:WIOCCL~~
 <WIOCCL:SET var="tipus" type="map" value="{##tipusCicle##}" map="{''LOE'':''mòdul'',''LOGSE'':''crèdit''}">
 ====== Presentació ======
@@ -46,7 +45,7 @@ El Departament d'Ensenyament té subscrites dues pòlisses complementàries:
   * **Pòlissa d'assegurança d'accidents personals**: Mort o invalidesa durant l'activitat ocupacional, així com //in itinere//. Per a alumnes d'ensenyaments secundaris postobligatoris que facin pràctiques en empreses.
   * **Pòlissa d'assegurança de responsabilitat civil i patrimonial**: Danys corporals o materials patits per terceres persones i causats, per acció o per omissió, per a l'alumne en practiques, cobrint les conseqüències econòmiques que se'n deriven. Cobreix tots els alumnes de centres públics de titularitat de la Generalitat de Catalunya.
 
-====== Drets i obligacions de l'alumne ======
+====== Drets i obligacions de l'alumne (nou) ======
 
 Tal com es recull a l'ordre ENS/241/2015, de 27 de juliol, l'article 19 indica:
   - L'alumne no té, en cap cas, vinculació o relació laboral amb l'empresa.
@@ -250,9 +249,8 @@ A continuació teniu el calendari de les dates clau del {##tipus##}.
 ::table:T02
   :title:Dates clau
   :type:pt_taula
-^  Data inici FCT  ^  Data màxima per iniciar FCT al <WIOCCL:IF condition="{##semestre##}==''1''">primer</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==''2''">segon</WIOCCL:IF> semestre  ^  1a convocatòria per obtenir apte a secretaria  ^  2a convocatòria per obtenir apte a secretaria  ^
-| {#_DATE("{##dataIniciFCT##}")_#} |  {#_DATE("{##dataMaxIniciFCT##}")_#}  |  {#_DATE("{##dataApteFCT##}")_#}  |  {#_DATE("{##dataMaxApteFCT##}")_#}  |
+^  Data inici FCT  ^  Data màxima per iniciar FCT al <WIOCCL:IF condition="{##semestre##}==''1''">primer</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==''2''">segon</WIOCCL:IF> semestre  ^  Data màxima per obtenir apte a secretaria  ^
+| {#_DATE("{##dataIniciFCT##}")_#} |  {#_DATE("{##dataMaxIniciFCT##}")_#}  |  {#_DATE("{##dataMaxApteFCT##}")_#}  |
 :::
 
 </WIOCCL:SET>
-###:

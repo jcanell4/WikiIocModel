@@ -37,6 +37,19 @@ class upgrader_7 extends CommonUpgrader {
                 //actualiza el doc del usuario en base a la plantilla
                 $doc = $this->updateDocFromTemplateUsingProtectecTags($plantilla, $doc);
 
+                /*Correció  del doble slash!
+                /*
+                    Es canvia "{##item_act[descripció]##} \ </WIOCCL:FOREACH>     ||"
+                                   per "{##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||"
+                */
+                $aTokRep = [
+                    [
+                        "\\| \\<WIOCCL:FOREACH  var\\=\"item_act\" array\\=\"\\{##activitatsPerUD##\\}\" filter\\=\"\\{##item_act\\[nucli activitat\\]##\\}\\=\\=\\{##itemu\\[nucli activitat\\]##\\}\"\\>\\- \\{##item_act\\[descripció\\]##\\} \\\\ \<\/WIOCCL:FOREACH\>",
+                        "| <WIOCCL:FOREACH  var=\"item_act\" array=\"{##activitatsPerUD##}\" filter=\"{##item_act[nucli activitat]##}=={##itemu[nucli activitat]##}\">- {##item_act[descripció]##} \\\\\\\\ </WIOCCL:FOREACH>"
+                    ]
+                ];
+                $doc = $this->updateTemplateByReplace($doc, $aTokRep);
+                
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 6 to 7");
                 }

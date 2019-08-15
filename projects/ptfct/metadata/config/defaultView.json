@@ -92,7 +92,7 @@
     },
     "dataIniciFCT": {
       "label" : "Data d'inici de la FCT (dataIniciFCT)",
-      "n_columns": 4,
+      "n_columns": 3,
       "group": "dadesBasiques",
       "props": {
         "required": true,
@@ -101,7 +101,16 @@
     },
     "dataMaxIniciFCT": {
       "label" : "Data màxima d'inici de la FCT (dataMaxIniciFCT)",
-      "n_columns": 4,
+      "n_columns": 3,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Aquesta dada canviarà en actualitzar el projecte"
+      }
+    },
+    "dataApteFCT": {
+      "label" : "1a convocatòria per obtenir l'apte de la FCT (dataApteFCT)",
+      "n_columns": 3,
       "group": "dadesBasiques",
       "props": {
         "required": true,
@@ -109,8 +118,8 @@
       }
     },
     "dataMaxApteFCT": {
-      "label" : "Data màxima per obtenir l'apte de la FCT (dataMaxApteFCT)",
-      "n_columns": 4,
+      "label" : "2a convocatòria per obtenir l'apte de la FCT (dataMaxApteFCT)",
+      "n_columns": 3,
       "group": "dadesBasiques",
       "props": {
         "required": true,

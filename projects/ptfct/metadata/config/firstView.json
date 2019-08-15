@@ -198,6 +198,9 @@
     "dataMaxIniciFCT": {
       "type" : "hidden"
     },
+    "dataApteFCT": {
+      "type" : "hidden"
+    },
     "dataMaxApteFCT": {
       "type" : "hidden"
     }

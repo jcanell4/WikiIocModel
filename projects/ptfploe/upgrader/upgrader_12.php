@@ -32,12 +32,23 @@ class upgrader_12 extends CommonUpgrader {
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename);
-
                 $plantilla = @file_get_contents(WIKI_IOC_PROJECT."metadata/plantilles/continguts.txt.v12");
-//
+
                 //actualiza el doc del usuario en base a la plantilla
                 $doc = $this->updateDocFromTemplateUsingProtectecTags($plantilla, $doc);
 
+                /*Correció  del doble slash!
+                /*
+                    Es canvia "{##item_act[descripció]##} \ </WIOCCL:FOREACH>     ||"
+                                   per "{##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||"
+                */
+                $aTokRep = [
+                    [
+                        "\\| \\<WIOCCL:FOREACH  var\\=\"item_act\" array\\=\"\\{##activitatsAprenentatge##\\}\" filter\\=\"\\{##item_act\\[unitat\\]##\\}\\=\\=\\{##item_per\\[unitat\\]##\\}\\&\\&\\{##item_act\\[període\\]##\\}\\=\\=\\{##item_per\\[període\\]##\\}\"\\>\\- \\{##item_act\\[descripció\\]##\\} \\\\ \<\/WIOCCL:FOREACH\>", 
+                        "| <WIOCCL:FOREACH  var=\"item_act\" array=\"{##activitatsAprenentatge##}\" filter=\"{##item_act[unitat]##}=={##item_per[unitat]##}&&{##item_act[període]##}=={##item_per[període]##}\">- {##item_act[descripció]##} \\\\\\\\ </WIOCCL:FOREACH>"
+                    ]
+                ];
+                $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 11 to 12");
