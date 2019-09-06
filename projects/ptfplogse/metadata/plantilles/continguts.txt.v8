@@ -421,17 +421,17 @@ La qualificació final del {##tipusBlocCredit##} (QF) es calcula a partir de l'a
 
 </WIOCCL:IF>
 
-Per sumar l'AC s’ha d’obtenir una qualificació mínima de {##notaMinimaPAF##},00 a la PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>{##notaMinimaEAF##},00 a l'EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i {##notaMinimaJT##},00 a la JT</WIOCCL:IF> sense haver fet cap tipus arrodoniment previ.
+Per sumar l'AC s’ha d’obtenir una qualificació mínima de {##notaMinimaPAF##},00 a la PAF<WIOCCL:IF condition="{{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>{##notaMinimaEAF##},00 a l'EAF</WIOCCL:IF><WIOCCL:IF condition="{{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i {##notaMinimaJT##},00 a la JT</WIOCCL:IF> sense haver fet cap tipus arrodoniment previ.
 
 <WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacio##},''tipus qualificació'', [''EAF'',''JT''])_#}\>0">
-Si la qualificació d'algun dels instruments d'avaluació obigatoris (PAF, EAF, JT) és inferior a la nota mínima indicada, el càlcul de la QF es farà tal com s'indica a la taula següent:
+Si la qualificació d'algun dels elements d'avaluació obigatoris (PAF, EAF, JT) és inferior a la nota mínima indicada, el càlcul de la QF es farà tal com s'indica a la taula següent:
 ::table:T10-1
   :title:Càlcul QF per qualificacions inferiors a la nota mínima
   :type:pt_taula
-^  Element d'avaluació obligatori ^ Nota mínima  ^  Càlcul aplicat per la QF  ^
+^  Element d'avaluació obligatori ^ Nota mínima  ^  Càlcul aplicat  ^
 |  PAF  |  {##notaMinimaPAF##},00  | <WIOCCL:SUBSET subsetvar="filteredPAF" array="{##dadesQualificacio##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF|
 <WIOCCL:FOREACH var="item" array="{##dadesQualificacio##}" filter="{##item[tipus qualificació]##}==''EAF''||{##item[tipus qualificació]##}==''JT''">
-|  {##item[abreviació qualificació]##}  |  <WIOCCL:IF condition="{##item[tipus qualificació]##}==''EAF''">{##notaMinimaEAF##},00</WIOCCL:IF><WIOCCL:IF condition="{##item[tipus qualificació]##}==''JT''">{##notaMinimaJT##},00</WIOCCL:IF>  | {##item[ponderació]##}% de la nota obtinguda a l'{##item[abreviació qualificació]##} |
+|  {##item[abreviació qualificació]##}  |  <WIOCCL:IF condition="{##item[tipus qualificació]##}==''EAF''">{##notaMinimaEAF##},00</WIOCCL:IF><WIOCCL:IF condition="{##item[tipus qualificació]##}==''JT''">{##notaMinimaJT##},00</WIOCCL:IF>  | {##item[ponderació]##}% de la nota obtinguda a l'{##item[id]##} |
 </WIOCCL:FOREACH>
 :::
 </WIOCCL:IF>
@@ -447,11 +447,7 @@ La QF del bloc és numèrica de l'1 al 10, sense decimals; és la mitjana ponder
 La qualificació final del crèdit és numèrica de l'1 al 10, sense decimals. Es consideren positives les qualificacions iguals o superiors a 5,00.
 </WIOCCL:IF>
 
-<WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacio##},''tipus qualificació'', [''EAF'',''JT''])_#}\>0">
-Les qualificacions de la PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>l'EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i la JT</WIOCCL:IF> aprovades, s'apliquen tant en la convocatòria de la PAF 1 com en la de la PAF 2
-</WIOCCL:IF>
-
-En cas de no superar el crèdit, el següent semestre s'han de tornar a realitzar totes les activitats (PAFPAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i JT</WIOCCL:IF>). No es guardarà cap nota parcial del crèdit pel següent semestre.
+En cas de no superar el crèdit, el següent semestre s'han de tornar a realitzar totes les activitats (PAF, EAF, JT i AC). No es guardarà cap nota parcial del crèdit pel següent semestre.
 
 ###:
 

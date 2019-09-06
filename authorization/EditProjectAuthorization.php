@@ -15,7 +15,7 @@ class EditProjectAuthorization extends ProjectCommandAuthorization {
     public function canRun() {
         if (parent::canRun()) {
             if(($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(array("projectmanager","admin")))
-                    && !$this->isResponsable()) {
+                    && !$this->isResponsable() && !$this->isAuthor()) {
                 $this->errorAuth['error'] = TRUE;
                 $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
                 $this->errorAuth['extra_param'] = $this->permission->getIdPage();
