@@ -806,9 +806,6 @@
             "add_default_row_before": "Afegir dada abans de la fila seleccionada"
           },
           "fields": {
-            "unitat didàctica": {
-               "type":"number"
-            },
             "tipus qualificació": {
               "type": "select",
               "options": ["AC", "EAF", "JT", "PAF"]                                       },

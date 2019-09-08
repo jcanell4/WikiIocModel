@@ -357,7 +357,9 @@ class LeafNodeDoc extends AbstractNodeDoc{
     const DOUBLEHYPHEN_TYPE = "doublehyphen";
     const GRAVE_TYPE = "grave";
     const ACRONYM_TYPE = "acronym";
-
+    const OP_SINGLEQUOTE_TYPE      = "open_singlequote";
+    const CL_SINGLEQUOTE_TYPE      = "close_singlequote";
+    
     private $acronym;
 
     public function __construct($type) {
@@ -803,17 +805,19 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function singlequoteopening() {
-        $node = new StructuredNodeDoc(StructuredNodeDoc::SINGLEQUOTE_TYPE);
-        $this->currentNode->addContent($node);
-        $this->currentNode = $node;
+        $this->currentNode->addContent(new LeafNodeDoc(LeafNodeDoc::OP_SINGLEQUOTE_TYPE));
+//        $node = new StructuredNodeDoc(StructuredNodeDoc::SINGLEQUOTE_TYPE);
+//        $this->currentNode->addContent($node);
+//        $this->currentNode = $node;
     }
 
     function singlequoteclosing() {
-        if($this->currentNode->type==StructuredNodeDoc::SINGLEQUOTE_TYPE){
-            $this->currentNode = $this->currentNode->getOwner();
-        }else{
-            $this->apostrophe();
-        }
+        $this->currentNode->addContent(new LeafNodeDoc(LeafNodeDoc::CL_SINGLEQUOTE_TYPE));
+//        if($this->currentNode->type==StructuredNodeDoc::SINGLEQUOTE_TYPE){
+//            $this->currentNode = $this->currentNode->getOwner();
+//        }else{
+//            $this->apostrophe();
+//        }
     }
 
     function apostrophe() {

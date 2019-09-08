@@ -154,14 +154,14 @@ class ptfplogseProjectModel extends AbstractProjectModel {
         }
 
         $taulaEAF = (is_array($values["datesEAF"])) ? $values["datesEAF"] : json_decode($values["datesEAF"], true);
-
+        
         if ($taulaEAF!=NULL){
             $hiHaSolucio = FALSE;
             $hiHaEnunciatRecuperacio = FALSE;
             for ($i=0; $i<count($taulaEAF); $i++){
                 $hiHaSolucio |= $taulaEAF[$i]["hiHaSolucio"];
                 $hiHaEnunciatRecuperacio |= $taulaEAF[$i]["hiHaEnunciatRecuperacio"];
-            }
+                        }
 
             $values["hiHaSolucioPerEAF"] = $hiHaSolucio === 0 ? FALSE : TRUE ;
             $values["hiHaEnunciatRecuperacioPerEAF"] = $hiHaEnunciatRecuperacio === 0 ? FALSE : TRUE ;
@@ -173,7 +173,7 @@ class ptfplogseProjectModel extends AbstractProjectModel {
             $hiHaSolucio = FALSE;
             for ($i=0; !$hiHaSolucio && $i<count($taulaAC); $i++){
                 $hiHaSolucio = $taulaAC[$i]["hiHaSolucio"];
-            }
+                        }
             $values["hiHaSolucioPerAC"] = $hiHaSolucio;
         }
 
@@ -198,7 +198,7 @@ class ptfplogseProjectModel extends AbstractProjectModel {
             $values["durada"] = $hores[0];
             $values["taulaDadesUD"] = $taulaDadesUnitats;
         }
-
+        
         $data = json_encode($values);
         return parent::updateCalculatedFields($data);
     }

@@ -696,6 +696,8 @@ class BasicStaticPdfRenderer {
                 $ret = "\"";
                 break;
             case LeafNodeDoc::APOSTROPHE_TYPE:
+            case LeafNodeDoc::OP_SINGLEQUOTE_TYPE:
+            case LeafNodeDoc::CL_SINGLEQUOTE_TYPE:
                 $ret = "'";
                 break;
             case LeafNodeDoc::BACKSLASH_TYPE:

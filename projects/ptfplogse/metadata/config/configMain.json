@@ -29,9 +29,9 @@
         {
             "main": "meta.mdpr",
             "versions": {
-                "fields": 5,
+                "fields": 6,
                 "templates": {
-                    "continguts": 9
+                    "continguts": 10
                 }
             },
             "mainType": {
@@ -61,11 +61,6 @@
                 "entradaQualificacioUD": {
                     "type": "object",
                     "keys": {
-                        "unitat didàctica": {
-                            "type": "number",
-                            "default": "{#_COPY(1)_#}",
-                            "mandatory": true
-                        },
                         "tipus qualificació": {
                             "type": "string",
                             "mandatory": true,
