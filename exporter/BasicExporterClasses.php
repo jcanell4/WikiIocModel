@@ -353,6 +353,12 @@ class BasicStaticPdfRenderer {
         $level = $header["level"]-1;
         $iocTcPdf->SetFont('Times', 'B', 12);
         $title = self::incHeaderCounter($level).$header["title"];
+
+        //Control de espacio disponible para impedir títulos huérfanos
+        if ($iocTcPdf->GetY() + 40 > $iocTcPdf->getPageHeight()) {
+            $iocTcPdf->AddPage(); //inserta salto de pagina
+        }
+
         $iocTcPdf->Bookmark($title, $level, 0);
         $iocTcPdf->Ln(5);
         $iocTcPdf->Cell(0, 0, $title, 0,1, "L");
@@ -414,6 +420,12 @@ class BasicStaticPdfRenderer {
                 break;
 
             case FigureFrame::FRAME_TYPE_FIGURE:
+                // Comprueba si queda suficiente espacio vertical para poner la imagen
+                // junto al título, es decir, si cabe el bloque título + imagen en el resto de página
+                list($w, $h) = self::setImageSize($content['content'][0]['content'][0]['src'], $content['content'][0]['content'][0]['width'], $content['content'][0]['content'][0]['height']);
+                if ($iocTcPdf->GetY() + $h + 25 > $iocTcPdf->getPageHeight()) {
+                    $iocTcPdf->AddPage(); //inserta salto de pagina
+                }
                 $center = "style=\"margin:auto; text-align:center;";
                 if ($content["hasBorder"]) {
                     $style = $center . " border:1px solid gray;";
@@ -461,17 +473,40 @@ class BasicStaticPdfRenderer {
         preg_match('/\.(.+)$/', $content['src'], $match);
         $ext = ($match) ? $match[1] : "JPG";
         //càlcul de les dimensions de la imatge
-        list($w0, $h0) = getimagesize($content['src']);
-        $w = ($content['width']) ? $content['width'] / 5 : 0;
-        if ($w) $pcw = $w / $w0; //percentatge de tamany
-        $h = ($content['height']) ? $content['height'] / 5 : $h0 * $pcw;
+        list($w, $h) = self::setImageSize($content['src'], $content['width'], $content['height']);
+        if ($iocTcPdf->GetY() + $h > $iocTcPdf->getPageHeight()) {
+            $iocTcPdf->AddPage(); //inserta salto de pagina
+        }
         //inserció de la imatge
-        $iocTcPdf->Image($content['src'], '', '', $w, $h, $ext, '', 'T', '', '', 'C');
+        $iocTcPdf->Image($content['src'], '', '', $w, 0, $ext, '', 'T', true, 300, 'C');
         $iocTcPdf->SetY($iocTcPdf->GetY() + $h); //correcció de la coordinada Y desprès de insertar la imatge
         //inserció del títol a sota de la imatge
         $center = "style=\"margin:auto; text-align:center;";
         $text = "<p $center font-size:80%;\">{$content['title']}</p>";
         $iocTcPdf->writeHTML($text, TRUE, FALSE);
+    }
+
+    private static function setImageSize($imageFile, $w=NULL, $h=NULL) {
+        list($w0, $h0) = getimagesize($imageFile);
+        if ($w==NULL) {
+            if ($w0 <= 800) {
+                $w = $w0;
+            }else {
+                $factor_reduc = 800 / $w0;
+                $w = 800;
+            }
+        }else {
+            $factor_reduc = $w / $w0;
+        }
+        if ($h==NULL) {
+            $h = ($factor_reduc!=NULL) ? $h0*$factor_reduc : $h0;
+            if ($h > 1200) {
+                $factor_reduc = 1200 / $h;
+                $h = 1200;
+                $w = $w * $factor_reduc;
+            }
+        }
+        return [$w/5, $h/5];
     }
 
     protected static function getContent($content) {
