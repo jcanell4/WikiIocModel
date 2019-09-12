@@ -93,7 +93,7 @@ class ProjectMetaDataQuery extends DataQuery {
             $dirList = scandir($dir) ;
             $found = false;
             for ($i=0; !$found && $i<count($dirList); $i++){
-                if (is_dir($dirList[$i])){
+                if (is_dir($dir.$dirList[$i])){
                     if (preg_grep("/.*\.$ext/", scandir($dir.$dirList[$i]))){
                         $this->projectType = $dirList[$i];
                         $found = true;

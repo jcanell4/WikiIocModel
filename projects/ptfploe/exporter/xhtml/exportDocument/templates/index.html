@@ -552,7 +552,7 @@
 <WIOCCL:FOREACH var="itemAC" array="{##datesAC##}">
 <WIOCCL:CHOOSE id="selector" lExpression="{##previousEAC##}" rExpression="{##itemAC[id]##}">
 <WIOCCL:CASE forchoose="selector" relation="==">
-<WIOCCL:REPARSESET var="rowSpan_{##itemAC[id]##}" value="{#_SUMA({##rowSpan_{##itemAC[id]##}##},1)_#}"></WIOCCL:REPARSESET>
+<WIOCCL:RESET var="rowSpan_{##itemAC[id]##}" value="{#_SUMA({##rowSpan_{##itemAC[id]##}##},1)_#}"></WIOCCL:RESET>
       <tr>
         <th>U{##itemAC[unitat]##}</th>
       </tr>
@@ -568,7 +568,7 @@
 </WIOCCL:IF>
         <td rowspan="{%%rowSpan_{##itemAC[id]##}%%}">{#_DATE("{##itemAC[qualificació]##}")_#}</td>
       </tr>
-<WIOCCL:REPARSESET var="rowSpan_{##itemAC[id]##}" value="1"></WIOCCL:REPARSESET>
+<WIOCCL:RESET var="rowSpan_{##itemAC[id]##}" value="1"></WIOCCL:RESET>
 </WIOCCL:DEFAULTCASE>
 <WIOCCL:RESET var="previousEAC" type="literal" value="{##itemAC[id]##}"></WIOCCL:RESET>
 </WIOCCL:CHOOSE>
@@ -645,7 +645,7 @@
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
 <WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
 <WIOCCL:CASE forchoose="selector" relation="==">
-<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="{#_SUMA({##rowSpan_{##item[id]##}##},1)_#}"></WIOCCL:REPARSESET>
+<WIOCCL:RESET var="rowSpan_{##item[id]##}" value="{#_SUMA({##rowSpan_{##item[id]##}##},1)_#}"></WIOCCL:RESET>
       <tr>
         <th>U{##item[unitat]##}</th>
       </tr>
@@ -661,7 +661,7 @@
 </WIOCCL:IF>
         <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[qualificació]##}")_#}</td>
       </tr>
-<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:REPARSESET>
+<WIOCCL:RESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:RESET>
 </WIOCCL:DEFAULTCASE>
 <WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
 </WIOCCL:CHOOSE>
@@ -690,7 +690,7 @@
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
 <WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
 <WIOCCL:CASE forchoose="selector" relation="==">
-<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="{#_SUMA({##rowSpan_{##item[id]##}##},1)_#}"></WIOCCL:REPARSESET>
+<WIOCCL:RESET var="rowSpan_{##item[id]##}" value="{#_SUMA({##rowSpan_{##item[id]##}##},1)_#}"></WIOCCL:RESET>
       <tr>
         <th>U{##item[unitat]##}</th>
       </tr>
@@ -713,7 +713,7 @@
 </WIOCCL:IF>
         <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[qualificació recuperació]##}")_#}</td>
       </tr>
-<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:REPARSESET>
+<WIOCCL:RESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:RESET>
 </WIOCCL:DEFAULTCASE>
 <WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
 </WIOCCL:CHOOSE>
