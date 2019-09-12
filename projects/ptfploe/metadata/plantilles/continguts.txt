@@ -156,7 +156,7 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 <WIOCCL:FOREACH var="itemAC" array="{##datesAC##}">
 <WIOCCL:CHOOSE id="selector" lExpression="{##previousEAC##}" rExpression="{##itemAC[id]##}">
 <WIOCCL:CASE forchoose="selector" relation="==">
-| ::: | U{##itemAC[unitat]##} | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">| ::: </WIOCCL:IF>| ::: |
+| ::: |  U{##itemAC[unitat]##}  | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">| ::: </WIOCCL:IF>| ::: |
 </WIOCCL:CASE>
 <WIOCCL:DEFAULTCASE forchoose="selector">
 |  {##itemAC[id]##}  |  U{##itemAC[unitat]##}  |  {#_DATE("{##itemAC[enunciat]##}")_#}  |  {#_DATE("{##itemAC[lliurament]##}")_#}  <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">|  <WIOCCL:IF condition="{##itemAC[hiHaSolucio]##}==true">{#_DATE("{##itemAC[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##itemAC[hiHaSolucio]##}==false">--</WIOCCL:IF>  </WIOCCL:IF>|  {#_DATE("{##itemAC[qualificació]##}")_#}  |
@@ -182,7 +182,7 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
 <WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
 <WIOCCL:CASE forchoose="selector" relation="==">
-| ::: | U{##item[unitat]##} | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| ::: </WIOCCL:IF>| ::: |
+| ::: |  U{##item[unitat]##}  | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| ::: </WIOCCL:IF>| ::: |
 </WIOCCL:CASE>
 <WIOCCL:DEFAULTCASE forchoose="selector">
 |  {##item[id]##}  |  U{##item[unitat]##}  |  {#_DATE("{##item[enunciat]##}")_#}  |  {#_DATE("{##item[lliurament]##}")_#}  <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">|  <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF>  </WIOCCL:IF>|  {#_DATE("{##item[qualificació]##}")_#}  |
