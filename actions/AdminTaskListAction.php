@@ -11,7 +11,7 @@ class AdminTaskListAction extends AdminTaskAction {
 
     private $pageToSend;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
     }
 

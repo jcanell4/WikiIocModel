@@ -13,7 +13,7 @@ class AdminTaskAction extends DokuAction{
 
     private $dataTmp;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->defaultDo = PageKeys::DW_ACT_EXPORT_ADMIN;
     }

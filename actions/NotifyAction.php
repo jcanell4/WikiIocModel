@@ -48,7 +48,7 @@ class NotifyAction extends AbstractWikiAction {
          */
     }
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $type = WikiGlobalConfig::getConf('notifier_type', 'wikiiocmodel');
         $this->dokuNotifyModel = $modelManager->getNotifyModel($type);

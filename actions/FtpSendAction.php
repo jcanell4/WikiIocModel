@@ -15,11 +15,11 @@ class FtpSendAction extends DokuAction{
         $this->ftpSender = new FtpSender();
     }
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->dokuPageModel = new DokuPageModel($modelManager->getPersistenceEngine());
     }
-    
+
     protected function getModel() {
         return $this->dokuPageModel;
     }
@@ -29,16 +29,16 @@ class FtpSendAction extends DokuAction{
         $reCC = '/\* \*\*copylink\*\*.*?:.*http:\/\/creativecommons.*\n/m';
         $this->getModel()->init($this->params[ProjectKeys::KEY_ID]);
         $pageStruct = $this->getModel()->getRawData();
-        
+
         preg_match($reCodi, $pageStruct['content'], $matches);
-        
+
         $docCode = trim($matches[1]);
         $isProtected = preg_match($reCC, $pageStruct['content'])!=1;
         if($isProtected){
             $docCode .= "_protected";
         }
         $remoteFilename ="web";
-        
+
         //afegir a la llista d'objectes a enviar quins fitxers i sota quins paràmetres caldrà fer-ho
         $filename = str_replace(':', '_', $this->params[ProjectKeys::KEY_ID]).".zip";
         $dest = str_replace(':', '/', $this->params[ProjectKeys::KEY_ID]);

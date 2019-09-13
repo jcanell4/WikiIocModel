@@ -10,7 +10,7 @@ class ListProjectsAction extends AbstractWikiAction {
     private $persistenceEngine;
     private $model;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
         $this->model = new BasicWikiDataModel($this->persistenceEngine);

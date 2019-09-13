@@ -10,7 +10,7 @@ class DeleteMediaAction extends MediaAction{
 
     private $actionReturn;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
     }
 

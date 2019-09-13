@@ -15,7 +15,7 @@ abstract class MediaAction extends DokuAction
     protected $dokuModel;
     protected $persistenceEngine;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
         $this->dokuModel = new DokuMediaModel($this->persistenceEngine);

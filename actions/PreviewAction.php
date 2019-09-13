@@ -15,7 +15,7 @@ class PreviewAction extends DokuAction{
     private $info;
     private $html;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->defaultDo = PageKeys::DW_ACT_PREVIEW;
         $this->setRenderer(TRUE);

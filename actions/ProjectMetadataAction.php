@@ -12,7 +12,7 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
     protected $projectModel;
     protected $resourceLocker;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
         $ownProjectModel = $modelManager->getProjectType()."ProjectModel";

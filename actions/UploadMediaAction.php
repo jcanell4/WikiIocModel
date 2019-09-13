@@ -10,7 +10,7 @@ class UploadMediaAction extends MediaAction {
     private $fileName;
     private $warnings = array();
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
     }
 

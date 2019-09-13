@@ -10,7 +10,7 @@ require_once DOKU_INC . "inc/html.php";
 class RecentListAction extends DokuAction{
     private $content;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->defaultDo = PageKeys::DW_ACT_RECENT;
     }

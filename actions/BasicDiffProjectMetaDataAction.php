@@ -12,7 +12,7 @@ class BasicDiffProjectMetaDataAction extends ProjectMetadataAction {
 
     private static $infoDuration = -1;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
     }
 

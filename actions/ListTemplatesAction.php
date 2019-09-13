@@ -12,7 +12,7 @@ class ListTemplatesAction extends AbstractWikiAction {
     private $persistenceEngine;
     private $projectModel;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
         $projectType = $modelManager->getProjectType();

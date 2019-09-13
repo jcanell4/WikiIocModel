@@ -7,7 +7,7 @@ if (!defined("DOKU_INC")) die();
 
 abstract class RenderedPageAction extends PageAction{
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->setRenderer(TRUE);   //Indica que la resposta es renderitza i caldrà llençar l'esdeveniment quan calgui
     }

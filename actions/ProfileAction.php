@@ -13,7 +13,7 @@ class ProfileAction extends DokuAction{
 
     private $usrdata = array();
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->params[AjaxKeys::KEY_DO] = AjaxKeys::KEY_PROFILE;
     }

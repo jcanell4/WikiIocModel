@@ -13,7 +13,7 @@ class RawPageAction extends EditPageAction {
 
     protected $lockStruct;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->defaultDo = PageKeys::DW_ACT_EDIT;
         //Indica que la resposta es renderitza i caldrà llançar l'esdeveniment quan calgui

@@ -8,7 +8,7 @@ require_once(DOKU_INC . 'inc/common.php');
 
 class CancelEditPageAction extends RenderedPageAction {
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->defaultDo = PageKeys::DW_ACT_DRAFTDEL;
     }

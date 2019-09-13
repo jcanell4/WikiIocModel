@@ -7,7 +7,7 @@ if (!defined("DOKU_INC")) die();
 
 class CancelPartialEditPageAction extends CancelEditPageAction {
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
     }
 

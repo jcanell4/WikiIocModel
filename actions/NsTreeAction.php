@@ -8,7 +8,7 @@ class NsTreeAction extends AbstractWikiAction {
 
     private $wikiDataModel;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
         $this->wikiDataModel = new BasicWikiDataModel($this->persistenceEngine);

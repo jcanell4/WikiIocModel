@@ -14,7 +14,7 @@ class BasicDraftProjectMetaDataAction extends ProjectMetadataAction {
     private $Do;
     private static $infoDuration = 15;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->Do = PageKeys::DW_ACT_PREVIEW;
     }

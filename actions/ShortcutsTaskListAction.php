@@ -19,7 +19,7 @@ class ShortcutsTaskListAction extends HtmlPageAction {
         }
     }
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
     }
 

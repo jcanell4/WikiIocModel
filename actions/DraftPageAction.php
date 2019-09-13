@@ -14,7 +14,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 class DraftPageAction extends PageAction {
     private static $infoDuration = 15;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->defaultDo = PageKeys::DW_ACT_PREVIEW;
     }

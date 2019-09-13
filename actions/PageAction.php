@@ -16,9 +16,7 @@ abstract class PageAction extends DokuAction implements ResourceLockerInterface,
 
     const REVISION_SUFFIX= '-rev-';
 
-
-
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
         $this->dokuPageModel = $this->instantiateModel();

@@ -10,7 +10,7 @@ require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 class RawPartialPageAction extends EditPageAction {
     private $lockStruct;
 
-    public function init($modelManager) {
+    public function init($modelManager=NULL) {
         parent::init($modelManager);
         $this->defaultDo = PageKeys::DW_ACT_EDIT;
     }
