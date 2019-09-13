@@ -7,7 +7,7 @@
 
 Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul##} del</WIOCCL:IF> mòdul {##modul##} {##descripcio##}
 
-Té una assignació de {##durada##} h<WIOCCL:IF condition="!{#_IS_STR_EMPTY({##cicle##})_#}&&!{#_STR_CONTAINS(''Indiqueu'', {##cilce##})_#}"> de les {##duradaCicle##} h del cicle de {##cicle##}</WIOCCL:IF>. El  coodinador del mòdul és {##coordinador##}, el professorat és {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
+Té una assignació de {##durada##} h de les {##duradaCicle##} h del cicle de {##cicle##}. El  coodinador del mòdul és {##coordinador##}, el professorat és {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
 
 <WIOCCL:CHOOSE id="itineraris" lExpression="{#_ARRAY_LENGTH({##itinerarisRecomanats##})_#}">
 <WIOCCL:CASE forchoose="itineraris" rExpression="0">Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**</WIOCCL:CASE>
@@ -311,7 +311,7 @@ Cal tenir en compte que:
 
   * L’AC té una ponderació en la **qualificació final** de la UF (vegeu l'apartat <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">"Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">"Qualificació final de cada UF"</WIOCCL:IF>).
   * Els EAC han de ser lliurats dins dels terminis fixats, el termini és **improrrogable**. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data de lliurament (consulteu dates clau a la taula :table:T05:).
-  * El seguiment correcte de l’AC compromet l’alumne a fer les activitats proposades de manera individual, original i seguint les indicacions del professor. Els treballs o tasques d'AC que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
+  * El seguiment correcte de l’AC compromet l’alumne a fer les activitats proposades de manera individual, original i seguint les indicacions del professor. Si no es respecten aquestes condicions, s’obtindrà una qualificació negativa. Els treballs o tasques d'AC que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
   * En els EAC s'estableixen els criteris d'avaluació corresponents tant de contingut com de forma (per exemple, l'expressió lingüística i ortogràfica). 
   * El professor corregeix els EAC i emet una qualificació numèrica de l'escala entre el 0 i el 10, amb dos decimals. 
   * Per poder tenir en compte la qualificació de l’AC, s’ha d’aconseguir **a la PAF** una qualificació **mínima de {##notaMinimaPAF##},00 sense cap  arrodoniment** (PAF 1 o PAF 2).
@@ -517,7 +517,7 @@ La superació del mòdul s’obté amb la superació de les UF que el componen. 
 
 **QFM= <WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}" counter="ind">QUF{##item[unitat formativa]##} * {##item[ponderació]##}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUF##})_#},1)_#}">+</WIOCCL:IF></WIOCCL:FOREACH> **
 
-En cas de no superar alguna UF el mòdul quedarà pendent. Només es consideren aprovades les qualificacions iguals o superiors a 5,00. <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">La qualificació final del bloc s’expressarà com a Superat o Pendent.</WIOCCL:IF>
+En cas de no superar alguna UF el mòdul quedarà pendent. Es consideren positives les qualificacions iguals o superiors a 5. <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">La qualificació final del bloc s’expressarà com a Superat o Pendent.</WIOCCL:IF>
 
 </WIOCCL:IF>
 ###:
@@ -536,7 +536,7 @@ La planificació establerta per a la UF{##itemUf[unitat formativa]##} és la seg
 <WIOCCL:FOREACH  var="itemu" array="{##taulaDadesUnitats##}" filter="{##itemu[unitat formativa]##}=={##itemUf[unitat formativa]##}">
 ^  **Unitat {##itemu[unitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h)**  ^^
 <WIOCCL:FOREACH  var="item_per" array="{##calendari##}" filter="{##item_per[unitat]##}=={##itemu[unitat]##}">
-^**{#_UCFIRST({##item[tipus període]##})_#} {##item_per[període]##}: {##item_per[descripció període]##} ({##item_per[hores]##} h).     Activitats d'aprenentatge**  ^^
+^**Apartat {##item_per[període]##}: {##item_per[descripció període]##} ({##item_per[hores]##} h).     Activitats d'aprenentatge**  ^^
 | <WIOCCL:FOREACH  var="item_act" array="{##activitatsAprenentatge##}" filter="{##item_act[unitat]##}=={##item_per[unitat]##}&&{##item_act[període]##}=={##item_per[període]##}">- {##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||
 </WIOCCL:FOREACH>
 </WIOCCL:FOREACH>

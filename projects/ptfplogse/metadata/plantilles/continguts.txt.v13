@@ -10,7 +10,7 @@
 
 Aquest <WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">{##tipusBlocCredit##} del</WIOCCL:IF> crèdit {##credit##} {##descripcio##}
 
-Té una assignació de {##durada##} h <WIOCCL:IF condition="!{#_IS_STR_EMPTY({##cicle##})_#}&&!{#_STR_CONTAINS(''Indiqueu'', {##cilce##})_#}">de les {##duradaCicle##} h del cicle de {##cicle##}</WIOCCL:IF>. El coodinador del crèdit és {##coordinador##}, el professorat és {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
+Té una assignació de {##durada##} h <WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##cicle##}'')_#}&&!{#_STR_CONTAINS(''Indiqueu'', ''{##cicle##}'')_#}">de les {##duradaCicle##} h del cicle de {##cicle##}</WIOCCL:IF>. El coodinador del crèdit és {##coordinador##}, el professorat és {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
 
 <WIOCCL:CHOOSE id="itineraris" lExpression="{#_ARRAY_LENGTH({##itinerarisRecomanats##})_#}">
 <WIOCCL:CASE forchoose="itineraris" rExpression="0">Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**</WIOCCL:CASE>

@@ -10,7 +10,7 @@
 
 Aquest <WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">{##tipusBlocCredit##} del</WIOCCL:IF> crèdit {##credit##} {##descripcio##}
 
-Té una assignació de {##durada##} h <WIOCCL:IF condition="!{#_IS_STR_EMPTY({##cicle##})_#}&&!{#_STR_CONTAINS(''Indiqueu'', {##cilce##})_#}">de les {##duradaCicle##} h del cicle de {##cicle##}</WIOCCL:IF>. El coodinador del crèdit és {##coordinador##}, el professorat és {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
+Té una assignació de {##durada##} h de les {##duradaCicle##} h del cicle de {##cicle##}. El coodinador del crèdit és {##coordinador##}, el professorat és {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
 
 <WIOCCL:CHOOSE id="itineraris" lExpression="{#_ARRAY_LENGTH({##itinerarisRecomanats##})_#}">
 <WIOCCL:CASE forchoose="itineraris" rExpression="0">Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**</WIOCCL:CASE>
@@ -300,7 +300,7 @@ Cal tenir en compte que:
 
   * L’AC té una ponderació en la **qualificació final** de la UD (vegeu l'apartat <WIOCCL:IF condition="''crèdit''=={##tipusBlocCredit##}">"Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">"Qualificació final de cada UD"</WIOCCL:IF>).
   * Els EAC han de ser lliurats dins dels terminis fixats, el termini és **improrrogable**. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data de lliurament (consulteu dates clau a la taula :table:T05:).
-  * El seguiment correcte de l’AC compromet l’alumne a fer les activitats proposades de manera individual, original i seguint les indicacions del professor. Els treballs o tasques d'AC que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
+  * El seguiment correcte de l’AC compromet l’alumne a fer les activitats proposades de manera individual, original i seguint les indicacions del professor. Si no es respecten aquestes condicions, s’obtindrà una qualificació negativa. Els treballs o tasques d'AC que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
   * En els EAC s'estableixen els criteris d'avaluació corresponents tant de contingut com de forma (per exemple, l'expressió lingüística i ortogràfica).
   * El professor corregeix els EAC i emet una qualificació numèrica de l'escala entre el 0 i el 10, amb dos decimals.
   * Per poder tenir en compte la qualificació de l’AC, s’ha d’aconseguir **a la PAF** una qualificació **mínima de {##notaMinimaPAF##},00 sense cap  arrodoniment** (PAF 1 o PAF 2).
@@ -421,7 +421,7 @@ La qualificació final del {##tipusBlocCredit##} (QF) es calcula a partir de l'a
 
 <WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">
 
-**QFbloc{##nbloc##} = <WIOCCL:FOREACH var="item" array="{##dadesQualificacio##}"  counter="indx">{##item[abreviació qualificació]##} * {##item[ponderació]##}% <WIOCCL:IF condition="{##indx##}\<{#_SUBS({#_ARRAY_LENGTH({##dadesQualificacio##})_#},1)_#}">+ </WIOCCL:IF></WIOCCL:FOREACH>**
+**QFbloc{##nbloc##} = <WIOCCL:FOREACH var="item" array="{##dadesQualificacio##}"  counter="indx">{##item[abreviació qualificació]##} * {##item[ponderació]##}% <WIOCCL:IF condition="{##indx##}\<{#_SUBS({#_ARRAY_LENGTH({##dadesQualificacioFiltrades##})_#},1)_#}">+ </WIOCCL:IF></WIOCCL:FOREACH>**
 
 </WIOCCL:IF>
 

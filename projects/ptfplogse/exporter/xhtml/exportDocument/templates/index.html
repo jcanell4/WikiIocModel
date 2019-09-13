@@ -51,7 +51,9 @@
         <div class="section1_element">
           <div class="section1_icona" id="material_icona"></div>
           <h3>Material didàctic</h3>
+<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##urlMaterialDidactic##}'')_#}&&!{#_STR_CONTAINS(''http://ioc.xtec.cat/materials/FP/Materials/.../web/html/'', ''{##urlMaterialDidactic##}'')_#}">          
           <a href="{##urlMaterialDidactic##}">material de l'aula</a>
+</WIOCCL:IF>
         </div>
         <div class="section1_element">
           <div class="section1_icona" id="dedicacio_icona"></div>
@@ -510,21 +512,20 @@
         <th>Inici</th>
         <th>Final</th>
       </tr>
-<WIOCCL:FOR from="{#_MIN({##calendari##}, ''MIN[unitat didàctica]'')_#}" to="{#_MAX({##calendari##}, ''MAX[unitat didàctica]'')_#}" counter="idUnitat">
-<WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[unitat didàctica]##}=={##idUnitat##}">
-<WIOCCL:FOREACH  var="itemCal" array="{##filtered##}" counter="cont">
+<WIOCCL:SET var="previousUD" type="literal" value="0">
+<WIOCCL:FOREACH  var="itemCal" array="{##calendari##}" counter="cont">
       <tr>
-<WIOCCL:IF condition="{##cont##}==0">
-        <th rowspan="{#_ARRAY_LENGTH({##filtered##})_#}">U{##itemCal[unitat didàctica]##}</th>
+<WIOCCL:IF condition="{##previousUD##}!={##itemCal[unitat didàctica]##}">
+        <th rowspan="{#_COUNTINARRAY({##calendari##}, ''unitat didàctica'', {##itemCal[unitat didàctica]##})_#}">U{##itemCal[unitat didàctica]##}</th>
 </WIOCCL:IF>
           <td>{##itemCal[nucli activitat]##}</td>
         <td>{##itemCal[nom]##}</td>
         <td>{#_DATE("{##itemCal[inici]##}")_#}</td>
         <td>{#_DATE("{##itemCal[final]##}")_#}</td>
       </tr>
+<WIOCCL:RESET var="previousUD" type="literal" value="{##itemCal[unitat didàctica]##}"></WIOCCL:RESET>
 </WIOCCL:FOREACH>
-</WIOCCL:SUBSET>
-</WIOCCL:FOR>
+</WIOCCL:SET>
     </table>
   </div>
 </section>
@@ -538,7 +539,7 @@
     <br/>
     <p>Els lliuraments s'han de realitzar dins dels terminis fixats i són improrrogables.</p>
     <br/>
-    <p>L'AC inclou <span>{#_ARRAY_LENGTH({##datesAC##})_#} lliuraments</span>, distribuïts de la següent manera:</p>
+    <p>L'AC inclou <span>{#_COUNTDISTINCT({##datesAC##}, [''id''])_#} lliuraments</span>, distribuïts de la següent manera:</p>
     <table class="own_table">
       <tr>
         <th colspan="2"></th>
@@ -654,7 +655,7 @@
 </WIOCCL:CASE>
 <WIOCCL:DEFAULTCASE forchoose="selector">
       <tr>
-        <th>U{##item[unitat]##}</th>
+        <th>U{##item[unitat didàctica]##}</th>
         <th rowspan="{%%rowSpan_{##item[id]##}%%}">{##item[id]##}</th>
         <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[enunciat]##}")_#}</td>
         <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[lliurament]##}")_#}</td>
@@ -663,7 +664,7 @@
 </WIOCCL:IF>
         <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[qualificació]##}")_#}</td>
       </tr>
-<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:REPARSESET>
+<WIOCCL:RESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:RESET>
 </WIOCCL:DEFAULTCASE>
 <WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
 </WIOCCL:CHOOSE>
@@ -692,14 +693,14 @@
 <WIOCCL:FOREACH var="item" array="{##datesEAF##}">
 <WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
 <WIOCCL:CASE forchoose="selector" relation="==">
-<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="{#_SUMA({##rowSpan_{##item[id]##}##},1)_#}"></WIOCCL:REPARSESET>
+<WIOCCL:RESET var="rowSpan_{##item[id]##}" value="{#_SUMA({##rowSpan_{##item[id]##}##},1)_#}"></WIOCCL:RESET>
       <tr>
           <th>U{##item[unitat didàctica]##}</th>
       </tr>
 </WIOCCL:CASE>
 <WIOCCL:DEFAULTCASE forchoose="selector">
       <tr>
-        <th>U{##item[unitat didàtica]##}</th>
+        <th>U{##item[unitat didàctica]##}</th>
         <th rowspan="{%%rowSpan_{##item[id]##}%%}">{##item[id]##}</th>
 <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">		
 <WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==true">
@@ -715,7 +716,7 @@
 </WIOCCL:IF>
         <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[qualificació recuperació]##}")_#}</td>
       </tr>
-<WIOCCL:REPARSESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:REPARSESET>
+<WIOCCL:RESET var="rowSpan_{##item[id]##}" value="1"></WIOCCL:RESET>
 </WIOCCL:DEFAULTCASE>
 <WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
 </WIOCCL:CHOOSE>

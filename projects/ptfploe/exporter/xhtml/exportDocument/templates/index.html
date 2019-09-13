@@ -51,7 +51,9 @@
         <div class="section1_element">
           <div class="section1_icona" id="material_icona"></div>
           <h3>Material didàctic</h3>
+<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##urlMaterialDidactic##}'')_#}&&!{#_STR_CONTAINS(''http://ioc.xtec.cat/materials/FP/Materials/.../web/html/'', ''{##urlMaterialDidactic##}'')_#}">          
           <a href="{##urlMaterialDidactic##}">material de l'aula</a>
+</WIOCCL:IF>
         </div>
         <div class="section1_element">
           <div class="section1_icona" id="dedicacio_icona"></div>
@@ -509,8 +511,8 @@
         <th>Inici</th>
         <th>Final</th>
       </tr>
-<WIOCCL:FOR from="{#_MIN({##calendari##}, ''MIN[unitat]'')_#}" to="{#_MAX({##calendari##}, ''MAX[unitat]'')_#}" counter="idUnitat">
-<WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[unitat]##}=={##idUnitat##}">     
+<WIOCCL:FOREACH var="itemU" array="{##taulaDadesUnitats##}">
+<WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[unitat]##}=={##itemU[unitat]##}">     
 <WIOCCL:FOREACH  var="itemCal" array="{##filtered##}" counter="cont">
       <tr>
 <WIOCCL:IF condition="{##cont##}==0">
@@ -522,7 +524,7 @@
       </tr>
 </WIOCCL:FOREACH>
 </WIOCCL:SUBSET>
-</WIOCCL:FOR>
+</WIOCCL:FOREACH>
     </table>
   </div>
 </section>
@@ -536,7 +538,7 @@
     <br/>
     <p>Els lliuraments s'han de realitzar dins dels terminis fixats i són improrrogables.</p>
     <br/>
-    <p>L'AC inclou <span>{#_ARRAY_LENGTH({##datesAC##})_#} lliuraments</span>, distribuïts de la següent manera:</p>
+    <p>L'AC inclou <span>{#_COUNTDISTINCT({##datesAC##},[''id''])_#} lliuraments</span>, distribuïts de la següent manera:</p>
     <table class="own_table">
       <tr>
         <th colspan="2"></th>
