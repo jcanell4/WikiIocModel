@@ -173,29 +173,36 @@ class RawPageAction extends EditPageAction {
         // Eliminem la etiqueta
         $text = preg_replace($pattern, "", $text);
 
-        // Capturem el id del formulari
+        // Capturem el id del formulari.
         $pattern = "/<form id=\"(.*?)\"/";
-        //$form = "dw__editform";
         preg_match($pattern, $text, $match);
         $form = $match[1];
 
+        $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID]); //igualar al id del formulario
+
         $pattern = "/<form id=\"" . $form . "\"/";
-        $replace = "/<form id=\"form_" . $this->params[PageKeys::KEY_ID] . "\"/";
+        $replace = "/<form id=\"form_" . $id . "\"/";
         $text = preg_replace($pattern, $replace, $text);
 
         // Afegim el id del formulari als inputs
         $pattern = "/<input/";
-        $replace = "<input form=\"form_" . $this->params[PageKeys::KEY_ID] . "\"";
+        $replace = "<input form=\"form_" . $id . "\"";
         $meta = preg_replace($pattern, $replace, $meta);
 
         // Netegem el valor
         $pattern = "/value=\"string\"/";
         $replace = "value=\"\"";
         $meta = preg_replace($pattern, $replace, $meta);
-        $metaId = str_replace(":", "_", $this->params[PageKeys::KEY_ID]) . '_metaEditForm';
+
+        //Modifiquem el tamany de la caixa de l'input
+        $pattern = "/size=\"50\"/";
+        $replace = "style=\"width:99%;\"";
+        $meta = preg_replace($pattern, $replace, $meta);
+
+        $metaId = $id . '_metaEditForm';
         $response['meta'] = [($this->getCommonPage($metaId,
-                                                   WikiIocLangManager::getLang('metaEditForm'),
-                                                   $meta)
+                              WikiIocLangManager::getLang('metaEditForm'),
+                              $meta)
                              + ['type' => 'summary']
                             )];
 
