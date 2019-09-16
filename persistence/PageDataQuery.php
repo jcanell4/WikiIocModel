@@ -72,7 +72,7 @@ class PageDataQuery extends DataQuery {
         $file = $this->getFileName($id).".$version";
         return io_readFile($file);
     }
-    
+
     public function getRaw($id, $rev=NULL){
         return rawWiki($id, $rev);
     }
@@ -147,13 +147,11 @@ class PageDataQuery extends DataQuery {
             $ret[$revision]['date'] =  WikiPageSystemManager::extractDateFromRevision($ret[$revision]['date']);
         }
 
-
-
         $ret['current'] = @filemtime(wikiFN($id));
         $ret['docId'] = $id;
         $ret['position'] = $offset;
         $ret['amount'] = $amount;
-
+        $ret['summary'] = getRevisionInfo($id, $ret['current'])['sum'];
 
         return $ret;
     }
