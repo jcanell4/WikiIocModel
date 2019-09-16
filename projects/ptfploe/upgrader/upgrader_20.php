@@ -32,16 +32,18 @@ class upgrader_20 extends CommonUpgrader {
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename);
+
+
                 $plantilla = @file_get_contents(WIKI_IOC_PROJECT."metadata/plantilles/continguts.txt.v20");
 
                 //Fer el canvi d'inserir el nou bloc protected abans d'executar $doc = $this->updateDocFromTemplateUsingProtectecTags($plantilla, $doc);
-//                $aTokRep = [
-//                    [
-//                        "afegir a aquí el text a buscar", 
-//                        "afegir a aqí el text a substituir"
-//                    ],
-//                ];
-//                $doc = $this->updateTemplateByReplace($doc, $aTokRep);
+                $aTokRep = [
+                    [
+                " \\* Presentar-se directament a la recuperació de l'EAF\\.",
+                "###:\n  * Presentar-se directament a la recuperació de l'EAF.[##TODO: Elimineu la frase anterior si ho creieu convenient. No elimineu aqust TODO per disposar d'una referencia per a futurs canvis##]\n:###"
+                    ],
+                ];
+                $doc = $this->updateTemplateByReplace($doc, $aTokRep);
                 
                 //actualiza el doc del usuario en base a la plantilla
                 $doc = $this->updateDocFromTemplateUsingProtectecTags($plantilla, $doc);
