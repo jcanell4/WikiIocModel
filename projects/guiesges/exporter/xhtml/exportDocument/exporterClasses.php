@@ -57,7 +57,7 @@ class exportDocument extends MainRender {
                 $modul = html_entity_decode(htmlspecialchars_decode($data["codi_modul"], ENT_COMPAT|ENT_QUOTES));
                 $modul .= "-";
                 $modul .= html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
-                $durada = html_entity_decode(htmlspecialchars_decode($data["dedicacio"], ENT_COMPAT|ENT_QUOTES));
+                //$durada = html_entity_decode(htmlspecialchars_decode($data["dedicacio"], ENT_COMPAT|ENT_QUOTES));
                 $codi = html_entity_decode(htmlspecialchars_decode($data["codi"], ENT_COMPAT|ENT_QUOTES));
                 $versio = html_entity_decode(htmlspecialchars_decode($data["versio"], ENT_COMPAT|ENT_QUOTES));
                 $titol = ["Estudis de GES", "Guia d'estudi", $modul, $trimestre];

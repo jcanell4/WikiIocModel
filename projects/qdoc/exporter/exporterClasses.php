@@ -118,24 +118,19 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
         $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
         $iocTcPdf->setFooterData($params["data"]["peu"]);
-
+$iocTcPdf->setHeaderData
         // set header and footer fonts
         $iocTcPdf->setHeaderFont(Array(self::$headerFont, '', self::$headerFontSize));
         $iocTcPdf->setFooterFont(Array(self::$footerFont, '', self::$footerFontSize));
 
-        // set default monospaced font
         $iocTcPdf->SetDefaultMonospacedFont("Courier");
+        $iocTcPdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $iocTcPdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
         // set margins
         $iocTcPdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
         $iocTcPdf->SetHeaderMargin(PDF_MARGIN_HEADER);
         $iocTcPdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
-        // set auto page breaks
-        $iocTcPdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
-        // set image scale factor
-        $iocTcPdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
         //pàgina de continguts
         $iocTcPdf->AddPage();

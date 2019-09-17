@@ -111,10 +111,11 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
         //primera pàgina
-        $iocTcPdf->SetFont(self::$firstPageFont, 'B', 35);
         $iocTcPdf->AddPage();
         $iocTcPdf->SetX(100);
         $iocTcPdf->SetY($y=80);
+
+        $iocTcPdf->SetFont(self::$firstPageFont, 'B', 35);
         $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"]["titol"], 0, 'L');
         $iocTcPdf->SetY($y+=30);
         $iocTcPdf->SetFont(self::$firstPageFont, 'B', 25);
@@ -146,9 +147,8 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->MultiCell(0, 0, 'Índex', 0, 'C', 0, 1, '', '', true, 0);
         $iocTcPdf->Ln();
 
-        $iocTcPdf->SetFont('Times', '', 12);
-
         // add a simple Table Of Content at first page
+        $iocTcPdf->SetFont('Times', '', 12);
         $iocTcPdf->addTOC(2, 'courier', '.', 'INDEX', 'B', array(128,0,0));
 
         // end of TOC page

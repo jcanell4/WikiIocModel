@@ -58,9 +58,9 @@ class exportDocument extends MainRender {
                 $cicle = html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
                 $credit = html_entity_decode(htmlspecialchars_decode($data["credit"], ENT_COMPAT|ENT_QUOTES));
                 $tipusBlocCredit = html_entity_decode(htmlspecialchars_decode($data["tipusBlocCredit"], ENT_COMPAT|ENT_QUOTES));
-                $durada = html_entity_decode(htmlspecialchars_decode($data["durada"], ENT_COMPAT|ENT_QUOTES));
-                $professors = html_entity_decode(htmlspecialchars_decode($data["professors"], ENT_COMPAT|ENT_QUOTES));
-                $coordinador = html_entity_decode(htmlspecialchars_decode($data["coordinador"], ENT_COMPAT|ENT_QUOTES));
+                //$durada = html_entity_decode(htmlspecialchars_decode($data["durada"], ENT_COMPAT|ENT_QUOTES));
+                //$professors = html_entity_decode(htmlspecialchars_decode($data["professors"], ENT_COMPAT|ENT_QUOTES));
+                //$coordinador = html_entity_decode(htmlspecialchars_decode($data["coordinador"], ENT_COMPAT|ENT_QUOTES));
 
                 $params = array(
                     "id" => $this->cfgExport->id,
@@ -69,18 +69,18 @@ class exportDocument extends MainRender {
                     "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
                     "mode" => isset($this->mode) ? $this->mode : $this->filetype,
                     "data" => array(
-                        "header_page_logo" => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
-                        "header_page_wlogo" => 9.9,
-                        "header_page_hlogo" => 11.1,
-                        "header_ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
-                        "header_rtext" => $cicle."\n".$credit."-".$tipusBlocCredit."\n".$semestre,
+                        "header" => ["logo" => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
+                                     "wlogo" => 9.9,
+                                     "hlogo" => 11.1,
+                                     "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
+                                     "rtext" => $cicle."\n".$credit."-".$tipusBlocCredit."\n".$semestre],
                         "titol" => array(
                             "Formació Professional",
                             "Pla de Treball",
                             $cicle,
                             $credit.($tipusBlocCredit!="crèdit")?"-$tipusBlocCredit":"",
                             $semestre,
-                        ),    //títol del document
+                        ),
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
                     )
                 );
