@@ -65,7 +65,7 @@ class IocTcPdf extends TCPDF {
 
         $this->SetY(-15);   //Position at 15 mm from bottom
         $this->SetFont($this->footer_font[0], $this->footer_font[1], $this->footer_font[2]);
-        $this->Cell(0, 10, 'pàgina '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M'); //Page number
+        $this->Cell(0, 10, 'pàgina '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');  //Page number
     }
 
     public function setHeaderData($ln='', $lw=0, $lh=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)) {
