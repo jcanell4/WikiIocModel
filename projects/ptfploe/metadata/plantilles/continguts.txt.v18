@@ -89,7 +89,7 @@ Aquest mòdul està distribuït en les següents unitats formatives:
 
 </WIOCCL:IF>
 <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">
-El mòdul s'imparteix en {#_MAX({##taulaDadesUF##}, ''MAX[bloc]'', ''bloc'')_#} blocs. Aquest pla de treball correspon al {##tipusBlocModul##} del  mòdul. Cada bloc està distribuït en les següents unitats formatives:
+El mòdul s'imparteix en dos blocs. Aquest pla de treball correspon al {##tipusBlocModul##} del  mòdul. Cada bloc està distribuït en les següents unitats formatives:
 
 ::table:T02
   :title:Blocs
@@ -186,7 +186,7 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 | ::: |  U{##item[unitat]##}  | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| ::: </WIOCCL:IF>| ::: |
 </WIOCCL:CASE>
 <WIOCCL:DEFAULTCASE forchoose="selector">
-|  {##item[id]##}  |  U{##item[unitat]##}  |  {#_DATE("{##item[enunciat]##}")_#}  |  {#_DATE("{##item[lliurament]##}")_#}  <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">|  <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF>  </WIOCCL:IF>|  {#_DATE("{##item[qualificació]##}")_#}  |
+|  {##item[id]##}  |  U{##item[unitat]##}  |  {#_DATE("{##item[enunciat]##}")_#}  |  {#_DATE("{##item[lliurament]##}")_#}  <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">|  <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF>  </WIOCCL:IF>|  {#_DATE("{##item[qualificació]##}")_#}  |
 </WIOCCL:DEFAULTCASE>
 <WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
 </WIOCCL:CHOOSE>
@@ -344,9 +344,8 @@ Els EAF que siguin una còpia literal (total o parcial) d'altres treballs, exerc
 Com que és part de l'avaluació final, l'EAF té dues convocatòries cada semestre:  EAF i recuperació EAF. L'alumne pot: 
 
   * Presentar-se a l'EAF i, en cas de no superar-lo, presentar-se a la recuperació de l'EAF del mateix semestre. En cap cas es pot presentar a la recuperació de l'EAF per pujar nota tenint l'EAF superat.
-###:
-  * Presentar-se directament a la recuperació de l'EAF.[##TODO: Elimineu la frase anterior si ho creieu convenient. No elimineu aqust TODO per disposar d'una referencia per a futurs canvis##]
-:###
+  * Presentar-se directament a la recuperació de l'EAF.
+
 La convocatòria de l'EAF s'exhaureix tant si l'estudiant s'hi presenta com si no (excepte que l'alumne hagi anul·lat la matrícula). La convocatòria de recuperació de l'EAF només s'exhaureix si l'estudiant s'hi presenta. 
 
 En el cas dels EAF establerts amb metodologia de treball en equip, l'estudiant té l'obligació de presentar-se a la convocatòria de l'EAF i només opta a presentar-se a l'EAF de recuperació quan:
@@ -376,7 +375,7 @@ Jornada presencial procedimental de la unitat formativa:
 
 Per assistir a la JT és imprescindible:
 
-  * Apuntar-se a l'espai indicat pel professor dins dels terminis establerts.
+  * Apuntar-se a l'espai indicat pel professor dins dels terminis establerts (si ho considereu)
 ###:
 [##TODO: Afegiu altres punts amb les consideracions que considereu oprotunes##]
 
@@ -384,7 +383,7 @@ Per assistir a la JT és imprescindible:
 <WIOCCL:IF condition="{##hiHaRecuperacioPerJT##}==true">
 S'ofereixen dues convocatòries cada semestre: JT i recuperació JT. Només es té accés a la convocatòria de recuperació JT si l'alumne:
 
-  - Ha suspès la primera convocatòria.
+  - Ha suspès la primera convocatòria amb una nota inferior a {##notaMinimaJT##},00.
   - Ha patit un accident greu, un ingrés hospitalari, la mort d'un familiar fins a 2n grau (el mateix dia de la jornada) o ha  d'assistir a un judici (el mateix dia de la jornada)  que impossibiliti l'assistència  a la convocatòria JT.
 ###:
 
@@ -455,14 +454,12 @@ Per sumar l'AC s’ha d’obtenir una qualificació mínima de {##notaMinimaPAF#
 **Si la qualificació de la PAF és inferior a {##notaMinimaPAF##},00, el càlcul de la QF serà el <WIOCCL:SUBSET subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_FIRST({##filtered##}, ''FIRST[ponderació]'')_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF.**
 </WIOCCL:IF>
 <WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''EAF'',''JT''])_#}\>0">
-Si la qualificació d'algun dels instruments d'avaluació obigatoris (PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i JT</WIOCCL:IF>) és inferior a la nota mínima indicada, el càlcul de la QF es farà tal com s'indica a la taula següent:
+Si la qualificació d'algun dels instruments d'avaluació obigatoris (PAF, EAF, JT) és inferior a la nota mínima indicada, el càlcul de la QF es farà tal com s'indica a la taula següent:
 ::table:T10-1
   :title:Càlcul QF per qualificacions inferiors a la nota mínima
   :type:pt_taula
 ^  Element d'avaluació obligatori ^ Nota mínima  ^  Càlcul aplicat per la QF ^
-<WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''PAF''])_#}\>0">
 |  PAF  |  {##notaMinimaPAF##},00  | <WIOCCL:SUBSET subsetvar="filteredPAF" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF  |
-</WIOCCL:IF>
 <WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[tipus qualificació]##}==''EAF''||{##item[tipus qualificació]##}==''JT''">
 |  {##item[abreviació qualificació]##}  |  <WIOCCL:IF condition="{##item[tipus qualificació]##}==''EAF''">{##notaMinimaEAF##},00</WIOCCL:IF><WIOCCL:IF condition="{##item[tipus qualificació]##}==''JT''">{##notaMinimaJT##},00</WIOCCL:IF>  | {##item[ponderació]##}% de la nota obtinguda a l'{##item[abreviació qualificació]##} |
 </WIOCCL:FOREACH>
@@ -490,9 +487,7 @@ Si la qualificació de la PAF és inferior a {##notaMinimaPAF##},00, el càlcul 
   :title:Càlcul QUF{##itemUf[unitat formativa]##} per qualificacions inferiors a la nota mínima
   :type:pt_taula
 ^  Element d'avaluació obligatori ^ Nota mínima  ^  Càlcul aplicat per la QUF{##itemUf[unitat formativa]##}  ^
-<WIOCCL:IF condition="{#_COUNTINARRAY({##filteredDadesQualificacioUFs##},''tipus qualificació'', [''PAF''])_#}\>0">
 |  PAF  |  {##notaMinimaPAF##},00  | <WIOCCL:SUBSET subsetvar="filteredPAF" array="{##filteredDadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF  |
-</WIOCCL:IF>
 <WIOCCL:FOREACH var="item" array="{##filteredDadesQualificacioUFs##}" filter="{##item[tipus qualificació]##}==''EAF''||{##item[tipus qualificació]##}==''JT''">
 |  {##item[abreviació qualificació]##}  |  <WIOCCL:IF condition="{##item[tipus qualificació]##}==''EAF''">{##notaMinimaEAF##},00</WIOCCL:IF><WIOCCL:IF condition="{##item[tipus qualificació]##}==''JT''">{##notaMinimaJT##},00</WIOCCL:IF>  | {##item[ponderació]##}% de la nota obtinguda a l'{##item[abreviació qualificació]##} |
 </WIOCCL:FOREACH>
