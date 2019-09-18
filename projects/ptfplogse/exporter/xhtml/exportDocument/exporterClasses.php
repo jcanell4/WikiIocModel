@@ -74,13 +74,11 @@ class exportDocument extends MainRender {
                                      "hlogo" => 11.1,
                                      "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
                                      "rtext" => $cicle."\n".$credit."-".$tipusBlocCredit."\n".$semestre],
-                        "titol" => array(
-                            "Formació Professional",
-                            "Pla de Treball",
-                            $cicle,
-                            $credit.($tipusBlocCredit!="crèdit")?"-$tipusBlocCredit":"",
-                            $semestre,
-                        ),
+                        "titol" => ["Formació Professional",
+                                    "Pla de Treball",
+                                    $cicle,
+                                    $credit . (($tipusBlocCredit!="crèdit") ? " - $tipusBlocCredit" : ""),
+                                    $semestre],
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
                     )
                 );
