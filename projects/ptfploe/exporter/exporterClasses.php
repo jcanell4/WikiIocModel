@@ -22,7 +22,7 @@ class renderObject extends BasicRenderObject {
 require_once (DOKU_INC.'inc/inc_ioc/tcpdf/tcpdf_include.php');
 
 class IocTcPdf extends TCPDF {
-    private $header_logo_height=10;
+    private $header_logo_height = 10;
 
     public function __construct($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = true, $encoding = 'UTF-8', $diskcache = false, $pdfa = false) {
         parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
@@ -34,10 +34,10 @@ class IocTcPdf extends TCPDF {
 
     //Page header
     public function Header() {
-        if ($this->PageNo() == 1) {
-            return;
-        }
+        if ($this->PageNo() == 1) return;
+
         $margins = $this->getMargins();
+        $subtitol = $this->Subtitle($this->header_string);
 
         // Logo
         $image_file = K_PATH_IMAGES.$this->header_logo;
@@ -48,31 +48,39 @@ class IocTcPdf extends TCPDF {
         $header_x = $margins['left'] + $margins['padding_left'] + ($this->header_logo_width * 1.1);
         $header_w = 105 - $header_x;
 
-        $this->SetTextColorArray($this->header_text_color);
         // header title
-        $this->SetFont($this->header_font[0], $this->header_font[1], $this->header_font[2]);
+        $this->SetTextColorArray($this->header_text_color);
+        $this->SetFont($headerfont[0], $headerfont[1], $headerfont[2]);
         $this->SetX($header_x);
         $this->MultiCell($header_w, $cell_height, $this->header_title, 0, 'L', 0, 0, "", "", true);
 
         // header string
-        $this->MultiCell(65, $cell_height, $this->header_string, 0, 'R', 0, 0, "", "", true);
-        $this->Line(5, 19, 180,19);
+        $this->MultiCell(0, $cell_height, $subtitol, 0, 'R', 0, 0, "", "", true);
+        $this->Line($margins['left'], 19, $this->getPageWidth()-$margins['right'], 19);
     }
 
     // Page footer
     public function Footer() {
-        if ($this->PageNo() ==1 ) {
-            return;
-        }
+        if ($this->PageNo() == 1) return;
+
         $this->SetY(-15);   //Position at 15 mm from bottom
         $this->SetFont($this->footer_font[0], $this->footer_font[1], $this->footer_font[2]);
-        $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M'); //Page number
+        $this->Cell(0, 10, 'pàgina '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M'); //Page number
     }
 
     public function setHeaderData($ln='', $lw=0, $lh=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)) {
         parent::setHeaderData($ln, $lw, $ht, $hs, $tc, $lc);
         $this->header_logo_height = $lh;
     }
+
+    private function Subtitle($title) {
+        $title = str_replace("/", "|", $title);
+        $title = str_replace("\n", "|", $title);
+        $arr_subtitol = explode("|", $title);
+        $c = count($arr_subtitol);
+        return $arr_subtitol[0] . "...\n" . $arr_subtitol[$c-2] . "\n" . $arr_subtitol[$c-1];
+    }
+
  }
 
 class StaticPdfRenderer extends BasicStaticPdfRenderer {
@@ -114,24 +122,36 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
 
         //primera pàgina
         $iocTcPdf->AddPage();
+
+        $lin = 0;
+        for ($i=2; $i<count($params["data"]["titol"]); $i++){
+            $arr_subtitol = explode("|", str_replace("/", "|", $params["data"]["titol"][$i]));
+            $lin += count($arr_subtitol);
+        }
+        $row_offset = $lin * 4;   //espai vertical que cal desplaçar per encabir un títol multilínia
+
         $iocTcPdf->SetX(100);
-        $iocTcPdf->SetY($y=100);
-        
+        $iocTcPdf->SetY($y=100-$row_offset);
+
         $iocTcPdf->SetFont(self::$firstPageFont, 'B', 35);
         for ($i=0; $i<2; $i++){
             $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"][$i], 0, 1);
         }
-        $iocTcPdf->SetY($y+=100);
+        $iocTcPdf->SetY($y+=100-$row_offset);
 
-        $iocTcPdf->SetFont(self::$firstPageFont, 'B', 20);
+        $iocTcPdf->SetFont(self::$firstPageFont, 'B', 18);
         for ($i=2; $i<count($params["data"]["titol"]); $i++){
-            $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"][$i], 0, 1);
+            $text = str_replace("/", "|", $params["data"]["titol"][$i]);
+            $arr_subtitol = explode("|", $text);
+            foreach ($arr_subtitol as $subtitol) {
+                $iocTcPdf->MultiCell(0, 0, trim($subtitol), 0, 1);
+            }
         }
 
         $iocTcPdf->AddPage();
 
         $len = count($params["data"]["contingut"]);
-        for($i=0; $i<$len; $i++){
+        for ($i=0; $i<$len; $i++){
             self::resolveReferences($params["data"]["contingut"][$i]);
         }
         for ($i=0; $i<$len; $i++){

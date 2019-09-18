@@ -78,7 +78,7 @@ class exportDocument extends MainRender {
                             "Formació Professional",
                             "Pla de Treball",
                             $cicle,
-                            $modul.($tipusBlocModul!="mòdul")?"-$tipusBlocModul":"",
+                            $modul . (($tipusBlocModul!="mòdul") ? " - $tipusBlocModul" : ""),
                             $semestre,
                         ),
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
