@@ -17,4 +17,21 @@ class FactoryAuthorization extends AbstractFactoryAuthorization {
         parent::__construct(self::PROJECT_AUTH);
     }
 
+    public function setAuthorizationCfg() {
+        if (empty($this->authCfg)) {
+            parent::setAuthorizationCfg();
+        }
+
+        // TODO[Xavi]: Quina es la manera correcta d'obtenir el id?
+        $meta = p_get_metadata($_REQUEST['id']);
+
+        if ($meta['partialDisabled']) {
+            $this->authCfg['edit_partial'] = "partialEditNotSupported";
+        } else {
+            $this->authCfg['edit_partial'] = "read";
+        }
+
+
+
+    }
 }

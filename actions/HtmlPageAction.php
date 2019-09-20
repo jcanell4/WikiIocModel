@@ -28,8 +28,9 @@ class HtmlPageAction extends RenderedPageAction{
     protected function responseProcess(){
         $response = parent::responseProcess();
 
-        // TODO: si es tracta d'un document de projecte es desactiva la edició parcial
-        $response['structure']['partialDisabled'] = $this->params['projectOwner'] ? TRUE : FALSE;
+        $meta = p_get_metadata($this->params[PageKeys::KEY_ID]);
+        $response['structure']['partialDisabled'] = isset($meta['partialDisabled']) ? $meta['partialDisabled'] : FALSE;
+
 
         // TODO: afegir el 'info' que correspongui
 
