@@ -41,12 +41,17 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 
             foreach ($arraytaula as $elem) {
                 if($elem["type"] !== "noprocess"){
-                    $processor = ucwords($elem['type'])."ProjectUpdateProcessor";
-                    if ( !isset($processArray[$processor]) ) {
-                        $processArray[$processor] = new $processor;
+                    if($elem['type']==="templateFile"){
+                        $dataTemplate = $projectModel->getRawDocument($elem['value']);
+                        $dataTemplate = ":###".str_replace([":###","###:"], "", $dataTemplate)."###:";
+                    }else{
+                        $processor = ucwords($elem['type'])."ProjectUpdateProcessor";
+                        if ( !isset($processArray[$processor]) ) {
+                            $processArray[$processor] = new $processor;
+                        }
+                        $processArray[$processor]->init($elem['value'], $elem['parameters']);
+                        $processArray[$processor]->runProcess($response);
                     }
-                    $processArray[$processor]->init($elem['value'], $elem['parameters']);
-                    $processArray[$processor]->runProcess($response);
                 }
             }
             if($restoreData){
@@ -65,6 +70,10 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                     ProjectKeys::KEY_METADATA_VALUE => json_encode($response)
                 ];
                 $projectModel->setData($metaData);    //actualiza el contenido en 'mdprojects/'
+                 
+                //canvis als fitxers si n'hi han
+                $projectModel->setRawProjectDocument($elem['parameters']['file'], $dataTemplate, WikiIocLangManager::getLang("update_message"));
+
                 
                 $projectModel->setProjectSubSetAttr("updatedDate", time());
 
