@@ -43,7 +43,8 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                 if($elem["type"] !== "noprocess"){
                     if($elem['type']==="templateFile"){
                         $dataTemplate = $projectModel->getRawDocument($elem['value']);
-                        $dataTemplate = ":###".str_replace([":###","###:"], "", $dataTemplate)."###:";
+                        $dataTemplate = ":###".preg_replace(["/:###/","/###:/","/~~WIOCCL_DATA.+~~/"], "", $dataTemplate)."###:";
+//                        $dataTemplate = ":###".str_replace([":###","###:"], "", $dataTemplate)."###:";
                     }else{
                         $processor = ucwords($elem['type'])."ProjectUpdateProcessor";
                         if ( !isset($processArray[$processor]) ) {
