@@ -113,10 +113,6 @@ class SavePageAction extends RawPageAction {
             $response['close']['idToShow'] = $response[PageKeys::KEY_ID];
         }
 
-
-        $partialDisabled = strpos($this->params['wikitext'], '~~USE:WIOCCL~~') !== false;
-        p_set_metadata($this->params[PageKeys::KEY_ID], ['partialDisabled' => $partialDisabled]);
-
         return $response;
     }
 

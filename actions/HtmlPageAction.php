@@ -28,7 +28,8 @@ class HtmlPageAction extends RenderedPageAction{
     protected function responseProcess(){
         $response = parent::responseProcess();
 
-        $meta = p_get_metadata($this->params[PageKeys::KEY_ID]);
+        // Duplicat al CancelEditPageAction
+        $meta = WikiIocInfoManager::getInfo('meta');
         $response['structure']['partialDisabled'] = isset($meta['partialDisabled']) ? $meta['partialDisabled'] : FALSE;
 
 

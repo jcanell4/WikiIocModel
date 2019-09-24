@@ -34,6 +34,12 @@ class CancelEditPageAction extends RenderedPageAction {
 
         $response = parent::responseProcess();
 
+        // Duplicat al HtmlPageAction
+        $meta = WikiIocInfoManager::getInfo('meta');
+        $response['structure']['partialDisabled'] = isset($meta['partialDisabled']) ? $meta['partialDisabled'] : FALSE;
+
+
+
         if ($this->params[PageKeys::DISCARD_CHANGES]) {
             $response['structure']['discard_changes'] = $this->params[PageKeys::DISCARD_CHANGES];
         }

@@ -21,12 +21,20 @@ class SavePartialPageAction extends SavePageAction{
     }
 
     protected function runProcess() {
+        // Si el text conté el '~~USE:WIOCCL~~' no es permet desar
+        if (strpos($this->params[PageKeys::KEY_TEXT], '~~USE:WIOCCL~~')) {
+            throw new PartialEditNotSupportedException();
+        }
+
         parent::runProcess();
         $this->getModel()->removeChunkDraft($this->params[PageKeys::KEY_SECTION_ID]);
         $this->lockStruct = $this->updateLock();
+
     }
 
     protected function responseProcess(){
+
+
 
            $response = array_merge($response =  parent::responseProcess(), $this->getModel()->getData());
 
