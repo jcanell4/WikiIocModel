@@ -1,0 +1,131 @@
+~~USE:WIOCCL~~
+[##TODO:En aquesta plantilla heu de modificar només els apartats que cal que ajusteu a la vostra matèria.
+
+Per ajudar-vos a fer la guia docent, a la Sala de Profes GES disposeu del [[https://portaljuridic.gencat.cat/ca/pjur_ocults/pjur_resultats_fitxa/?action=fitxa&mode=single&documentId=504619&language=ca_ES|Decret 161/2009]], un [[https://ioc.xtec.cat/campus/mod/resource/view.php?id=675657|document sobre com fer programacions competencials a l'ESO]] i un [[https://ioc.xtec.cat/campus/mod/resource/view.php?id=676430|model de guia docent del mòdul SO4]].##]
+====== Dades generals ======
+
+:###<WIOCCL:SET var="mAmbit" type="map" value="{##ambit##}" map="{''A_CIEN'':''Científic-Matemàtic'',''A_SOCI'':''Social'',''A_COMU'':''de la Comunicació''}">
+<WIOCCL:SET var="mOpcionalitat" type="map" value="{##opcionalitat##}" map="{''COMU'':''comú'',''OPCI'':''opcional''}">
+{##codi_modul##} {##modul##}
+
+Àmbit {##mAmbit##}
+
+Nivell {##nivell##}
+
+Mòdul {##mOpcionalitat##}
+
+Professor responsable: {##professor##}
+</WIOCCL:SET>
+</WIOCCL:SET>###:
+
+[##TODO:Descriure en un paràgraf la posició recomanada d'aquest mòdul al sí de l'itinerari de GES, si es recomana haver cursat altres mòduls prèviament, si està pensat per alumnes que comencen els estudis, etc.##]
+
+[##TODO:Descriure les capacitats prèvies que cal tenir per poder cursar aquest mòdul. Mirada restrictiva: només allò imprescindible i que molt difícilment podrà adquirir esforçant-s'hi molt al mòdul. Per exemple: un determinat nivell d'anglès.##]
+
+====== Per a què ensenyem? ======
+
+===== Competències desenvolupades en aquest mòdul =====
+
+[##TODO:Descriure a través d'una llista numerada les competències. Cal copiar exactament les competències que apareixen al currículum oficial de GES -decret 161/2009, al capítol de l'àmbit al que pertany el mòdul. Es seleccionen tant les competències pròpies de l'àmbit com les Aportacions de l'àmbit a les competències bàsiques, sense fer distincions. Mirada restrictiva: només aquelles competències que es treballin al mòdul de manera conscient.##]
+
+
+===== Objectius d'aprenentatge =====
+
+[##TODO:Els objectius d’aprenentatge són els enunciats que descriuen els aprenentatges que es preveu que adquiriran els alumnes en cada lliurament del mòdul. No són continguts sinó capacitats i s'expressen amb un verb. S’han de formular com a capacitats que els alumnes han de desenvolupar al llarg del mòdul perquè adquireixin les competències. Per tant, el seu referent directe són les competències enunciades en els apartats anteriors. En certa manera, els objectius de la unitat concreten aquestes competències al context i al nivell educatiu en què tenen lloc els aprenentatges. Han de ser de collita pròpia i s'han de posar en una llista numerada.##]
+
+
+====== Què ensenyem? ======
+
+
+===== Continguts =====
+[##TODO:Fer una llista dels continguts que utilitzem en la seqüència del mòdul. Ha de ser de collita pròpia, entenent que s'ha de moure en el marc que dibuixen els continguts descrits al 161/2009. No cal fer una llarga llista extremadament detallada però han de ser interpretables al nivell d'un índex de continguts d'un llibre de text. S'han de relacionar en una llista numerada.##]
+
+====== Com i quan ensenyem? ======
+
+
+===== Enfocament didàctic =====
+
+[##TODO:Cal fer un redactat amb una certa profunditat sobre amb quin enfocament i per quina estratègia hem dissenyat el mòdu. És una explicació com la que faríem si presentessim el mòdul a un grup de professors. Aquesta explicació ha de dibuixar un sentit concret d'allò que fem i plasmar l'autèntica feina artesanal i intransferible que caracteritza el paper de professor responsable.##]
+
+===== Lliurament 1 =====
+
+[##TODO:Descriure breument en un paràgraf en què consisteix el lliurament i quin és l'objectiu de la seqüència.##]
+
+
+^ Seqüència                                                                                       ^
+| [Xh] tipus d'activitat  1       |
+| [Xh] Tipus d'activitat  2       |
+
+===== Lliurament 2 =====
+
+[##TODO:Repetir el mateix esquema de continguts que en la secció 1##]
+
+^ Seqüència                                                                                       ^
+| [Xh] tipus d'activitat  1       |
+| [Xh] Tipus d'activitat  2       |
+
+
+===== Lliurament 3 =====
+[##TODO:Repetir el mateix esquema de continguts que en la secció 1##]
+
+^ Seqüència                                                                                       ^
+| [Xh] tipus d'activitat  1       |
+| [Xh] Tipus d'activitat  2       |
+
+
+===== Lliurament 4 =====
+
+[##TODO:Repetir el mateix esquema de continguts que en la secció 1##]
+
+^ Seqüència                                                                                       ^
+| [Xh] tipus d'activitat  1       |
+| [Xh] Tipus d'activitat  2       |
+
+
+====== Per a què, quan i com avaluem? ======
+
+
+===== Criteris i indicadors d'avaluació =====
+
+[##TODO:En aquest apartat es fa una relació dels criteris d'avaluació del mòdul. És com si fessim una rúbrica del global del mòdul, però en cap cas fent una suma de les rúbriques de les activitats concretes, sinó fent criteris globals. Hi ha d'haver un màxim de 6 o 7 criteris d'avaluació. Els criteris es posen en taules, seguint l'esquema següent:##]
+
+^ Criteri d'avaluació 1: Descripció del criteri  ^^^
+| //Nivell de suficiència// | //Nivell de notabilitat// | //Nivell d'excel·lència// |
+| Descripció de l'indicador | Descripció de l'indicador | Descripció de l'indicador |
+
+^ Criteri d'avaluació 2: Descripció del criteri  ^^^
+| //Nivell de suficiència// | //Nivell de notabilitat// | //Nivell d'excel·lència// |
+| Descripció de l'indicador | Descripció de l'indicador | Descripció de l'indicador |
+
+
+^ Criteri d'avaluació n: Descripció del criteri  ^^^
+| //Nivell de suficiència// | //Nivell de notabilitat// | //Nivell d'excel·lència// |
+| Descripció de l'indicador | Descripció de l'indicador | Descripció de l'indicador |
+
+
+===== Obtenció de les qualificacions =====
+
+[##TODO:En aquest paràgraf cal optar per una de les dues opcions següents:
+
+Aquest mòdul se supera a través de l’avaluació contínua. La qualificació final del mòdul s’obté de la ponderació de les qualificacions finals dels quatre lliuraments.
+
+Aquest mòdul se supera aprovant l'avaluació contínua i fent correctament la prova de validació. La qualificació final de l'avaluació contínua s'obté de la ponderació de les qualificacions finals dels quatre lliuraments.##]
+
+Les qualificacions finals dels 4 lliuraments s’obtenen de la següent forma:
+
+[##TODO:Canvieu la taula següent amb les dades adients pel vostre mòdul:##]
+
+|Lliurament 1  | X% activitat X + X% tasca principal del lliurament.  |
+|Lliurament 2  | X% activitat X + X% tasca principal del lliurament.  |
+|Lliurament 3  | X% activitat X + X% tasca principal del lliurament.  |
+|Lliurament 4  | X% activitat X + X% tasca principal del lliurament.  |
+
+
+====== Mesures d’atenció a la diversitat ======
+
+El mòdul preveu un tractament específic per a l’alumnat que l’ha repetit més d’una vegada. El professorat té eines per a identificar aquest alumnat i li aplica uns models de retroacció molt més dirigits a fites concretes i una major intensitat de seguiment entre lliuraments -veure com ha evolucionat respecte les indicacions donades en l’anterior correcció-.
+
+En casos d’alumnat NESE, el professorat aplicarà les indicacions vinculades al Procediment d’atenció a l’alumnat NESE.
+
+[##TODO:Aquests són els dos textos que com a mínim ha de tenir aquest apartat. Si teniu altres mesures d'atenció a la diversitat com itineraris diferenciats, activitats per gent que parteix de més avall, etc. poseu-ho aquí. No s'ha de posar res referit als NESE a banda del text que ja hi ha, perquè la qüestió dels NESE es descriurà en un document a part que vincula tots els mòduls de GES##]
+

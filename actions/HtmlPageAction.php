@@ -28,11 +28,6 @@ class HtmlPageAction extends RenderedPageAction{
     protected function responseProcess(){
         $response = parent::responseProcess();
 
-        // Duplicat al CancelEditPageAction
-        $meta = WikiIocInfoManager::getInfo('meta');
-        $response['structure']['partialDisabled'] = isset($meta['partialDisabled']) ? $meta['partialDisabled'] : FALSE;
-
-
         // TODO: afegir el 'info' que correspongui
 
         // Si no s'ha especificat cap altre missatge mostrem el de carrega

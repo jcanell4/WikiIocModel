@@ -18,6 +18,10 @@
   "metaDataProjectStructure": [
     {
       "main": "meta.mdpr",
+      "versions": {
+            "fields": 0,
+            "templates": {"convocatoria_a2":1, "convocatoria_b1":1, "convocatoria_b2":1}
+      },
       "mainType": {
         "type": "object",
         "typeDef": "convocatories"
