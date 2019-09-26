@@ -503,6 +503,13 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $subSetList = $this->projectMetaDataQuery->getListMetaDataSubSets();
         return in_array($subSet, $subSetList);
     }
+    
+    public function getPluginName(){
+        $dir = $this->projectMetaDataQuery->getProjectTypeDir();
+        $dirs  = explode("/", $dir);
+        $ret = $dirs[count($dirs)-4];
+        return  $ret;
+    }
 
     //TODO PEL RAFA: AIXÒ HA DE PASSAR AL ProjectDataQuery
     //Obtiene un array [key, value] con los datos de una revisión específica del proyecto solicitado
@@ -703,12 +710,31 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $ret = $this->filesToExportList();
         return (!empty($ret));
     }
+    
+    public function getFtpConfigData($ftpId=FALSE){
+        if(!$ftpId){
+            $ftpId = $this->getProjectMetaDataQuery()->getMetaDataFtpSender(ProjectKeys::KEY_FTPID);
+        }        
+        $pluguin = $this->getPluginName();        
+        $ftpConfigs =  WikiGlobalConfig::getConf(ProjectKeys::KEY_FTP_CONFIG, $pluguin);        
+        if(!isset($ftpConfigs["default"]) && !isset($ftpConfigs[$ftpId]) ){
+            throw new Exception("Cal configurar les dades del servidor FTP");
+        }
+        $connectionData = !isset($ftpConfigs["default"]) ? [] : $ftpConfigs['default'];        
+        if(isset($ftpConfigs[$ftpId])){
+            $connectionData  = array_merge($connectionData, $ftpConfigs[$ftpId]);   
+        }        
+        return $connectionData;
+    }
 
     public function set_ftpsend_metadata() {
+        $connectionData = $this->getFtpConfigData();
+        if($connectionData["remoteUrl"][strlen($connectionData["remoteUrl"])-1]==='/'){
+            $connectionData["remoteUrl"] = substr($connectionData["remoteUrl"],0, strlen($connectionData["remoteUrl"])-1);
+        }
         $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $this->id) .'/'.preg_replace('/:/', '_', $this->id) . '.zip';
-
         $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_timestamp", filemtime($file));
-        $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_url", $this->getProjectMetaDataQuery()->getMetaDataFtpSender('ftpsend_url') . '/' . basename($file, '.zip'));
+        $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_url", $connectionData["remoteUrl"] . '/' . basename($file, '.zip'));
         $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_index", $this->getProjectMetaDataQuery()->getMetaDataFtpSender('ftpsend_index'));
 
     }

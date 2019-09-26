@@ -95,11 +95,13 @@
       <tr>
         <th>Data inici FCT</th>
         <th>Data màxima per iniciar FCT al <WIOCCL:IF condition="{##semestre##}==''1''">primer</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==''2''">segon</WIOCCL:IF> semestre</th>
-        <th>Data màxima per obtenir apte a secretaria </th>
+        <th>1a convocatòria per obtenir apte a secretaria </th>
+        <th>2a convocatòria per obtenir apte a secretaria </th>
       </tr>
       <tr>
         <td>{#_DATE("{##dataIniciFCT##}")_#}</td>
         <td>{#_DATE("{##dataMaxIniciFCT##}")_#}</td>
+        <td>{#_DATE("{##dataApteFCT##}")_#}</td>
         <td>{#_DATE("{##dataMaxApteFCT##}")_#}</td>
       </tr>
     </table>

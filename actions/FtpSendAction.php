@@ -45,6 +45,10 @@ class FtpSendAction extends DokuAction{
         $dest = dirname($dest)."/";
         $local = WikiGlobalConfig::getConf('mediadir')."/".$dest;
 
+        $ftpConfigs =  WikiGlobalConfig::getConf(AjaxKeys::KEY_FTP_CONFIG, 'iocexportl');
+        $connectionData  = $ftpConfigs['materials_fp'];
+        $this->ftpSender->setConnectionData($connectionData);
+
         $this->ftpSender->addObjectToSendList($filename, $local, "remoteBase/", "$docCode/", [0], "$remoteFilename.zip");
         $this->ftpSender->addObjectToSendList($filename, $local, "remoteBase/", "$docCode/$remoteFilename/", [1]);
     }
