@@ -27,11 +27,15 @@ class ProjectPermission extends BasicPermission {
     }
 
     public function setAuthor($author) {
-        $this->author = preg_split("/[\s,]+/", $author);
+        if(is_string($author) && !empty($author)){
+            $this->author = preg_split("/[\s,]+/", $author);
+        }
     }
 
     public function setResponsable($responsable) {
-        $this->responsable = preg_split("/[\s,]+/", $responsable);
+        if(is_string($responsable) && !empty($responsable)){
+            $this->responsable = preg_split("/[\s,]+/", $responsable);
+        }
     }
 
     public function setRol($rol) {
