@@ -55,7 +55,7 @@ class exportDocument extends MainRender {
                 $zip->addFromString('pt_sencer/pt.html', $ptSencer);
 
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
-                $cicle = html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
+                $cicle = $data["cicle"]==="Indiqueu el cicle"?"":html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
                 $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
                 $tipusBlocModul = html_entity_decode(htmlspecialchars_decode($data["tipusBlocModul"], ENT_COMPAT|ENT_QUOTES));
                 //$durada = html_entity_decode(htmlspecialchars_decode($data["durada"], ENT_COMPAT|ENT_QUOTES));

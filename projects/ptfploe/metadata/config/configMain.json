@@ -18,10 +18,9 @@
     "metaDataFtpSender": [
         {
             "main": {
-                "file_1": {"local":"mediadir", "type":"zip", "action":[1], "remoteBase":"pla_treball/", "remoteDir":"loe/"}
+                "file_1": {"local":"mediadir", "type":"zip", "action":[1]}
             },
             "ftpId":"pla_treball",
-            "ftpsend_url":"/loe",
             "ftpsend_index":"index.html"
         }
     ],
@@ -31,7 +30,7 @@
 
             "versions": {
                 "fields" : 5,
-                "templates": {"continguts":21}
+                "templates": {"continguts":22}
             },
             "mainType": {
                 "type": "object",

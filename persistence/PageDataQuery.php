@@ -59,6 +59,13 @@ class PageDataQuery extends DataQuery {
             saveWikiText($id, " ", "");
             saveWikiText($id, $text, $summary, $minor);
         }
+
+
+        $partialDisabled = strpos($text, '~~USE:WIOCCL~~') !== false;
+
+        $meta['partialDisabled'] = $partialDisabled;
+        p_set_metadata($id, $meta);
+
     }
 
     public function getHtml($id, $rev = null){

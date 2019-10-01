@@ -84,7 +84,7 @@ class renderFileToPsDom extends renderFile
     protected function render($instructions, &$renderData)
     {
         $ret = p_latex_render('wikiiocmodel_psdom', $instructions, $renderData);
-        Logger::debug("psDom: $ret", 0, 0, 0, 0);
+        Logger::debug("psDom: $ret", 0, 0, 0, 1, FALSE);
         return $ret;
     }
 }

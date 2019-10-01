@@ -30,7 +30,7 @@
   <header class="main_header">
     <div class="container">
       <h1>Pla de treball</h1>
-      <h2>{##cicle##}</h2>
+      <h2><WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##cicle##}'')_#}&&!{#_STR_CONTAINS(''Indiqueu'', ''{##cicle##}'')_#}">{##cicle##}</WIOCCL:IF></h2>
       <h2>{##modul##}<WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">-{##tipusBlocModul##}</WIOCCL:IF></h2>
     </div>
   </header>

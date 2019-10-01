@@ -22,6 +22,10 @@ abstract class RenderedPageAction extends PageAction{
         $obj->addMetaTocResponse($response);
         $response['revs'] = $obj->getRevisionList();
         $obj->addNotificationsMetaToResponse($response);
+
+        $meta = WikiIocInfoManager::getInfo('meta');
+        $response['structure']['partialDisabled'] = isset($meta['partialDisabled']) ? $meta['partialDisabled'] : FALSE;
+
         return $response;
     }
 }
