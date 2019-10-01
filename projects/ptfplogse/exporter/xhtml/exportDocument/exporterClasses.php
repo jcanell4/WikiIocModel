@@ -12,6 +12,7 @@ class exportDocument extends MainRender {
     public function __construct($factory, $typedef, $renderdef, $params=NULL) {
         parent::__construct($factory, $typedef, $renderdef);
         $this->initParams($params);
+//        Logger::init(1);
     }
 
     public function initParams($params=NULL){
