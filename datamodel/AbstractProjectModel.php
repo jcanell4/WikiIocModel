@@ -144,6 +144,19 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $this->dokuPageModel->setData($toSet);
     }
 
+    /*
+     * Obtiene las listas de 'old persons'. Debe usarse antes de guardar los nuevos datos
+     */
+    public function getOldPersonsDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE) {
+        $oldDataProject = $this->getDataProject($id, $projectType, $metaDataSubSet);
+        if (!empty($oldDataProject)) {
+            return ['autor' => $oldDataProject['autor'],
+                    'responsable' => $oldDataProject['responsable'],
+                    'supervisor'=>$oldDataProject['supervisor']
+                   ];
+        }
+    }
+
     /**
      * Obtiene los datos del archivo de datos (meta.mdpr) de un proyecto
      */
@@ -228,7 +241,6 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         //Escribe un acceso a la página del proyecto en el archivo de atajos de de new_autor
         $params = [
              'id' => $parArr['id']
-            ,'autor' => $new_autor
             ,'link_page' => $parArr['link_page']
             ,'user_shortcut' => $ns.$parArr['shortcut_name']
         ];
@@ -239,7 +251,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
     private function _modifyACLPageToOldResponsable($old_responsable, $parArr, $project_ns) {
         //lista de nuevos Responsables
-        $nResponsables = preg_split("/[\s,]+/", $parArr['new_responsable']);
+        $nResponsables = array_unique(preg_split("/[\s,]+/", $parArr['new_responsable']));
 
         if (! in_array($old_responsable, $nResponsables)) {
             $oAutor = preg_split("/[\s,]+/", $parArr['old_autor']);
@@ -250,6 +262,157 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             }
         }
         return $retError;
+    }
+
+    /**
+     * Construye un array de datos para la actualización de permisos (y shortcuts), sobre un proyecto,
+     * de los usuarios (autores, responsables, etc) relacionados en el formulario del proyecto
+     * @param array $newDataProject : array con los nuevos datos del proyecto
+     * @param bool $old : indica si existen old_persons (no existen en el caso de CreateProject)
+     * @return array con los datos necesarios
+     */
+    public function buildParamsToPersons($newDataProject, $oldDataProject=NULL) {
+        $userpage_ns = preg_replace('/^:(.*)/', '\1', WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')); //elimina el ':' del principio
+
+        $persons = [];
+        if (!empty($oldDataProject['autor']) || !empty($newDataProject['autor']['value'])) {
+            $persons['autor'] = ['old' => $oldDataProject['autor'],
+                                 'new' => $newDataProject['autor']['value'],
+                                 'permis' => AUTH_UPLOAD,
+                                 'drecera' => TRUE];
+        }
+        if (!empty($oldDataProject['responsable']) || !empty($newDataProject['responsable']['value'])) {
+            $persons['responsable'] = ['old' => $oldDataProject['responsable'],
+                                       'new' => $newDataProject['responsable']['value'],
+                                       'permis' => AUTH_UPLOAD,
+                                       'drecera' => TRUE];
+        }
+        if (!empty($oldDataProject['supervisor']) || !empty($newDataProject['supervisor']['value'])) {
+            $persons['supervisor'] = ['old' => $oldDataProject['supervisor'],
+                                      'new' => $newDataProject['supervisor']['value'],
+                                      'permis' => AUTH_READ,
+                                      'drecera' => FALSE];
+        }
+        $params = [
+             'id' => $this->id
+            ,'link_page' => $this->id
+            ,'persons' => $persons
+            ,'userpage_ns' => $userpage_ns
+            ,'shortcut_name' => WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
+        ];
+        return $params;
+    }
+
+    /**
+     * Elimina permisos ACL de old_person sobre la página del proyecto
+     * @param string $old : username de la persona a la que se le quieren quitar los permisos
+     * @param string $sNew : lista de usernames que tienen perimiso
+     * @param string $project_ns : wiki ruta de la página del proyecto
+     * @return array | NULL : lista de errores
+     */
+    private function _deleteACLPageToOldPerson($old, $sNew, $project_ns) {
+        //lista de nuevas Persons
+        $nPersons = array_unique(preg_split("/[\s,]+/", $sNew, NULL, PREG_SPLIT_NO_EMPTY));
+
+        if (! in_array($old, $nPersons)) {
+            //Elimina ACL de old_person sobre la página del proyecto
+            $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $old);
+            if (!$ret) $retError[] = "Error en eliminar permissos a '$old' sobre '$project_ns'";
+        }
+        return $retError;
+    }
+
+    /**
+     * Elimina el enlace a la página del proyecto en el archivo dreceres de old_person
+     * @param string $old : username al que se pretende eliminar el enlace
+     * @param string $sNew : lista de las nuevas personas del proyecto (autores, responsables, ...)
+     * @param string $link_page : id de la página del proyecto
+     * @param string $userpage_ns : wiki ruta base de las páginas de usuario
+     * @param string $shortcut_name : nom de l'arxiu de dreceres
+     */
+    private function _removeShortcutPageToOldPerson($old, $sNew, $drecera, $link_page, $userpage_ns, $shortcut_name) {
+        //lista de nuevas Persons
+        $nPersons = array_unique(preg_split("/[\s,]+/", $sNew, NULL, PREG_SPLIT_NO_EMPTY));
+
+        if (!in_array($old, $nPersons) || !$drecera) {
+            //Elimina el enlace a la página del proyecto en el archivo dreceres de old_person
+            $old_usershortcut = "$userpage_ns$old:$shortcut_name";
+            $this->removeProjectPageFromUserShortcut($old_usershortcut, $link_page);
+        }
+    }
+
+    /**
+     * Añade un enlace a la página del proyecto en el archivo dreceres de new_person
+     * @param string $new : username al que se añade el enlace
+     * @param string $id : id de la página del proyecto
+     * @param string $link_page : id de la página del proyecto
+     * @param string $userpage_ns : wiki ruta base de las páginas de usuario
+     * @param string $shortcut_name : nom de l'arxiu de dreceres
+     */
+    private function _addPageProjectToUserShortcut($new, $id, $link_page, $userpage_ns, $shortcut_name) {
+        //Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
+        $ns = "$userpage_ns$new:";
+        PagePermissionManager::updatePagePermission($ns."*", $new, AUTH_DELETE, TRUE);
+
+        //Escribe un enlace a la página del proyecto en el archivo de atajos de de new_person
+        $params = [
+             'id' => $id
+            ,'link_page' => $link_page
+            ,'user_shortcut' => $ns.$shortcut_name
+        ];
+        $this->includePageProjectToUserShortcut($params);
+    }
+
+    /**
+     * Modifica los permisos en el fichero de ACL y la página de atajos del autor
+     * cuando se modifica el autor o el responsable del proyecto
+     * @param array $aParm ['id','link_page','persons[]','userpage_ns','shortcut_name']
+     *                  'link_page' : id de la página del proyecto
+     *                  'userpage_ns' : wiki ruta base de las páginas de usuario
+     *                  'shortcut_name' : nom de l'arxiu de dreceres
+     */
+    public function modifyACLPageAndShortcutToPerson($aParm) {
+        $project_ns = $aParm['id'].":*";
+
+        foreach ($aParm['persons'] as $person) {
+            $old_persons .= "{$person['old']},";
+            $new_persons .= "{$person['new']},";
+        }
+        $oPersons = array_unique(preg_split("/[\s,]+/", $old_persons, NULL, PREG_SPLIT_NO_EMPTY));
+
+        if (!empty($oPersons)) {
+            foreach ($aParm['persons'] as $person) {
+                $olds = preg_split("/[\s,]+/", $person['old'], NULL, PREG_SPLIT_NO_EMPTY);
+                //Si se ha modificado una Person del proyecto (si existe algún old) ...
+                foreach ($olds as $old) {
+                    //elimina, si nada lo impide, los permisos de la antigua persona
+                    $ret = $this->_deleteACLPageToOldPerson($old, $new_persons, $project_ns);
+                    if ($ret) $retError[] = $ret;
+                    //elimina, si nada lo impide, la entrada shortcut del archivo dreceres de la persona
+                    $this->_removeShortcutPageToOldPerson($old, $new_persons, $person['drecera'], $aParm['link_page'], $aParm['userpage_ns'], $aParm['shortcut_name']);
+                }
+            }
+        }
+
+        //establece la auténtica lista de nuevas Persons
+        foreach ($aParm['persons'] as $person) {
+            $nPersons = array_unique(preg_split("/[\s,]+/", $person['new'], NULL, PREG_SPLIT_NO_EMPTY));
+            $newPersons = array_diff($nPersons, $oPersons);
+            foreach ($newPersons as $new) {
+                //Crea ACL para new_person sobre la página del proyecto
+                $ret = PagePermissionManager::updatePagePermission($project_ns, $new, $person['permis'], TRUE);
+                if (!$ret) $retError[] = "Error en assignar permissos a '$new' sobre '$project_ns'";
+                if ($person['drecera']) {
+                    $this->_addPageProjectToUserShortcut($new, $aParm['id'], $aParm['link_page'], $aParm['userpage_ns'], $aParm['shortcut_name']);
+                }
+            }
+        }
+
+        if ($retError) {
+            foreach ($retError as $e) {
+                throw new UnknownProjectException($project_ns, $e);
+            }
+        }
     }
 
     /**
@@ -301,7 +464,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     /**
      * Inserta en la página de dreceres del usuario un texto con enlace al proyecto
      * Si la página dreceres.txt del usuario no existe, se crea a partir de la plantilla 'userpage_shortcuts_ns'
-     * @param array $parArr ['id', 'autor', 'link_page', 'user_shortcut']
+     * @param array $parArr ['id', 'link_page', 'user_shortcut']
      */
     protected function includePageProjectToUserShortcut($parArr) {
         $summary = "include Page Project To User Shortcut";
@@ -435,9 +598,9 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         foreach ($configStructure as $key => $def) {
             if(isset($def["calculate"])){
                 $value = IocCommon::getCalculateFieldFromFunction($def["calculate"], $this->id, $values);
-                $values[$key]=$value;                
+                $values[$key]=$value;
             }elseif ($def["type"] == "boolean" || $def["type"] == "bool") {
-                if(!isset($values[$key]) 
+                if(!isset($values[$key])
                         || $values[$key] === false
                         || $values[$key] === "false"){
                     $values[$key] = "false";
@@ -449,7 +612,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $data = json_encode($values);
         return $data;
     }
-    
+
     public function updateCalculatedFields($data) {
         // A implementar a les subclasses, per defecte no es fa res
         return $data;

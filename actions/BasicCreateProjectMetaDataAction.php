@@ -33,23 +33,16 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
             $model->setData($metaData);    //crea la estructura y el contenido en 'mdprojects/'
             $model->createDataDir($id);    //crea el directori del projecte a 'data/pages/'
             $v_conf = $model->getMetaDataAnyAttr("versions");
-            if($v_conf){
+            if ($v_conf){
                 $model->setProjectSystemSubSetAttr("versions", $v_conf, $this->params[ProjectKeys::KEY_METADATA_SUBSET]);
             }
 
             $ret = $model->getData();      //obtiene la estructura y el contenido del proyecto
 
-            $include = [
-                 'id' => $id
-                ,'link_page' => $id
-                ,'old_autor' => ""
-                ,'old_responsable' => ""
-                ,'new_autor' => $ret['projectMetaData']['autor']['value']
-                ,'new_responsable' => $ret['projectMetaData']['responsable']['value']
-                ,'userpage_ns' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')
-                ,'shortcut_name' => WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
-            ];
-            $model->modifyACLPageToUser($include);
+            //[TODO: Rafael] La asignación de permisos y shortcuts a las 'personas' del proyecto debería hacerse
+            //               en el momento de la Generación y no en la Creación
+            $params = $model->buildParamsToPersons($ret['projectMetaData'], NULL);
+            $model->modifyACLPageAndShortcutToPerson($params);
 
             $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_created'), $id);  //añade info para la zona de mensajes
             $ret[ProjectKeys::KEY_ID] = $this->idToRequestId($id);

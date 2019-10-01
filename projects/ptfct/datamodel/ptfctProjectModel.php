@@ -39,47 +39,17 @@ class ptfctProjectModel extends AbstractProjectModel {
         $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
 
         //2. Establece la marca de 'proyecto generado'
-        $ret[ProjectKeys::KEY_GENERATED] = $this->projectMetaDataQuery->setProjectGenerated();
+        $ret[ProjectKeys::KEY_GENERATED] = $this->getProjectMetaDataQuery()->setProjectGenerated();
 
         if ($ret[ProjectKeys::KEY_GENERATED]) {
             try {
-                $aAutors = preg_split("/[\s,]+/", $ret['projectMetaData']["autor"]['value']);
-                foreach ($aAutors as $autor) {
-                    //3a. Otorga, a cada Autor, permisos sobre el directorio de proyecto
-                    PagePermissionManager::updatePagePermission($this->id.":*", $autor, AUTH_UPLOAD);
-
-                    //4a. Otorga permisos a cada Autor sobre su propio directorio (en el caso de que no los tenga)
-                    $ns = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel').$autor.":";
-                    PagePermissionManager::updatePagePermission($ns."*", $autor, AUTH_DELETE, TRUE);
-                    //4b. Incluye la página del proyecto en el archivo de atajos del Autor
-                    $params = [
-                         'id' => $this->id
-                        ,'autor' => $autor
-                        ,'link_page' => $this->id
-                        ,'user_shortcut' => $ns.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
-                    ];
-                    $this->includePageProjectToUserShortcut($params);
-                }
-
-                //3b. Otorga, a los Responsables, permisos sobre el directorio de proyecto
-                $aResponsables = preg_split("/[\s,]+/", $ret['projectMetaData']["responsable"]['value']);
-                foreach ($aResponsables as $responsable) {
-                    if (! in_array($responsable, $aAutors)) {
-                        PagePermissionManager::updatePagePermission($this->id.":*", $responsable, AUTH_UPLOAD);
-                    }
-                }
-
-                //5. Otorga, a los Supervisores, permisos de lectura sobre el directorio de proyecto
-                $aSupervisors = preg_split("/[\s,]+/", $ret['projectMetaData']["supervisor"]['value']);
-                foreach ($aSupervisors as $supervisor) {
-                    if (! (in_array($supervisor, $aAutors) || in_array($supervisor, $aResponsables)) ) {
-                        PagePermissionManager::updatePagePermission($this->id.":*", $supervisor, AUTH_READ, TRUE);
-                    }
-                }
+                //3. Otorga, a las Persons, permisos sobre el directorio de proyecto y añade enlace a dreceres
+                $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
+                $this->modifyACLPageAndShortcutToPerson($params);
             }
             catch (Exception $e) {
                 $ret[ProjectKeys::KEY_GENERATED] = FALSE;
-                $this->projectMetaDataQuery->setProjectSystemStateAttr("generated", FALSE);
+                $this->getProjectMetaDataQuery()->setProjectSystemStateAttr("generated", FALSE);
             }
         }
 
@@ -91,49 +61,16 @@ class ptfctProjectModel extends AbstractProjectModel {
         // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
         $file = $this->getTemplateContentDocumentId($data) . ".txt";
 
-
         $plantilla = file_get_contents($pdir.$file);
         $name = substr($file, 0, -4);
         $destino = $this->getContentDocumentId($name);
         $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
             PageKeys::KEY_WIKITEXT => $plantilla,
             PageKeys::KEY_SUM => "generate project"]);
-
     }
 
     public function getTemplateContentDocumentId($responseData){
         return "continguts";
-    }
-
-    public function modifyACLPageToSupervisor($parArr) {
-        $project_ns = $parArr['id'].":*";
-
-        // S'ha modificat el supervisor
-        if ($parArr['old_supervisor'] !== $parArr['new_supervisor']) {
-            if ($parArr['old_supervisor'] !== $parArr['new_autor']
-                && $parArr['old_supervisor'] !== $parArr['new_responsable']) {
-                //Elimina ACL de old_responsable sobre la página del proyecto
-                if ($parArr['old_supervisor'] && $parArr['old_supervisor']!=="") {
-                    $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $parArr['old_supervisor']);
-                    if (!$ret) $retError[] = "Error en eliminar permissos a '${parArr['old_supervisor']}' sobre '$project_ns'";
-                }
-            }
-
-            // Si el supervisor es també autor o responsable te permisos superiors, no cal fer res
-            //Crea ACL para new_responsable sobre la pàgina del projecte
-            if ($parArr['new_supervisor'] !== $parArr['new_autor']
-                && $parArr['new_supervisor'] !== $parArr['new_responsable']
-                && $parArr['new_supervisor'] !== '') {
-                $ret = PagePermissionManager::updatePagePermission($project_ns, $parArr['new_supervisor'], AUTH_READ, TRUE);
-                if (!$ret) $retError[] = "Error en assignar permissos a '${parArr['new_supervisor']}' sobre '$project_ns'";
-            }
-        }
-
-        if ($retError) {
-            foreach ($retError as $e) {
-                throw new UnknownProjectException($project_ns, $e);
-            }
-        }
     }
 
 }

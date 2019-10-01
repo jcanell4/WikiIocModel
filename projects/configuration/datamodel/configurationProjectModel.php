@@ -36,7 +36,7 @@ class configurationProjectModel extends AbstractProjectModel{
             //3b. Incluye la página del proyecto en el archivo de atajos del Autor
             $params = [
                  'id' => $this->id
-                ,'autor' => $autor
+                ,'link_page' => $this->id
                 ,'user_shortcut' => $ns.WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
             ];
             $this->includePageProjectToUserShortcut($params);

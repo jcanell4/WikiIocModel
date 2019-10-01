@@ -14,12 +14,13 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
      * @return array con la estructura y los valores del proyecto
      */
     protected function responseProcess() {
-        $extraProject = $this->params['extraProject'];
         $model = $this->getModel();
         $modelAttrib = $model->getModelAttributes();
 
         //sólo se ejecuta si existe el proyecto
         if ($model->existProject()) {
+
+            $oldPersonsDataProject = $model->getOldPersonsDataProject($modelAttrib[ProjectKeys::KEY_ID], $modelAttrib[ProjectKeys::KEY_PROJECT_TYPE], $modelAttrib[ProjectKeys::KEY_METADATA_SUBSET]);
 
             $metaDataValues = $this->netejaKeysFormulari($this->params);
             $metaDataValues = $this->donaEstructuraALesDadesPlanes($metaDataValues, $model->getMetaDataAnyAttr());
@@ -44,17 +45,8 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
             $response[ProjectKeys::KEY_GENERATED] = $model->isProjectGenerated();
 
             if ($response[ProjectKeys::KEY_GENERATED]) {
-                $include = [
-                     'id' => $modelAttrib[ProjectKeys::KEY_ID]
-                    ,'link_page' => $modelAttrib[ProjectKeys::KEY_ID] //$modelAttrib[ProjectKeys::KEY_ID].":".end(explode(":", $response['projectMetaData']["plantilla"]['value']))
-                    ,'old_autor' => $extraProject['old_autor']
-                    ,'old_responsable' => $extraProject['old_responsable']
-                    ,'new_autor' => $response['projectMetaData']['autor']['value']
-                    ,'new_responsable' => $response['projectMetaData']['responsable']['value']
-                    ,'userpage_ns' => WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')
-                    ,'shortcut_name' => WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel')
-                ];
-                $model->modifyACLPageToUser($include);
+                $params = $model->buildParamsToPersons($response['projectMetaData'], $oldPersonsDataProject);
+                $model->modifyACLPageAndShortcutToPerson($params);
             }
             if (!$this->params[ProjectKeys::KEY_KEEP_DRAFT]) {
                 $model->removeDraft();
@@ -71,6 +63,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
         if (!$response) {
             throw new ProjectExistException($modelAttrib[ProjectKeys::KEY_ID]);
         }else {
+            $response['old_persons'] = $oldPersonsDataProject;
             //Añadir propiedades/restricciones del configMain para la creación de elementos dentro del proyecto
             parent::addResponseProperties($response);
             return $response;
