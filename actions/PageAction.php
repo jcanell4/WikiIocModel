@@ -5,9 +5,7 @@
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
 require_once DOKU_PLUGIN . "wikiiocmodel/LockManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/authorization/PagePermissionManager.php";
 
 abstract class PageAction extends DokuAction implements ResourceLockerInterface,ResourceUnlockerInterface {
     protected $dokuPageModel;
@@ -20,7 +18,6 @@ abstract class PageAction extends DokuAction implements ResourceLockerInterface,
         parent::init($modelManager);
         $this->persistenceEngine = $modelManager->getPersistenceEngine();
         $this->dokuPageModel = $this->instantiateModel();
-//        $this->dokuPageModel = new DokuPageModel($this->persistenceEngine);
         $this->resourceLocker = new ResourceLocker($this->persistenceEngine);
     }
 

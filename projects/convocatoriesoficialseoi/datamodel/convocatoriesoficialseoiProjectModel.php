@@ -6,7 +6,6 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
-require_once(WIKI_IOC_MODEL . "authorization/PagePermissionManager.php");
 require_once(WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
 
 class convocatoriesoficialseoiProjectModel extends AbstractProjectModel
@@ -40,18 +39,11 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel
 
     public function generateProject()
     {
-        // Considerem que el projecte es generat si les dates son correctes, això permet fer la exportació
-
+        // Considerem que el projecte està generat si les dates son correctes, això permet fer l'exportació
         $success = $this->validateProjectDates(); // TODO: cridar a una funció que validi les dades
-
-        if ($success) {
-            $ret[ProjectKeys::KEY_GENERATED] = $this->projectMetaDataQuery->setProjectGenerated();
-
-        } else {
-            $ret[ProjectKeys::KEY_GENERATED] = FALSE;
-        }
-
-        $this->projectMetaDataQuery->setProjectSystemStateAttr("generated", $ret[ProjectKeys::KEY_GENERATED]);
+        $ret = ($success) ? $this->projectMetaDataQuery->setProjectGenerated() : FALSE;
+        $this->projectMetaDataQuery->setProjectSystemStateAttr("generated", $ret);
+        return $ret;
     }
 
     protected function validateProjectDates()
