@@ -211,59 +211,6 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return $ret;
     }
 
-    private function _modifyACLPageToOldAutor($old_autor, $parArr, $project_ns) {
-        //lista de nuevos Autores
-        $nAutors = preg_split("/[\s,]+/", $parArr['new_autor']);
-
-        if (! in_array($old_autor, $nAutors)) {
-            $oResponsable = preg_split("/[\s,]+/", $parArr['old_responsable']);
-            if (! in_array($old_autor, $oResponsable)) {
-                //Elimina ACL de old_autor sobre la página del proyecto
-                $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $old_autor);
-                if (!$ret) $retError[] = "Error en eliminar permissos a '$old_autor' sobre '$project_ns'";
-            }
-            //Elimina el acceso a la página del proyecto en el archivo dreceres de de old_autor
-            $old_usershortcut = $parArr['userpage_ns'].$old_autor.":".$parArr['shortcut_name'];
-            $this->removeProjectPageFromUserShortcut($old_usershortcut, $parArr['link_page']);
-        }
-        return $retError;
-    }
-
-    private function _modifyACLPageToNewAutor($new_autor, $parArr, $project_ns) {
-        //Crea ACL para new_autor sobre la página del proyecto
-        $ret = PagePermissionManager::updatePagePermission($project_ns, $new_autor, AUTH_UPLOAD, TRUE);
-        if (!$ret) $retError[] = "Error en assignar permissos a '$new_autor' sobre '$project_ns'";
-
-        //Otorga permisos al autor sobre su propio directorio (en el caso de que no los tenga)
-        $ns = $parArr['userpage_ns'].$new_autor.":";
-        PagePermissionManager::updatePagePermission($ns."*", $new_autor, AUTH_DELETE, TRUE);
-
-        //Escribe un acceso a la página del proyecto en el archivo de atajos de de new_autor
-        $params = [
-             'id' => $parArr['id']
-            ,'link_page' => $parArr['link_page']
-            ,'user_shortcut' => $ns.$parArr['shortcut_name']
-        ];
-        $this->includePageProjectToUserShortcut($params);
-
-        return $retError;
-    }
-
-    private function _modifyACLPageToOldResponsable($old_responsable, $parArr, $project_ns) {
-        //lista de nuevos Responsables
-        $nResponsables = array_unique(preg_split("/[\s,]+/", $parArr['new_responsable']));
-
-        if (! in_array($old_responsable, $nResponsables)) {
-            $oAutor = preg_split("/[\s,]+/", $parArr['old_autor']);
-            if (! in_array($old_responsable, $oAutor)) {
-                //Elimina ACL de old_responsable sobre la página del proyecto
-                $ret = PagePermissionManager::deletePermissionPageForUser($project_ns, $old_responsable);
-                if (!$ret) $retError[] = "Error en eliminar permissos a '$old_responsable' sobre '$project_ns'";
-            }
-        }
-        return $retError;
-    }
-
     /**
      * Construye un array de datos para la actualización de permisos (y shortcuts), sobre un proyecto,
      * de los usuarios (autores, responsables, etc) relacionados en el formulario del proyecto
@@ -406,52 +353,6 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                     $this->_addPageProjectToUserShortcut($new, $aParm['id'], $aParm['link_page'], $aParm['userpage_ns'], $aParm['shortcut_name']);
                 }
             }
-        }
-
-        if ($retError) {
-            foreach ($retError as $e) {
-                throw new UnknownProjectException($project_ns, $e);
-            }
-        }
-    }
-
-    /**
-     * Modifica los permisos en el fichero de ACL y la página de atajos del autor
-     * cuando se modifica el autor o el responsable del proyecto
-     * @param array $parArr ['id','link_page','old_autor','old_responsable','new_autor','new_responsable','userpage_ns','shortcut_name']
-     */
-    public function modifyACLPageToUser($parArr) {
-        $project_ns = $parArr['id'].":*";
-
-        $oAutors = preg_split("/[\s,]+/", $parArr['old_autor']);
-        //Si se ha modificado el Autor del proyecto ...
-        if ($parArr['old_autor'] !== NULL && $parArr['old_autor'] !== "") {
-            foreach ($oAutors as $old_autor) {
-                $this->_modifyACLPageToOldAutor($old_autor, $parArr, $project_ns);
-            }
-        }
-        //establece la auténtica lista de nuevos Autores
-        $nAutors = preg_split("/[\s,]+/", $parArr['new_autor']);
-        $newAutors = array_diff($nAutors, $oAutors);
-        foreach ($newAutors as $new_autor) {
-            $ret = $this->_modifyACLPageToNewAutor($new_autor, $parArr, $project_ns);
-            if ($ret) $retError[] = $ret;
-        }
-
-        $oResponsables = preg_split("/[\s,]+/", $parArr['old_responsable']);
-        //Si se ha modificado el Responsable del proyecto ...
-        if ($parArr['old_responsable'] !== NULL && $parArr['old_responsable'] !== "") {
-            foreach ($oResponsables as $old_responsable) {
-                $ret = $this->_modifyACLPageToOldResponsable($old_responsable, $parArr, $project_ns);
-            }
-        }
-        //establece la auténtica lista de nuevos Responsables
-        $nResponsables = preg_split("/[\s,]+/", $parArr['new_responsable']);
-        $newResponsables = array_diff($nResponsables, $oResponsables);
-        foreach ($newResponsables as $new_responsable) {
-            //Crea ACL para new_responsable sobre la página del proyecto
-            $ret = PagePermissionManager::updatePagePermission($project_ns, $new_responsable, AUTH_UPLOAD, TRUE);
-            if (!$ret) $retError[] = "Error en assignar permissos a '$new_responsable' sobre '$project_ns'";
         }
 
         if ($retError) {
@@ -666,7 +567,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $subSetList = $this->projectMetaDataQuery->getListMetaDataSubSets();
         return in_array($subSet, $subSetList);
     }
-    
+
     public function getPluginName(){
         $dir = $this->projectMetaDataQuery->getProjectTypeDir();
         $dirs  = explode("/", $dir);
@@ -848,16 +749,18 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     public function filesToExportList() {
         $ret = array();
         $metadata = $this->getProjectMetaDataQuery()->getMetaDataFtpSender();
-        foreach ($metadata as $n => $ofile) {
-            $path = ($ofile['local']==='mediadir') ? WikiGlobalConfig::getConf('mediadir')."/". str_replace(':', '/', $this->id)."/" : $ofile['local'];
-            if (($dir = @opendir($path))) {
-                while ($file = readdir($dir)) {
-                    if (!is_dir("$path/$file") && end(explode(".",$file))===$ofile['type']) {
-                        $ret[$n]['file'] = $file;
-                        $ret[$n]['local'] = $path;
-                        $ret[$n]['action'] = $ofile['action'];
-                        $ret[$n]['remoteBase'] = $ofile['remoteBase'];
-                        $ret[$n]['remoteDir'] = $ofile['remoteDir'];
+        if (!empty($metadata)) {
+            foreach ($metadata as $n => $ofile) {
+                $path = ($ofile['local']==='mediadir') ? WikiGlobalConfig::getConf('mediadir')."/". str_replace(':', '/', $this->id)."/" : $ofile['local'];
+                if (($dir = @opendir($path))) {
+                    while ($file = readdir($dir)) {
+                        if (!is_dir("$path/$file") && end(explode(".",$file))===$ofile['type']) {
+                            $ret[$n]['file'] = $file;
+                            $ret[$n]['local'] = $path;
+                            $ret[$n]['action'] = $ofile['action'];
+                            $ret[$n]['remoteBase'] = $ofile['remoteBase'];
+                            $ret[$n]['remoteDir'] = $ofile['remoteDir'];
+                        }
                     }
                 }
             }
@@ -873,20 +776,20 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $ret = $this->filesToExportList();
         return (!empty($ret));
     }
-    
+
     public function getFtpConfigData($ftpId=FALSE){
         if(!$ftpId){
             $ftpId = $this->getProjectMetaDataQuery()->getMetaDataFtpSender(ProjectKeys::KEY_FTPID);
-        }        
-        $pluguin = $this->getPluginName();        
-        $ftpConfigs =  WikiGlobalConfig::getConf(ProjectKeys::KEY_FTP_CONFIG, $pluguin);        
+        }
+        $pluguin = $this->getPluginName();
+        $ftpConfigs =  WikiGlobalConfig::getConf(ProjectKeys::KEY_FTP_CONFIG, $pluguin);
         if(!isset($ftpConfigs["default"]) && !isset($ftpConfigs[$ftpId]) ){
             throw new Exception("Cal configurar les dades del servidor FTP");
         }
-        $connectionData = !isset($ftpConfigs["default"]) ? [] : $ftpConfigs['default'];        
+        $connectionData = !isset($ftpConfigs["default"]) ? [] : $ftpConfigs['default'];
         if(isset($ftpConfigs[$ftpId])){
-            $connectionData  = array_merge($connectionData, $ftpConfigs[$ftpId]);   
-        }        
+            $connectionData  = array_merge($connectionData, $ftpConfigs[$ftpId]);
+        }
         return $connectionData;
     }
 
