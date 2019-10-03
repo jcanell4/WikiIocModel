@@ -53,7 +53,7 @@ class PageDataQuery extends DataQuery {
     }
 
     public function save($id, $text, $summary, $minor = false, $forceSave=false){
-        $fdt = filemtime(wikiFN($id));
+        $fdt = @filemtime(wikiFN($id));
         saveWikiText($id, $text, $summary, $minor);
         if($forceSave && $fdt === filemtime(wikiFN($id))){
             saveWikiText($id, " ", "");

@@ -23,19 +23,27 @@ class ProjectCommandAuthorization extends BasicCommandAuthorization {
 
     public function isAuthor() {
         global $_SERVER;
-        return (in_array($_SERVER['REMOTE_USER'], $this->permission->getAuthor()));
+        if (($author = $this->permission->getAuthor()))
+            return (in_array($_SERVER['REMOTE_USER'], $author));
+        else
+            return FALSE;
     }
 
     public function isResponsable() {
         global $_SERVER;
-        return (in_array($_SERVER['REMOTE_USER'], $this->permission->getResponsable()));
+        if (($responsable = $this->permission->getResponsable()))
+            return (in_array($_SERVER['REMOTE_USER'], $responsable));
+        else
+            return FALSE;
     }
 
     public function isUserGroup($grups=array()) {
         $ret = FALSE;
         $userGrups = $this->permission->getUserGroups();
-        foreach ($grups as $grup) {
-            $ret |= in_array($grup, $userGrups);
+        if (!empty($userGrups) && !empty($grups)) {
+            foreach ($grups as $grup) {
+                $ret |= in_array($grup, $userGrups);
+            }
         }
         return $ret;
     }

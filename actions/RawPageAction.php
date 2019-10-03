@@ -40,7 +40,7 @@ class RawPageAction extends EditPageAction {
 
         if (!$this->params[PageKeys::KEY_DATE]) {
             global $DATE;
-            $DATE = $this->params[PageKeys::KEY_DATE] = WikiIocInfoManager::getInfo("meta")['date']['modified'];
+            $DATE = $this->params[PageKeys::KEY_DATE] = @WikiIocInfoManager::getInfo("meta")['date']['modified'];
 
         }
     }
