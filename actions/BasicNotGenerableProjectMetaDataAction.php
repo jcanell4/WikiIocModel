@@ -15,12 +15,10 @@ class BasicNotGenerableProjectMetaDataAction extends BasicSetProjectMetaDataActi
         $response = parent::responseProcess();
 
         $model = $this->getModel();
-        if ($model->isProjectGenerated()){
+        if ($response[ProjectKeys::KEY_GENERATED]){
             $ns_continguts = $model->getContentDocumentId($response);
             p_set_metadata($ns_continguts, array('metadataProjectChanged' => time()));
-        }
-
-        if (!$response[ProjectKeys::KEY_GENERATED]) {
+        }else {
             $params = $model->buildParamsToPersons($response['projectMetaData'], $response['old_persons']);
             $model->modifyACLPageAndShortcutToPerson($params);
         }
