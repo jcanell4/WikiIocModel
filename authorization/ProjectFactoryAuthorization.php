@@ -36,6 +36,7 @@ class ProjectFactoryAuthorization extends AbstractFactoryAuthorization {
                  ,'diffProject'                 => "editProject"
                  ,'save_project_draftProject'   => "editProject"
                  ,'remove_project_draftProject' => "editProject"
+                 ,'rename_projectProject'       => "responsableProject"
                  ,'new_documentProject'         => "editProject"
                  ,'new_folderProject'           => "editProject"
                  ,'_none'                       => "basicCommand"

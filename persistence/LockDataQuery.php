@@ -176,12 +176,25 @@ class LockDataQuery extends DataQuery
     }
 
     /**
-     * Indica si el fitxer està lliure o bloquejat. Pot retornar els següents valors: UNLOCKED, LOCKED, LOCKED_BEFORE
-     *
+     * Busca bloqueix en tots els directoris superiors del recurs pel cual es demana informació de bloqueix
      * @param String $id
+     * @return int : UNLOCKED, LOCKED, LOCKED_BEFORE
+     */
+    public function checklock($id, $checkAutoLock=FALSE) {
+        $state = 0;
+        do {
+            $state = max($state, $this->_checklock($id, $checkAutoLock));
+            $id = preg_replace('/(.*):.*/', '$1', $id);
+        }while (strpos($id,":") !== FALSE);
+
+        return $state;
+    }
+
+    /**
+     * Indica si el fitxer està lliure o bloquejat. Pot retornar els següents valors: UNLOCKED, LOCKED, LOCKED_BEFORE
      * @return int
      */
-    public function checklock($id, $checkAutoLock=FALSE)
+    private function _checklock($id, $checkAutoLock=FALSE)
     {
         $lock = $this->getFileName($id);
         $extendedlock = $this->getFileName($id, 'extended');

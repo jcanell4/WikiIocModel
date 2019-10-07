@@ -399,6 +399,15 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     /**
+     * Canvia el nom dels directoris del projecte indicat
+     * @param string $ns : ns original del projecte
+     * @param string $new_name : nou nom pel projecte
+     */
+    public function renameProject($ns, $new_name) {
+        $this->projectMetaDataQuery->renameProject($ns, $new_name);
+    }
+
+    /**
      * Crea el archivo $destino a partir de una plantilla
      */
     protected function createPageFromTemplate($destino, $plantilla=NULL, $extra=NULL, $summary="generate project") {

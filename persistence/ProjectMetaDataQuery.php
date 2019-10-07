@@ -697,6 +697,67 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     /**
+     * Canvia el nom dels directoris del projecte indicat
+     * @param string $ns : ns original del projecte
+     * @param string $new_name : nou nom pel projecte
+     */
+    public function renameProject($ns, $new_name) {
+        //1. Canvia el nom dels directoris del projecte indicat
+        $paths = ['datadir',       /*pages*/
+                  'olddir',        /*attic*/
+                  'mediadir',      /*media*/
+                  'mediaolddir',   /*media_attic*/
+                  'metadir',       /*meta*/
+                  'mediametadir',  /*media_meta*/
+                  'mdprojects',    /*mdprojects*/
+                  'revisionprojectdir', /*project_attic*/
+                  'metaprojectdir',  /*project_meta*/
+                 ];
+        $new_name = preg_replace(array('/\s+/', '/:+/'), "", $new_name);
+        $base_dir = explode(":", $ns);
+        $old_name = array_pop($base_dir);
+        $base_dir = implode("/", $base_dir);
+
+        foreach ($paths as $dir) {
+            $basePath = WikiGlobalConfig::getConf($dir);
+            $oldPath = "$basePath/$base_dir/$old_name";
+            if (file_exists($oldPath)) {
+                $newPath = "$basePath/$base_dir/$new_name";
+                if (! rename($oldPath, $newPath) )
+                    throw new Exception("renameProject: Error mentre canviava el nom del projecte a $dir.");
+            }
+        }
+
+        //2. Canvia el contingut dels arxius ".changes" i ".meta" que contenen la ruta del projecte
+        $paths = ['metadir',
+                  'mediametadir',
+                  'metaprojectdir'
+                 ];
+        foreach ($paths as $dir) {
+            $basePath = WikiGlobalConfig::getConf($dir);
+            $newPath = "$basePath/$base_dir/$new_name";
+            $scan = @scandir($newPath);
+            if ($scan) {
+                foreach ($scan as $file) {
+                    if (!is_dir($file) && (strpos($file, ".changes")>0 || strpos($file, ".meta")>0)) {
+                        $content = file_get_contents("$newPath/$file");
+                        $content = preg_replace("/:$old_name/m" , ":$new_name", $content);
+                        if (file_put_contents("$newPath/$file", $content, LOCK_EX) === FALSE)
+                            throw new Exception("renameProject: Error mentre canviava el contingut de $newPath/$file.");
+                    }
+                }
+            }
+        }
+
+        //3. Canvia el contingut de l'arxiu ACL que pot contenir la ruta del projecte
+        $file = DOKU_CONF."acl.auth";
+        $content = file_get_contents($file);
+        $content = preg_replace("/:$old_name/m" , ":$new_name", $content);
+        if (file_put_contents($file, $content, LOCK_EX) === FALSE)
+            throw new Exception("renameProject: Error mentre canviava el nom del projecte a $file.");
+    }
+
+    /**
      * @return array Con los datos del proyecto correspondientes a la clave '$metaDataSubSet'
      */
     public function getDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE, $retData=TRUE) {
