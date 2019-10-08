@@ -230,6 +230,31 @@ class LockDataQuery extends DataQuery
     }
 
     /**
+     * Averigua si dentro de la ruta indicada hay alguna página bloqueada
+     * @param string $id : wikiruta a examinar (normalmente es un directorio de proyecto)
+     * @return boolean : TRUE indica que hay alguna página bloqueada
+     */
+    public function isLockedChild($id) {
+        $locked = FALSE;
+        $datadir = WikiGlobalConfig::getConf('datadir') . "/" . str_replace(":", "/", $id);
+        $scan = @scandir($datadir);
+        if ($scan) {
+            foreach ($scan as $file) {
+                if (substr($file, -1) !== ".") {
+                    $f = str_replace(".txt", "", "$id:$file");
+                    if (is_dir("$datadir/$file")) {
+                        $locked = $this->isLockedChild($f);
+                    }else {
+                        $locked = ($this->_checklock($f) > self::UNLOCKED);
+                        if ($locked) break;
+                    }
+                }
+            }
+        }
+        return $locked;
+    }
+
+    /**
      * Afegeix la petició de que un usuari desitja bloquejar el recurs al fitxer de bloquejos estès. A més, activa el
      * sistema de notificacions a fi que l'usuari que manté bloquejat el recurs s'assabenti que hi ha un usuari que
      * reclama també el bloqueig.

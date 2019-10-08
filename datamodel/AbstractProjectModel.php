@@ -402,9 +402,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * Canvia el nom dels directoris del projecte indicat
      * @param string $ns : ns original del projecte
      * @param string $new_name : nou nom pel projecte
+     * @param string $persons : noms dels autors i els responsables separats per ","
      */
-    public function renameProject($ns, $new_name) {
-        $this->projectMetaDataQuery->renameProject($ns, $new_name);
+    public function renameProject($ns, $new_name, $persons) {
+        $this->projectMetaDataQuery->renameProject($ns, $new_name, $persons);
     }
 
     /**

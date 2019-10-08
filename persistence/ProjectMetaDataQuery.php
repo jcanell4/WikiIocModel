@@ -700,8 +700,9 @@ class ProjectMetaDataQuery extends DataQuery {
      * Canvia el nom dels directoris del projecte indicat
      * @param string $ns : ns original del projecte
      * @param string $new_name : nou nom pel projecte
+     * @param string $persons : noms dels autors i els responsables separats per ","
      */
-    public function renameProject($ns, $new_name) {
+    public function renameProject($ns, $new_name, $persons) {
         //1. Canvia el nom dels directoris del projecte indicat
         $paths = ['datadir',       /*pages*/
                   'olddir',        /*attic*/
@@ -741,7 +742,7 @@ class ProjectMetaDataQuery extends DataQuery {
                 foreach ($scan as $file) {
                     if (!is_dir($file) && (strpos($file, ".changes")>0 || strpos($file, ".meta")>0)) {
                         $content = file_get_contents("$newPath/$file");
-                        $content = preg_replace("/:$old_name/m" , ":$new_name", $content);
+                        $content = preg_replace("/:\b$old_name/m", ":$new_name", $content);
                         if (file_put_contents("$newPath/$file", $content, LOCK_EX) === FALSE)
                             throw new Exception("renameProject: Error mentre canviava el contingut de $newPath/$file.");
                     }
@@ -752,9 +753,21 @@ class ProjectMetaDataQuery extends DataQuery {
         //3. Canvia el contingut de l'arxiu ACL que pot contenir la ruta del projecte
         $file = DOKU_CONF."acl.auth";
         $content = file_get_contents($file);
-        $content = preg_replace("/:$old_name/m" , ":$new_name", $content);
+        $content = preg_replace("/(:*)$old_name:/m", "$1$new_name:", $content);
         if (file_put_contents($file, $content, LOCK_EX) === FALSE)
             throw new Exception("renameProject: Error mentre canviava el nom del projecte a $file.");
+
+        //4. Canvia el contingut dels arxius de dreceres de autors i responsables amb la nova ruta del projecte
+        $path_dreceres = WikiGlobalConfig::getConf('datadir') . str_replace(":", "/", WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel'));
+        $nom_dreceres = WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel') . ".txt";
+        $persons = explode(",", $persons);
+        foreach ($persons as $user) {
+            $file = "$path_dreceres$user/$nom_dreceres";
+            $content = file_get_contents($file);
+            $content = preg_replace("/:$old_name(\W)/m", ":$new_name$1", $content);
+            if (file_put_contents($file, $content, LOCK_EX) === FALSE)
+                throw new Exception("renameProject: Error mentre canviava el contingut de la drecera de $user.");
+        }
     }
 
     /**
