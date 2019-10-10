@@ -245,7 +245,7 @@ class LockDataQuery extends DataQuery
                     if (is_dir("$datadir/$file")) {
                         $locked = $this->isLockedChild($f);
                     }else {
-                        $locked = ($this->_checklock($f) > self::UNLOCKED);
+                        $locked = $locked || ($this->_checklock($f) > self::UNLOCKED);
                         if ($locked) break;
                     }
                 }

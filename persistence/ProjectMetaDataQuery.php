@@ -714,7 +714,6 @@ class ProjectMetaDataQuery extends DataQuery {
                   'revisionprojectdir', /*project_attic*/
                   'metaprojectdir',  /*project_meta*/
                  ];
-        $new_name = preg_replace(array('/\s+/', '/:+/'), "", $new_name);
         $base_dir = explode(":", $ns);
         $old_name = array_pop($base_dir);
         $base_dir = implode("/", $base_dir);

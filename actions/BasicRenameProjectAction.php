@@ -8,6 +8,34 @@ if (!defined("DOKU_INC")) die();
 class BasicRenameProjectAction extends BasicViewProjectMetaDataAction {
 
     protected function runAction() {
+        $model = $this->getModel();
+        $response = $model->getData();
+
+        $persons = $response['projectMetaData']['autor']['value'].",".$response['projectMetaData']['responsable']['value'];
+        $model->renameProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_NEWNAME], $persons);
+
+        $new_ns = preg_replace("/:[^:]*$/", ":{$this->params[ProjectKeys::KEY_NEWNAME]}", $this->params[ProjectKeys::KEY_ID]);
+        $model->init($new_ns, $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
+
+        $response = parent::runAction();
+
+        $response[ProjectKeys::KEY_OLD_NS] = $this->params[ProjectKeys::KEY_ID];
+        $response[ProjectKeys::KEY_OLD_ID] = $this->idToRequestId($this->params[ProjectKeys::KEY_ID]);
+        $response[ProjectKeys::KEY_NS] = $new_ns;
+        $response[ProjectKeys::KEY_ID] = $this->idToRequestId($response[ProjectKeys::KEY_NS]);
+
+        return $response;
+    }
+
+    public function responseProcess() {
+        $response = parent::responseProcess();
+        return $response;
+    }
+
+    protected function initAction() {
+        parent::initAction();
+        $this->params[ProjectKeys::KEY_NEWNAME] = preg_replace(array('/\s+/', '/:+/'), "", $this->params[ProjectKeys::KEY_NEWNAME]);
+
         $this->lockStruct = $this->requireResource(TRUE);
         if ($this->lockStruct["state"]!== ResourceLockerInterface::LOCKED){
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
@@ -17,21 +45,6 @@ class BasicRenameProjectAction extends BasicViewProjectMetaDataAction {
             $this->resourceLocker->leaveResource(TRUE);
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
-
-        $model = $this->getModel();
-        $data = $model->getData();
-        $persons = $data['projectMetaData']['autor']['value'].",".$data['projectMetaData']['responsable']['value'];
-        $model->renameProject($this->params[ProjectKeys::KEY_ID], $this->params['newname'], $persons);
-
-        $response[PageKeys::KEY_CODETYPE] = 0;
-        return $response;
-    }
-
-    public function responseProcess() {
-        $this->initAction();
-        $response = $this->runAction();
-        $this->postAction($response);
-        return $response;
     }
 
     protected function postAction(&$response) {
