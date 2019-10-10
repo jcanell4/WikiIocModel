@@ -217,16 +217,18 @@ class RawPageAction extends EditPageAction {
     }
 
     protected function translateToDW($text){
-        $trans = new MarkDown2DikuWikiTranslator();
+//        $trans = new MarkDown2DikuWikiTranslator();
 
         $noutext = Html2DWParser::parse($text);
+
+        return $noutext;
 
 //        exec("cd ".DOKU_INC."../pandoc; ./convHtml2MdwFromText.sh \"$text\"", $return, $exit);
 //        if($exit!==0){
 //            throw new SystemExecutionFailedException();
 //        }
 //        $text = implode ( "\n" , $return );
-        return $trans->getRenderedContent($trans->getInstructions($noutext));
+//        return $trans->getRenderedContent($trans->getInstructions($noutext));
     }
 
     protected function translateToHTML($text){
