@@ -13,15 +13,14 @@ class BasicRenameProjectAction extends BasicViewProjectMetaDataAction {
 
         $persons = $response['projectMetaData']['autor']['value'].",".$response['projectMetaData']['responsable']['value'];
         $model->renameProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_NEWNAME], $persons);
-
-        $new_ns = preg_replace("/:[^:]*$/", ":{$this->params[ProjectKeys::KEY_NEWNAME]}", $this->params[ProjectKeys::KEY_ID]);
-        $model->init($new_ns, $this->params[ProjectKeys::KEY_PROJECT_TYPE]);
+        //Cercar una altre manera de fer el canvi!
+        $this->setGlobalID($model->getId());
 
         $response = parent::runAction();
 
         $response[ProjectKeys::KEY_OLD_NS] = $this->params[ProjectKeys::KEY_ID];
         $response[ProjectKeys::KEY_OLD_ID] = $this->idToRequestId($this->params[ProjectKeys::KEY_ID]);
-        $response[ProjectKeys::KEY_NS] = $new_ns;
+        $response[ProjectKeys::KEY_NS] = $model->getID();
         $response[ProjectKeys::KEY_ID] = $this->idToRequestId($response[ProjectKeys::KEY_NS]);
 
         return $response;
@@ -56,5 +55,11 @@ class BasicRenameProjectAction extends BasicViewProjectMetaDataAction {
     public function requireResource($lock = FALSE) {
         $this->resourceLocker->init($this->params, TRUE);
         return $this->resourceLocker->requireResource($lock);
+    }
+    
+    private function setGlobalID($id){
+        global $INPUT;
+        
+        $INPUT->set("id", $id);
     }
 }
