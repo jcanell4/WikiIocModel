@@ -218,30 +218,33 @@ class RawPageAction extends EditPageAction {
 
     protected function translateToDW($text){
 //        $trans = new MarkDown2DikuWikiTranslator();
-
-        $noutext = Html2DWParser::parse($text);
-
-        return $noutext;
-
 //        exec("cd ".DOKU_INC."../pandoc; ./convHtml2MdwFromText.sh \"$text\"", $return, $exit);
 //        if($exit!==0){
 //            throw new SystemExecutionFailedException();
 //        }
 //        $text = implode ( "\n" , $return );
 //        return $trans->getRenderedContent($trans->getInstructions($noutext));
+
+        $noutext = Html2DWParser::parse($text);
+        return $noutext;
+
     }
 
     protected function translateToHTML($text){
 
-        $trans = new DikuWiki2MarkDownTranslator();
-        $mdFormat=$trans->getRenderedContent($trans->getInstructions($text));
+//        $trans = new DikuWiki2MarkDownTranslator();
+//        $mdFormat=$trans->getRenderedContent($trans->getInstructions($text));
+//
+//
+//        exec("cd ".DOKU_INC."../pandoc; ./convMdw2HtmlFromText.sh \"$mdFormat\"", $return, $exit);
+//        if($exit!==0){
+//            throw new SystemExecutionFailedException();
+//        }
+//        return implode ( "\n" , $return );
 
+        $noutext = DW2HtmlParser::parse($text);
+        return $noutext;
 
-        exec("cd ".DOKU_INC."../pandoc; ./convMdw2HtmlFromText.sh \"$mdFormat\"", $return, $exit);
-        if($exit!==0){
-            throw new SystemExecutionFailedException();
-        }
-        return implode ( "\n" , $return );
     }
 
     private function _getLocalDraftResponse()
