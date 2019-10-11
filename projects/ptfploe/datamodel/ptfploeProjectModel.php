@@ -13,10 +13,10 @@ class ptfploeProjectModel extends AbstractProjectModel {
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
     }
-
-    public function getId(){
-        return $this->id;
-    }
+//
+//    public function getId(){
+//        return $this->id;
+//    }
 
     public function getProjectDocumentName() {
         $ret = $this->getMetaDataProject();

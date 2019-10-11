@@ -1029,4 +1029,12 @@ class ProjectMetaDataQuery extends DataQuery {
         }
         return $obj;
     }
+    
+    /*AFEGIR UNA FUNCIÖ PER REANOMENAR FITXERS QUE PERTANYIN A UNA PROJECTE 
+     Amb una signatura semblant a:*/
+    //$nsParcial = ns realtiu al ns del projecte
+    //$mabit = es refereix al lloc on es troba el fitxer (data, media, attic, etc.)
+    public function renameFile($nsParcial, $ambit="data"){
+        throw new UnavailableMethodExecutionException("renameFile");
+    }
 }

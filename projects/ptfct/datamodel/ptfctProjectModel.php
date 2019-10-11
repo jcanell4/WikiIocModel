@@ -14,9 +14,9 @@ class ptfctProjectModel extends AbstractProjectModel {
         parent::__construct($persistenceEngine);
     }
 
-    public function getId(){
-        return $this->id;
-    }
+//    public function getId(){
+//        return $this->id;
+//    }
 
     public function getProjectDocumentName() {
         $ret = $this->getMetaDataProject();

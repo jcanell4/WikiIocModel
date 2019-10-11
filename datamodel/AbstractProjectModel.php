@@ -35,6 +35,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $this->dokuPageModel = new DokuPageModel($persistenceEngine);
         $this->viewConfigName = "defaultView";
     }
+    
+    public function getId(){
+        return $this->id;
+    }
 
     public function init($params, $projectType=NULL, $rev=NULL, $viewConfigName="defaultView", $metadataSubset=Projectkeys::VAL_DEFAULTSUBSET) {
         if(is_array($params)){
@@ -406,6 +410,9 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      */
     public function renameProject($ns, $new_name, $persons) {
         $this->projectMetaDataQuery->renameProject($ns, $new_name, $persons);
+        $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
+        $this->id = $new_ns;
+        //Cal renombrar també el fitxer ZIP si existeix
     }
 
     /**
