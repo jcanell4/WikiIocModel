@@ -409,6 +409,15 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     /**
+     * Elimina els directoris del projecte indicat i les seves referències i enllaços
+     * @param string $ns : ns del projecte
+     * @param string $persons : noms dels autors i els responsables separats per ","
+     */
+    public function removeProject($ns, $persons) {
+        $this->projectMetaDataQuery->removeProject($ns, $persons);
+    }
+
+    /**
      * Crea el archivo $destino a partir de una plantilla
      */
     protected function createPageFromTemplate($destino, $plantilla=NULL, $extra=NULL, $summary="generate project") {

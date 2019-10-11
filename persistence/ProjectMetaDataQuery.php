@@ -770,6 +770,76 @@ class ProjectMetaDataQuery extends DataQuery {
     }
 
     /**
+     * Elimina els directoris del projecte indicat i les seves referències i enllaços
+     * @param string $ns : ns del projecte
+     * @param string $persons : noms dels autors i els responsables separats per ","
+     */
+    public function removeProject($ns, $persons) {
+        //1. Elimina els directoris relacionats amb el projecte indicat
+        $aFolders = ['datadir',       /*pages*/
+                     'olddir',        /*attic*/
+                     'mediadir',      /*media*/
+                     'mediaolddir',   /*media_attic*/
+                     'metadir',       /*meta*/
+                     'mediametadir',  /*media_meta*/
+                     'mdprojects',    /*mdprojects*/
+                     'revisionprojectdir', /*project_attic*/
+                     'metaprojectdir',  /*project_meta*/
+                    ];
+        $project_dir = str_replace(":","/", $ns);
+
+        foreach ($aFolders as $folder) {
+            $full_dir = WikiGlobalConfig::getConf($folder)."/$project_dir";
+            if (!$this->_removeDir($full_dir)) {
+                throw new Exception("removeProject: Error mentre eliminava el directori $project_dir del projecte.");
+            }
+        }
+
+        //2. Canvia el contingut de l'arxiu ACL que pot contenir la ruta del projecte
+        $file = DOKU_CONF."acl.auth";
+        $content = file_get_contents($file);
+        $content = preg_replace("/^.*:*$old_name:.*\d$/m", "", $content);
+        if (file_put_contents($file, $content, LOCK_EX) === FALSE)
+            throw new Exception("removeProject: Error mentre eliminava el nom del projecte a $file.");
+
+        //3. Canvia el contingut dels arxius de dreceres de autors i responsables eliminant la ruta del projecte
+        $path_dreceres = WikiGlobalConfig::getConf('datadir') . str_replace(":", "/", WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel'));
+        $nom_dreceres = WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel') . ".txt";
+        $persons = explode(",", $persons);
+        foreach ($persons as $user) {
+            $file = "$path_dreceres$user/$nom_dreceres";
+            $content = file_get_contents($file);
+            $content = preg_replace("/^\[\[.*:*$old_name\W.*\]\]$/m", "", $content);
+            if (file_put_contents($file, $content, LOCK_EX) === FALSE)
+                throw new Exception("removeProject: Error mentre eliminava el nom del projecte de la drecera de $user.");
+        }
+    }
+
+    /**
+     * Elimina un directorio, eliminando primero sus hijos
+     * @param string $dir : directorio que se desea eliminat
+     * @return boolean : TRUE si ha conseguido eliminar el directorio (incluye sus hijos)
+     */
+    private function _removeDir($dir) {
+        $ret = TRUE;
+        $scan = @scandir($dir);
+        $scan = array_diff($scan, [".", ".."]);
+        if ($scan) {
+            foreach ($scan as $file) {
+                if (is_dir($file)) {
+                    if (!($ret = $this->_removeDir("$dir/$file"))) break;
+                }else {
+                    if (!($ret = $ret && unlink("$dir/$file"))) break;
+                }
+            }
+        }
+        if ($ret) {
+            $ret = rmdir($dir);
+        }
+        return $ret;
+    }
+
+    /**
      * @return array Con los datos del proyecto correspondientes a la clave '$metaDataSubSet'
      */
     public function getDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE, $retData=TRUE) {
