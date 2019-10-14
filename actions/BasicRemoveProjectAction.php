@@ -14,7 +14,10 @@ class BasicRemoveProjectAction extends BasicViewProjectMetaDataAction {
         $persons = $response['projectMetaData']['autor']['value'].",".$response['projectMetaData']['responsable']['value'];
         $model->removeProject($this->params[ProjectKeys::KEY_ID], $persons);
 
-        $response = [ProjectKeys::KEY_CODETYPE => 0];
+        $response = [ProjectKeys::KEY_ID => $this->idToRequestId($this->params[ProjectKeys::KEY_ID]),
+                     ProjectKeys::KEY_OLD_ID => $this->params[ProjectKeys::KEY_ID],
+                     ProjectKeys::KEY_CODETYPE => 0
+                    ];
         return $response;
     }
 
@@ -39,7 +42,7 @@ class BasicRemoveProjectAction extends BasicViewProjectMetaDataAction {
 
     protected function postAction(&$response) {
         $this->resourceLocker->leaveResource(TRUE);
-        $new_message = $this->generateMessageInfoForSubSetProject($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_renamed');
+        $new_message = $this->generateMessageInfoForSubSetProject($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_removed');
         $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
     }
 

@@ -575,8 +575,11 @@ class ProjectMetaDataQuery extends DataQuery {
         }
         $dirProject = $this->getProjectFilePath(NULL, NULL, FALSE);
         $file = WikiGlobalConfig::getConf('projects','wikiiocmodel')['dataSystem'];
-        $systemContent = json_decode(file_get_contents($dirProject.$file), true);
-        return $systemContent[$metadataSubset];
+        if (is_file($dirProject.$file)) {
+            $systemContent = json_decode(file_get_contents($dirProject.$file), true);
+            return $systemContent[$metadataSubset];
+        }
+        return NULL;
     }
 
     public function setSystemData($data, $metadataSubset=FALSE) {
@@ -704,16 +707,7 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function renameProject($ns, $new_name, $persons) {
         //1. Canvia el nom dels directoris del projecte indicat
-        $paths = ['datadir',       /*pages*/
-                  'olddir',        /*attic*/
-                  'mediadir',      /*media*/
-                  'mediaolddir',   /*media_attic*/
-                  'metadir',       /*meta*/
-                  'mediametadir',  /*media_meta*/
-                  'mdprojects',    /*mdprojects*/
-                  'revisionprojectdir', /*project_attic*/
-                  'metaprojectdir',  /*project_meta*/
-                 ];
+        $paths = $this->_arrayDataFolders();
         $base_dir = explode(":", $ns);
         $old_name = array_pop($base_dir);
         $base_dir = implode("/", $base_dir);
@@ -739,7 +733,7 @@ class ProjectMetaDataQuery extends DataQuery {
             $scan = @scandir($newPath);
             if ($scan) {
                 foreach ($scan as $file) {
-                    if (!is_dir($file) && (strpos($file, ".changes")>0 || strpos($file, ".meta")>0)) {
+                    if (!is_dir("$newPath/$file") && (strpos($file, ".changes")>0 || strpos($file, ".meta")>0)) {
                         $content = file_get_contents("$newPath/$file");
                         $content = preg_replace("/:\b$old_name/m", ":$new_name", $content);
                         if (file_put_contents("$newPath/$file", $content, LOCK_EX) === FALSE)
@@ -750,7 +744,7 @@ class ProjectMetaDataQuery extends DataQuery {
         }
 
         //3. Canvia el contingut de l'arxiu ACL que pot contenir la ruta del projecte
-        $file = DOKU_CONF."acl.auth";
+        $file = DOKU_CONF."acl.auth.php";
         $content = file_get_contents($file);
         $content = preg_replace("/(:*)$old_name:/m", "$1$new_name:", $content);
         if (file_put_contents($file, $content, LOCK_EX) === FALSE)
@@ -767,6 +761,68 @@ class ProjectMetaDataQuery extends DataQuery {
             if (file_put_contents($file, $content, LOCK_EX) === FALSE)
                 throw new Exception("renameProject: Error mentre canviava el contingut de la drecera de $user.");
         }
+
+        //5. Canvia el nom dels arxius ".zip" que contenen (en el nom) l'antiga ruta del projecte
+        $basePath = WikiGlobalConfig::getConf('mediadir');
+        $newPath = "$basePath/$base_dir/$new_name";
+        $scan = @scandir($newPath);
+        if ($scan) {
+            foreach ($scan as $file) {
+                if (!is_dir("$newPath/$file") && strpos($file, ".zip")>0 && strpos($file, $old_name)!==FALSE) {
+                    $newfile = preg_replace("/_$old_name\./m", "_{$new_name}.", $file);
+                    if (rename("$newPath/$file", "$newPath/$newfile") === FALSE)
+                        throw new Exception("renameProject: Error mentre canviava el nom de l'arxiu $newPath/$file.");
+                }
+            }
+        }
+
+        //6. Canvia el contingut dels arxius que contenen l'antiga ruta del projecte (normalment la ruta absoluta a les imatges)
+        $basePath = WikiGlobalConfig::getConf('datadir');
+        $newPath = "$basePath/$base_dir/$new_name";
+        if ($this->_changeNameProjectInFiles($newPath, $old_name, $new_name) === FALSE)
+            throw new Exception("renameProject: Error mentre canviava el contingut d'algun axiu a $newPath.");
+    }
+
+    /**
+     * Canvia el contingut dels arxius que contenen l'antiga ruta del projecte
+     * @param string $path : ruta base dels arxius .txt que cal canviar-ne el contingut
+     * @param string $old_name : antic nom del projecte
+     * @param string $new_name : nou nom del projecte
+     */
+    private function _changeNameProjectInFiles($path, $old_name, $new_name) {
+        $ret = TRUE;
+        $scan = @scandir($path);
+        $scan = array_diff($scan, [".", ".."]);
+        if ($scan) {
+            foreach ($scan as $file) {
+                if (is_dir("$path/$file")) {
+                    $ret = $this->_changeNameProjectInFiles("$path/$file");
+                }elseif (strpos($file, ".txt")>0) {
+                    $content = file_get_contents("$path/$file");
+                    $content = preg_replace("/:\b{$old_name}([^a-z_A-Z])/", ":$new_name$1", $content);
+                    $ret = $ret && file_put_contents("$path/$file", $content, LOCK_EX);
+                }
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * Llista de directoris en 'data'
+     * @return array
+     */
+    private function _arrayDataFolders() {
+        $folders = ['datadir',       /*pages*/
+                    'olddir',        /*attic*/
+                    'mediadir',      /*media*/
+                    'mediaolddir',   /*media_attic*/
+                    'metadir',       /*meta*/
+                    'mediametadir',  /*media_meta*/
+                    'mdprojects',    /*mdprojects*/
+                    'revisionprojectdir', /*project_attic*/
+                    'metaprojectdir',  /*project_meta*/
+                   ];
+        return $folders;
     }
 
     /**
@@ -776,29 +832,20 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function removeProject($ns, $persons) {
         //1. Elimina els directoris relacionats amb el projecte indicat
-        $aFolders = ['datadir',       /*pages*/
-                     'olddir',        /*attic*/
-                     'mediadir',      /*media*/
-                     'mediaolddir',   /*media_attic*/
-                     'metadir',       /*meta*/
-                     'mediametadir',  /*media_meta*/
-                     'mdprojects',    /*mdprojects*/
-                     'revisionprojectdir', /*project_attic*/
-                     'metaprojectdir',  /*project_meta*/
-                    ];
+        $aFolders = $this->_arrayDataFolders();
         $project_dir = str_replace(":","/", $ns);
 
         foreach ($aFolders as $folder) {
             $full_dir = WikiGlobalConfig::getConf($folder)."/$project_dir";
             if (!$this->_removeDir($full_dir)) {
-                throw new Exception("removeProject: Error mentre eliminava el directori $project_dir del projecte.");
+                throw new Exception("removeProject: Error mentre eliminava el directori $folder/$project_dir del projecte.");
             }
         }
 
         //2. Canvia el contingut de l'arxiu ACL que pot contenir la ruta del projecte
-        $file = DOKU_CONF."acl.auth";
+        $file = DOKU_CONF."acl.auth.php";
         $content = file_get_contents($file);
-        $content = preg_replace("/^.*:*$old_name:.*\d$/m", "", $content);
+        $content = preg_replace("/^.*:*$ns:\*.*\d$/m", "", $content);
         if (file_put_contents($file, $content, LOCK_EX) === FALSE)
             throw new Exception("removeProject: Error mentre eliminava el nom del projecte a $file.");
 
@@ -809,7 +856,7 @@ class ProjectMetaDataQuery extends DataQuery {
         foreach ($persons as $user) {
             $file = "$path_dreceres$user/$nom_dreceres";
             $content = file_get_contents($file);
-            $content = preg_replace("/^\[\[.*:*$old_name\W.*\]\]$/m", "", $content);
+            $content = preg_replace("/^\[\[.*:*$ns\W.*\]\]$/m", "", $content);
             if (file_put_contents($file, $content, LOCK_EX) === FALSE)
                 throw new Exception("removeProject: Error mentre eliminava el nom del projecte de la drecera de $user.");
         }
@@ -823,17 +870,17 @@ class ProjectMetaDataQuery extends DataQuery {
     private function _removeDir($dir) {
         $ret = TRUE;
         $scan = @scandir($dir);
-        $scan = array_diff($scan, [".", ".."]);
+        if ($scan) $scan = array_diff($scan, [".", ".."]);
         if ($scan) {
             foreach ($scan as $file) {
-                if (is_dir($file)) {
+                if (is_dir("$dir/$file")) {
                     if (!($ret = $this->_removeDir("$dir/$file"))) break;
                 }else {
                     if (!($ret = $ret && unlink("$dir/$file"))) break;
                 }
             }
         }
-        if ($ret) {
+        if ($ret && is_dir($dir)) {
             $ret = rmdir($dir);
         }
         return $ret;
@@ -1099,8 +1146,8 @@ class ProjectMetaDataQuery extends DataQuery {
         }
         return $obj;
     }
-    
-    /*AFEGIR UNA FUNCIÖ PER REANOMENAR FITXERS QUE PERTANYIN A UNA PROJECTE 
+
+    /*AFEGIR UNA FUNCIÖ PER REANOMENAR FITXERS QUE PERTANYIN A UNA PROJECTE
      Amb una signatura semblant a:*/
     //$nsParcial = ns realtiu al ns del projecte
     //$mabit = es refereix al lloc on es troba el fitxer (data, media, attic, etc.)
