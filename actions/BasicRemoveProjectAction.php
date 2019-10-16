@@ -14,10 +14,17 @@ class BasicRemoveProjectAction extends BasicViewProjectMetaDataAction {
         $persons = $response['projectMetaData']['autor']['value'].",".$response['projectMetaData']['responsable']['value'];
         $model->removeProject($this->params[ProjectKeys::KEY_ID], $persons);
 
+        //Lee la página shortcuts para enviarla al cliente obligándole a hacer un refresh del tab shortcuts
+        $ns_shortcut = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')
+                     . $this->params[PageKeys::KEY_USER_ID] . ":"
+                     . WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel');
+        $data = $model->getDataDocument($ns_shortcut);
+
         $response = [ProjectKeys::KEY_ID => $this->idToRequestId($this->params[ProjectKeys::KEY_ID]),
-                     ProjectKeys::KEY_OLD_ID => $this->params[ProjectKeys::KEY_ID],
-                     ProjectKeys::KEY_CODETYPE => 0
+                     ProjectKeys::KEY_CODETYPE => ProjectKeys::VAL_CODETYPE_REMOVE,
+                     PageKeys::KEY_HTML_SC => [PageKeys::KEY_HTML_SC => $data['structure']['html']]
                     ];
+
         return $response;
     }
 

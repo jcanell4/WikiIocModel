@@ -48,6 +48,13 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
             $ret[ProjectKeys::KEY_ID] = $this->idToRequestId($id);
             $ret[ProjectKeys::KEY_NS] = $id;
             $ret[ProjectKeys::KEY_PROJECT_TYPE] = $projectType;
+
+            //Lee la página shortcuts para enviarla al cliente obligándole a hacer un refresh del tab shortcuts
+            $ns_shortcut = WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel')
+                         . $_SERVER['REMOTE_USER'] . ":"
+                         . WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel');
+            $data = $model->getDataDocument($ns_shortcut);
+            $ret[PageKeys::KEY_HTML_SC] = [PageKeys::KEY_HTML_SC => $data['structure']['html']];
         }
         if (!$ret)
             throw new ProjectExistException($id);
