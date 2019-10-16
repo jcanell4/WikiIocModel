@@ -31,32 +31,30 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      */
     public function getMeta($MetaDataRequestMessage) {
         //Check parameters mandatories
-        $checkParameters = isset($MetaDataRequestMessage[self::K_PERSISTENCE]) &&
-                            isset($MetaDataRequestMessage[self::K_IDRESOURCE]) &&
-                            $MetaDataRequestMessage[self::K_IDRESOURCE] != '' &&
-                            isset($MetaDataRequestMessage[self::K_PROJECTTYPE]) &&
-                            $MetaDataRequestMessage[self::K_PROJECTTYPE] != '' &&
-                            isset($MetaDataRequestMessage[self::K_METADATASUBSET]) &&
-                            $MetaDataRequestMessage[self::K_METADATASUBSET] != '';
-
-        if (!$checkParameters) {
+        if ( ! (isset($MetaDataRequestMessage[self::K_PERSISTENCE]) &&
+                isset($MetaDataRequestMessage[self::K_IDRESOURCE]) &&
+                $MetaDataRequestMessage[self::K_IDRESOURCE] != '' &&
+                isset($MetaDataRequestMessage[self::K_PROJECTTYPE]) &&
+                $MetaDataRequestMessage[self::K_PROJECTTYPE] != '' &&
+                isset($MetaDataRequestMessage[self::K_METADATASUBSET]) &&
+                $MetaDataRequestMessage[self::K_METADATASUBSET] != '')) {
             throw new WrongParams();
         }
 
-        $jSONArray = $this->__getMetaPersistence($MetaDataRequestMessage);
-        if (!isset($jSONArray) || $jSONArray == null) {
+        $jsonObj = $this->__getMetaPersistence($MetaDataRequestMessage);
+        if (!isset($jsonObj) || $jsonObj == NULL) {
             // Se usa cuando todavía no hay datos en el fichero de proyecto, entonces se recoge la lista de campos del tipo de proyecto
             // aunque, tal vez, habría que retornar NULL (eliminando la Excepción)
-            $jSONArray = $this->__getStructureMetaDataConfig($MetaDataRequestMessage);
+            $jsonObj = $this->__getStructureMetaDataConfig($MetaDataRequestMessage);
         }
-        if (!isset($jSONArray) || $jSONArray == null) {
+        if (!isset($jsonObj) || $jsonObj == NULL) {
             throw new MetaDataNotFound();
         }
 
         //Persistence returns wellformed JSON
-        MetaDataDaoConfig::controlMalFormedJson($jSONArray);
+        MetaDataDaoConfig::controlMalFormedJson($jsonObj);
 
-        return $jSONArray;
+        return $jsonObj;
     }
 
     /**
@@ -68,12 +66,13 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      */
     public function __getMetaPersistence($MetaDataRequestMessage) {
         return $MetaDataRequestMessage[self::K_PERSISTENCE]
-                    ->createProjectMetaDataQuery($MetaDataRequestMessage[self::K_IDRESOURCE],
-                              $MetaDataRequestMessage[self::K_METADATASUBSET],
-                              $MetaDataRequestMessage[self::K_PROJECTTYPE],
-                              $MetaDataRequestMessage[self::K_REVISION]
-                            )
-                    ->getMeta();
+                    ->createProjectMetaDataQuery(
+                            $MetaDataRequestMessage[self::K_IDRESOURCE],
+                            $MetaDataRequestMessage[self::K_METADATASUBSET],
+                            $MetaDataRequestMessage[self::K_PROJECTTYPE],
+                            $MetaDataRequestMessage[self::K_REVISION]
+                        )
+                    ->getMeta($MetaDataRequestMessage[self::K_METADATASUBSET], $MetaDataRequestMessage[self::K_REVISION]);
     }
 
     /**
@@ -84,8 +83,8 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
      */
     public function __getStructureMetaDataConfig($MetaDataRequestMessage) {
         return $MetaDataRequestMessage[self::K_PERSISTENCE]
-                    ->createProjectMetaDataQuery(FALSE, 
-                                                $MetaDataRequestMessage[self::K_METADATASUBSET], 
+                    ->createProjectMetaDataQuery(FALSE,
+                                                $MetaDataRequestMessage[self::K_METADATASUBSET],
                                                 $MetaDataRequestMessage[self::K_PROJECTTYPE])
                     ->getStructureMetaDataConfig();
     }

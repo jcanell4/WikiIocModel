@@ -176,7 +176,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * Obtiene los datos del archivo de datos (meta.mdpr) de un proyecto
      */
     public function getMetaDataProject($metaDataSubset=FALSE) {
-        $ret = $this->projectMetaDataQuery->getMeta($metaDataSubset);
+        $ret = $this->projectMetaDataQuery->getMeta($metaDataSubset, FALSE);
         return json_decode($ret, true);
     }
 
