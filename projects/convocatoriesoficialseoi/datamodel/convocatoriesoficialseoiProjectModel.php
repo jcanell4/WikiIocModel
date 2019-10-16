@@ -64,18 +64,17 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel
         return $validated;
     }
 
-    public function validateTemplates()
+    public function validateTemplates($configTemplates=NULL)
     {
-
-        $data = $this->getData();
-        $configTemplates = $data['projectMetaData']['plantilla']['value'];
+        if ($configTemplates == NULL) {
+            $data = $this->getData();
+            $configTemplates = $data['projectMetaData']['plantilla']['value'];
+        }
         $projectTemplatesDates = explode(',', $configTemplates);
-
-
         $projectFileDates = [];
+
         foreach ($projectTemplatesDates as $file) {
             $ID = $this->id . ':' . $file;
-
             $filepath = WikiFn($ID);
             $projectFileDates[$file] = filemtime($filepath);
         }
@@ -83,14 +82,12 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel
         $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir() . "metadata/plantilles/";
 
         foreach ($projectTemplatesDates as $key) {
-
             $file = $pdir . $key . '.txt';
 
             if (!isset($projectFileDates[$key])) {
                 // No existeix el nom del fitxer
                 return false;
             }
-
             $currentFileTime = filemtime($file);
 
             if ($currentFileTime > $projectFileDates[$key]) {
@@ -98,7 +95,6 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel
                 return false;
             }
         }
-
 
         return true;
     }

@@ -16,7 +16,8 @@ class ViewProjectMetaDataAction extends BasicViewUpdatableProjectMetaDataAction{
         $response = parent::runAction();
 
         // Si els documents no coincideixen amb les plantilles es mostra el botó update
-        $response[ProjectKeys::KEY_ACTIVA_UPDATE_BTN] = !$model->validateTemplates()? 1 : 0;
+        $plantilla = $response['projectMetaData']['plantilla']['value'];
+        $response[ProjectKeys::KEY_ACTIVA_UPDATE_BTN] = !$model->validateTemplates($plantilla) ? 1 : 0;
 
         return $response;
     }
