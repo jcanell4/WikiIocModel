@@ -36,7 +36,7 @@ class RefreshEditionAction extends PageAction implements ResourceLockerInterface
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
 
-        $response[PageKeys::KEY_CODETYPE]=0;
+        $response[PageKeys::KEY_CODETYPE] = ProjectKeys::VAL_CODETYPE_OK;
         return $response;
     }
 

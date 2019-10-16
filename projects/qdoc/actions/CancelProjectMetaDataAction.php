@@ -7,7 +7,7 @@ class CancelProjectMetaDataAction extends ViewProjectMetaDataAction {
         $response = BasicCancelProjectMetaDataAction::sharedRunAction($this);
 
         if ($this->params[ProjectKeys::KEY_NO_RESPONSE] ) {
-            $response[ProjectKeys::KEY_CODETYPE] = 0;
+            $response[ProjectKeys::KEY_CODETYPE] = ProjectKeys::VAL_CODETYPE_OK;
         }else {
             $response = parent::runAction();
         }

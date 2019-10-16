@@ -28,7 +28,7 @@ class CancelEditPageAction extends RenderedPageAction {
     protected function responseProcess()
     {
         if($this->params[PageKeys::KEY_NO_RESPONSE]){
-            $response[PageKeys::KEY_CODETYPE]=0;
+            $response[PageKeys::KEY_CODETYPE] = ProjectKeys::VAL_CODETYPE_OK;
             return $response;
         }
 

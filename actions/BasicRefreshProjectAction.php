@@ -13,7 +13,7 @@ class BasicRefreshProjectAction extends BasicViewProjectMetaDataAction implement
         if ($this->lockStruct["state"]!== ResourceLockerInterface::LOCKED){
             throw new FileIsLockedException($this->params[PageKeys::KEY_ID]);
         }
-        $response[PageKeys::KEY_CODETYPE] = 0;
+        $response[PageKeys::KEY_CODETYPE] = ProjectKeys::VAL_CODETYPE_OK;
         return $response;
     }
 

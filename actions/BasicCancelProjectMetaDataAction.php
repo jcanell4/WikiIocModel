@@ -8,7 +8,7 @@ class BasicCancelProjectMetaDataAction extends BasicViewProjectMetaDataAction im
         $response = self::sharedRunAction($this);
 
         if ($this->params[ProjectKeys::KEY_NO_RESPONSE]) {
-            $response[ProjectKeys::KEY_CODETYPE] = 0;
+            $response[ProjectKeys::KEY_CODETYPE] = ProjectKeys::VAL_CODETYPE_OK;
         }else {
             $response = parent::runAction();
         }
@@ -31,7 +31,7 @@ class BasicCancelProjectMetaDataAction extends BasicViewProjectMetaDataAction im
     }
 
     protected function postAction(&$response) {
-        if ($response[ProjectKeys::KEY_CODETYPE] !== 0) {
+        if ($response[ProjectKeys::KEY_CODETYPE] !== ProjectKeys::VAL_CODETYPE_OK) {
             $new_message = $this->generateMessageInfoForSubSetProject($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_canceled');
             $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
         }
