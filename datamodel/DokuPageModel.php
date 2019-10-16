@@ -38,7 +38,12 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
     public function setData($toSet, $forceSave=false) {
         $params = (is_array($toSet)) ? $toSet : array(PageKeys::KEY_WIKITEXT => $toSet);
-        $params[PageKeys::KEY_ID] = ($this->id) ? $this->id : $params[PageKeys::KEY_ID];
+
+        //--- ATENCIÓ: Vigilar aquest id ---
+        //$params[PageKeys::KEY_ID] = ($this->id) ? $this->id : $params[PageKeys::KEY_ID];
+        if (!$params[PageKeys::KEY_ID])
+            $params[PageKeys::KEY_ID] = $this->id;
+
         $this->resourceLocker->init($params);
         //mirar si està bloquejat i si no ho està => excepció
         if ($this->resourceLocker->checklock() === LockDataQuery::UNLOCKED) {
@@ -497,7 +502,7 @@ class DokuPageModel extends WikiRenderizableDataModel {
                 break;
         }
     }
-    
+
     public function get_ftpsend_metadata() { // Nom del fitxer per comprovar la data
         $html = '';
 
