@@ -35,7 +35,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $this->dokuPageModel = new DokuPageModel($persistenceEngine);
         $this->viewConfigName = "defaultView";
     }
-    
+
     public function getId(){
         return $this->id;
     }
@@ -139,6 +139,17 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     public function getRawDocument($filename) {
         $content = $this->getPageDataQuery()->getRaw($filename);
         return $content;
+    }
+
+    /**
+     * Obtiene una estructura de datos relativa al fichero indicado en la ruta $ns
+     * @param string $ns : wiki-ruta del fichero solicitado
+     * @return array : estructura de datos relativa al fichero (incluye su contenido en formato HTML)
+     */
+    public function getDataDocument($ns) {
+        $this->dokuPageModel->init($ns);
+        $data = $this->dokuPageModel->getData();
+        return $data;
     }
 
     public function setRawProjectDocument($filename, $text, $summary) {
@@ -374,7 +385,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     protected function includePageProjectToUserShortcut($parArr) {
         $summary = "include Page Project To User Shortcut";
         $comment = ($parArr['link_page'] === $parArr['id']) ? "al" : "als continguts del";
-        $shortcutText = "\n[[${parArr['link_page']}|accés $comment projecte ${parArr['id']}]]\n";
+        $shortcutText = "\n[[${parArr['link_page']}|accés $comment projecte ${parArr['id']}]]";
         $text = $this->getPageDataQuery()->getRaw($parArr['user_shortcut']);
         if ($text == "") {
             //La página dreceres.txt del usuario no existe
