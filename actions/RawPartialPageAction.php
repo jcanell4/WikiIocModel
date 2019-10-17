@@ -306,9 +306,13 @@ class RawPartialPageAction extends EditPageAction {
     }
 
     protected function translateToDW($text){
+
+
         $trans = new MarkDown2DikuWikiTranslator();
-        exec(DOKU_INC."../pandoc/convHtml2MdwFromText.sh \"$text\"", $return, $exit);
-        $text = implode ( "\n" , $return );
+        $text = Html2DWParser::parse($text);
+
+//        exec(DOKU_INC."../pandoc/convHtml2MdwFromText.sh \"$text\"", $return, $exit);
+//        $text = implode ( "\n" , $return );
         return $trans->getRenderedContent($trans->getInstructions($text));
     }
 

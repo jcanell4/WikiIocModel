@@ -217,23 +217,15 @@ class RawPageAction extends EditPageAction {
     }
 
     protected function translateToDW($text){
-        $trans = new MarkDown2DikuWikiTranslator();
-        exec("cd ".DOKU_INC."../pandoc; ./convHtml2MdwFromText.sh \"$text\"", $return, $exit);
-        if($exit!==0){
-            throw new SystemExecutionFailedException();
-        }
-        $text = implode ( "\n" , $return );
-        return $trans->getRenderedContent($trans->getInstructions($text));
+        return Hmtl2DWTranslator::translate($text);
+
     }
 
     protected function translateToHTML($text){
-        $trans = new DikuWiki2MarkDownTranslator();
-        $mdFormat=$trans->getRenderedContent($trans->getInstructions($text));
-        exec("cd ".DOKU_INC."../pandoc; ./convMdw2HtmlFromText.sh \"$mdFormat\"", $return, $exit);
-        if($exit!==0){
-            throw new SystemExecutionFailedException();
-        }
-        return implode ( "\n" , $return );
+
+
+        return DW2HtmlTranslator::translate($text);
+
     }
 
     private function _getLocalDraftResponse()
@@ -289,7 +281,9 @@ class RawPageAction extends EditPageAction {
         $resp = $this->_getBaseDataToSend();
         $resp = array_merge($resp, $this->_getStructuredHtmlForm($rawData['content']));
         $resp['content'] = $rawData['content'];
-        if ($this->params['contentFormat'] === self::HTML_FORMAT){
+
+        // TODO s'ha de discriminar quan el $rawData ja és html
+        if ($this->params['contentFormat'] === self::HTML_FORMAT && $this->dokuPageModel->format != 'html'){
             $resp['content'] = $this->translateToHTML($resp['content']);
         }
         $resp['locked'] = $rawData['locked'];
