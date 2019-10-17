@@ -72,6 +72,7 @@ abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
                             $MetaDataRequestMessage[self::K_PROJECTTYPE],
                             $MetaDataRequestMessage[self::K_REVISION]
                         )
+                    //En aquest cas getMeta  no hauria de portar paràmetres perquè ja se li han passat  en el create
                     ->getMeta($MetaDataRequestMessage[self::K_METADATASUBSET], $MetaDataRequestMessage[self::K_REVISION]);
     }
 
