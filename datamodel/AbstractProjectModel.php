@@ -104,6 +104,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         return ($this->metaDataSubSet && $this->metaDataSubSet !== ProjectKeys::VAL_DEFAULTSUBSET);
     }
 
+    public function setProjectId($projectId) {
+        $this->projectMetaDataQuery->setProjectId($projectId);
+    }
+
     /**
      * Retorna el sufijo para el ID de la pestaña de un proyecto para un subset distinto de 'main' o una revisión
      * @params string $rev . Si existe, indica que es una revisión del proyecto
@@ -414,16 +418,28 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     /**
-     * Canvia el nom dels directoris del projecte indicat
+     * Canvia el nom dels directoris del projecte indicat,
+     * els noms dels fitxers generats amb la base del nom del projecte i
+     * les referències a l'antic nom de projecte dins dels fitxers afectats
      * @param string $ns : ns original del projecte
      * @param string $new_name : nou nom pel projecte
      * @param string $persons : noms dels autors i els responsables separats per ","
      */
     public function renameProject($ns, $new_name, $persons) {
-        $this->projectMetaDataQuery->renameProject($ns, $new_name, $persons);
+        $base_dir = explode(":", $ns);
+        $old_name = array_pop($base_dir);
+        $base_dir = implode("/", $base_dir);
+
+        $this->projectMetaDataQuery->renameDirNames($base_dir, $old_name, $new_name);
+        $this->projectMetaDataQuery->changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name);
+        $this->projectMetaDataQuery->changeOldPathProjectInACLFile($old_name, $new_name);
+        $this->projectMetaDataQuery->changeOldPathProjectInShortcutFiles($old_name, $new_name, $persons);
+        $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_dir, $old_name, $new_name, ".zip");
+        $this->projectMetaDataQuery->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
+
         $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
         $this->id = $new_ns;
-        //Cal renombrar també el fitxer ZIP si existeix
+        $this->setProjectId($this->id);
     }
 
     /**

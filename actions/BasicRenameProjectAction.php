@@ -13,7 +13,7 @@ class BasicRenameProjectAction extends BasicViewProjectMetaDataAction {
 
         $persons = $response['projectMetaData']['autor']['value'].",".$response['projectMetaData']['responsable']['value'];
         $model->renameProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_NEWNAME], $persons);
-        //Cercar una altre manera de fer el canvi!
+
         $this->setGlobalID($model->getId());
 
         $response = parent::runAction();
@@ -22,6 +22,7 @@ class BasicRenameProjectAction extends BasicViewProjectMetaDataAction {
         $response[ProjectKeys::KEY_OLD_ID] = $this->idToRequestId($this->params[ProjectKeys::KEY_ID]);
         $response[ProjectKeys::KEY_NS] = $model->getID();
         $response[ProjectKeys::KEY_ID] = $this->idToRequestId($response[ProjectKeys::KEY_NS]);
+        $response[ProjectKeys::KEY_GENERATED] = $model->isProjectGenerated();
 
         return $response;
     }
@@ -56,10 +57,10 @@ class BasicRenameProjectAction extends BasicViewProjectMetaDataAction {
         $this->resourceLocker->init($this->params, TRUE);
         return $this->resourceLocker->requireResource($lock);
     }
-    
+
     private function setGlobalID($id){
         global $INPUT;
-        
+
         $INPUT->set("id", $id);
     }
 }

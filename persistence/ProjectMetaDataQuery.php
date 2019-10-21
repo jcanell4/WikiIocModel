@@ -50,6 +50,10 @@ class ProjectMetaDataQuery extends DataQuery {
         return $this;
     }
 
+    public function setProjectId($projectId){
+        $this->projectId = $projectId;
+    }
+
     public function setRevision($rev){
         $this->revision = $rev;
     }
@@ -699,16 +703,13 @@ class ProjectMetaDataQuery extends DataQuery {
 
     /**
      * Canvia el nom dels directoris del projecte indicat
-     * @param string $ns : ns original del projecte
-     * @param string $new_name : nou nom pel projecte
-     * @param string $persons : noms dels autors i els responsables separats per ","
+     * @param string $base_dir : directori wiki del projecte
+     * @param string $old_name : nom actual del projecte
+     * @param string $new_name : nou nom del projecte
+     * @throws Exception
      */
-    public function renameProject($ns, $new_name, $persons) {
-        //1. Canvia el nom dels directoris del projecte indicat
+    public function renameDirNames($base_dir, $old_name, $new_name) {
         $paths = $this->_arrayDataFolders();
-        $base_dir = explode(":", $ns);
-        $old_name = array_pop($base_dir);
-        $base_dir = implode("/", $base_dir);
 
         foreach ($paths as $dir) {
             $basePath = WikiGlobalConfig::getConf($dir);
@@ -719,8 +720,16 @@ class ProjectMetaDataQuery extends DataQuery {
                     throw new Exception("renameProject: Error mentre canviava el nom del projecte a $dir.");
             }
         }
+    }
 
-        //2. Canvia el contingut dels arxius ".changes" i ".meta" que contenen la ruta del projecte
+    /**
+     * Canvia el contingut dels arxius ".changes" i ".meta" que contenen la ruta del projecte per la ruta amb el nou nom de projecte
+     * @param string $base_dir : directori wiki del projecte
+     * @param string $old_name : nom actual del projecte
+     * @param string $new_name : nou nom del projecte
+     * @throws Exception
+     */
+    public function changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name) {
         $paths = ['metadir',
                   'mediametadir',
                   'metaprojectdir'
@@ -740,15 +749,30 @@ class ProjectMetaDataQuery extends DataQuery {
                 }
             }
         }
+    }
 
-        //3. Canvia el contingut de l'arxiu ACL que pot contenir la ruta del projecte
+    /**
+     * Canvia el contingut de l'arxiu ACL que pot contenir la ruta antiga del projecte
+     * @param string $old_name : nom actual del projecte
+     * @param string $new_name : nou nom del projecte
+     * @throws Exception
+     */
+    public function changeOldPathProjectInACLFile($old_name, $new_name) {
         $file = DOKU_CONF."acl.auth.php";
         $content = file_get_contents($file);
         $content = preg_replace("/(:*)$old_name:/m", "$1$new_name:", $content);
         if (file_put_contents($file, $content, LOCK_EX) === FALSE)
             throw new Exception("renameProject: Error mentre canviava el nom del projecte a $file.");
+    }
 
-        //4. Canvia el contingut dels arxius de dreceres de autors i responsables amb la nova ruta del projecte
+    /**
+     * Canvia el contingut dels arxius de dreceres d'autors i responsables amb la nova ruta del projecte
+     * @param string $old_name : nom actual del projecte
+     * @param string $new_name : nou nom del projecte
+     * @param string $persons : noms dels autors i els responsables separats per ","
+     * @throws Exception
+     */
+    public function changeOldPathProjectInShortcutFiles($old_name, $new_name, $persons) {
         $path_dreceres = WikiGlobalConfig::getConf('datadir') . str_replace(":", "/", WikiGlobalConfig::getConf('userpage_ns','wikiiocmodel'));
         $nom_dreceres = WikiGlobalConfig::getConf('shortcut_page_name','wikiiocmodel') . ".txt";
         $persons = explode(",", $persons);
@@ -759,22 +783,52 @@ class ProjectMetaDataQuery extends DataQuery {
             if (file_put_contents($file, $content, LOCK_EX) === FALSE)
                 throw new Exception("renameProject: Error mentre canviava el contingut de la drecera de $user.");
         }
+    }
 
-        //5. Canvia el nom dels arxius ".zip" que contenen (en el nom) l'antiga ruta del projecte
+    /**
+     * Canvia el nom dels arxius $filetype que contenen (en el nom) l'antiga ruta del projecte
+     * @param string $base_dir : directori wiki del projecte
+     * @param string $old_name : nom actual del projecte
+     * @param string $new_name : nou nom del projecte
+     * @param array|string $listfiles : llista d'arxius o extensió dels arxius (per defecte ".zip") generats pel render que cal renombrar
+     * @throws Exception
+     */
+    public function renameRenderGeneratedFiles($base_dir, $old_name, $new_name, $listfiles=".zip") {
         $basePath = WikiGlobalConfig::getConf('mediadir');
         $newPath = "$basePath/$base_dir/$new_name";
-        $scan = @scandir($newPath);
-        if ($scan) {
-            foreach ($scan as $file) {
-                if (!is_dir("$newPath/$file") && strpos($file, ".zip")>0 && strpos($file, $old_name)!==FALSE) {
-                    $newfile = preg_replace("/_$old_name\./m", "_{$new_name}.", $file);
-                    if (rename("$newPath/$file", "$newPath/$newfile") === FALSE)
-                        throw new Exception("renameProject: Error mentre canviava el nom de l'arxiu $newPath/$file.");
+        if (is_array($listfiles)) {
+            foreach ($listfiles as $file) {
+                $newfile = preg_replace("/_$old_name/", "_{$new_name}", $file);
+                if (!($ret = rename("$newPath/$file", "$newPath/$newfile"))) {
+                    break;
+                }
+            }
+        }else {
+            $scan = @scandir($newPath);
+            if ($scan) {
+                foreach ($scan as $file) {
+                    if (!is_dir("$newPath/$file") && strpos($file, $listfiles)>0 && strpos($file, $old_name)!==FALSE) {
+                        $newfile = preg_replace("/_$old_name\./m", "_{$new_name}.", $file);
+                        if (!($ret = rename("$newPath/$file", "$newPath/$newfile"))) {
+                            break;
+                        }
+                    }
                 }
             }
         }
+        if (!$ret) {
+            throw new Exception("renameProject: Error mentre canviava el nom de l'arxiu $newPath/$file.");
+        }
+    }
 
-        //6. Canvia el contingut dels arxius que contenen l'antiga ruta del projecte (normalment la ruta absoluta a les imatges)
+    /**
+     * Canvia el contingut dels arxius que contenen l'antiga ruta del projecte (normalment la ruta absoluta a les imatges)
+     * @param string $base_dir : directori wiki del projecte
+     * @param string $old_name : nom actual del projecte
+     * @param string $new_name : nou nom del projecte
+     * @throws Exception
+     */
+    public function changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name) {
         $basePath = WikiGlobalConfig::getConf('datadir');
         $newPath = "$basePath/$base_dir/$new_name";
         if ($this->_changeNameProjectInFiles($newPath, $old_name, $new_name) === FALSE)
@@ -794,7 +848,7 @@ class ProjectMetaDataQuery extends DataQuery {
         if ($scan) {
             foreach ($scan as $file) {
                 if (is_dir("$path/$file")) {
-                    $ret = $this->_changeNameProjectInFiles("$path/$file");
+                    $ret = $this->_changeNameProjectInFiles("$path/$file", $old_name, $new_name);
                 }elseif (strpos($file, ".txt")>0) {
                     $content = file_get_contents("$path/$file");
                     $content = preg_replace("/:\b{$old_name}([^a-z_A-Z])/", ":$new_name$1", $content);
