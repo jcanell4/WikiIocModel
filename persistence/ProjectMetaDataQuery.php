@@ -735,16 +735,16 @@ class ProjectMetaDataQuery extends DataQuery {
                   'metaprojectdir'
                  ];
         foreach ($paths as $dir) {
-            $basePath = WikiGlobalConfig::getConf($dir);
-            $newPath = "$basePath/$base_dir/$new_name";
+            $newPath = WikiGlobalConfig::getConf($dir)."/$base_dir/$new_name";
             $scan = @scandir($newPath);
             if ($scan) {
                 foreach ($scan as $file) {
                     if (!is_dir("$newPath/$file") && (strpos($file, ".changes")>0 || strpos($file, ".meta")>0)) {
-                        $content = file_get_contents("$newPath/$file");
-                        $content = preg_replace("/:\b$old_name/m", ":$new_name", $content);
-                        if (file_put_contents("$newPath/$file", $content, LOCK_EX) === FALSE)
-                            throw new Exception("renameProject: Error mentre canviava el contingut de $newPath/$file.");
+                        if (($content = file_get_contents("$newPath/$file"))) {
+                            $content = preg_replace("/:\b$old_name/m", ":$new_name", $content);
+                            if (file_put_contents("$newPath/$file", $content, LOCK_EX) === FALSE)
+                                throw new Exception("renameProject: Error mentre canviava el contingut de $newPath/$file.");
+                        }
                     }
                 }
             }
@@ -759,10 +759,11 @@ class ProjectMetaDataQuery extends DataQuery {
      */
     public function changeOldPathProjectInACLFile($old_name, $new_name) {
         $file = DOKU_CONF."acl.auth.php";
-        $content = file_get_contents($file);
-        $content = preg_replace("/(:*)$old_name:/m", "$1$new_name:", $content);
-        if (file_put_contents($file, $content, LOCK_EX) === FALSE)
-            throw new Exception("renameProject: Error mentre canviava el nom del projecte a $file.");
+        if (($content = file_get_contents($file))) {
+            $content = preg_replace("/(:*)$old_name:/m", "$1$new_name:", $content);
+            if (file_put_contents($file, $content, LOCK_EX) === FALSE)
+                throw new Exception("renameProject: Error mentre canviava el nom del projecte a $file.");
+        }
     }
 
     /**
@@ -778,10 +779,13 @@ class ProjectMetaDataQuery extends DataQuery {
         $persons = explode(",", $persons);
         foreach ($persons as $user) {
             $file = "$path_dreceres$user/$nom_dreceres";
-            $content = file_get_contents($file);
-            $content = preg_replace("/:$old_name(\W)/m", ":$new_name$1", $content);
-            if (file_put_contents($file, $content, LOCK_EX) === FALSE)
-                throw new Exception("renameProject: Error mentre canviava el contingut de la drecera de $user.");
+            if (@file_exists($file)) {
+                if (($content = file_get_contents($file))) {
+                    $content = preg_replace("/:$old_name(\W)/m", ":$new_name$1", $content);
+                    if (file_put_contents($file, $content, LOCK_EX) === FALSE)
+                        throw new Exception("renameProject: Error mentre canviava el contingut de la drecera de $user.");
+                }
+            }
         }
     }
 
@@ -794,13 +798,15 @@ class ProjectMetaDataQuery extends DataQuery {
      * @throws Exception
      */
     public function renameRenderGeneratedFiles($base_dir, $old_name, $new_name, $listfiles=".zip") {
-        $basePath = WikiGlobalConfig::getConf('mediadir');
-        $newPath = "$basePath/$base_dir/$new_name";
+        $ret = TRUE;
+        $newPath = WikiGlobalConfig::getConf('mediadir')."/$base_dir/$new_name";
         if (is_array($listfiles)) {
             foreach ($listfiles as $file) {
-                $newfile = preg_replace("/_$old_name/", "_{$new_name}", $file);
-                if (!($ret = rename("$newPath/$file", "$newPath/$newfile"))) {
-                    break;
+                if (@file_exists($file)) {
+                    $newfile = preg_replace("/_$old_name/", "_{$new_name}", $file);
+                    if (!($ret = rename("$newPath/$file", "$newPath/$newfile"))) {
+                        break;
+                    }
                 }
             }
         }else {
@@ -817,7 +823,7 @@ class ProjectMetaDataQuery extends DataQuery {
             }
         }
         if (!$ret) {
-            throw new Exception("renameProject: Error mentre canviava el nom de l'arxiu $newPath/$file.");
+            throw new Exception("renameProject: Error mentre canviava el nom de l'arxiu $file.");
         }
     }
 
@@ -829,10 +835,9 @@ class ProjectMetaDataQuery extends DataQuery {
      * @throws Exception
      */
     public function changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name) {
-        $basePath = WikiGlobalConfig::getConf('datadir');
-        $newPath = "$basePath/$base_dir/$new_name";
+        $newPath = WikiGlobalConfig::getConf('datadir')."/$base_dir/$new_name";
         if ($this->_changeNameProjectInFiles($newPath, $old_name, $new_name) === FALSE)
-            throw new Exception("renameProject: Error mentre canviava el contingut d'algun axiu a $newPath.");
+            throw new Exception("renameProject: Error mentre canviava el contingut d'algun axiu a $base_dir.");
     }
 
     /**
@@ -850,9 +855,10 @@ class ProjectMetaDataQuery extends DataQuery {
                 if (is_dir("$path/$file")) {
                     $ret = $this->_changeNameProjectInFiles("$path/$file", $old_name, $new_name);
                 }elseif (strpos($file, ".txt")>0) {
-                    $content = file_get_contents("$path/$file");
-                    $content = preg_replace("/:\b{$old_name}([^a-z_A-Z])/", ":$new_name$1", $content);
-                    $ret = $ret && file_put_contents("$path/$file", $content, LOCK_EX);
+                    if (($content = file_get_contents("$path/$file"))) {
+                        $content = preg_replace("/:\b{$old_name}([^a-z_A-Z])/", ":$new_name$1", $content);
+                        $ret = $ret && file_put_contents("$path/$file", $content, LOCK_EX);
+                    }
                 }
             }
         }
