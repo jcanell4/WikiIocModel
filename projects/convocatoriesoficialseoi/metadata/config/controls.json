@@ -8,6 +8,7 @@
     "scripts": {
       "updateHandler": {
         "conditions": {
+          "page.isRevision": "false",
           "page.action": "'never'"
         }
       }
@@ -42,6 +43,7 @@
         ],
         "conditions": {
           "page.updateButton": "1",
+          "page.isRevision": "false",
           "page.generated": "true"
         }
       }
@@ -80,6 +82,7 @@
         ],
         "conditions": {
           "page.action": "'project_view'",
+          "page.isRevision": "false",
           "page.generated": "true",
           "page.updateButton": "0"
         }
