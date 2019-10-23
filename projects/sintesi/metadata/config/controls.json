@@ -1,0 +1,132 @@
+{
+    "generateProject": {
+        "parms": { 
+            "DOM": {
+               "id": "generateProjectButton"
+            }
+        },
+
+        "scripts": {
+            "updateHandler": {
+                "conditions": {
+                    "page.isRevision": "false",
+                    "page.action": "'never'"
+                }
+            }
+        }
+
+    },
+    "sintesiConsolidateData": {
+        "class": "WikiIocButton",
+        "parms": { 
+            "DOM": {
+               "id": "sintesiConsolidateData",
+               "title": "Consolidació de les dades",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocConsolidateIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+        "scripts": {
+            "getFunctions": {
+                "path": "ConsolidateDataGetFunction.js"
+            },
+            "updateHandler": {
+                "rols": [
+                   "responsable",
+                   "autor"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'",
+                    "page.isRevision": "false",
+                    "page.generated":"false"
+                }
+            }
+        }
+
+    },
+    "sintesiUpdateDataProject": {
+        "class": "WikiIocButton",
+        "parms": { 
+            "DOM": {
+               "id": "sintesiUpdateDataProject",
+               "title": "Actualització del Projecte",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocUpdateDataIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectUpdate'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+
+        "scripts": {
+            "getFunctions": {
+                "path": "UpdateGetFunction.js"
+            },
+            "updateHandler": {
+                "rols": [
+                   "responsable",
+                   "autor"
+                ],
+                "conditions": {
+                    "page.updateButton": "1",
+                    "page.isRevision": "false",
+                    "page.generated":"true"
+                }
+            }
+        }
+
+    },
+    "sintesiHtmlExport": {
+        "class": "WikiIocButton",
+        "parms": {
+            "DOM": {
+               "id": "sintesiHtmlExport",
+               "title": "sintesiHtmlExport",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportHtmlIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectExport'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+       
+        "scripts": {
+            "getFunctions": {
+                "path": "HtmlExportGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "isprojectmanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'",
+                    "page.generated":"true",
+                    "page.isRevision": "false",
+                    "page.updateButton": "0"
+                }
+            }
+        }
+    }
+}

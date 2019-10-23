@@ -1,0 +1,15 @@
+\raggedbottom
+%************* TOC
+\newgeometry{top=20mm, bottom=20mm, right=20mm, left=20mm}
+\headingnonumbers
+\tableofcontents
+\restoregeometry
+\newpage
+\fancypagestyle{plain}{
+	\fancyhf{}
+	\fancyhead[LO]{}
+	\fancyhead[CO]{\fontfamily{phv}\selectfont\tiny\thepage}
+	\fancyhead[RO]{\headerspacingline\fontfamily{phv}\selectfont\tiny @DOC_TITOL@}
+	\fancyfoot[RO]{}
+}
+\chead{\fontfamily{phv}\selectfont{\tiny{\thepage}}}
