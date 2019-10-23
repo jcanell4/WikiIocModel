@@ -89,8 +89,7 @@ class ptfctProjectModel extends AbstractProjectModel {
         $this->projectMetaDataQuery->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
 
         $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
-        $this->id = $new_ns;
-        $this->setProjectId($this->id);
+        $this->setProjectId($new_ns);
     }
 
     /**

@@ -105,6 +105,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     public function setProjectId($projectId) {
+        $this->id = $projectId;
         $this->projectMetaDataQuery->setProjectId($projectId);
     }
 
@@ -438,8 +439,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $this->projectMetaDataQuery->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
 
         $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
-        $this->id = $new_ns;
-        $this->setProjectId($this->id);
+        $this->setProjectId($new_ns);
     }
 
     /**
