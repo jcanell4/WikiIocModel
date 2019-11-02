@@ -37,6 +37,59 @@
                 "typeDef": "pla"
             },
             "typesDefinition": {
+                "entradaCalendari": {
+                    "type": "object",
+                    "keys": {
+                        "unitat": {
+                            "type": "number",
+                            "default": "{#_COPY(1)_#}",
+                            "mandatory": true
+                        },
+                        "període": {
+                            "type": "number",
+                            "default": "{#_INC(1)_#}",
+                            "mandatory": true
+                        },
+                        "tipus període": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "descripció període": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true
+                        },
+                        "inici": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "final": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        }
+                    }
+                },
+                "defCalendari": {
+                    "type": "objectArray",
+                    "typeDef":"entradaCalendari"
+                },                                                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 "entradaResultatsAprenentage": {
                     "type":"object",
                     "keys": {
@@ -294,47 +347,6 @@
                     "type": "objectArray",
                     "typeDef":"entradaDatesJT"
                 },                                                
-                "entradaCalendari": {
-                    "type": "object",
-                    "keys": {
-                        "unitat": {
-                            "type": "number",
-                            "default": "{#_COPY(1)_#}",
-                            "mandatory": true
-                        },
-                        "període": {
-                            "type": "number",
-                            "default": "{#_INC(1)_#}",
-                            "mandatory": true
-                        },
-                        "tipus període": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "descripció període": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "hores": {
-                            "type": "number",
-                            "mandatory": true
-                        },
-                        "inici": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "final": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        }
-                    }
-                },
-                "defCalendari": {
-                    "type": "objectArray",
-                    "typeDef":"entradaCalendari"
-                },                                                
                 "entradaEinesAprenentatge": {
                     "type": "object",
                     "keys": {
@@ -478,24 +490,13 @@
                 "pla": {
                     "type": "object",
                     "keys": {
-                        "semestre": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default":1
-                        },
-                        "tipusBlocModul":{
+                        "tipusCicle":{
                             "type":"string",
                             "mandatory": true,
-                            "default":"mòdul"
+                            "default":"LOE"
                         },
-                        "cicle": {
+                        "descripcio": {
                             "type": "string",
-                            "default": "Indiqueu el cicle",
-                            "mandatory": true
-                        },
-                        "modul": {
-                            "type": "string",
-                            "default": "MXX Indiqueu el nom mòdul",
                             "mandatory": true
                         },
                         "durada": {
@@ -506,14 +507,18 @@
                                 "readonly" : true
                             }
                         },
+                        "calendari": {
+                            "type": "defCalendari",
+                            "mandatory": true
+                        },
                         "duradaCicle": {
                             "type": "string",
                             "default": 2000,
                             "mandatory": true   
                         },
-                        "professors": {
+                        "cicle": {
                             "type": "string",
-                            "default": "Indiqueu el nom dels professors",
+                            "default": "Indiqueu el cicle",
                             "mandatory": true
                         },
                         "coordinador": {
@@ -521,9 +526,9 @@
                             "default": "Indiqueu el nom del coordinador",
                             "mandatory": true
                         },
-                        "urlMaterialDidactic": {
+                        "professors": {
                             "type": "string",
-                            "default": "http://ioc.xtec.cat/materials/FP/Materials/.../web/html/",
+                            "default": "Indiqueu el nom dels professors",
                             "mandatory": true
                         },
                         "dedicacio": {
@@ -531,11 +536,43 @@
                             "default": 0,
                             "mandatory": true
                         },
-                        "requerimentsMatricula": {
+                        "tecnicEn": {
                             "type": "string",
+                            "default": "Tècnic en ",
                             "mandatory": true
                         },
-                        "descripcio": {
+                        "compatencia": {
+                            "type": "string",
+                            "default": "Descriu la competència ...",
+                            "mandatory": true
+                        },
+                        "tipusTreball": {
+                            "type": "string",
+                            "default": "projecte",
+                            "mandatory": true
+                        },
+
+
+                        
+
+                            
+                                                        
+                        "semestre": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default":1
+                        },
+                        "modul": {
+                            "type": "string",
+                            "default": "MXX Indiqueu el nom mòdul",
+                            "mandatory": true
+                        },
+                        "urlMaterialDidactic": {
+                            "type": "string",
+                            "default": "http://ioc.xtec.cat/materials/FP/Materials/.../web/html/",
+                            "mandatory": true
+                        },
+                        "requerimentsMatricula": {
                             "type": "string",
                             "mandatory": true
                         },
@@ -571,10 +608,6 @@
                             "default":"no",
                             "mandatory": true
                         },                                                
-                        "calendari": {
-                            "type": "defCalendari",
-                            "mandatory": true
-                        },
                         "datesAC": {
                             "type": "defDatesAC",
                             "mandatory": true
