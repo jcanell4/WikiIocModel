@@ -101,7 +101,7 @@
                         "id": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "RA{#_INC(1)_#}"
+                            "default": "{#_IFFIELDISEQUAL(\"tipusCicle\", \"LOE\", \"RA\", \"OT\")_#}{#_INC(1)_#}"
                         },
                         "descripció": {
                             "type": "string",
@@ -182,10 +182,10 @@
                     "type": "objectArray",
                     "typeDef":"entradaDadesAC"
                 },                                                                
-                "entradaCompetencies": {
+                "entradaCapacitats": {
                     "type": "object",
                     "keys": {
-                        "competència": {
+                        "capacitat": {
                             "type": "string",
                             "default": "",
                             "mandatory": true
@@ -202,9 +202,9 @@
                         }
                     }
                 },
-                "defCompetencies": {
+                "defCapacitats": {
                     "type": "objectArray",
-                    "typeDef":"entradaCompetencies"
+                    "typeDef":"entradaCapacitats"
                 },                                                
                 "entradaExtres": {
                     "type":"object",
@@ -279,7 +279,7 @@
                             "default": 0,
                             "mandatory": true
                         },
-                        "compatencia": {
+                        "competencia": {
                             "type": "string",
                             "default": "Descriu la competència ...",
                             "mandatory": true
@@ -311,8 +311,8 @@
                             "type": "defDadesAC",
                             "mandatory": true
                         },
-                        "dadesCompetencies": {
-                            "type": "defCompetencies",
+                        "dadesCapacitats": {
+                            "type": "defCapacitats",
                             "mandatory": true
                         },
                         "dadesExtres": {

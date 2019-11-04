@@ -54,7 +54,7 @@ class sintesiProjectModel extends AbstractProjectModel {
     public function createTemplateDocument($data){
         $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
         // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
-        $file = $this->getTemplateContentDocumentId($data) . ".txt";
+        $file = $this->getTemplateContentDocumentId("continguts") . ".txt";
 
         $plantilla = file_get_contents($pdir.$file);
         $name = substr($file, 0, -4);
