@@ -50,21 +50,19 @@
         }        
     },
     "fields": {
-      "tipusBlocModul":{
+      "tipusCicle":{
         "type":"select",
         "n_columns": 5,
-        "label": "Bloc o mòdul (tipusBlocModul)",
+        "label": "LOGSE o LOE (tipusCicle)",
         "group": "main",
         "props": {
           "required": true,
-          "title" : "indiqueu si es tracta d'un bloc o d'un mòdul."
+          "title" : "indiqueu si es tracta d'un cicle LOE o LOGSE."
         },
         "config":{
             "options":[
-                {"value":"mòdul"},
-                {"value":"1r. bloc"}, 
-                {"value":"2n. bloc"},
-                {"value":"3r. bloc"}
+                {"value":"LOE"},
+                {"value":"LOGSE"}
             ]
         }
       },
@@ -87,12 +85,12 @@
         }
       },
       "modul": {
-        "label" : "Nom del mòdul o bloc (modul)",
+        "label" : "Nom del mòdul o crèdit (modul)",
         "n_columns": 8,
         "group": "main",
         "props": {
           "required": true,
-          "title": "indiqueu el nom del mòdul i el bloc si cal. Per exemple: M02 Seguretat i alta disponibilitat"
+          "title": "indiqueu el nom del crèdit o mòdul. Per exemple: M11 Síntesi"
         }
       },
       "durada": {
@@ -123,15 +121,6 @@
           "title": "Indiqueu el/s nom/s del/s professor/s"
         }
       },
-      "urlMaterialDidactic": {
-        "label" : "Adreça del material didàctic (urlMaterialDidactic)",
-        "n_columns": 8,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "indiqueu la URL per accedir als materials didàctics"
-        }
-      },
       "dedicacio": {
         "type":"number",
         "label" : "Dedicació setmanal (dedicacio)",
@@ -140,15 +129,6 @@
         "props": {
           "required": true,
           "title": "indiqueu el número d'hores de dedicació setmanal"
-        }
-      },
-      "requerimentsMatricula": {
-        "n_columns": 12,
-        "label" : "Requisits (requerimentsMatricula)",
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "indiqueu quins són els requeriments de la matrícula d'aquest mòdul o bloc"
         }
       },
       "descripcio": {
@@ -165,178 +145,6 @@
             "mode": "xhtml"
         },
         "group": "main"
-      },
-      "itinerarisRecomanats": {
-        "label": "Taula dels itineraris recomanats (itinerarisRecomanats)",
-        "n_columns": 12,
-        "type": "editableObject",
-        "group": "main",
-        "n_rows": 5,
-        "props": {
-          "data-editable-element": "table",
-          "title": "Itineraris recomanats"
-        },
-        "config": {
-          "actions": {
-            "add_default_row": "Afegir fila",
-            "remove_rows": "Eliminar files ",
-            "add_default_row_before": "Afegir fila abans de la fila seleccionada"
-          },
-          "fields": {
-            "mòdul": {
-              "type": "string"
-            },
-            "itinerariRecomanatS1": {
-              "type": "number"
-            },
-            "itinerariRecomanatS2": {
-              "type": "number"
-            }
-          }
-        }
-      },
-      "semestre": {
-        "label": "Semestre (semestre)",
-        "n_columns": 6, 
-        "group": "actualitzables",
-        "props":{
-                "min":1,
-                "max":2,
-                "title" : "Indiqueu quin és el semestre actual"
-        }    
-      },
-      "taulaDadesUF": {
-        "label": "Unitats Formatives (taulaDadesUF)",
-        "n_columns": 12,
-        "type": "editableObject",
-        "group": "main",
-        "n_rows": 5,
-        "props": {
-          "data-editable-element": "table",
-          "title": "Detalleu les dades de cada UF. No cal que ompliu les hores de les UFs detallades en aquest bloc o mòdul, es calculen automàticament."      
-        },
-        "config": {
-          "actions": {
-            "set_multiple_default_rows": "Definir el nombre d'Unitats Formatives del mòdul",
-            "remove_rows": "Eliminar les Unitats Formatives seleccionades",
-            "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
-          },
-          "fields": {
-            "bloc":{
-              "type": "number"         
-            },        
-            "unitat formativa": {
-              "type": "number"
-            },
-            "nom": {
-              "type": "string"
-            },
-            "hores": {
-              "type": "number"
-            },
-            "ponderació": {
-              "type": "number"
-            }
-          },
-          "layout": [
-            {
-              "defaultCell": {
-                "width" : "15%"
-              },
-              "cells": [
-                {
-                  "name": "unitat formativa",
-                  "field": "unitat formativa",
-                  "editable": true
-                },
-
-                {
-                  "name": "nom",
-                  "field": "nom",
-                   "width":"40%",
-                  "editable": true
-                },
-
-                {
-                  "name": "hores",
-                  "field": "hores",
-                  "editable": true
-                },
-
-                {
-                  "name": "ponderació",
-                  "field": "ponderació",
-                  "editable": true
-                }
-              ]
-            }
-          ]
-        }
-      },
-      "taulaDadesUnitats": {
-        "label": "Unitats (taulaDadesUnitats)",
-        "n_columns": 12,
-        "type": "editableObject",
-        "group": "main",
-        "n_rows": 8,
-        "props": {
-          "data-editable-element": "table",
-          "title": "Detalleu les dades referents a cada unitat. No heu d'omplir les hores de les unitat, es calculen automàticament"      
-        },
-        "config": {
-          "actions": {
-            "set_multiple_default_rows": "Definir el nombre d'unitats",
-            "remove_rows": "Eliminar les unitats seleccionades",
-            "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
-          },
-          "fields": {
-            "unitat formativa": {
-              "type": "number"
-            },
-            "unitat": {
-              "type": "number"
-            },
-            "nom": {
-              "type": "string"
-            },
-            "hores": {
-              "type": "number"
-            }
-          },
-          "layout": [
-            {
-              "defaultCell": {
-                "width" : "15%"
-              },
-              "cells": [
-                {
-                  "name": "unitat formativa",
-                  "field": "unitat formativa",
-                  "editable": true
-                },
-
-                {
-                  "name": "unitat",
-                  "field": "unitat",
-                  "editable": true
-                },
-
-                {
-                  "name": "nom",
-                  "field": "nom",
-                   "width":"55%",
-                  "editable": true
-                },
-
-                {
-                  "name": "hores",
-                  "field": "hores",
-                  "editable": false
-                }
-              ]
-            }
-          ]
-        }
       },
       "einesAprenentatge": {
         "label": "Taula de les eines d'estudi (einesAprenentatge)",
@@ -372,20 +180,20 @@
         }
       },
       "resultatsAprenentatge": {
-        "label": "Taula dels resultats d'aprenentatge (resultatsAprenentatge)",
+        "label": "Taula dels resultats d'aprenentatge/obtectius terminals (resultatsAprenentatge)",
         "n_columns": 12,
         "type": "editableObject",
         "group": "main",
         "n_rows": 8,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu els resultats d'aprenentatge."
+          "title": "Detalleu els resultats d'aprenentatge/objectius terminals."
         },
         "config": {
           "actions": {
-            "add_default_row": "Afegir RA",
-            "remove_rows": "Eliminar els RA seleccionats",
-            "add_default_row_before": "Afegir RA abans de la fila seleccionada"
+            "add_default_row": "Afegir RA/OT",
+            "remove_rows": "Eliminar els RA/OT seleccionats",
+            "add_default_row_before": "Afegir RA/OT abans de la fila seleccionada"
           },
           "fields": {
             "id": {
@@ -396,56 +204,6 @@
             }
           }
         }
-      },
-      "activitatsAprenentatge": {
-        "label": "Taula de les activitats d'aprenentatge (activitatsAprenentatge)",
-        "n_columns": 12,
-        "type": "editableObject",
-        "group": "main",
-        "n_rows": 8,
-        "props": {
-          "data-editable-element": "table",
-          "title": "Detalleu les activitats d'aprenentatge."
-        },
-        "config": {
-          "actions": {
-            "add_default_row": "Afegir activitat",
-            "remove_rows": "Eliminar les activitats seleccionades",
-            "add_default_row_before": "Afegir activitat abans de la fila seleccionada"
-          },
-          "fields": {
-            "unitat": {
-                "type": "number"
-            },
-            "període": {
-                "type": "number"
-            },
-            "eina": {
-              "type": "select",
-              "options": ["lectura", "autoavaluació", "fòrum", "qüestionari", "exercicis", "altres"]                        
-            },
-            "descripció": {
-                "type": "string"
-            }
-          }
-        }
-      },
-      "avaluacioInicial":{
-        "label": "Avaluació inicial (avaluacioInicial)",
-        "type":"select",
-        "n_columns":6,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada UF"      
-        },
-         "config":{
-            "options":[
-                {"description":"No es fa","value":"NO"}, 
-                {"description":"A l'inci","value":"INICI"}, 
-                {"description":"Per cada UF","value":"PER_UF"}
-            ]
-         }            
       },
       "calendari": {
         "label": "Temporització (calendari)",
@@ -464,14 +222,8 @@
             "add_default_row_before": "Afegir període abans de la fila seleccionada"
           },
           "fields": {
-            "unitat": {
-              "type": "number"
-            },
             "període": {
                 "type": "number"
-            },
-            "tipus període": {
-                "type": "string"
             },
             "descripció període": {
                 "type": "string"
@@ -493,20 +245,9 @@
               },
               "cells": [
                 {
-                  "name": "unitat",
-                  "field": "unitat",
-                  "width": "8%",               
-                  "editable": true
-                },
-                {
                   "name": "període",
                   "field": "període",
                   "width": "8%",               
-                  "editable": true
-                },
-                {
-                  "name": "tipus període",
-                  "field": "tipus període",
                   "editable": true
                 },
                 {
@@ -536,7 +277,7 @@
           ]
         }
       },
-      "datesAC": {
+      "dadesAC": {
         "label":"Dates importants. EAC (datesAC)",
         "n_columns": 12,
         "type": "editableObject",
@@ -556,7 +297,10 @@
             "id": {
               "type": "string"
             },
-            "unitat": {
+            "parts": {
+              "type": "string"
+            },
+            "període": {
               "type": "number"
             },
             "enunciat": {
@@ -565,14 +309,11 @@
             "lliurament": {
               "type": "date"
             },
-            "hiHaSolucio": {
-              "type": "boolean"
-            },
-            "solució": {
-              "type": "date"
-            },
             "qualificació": {
               "type": "date"
+            },
+            "ponderació": {
+              "type": "number"
             }
           },
           "layout": [
@@ -588,8 +329,13 @@
                   "width": "5%"
                 },
                 {
-                  "name": "unitat",
-                  "field": "unitat",
+                  "name": "parts",
+                  "field": "parts",
+                  "width": "5%"
+                },
+                {
+                  "name": "període",
+                  "field": "període",
                   "width": "5%"
                 },
                 {
@@ -601,359 +347,16 @@
                   "field": "lliurament"
                 },
                 {
-                  "name": "solució?",
-                  "field": "hiHaSolucio"
-                },
-                {
-                  "name": "solució",
-                  "field": "solució"
-                },
-                {
                   "name": "qualificació",
                   "field": "qualificació"
+                },
+                {
+                  "name": "ponderació",
+                  "field": "ponderació"
                 }
               ]
             }
           ]          
-        }
-      },
-      "datesEAF": {
-        "label":"Dates importants. EAF (datesEAF)",
-        "n_columns": 12,
-        "type": "editableObject",
-        "group": "actualitzables",
-        "n_rows": 4,
-        "props": {
-          "data-editable-element": "table",
-          "title": "Detalleu les dates importants dels EAF"
-        },
-        "config": {
-          "actions": {
-            "add_default_row": "Afegir un nou EAF",
-            "remove_rows": "Eliminar els EAF seleccionats",
-            "add_default_row_before": "Afegir EAF abans de la fila seleccionada"
-          },
-          "fields": {
-            "id": {
-              "type": "string"
-            },
-            "unitat": {
-              "type": "number"
-            },
-            "enunciat": {
-              "type": "date"
-            },
-            "lliurament": {
-              "type": "date"
-            },
-            "hiHaSolucio": {
-              "type": "boolean"
-            },
-            "solució": {
-              "type": "date"
-            },
-            "qualificació": {
-              "type": "date"
-            },
-            "hiHaEnunciatRecuperacio": {
-              "type": "boolean"
-            },
-            "enunciat recuperació": {
-                "type": "date"
-            },
-            "lliurament recuperació": {
-                "type": "date"
-            },
-            "solució recuperació": {
-                "type": "date"
-            },
-            "qualificació recuperació": {
-                "type": "date"
-            }
-          },
-          "layout": [
-            {
-              "defaultCell": {
-                "width" : "11%",
-                "editable": true
-              },
-              "cells": [
-                {
-                  "name": "id",
-                  "field": "id",
-                  "width": "5%"
-                },
-                {
-                  "name": "unitat",
-                  "field": "unitat",
-                  "width": "5%"
-                },
-                {
-                  "name": "enunciat",
-                  "field": "enunciat"
-                },
-                {
-                  "name": "lliurament",
-                  "field": "lliurament"
-                },
-                {
-                  "name": "solució?",
-                  "field": "hiHaSolucio"
-                },
-                {
-                  "name": "solució",
-                  "field": "solució"
-                },
-                {
-                  "name": "qualificació",
-                  "field": "qualificació"
-                },
-                {
-                  "name": "enunciat recuperació?",
-                  "field": "hiHaEnunciatRecuperacio"
-                },
-                {
-                  "name": "enunciat recuperació",
-                  "field": "enunciat recuperació"
-                },
-                {
-                  "name": "lliurament recuperació",
-                  "field": "lliurament recuperació"
-                },
-                {
-                  "name": "solució recuperació",
-                  "field": "solució recuperació"
-                },
-                {
-                  "name": "qualificació recuperació",
-                  "field": "qualificació recuperació"
-                }
-              ]
-            }
-          ]    
-        }
-      },
-      "datesJT": {
-        "label":"Dates importants. JT (datesJT)",
-        "n_columns": 12,
-        "type": "editableObject",
-        "group": "actualitzables",
-        "n_rows": 4,
-        "props": {
-          "data-editable-element": "table",
-          "title": "Detalleu les dates importants de  les JT"
-        },
-        "config": {
-          "actions": {
-            "add_default_row": "Afegir una nova JT",
-            "remove_rows": "Eliminar les JT seleccionades",
-            "add_default_row_before": "Afegir JT abans de la fila seleccionada"
-          },
-          "fields": {
-            "id": {
-              "type": "string"
-            },
-            "inscripció": {
-                "type": "date"
-            },
-            "llista provisional": {
-                "type": "date"
-            },
-            "llista definitiva": {
-                "type": "date"
-            },
-            "data JT": {
-                "type": "date"
-            },
-            "qualificació": {
-                "type": "date"
-            },
-            "hiHaRecuperacio": {
-                "type": "boolean"
-            },
-            "inscripció recuperació": {
-                "type": "date"
-            },
-            "llista provisional recuperació": {
-                "type": "date"
-            },
-            "llista definitiva recuperació": {
-                "type": "date"
-            },
-            "data JT recuperació": {
-                "type": "date"
-            },
-            "qualificació recuperació": {
-                "type": "date"
-            }
-          },
-          "layout": [
-            {
-              "defaultCell": {
-                "width" : "9%",
-                "editable": true
-              },
-              "cells": [
-                {
-                  "name": "id",
-                  "field": "id",
-                  "width": "5%"
-                },
-                {
-                  "name": "inscripció",
-                  "field": "inscripció"
-                },
-                {
-                  "name": "llista provisional",
-                  "field": "llista provisional"
-                },
-                {
-                  "name": "llista definitiva",
-                  "field": "llista definitiva"
-                },
-                {
-                  "name": "data JT",
-                  "field": "data JT"
-                },
-                {
-                  "name": "qualificació",
-                  "field": "qualificació"
-                },
-                {
-                  "name": "recuperació?",
-                  "field": "hiHaRecuperacio"
-                },
-                {
-                  "name": "inscripció recuperació",
-                  "field": "inscripció recuperació"
-                },
-                {
-                  "name": "llista provisional recuperació",
-                  "field": "llista provisional recuperació"
-                },
-                {
-                  "name": "llista definitiva recuperació",
-                  "field": "llista definitiva recuperació"
-                },
-                {
-                  "name": "data JT recuperació",
-                  "field": "data JT recuperació"
-                },
-                {
-                  "name": "qualificació recuperació",
-                  "field": "qualificació recuperació"
-                }
-              ]
-            }
-          ]  
-        }
-      },
-      "dataPaf1": {
-        "label": "Data de la PAF 1 (dataPaf1)",
-        "n_columns":6,
-        "group": "actualitzables",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la data en que es realitzarà la PAF 1"
-        }
-      },
-      "dataQualificacioPaf1": {
-        "label": "Data de la qualificació de la PAF 1 (dataQualificacioPaf1)",
-        "n_columns":6,
-        "group": "actualitzables",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la data en que es realitzarà la PAF 1"
-        }
-      },
-      "dataPaf2": {
-        "label": "Data de la PAF 2 (dataPaf2)",
-        "n_columns":6,
-        "group": "actualitzables",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la data en que es realitzarà la PAF 2"
-        }
-      },
-      "dataQualificacioPaf2": {
-        "label": "Data de la qualificació de la PAF 2 (dataQualificacioPaf2)",
-        "n_columns":6,
-        "group": "actualitzables",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la data en que es realitzarà la PAF 2"
-        }
-      },
-      "duradaPAF": {
-        "label": "Durada de la PAF (duradaPAF)",
-        "n_columns":6,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la durada màxima de la PAF"
-        }
-      },
-      "notaMinimaPAF": {
-        "label": "Nota mínima a la PAF (notaMinimaPAF)",
-        "n_columns":4,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la nota mínima que cal treure a la PAF per tal de poder ponderar l'AC"
-        }
-      },
-      "notaMinimaEAF": {
-        "label": "Nota mínima a l'EAF (notaMinimaEAF)",
-        "n_columns":4,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la nota mínima que cal treure a l'EAF per tal de poder ponderar la qualificació final"
-        }
-      },
-      "notaMinimaJT": {
-        "label": "Nota mínima a la JT (notaMinimaJT)",
-        "n_columns":4,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "Indiqueu la nota mínima que cal treure a la JT per tal de poder ponderar la qualificació final"
-        }
-      },
-      "dadesQualificacioUFs": {
-        "label": "Qualificació de les UF (dadesQualificacioUFs)",
-        "n_columns": 12,
-        "group": "main",
-        "n_rows": 10,
-        "type": "editableObject",
-        "props": {
-          "data-editable-element": "table",
-          "title": "Detalleu com pondera L'AC i la PAF per cada UF"
-        },
-        "config": {
-          "actions": {
-            "add_default_row": "Afegir una nova dada",
-            "remove_rows": "Eliminar les dades seleccionades",
-            "add_default_row_before": "Afegir dada abans de la fila seleccionada"
-          },
-          "fields": {
-            "unitat formativa": {
-              "type": "number"
-            },
-            "tipus qualificació": {
-              "type": "select",
-              "options": ["AC", "EAF", "JT", "PAF"]                           
-            },
-            "descripció qualificació": {
-              "type": "string"
-            },
-            "abreviació qualificació": {
-              "type": "string"
-            },
-            "ponderació": {
-              "type": "number"
-            }
-          }
         }
       },
       "dadesExtres": {
@@ -1085,27 +488,6 @@
             "defaultEntryField": "name"
           }
         }
-      },
-      "notaMinimaAC": {
-        "type":"hidden"
-      },
-      "plantilla": {
-        "type" : "hidden"
-      },
-      "fitxercontinguts": {
-        "type" : "hidden"
-      },
-      "hiHaRecuperacioPerJT":{
-        "type" : "hidden"
-      },
-      "hiHaSolucioPerEAF":{
-        "type" : "hidden"
-      },
-      "hiHaSolucioPerAC":{
-        "type" : "hidden"
-      },
-      "hiHaEnunciatRecuperacioPerEAF":{
-        "type" : "hidden"
       }
     }
 }
