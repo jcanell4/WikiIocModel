@@ -95,12 +95,22 @@
       },
       "durada": {
         "label" : "Durada (durada)",
-        "n_columns": 4,
+        "n_columns": 3,
         "group": "main",
         "props": {
           "required": true,
           "readonly": true,
           "title": "Aquest és un camp calculat. No l'heu d'introduir"
+        }
+      },
+      "dedicacio": {
+        "type":"number",
+        "label" : "Dedicació setmanal (dedicacio)",
+        "n_columns": 3,
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "indiqueu el número d'hores de dedicació setmanal"
         }
       },
       "coordinador": {
@@ -121,16 +131,6 @@
           "title": "Indiqueu el/s nom/s del/s professor/s"
         }
       },
-      "dedicacio": {
-        "type":"number",
-        "label" : "Dedicació setmanal (dedicacio)",
-        "n_columns": 4,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "indiqueu el número d'hores de dedicació setmanal"
-        }
-      },
       "descripcio": {
         "n_columns": 12,
         "label" : "Aquest bloc/mòdul ... (descripcio)",
@@ -145,6 +145,47 @@
             "mode": "xhtml"
         },
         "group": "main"
+      },
+      "competencia": {
+        "n_columns": 12,
+        "label" : "Competència global (competencia)",
+        "type": "textarea",
+        "n_rows": 6,
+        "props": {
+          "data-editable-element": "textarea",
+          "title": "Copia a aquí la competència global del cicle formatiu"
+        },
+        "config": {
+            "renderable": true,
+            "mode": "xhtml"
+        },
+        "group": "main"
+      },
+      "resultatsAprenentatge": {
+        "label": "Taula dels resultats d'aprenentatge/obtectius terminals (resultatsAprenentatge)",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "main",
+        "n_rows": 8,
+        "props": {
+          "data-editable-element": "table",
+          "title": "Detalleu els resultats d'aprenentatge/objectius terminals."
+        },
+        "config": {
+          "actions": {
+            "add_default_row": "Afegir RA/OT",
+            "remove_rows": "Eliminar els RA/OT seleccionats",
+            "add_default_row_before": "Afegir RA/OT abans de la fila seleccionada"
+          },
+          "fields": {
+            "id": {
+              "type": "string"
+            },
+            "descripcio": {
+              "type": "string"
+            }
+          }
+        }
       },
       "einesAprenentatge": {
         "label": "Taula de les eines d'estudi (einesAprenentatge)",
@@ -175,32 +216,6 @@
             },
             "puntuable": {
               "type": "bool"
-            }
-          }
-        }
-      },
-      "resultatsAprenentatge": {
-        "label": "Taula dels resultats d'aprenentatge/obtectius terminals (resultatsAprenentatge)",
-        "n_columns": 12,
-        "type": "editableObject",
-        "group": "main",
-        "n_rows": 8,
-        "props": {
-          "data-editable-element": "table",
-          "title": "Detalleu els resultats d'aprenentatge/objectius terminals."
-        },
-        "config": {
-          "actions": {
-            "add_default_row": "Afegir RA/OT",
-            "remove_rows": "Eliminar els RA/OT seleccionats",
-            "add_default_row_before": "Afegir RA/OT abans de la fila seleccionada"
-          },
-          "fields": {
-            "id": {
-              "type": "string"
-            },
-            "descripcio": {
-              "type": "string"
             }
           }
         }
