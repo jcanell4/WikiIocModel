@@ -106,7 +106,7 @@
                         "descripció": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "dada"
+                            "default": "descripció de l'RA"
                         }
                     }                    
                 },
@@ -185,6 +185,11 @@
                 "entradaCapacitats": {
                     "type": "object",
                     "keys": {
+                        "id": {
+                            "type": "number",
+                            "default": "{#_INC(1)_#}",
+                            "mandatory": true
+                        },
                         "capacitat": {
                             "type": "string",
                             "default": "",
@@ -194,17 +199,31 @@
                             "type": "number",
                             "default": "0",
                             "mandatory": true
-                        },
-                        "evidències": {
-                            "type": "string",
-                            "default": "",
-                            "mandatory": true
                         }
                     }
                 },
                 "defCapacitats": {
                     "type": "objectArray",
                     "typeDef":"entradaCapacitats"
+                },                                                
+                "entradaEvidenciesCapacitats": {
+                    "type": "object",
+                    "keys": {
+                        "idCapacitat": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "descripció": {
+                            "type": "string",
+                            "default": "Descriu l'evidència",
+                            "mandatory": true
+                        }
+                    }
+                },
+                "defEvidenciesCapacitats": {
+                    "type": "objectArray",
+                    "typeDef":"entradaEvidenciesCapacitats"
                 },                                                
                 "entradaExtres": {
                     "type":"object",
@@ -286,7 +305,7 @@
                         },
                         "tipusTreball": {
                             "type": "string",
-                            "default": "projecte",
+                            "default": "PROJ",
                             "mandatory": true
                         },
                         "einesAprenentatge": {
@@ -313,6 +332,10 @@
                         },
                         "dadesCapacitats": {
                             "type": "defCapacitats",
+                            "mandatory": true
+                        },
+                        "dadesEvidenciesCapacitats": {
+                            "type": "defEvidenciesCapacitats",
                             "mandatory": true
                         },
                         "dadesExtres": {
