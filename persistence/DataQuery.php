@@ -248,7 +248,7 @@ abstract class DataQuery {
     private function fillProjectNode($nodeData, $level, $itemsProject, $onlyDirs, $subSetList=NULL) {
         //Logger::debug("fillProjectNode->nodeData: ".json_encode($nodeData), 0, __LINE__, "DataQuery", -1, TRUE);
         //Logger::debug("fillProjectNode->itmsProject: ".json_encode($itemsProject), 0, __LINE__, "DataQuery", -1, TRUE);
-        $c = (count($subSetList) > 0) ? count($subSetList) : 0; //countSubSets
+        $c = ($subSetList && count($subSetList) > 0) ? count($subSetList) : 0; //countSubSets
         $children = ($c > 0) ? $subSetList : array();
 
         foreach (array_keys($nodeData) as $item) {

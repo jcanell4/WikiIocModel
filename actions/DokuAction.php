@@ -24,7 +24,7 @@ abstract class DokuAction extends AbstractWikiAction{
      * @param Array $paramsArr
      */
     public function get($paramsArr=array()){
-        $this->response = "";
+        $this->response = array();
 
         $this->start($paramsArr);
         $this->run();

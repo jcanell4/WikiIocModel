@@ -186,7 +186,7 @@ class AdminTaskAction extends DokuAction{
                 }
                 break;
             default:
-                $response['info'] = self::generateInfo("info", "Emplenar a DokumodelAdapter->getAdminTask:" + $_REQUEST['page'], $id );
+                $response['info'] = self::generateInfo("info", "Emplenar a DokumodelAdapter->getAdminTask:" . $_REQUEST['page'], $id );
                 break;
         }
 
