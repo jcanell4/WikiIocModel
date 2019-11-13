@@ -293,6 +293,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * Elimina el enlace a la página del proyecto en el archivo dreceres de old_person
      * @param string $old : username al que se pretende eliminar el enlace
      * @param string $sNew : lista de las nuevas personas del proyecto (autores, responsables, ...)
+     * @param bool   $drecera : indica si $old tiene permiso para crear dreceres
      * @param string $link_page : id de la página del proyecto
      * @param string $userpage_ns : wiki ruta base de las páginas de usuario
      * @param string $shortcut_name : nom de l'arxiu de dreceres
@@ -301,8 +302,8 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         //lista de nuevas Persons
         $nPersons = array_unique(preg_split("/[\s,]+/", $sNew, NULL, PREG_SPLIT_NO_EMPTY));
 
-        if (!in_array($old, $nPersons) || !$drecera) {
-            //Elimina el enlace a la página del proyecto en el archivo dreceres de old_person
+        //Si old_peson tiene permiso para crear dreceres y no es new_person, elimina el enlace a la página del proyecto en su archivo dreceres
+        if ($drecera && !in_array($old, $nPersons)) {
             $old_usershortcut = "$userpage_ns$old:$shortcut_name";
             $this->removeProjectPageFromUserShortcut($old_usershortcut, $link_page);
         }
