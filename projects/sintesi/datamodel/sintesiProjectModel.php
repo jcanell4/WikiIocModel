@@ -72,81 +72,15 @@ class sintesiProjectModel extends AbstractProjectModel {
 
         $values = json_decode($data, true);
 
-        $taulaDadesUF = (is_array($values["taulaDadesUF"])) ? $values["taulaDadesUF"] : json_decode($values["taulaDadesUF"], true);
-        $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
 
-        if ($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
-            $hores = array();
+        if ($taulaCalendari!=NULL){
+            $hores = 0;
             for ($i=0; $i<count($taulaCalendari); $i++){
-                $idU = intval($taulaCalendari[$i]["unitat"]);
-                if (!isset($hores[$idU])){
-                    $hores[$idU]=0;
-                }
-                $hores[$idU]+= $taulaCalendari[$i]["hores"];
+                $hores+= $taulaCalendari[$i]["hores"];
             }
 
-            $horesUF = array();
-            $horesUF[0] = 0;
-            for ($i=0; $i<count($taulaDadesUnitats); $i++){
-                $idU = intval($taulaDadesUnitats[$i]["unitat"]);
-                if (isset($hores[$idU])){
-                    $taulaDadesUnitats[$i]["hores"]=$hores[$idU];
-                }
-                $idUf = intval($taulaDadesUnitats[$i]["unitat formativa"]);
-                if (!isset($horesUF[$idUf])){
-                    $horesUF[$idUf]=0;
-                }
-                $horesUF[0]+= $taulaDadesUnitats[$i]["hores"];
-                $horesUF[$idUf]+= $taulaDadesUnitats[$i]["hores"];
-            }
-
-            if ($taulaDadesUF!=NULL){
-                for ($i=0; $i<count($taulaDadesUF); $i++){
-                    $idUf = intval($taulaDadesUF[$i]["unitat formativa"]);
-                    if (isset($horesUF[$idUf])){
-                        $taulaDadesUF[$i]["hores"]=$horesUF[$idUf];
-                    }
-                }
-            }
-
-            $values["durada"] = $horesUF[0];
-            $values["taulaDadesUnitats"] = $taulaDadesUnitats;
-            $values["taulaDadesUF"] = $taulaDadesUF;
-        }
-
-        $taulaJT = (is_array($values["datesJT"])) ? $values["datesJT"] : json_decode($values["datesJT"], true);
-
-        if ($taulaJT!=NULL){
-            $hiHaRecuperacio = FALSE;
-            for ($i=0; !$hiHaRecuperacio && $i<count($taulaJT); $i++){
-                $hiHaRecuperacio = $taulaJT[$i]["hiHaRecuperacio"];
-            }
-            $values["hiHaRecuperacioPerJT"] = $hiHaRecuperacio;
-        }
-
-        $taulaEAF = (is_array($values["datesEAF"])) ? $values["datesEAF"] : json_decode($values["datesEAF"], true);
-
-        if ($taulaEAF!=NULL){
-            $hiHaSolucio = FALSE;
-            $hiHaEnunciatRecuperacio = FALSE;
-            for ($i=0; $i<count($taulaEAF); $i++){
-                $hiHaSolucio |= $taulaEAF[$i]["hiHaSolucio"];
-                $hiHaEnunciatRecuperacio |= $taulaEAF[$i]["hiHaEnunciatRecuperacio"];
-            }
-
-            $values["hiHaSolucioPerEAF"] = $hiHaSolucio === 0 ? FALSE : TRUE ;
-            $values["hiHaEnunciatRecuperacioPerEAF"] = $hiHaEnunciatRecuperacio === 0 ? FALSE : TRUE ;
-        }
-
-        $taulaAC = (is_array($values["datesAC"])) ? $values["datesAC"] : json_decode($values["datesAC"], true);
-
-        if ($taulaAC!=NULL){
-            $hiHaSolucio = FALSE;
-            for ($i=0; !$hiHaSolucio && $i<count($taulaAC); $i++){
-                $hiHaSolucio = $taulaAC[$i]["hiHaSolucio"];
-            }
-            $values["hiHaSolucioPerAC"] = $hiHaSolucio;
+            $values["durada"] = $hores;
         }
 
         $data = json_encode($values);

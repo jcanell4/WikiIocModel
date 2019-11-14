@@ -221,9 +221,15 @@ Les competències de treball en equip avaluades es concreten en:
 ::table:TC
   :title:Taula de competències avaluades
   :type:pt_taula
+  :widths:1,1,5
 [^  CAPACITATS  ^  Punts  ^  EVIDÈNCIES  ^
 <WIOCCL:FOREACH var="item" array="{##dadesCapacitats##}">
-|   {##item[capacitat]##}    |  {##item[punts]##}  |       {##item[evidències]##}       |
+|   {##item[capacitat]##}    |  {##item[punts]##}  |       
+<WIOCCL:FOREACH var="itemEvidencies" array="{##dadesEvidenciesCapacitats##}" filter="{##item[id]##}={##itemEvidencies[idCapacitat]##}">
+
+  * {##itemEvidencies[descripció]##}
+</WIOCCL:FOREACH>
+       |
 </WIOCCL:FOREACH>]
 :::
 </WIOCCL:SET>
@@ -236,5 +242,3 @@ Les competències de treball en equip avaluades es concreten en:
 </WIOCCL:CONDSET>
 </WIOCCL:CONDSET>
 ###:
-
-

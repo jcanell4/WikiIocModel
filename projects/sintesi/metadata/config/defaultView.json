@@ -181,7 +181,7 @@
             "id": {
               "type": "string"
             },
-            "descripcio": {
+            "descripció": {
               "type": "string"
             }
           }
@@ -529,9 +529,9 @@
         },
         "config": {
           "actions": {
-            "add_default_row": "Afegir un nou lliurament",
-            "remove_rows": "Eliminar els lliuraments seleccionats",
-            "add_default_row_before": "Afegir lliurament abans de la fila seleccionada"
+            "add_default_row": "Afegir una nova evidència",
+            "remove_rows": "Eliminar les evidències seleccionades",
+            "add_default_row_before": "Afegir evidències abans de la fila seleccionada"
           },
           "fields": {
             "idCapacitat": {
@@ -554,7 +554,7 @@
                   "width": "5%"
                 },
                 {
-                  "name": "descripció",
+                  "name": "descripció de l'evidència",
                   "field": "descripció"
                 }
               ]
