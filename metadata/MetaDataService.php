@@ -242,7 +242,7 @@ class MetaDataService {
             $MetaDataElementsKey = $this->getMetaDataDaoConfig()->getMetaDataElementsKey($MetaDataRequest[self::K_IDRESOURCE], $MetaDataRequest[self::K_PERSISTENCE]);
             $this->setMetaDataElements($MetaDataElementsKey);
             $mDEKey = $this->getMetaDataElements();
-            if ($mDEKey != null && is_array($mDEKey) && count($mDEKey) > 0) {
+            if (is_object($mDEKey)) {
                 $arrayElements = get_object_vars($this->getMetaDataElements());
                 asort($arrayElements);
                 $this->setMetaDataElements($arrayElements);

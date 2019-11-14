@@ -123,7 +123,7 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
         return $new_message;
     }
 
-    protected function addNotificationsMetaToResponse(&$response, $ns, $rev, $list) {
+    protected function addNotificationsMetaToResponse(&$response, $ns=NULL, $rev=NULL, $list=NULL) {
         if (!isset($response['meta'])) {
             $response['meta'] = array();
         }
