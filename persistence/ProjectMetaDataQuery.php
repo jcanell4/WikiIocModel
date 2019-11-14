@@ -330,7 +330,7 @@ class ProjectMetaDataQuery extends DataQuery {
         }
 
         $configArray = json_decode($configMain, true);
-        $toReturn = "";
+        $toReturn = array();
 
         for ($i = 0; $i < sizeof($configArray[$configSet]); $i++) {
             $toReturn[] = array_keys($configArray[$configSet][$i])[0];
@@ -491,7 +491,7 @@ class ProjectMetaDataQuery extends DataQuery {
         $contentFile = io_readFile($filename, false);
 
         if ($contentFile != false) {
-            $contentMainArray = json_decode($contentFile, true);
+            $contentMainArray = $this->controlMalFormedJson($contentFile, "array");
             foreach ($contentMainArray as $clave => $valor) {
                 if ($clave == $subSet) {
                     if (is_array($valor)) {

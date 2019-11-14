@@ -211,7 +211,7 @@
         }
       },
       "tipusTreball": {
-        "type":"datalist",
+        "type":"select",
         "label" : "Tipus de treball que es fa (tipusTreball)",
         "n_columns": 6,
         "group": "dadesBasiques",
@@ -221,9 +221,9 @@
         },
         "config":{
             "options":[
-                {"value":"treball"},
-                {"value":"memòria"},
-                {"value":"projecte"}
+                {"description":"projecte", "value":"PROJ"},
+                {"description":"treball", "value":"TREB"},
+                {"description":"memòria", "value":"MEM"}
             ]
         }
       },
@@ -238,9 +238,9 @@
         },
         "config":{
             "options":[
-                {"value":"treball"},
-                {"value":"memòria"},
-                {"value":"projecte"}
+                {"value":"període"},
+                {"value":"fase"},
+                {"value":"etapa"}
             ]
         }
       },
@@ -414,8 +414,7 @@
           "layout": [
             {
               "defaultCell": {
-                "width" : "21%",
-                "editable": true
+                "width" : "10%"
               },
               "cells": [
                 {
@@ -466,19 +465,69 @@
         },
         "config": {
           "actions": {
-            "add_default_row": "Afegir un nou lliurament",
-            "remove_rows": "Eliminar els lliuraments seleccionats",
-            "add_default_row_before": "Afegir lliurament abans de la fila seleccionada"
+            "add_default_row": "Afegir una nova capacitat",
+            "remove_rows": "Eliminar les capacitats seleccionades",
+            "add_default_row_before": "Afegir capacitat abans de la fila seleccionada"
           },
           "fields": {
+            "id": {
+              "type": "string"
+            },
             "capacitat": {
               "type": "string"
             },
             "punts": {
               "type": "string"
+            }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "80%",
+                "editable": true
+              },
+              "cells": [
+                {
+                  "name": "id",
+                  "field": "id",
+                  "width": "5%"
+                },
+                {
+                  "name": "capacitats",
+                  "field": "capacitat"
+                },
+                {
+                  "name": "punts",
+                  "field": "punts",
+                  "width": "5%"
+                }
+              ]
+            }
+          ]          
+        }
+      },
+      "dadesEvidenciesCapacitats": {
+        "label":"Evidencies de les capacitats a avaluar en relació al treball en equip  (dadesEvidenciesCapacitats)",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "avaluacio",
+        "n_rows": 8,
+        "props": {
+          "data-editable-element": "table",
+          "title": "Detalleu les capacitats i les seves evidències "
+        },
+        "config": {
+          "actions": {
+            "add_default_row": "Afegir una nova evidència",
+            "remove_rows": "Eliminar les evidències seleccionades",
+            "add_default_row_before": "Afegir evidències abans de la fila seleccionada"
+          },
+          "fields": {
+            "idCapacitat": {
+              "type": "string"
             },
-            "evidències": {
-              "type": "number"
+            "descripció": {
+              "type": "string"
             }
           },
           "layout": [
@@ -489,17 +538,13 @@
               },
               "cells": [
                 {
-                  "name": "capacitats",
-                  "field": "capacitat"
-                },
-                {
-                  "name": "punts",
-                  "field": "punts",
+                  "name": "id capacitat",
+                  "field": "idCapacitat",
                   "width": "5%"
                 },
                 {
-                  "name": "evidències",
-                  "field": "evidències"
+                  "name": "descripció de l'evidència",
+                  "field": "descripció"
                 }
               ]
             }

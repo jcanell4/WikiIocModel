@@ -3,16 +3,12 @@
 <WIOCCL:SET var="tipusModCred" type="map" value="{##tipusCicle##}" map="{''LOE'':''mòdul'',''LOGSE'':''crèdit''}">
 <WIOCCL:SET var="tipusOtRa" type="map" value="{##tipusCicle##}" map="{''LOE'':''resultats d'aprenentatge (RA)'',''LOGSE'':''objectius terminals (OT)''}">
 <WIOCCL:SET var="delTipusTreball" type="map" value="{##tipusTreball##}" map="{''PROJ'':''del projecte'',''TREB'':''del treball'',''MEM'':''de la memòria''}">
-<WIOCCL:SET var="elTipusrTeball" type="map" value="{##tipusTreball##}" map="{''PROJ'':''el projecte'',''TREB'':''el treball'',''MEM'':''la memòria''}">
+<WIOCCL:SET var="elTipusTreball" type="map" value="{##tipusTreball##}" map="{''PROJ'':''el projecte'',''TREB'':''el treball'',''MEM'':''la memòria''}">
 <WIOCCL:SET var="literalTipusTreball" type="map" value="{##tipusTreball##}" map="{''PROJ'':''projecte'',''TREB'':''treball'',''MEM'':''memòria''}">
-<WIOCCL:IF condition="{#_STR_CONTAINS('/', ''{##nomPeriode##}'')_#}">
-<WIOCCL:SET var="nomPeriodeSing" type="literal" value="{#_ARRAY_GET_VALUE(0,{#_EXPLODE(''/'',''{##nomPeriode##}'')_#})_#}">
-<WIOCCL:SET var="nomPeriodePlur" type="literal" value="{#_ARRAY_GET_VALUE(1,{#_EXPLODE(''/'',''{##nomPeriode##}'')_#})_#}">
-</WIOCCL:IF>
-<WIOCCL:IF condition="!{#_STR_CONTAINS('/', ''{##nomPeriode##}'')_#}">
-<WIOCCL:SET var="nomPeriodeSing" type="literal" value="{##nomPeriode##}">
-<WIOCCL:SET var="nomPeriodePlur" type="literal" value="{##nomPeriode##}">
-</WIOCCL:IF>
+<WIOCCL:CONDSET condition="{#_STR_CONTAINS(''/'', ''{##nomPeriode##}'')_#}" var="nomPeriodeSing" type="literal" value="{#_ARRAY_GET_VALUE(0,{#_EXPLODE(''/'',''{##nomPeriode##}'')_#})_#}">
+<WIOCCL:CONDSET condition="{#_STR_CONTAINS(''/'', ''{##nomPeriode##}'')_#}" var="nomPeriodePlur" type="literal" value="{#_ARRAY_GET_VALUE(1,{#_EXPLODE(''/'',''{##nomPeriode##}'')_#})_#}">
+<WIOCCL:CONDSET condition="!{#_STR_CONTAINS(''/'', ''{##nomPeriode##}'')_#}" var="nomPeriodeSing" type="literal" value="{##nomPeriode##}">
+<WIOCCL:CONDSET condition="!{#_STR_CONTAINS(''/'', ''{##nomPeriode##}'')_#}" var="nomPeriodePlur" type="literal" value="{##nomPeriode##}s">
 ###:
 
 :###
@@ -20,7 +16,7 @@
 ###:
 
 :###
-Aquest {##tipusModCred##}  {##modul##} tracta de {##descripcio##}. Ha de permetre culminar la integració dels continguts impartits al llarg del cicle, globalitzant i interrelacionant,i si escau completant, aquells continguts susceptibles de mostrar, al final del cicle formatiu, el grau d'assoliment dels objectius generals del cicle. 
+Aquest {##tipusModCred##}  {##modul##} {##descripcio##}. Ha de permetre culminar la integració dels continguts impartits al llarg del cicle, globalitzant i interrelacionant,i si escau completant, aquells continguts susceptibles de mostrar, al final del cicle formatiu, el grau d'assoliment dels objectius generals del cicle. 
 
 Per tant es demana un treball eminentment pràctic **treballant en petit grup de forma col·laborativa o cooperativa**. 
 
@@ -74,11 +70,11 @@ PLAGIAR és robar els mots (orals o escrits), les idees, les teories, els fets (
 :::
 ###:
 
-:###<WIOCCL:IF condin¡tion="{##tipusCicle##}==''LOE''">
+:###<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">
 ===== Desplegament dels RA =====
 </WIOCCL:IF>###:
 :###
-<WIOCCL:IF condin¡tion="{##tipusCicle##}==''LOGSE''">
+<WIOCCL:IF condition="{##tipusCicle##}==''LOGSE''">
 ===== Desplegament dels OT =====
 </WIOCCL:IF>###:
 
@@ -86,7 +82,7 @@ PLAGIAR és robar els mots (orals o escrits), les idees, les teories, els fets (
 En aquest {##tipusModCred##} es descriuen els següents {##tipusOtRa##}:
 
 <WIOCCL:FOREACH var="item" array="{##resultatsAprenentatge##}">
-  ***{##item[id]##}:** {##item[descripcio]##}
+  ***{##item[id]##}:** {##item[descripció]##}
 </WIOCCL:FOREACH>
 ###:
 
@@ -101,16 +97,15 @@ S'estructura en **{##nomPeriodePlur##}** que es descriuen a la taula ::table:TCA
 
 És imprescindible tenir una visió global del que comporta el treball a fer i amb quines fases es distribueix. Per tant, s’ha de realitzar primer una lectura general del material i posteriorment  una lectura més exhaustiva del contingut de cada unitat.
 
-
+::table:TCAL
   :title:Calendari
   :type:pt_taula
 <WIOCCL:FOREACH var="item" array="{##calendari##}">
 ^  {##nomPeriodeSing##}  ^  Descripció  ^  Durada  ^ Temporització  ^
-|   {##item[període]##}   |  {##item[descripció període]##}  |  {##item[hores]##} h  |  {#_DATE({##item[inici]##})_#}-{#_DATE({##item[final]##})_#}  |
-|      :::      |   Tasques   |||
-|      :::      |   Tasca   |   descrició   ||
-<WIOCCL:FOREACH var="itemTasques" array="{##tasquesPerPeriode##} filter="{##itemTasques[període]##}=={##item[període]##}">
-|      :::      |   {##itemTasques[id]##}   |   {##itemTasques[descrició]##}   ||
+|   {##item[període]##}   |  {##item[descripció període]##}  |  {##item[hores]##} h  |  {#_DATE("{##item[inici]##}","/")_#}-{#_DATE("{##item[final]##}", "/")_#}  |
+^      :::      ^   Tasques   ^^^
+<WIOCCL:FOREACH var="itemTasques" array="{##tasquesPerPeriode##}" filter="{##itemTasques[període]##}=={##item[període]##}">
+|      :::      |   {##itemTasques[id]##}.- {##itemTasques[descripció]##}   |||
 </WIOCCL:FOREACH>
 </WIOCCL:FOREACH>
 :::
@@ -134,8 +129,8 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
   :title:Taula de dades clau
   :type:pt_taula
 ^ {##nomPeriodeSing##} ^   EAC   ^   Publicació EAC/EAF   ^  Lliurament EAC/EAF  ^  Publicació qualificació  ^
-<WIOCCL:FOREACH var="item" array="{##datesAC##}">
-|   {##item[Període]##}    |  {##item[id]##} {##item[parts]##}  |       {#_DATA({##item[enunciat]##})_#}       |  {#_DATA({##item[lliurament]##})_#}  |         {#_DATA({##item[qualificació]##})_#}          |
+<WIOCCL:FOREACH var="item" array="{##dadesAC##}">
+|   {##item[període]##}    |  {##item[id]##} {##item[parts]##}  |       {#_DATE("{##item[enunciat]##}")_#}       |  {#_DATE("{##item[lliurament]##}")_#}  |         {#_DATE("{##item[qualificació]##}")_#}          |
 </WIOCCL:FOREACH>
 :::
 ###:
@@ -157,7 +152,7 @@ EXEMPLE]]. Podeu copiar i enganxar l'exemple per tal que us serveixi de base per
 ###:
 
 :###
-{#_UCFIRST({##elTipusTreball##})_#} que és fil conductor del {##tipusModCred##} es realitza en grup. Es duu a terme mitjançant la realització a distància d'Exercicis d'avaluació continuada (EAC/TEA) i Exercicis d'avaluació final (EAF) **obligatoris**. 
+{#_UCFIRST("{##elTipusTreball##}")_#} que és fil conductor del {##tipusModCred##} es realitza en grup. Es duu a terme mitjançant la realització a distància d'Exercicis d'avaluació continuada (EAC/TEA) i Exercicis d'avaluació final (EAF) **obligatoris**. 
 
 Aquest {##tipusModCred##} **no té Prova d'avaluació final (PAF) presencial**.
 
@@ -175,9 +170,11 @@ Seran causa d'exclusió i en conseqüència de suspens del {##tipusModCred##}, l
 Tot i que es tracta d'<WIOCCL:IF condition="{##tipusTreball##}!=''MEM''">un</WIOCCL:IF><WIOCCL:IF condition="{##tipusTreball##}==''MEM''">una</WIOCCL:IF> {##literalTipusTreball##} <WIOCCL:IF condition="{##tipusTreball##}==''MEM''">elaborada</WIOCCL:IF><WIOCCL:IF condition="{##tipusTreball##}!=''MEM''">elaborat</WIOCCL:IF> en equip, la qualificació obtinguda per cada membre del grup de treball pot ser diferent, en base a les evidències aportades.
 ###:
 
-[##TODO: Indiqueu altres consideracions que siguin necesàries en el vostre crèdit/mòdul. Per exempe: "En L'EAC3 és obligatori que cada alumne, per obtenir una qualificació positiva del crèdit/mòdul, lliuri i obtingui una qualificació positiva d'un vídeo demostrant l'assoliment dels procediments d'alguna de les tècniques proposades.
+[##TODO: Indiqueu altres consideracions que siguin necesàries en el vostre crèdit/mòdul. Per exempe:[[EXEMPLE
+En L'EAC3 és obligatori que cada alumne, per obtenir una qualificació positiva del crèdit/mòdul, lliuri i obtingui una qualificació positiva d'un vídeo demostrant l'assoliment dels procediments d'alguna de les tècniques proposades.
 
-Si un alumne en un període de 5 dies no fa aportacions actives i/o significatives al grup i/o no penja documents de producció pròpia, se'l podrà fer fora del grup encara que podrà quedar- se a l'aula. Això suposarà una qualificació negativa en el crèdit de síntesi/mòdul projecte,síntesi.".##]
+Si un alumne en un període de 5 dies no fa aportacions actives i/o significatives al grup i/o no penja documents de producció pròpia, se'l podrà fer fora del grup encara que podrà quedar- se a l'aula. Això suposarà una qualificació negativa en el crèdit de síntesi/mòdul projecte,síntesi.
+EXEMPLE]].##]
 
 :###
 **Lliuraments:**
@@ -224,9 +221,15 @@ Les competències de treball en equip avaluades es concreten en:
 ::table:TC
   :title:Taula de competències avaluades
   :type:pt_taula
-[^  COMPETÈNCIES  ^  Punts  ^  EVIDÈNCIES  ^
-<WIOCCL:FOREACH var="item" array="{##dadesCompetencies##}">
-|   {##item[competència]##}    |  {##item[punts]##}  |       ##item[evidències]##}       |
+  :widths:1,1,5
+[^  CAPACITATS  ^  Punts  ^  EVIDÈNCIES  ^
+<WIOCCL:FOREACH var="item" array="{##dadesCapacitats##}">
+|   {##item[capacitat]##}    |  {##item[punts]##}  |       
+<WIOCCL:FOREACH var="itemEvidencies" array="{##dadesEvidenciesCapacitats##}" filter="{##item[id]##}={##itemEvidencies[idCapacitat]##}">
+
+  * {##itemEvidencies[descripció]##}
+</WIOCCL:FOREACH>
+       |
 </WIOCCL:FOREACH>]
 :::
 </WIOCCL:SET>
@@ -234,14 +237,8 @@ Les competències de treball en equip avaluades es concreten en:
 </WIOCCL:SET>
 </WIOCCL:SET>
 </WIOCCL:SET>
-<WIOCCL:IF condition="{#_STR_CONTAINS('/', ''{##nomPeriode##}'')_#}">
-</WIOCCL:SET>
-</WIOCCL:SET>
-</WIOCCL:IF>
-<WIOCCL:IF condition="!{#_STR_CONTAINS('/', ''{##nomPeriode##}'')_#}">
-</WIOCCL:SET>
-</WIOCCL:SET>
-</WIOCCL:IF>
+</WIOCCL:CONDSET>
+</WIOCCL:CONDSET>
+</WIOCCL:CONDSET>
+</WIOCCL:CONDSET>
 ###:
-
-

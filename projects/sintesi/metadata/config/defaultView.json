@@ -86,7 +86,7 @@
       },
       "modul": {
         "label" : "Nom del mòdul o crèdit (modul)",
-        "n_columns": 8,
+        "n_columns": 6,
         "group": "main",
         "props": {
           "required": true,
@@ -95,12 +95,22 @@
       },
       "durada": {
         "label" : "Durada (durada)",
-        "n_columns": 4,
+        "n_columns": 3,
         "group": "main",
         "props": {
           "required": true,
           "readonly": true,
           "title": "Aquest és un camp calculat. No l'heu d'introduir"
+        }
+      },
+      "dedicacio": {
+        "type":"number",
+        "label" : "Dedicació setmanal (dedicacio)",
+        "n_columns": 3,
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "indiqueu el número d'hores de dedicació setmanal"
         }
       },
       "coordinador": {
@@ -121,16 +131,6 @@
           "title": "Indiqueu el/s nom/s del/s professor/s"
         }
       },
-      "dedicacio": {
-        "type":"number",
-        "label" : "Dedicació setmanal (dedicacio)",
-        "n_columns": 4,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "indiqueu el número d'hores de dedicació setmanal"
-        }
-      },
       "descripcio": {
         "n_columns": 12,
         "label" : "Aquest bloc/mòdul ... (descripcio)",
@@ -145,6 +145,47 @@
             "mode": "xhtml"
         },
         "group": "main"
+      },
+      "competencia": {
+        "n_columns": 12,
+        "label" : "Competència global (competencia)",
+        "type": "textarea",
+        "n_rows": 6,
+        "props": {
+          "data-editable-element": "textarea",
+          "title": "Copia a aquí la competència global del cicle formatiu"
+        },
+        "config": {
+            "renderable": true,
+            "mode": "xhtml"
+        },
+        "group": "main"
+      },
+      "resultatsAprenentatge": {
+        "label": "Taula dels resultats d'aprenentatge/obtectius terminals (resultatsAprenentatge)",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "main",
+        "n_rows": 8,
+        "props": {
+          "data-editable-element": "table",
+          "title": "Detalleu els resultats d'aprenentatge/objectius terminals."
+        },
+        "config": {
+          "actions": {
+            "add_default_row": "Afegir RA/OT",
+            "remove_rows": "Eliminar els RA/OT seleccionats",
+            "add_default_row_before": "Afegir RA/OT abans de la fila seleccionada"
+          },
+          "fields": {
+            "id": {
+              "type": "string"
+            },
+            "descripció": {
+              "type": "string"
+            }
+          }
+        }
       },
       "einesAprenentatge": {
         "label": "Taula de les eines d'estudi (einesAprenentatge)",
@@ -179,30 +220,38 @@
           }
         }
       },
-      "resultatsAprenentatge": {
-        "label": "Taula dels resultats d'aprenentatge/obtectius terminals (resultatsAprenentatge)",
-        "n_columns": 12,
-        "type": "editableObject",
+      "tipusTreball": {
+        "type":"select",
+        "label" : "Tipus de treball que es fa (tipusTreball)",
+        "n_columns": 6,
         "group": "main",
-        "n_rows": 8,
         "props": {
-          "data-editable-element": "table",
-          "title": "Detalleu els resultats d'aprenentatge/objectius terminals."
+          "required": true,
+          "title": "Indiqueu el nom del tipus de treball: treball, memòria, projecte, ... Podeu escriure-hi qualsevol text."
         },
-        "config": {
-          "actions": {
-            "add_default_row": "Afegir RA/OT",
-            "remove_rows": "Eliminar els RA/OT seleccionats",
-            "add_default_row_before": "Afegir RA/OT abans de la fila seleccionada"
-          },
-          "fields": {
-            "id": {
-              "type": "string"
-            },
-            "descripcio": {
-              "type": "string"
-            }
-          }
+        "config":{
+            "options":[
+                {"description":"projecte", "value":"PROJ"},
+                {"description":"treball", "value":"TREB"},
+                {"description":"memòria", "value":"MEM"}
+            ]
+        }
+      },
+      "nomPeriode": {
+        "type":"datalist",
+        "label" : "Com cal anomenar cada període? (nomPeriode)",
+        "n_columns": 6,
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "Indiqueu com cal anomenar cada període: període, fase, etapa, ... Podeu escriure-hi qualsevol text."
+        },
+        "config":{
+            "options":[
+                {"value":"període"},
+                {"value":"fase"},
+                {"value":"etapa"}
+            ]
         }
       },
       "calendari": {
@@ -270,6 +319,62 @@
                 {
                   "name": "final",
                   "field": "final",
+                  "editable": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "tasquesPerPeriode": {
+        "label": "Detall de tasques per període (tasquesPerPeriode)",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "main",
+        "n_rows": 9,
+        "props": {
+          "data-editable-element": "table",
+          "title": "Indiqueu les tasques en que cada període es divideix."
+        },
+        "config": {
+          "actions": {
+            "add_default_row": "Afegir tasca",
+            "remove_rows": "Eliminar tasques seleccionades",
+            "add_default_row_before": "Afegir tasca abans de la fila seleccionada"
+          },
+          "fields": {
+            "període": {
+                "type": "number"
+            },
+            "id": {
+              "type": "string"
+            },
+            "descripció": {
+                "type": "string"
+            }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "10%"
+              },
+              "cells": [
+                {
+                  "name": "període",
+                  "field": "període",
+                  "width": "10%",               
+                  "editable": true
+                },
+                {
+                  "name": "id",
+                  "field": "id",
+                  "width": "10%",               
+                  "editable": true
+                },
+                {
+                  "name": "descripció tasca",
+                  "field": "descripció",
+                  "width": "80%",               
                   "editable": true
                 }
               ]
@@ -353,6 +458,104 @@
                 {
                   "name": "ponderació",
                   "field": "ponderació"
+                }
+              ]
+            }
+          ]          
+        }
+      },
+      "dadesCapacitats": {
+        "label":"Evidencies de les capacitats a avaluar en relació al treball en equip  (dadesCapacitats)",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "main",
+        "n_rows": 4,
+        "props": {
+          "data-editable-element": "table",
+          "title": "Detalleu les capacitats i les seves evidències "
+        },
+        "config": {
+          "actions": {
+            "add_default_row": "Afegir una nova capacitat",
+            "remove_rows": "Eliminar les capacitats seleccionades",
+            "add_default_row_before": "Afegir capacitat abans de la fila seleccionada"
+          },
+          "fields": {
+            "id": {
+              "type": "string"
+            },
+            "capacitat": {
+              "type": "string"
+            },
+            "punts": {
+              "type": "string"
+            }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "80%",
+                "editable": true
+              },
+              "cells": [
+                {
+                  "name": "id",
+                  "field": "id",
+                  "width": "5%"
+                },
+                {
+                  "name": "capacitats",
+                  "field": "capacitat"
+                },
+                {
+                  "name": "punts",
+                  "field": "punts",
+                  "width": "5%"
+                }
+              ]
+            }
+          ]          
+        }
+      },
+      "dadesEvidenciesCapacitats": {
+        "label":"Evidencies de les capacitats a avaluar en relació al treball en equip  (dadesEvidenciesCapacitats)",
+        "n_columns": 12,
+        "type": "editableObject",
+        "group": "main",
+        "n_rows": 8,
+        "props": {
+          "data-editable-element": "table",
+          "title": "Detalleu les capacitats i les seves evidències "
+        },
+        "config": {
+          "actions": {
+            "add_default_row": "Afegir una nova evidència",
+            "remove_rows": "Eliminar les evidències seleccionades",
+            "add_default_row_before": "Afegir evidències abans de la fila seleccionada"
+          },
+          "fields": {
+            "idCapacitat": {
+              "type": "string"
+            },
+            "descripció": {
+              "type": "string"
+            }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "21%",
+                "editable": true
+              },
+              "cells": [
+                {
+                  "name": "id capacitat",
+                  "field": "idCapacitat",
+                  "width": "5%"
+                },
+                {
+                  "name": "descripció de l'evidència",
+                  "field": "descripció"
                 }
               ]
             }
