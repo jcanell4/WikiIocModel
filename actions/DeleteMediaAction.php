@@ -25,12 +25,12 @@ class DeleteMediaAction extends MediaAction{
                 "id" => "media",
                 "title" => "media",
                 "ns" => $this->params[MediaKeys::KEY_NS],
-                "imageTitle" => noNS($this->params[MediaKeys::KEY_IMAGE_ID]),
-                "image" => $this->params[MediaKeys::KEY_IMAGE_ID],
+                "imageTitle" => noNS($this->params[MediaKeys::KEY_IMAGE]),
+                "image" => $this->params[MediaKeys::KEY_IMAGE],
                 "fromId" => $this->params[MediaKeys::KEY_FROM_ID],
                 "modifyImageLabel" => $lang['img_manager'],
                 "closeDialogLabel" => $lang['img_backto'],
-                "info" => sprintf($lang['deletesucc'], noNS($this->params[MediaKeys::KEY_IMAGE_ID])),
+                "info" => sprintf($lang['deletesucc'], noNS($this->params[MediaKeys::KEY_IMAGE])),
                 "result" => $this->actionReturn
             );
             $JSINFO = array('id' => "media", 'namespace' => $this->params[MediaKeys::KEY_NS]);
@@ -38,14 +38,14 @@ class DeleteMediaAction extends MediaAction{
         elseif ($this->actionReturn & DOKU_MEDIA_INUSE) {
             if(!$conf['refshow']) {
                 $ret =array(
-                    "info" => sprintf($lang['mediainuse'], noNS($this->params[MediaKeys::KEY_IMAGE_ID])),
+                    "info" => sprintf($lang['mediainuse'], noNS($this->params[MediaKeys::KEY_IMAGE])),
                     "result" => $this->actionReturn
                 );
             }
         }
         else {
             $ret =array(
-                "info" => sprintf($lang['deletefail'], noNS($this->params[MediaKeys::KEY_IMAGE_ID])),
+                "info" => sprintf($lang['deletefail'], noNS($this->params[MediaKeys::KEY_IMAGE])),
                 "result" => $this->actionReturn
             );
         }
@@ -53,17 +53,17 @@ class DeleteMediaAction extends MediaAction{
     }
 
     protected function runProcess() {
-        if (auth_quickaclcheck( getNS( $this->params[MediaKeys::KEY_IMAGE_ID] ) . ":*" )< AUTH_DELETE) {
+        if (auth_quickaclcheck( getNS( $this->params[MediaKeys::KEY_IMAGE] ) . ":*" )< AUTH_DELETE) {
             throw new HttpErrorCodeException("Access denied", 401);
         }
         if(!$this->dokuModel->exist()){
-            throw new HttpErrorCodeException("Resource " . $this->params[MediaKeys::KEY_IMAGE_ID] . " not found.", 404);
+            throw new HttpErrorCodeException("Resource " . $this->params[MediaKeys::KEY_IMAGE] . " not found.", 404);
         }
         $this->actionReturn = $this->dokuModel->delete();
     }
 
     protected function initModel() {
-        $this->dokuModel->init($this->params[MediaKeys::KEY_IMAGE_ID], $this->params[MediaKeys::KEY_REV], $this->params[MediaKeys::KEY_META], $this->params[PageKeys::KEY_ID], $this->params[MediaKeys::KEY_NS_TARGET]);
+        $this->dokuModel->init($this->params[MediaKeys::KEY_IMAGE], $this->params[MediaKeys::KEY_REV], $this->params[MediaKeys::KEY_META], $this->params[PageKeys::KEY_ID], $this->params[MediaKeys::KEY_NS_TARGET]);
     }
 
     function mediaManagerFileList(){

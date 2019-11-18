@@ -35,7 +35,7 @@ class UploadMediaAction extends MediaAction {
             $this->warnings[] = sprintf(WikiIocLangManager::getLang('mediaextchange'),$fext,$iext);
         }
 
-        if(!$this->params[MediaKeys::KEY_IMAGE_ID]){
+        if(!$this->params[MediaKeys::KEY_IMAGE]){
             if(!$this->params[MediaKeys::KEY_NS_TARGET]){
                 $this->params[MediaKeys::KEY_NS_TARGET] = $this->params[MediaKeys::KEY_NS];
             }
@@ -49,8 +49,8 @@ class UploadMediaAction extends MediaAction {
                 "id" => "media",
                 "title" => "media",
                 "ns" => $this->params[MediaKeys::KEY_NS],
-                "imageTitle" => noNS($this->params[MediaKeys::KEY_IMAGE_ID]),
-                "image" => $this->params[MediaKeys::KEY_IMAGE_ID],
+                "imageTitle" => noNS($this->params[MediaKeys::KEY_IMAGE]),
+                "image" => $this->params[MediaKeys::KEY_IMAGE],
                 "fromId" => $this->params[MediaKeys::KEY_FROM_ID],
                 "modifyImageLabel" => $lang['img_manager'],
                 "closeDialogLabel" => $lang['img_backto'],
@@ -94,7 +94,7 @@ class UploadMediaAction extends MediaAction {
         if($this->params[MediaKeys::KEY_NS_TARGET]){
             $this->dokuModel->initWhitTarget($this->params[MediaKeys::KEY_NS_TARGET], $this->params[MediaKeys::KEY_MEDIA_NAME], $this->params[MediaKeys::KEY_REV], $this->params[MediaKeys::KEY_META]);
         }else{
-            $this->dokuModel->initWithId($this->params[MediaKeys::KEY_IMAGE_ID], $this->params[MediaKeys::KEY_REV], $this->params[MediaKeys::KEY_META], $this->params[MediaKeys::KEY_FROM_ID]);
+            $this->dokuModel->initWithId($this->params[MediaKeys::KEY_IMAGE], $this->params[MediaKeys::KEY_REV], $this->params[MediaKeys::KEY_META], $this->params[MediaKeys::KEY_FROM_ID]);
         }
     }
 

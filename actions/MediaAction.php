@@ -46,23 +46,23 @@ abstract class MediaAction extends DokuAction
             $REV = $this->params[MediaKeys::KEY_REV];
         }
 
-        if($this->params[MediaKeys::KEY_IMAGE_ID]){
-            $IMG = $this->params[MediaKeys::KEY_IMG_ID] = $this->params[MediaKeys::KEY_IMAGE_ID];
-            $SRC = mediaFN($this->params[MediaKeys::KEY_IMAGE_ID]);
-        }else if($this->params[MediaKeys::KEY_IMG_ID]){
-            $IMG = $this->params[MediaKeys::KEY_IMAGE_ID] = $this->params[MediaKeys::KEY_IMG_ID];
-            $SRC = mediaFN($this->params[MediaKeys::KEY_IMAGE_ID]);
+        if($this->params[MediaKeys::KEY_IMAGE]){
+            $IMG = $this->params[MediaKeys::KEY_IMG] = $this->params[MediaKeys::KEY_IMAGE];
+            $SRC = mediaFN($this->params[MediaKeys::KEY_IMAGE]);
+        }else if($this->params[MediaKeys::KEY_IMG]){
+            $IMG = $this->params[MediaKeys::KEY_IMAGE] = $this->params[MediaKeys::KEY_IMG];
+            $SRC = mediaFN($this->params[MediaKeys::KEY_IMAGE]);
         }
 
         if($this->params[MediaKeys::KEY_DELETE]){
             $DEL = $this->params[MediaKeys::KEY_DELETE];
-            if(!$this->params[MediaKeys::KEY_IMAGE_ID]){
-                $IMG = $this->params[MediaKeys::KEY_IMG_ID] = $this->params[MediaKeys::KEY_IMAGE_ID]=$this->params[MediaKeys::KEY_DELETE];
+            if(!$this->params[MediaKeys::KEY_IMAGE]){
+                $IMG = $this->params[MediaKeys::KEY_IMG] = $this->params[MediaKeys::KEY_IMAGE] = $this->params[MediaKeys::KEY_DELETE];
             }
         }else if($this->params[MediaKeys::KEY_MEDIA_DO]
                 && $this->params[MediaKeys::KEY_MEDIA_DO]=  MediaKeys::KEY_DELETE
-                && $this->params[MediaKeys::KEY_IMAGE_ID]){
-            $DEL = $this->params[MediaKeys::KEY_IMAGE_ID];
+                && $this->params[MediaKeys::KEY_IMAGE]){
+            $DEL = $this->params[MediaKeys::KEY_IMAGE];
         }
 
         if($this->params[MediaKeys::KEY_MEDIA_ID] && !$this->params[MediaKeys::KEY_MEDIA_NAME]){
@@ -84,7 +84,7 @@ abstract class MediaAction extends DokuAction
         $content = "";
         $fullscreen = TRUE;
         $rev = '';
-        $image = cleanID($this->params[MediaKeys::KEY_IMAGE_ID]);
+        $image = cleanID($this->params[MediaKeys::KEY_IMAGE]);
 
         if (isset($this->params[MediaKeys::KEY_REV])) {
             $rev = $this->params[MediaKeys::KEY_REV];
