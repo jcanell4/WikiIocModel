@@ -18,15 +18,15 @@ class UploadMediaAction extends MediaAction {
         parent::startProcess();
 
         // get file and id
-        $this->fileName   = $this->params[MediaKeys::KEY_MEDIA_ID];
-        if(!$this->fileName){
+        $this->fileName = $this->params[MediaKeys::KEY_MEDIA_ID];
+        if (!$this->fileName){
             $this->params[MediaKeys::KEY_MEDIA_NAME] = $this->params[MediaKeys::KEY_MEDIA_ID] = $this->fileName
                                                      = $this->params[MediaKeys::KEY_UPLOAD][MediaKeys::KEY_NAME];
         }
 
         list($fext,$fmime,$dl) = mimetype($this->params[MediaKeys::KEY_UPLOAD][MediaKeys::KEY_NAME]);
         list($iext,$imime,$dl) = mimetype($this->fileName);
-        if($fext && !$iext){
+        if ($fext && !$iext){
             // no extension specified in id - read original one
             $this->fileName .= '.'.$fext;
             $imime = $fmime;
@@ -35,8 +35,8 @@ class UploadMediaAction extends MediaAction {
             $this->warnings[] = sprintf(WikiIocLangManager::getLang('mediaextchange'),$fext,$iext);
         }
 
-        if(!$this->params[MediaKeys::KEY_IMAGE]){
-            if(!$this->params[MediaKeys::KEY_NS_TARGET]){
+        if (!$this->params[MediaKeys::KEY_IMAGE]){
+            if (!$this->params[MediaKeys::KEY_NS_TARGET]){
                 $this->params[MediaKeys::KEY_NS_TARGET] = $this->params[MediaKeys::KEY_NS];
             }
             $this->initModel();
@@ -66,7 +66,6 @@ class UploadMediaAction extends MediaAction {
                 case 1:
                 case 2:
                     throw new MaxSizeExcededToUploadMediaException();
-                    break;
                 default:
                     throw new FailToUploadMediaException($this->params[MediaKeys::KEY_UPLOAD][MediaKeys::KEY_ERROR]);
             }
@@ -91,9 +90,9 @@ class UploadMediaAction extends MediaAction {
     }
 
     protected function initModel() {
-        if($this->params[MediaKeys::KEY_NS_TARGET]){
-            $this->dokuModel->initWhitTarget($this->params[MediaKeys::KEY_NS_TARGET], $this->params[MediaKeys::KEY_MEDIA_NAME], $this->params[MediaKeys::KEY_REV], $this->params[MediaKeys::KEY_META]);
-        }else{
+        if ($this->params[MediaKeys::KEY_NS_TARGET]){
+            $this->dokuModel->initWhitTarget($this->params[MediaKeys::KEY_NS_TARGET], $this->fileName, $this->params[MediaKeys::KEY_REV], $this->params[MediaKeys::KEY_META]);
+        }else {
             $this->dokuModel->initWithId($this->params[MediaKeys::KEY_IMAGE], $this->params[MediaKeys::KEY_REV], $this->params[MediaKeys::KEY_META], $this->params[MediaKeys::KEY_FROM_ID]);
         }
     }
