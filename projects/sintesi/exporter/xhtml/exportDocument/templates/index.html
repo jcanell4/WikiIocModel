@@ -304,8 +304,8 @@
                         }
 <WIOCCL:FOREACH var="item" array="{##dadesAC##}">
                        ,{
-                          title :"{##item[ponderació]##}",
-                          name :"{#_STR_SUBTR(''{##nomPeriode##}'',0,3)_#}.{##item[id]##}",
+                          title :"{#_UCFIRST(''{##nomPeriode##}'')_#} {##item[període]##}",
+                          name :"{##item[id]##}",
                           percent: {##item[ponderació]##}
                         }
 </WIOCCL:FOREACH>
