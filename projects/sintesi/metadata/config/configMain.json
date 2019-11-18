@@ -11,7 +11,7 @@
     "metaDataProjectConfig": [
         {
             "main": {
-                "projectTypeConfigFile": "admconfig:sintesi"
+                "projectTypeConfigFile": "admconfig:ptfploe"
             }
         }        
     ],
@@ -359,6 +359,11 @@
                             "type": "string",
                             "struc_chars": "40",
                             "mandatory": true
+                        },
+                        "semestre": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default":1
                         }
                     }
                 }

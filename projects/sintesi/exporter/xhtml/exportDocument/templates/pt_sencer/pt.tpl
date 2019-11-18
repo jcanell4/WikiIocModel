@@ -1,3 +1,4 @@
+<WIOCCL:SET var="tipusModCred" type="map" value="{##tipusCicle##}" map="{''LOE'':''mòdul'',''LOGSE'':''crèdit''}">
 <!doctype html>
 <html lang="en">
   <head>
@@ -19,7 +20,7 @@
 <div id="mySidenav" class="sidenav open">
   <div class="closebtn" onclick="closeNav()">&times;</div>
   <div class="content_index fade_in" id="myContentIndex">
-      @@TOC(continguts)@@
+      @@TOC(fitxercontinguts)@@
   </div>
 </div>
   
@@ -30,8 +31,8 @@
   <header class="main_header">
     <div class="container">
       <h1>Pla de treball</h1>
-      <h2><WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##cicle##}'')_#}&&!{#_STR_CONTAINS(''Indiqueu'', ''{##cicle##}'')_#}">{##cicle##}</WIOCCL:IF></h2>
-      <h2>{##modul##}<WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">-{##tipusBlocModul##}</WIOCCL:IF></h2>
+      <h2>{##cicle##}</h2>
+      <h2>{##modul##}</h2>
     </div>
   </header>
 
@@ -39,7 +40,7 @@
   
   <section id="intro">
     <div class="container">
-      <p><span>Durada del <WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">m&ograve;dul</WIOCCL:IF></span>: {##durada##} hores</p>
+      <p><span>Durada del {##tipusModCred##}</span>: {##durada##} hores</p>
       <p><span>Professors</span>: {##professors##}</p>
       <p><span>Coordinador/a</span>: {##coordinador##}</p>
       <p><span><WIOCCL:IF condition="{##semestre##}==1">Setembre</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">Febrer</WIOCCL:IF> {#_YEAR()_#}</span></p>
@@ -56,3 +57,4 @@
   <script src="js/main.js"></script>
   </body>
 </html>
+</WIOCCL:SET>

@@ -652,6 +652,9 @@
             "defaultEntryField": "name"
           }
         }
-      }
+      },
+      "semestre":{
+        "type" : "hidden"
+      }      
     }
 }

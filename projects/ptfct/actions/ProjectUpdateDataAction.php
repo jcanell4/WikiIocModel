@@ -5,7 +5,7 @@ include_once DOKU_PLUGIN."wikiiocmodel/projects/ptfct/actions/ViewProjectMetaDat
 
 class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 
-    protected function runAction() {
+     protected function runAction() {
         $projectType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
         $metaDataSubSet = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
 

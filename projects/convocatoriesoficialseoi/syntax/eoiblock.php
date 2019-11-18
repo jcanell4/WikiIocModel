@@ -104,7 +104,7 @@ class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_eoiblock exte
             }
             return TRUE;
 
-        }elseif ($mode === 'iocxhtml' || $mode === 'wikiiocmodel_ptxhtml') {
+        }elseif ($mode === 'xhtml' || $mode === 'iocxhtml' || $mode === 'wikiiocmodel_ptxhtml') {
 //        if ($mode === 'iocxhtml' || $mode === 'wikiiocmodel_ptxhtml') {
 //        } elseif ($mode === 'xhtml') {
 //            $renderer->doc .= $text;
@@ -122,7 +122,11 @@ class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_eoiblock exte
                     array_shift($instructions);
                     array_pop($instructions);
 //                    $renderer->doc .= '<div class="block-border">';
-                    $renderer->doc .= p_latex_render($mode, $instructions, $info);
+                    if($mode==='xhtml'){
+                        $renderer->doc .= p_render($mode, $instructions, $info);
+                    }else{
+                        $renderer->doc .= p_latex_render($mode, $instructions, $info);
+                    }
 //                    $renderer->doc .= '</div>';
                     break;
                 case DOKU_LEXER_EXIT :

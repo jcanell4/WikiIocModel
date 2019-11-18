@@ -5,12 +5,12 @@
                 "typeDef":"pla",
                 "class": "exportDocument",
                 "fields": "ALL",
-                "extraFields": [{"name":"pdfDocument", "valueType":"field", "value":"fitxercontinguts"}]
+                "extraFields": [
+                    {"name":"fitxercontinguts", "valueType":"page", "value":"continguts"},
+                    {"name":"pdfDocument", "valueType":"page", "value":"continguts"}
+                ]
             },
             "keys": {
-                "descripcio": {
-                    "render": {"class": "renderRenderizableText"}
-                },
                 "fitxercontinguts": {
                     "render": {"class": "renderFile"}
                 },
