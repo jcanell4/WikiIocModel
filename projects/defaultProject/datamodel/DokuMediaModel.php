@@ -41,8 +41,8 @@ class DokuMediaModel extends AbstractWikiModel {
             $this->ns = $this->nstarget = $this->dataQuery->getNs($id);
             $this->mediaName = $this->dataQuery->getIdWithoutNs($id);
         }
-        if($fromID || $id){
-            $this->fromId = $fromId!==NULL?$fromId:$this->ns.":*";
+        if($fromId || $id){
+            $this->fromId = ($fromId !== NULL) ? $fromId : $this->ns.":*";
         }
         if(!$this->ns){
             $this->ns = $this->dataQuery->getNs($fromId);
