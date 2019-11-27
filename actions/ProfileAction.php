@@ -41,7 +41,7 @@ class ProfileAction extends DokuAction{
     protected function responseProcess(){
         $response = array();
         $id = "user_profile";
-        $info_time_visible = 5;
+        $info_time_visible = -1;
         $fn = $_REQUEST['fn'];
 
         if (isset($fn)) {
