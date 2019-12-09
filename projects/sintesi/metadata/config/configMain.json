@@ -69,32 +69,6 @@
                     "type": "objectArray",
                     "typeDef":"entradaCalendari"
                 },                                                
-                "entradaEinesAprenentatge": {
-                    "type": "object",
-                    "keys": {
-                        "tipus": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "eina": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "opcionalitat": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "opcional"
-                        },
-                        "puntuable": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    }
-                },
-                "defEinesAprenentatge": {
-                    "type": "objectArray",
-                    "typeDef":"entradaEinesAprenentatge"
-                },
                 "entradaResultatsAprenentage": {
                     "type":"object",
                     "keys": {
@@ -182,7 +156,7 @@
                     "type": "objectArray",
                     "typeDef":"entradaDadesAC"
                 },                                                                
-                "entradaCapacitats": {
+                "entradaCompetencies": {
                     "type": "object",
                     "keys": {
                         "id": {
@@ -190,7 +164,7 @@
                             "default": "{#_INC(1)_#}",
                             "mandatory": true
                         },
-                        "capacitat": {
+                        "competencia": {
                             "type": "string",
                             "default": "",
                             "mandatory": true
@@ -202,14 +176,14 @@
                         }
                     }
                 },
-                "defCapacitats": {
+                "defCompetencies": {
                     "type": "objectArray",
-                    "typeDef":"entradaCapacitats"
+                    "typeDef":"entradaCompetencies"
                 },                                                
-                "entradaEvidenciesCapacitats": {
+                "entradaEvidenciesCompetencies": {
                     "type": "object",
                     "keys": {
-                        "idCapacitat": {
+                        "idCompetencia": {
                             "type": "number",
                             "mandatory": true,
                             "default": "{#_COPY(1)_#}"
@@ -221,9 +195,9 @@
                         }
                     }
                 },
-                "defEvidenciesCapacitats": {
+                "defEvidenciesCompetencies": {
                     "type": "objectArray",
-                    "typeDef":"entradaEvidenciesCapacitats"
+                    "typeDef":"entradaEvidenciesCompetencies"
                 },                                                
                 "entradaExtres": {
                     "type":"object",
@@ -256,6 +230,11 @@
                             "type":"string",
                             "mandatory": true,
                             "default":"LOE"
+                        },
+                        "individual":{
+                            "type":"boolean",
+                            "mandatory": true,
+                            "default": false
                         },
                         "descripcio": {
                             "type": "string",
@@ -308,11 +287,6 @@
                             "default": "PROJ",
                             "mandatory": true
                         },
-                        "einesAprenentatge": {
-                            "type": "defEinesAprenentatge",
-                            "default":[{"tipus":"lectura","eina":"Llibre de l'aula","opcionalitat":"lectura obligada","puntuable":"false"},{"tipus":"autoavaluació","eina":"Exercicis d'autoavaluació i activitats","opcionalitat":"opcional però recomanat","puntuable":"false"},{"tipus":"fòrum","eina":"Fòrum de l'aula","opcionalitat":"Participació recomanada","puntuable":"false"},{"tipus":"exercicis","eina":"Exercicis d'avaluació contínua","opcionalitat":"opcional","puntuable":"true"}],
-                            "mandatory": true
-                        },                                                
                         "resultatsAprenentatge": {
                             "type": "defResultatsAprenentage",
                             "mandatory": true
@@ -330,12 +304,12 @@
                             "type": "defDadesAC",
                             "mandatory": true
                         },
-                        "dadesCapacitats": {
-                            "type": "defCapacitats",
+                        "dadesCompetencies": {
+                            "type": "defCompetencies",
                             "mandatory": true
                         },
-                        "dadesEvidenciesCapacitats": {
-                            "type": "defEvidenciesCapacitats",
+                        "dadesEvidenciesCompetencies": {
+                            "type": "defEvidenciesCompetencies",
                             "mandatory": true
                         },
                         "dadesExtres": {

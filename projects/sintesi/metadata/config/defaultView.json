@@ -66,6 +66,16 @@
             ]
         }
       },
+      "individual": {
+        "type":"checkbox",
+        "label" : "És un treball indivudual",
+        "n_columns": 4,
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "indiqueu si en treball és individual"
+        }
+      },
       "cicle": {
         "label" : "Nom del cicle (cicle)",
         "n_columns": 8,
@@ -187,39 +197,6 @@
           }
         }
       },
-      "einesAprenentatge": {
-        "label": "Taula de les eines d'estudi (einesAprenentatge)",
-        "n_columns": 12,
-        "type": "editableObject",
-        "group": "main",
-        "n_rows": 8,
-        "props": {
-          "data-editable-element": "table",
-          "title": "Detalleu els recursos i les eines usades en l'aprenentatge de l'alumne"
-        },
-        "config": {
-          "actions": {
-            "add_default_row": "Afegir eina",
-            "remove_rows": "Eliminar eines seleccionades",
-            "add_default_row_before": "Afegir eina abans de la fila seleccionada"
-          },
-          "fields": {
-            "tipus": {
-              "type": "select",
-              "options": ["lectura", "autoavaluació", "fòrum", "qüestionari", "exercicis"]                        
-            },
-            "eina": {
-              "type": "string"
-            },
-            "opcionalitat": {
-              "type": "string"
-            },
-            "puntuable": {
-              "type": "bool"
-            }
-          }
-        }
-      },
       "tipusTreball": {
         "type":"select",
         "label" : "Tipus de treball que es fa (tipusTreball)",
@@ -250,7 +227,7 @@
             "options":[
                 {"value":"període"},
                 {"value":"fase"},
-                {"value":"etapa"}
+                {"value":"etapa/etapes"}
             ]
         }
       },
@@ -464,27 +441,27 @@
           ]          
         }
       },
-      "dadesCapacitats": {
-        "label":"Evidencies de les capacitats a avaluar en relació al treball en equip  (dadesCapacitats)",
+      "dadesCompetencies": {
+        "label":"Competències a avaluar en relació al treball en equip  (dadesCompetencies)",
         "n_columns": 12,
         "type": "editableObject",
         "group": "main",
         "n_rows": 4,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les capacitats i les seves evidències "
+          "title": "Detalleu les competencies del treball en equip"
         },
         "config": {
           "actions": {
-            "add_default_row": "Afegir una nova capacitat",
-            "remove_rows": "Eliminar les capacitats seleccionades",
-            "add_default_row_before": "Afegir capacitat abans de la fila seleccionada"
+            "add_default_row": "Afegir una nova competència",
+            "remove_rows": "Eliminar les competencies seleccionades",
+            "add_default_row_before": "Afegir competència abans de la fila seleccionada"
           },
           "fields": {
             "id": {
               "type": "string"
             },
-            "capacitat": {
+            "competencia": {
               "type": "string"
             },
             "punts": {
@@ -504,8 +481,8 @@
                   "width": "5%"
                 },
                 {
-                  "name": "capacitats",
-                  "field": "capacitat"
+                  "name": "competències",
+                  "field": "competencia"
                 },
                 {
                   "name": "punts",
@@ -517,15 +494,15 @@
           ]          
         }
       },
-      "dadesEvidenciesCapacitats": {
-        "label":"Evidencies de les capacitats a avaluar en relació al treball en equip  (dadesEvidenciesCapacitats)",
+      "dadesEvidenciesCompetencies": {
+        "label":"Evidencies de les competències a avaluar en relació al treball en equip  (dadesEvidenciesCompetencies)",
         "n_columns": 12,
         "type": "editableObject",
         "group": "main",
         "n_rows": 8,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les capacitats i les seves evidències "
+          "title": "Detalleu les evidències."
         },
         "config": {
           "actions": {
@@ -534,7 +511,7 @@
             "add_default_row_before": "Afegir evidències abans de la fila seleccionada"
           },
           "fields": {
-            "idCapacitat": {
+            "idCompetencia": {
               "type": "string"
             },
             "descripció": {
@@ -549,8 +526,8 @@
               },
               "cells": [
                 {
-                  "name": "id capacitat",
-                  "field": "idCapacitat",
+                  "name": "id competència",
+                  "field": "idCompetencia",
                   "width": "5%"
                 },
                 {
