@@ -136,21 +136,27 @@ class PageDataQuery extends DataQuery {
         }
         return $instructions;
     }
+    
+    public function countRevisions($id){
+        return IocCommon::countRevisions($id);
+    }
 
-     public function getRevisionList($id, $offset = 0){
+    public function getRevisionList($id, $offset = 0){
         $maxAmount = $amount = WikiGlobalConfig::getConf('revision-lines-per-page', 'wikiiocmodel');
 
         $revisions = getRevisions($id, $offset, $maxAmount + 1 );
 
         $ret = [];
-
+        $ret['totalamount'] = IocCommon::countRevisions($id);
          if (count($revisions)>$maxAmount) {
              $ret['show_more_button'] = true;
              array_pop($revisions);
-             $ret['totalamount'] = "+ de ${$offset+$maxAmount}";
-         }else{
+             $ta = $offset+$maxAmount;
+             //$ret['totalamount'] = "+ de $ta";
+        }else{
              $amount = count($revisions);
-             $ret['totalamount'] = "${$offset+$amount}";
+             $ta = $offset+$amount;
+             //$ret['totalamount'] = "$ta";
          }
 
         foreach ($revisions as $revision) {

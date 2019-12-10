@@ -124,7 +124,7 @@ class HtmlPageModel extends WikiRenderizableDataModel {
         return $toc;
     }
 
-    public function getRevisionList($offset = -1) {
+    public function getRevisionList($offset = 0) {
         return $this->getPageDataQuery()->getRevisionList($this->id, $offset);
     }
 
