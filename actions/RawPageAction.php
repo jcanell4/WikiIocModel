@@ -8,7 +8,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 
 class RawPageAction extends EditPageAction {
-    const HTML_FORMAT = "Dojo";
+    const HTML_FORMAT = "DOJO";
     const DW_FORMAT = "ACE";
 
     protected $lockStruct;
@@ -283,7 +283,7 @@ class RawPageAction extends EditPageAction {
         $resp['content'] = $rawData['content'];
 
         // TODO s'ha de discriminar quan el $rawData ja és html
-        if ($this->params['contentFormat'] === self::HTML_FORMAT && $this->dokuPageModel->format != 'html'){
+        if (strtoupper($this->params['contentFormat']) === self::HTML_FORMAT && $this->dokuPageModel->format != 'html'){
             $resp['content'] = $this->translateToHTML($resp['content']);
         }
         $resp['locked'] = $rawData['locked'];
