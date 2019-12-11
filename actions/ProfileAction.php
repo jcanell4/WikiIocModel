@@ -39,23 +39,28 @@ class ProfileAction extends DokuAction{
     }
 
     protected function responseProcess(){
+        global $auth;
         $response = array();
         $id = "user_profile";
-        $info_time_visible = -1;
+        $info_time_visible = 5;
         $fn = $_REQUEST['fn'];
-
+        
         if (isset($fn)) {
             $cmd = is_array($fn) ? key($fn) : $fn;
 
             if ($cmd === "modify") {
+                $userInfo = $auth->getUserData($this->params['userid']);
                 $this->usrdata = ['userid'  => $this->params['userid'],
                                   'username'=> $this->params['username'],
-                                  'usermail'=> $this->params['usermail']
+                                  'usermail'=> $this->params['usermail'],
+                                  'moodle'=> $userInfo['moodle']
                                  ];
             }else {
+                $userInfo = $auth->getUserData(WikiIocInfoManager::getInfo("client"));
                 $this->usrdata = ['userid'  => WikiIocInfoManager::getInfo("client"),
                                   'username'=> WikiIocInfoManager::getInfo("userinfo")['name'],
-                                  'usermail'=> WikiIocInfoManager::getInfo("userinfo")['mail']
+                                  'usermail'=> WikiIocInfoManager::getInfo("userinfo")['mail'],
+                                  'moodle'=> $userInfo['moodle']
                                  ];
             }
             $pageToSend = $this->getHtmlEditProfile();
@@ -134,6 +139,7 @@ class ProfileAction extends DokuAction{
         ptln("<input name='page' type='hidden' value='usermanager'>");
         ptln("<input name='userid' type='hidden' value='{$this->usrdata['userid']}'>");
         ptln("<input name='userid_old' type='hidden' value='{$this->usrdata['userid']}'>");
+        ptln("<input name='moodle' type='hidden' value='{$this->usrdata['moodle']}'>");
         ptln("</div>");
         ptln("<div class='table'>");
         ptln("<table class='inline'>");
@@ -148,17 +154,19 @@ class ProfileAction extends DokuAction{
         ptln("</tr><tr>");
         ptln("<td><label for='modify_usermail'>".WikiIocLangManager::getLang('email').": </label></td>");
         ptln("<td><input id='modify_usermail' name='usermail' class='edit' type='text' size='50' value='{$this->usrdata['usermail']}'></td>");
-        ptln("</tr><tr><td colspan=2><br /></td></tr><tr>");
-        ptln("<thead><tr><th colspan=2>Canvi de contrasenya</th></tr></thead>");
-        ptln("</tr><tr>");
-        ptln("<td><label for='modify_oldpass'>".WikiIocLangManager::getLang('oldpass').": </label></td>");
-        ptln("<td><input id='modify_oldpass' name='oldpass' class='edit' type='password' size='30' value=''></td>");
-        ptln("</tr><tr>");
-        ptln("<td><label for='modify_userpass'>".WikiIocLangManager::getLang('pass').": </label></td>");
-        ptln("<td><input id='modify_userpass' name='userpass' class='edit' type='password' size='30' value=''></td>");
-        ptln("</tr><tr>");
-        ptln("<td><label for='modify_newpass'>".WikiIocLangManager::getLang('newpass').": </label></td>");
-        ptln("<td><input id='modify_newpass' name='newpass' class='edit' type='password' size='30' value=''></td>");
+        if(!$this->usrdata['moodle']){
+            ptln("</tr><tr><td colspan=2><br /></td></tr><tr>");
+            ptln("<thead><tr><th colspan=2>Canvi de contrasenya</th></tr></thead>");
+            ptln("</tr><tr>");
+            ptln("<td><label for='modify_oldpass'>".WikiIocLangManager::getLang('oldpass').": </label></td>");
+            ptln("<td><input id='modify_oldpass' name='oldpass' class='edit' type='password' size='30' value=''></td>");
+            ptln("</tr><tr>");
+            ptln("<td><label for='modify_userpass'>".WikiIocLangManager::getLang('pass').": </label></td>");
+            ptln("<td><input id='modify_userpass' name='userpass' class='edit' type='password' size='30' value=''></td>");
+            ptln("</tr><tr>");
+            ptln("<td><label for='modify_newpass'>".WikiIocLangManager::getLang('newpass').": </label></td>");
+            ptln("<td><input id='modify_newpass' name='newpass' class='edit' type='password' size='30' value=''></td>");
+        }
         ptln("</tr></tbody>");
         ptln("<thead><tr><th colspan=2></th></tr></thead>");
         ptln("<tr><td></td><td>");
