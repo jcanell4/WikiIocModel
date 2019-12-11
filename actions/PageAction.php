@@ -109,7 +109,8 @@ abstract class PageAction extends DokuAction implements ResourceLockerInterface,
         $extra = array();
         $mEvt = new Doku_Event('WIOC_ADD_META_REVISION_LIST', $extra);
         if ($mEvt->advise_before()) {
-            $ret = $this->getModel()->getRevisionList($this->params[PageKeys::KEY_OFFSET]);
+            $offset = $this->params[PageKeys::KEY_OFFSET]?$this->params[PageKeys::KEY_OFFSET]:0;
+            $ret = $this->getModel()->getRevisionList($offset);
         }
         $mEvt->advise_after();
         unset($mEvt);

@@ -710,8 +710,11 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $revs = $this->projectMetaDataQuery->getProjectRevisionList($num);
         if ($revs) {
             $amount = WikiGlobalConfig::getConf('revision-lines-per-page', 'wikiiocmodel');
-            if (count($revs) > $amount) {
+            if (($revs["totalamount"] = count($revs)) > $amount) {
                 $revs['show_more_button'] = true;
+                $revs["maxamount"]=$amount;
+            }else{
+                $revs["maxamount"]=$revs["totalamount"];            
             }
             $r = $this->getActualRevision();
             $this->setActualRevision(TRUE);
