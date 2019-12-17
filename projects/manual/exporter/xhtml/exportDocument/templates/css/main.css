@@ -153,15 +153,15 @@ table {
     border-spacing: 0;
 }
 
-table .leftalign {
+table td.leftalign {
     text-align: left;
 }
 
-table .centeralign {
+table td.centeralign {
     text-align: center;
 }
 
-table .rightalign {
+table td.rightalign {
     text-align: right;
 }
 
