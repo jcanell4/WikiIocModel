@@ -334,12 +334,14 @@ class BasicStaticPdfRenderer {
     }
 
     protected static function resolveReferences($content) {
-        if ($content["type"]===TableFrame::TABLEFRAME_TYPE_TABLE || $content["type"]===TableFrame::TABLEFRAME_TYPE_ACCOUNTING) {
-            self::$tableCounter++;
-            self::$tableReferences[$content["id"]] = self::$tableCounter;
-        }elseif ($content["type"]===FigureFrame::FRAME_TYPE_FIGURE) {
-            self::$figureCounter++;
-            self::$figureReferences[$content["id"]] = self::$figureCounter;
+        if (!empty($content["id"])) {
+            if ($content["type"]===TableFrame::TABLEFRAME_TYPE_TABLE || $content["type"]===TableFrame::TABLEFRAME_TYPE_ACCOUNTING) {
+                self::$tableCounter++;
+                self::$tableReferences[$content["id"]] = self::$tableCounter;
+            }elseif ($content["type"]===FigureFrame::FRAME_TYPE_FIGURE) {
+                self::$figureCounter++;
+                self::$figureReferences[$content["id"]] = self::$figureCounter;
+            }
         }
         for ($i=0; $i<count($content["content"]); $i++) {
             self::resolveReferences($content["content"][$i]);
@@ -609,6 +611,7 @@ class BasicStaticPdfRenderer {
             case SpecialBlockNodeDoc::SOL_TYPE:
             case SpecialBlockNodeDoc::SOLUCIO_TYPE:
             case SpecialBlockNodeDoc::VERD_TYPE:
+            case SpecialBlockNodeDoc::EDITTABLE_TYPE:
                 $ret = self::getStructuredContent($content);
                 break;
 
