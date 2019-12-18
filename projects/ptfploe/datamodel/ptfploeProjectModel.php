@@ -6,9 +6,9 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
-require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
+require_once (WIKI_IOC_MODEL . "datamodel/MoodleProjectModel.php");
 
-class ptfploeProjectModel extends AbstractProjectModel {
+class ptfploeProjectModel extends MoodleProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
@@ -191,4 +191,11 @@ class ptfploeProjectModel extends AbstractProjectModel {
         return [$basename.".zip"];
     }
 
+    protected function getCalendarDates() {
+        throw new UnavailableMethodExecutionException("getCalendarDates");
+    }
+
+    protected function getCourseId() {
+        throw new UnavailableMethodExecutionException("getCourseId");
+    }
 }
