@@ -670,6 +670,7 @@ class BasicStaticPdfRenderer {
                 break;
 
             case ReferenceNodeDoc::REFERENCE_TYPE:
+                $titol = (empty($content["referenceTitle"])) ? $content["referenceId"] : $content["referenceTitle"];
                 switch ($content["referenceType"]) {
                     case ReferenceNodeDoc::REF_TABLE_TYPE:
                         $id = trim($content["referenceId"]);
@@ -681,13 +682,13 @@ class BasicStaticPdfRenderer {
                         break;
                     case ReferenceNodeDoc::REF_WIKI_LINK:
                         $file = $_SERVER['HTTP_REFERER']."?id=".$content["referenceId"];
-                        $ret = " <a href=\"".$file."\">".$content["referenceTitle"]."</a> ";
+                        $ret = " <a href=\"".$file."\">".$titol."</a> ";
                         break;
                     case ReferenceNodeDoc::REF_INTERNAL_LINK:
-                        $ret = " <a href='".$content["referenceId"]."'>".$content["referenceTitle"]."</a> ";
+                        $ret = " <a href='".$content["referenceId"]."'>".$titol."</a> ";
                         break;
                     case ReferenceNodeDoc::REF_EXTERNAL_LINK:
-                        $ret = " <a href=\"".$content["referenceId"]."\">".$content["referenceTitle"]."</a> ";
+                        $ret = " <a href=\"".$content["referenceId"]."\">".$titol."</a> ";
                         break;
                 }
                 break;
