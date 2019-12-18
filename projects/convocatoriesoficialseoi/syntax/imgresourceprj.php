@@ -84,19 +84,19 @@ class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_imgresourcepr
                 case DOKU_LEXER_UNMATCHED:
                     $instructions = get_latex_instructions($text);
                     //delete document_start and document_end instructions
-                    array_shift($instructions);
-                    array_pop($instructions);
+                    if ($instructions[0][0] === "document_start") {
+                        array_shift($instructions);
+                        array_pop($instructions);
+                    }
                     //delete p_open and p_close instructions
-                    array_shift($instructions);
-                    array_pop($instructions);
-
+                    if ($instructions[0][0] === "p_open") {
+                        array_shift($instructions);
+                        array_pop($instructions);
+                    }
 
                     $src = $plugin_controller->getProjectTypeDir($plugin_controller->getProjectType()) . 'exporter/resources/' . $instructions[0][1][0];
-
                     $renderer->getCurrentNode()->setSource($src);
-
                     break;
-
                 case DOKU_LEXER_EXIT:
                     $renderer->setCurrentNode($renderer->getCurrentNode()->getOwner());
                     break;
@@ -111,31 +111,29 @@ class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_imgresourcepr
                 case DOKU_LEXER_UNMATCHED :
                     $instructions = get_latex_instructions($text);
                     //delete document_start and document_end instructions
-                    array_shift($instructions);
-                    array_pop($instructions);
+                    if ($instructions[0][0] === "document_start") {
+                        array_shift($instructions);
+                        array_pop($instructions);
+                    }
                     //delete p_open and p_close instructions
-                    array_shift($instructions);
-                    array_pop($instructions);
-
+                    if ($instructions[0][0] === "p_open") {
+                        array_shift($instructions);
+                        array_pop($instructions);
+                    }
 
                     $path = '';
-
                     if ($mode !== 'wikiiocmodel_ptxhtml') {
                         $path = str_replace(DOKU_INC, '', $plugin_controller->getProjectTypeDir($plugin_controller->getProjectType())) . 'exporter/';
                     }
 
                     $path .= 'resources/' . $text;
-
-
                     $height = $this->pendingData[2] != NULL ? 'height="' . $this->pendingData[2] . '"' : '';
                     $width = $this->pendingData[3] != NULL ? 'width="' . $this->pendingData[3] . '"' : '';
                     $align = $this->pendingData[4] != NULL ? 'align="' . $this->pendingData[4] . '"' : '';
 
                     $renderer->doc .= '<img class="media" src="' . $path . '" ' . $height . ' ' . $width . ' ' . $align . '/>';
-
                     break;
                 case DOKU_LEXER_EXIT :
-
                     $this->pendingData = NULL;
                     break;
             }

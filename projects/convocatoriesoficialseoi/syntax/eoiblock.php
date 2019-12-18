@@ -88,11 +88,15 @@ class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_eoiblock exte
                 case DOKU_LEXER_UNMATCHED:
                     $instructions = get_latex_instructions($text);
                     //delete document_start and document_end instructions
-                    array_shift($instructions);
-                    array_pop($instructions);
+                    if ($instructions[0][0] === "document_start") {
+                        array_shift($instructions);
+                        array_pop($instructions);
+                    }
                     //delete p_open and p_close instructions
-                    array_shift($instructions);
-                    array_pop($instructions);
+                    if ($instructions[0][0] === "p_open") {
+                        array_shift($instructions);
+                        array_pop($instructions);
+                    }
                     foreach ( $instructions as $instruction ) {
                         call_user_func_array(array(&$renderer, $instruction[0]),$instruction[1]);
                     }
@@ -116,11 +120,15 @@ class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_eoiblock exte
                 case DOKU_LEXER_UNMATCHED :
                     $instructions = get_latex_instructions($text);
                     //delete document_start and document_end instructions
-                    array_shift($instructions);
-                    array_pop($instructions);
+                    if ($instructions[0][0] === "document_start") {
+                        array_shift($instructions);
+                        array_pop($instructions);
+                    }
                     //delete p_open and p_close instructions
-                    array_shift($instructions);
-                    array_pop($instructions);
+                    if ($instructions[0][0] === "p_open") {
+                        array_shift($instructions);
+                        array_pop($instructions);
+                    }
 //                    $renderer->doc .= '<div class="block-border">';
                     if($mode==='xhtml'){
                         $renderer->doc .= p_render($mode, $instructions, $info);
@@ -140,5 +148,3 @@ class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_eoiblock exte
         return FALSE;
     }
 }
-
-
