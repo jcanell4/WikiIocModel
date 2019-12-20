@@ -31,7 +31,7 @@
   "fields": {
     "tipusCicle":{
       "type":"select",
-      "n_columns": 3,
+      "n_columns": 6,
       "label": "LOE o LOGSE (tipusCicle)",
       "group": "dadesBasiques",
       "props": {
@@ -45,9 +45,18 @@
         ]
       }
     },
+    "moodleCourseId": {
+      "label" : "Identificador del curs a moodle (moodleCourseId)",
+      "n_columns": 6,
+      "group": "dadesBasiques",
+      "props": {
+        "required": true,
+        "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
+      }
+    },      
     "cicle": {
       "label" : "Nom del cicle (cicle)",
-      "n_columns": 6,
+      "n_columns": 9,
       "group": "dadesBasiques",
       "props": {
         "required": true,

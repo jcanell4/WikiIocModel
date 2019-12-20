@@ -191,11 +191,24 @@ class ptfploeProjectModel extends MoodleProjectModel {
         return [$basename.".zip"];
     }
 
+    /**
+     * Llista de les dates a pujar al calendari amb el format següent:
+     *  - title
+     *  - date (en format yyyy-mm-dd)
+     *  - description
+     */
     protected function getCalendarDates() {
-        throw new UnavailableMethodExecutionException("getCalendarDates");
+        $ret = array();
+        $data = $this->getDataProject();
+        foreach ($data["calendari"] as $key => $value) {
+            $ret[] = ["title"=>"inici %s"];
+        }
+        throw new  UnavailableMethodExecutionException("getCalendarDates");
+    
     }
 
     protected function getCourseId() {
-        throw new UnavailableMethodExecutionException("getCourseId");
+        $data = $this->getDataProject();
+        return $data["moodleCourseId"];
     }
 }

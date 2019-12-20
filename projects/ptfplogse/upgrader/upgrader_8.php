@@ -24,6 +24,18 @@ class upgrader_8 extends CommonUpgrader {
     public function process($type, $filename = NULL) {
         switch ($type) {
             case "fields":
+                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                $matches=array();
+                preg_match("/([MC]\d{2})? *-? *(.+)/", $dataProject["credit"], $matches); 
+                if(empty($matches[1])){
+                    $dataProject['creditId']="";
+                }else{
+                    $dataProject['creditId']=$matches[1];
+                }
+                $dataProject['credit'] = $matches[2];
+
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 7 to 8 (canvis en els camps)");
+
                 $status = TRUE;
                 break;
 

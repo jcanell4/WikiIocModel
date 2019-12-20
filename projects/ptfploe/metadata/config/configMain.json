@@ -29,7 +29,7 @@
             "main": "meta.mdpr",
 
             "versions": {
-                "fields" : 5,
+                "fields" : 7,
                 "templates": {"continguts":22}
             },
             "mainType": {
@@ -493,9 +493,14 @@
                             "default": "Indiqueu el cicle",
                             "mandatory": true
                         },
+                        "modulId": {
+                            "type": "string",
+                            "default": "MXX",
+                            "mandatory": true
+                        },
                         "modul": {
                             "type": "string",
-                            "default": "MXX Indiqueu el nom mòdul",
+                            "default": "Indiqueu el nom mòdul",
                             "mandatory": true
                         },
                         "durada": {
@@ -700,6 +705,11 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "continguts"
+                        },
+                        "moodleCourseId": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 0
                         }
                     }
                 }

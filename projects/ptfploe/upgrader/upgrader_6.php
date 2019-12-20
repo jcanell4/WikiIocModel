@@ -21,6 +21,12 @@ class upgrader_6 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
+                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+                $dataProject['moodleCourseId'] = 0;
+
                 $ret = TRUE;
                 break;
 

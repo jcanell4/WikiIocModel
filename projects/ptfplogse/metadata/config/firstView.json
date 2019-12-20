@@ -58,6 +58,15 @@
             ]
         }
       },
+      "moodleCourseId": {
+        "label" : "Identificador del curs a moodle (moodleCourseId)",
+        "n_columns": 3,
+        "group": "dadesBasiques",
+        "props": {
+          "required": true,
+          "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
+        }
+      },      
       "cicle": {
         "label" : "Nom del cicle (cicle)",
         "n_columns": 8,
@@ -76,18 +85,27 @@
           "title": "Indiqueu la durada del cicle en hores"
         }
       },
+      "creditId": {
+        "label" : "Codi del crèdit (creditId)",
+        "n_columns": 2,
+        "group": "dadesBasiques",
+        "props": {
+          "required": true,
+          "title": "indiqueu el codi del crèdit en format CXX. Per exemple: C02"
+        }
+      },
       "credit": {
         "label" : "Nom del crèdit (credit)",
         "n_columns": 8,
         "group": "dadesBasiques",
         "props": {
           "required": true,
-          "title": "indiqueu el nom del crèdit i el bloc si cal. Per exemple: M02 Seguretat i alta disponibilitat"
+          "title": "indiqueu el nom del crèdit. Per exemple: Seguretat i alta disponibilitat"
         }
       },
       "durada": {
         "label" : "Durada (durada)",
-        "n_columns": 4,
+        "n_columns": 2,
         "group": "dadesBasiques",
         "props": {
           "required": true,
