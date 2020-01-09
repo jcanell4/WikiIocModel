@@ -15,7 +15,7 @@
 <!-- Capçalera -->
 <header class="main_header">
   <div class="own_container">
-    <h1>{##credit##}<WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}"> - {##tipusBlocCredit##}</WIOCCL:IF></h1>
+    <h1>{##creditId##} {##credit##}<WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}"> - {##tipusBlocCredit##}</WIOCCL:IF></h1>
   </div>
 </header>
 <!-- /Capçalera -->
@@ -79,7 +79,7 @@
 <section class="section section2">
   <hr>
   <div class="own_container">
-      Aquest <WIOCCL:IF condition="''cr&egrave;dit''=={##tipusBlocCredit##}">crèdit</WIOCCL:IF><WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}">{##tipusBlocCredit##} del crèdit</WIOCCL:IF> {##credit##} {##descripcio##}
+      Aquest <WIOCCL:IF condition="''cr&egrave;dit''=={##tipusBlocCredit##}">crèdit</WIOCCL:IF><WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}">{##tipusBlocCredit##} del crèdit</WIOCCL:IF> {##creditId##} {##credit##} {##descripcio##}
   </div>
 </section>
 <!-- /Secció 2 -->

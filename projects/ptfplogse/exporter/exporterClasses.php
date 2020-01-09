@@ -78,7 +78,8 @@ class IocTcPdf extends TCPDF {
         $title = str_replace("\n", "|", $title);
         $arr_subtitol = explode("|", $title);
         $c = count($arr_subtitol);
-        return $arr_subtitol[0] . "...\n" . $arr_subtitol[$c-2] . "\n" . $arr_subtitol[$c-1];
+        $arr_subtitol[0] = BasicStaticPdfRenderer::getText($arr_subtitol[0], 100);
+        return $arr_subtitol[0] . "\n" . $arr_subtitol[$c-2] . "\n" . $arr_subtitol[$c-1];
     }
 
 }

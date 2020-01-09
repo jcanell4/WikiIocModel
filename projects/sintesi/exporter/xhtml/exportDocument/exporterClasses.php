@@ -57,6 +57,7 @@ class exportDocument extends MainRender {
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
                 $cicle = $data["cicle"]==="Indiqueu el cicle"?"":html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
                 $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
+                $modulId = html_entity_decode(htmlspecialchars_decode($data["modulId"], ENT_COMPAT|ENT_QUOTES));
                 $tipusBlocModul = html_entity_decode(htmlspecialchars_decode($data["tipusBlocModul"], ENT_COMPAT|ENT_QUOTES));
 
                 $params = array(
@@ -70,12 +71,12 @@ class exportDocument extends MainRender {
                                      "wlogo" => 9.9,
                                      "hlogo" => 11.1,
                                      "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
-                                     "rtext" => $cicle."\n".$modul."-".$tipusBlocModul."\n".$semestre],
+                                     "rtext" => $cicle."\n".$modulId." ".$modul."-".$tipusBlocModul."\n".$semestre],
                         "titol" => array(
                             "Formació Professional",
                             "Pla de Treball",
                             $cicle,
-                            $modul . (($tipusBlocModul!="mòdul") ? " - $tipusBlocModul" : ""),
+                            $modulId." ".$modul . (($tipusBlocModul!="mòdul") ? " - $tipusBlocModul" : ""),
                             $semestre,
                         ),
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat

@@ -334,13 +334,19 @@ class HeaderNodeDoc extends LeveledNodeDoc{
 }
 
 class FirstParagraphNode extends StructuredNodeDoc{
+    private $rootNode;
 
-    public function __construct() {
+    public function __construct($rootNode) {
         parent::__construct(self::PARAGRAPH_TYPE);
+        $this->rootNode = $rootNode;
     }
 
     public function getLevel(){
         return 1;
+    }
+    
+    public function getFather(){
+        return $this->rootNode;
     }
 
 }
@@ -638,7 +644,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     function p_open() {
         $paragraph = new StructuredNodeDoc(StructuredNodeDoc::PARAGRAPH_TYPE);
         if ($this->currentNode === NULL) {
-            $this->currentNode = new FirstParagraphNode();
+            $this->currentNode = new FirstParagraphNode($this->rootNode);
             $this->rootNode->addContent($this->currentNode);
         }
         $this->currentNode->addContent($paragraph);

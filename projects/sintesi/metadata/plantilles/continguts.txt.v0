@@ -16,7 +16,7 @@
 ###:
 
 :###
-Aquest {##tipusModCred##}  {##modulId##} {##modul##} {##descripcio##}. Ha de permetre culminar la integració dels continguts impartits al llarg del cicle, globalitzant i interrelacionant,i si escau completant, aquells continguts susceptibles de mostrar, al final del cicle formatiu, el grau d'assoliment dels objectius generals del cicle. 
+Aquest {##tipusModCred##}  {##modul##} {##descripcio##}. Ha de permetre culminar la integració dels continguts impartits al llarg del cicle, globalitzant i interrelacionant,i si escau completant, aquells continguts susceptibles de mostrar, al final del cicle formatiu, el grau d'assoliment dels objectius generals del cicle. 
 
 <WIOCCL:IF condition="!{##individual##}">
 Per tant es demana un treball eminentment pràctic **treballant en petit grup de forma col·laborativa o cooperativa**. 

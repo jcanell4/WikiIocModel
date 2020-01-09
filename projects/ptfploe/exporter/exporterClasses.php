@@ -46,7 +46,7 @@ class IocTcPdf extends TCPDF {
         $headerfont = $this->getHeaderFont();
         $cell_height = $this->getCellHeight($headerfont[2] / $this->k);
         $header_x = $margins['left'] + $margins['padding_left'] + ($this->header_logo_width * 1.1);
-        $header_w = 105 - $header_x;
+        $header_w = 95 - $header_x;
 
         // header title
         $this->SetTextColorArray($this->header_text_color);
@@ -73,12 +73,13 @@ class IocTcPdf extends TCPDF {
         $this->header_logo_height = $lh;
     }
 
-    private function Subtitle($title) {
+    protected function Subtitle($title) {
         $title = str_replace("/", "|", $title);
         $title = str_replace("\n", "|", $title);
         $arr_subtitol = explode("|", $title);
         $c = count($arr_subtitol);
-        return $arr_subtitol[0] . "...\n" . $arr_subtitol[$c-2] . "\n" . $arr_subtitol[$c-1];
+        $arr_subtitol[0] = BasicStaticPdfRenderer::getText($arr_subtitol[0], 100);
+        return $arr_subtitol[0] . "\n" . $arr_subtitol[$c-2] . "\n" . $arr_subtitol[$c-1];
     }
 
  }

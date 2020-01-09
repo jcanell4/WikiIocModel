@@ -6,9 +6,9 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
-require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
+require_once (WIKI_IOC_MODEL . "datamodel/MoodleProjectModel.php");
 
-class ptfctProjectModel extends AbstractProjectModel {
+class ptfctProjectModel extends MoodleProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
@@ -104,6 +104,43 @@ class ptfctProjectModel extends AbstractProjectModel {
     protected function listGeneratedFilesByRender($base_dir, $old_name) {
         $basename = str_replace([":","/"], "_", $base_dir) . "_" . $old_name;
         return [$basename.".zip"];
+    }
+
+    /**
+     * Llista de les dates a pujar al calendari amb el format següent:
+     *  - title
+     *  - date (en format yyyy-mm-dd)
+     *  - description
+     */
+    protected function getCalendarDates() {
+        $ret = array();
+        $data = $this->getDataProject();
+        $ret[] = [
+            "title"=>"FCT inici",
+            "date"=>$data["dataIniciFCT"],
+            "description"=>"Data d'inici de la FCT",
+        ];
+        $ret[] = [
+            "title"=>"FCT inici (data màxima)",
+            "date"=>$data["dataMaxIniciFCT"],
+            "description"=>"Data màxima per iniciar la FCT",
+        ];
+        $ret[] = [
+            "title"=>"FCT 1a convocatòria",
+            "date"=>$data["dataApteFCT"],
+            "description"=>"Data de la 1a convocatòria de la FCT",
+        ];
+        $ret[] = [
+            "title"=>"FCT 2a convocatòria",
+            "date"=>$data["dataMaxApteFCT"],
+            "description"=>"Data de la 2a convocatòria de la FCT",
+        ];
+        return $ret;
+    }
+
+    protected function getCourseId() {
+        $data = $this->getDataProject();
+        return $data["moodleCourseId"];        
     }
 
 }

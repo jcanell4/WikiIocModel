@@ -751,5 +751,15 @@ class BasicStaticPdfRenderer {
         }
         return $ret;
     }
-
+    
+    public static function getText($text, $max){
+        if($this->GetStringWidth($text)>$max){
+            while($this->GetStringWidth($text."...")>$max){
+                $text = substr($text, 0, strlen($text)-1);
+            }
+            $text = $text."...";
+        }
+        return $text;
+    }
+    
 }
