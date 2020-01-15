@@ -283,7 +283,7 @@ class RawPageAction extends EditPageAction {
         $resp['content'] = $rawData['content'];
 
         // TODO s'ha de discriminar quan el $rawData ja és html
-        if (strtoupper($this->params['contentFormat']) === self::HTML_FORMAT && $this->dokuPageModel->format != 'html'){
+        if (strtoupper($this->params['contentFormat']) === self::HTML_FORMAT && strtoupper($this->dokuPageModel->format) != 'HTML'){
             $resp['content'] = $this->translateToHTML($resp['content']);
         }
         $resp['locked'] = $rawData['locked'];

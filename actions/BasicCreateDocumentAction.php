@@ -56,7 +56,7 @@ class BasicCreateDocumentAction extends CreatePageAction {
         $toSave = con($this->params[PageKeys::KEY_PRE],
                       $this->params[PageKeys::KEY_WIKITEXT],
                       $this->params[PageKeys::KEY_SUF], 1);
-        if ($this->params["contentFormat"] === self::HTML_FORMAT){
+        if (strtoupper($this->params["contentFormat"]) === self::HTML_FORMAT){
             $toSave = $this->translateToDW($toSave);
         }
         $this->dokuPageModel->setData(array(
