@@ -315,6 +315,7 @@ class BasicStaticPdfRenderer {
     static $firstPageFont = "Times";
     static $pagesFont = "helvetica";
     static $state = ["table" => ["type" => "table"]];
+    static $tcpdfObj = NULL;
 
     public static function resetStaticDataRender() {
         self::$tableCounter = 0;
@@ -511,7 +512,7 @@ class BasicStaticPdfRenderer {
         return [$w/5, $h/5];
     }
 
-    protected static function getContent($content) {
+    protected static function getContent($content ) {
         $char = "";
         $ret = "";
         switch ($content["type"]) {
@@ -752,9 +753,9 @@ class BasicStaticPdfRenderer {
         return $ret;
     }
     
-    public static function getText($text, $max){
-        if($this->GetStringWidth($text)>$max){
-            while($this->GetStringWidth($text."...")>$max){
+    public static function getText($text, $max, IocTcPdf &$iocTcPdf){
+        if($iocTcPdf->GetStringWidth($text)>$max){
+            while($iocTcPdf->GetStringWidth($text."...")>$max){
                 $text = substr($text, 0, strlen($text)-1);
             }
             $text = $text."...";

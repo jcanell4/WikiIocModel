@@ -78,7 +78,7 @@ class action_plugin_wikiiocmodel_projects_convocatoriesoficialseoi extends WikiI
             $id = $arrayButton['parms']['DOM']['id'];
             //Construcción de los valores de sustitución de los patrones para el template UpdateViewHandler
             //changeWidgetProperty para todos los botones
-            $changeWidgetPropertyFalse .= "disp.changeWidgetProperty('${id}', 'visible', false);\n\t\t\t";
+            $changeWidgetPropertyFalse .= "disp.initUpdateWidgetProperty('${id}', 'visible', false);\n\t\t\t";
             $changeWidgetPropertyCondition .= "disp.changeWidgetProperty('${id}', 'visible', is${id}ButtonVisible);\n\t\t\t\t";
             $VarsIsButtonVisible .= "var is${id}ButtonVisible = true;\n\t\t\t\t\t";
 

@@ -197,10 +197,11 @@ class ptfploeProjectModel extends MoodleProjectModel {
      *  - date (en format yyyy-mm-dd)
      *  - description
      */
-    protected function getCalendarDates() {
+    public function getCalendarDates() {
         $ret = array();
-        $data = $this->getDataProject();
-        foreach ($data["calendari"] as $item) {
+        $data = $this->getMetaDataProject();
+        $calendari = json_decode($data["calendari"], true);
+        foreach ($calendari as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inici %s %d U%d", $data["modulId"], $item['tipus període'], $item["període"], $item["unitat"]),
                 "date"=>$item["inici"]
@@ -210,7 +211,8 @@ class ptfploeProjectModel extends MoodleProjectModel {
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
-        foreach ($data["datesAC"] as $item) {
+        $datesAC = json_decode($data["datesAC"], TRUE);
+        foreach ($datesAC as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
                     "title"=>sprintf("%s - enunciat %s", $data["modulId"], $item['id']),
@@ -240,7 +242,8 @@ class ptfploeProjectModel extends MoodleProjectModel {
         $dataEnunciatRecOld ="";
         $dataSolucioRecOld ="";
         $dataQualificacioRecOld ="";
-        foreach ($data["datesEAF"] as $item) {
+        $datesEAF = json_decode($data["datesEAF"], TRUE);
+        foreach ($datesEAF as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
                     "title"=>sprintf("%s - enunciat %s", $data["modulId"], $item['id']),
@@ -287,7 +290,8 @@ class ptfploeProjectModel extends MoodleProjectModel {
             }
         }
 
-        foreach ($data["datesJT"] as $item) {
+        $datesJT = json_decode($data["datesJT"], TRUE);
+        foreach ($datesJT as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inscripció %s", $data["modulId"], $item['id']),
                 "date"=>$item["inscripció"]
@@ -334,7 +338,7 @@ class ptfploeProjectModel extends MoodleProjectModel {
         return $ret;
     }
 
-    protected function getCourseId() {
+    public function getCourseId() {
         $data = $this->getDataProject();
         return $data["moodleCourseId"];
     }

@@ -112,7 +112,7 @@ class ptfctProjectModel extends MoodleProjectModel {
      *  - date (en format yyyy-mm-dd)
      *  - description
      */
-    protected function getCalendarDates() {
+    public function getCalendarDates() {
         $ret = array();
         $data = $this->getDataProject();
         $ret[] = [
@@ -138,7 +138,7 @@ class ptfctProjectModel extends MoodleProjectModel {
         return $ret;
     }
 
-    protected function getCourseId() {
+    public function getCourseId() {
         $data = $this->getDataProject();
         return $data["moodleCourseId"];        
     }

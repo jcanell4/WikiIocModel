@@ -12,6 +12,10 @@ class FtpProjectSendAction extends BasicFtpProjectSendAction{
         $response = parent::responseProcess();
         $response['ftpsend_html'] = $this->getModel()->get_ftpsend_metadata();
 
+        $action = $this->getActionInstance("ProjectSendMoodleEventsAction");
+        $resp = $action->get($this->params);
+        $response['info']= IocCommon::addInfoToInfo($resp['info'], $response['info']);
+  
         return $response;
     }
 }

@@ -20,6 +20,13 @@ abstract class AbstractWikiAction {
             self::$flagMainAction = NULL;
         }
     }
+    
+    public function getActionInstance($actionName){
+        $action = $this->modelManager->getActionInstance($actionName, null, true);
+        $action->params = $this->params;
+        $action->modelManager = $this->modelManager;
+        return $action;
+    }
 
     public function init($modelManager = NULL) {
         $this->modelManager = $modelManager;
@@ -71,7 +78,11 @@ abstract class AbstractWikiAction {
     }
 
     protected function setParams($paramsArr){
-        $this->params = $paramsArr;
+        if(is_array($this->params)){
+            $this->params = array_merge($this->params, $paramsArr);
+        }else{
+            $this->params = $paramsArr;
+        }
     }
 
     protected function preResponseProcess() {

@@ -177,10 +177,11 @@ class ptfplogseProjectModel extends MoodleProjectModel {
      *  - date (en format yyyy-mm-dd)
      *  - description
      */
-    protected function getCalendarDates() {
+    public function getCalendarDates() {
         $ret = array();
         $data = $this->getDataProject();
-        foreach ($data["calendari"] as $item) {
+        $calendari = json_decode($data["calendari"], true);
+        foreach ($calendari as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inici NA%d-U%d", $data["creditId"], $item["nucli activitat"], $item["unitat didàctica"]),
                 "date"=>$item["inici"]
@@ -190,7 +191,8 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
-        foreach ($data["datesAC"] as $item) {
+        $datesAC = json_decode($data["datesAC"], true);
+        foreach ($datesAC as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
                     "title"=>sprintf("%s - enunciat %s", $data["modulId"], $item['id']),
@@ -220,7 +222,8 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         $dataEnunciatRecOld ="";
         $dataSolucioRecOld ="";
         $dataQualificacioRecOld ="";
-        foreach ($data["datesEAF"] as $item) {
+        $datesEAF = json_decode($data["datesEAF"], true);
+        foreach ($datesEAF as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
                     "title"=>sprintf("%s - enunciat %s", $data["modulId"], $item['id']),
@@ -267,7 +270,8 @@ class ptfplogseProjectModel extends MoodleProjectModel {
             }
         }
 
-        foreach ($data["datesJT"] as $item) {
+        $datesJT = json_decode($data["datesJT"], true);
+        foreach ($datesJT as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inscripció %s", $data["modulId"], $item['id']),
                 "date"=>$item["inscripció"]
@@ -314,7 +318,7 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         return $ret;
     }
 
-    protected function getCourseId() {
+    public function getCourseId() {
         $data = $this->getDataProject();
         return $data["moodleCourseId"];
     }

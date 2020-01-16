@@ -34,7 +34,21 @@ class upgrader_2 extends CommonUpgrader {
                 $ret = TRUE;
                 break;
             case "templates":
-                $ret = TRUE;
+                if ($filename===NULL) { 
+                    $filename = $this->model->getProjectDocumentName();
+                }
+                $doc = $this->model->getRawProjectDocument($filename)."\n";
+
+                $aTokRep = [
+                            [" períodes, de  les ",
+                             " {##nomPeriodePlur##}, de  les "]
+                           ];
+                $doc = $this->updateTemplateByReplace($doc, $aTokRep);
+
+                if (!empty($doc)) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade version 22 to 23");
+                }
+                $ret = !empty($doc);
         }
         return $ret;
     }

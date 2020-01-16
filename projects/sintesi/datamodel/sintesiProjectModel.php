@@ -125,10 +125,11 @@ class sintesiProjectModel extends MoodleProjectModel {
         return [$basename.".zip"];
     }
 
-    protected function getCalendarDates() {
+    public function getCalendarDates() {
         $ret = array();
         $data = $this->getDataProject();
-        foreach ($data["calendari"] as $item) {
+        $calendari = json_decode($data["calendari"], true);
+        foreach ($calendari as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inici %s %d", $data["modulId"], $data["nomPeriode"], $item["període"]),
                 "date"=>$item["inici"]
@@ -138,7 +139,8 @@ class sintesiProjectModel extends MoodleProjectModel {
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
-        foreach ($data["datesAC"] as $item) {
+        $datesAC = json_decode($data["datesAC"], true);
+        foreach ($datesAC as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
                     "title"=>sprintf("%s - enunciat %s", $data["modulId"], $item['id']),
@@ -157,7 +159,7 @@ class sintesiProjectModel extends MoodleProjectModel {
         return $ret;
     }
 
-    protected function getCourseId() {
+    public function getCourseId() {
         $data = $this->getDataProject();
         return $data["moodleCourseId"];
     }

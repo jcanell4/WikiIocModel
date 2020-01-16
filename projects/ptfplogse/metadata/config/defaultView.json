@@ -70,8 +70,8 @@
       },
       "moodleCourseId": {
         "label" : "Identificador del curs a moodle (moodleCourseId)",
-        "n_columns": 3,
-        "group": "main",
+        "n_columns": 6,
+        "group": "actualitzables",
         "props": {
           "required": true,
           "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
