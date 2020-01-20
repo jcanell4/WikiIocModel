@@ -913,10 +913,12 @@ class ProjectMetaDataQuery extends DataQuery {
         $persons = explode(",", $persons);
         foreach ($persons as $user) {
             $file = "$path_dreceres$user/$nom_dreceres";
-            $content = file_get_contents($file);
-            $content = preg_replace("/^\[\[.*:*$ns\W.*\]\]$/m", "", $content);
-            if (file_put_contents($file, $content, LOCK_EX) === FALSE)
-                throw new Exception("removeProject: Error mentre eliminava el nom del projecte de la drecera de $user.");
+            if(file_exists($file)){
+                $content = file_get_contents($file);
+                $content = preg_replace("/^\[\[.*:*$ns\W.*\]\]$/m", "", $content);
+                if (file_put_contents($file, $content, LOCK_EX) === FALSE)
+                    throw new Exception("removeProject: Error mentre eliminava el nom del projecte de la drecera de $user.");
+            }
         }
     }
 

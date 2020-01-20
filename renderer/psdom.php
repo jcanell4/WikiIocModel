@@ -231,6 +231,7 @@ class SpecialBlockNodeDoc extends StructuredNodeDoc{
     const SOL_TYPE              = 'sol';
     const SOLUCIO_TYPE          = 'solucio';
     const VERD_TYPE             = "verd";
+    const EDITTABLE_TYPE        = "editttable";
 
     public function __construct($type) {
         parent::__construct($type);
@@ -332,6 +333,24 @@ class HeaderNodeDoc extends LeveledNodeDoc{
     }
 }
 
+class FirstParagraphNode extends StructuredNodeDoc{
+    private $rootNode;
+
+    public function __construct($rootNode) {
+        parent::__construct(self::PARAGRAPH_TYPE);
+        $this->rootNode = $rootNode;
+    }
+
+    public function getLevel(){
+        return 1;
+    }
+    
+    public function getFather(){
+        return $this->rootNode;
+    }
+
+}
+
 class RootNodeDoc extends LeveledNodeDoc{
     const ROOT_TYPE = "root";
 
@@ -359,7 +378,7 @@ class LeafNodeDoc extends AbstractNodeDoc{
     const ACRONYM_TYPE = "acronym";
     const OP_SINGLEQUOTE_TYPE      = "open_singlequote";
     const CL_SINGLEQUOTE_TYPE      = "close_singlequote";
-    
+
     private $acronym;
 
     public function __construct($type) {
@@ -625,7 +644,8 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     function p_open() {
         $paragraph = new StructuredNodeDoc(StructuredNodeDoc::PARAGRAPH_TYPE);
         if ($this->currentNode === NULL) {
-            $this->currentNode = $this->rootNode;
+            $this->currentNode = new FirstParagraphNode($this->rootNode);
+            $this->rootNode->addContent($this->currentNode);
         }
         $this->currentNode->addContent($paragraph);
         $this->currentNode = $paragraph;

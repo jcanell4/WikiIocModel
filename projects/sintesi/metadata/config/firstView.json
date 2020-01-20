@@ -42,7 +42,7 @@
     "fields": {
       "tipusCicle":{
         "type":"select",
-        "n_columns": 5,
+        "n_columns": 4,
         "label": "LOGSE o LOE (tipusCicle)",
         "group": "dadesBasiques",
         "props": {
@@ -56,6 +56,25 @@
             ]
         }
       },
+      "individual": {
+        "type":"checkbox",
+        "label" : "És un treball indivudual",
+        "n_columns": 4,
+        "group": "dadesBasiques",
+        "props": {
+          "required": true,
+          "title": "indiqueu si en treball és individual"
+        }
+      },
+      "moodleCourseId": {
+        "label" : "Identificador del curs a moodle (moodleCourseId)",
+        "n_columns": 4,
+        "group": "dadesBasiques",
+        "props": {
+          "required": true,
+          "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
+        }
+      },      
       "cicle": {
         "label" : "Nom del cicle (cicle)",
         "n_columns": 8,
@@ -72,6 +91,15 @@
         "props": {
           "required": true,
           "title": "Indiqueu la durada del cicle en hores"
+        }
+      },
+      "modulId": {
+        "label" : "Codi del mòdul (modulId)",
+        "n_columns": 3,
+        "group": "dadesBasiques",
+        "props": {
+          "required": true,
+          "title": "indiqueu el codi del mòdul en format MXX. Per exemple: M02"
         }
       },
       "modul": {
@@ -105,7 +133,7 @@
       },
       "coordinador": {
         "label" : "Coordinador (coordinador)",
-        "n_columns": 6,
+        "n_columns": 4,
         "group": "dadesBasiques",
         "props": {
           "required": true,
@@ -114,7 +142,7 @@
       },
       "professors": {
         "label" : "Professors (professors)",
-        "n_columns": 6,
+        "n_columns": 5,
         "group": "dadesBasiques",
         "props": {
           "required": true,
@@ -387,33 +415,40 @@
                 {
                   "name": "id",
                   "field": "id",
-                  "width": "5%"
+                  "width": "5%",               
+                  "editable": true
                 },
                 {
                   "name": "parts",
                   "field": "parts",
-                  "width": "5%"
+                  "width": "5%",               
+                  "editable": true
                 },
                 {
                   "name": "període",
                   "field": "període",
-                  "width": "5%"
+                  "width": "5%",               
+                  "editable": true
                 },
                 {
                   "name": "enunciat",
-                  "field": "enunciat"
+                  "field": "enunciat",               
+                  "editable": true
                 },
                 {
                   "name": "lliurament",
-                  "field": "lliurament"
+                  "field": "lliurament",               
+                  "editable": true
                 },
                 {
                   "name": "qualificació",
-                  "field": "qualificació"
+                  "field": "qualificació",               
+                  "editable": true
                 },
                 {
                   "name": "ponderació",
-                  "field": "ponderació"
+                  "field": "ponderació",               
+                  "editable": true
                 }
               ]
             }
@@ -450,23 +485,25 @@
           "layout": [
             {
               "defaultCell": {
-                "width" : "80%",
-                "editable": true
+                "width" : "80%"
               },
               "cells": [
                 {
                   "name": "id",
                   "field": "id",
-                  "width": "5%"
+                  "width": "5%",
+                "editable": true
                 },
                 {
                   "name": "competencies",
-                  "field": "competencia"
+                  "field": "competencia",
+                "editable": true
                 },
                 {
                   "name": "punts",
                   "field": "punts",
-                  "width": "5%"
+                  "width": "5%",
+                "editable": true
                 }
               ]
             }
@@ -500,18 +537,19 @@
           "layout": [
             {
               "defaultCell": {
-                "width" : "21%",
-                "editable": true
+                "width" : "21%"
               },
               "cells": [
                 {
                   "name": "id competència",
                   "field": "idCompetencia",
-                  "width": "5%"
+                  "width": "5%",
+                "editable": true
                 },
                 {
                   "name": "descripció de l'evidència",
-                  "field": "descripció"
+                  "field": "descripció",
+                "editable": true
                 }
               ]
             }

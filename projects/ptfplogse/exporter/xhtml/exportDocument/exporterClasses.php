@@ -58,6 +58,7 @@ class exportDocument extends MainRender {
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
                 $cicle = $data["cicle"]==="Indiqueu el cicle"?"":html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
                 $credit = html_entity_decode(htmlspecialchars_decode($data["credit"], ENT_COMPAT|ENT_QUOTES));
+                $creditId = html_entity_decode(htmlspecialchars_decode($data["creditId"], ENT_COMPAT|ENT_QUOTES));
                 $tipusBlocCredit = html_entity_decode(htmlspecialchars_decode($data["tipusBlocCredit"], ENT_COMPAT|ENT_QUOTES));
                 //$durada = html_entity_decode(htmlspecialchars_decode($data["durada"], ENT_COMPAT|ENT_QUOTES));
                 //$professors = html_entity_decode(htmlspecialchars_decode($data["professors"], ENT_COMPAT|ENT_QUOTES));
@@ -74,11 +75,11 @@ class exportDocument extends MainRender {
                                      "wlogo" => 9.9,
                                      "hlogo" => 11.1,
                                      "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
-                                     "rtext" => $cicle."\n".$credit."-".$tipusBlocCredit."\n".$semestre],
+                                     "rtext" => $cicle."\n".$creditId." ".$credit."-".$tipusBlocCredit."\n".$semestre],
                         "titol" => ["Formació Professional",
                                     "Pla de Treball",
                                     $cicle,
-                                    $credit . (($tipusBlocCredit!="crèdit") ? " - $tipusBlocCredit" : ""),
+                                    $creditId." ".$credit . (($tipusBlocCredit!="crèdit") ? " - $tipusBlocCredit" : ""),
                                     $semestre],
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
                     )

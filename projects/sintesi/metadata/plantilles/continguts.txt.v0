@@ -16,13 +16,13 @@
 ###:
 
 :###
-Aquest {##tipusModCred##}  {##modulId##} {##modul##} {##descripcio##}. Ha de permetre culminar la integració dels continguts impartits al llarg del cicle, globalitzant i interrelacionant,i si escau completant, aquells continguts susceptibles de mostrar, al final del cicle formatiu, el grau d'assoliment dels objectius generals del cicle. 
+Aquest {##tipusModCred##}  {##modul##} {##descripcio##}. Ha de permetre culminar la integració dels continguts impartits al llarg del cicle, globalitzant i interrelacionant,i si escau completant, aquells continguts susceptibles de mostrar, al final del cicle formatiu, el grau d'assoliment dels objectius generals del cicle. 
 
 <WIOCCL:IF condition="!{##individual##}">
 Per tant es demana un treball eminentment pràctic **treballant en petit grup de forma col·laborativa o cooperativa**. 
 </WIOCCL:IF>
 
-Té una assignació de {##durada##} h (un semestre) distribuïdes en {#_ARRAY_LENGTH({##calendari##})_#} {##nomPeriodePlur##}, de  les {##duradaCicle##} h que té el cicle de {##cicle##}. El coordinador  és {##coordinador##}; el professorat és {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
+Té una assignació de {##durada##} h (un semestre) distribuïdes en {#_ARRAY_LENGTH({##calendari##})_#} períodes, de  les {##duradaCicle##} h que té el cicle de {##cicle##}. El coordinador  és {##coordinador##}; el professorat és {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
 
 Suposa una **dedicació setmanal mínima aproximada de {##dedicacio##} h**. Es cursa el **darrer semestre** de l'itinerari formatiu perquè és  necessari tenir superats o convalidats (o cursar en el semestre en què es fa la matrícula) tots els {##tipusModCred##}s del cicle, excepte l'FCT ###: [##TODO: afegir altres requisit si fos necessari##]. 
 

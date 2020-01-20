@@ -485,7 +485,7 @@ La planificació establerta per a la UD{##itemUD[unitat didàctica]##} és la se
 
 </WIOCCL:FOREACH>
 <WIOCCL:FOREACH  var="itemAval" array="{##filteredEAF##}" counter="idItemAval">
-^ <WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredAC##})_#}==0&&{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesAC##})_#}\=0||{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[id]##}: {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##itemAval[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#})_#}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredEAF##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
+^ <WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredAC##})_#}==0&&{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="#_ARRAY_LENGTH({##datesAC##})_#}\=0||{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[id]##}: {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##itemAval[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#})_#}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredEAF##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
 
 </WIOCCL:FOREACH>
 </WIOCCL:SUBSET>

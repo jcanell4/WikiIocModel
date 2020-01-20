@@ -29,9 +29,9 @@
         {
             "main": "meta.mdpr",
             "versions": {
-                "fields": 6,
+                "fields": 8,
                 "templates": {
-                    "continguts": 13
+                    "continguts": 16
                 }
             },
             "mainType": {
@@ -452,9 +452,14 @@
                             "default": "Indiqueu el cicle",
                             "mandatory": true
                         },
+                        "creditId": {
+                            "type": "string",
+                            "default": "CXX",
+                            "mandatory": true
+                        },
                         "credit": {
                             "type": "string",
-                            "default": "CXX Indiqueu el nom crèdit",
+                            "default": "Indiqueu el nom crèdit",
                             "mandatory": true
                         },
                         "durada": {
@@ -692,7 +697,12 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "continguts"
-                        }
+                        },
+                       "moodleCourseId": {
+                           "type": "number",
+                           "mandatory": true,
+                           "default": 0
+                       }
                     }
                 }
             }

@@ -29,6 +29,7 @@
     {
       "main": "meta.mdpr",
       "versions": {
+        "fields": 1,
         "templates": {
           "continguts": 2
         }
@@ -114,6 +115,11 @@
               "type": "string",
               "mandatory": true,
               "default": "continguts"
+            },
+            "moodleCourseId": {
+                "type": "number",
+                "mandatory": true,
+                "default": 0
             }
           }
         }

@@ -15,7 +15,7 @@
 <!-- Capçalera -->
 <header class="main_header">
   <div class="own_container">
-      <h1>{##modul##}<WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}"> - {##tipusBlocModul##}</WIOCCL:IF></h1>
+      <h1>{##modulId##} {##modul##}<WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}"> - {##tipusBlocModul##}</WIOCCL:IF></h1>
   </div>
 </header>
 <!-- /Capçalera -->
@@ -79,7 +79,7 @@
 <section class="section section2">
   <hr>
   <div class="own_container">
-    Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">{##tipusBlocModul##} del mòdul</WIOCCL:IF> {##modul##} {##descripcio##}
+    Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">{##tipusBlocModul##} del mòdul</WIOCCL:IF> {##modulId##} {##modul##} {##descripcio##}
   </div>
 </section>
 <!-- /Secció 2 -->

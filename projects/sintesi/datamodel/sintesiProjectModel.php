@@ -6,9 +6,9 @@
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
-require_once (WIKI_IOC_MODEL . "datamodel/AbstractProjectModel.php");
+require_once (WIKI_IOC_MODEL . "datamodel/MoodleProjectModel.php");
 
-class sintesiProjectModel extends AbstractProjectModel {
+class sintesiProjectModel extends MoodleProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
@@ -125,4 +125,42 @@ class sintesiProjectModel extends AbstractProjectModel {
         return [$basename.".zip"];
     }
 
+    public function getCalendarDates() {
+        $ret = array();
+        $data = $this->getDataProject();
+        $calendari = json_decode($data["calendari"], true);
+        foreach ($calendari as $item) {
+            $ret[] = [
+                "title"=>sprintf("%s - inici %s %d", $data["modulId"], $data["nomPeriode"], $item["període"]),
+                "date"=>$item["inici"]
+            ];
+        }
+        
+        $dataEnunciatOld ="";
+        $dataSolucioOld ="";
+        $dataQualificacioOld ="";
+        $datesAC = json_decode($data["datesAC"], true);
+        foreach ($datesAC as $item) {
+            if($dataEnunciatOld!=$item["enunciat"]){
+                $ret[] = [
+                    "title"=>sprintf("%s - enunciat %s", $data["modulId"], $item['id']),
+                    "date"=>$item["enunciat"]
+                ];
+                $dataEnunciatOld = $item["enunciat"];
+            }
+            if($dataQualificacioOld!=$item["qualificació"]){
+                $ret[] = [
+                    "title"=>sprintf("%s - qualificació %s", $data["modulId"], $item['id']),
+                    "date"=>$item["qualificació"]
+                ];
+                $dataQualificacioOld = $item["qualificació"];
+            }
+        }
+        return $ret;
+    }
+
+    public function getCourseId() {
+        $data = $this->getDataProject();
+        return $data["moodleCourseId"];
+    }
 }

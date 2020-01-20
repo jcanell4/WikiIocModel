@@ -32,7 +32,7 @@
     <div class="container">
       <h1>Pla de treball</h1>
       <h2>{##cicle##}</h2>
-      <h2>{##modul##}</h2>
+      <h2>{##modulId##} {##modul##}</h2>
     </div>
   </header>
 

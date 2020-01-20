@@ -315,6 +315,7 @@ class BasicStaticPdfRenderer {
     static $firstPageFont = "Times";
     static $pagesFont = "helvetica";
     static $state = ["table" => ["type" => "table"]];
+    static $tcpdfObj = NULL;
 
     public static function resetStaticDataRender() {
         self::$tableCounter = 0;
@@ -334,12 +335,14 @@ class BasicStaticPdfRenderer {
     }
 
     protected static function resolveReferences($content) {
-        if ($content["type"]===TableFrame::TABLEFRAME_TYPE_TABLE || $content["type"]===TableFrame::TABLEFRAME_TYPE_ACCOUNTING) {
-            self::$tableCounter++;
-            self::$tableReferences[$content["id"]] = self::$tableCounter;
-        }elseif ($content["type"]===FigureFrame::FRAME_TYPE_FIGURE) {
-            self::$figureCounter++;
-            self::$figureReferences[$content["id"]] = self::$figureCounter;
+        if (!empty($content["id"])) {
+            if ($content["type"]===TableFrame::TABLEFRAME_TYPE_TABLE || $content["type"]===TableFrame::TABLEFRAME_TYPE_ACCOUNTING) {
+                self::$tableCounter++;
+                self::$tableReferences[$content["id"]] = self::$tableCounter;
+            }elseif ($content["type"]===FigureFrame::FRAME_TYPE_FIGURE) {
+                self::$figureCounter++;
+                self::$figureReferences[$content["id"]] = self::$figureCounter;
+            }
         }
         for ($i=0; $i<count($content["content"]); $i++) {
             self::resolveReferences($content["content"][$i]);
@@ -509,7 +512,7 @@ class BasicStaticPdfRenderer {
         return [$w/5, $h/5];
     }
 
-    protected static function getContent($content) {
+    protected static function getContent($content ) {
         $char = "";
         $ret = "";
         switch ($content["type"]) {
@@ -609,6 +612,7 @@ class BasicStaticPdfRenderer {
             case SpecialBlockNodeDoc::SOL_TYPE:
             case SpecialBlockNodeDoc::SOLUCIO_TYPE:
             case SpecialBlockNodeDoc::VERD_TYPE:
+            case SpecialBlockNodeDoc::EDITTABLE_TYPE:
                 $ret = self::getStructuredContent($content);
                 break;
 
@@ -667,6 +671,7 @@ class BasicStaticPdfRenderer {
                 break;
 
             case ReferenceNodeDoc::REFERENCE_TYPE:
+                $titol = (empty($content["referenceTitle"])) ? $content["referenceId"] : $content["referenceTitle"];
                 switch ($content["referenceType"]) {
                     case ReferenceNodeDoc::REF_TABLE_TYPE:
                         $id = trim($content["referenceId"]);
@@ -678,13 +683,13 @@ class BasicStaticPdfRenderer {
                         break;
                     case ReferenceNodeDoc::REF_WIKI_LINK:
                         $file = $_SERVER['HTTP_REFERER']."?id=".$content["referenceId"];
-                        $ret = " <a href=\"".$file."\">".$content["referenceTitle"]."</a> ";
+                        $ret = " <a href=\"".$file."\">".$titol."</a> ";
                         break;
                     case ReferenceNodeDoc::REF_INTERNAL_LINK:
-                        $ret = " <a href='".$content["referenceId"]."'>".$content["referenceTitle"]."</a> ";
+                        $ret = " <a href='".$content["referenceId"]."'>".$titol."</a> ";
                         break;
                     case ReferenceNodeDoc::REF_EXTERNAL_LINK:
-                        $ret = " <a href=\"".$content["referenceId"]."\">".$content["referenceTitle"]."</a> ";
+                        $ret = " <a href=\"".$content["referenceId"]."\">".$titol."</a> ";
                         break;
                 }
                 break;
@@ -747,5 +752,15 @@ class BasicStaticPdfRenderer {
         }
         return $ret;
     }
-
+    
+    public static function getText($text, $max, IocTcPdf &$iocTcPdf){
+        if($iocTcPdf->GetStringWidth($text)>$max){
+            while($iocTcPdf->GetStringWidth($text."...")>$max){
+                $text = substr($text, 0, strlen($text)-1);
+            }
+            $text = $text."...";
+        }
+        return $text;
+    }
+    
 }

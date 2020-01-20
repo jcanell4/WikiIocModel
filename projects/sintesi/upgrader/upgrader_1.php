@@ -33,28 +33,21 @@ class upgrader_1 extends CommonUpgrader {
                 $ret = TRUE;
                 break;
             case "templates":
-                // Línia 96.  Es canvia "  :title:Taula Unitats" per "  :title:Apartats"
-                // Línia 102. Es canvia "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[inici]##}" per "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[final]##}"
-
                 if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
                     $filename = $this->model->getProjectDocumentName();
                 }
-                $doc = $this->model->getRawProjectDocument($filename);
+                $doc = $this->model->getRawProjectDocument($filename)."\n";
 
-                $aTokRep = [["~~USE:WIOCCL~~",
-                             ":###\n~~USE:WIOCCL~~"],
-                             ["Drets i obligacions de l'alumne (nou)",
-                             "Drets i obligacions de l'alumne"],
-                             ["\\^  Data màxima per obtenir apte a secretaria  \\^",
-                             "^  1a convocatòria per obtenir apte a secretaria  ^  2a convocatòria per obtenir apte a secretaria  ^"],
-                             ["\\|  \\{\\\#\\_DATE\\(\"\\{\\#\\#dataMaxApteFCT\\#\\#\\}\"\\)\\_\\#\\}  \\|",
-                             "|  {#_DATE(\"{##dataApteFCT##}\")_#}  |  {#_DATE(\"{##dataMaxApteFCT##}\")_#}  |"]];
-                $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
+                $aTokRep = [
+                            ["(Aquest \{##tipusModCred##\} )(\{##modul##\} \{##descripcio##\})",
+                             "$1{##modulId##} $2"]
+                           ];
+                $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
+                if (!empty($doc)) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade version 22 to 23");
                 }
-                $ret = !empty($dataChanged);
+                $ret = !empty($doc);
         }
         return $ret;
     }

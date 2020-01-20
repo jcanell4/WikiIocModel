@@ -55,8 +55,8 @@ class IocTcPdf extends TCPDF {
         $this->MultiCell($header_w, $cell_height, $this->header_title, 0, 'L', 0, 0, "", "", true);
 
         // header string
-        $this->MultiCell(65, $cell_height, $this->header_string, 0, 'R', 0, 0, "", "", true);
-        $this->Line(5, 19, 180,19);
+        $this->MultiCell(0, $cell_height, $this->header_string, 0, 'R', 0, 0, "", "", true);
+        $this->Line($margins['left'], 19, $this->getPageWidth()-$margins['right'], 19);
     }
 
     // Page footer

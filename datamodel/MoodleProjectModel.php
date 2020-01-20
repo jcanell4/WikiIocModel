@@ -50,7 +50,7 @@ abstract class MoodleProjectModel extends AbstractProjectModel{
         
     }
     
-    protected abstract function getCourseId();
+    public abstract function getCourseId();
 
     /**
      * Llista de les dates a pujar al calendari amb el format següent:
@@ -58,5 +58,5 @@ abstract class MoodleProjectModel extends AbstractProjectModel{
      *  - date (en format yyyy-mm-dd)
      *  - description
      */
-    protected abstract function getCalendarDates();    
+    public abstract function getCalendarDates();    
 }

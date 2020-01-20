@@ -53,4 +53,15 @@ class BasicCommandAuthorization extends AbstractCommandAuthorization {
         return checkSecurityToken();
     }
 
+    public function isUserGroup($grups=array()) {
+        $ret = FALSE;
+        $userGrups = $this->permission->getUserGroups();
+        if (!empty($userGrups) && !empty($grups)) {
+            foreach ($grups as $grup) {
+                $ret |= in_array($grup, $userGrups);
+            }
+        }
+        return $ret;
+    }
+
 }

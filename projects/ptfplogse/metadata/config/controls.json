@@ -16,6 +16,33 @@
         }
 
     },
+    "ftpSend": {
+        "parms": { 
+            "DOM": {
+               "id": "ftpSendButton"
+            }
+        },
+
+        "scripts": {
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'",
+                    "page.generated":"true",
+                    "page.isRevision": "false",
+                    "page.updateButton": "0",
+                    "page.ftpSendButton": "true"
+                }
+            }
+        }
+
+    },
     "ptfplogseConsolidateData": {
         "class": "WikiIocButton",
         "parms": { 
