@@ -139,7 +139,7 @@ class sintesiProjectModel extends MoodleProjectModel {
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
-        $datesAC = json_decode($data["datesAC"], true);
+        $datesAC = json_decode($data["dadesAC"], true);
         foreach ($datesAC as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [

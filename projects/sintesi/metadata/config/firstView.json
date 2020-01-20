@@ -368,14 +368,14 @@
         }
       },
       "dadesAC": {
-        "label":"Dates importants (datesAC)",
+        "label":"Dades importants AC (dadesAC)",
         "n_columns": 12,
         "type": "editableObject",
         "group": "avaluacio",
         "n_rows": 4,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les dates importants de l'AC"
+          "title": "Detalleu les dades importants de l'AC"
         },
         "config": {
           "actions": {
