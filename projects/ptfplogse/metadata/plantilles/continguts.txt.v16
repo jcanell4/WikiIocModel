@@ -290,7 +290,7 @@ L'AC es fa a distància, es concreta en:
 
   * UNITAT DIDÀCTICA {##itemUD[unitat didàctica]##}
 <WIOCCL:FOREACH var="item" array="{##datesAC##}" filter="{##item[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
-      * {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##item[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#})_#} ({##item[id]##})
+      * {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##item[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#},'' '')_#} ({##item[id]##})
 </WIOCCL:FOREACH>
 </WIOCCL:FOREACH>
 
@@ -481,11 +481,11 @@ La planificació establerta per a la UD{##itemUD[unitat didàctica]##} és la se
 <WIOCCL:SUBSET  subsetvar="filteredEAF" array="{##datesEAF##}" arrayitem="itemsubEAF" filter="{##itemsubEAF[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
  <WIOCCL:SUBSET  subsetvar="filteredAC" array="{##datesAC##}" arrayitem="itemsubAC" filter="{##itemsubAC[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
 <WIOCCL:FOREACH  var="itemAval" array="{##filteredAC##}" counter="idItemAval">
-^ <WIOCCL:IF condition="{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[id]##}: {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##itemAval[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#})_#}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredEAF##})_#}==0&&{#_ARRAY_LENGTH({##filteredAC##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
+^ <WIOCCL:IF condition="{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[id]##}: {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##itemAval[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#}, '' '')_#}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredEAF##})_#}==0&&{#_ARRAY_LENGTH({##filteredAC##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
 
 </WIOCCL:FOREACH>
 <WIOCCL:FOREACH  var="itemAval" array="{##filteredEAF##}" counter="idItemAval">
-^ <WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredAC##})_#}==0&&{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesAC##})_#}\=0||{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[id]##}: {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##itemAval[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#})_#}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredEAF##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
+^ <WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredAC##})_#}==0&&{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredAC##})_#}\>0||{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[id]##}: {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##itemAval[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#}, '' '')_#}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredEAF##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
 
 </WIOCCL:FOREACH>
 </WIOCCL:SUBSET>

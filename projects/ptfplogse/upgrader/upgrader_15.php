@@ -31,7 +31,7 @@ class upgrader_15 extends CommonUpgrader {
                 $doc = $this->model->getRawProjectDocument($filename)."\n";
 
                 $aTokRep = [
-                            ["(Aquest <WIOCCL:IF condition=\"''crèdit''!=\{##tipusBlocCredit##}\">\{##tipusBlocCredit##\} del<\/WIOCCL:IF> crèdit )(\{##credit##\} \{##descripcio##\})",
+                            ["(Aquest <WIOCCL:IF condition=\"''crèdit''!=\{##tipusBlocCredit##\}\">\{##tipusBlocCredit##\} del<\/WIOCCL:IF> crèdit )(\{##credit##\} \{##descripcio##\})",
                              "$1{##creditId##} $2"]
                            ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);

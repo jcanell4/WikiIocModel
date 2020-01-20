@@ -419,40 +419,46 @@
           "layout": [
             {
               "defaultCell": {
-                "width" : "21%",
-                "editable": true
+                "width" : "21%"
               },
               "cells": [
                 {
                   "name": "id",
                   "field": "id",
-                  "width": "5%"
+                  "width": "5%",               
+                  "editable": true
                 },
                 {
                   "name": "parts",
                   "field": "parts",
-                  "width": "5%"
+                  "width": "5%",               
+                  "editable": true
                 },
                 {
                   "name": "període",
                   "field": "període",
-                  "width": "5%"
+                  "width": "5%",               
+                  "editable": true
                 },
                 {
                   "name": "enunciat",
-                  "field": "enunciat"
+                  "field": "enunciat",               
+                  "editable": true
                 },
                 {
                   "name": "lliurament",
-                  "field": "lliurament"
+                  "field": "lliurament",               
+                  "editable": true
                 },
                 {
                   "name": "qualificació",
-                  "field": "qualificació"
+                  "field": "qualificació",               
+                  "editable": true
                 },
                 {
                   "name": "ponderació",
-                  "field": "ponderació"
+                  "field": "ponderació",               
+                  "editable": true
                 }
               ]
             }
@@ -489,23 +495,25 @@
           "layout": [
             {
               "defaultCell": {
-                "width" : "80%",
-                "editable": true
+                "width" : "80%"
               },
               "cells": [
                 {
                   "name": "id",
                   "field": "id",
-                  "width": "5%"
+                  "width": "5%",
+                "editable": true
                 },
                 {
                   "name": "competències",
-                  "field": "competencia"
+                  "field": "competencia",
+                "editable": true
                 },
                 {
                   "name": "punts",
                   "field": "punts",
-                  "width": "5%"
+                  "width": "5%",
+                "editable": true
                 }
               ]
             }
@@ -539,18 +547,19 @@
           "layout": [
             {
               "defaultCell": {
-                "width" : "21%",
-                "editable": true
+                "width" : "21%"
               },
               "cells": [
                 {
                   "name": "id competència",
                   "field": "idCompetencia",
-                  "width": "5%"
+                  "width": "5%",
+                "editable": true
                 },
                 {
                   "name": "descripció de l'evidència",
-                  "field": "descripció"
+                  "field": "descripció",
+                "editable": true
                 }
               ]
             }
