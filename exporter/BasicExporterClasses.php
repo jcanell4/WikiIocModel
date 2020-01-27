@@ -344,11 +344,15 @@ class BasicStaticPdfRenderer {
                 self::$figureReferences[$content["id"]] = self::$figureCounter;
             }
         }
-        for ($i=0; $i<count($content["content"]); $i++) {
-            self::resolveReferences($content["content"][$i]);
+        if (!empty($content["content"])) {
+            for ($i=0; $i<count($content["content"]); $i++) {
+                self::resolveReferences($content["content"][$i]);
+            }
         }
-        for ($i=0; $i<count($content["children"]); $i++) {
-            self::resolveReferences($content["children"][$i]);
+        if (!empty($content["children"])) {
+            for ($i=0; $i<count($content["children"]); $i++) {
+                self::resolveReferences($content["children"][$i]);
+            }
         }
     }
 
@@ -752,7 +756,7 @@ class BasicStaticPdfRenderer {
         }
         return $ret;
     }
-    
+
     public static function getText($text, $max, IocTcPdf &$iocTcPdf){
         if($iocTcPdf->GetStringWidth($text)>$max){
             while($iocTcPdf->GetStringWidth($text."...")>$max){
@@ -762,5 +766,5 @@ class BasicStaticPdfRenderer {
         }
         return $text;
     }
-    
+
 }
