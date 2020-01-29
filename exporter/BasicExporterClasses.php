@@ -357,19 +357,21 @@ class BasicStaticPdfRenderer {
     }
 
     protected static function renderHeader($header, IocTcPdf &$iocTcPdf) {
-        $level = $header["level"]-1;
-        $iocTcPdf->SetFont('Times', 'B', 12);
-        $title = self::incHeaderCounter($level).$header["title"];
+        if ($header['type'] !== StructuredNodeDoc::ROOTCONTENT_TYPE) {
+            $level = $header["level"]-1;
+            $iocTcPdf->SetFont('Times', 'B', 12);
+            $title = self::incHeaderCounter($level).$header["title"];
 
-        //Control de espacio disponible para impedir títulos huérfanos
-        if ($iocTcPdf->GetY() + 40 > $iocTcPdf->getPageHeight()) {
-            $iocTcPdf->AddPage(); //inserta salto de pagina
+            //Control de espacio disponible para impedir títulos huérfanos
+            if ($iocTcPdf->GetY() + 40 > $iocTcPdf->getPageHeight()) {
+                $iocTcPdf->AddPage(); //inserta salto de pagina
+            }
+
+            $iocTcPdf->Bookmark($title, $level, 0);
+            $iocTcPdf->Ln(5);
+            $iocTcPdf->Cell(0, 0, $title, 0,1, "L");
+            $iocTcPdf->Ln(3);
         }
-
-        $iocTcPdf->Bookmark($title, $level, 0);
-        $iocTcPdf->Ln(5);
-        $iocTcPdf->Cell(0, 0, $title, 0,1, "L");
-        $iocTcPdf->Ln(3);
         for ($i=0; $i<count($header["content"]); $i++) {
             self::renderContent($header["content"][$i], $iocTcPdf);
         }
