@@ -21,7 +21,7 @@ class CreatePageAction extends SavePageAction {
 
         if (!$response['info']) {
             $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID]);
-            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('document_created'), $id);
+            $response['info'] = self::generateInfo("info", WikiIocLangManager::getLang('document_created'), $id);
         }
 
         return $response;

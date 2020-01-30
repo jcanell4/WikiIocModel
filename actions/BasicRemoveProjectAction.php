@@ -50,7 +50,7 @@ class BasicRemoveProjectAction extends BasicViewProjectMetaDataAction {
     protected function postAction(&$response) {
         $this->resourceLocker->leaveResource(TRUE);
         $new_message = $this->generateMessageInfoForSubSetProject($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_removed');
-        $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
+        $response['info'] = self::addInfoToInfo($response['info'], $new_message);
     }
 
     public function requireResource($lock = FALSE) {

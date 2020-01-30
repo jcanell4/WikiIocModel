@@ -33,7 +33,7 @@ class BasicCancelProjectMetaDataAction extends BasicViewProjectMetaDataAction im
     protected function postAction(&$response) {
         if ($response[ProjectKeys::KEY_CODETYPE] !== ProjectKeys::VAL_CODETYPE_OK) {
             $new_message = $this->generateMessageInfoForSubSetProject($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_canceled');
-            $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
+            $response['info'] = self::addInfoToInfo($response['info'], $new_message);
         }
     }
 

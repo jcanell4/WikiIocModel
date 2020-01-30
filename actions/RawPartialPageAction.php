@@ -160,7 +160,7 @@ class RawPartialPageAction extends EditPageAction {
     {
         $response = $data;
         $response[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
-        $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
+        $response['info'] = self::generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
 
         return $response;
     }
@@ -174,7 +174,7 @@ class RawPartialPageAction extends EditPageAction {
 
         $this->getModel()->replaceContentForChunk($response['structure'], $this->params[PageKeys::KEY_SECTION_ID],
             $response["draft"]['content']);
-        $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_editing'));
+        $response['info'] = self::generateInfo('warning', WikiIocLangManager::getLang('draft_editing'));
 
         return $response;
     }
@@ -184,7 +184,7 @@ class RawPartialPageAction extends EditPageAction {
         $response['original_call'] = $this->generateOriginalCall();
         $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
         $response['show_draft_conflict_dialog'] = true;
-        $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('draft_found'));
+        $response['info'] = self::generateInfo('warning', WikiIocLangManager::getLang('draft_found'));
 
         return $response;
     }
@@ -234,7 +234,7 @@ class RawPartialPageAction extends EditPageAction {
         $response = $this->generateOriginalCall();
         $response['show_draft_dialog'] = true;
         $response['title'] = $data['structure']['title'];
-        $response['info'] = $this->generateInfo('warning', WikiIocLangManager::getLang('partial_draft_found'));
+        $response['info'] = self::generateInfo('warning', WikiIocLangManager::getLang('partial_draft_found'));
         $response['lastmod'] = $data['structure']['date'];
         $response['content'] = $data['content']['editing'];
         $response['draft'] = $data['draft'];

@@ -55,7 +55,7 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
             if ($this->params[ProjectKeys::KEY_NO_RESPONSE]) {
                 $response[ProjectKeys::KEY_CODETYPE] = ProjectKeys::VAL_CODETYPE_OK;
             }else{
-                $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_saved'), $modelAttrib[ProjectKeys::KEY_ID]);
+                $response['info'] = self::generateInfo("info", WikiIocLangManager::getLang('project_saved'), $modelAttrib[ProjectKeys::KEY_ID]);
                 $response[ProjectKeys::KEY_ID] = $this->idToRequestId($modelAttrib[ProjectKeys::KEY_ID]);
             }
         }
