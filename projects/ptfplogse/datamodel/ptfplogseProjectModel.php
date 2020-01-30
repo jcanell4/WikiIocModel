@@ -180,7 +180,11 @@ class ptfplogseProjectModel extends MoodleProjectModel {
     public function getCalendarDates() {
         $ret = array();
         $data = $this->getDataProject();
-        $calendari = json_decode($data["calendari"], true);
+        if(is_string($data["calendari"])){
+            $calendari = json_decode($data["calendari"], true);
+        }else{
+            $calendari = $data["calendari"];
+        }
         foreach ($calendari as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inici NA%d-U%d", $data["creditId"], $item["nucli activitat"], $item["unitat didàctica"]),
@@ -191,25 +195,29 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
-        $datesAC = json_decode($data["datesAC"], true);
+        if(is_string($data["datesAC"])){
+            $datesAC = json_decode($data["datesAC"], true);
+        }else{
+            $datesAC = $data["datesAC"];
+        }
         foreach ($datesAC as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
-                    "title"=>sprintf("%s - enunciat %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - enunciat %s", $data["creditId"], $item['id']),
                     "date"=>$item["enunciat"]
                 ];
                 $dataEnunciatOld = $item["enunciat"];
             }
             if($item["hiHaSolucio"] && $dataSolucioOld!=$item["solució"]){
                 $ret[] = [
-                    "title"=>sprintf("%s - solució %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - solució %s", $data["creditId"], $item['id']),
                     "date"=>$item["solució"]
                 ];
                 $dataSolucioOld = $item["solució"];
             }
             if($dataQualificacioOld!=$item["qualificació"]){
                 $ret[] = [
-                    "title"=>sprintf("%s - qualificació %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - qualificació %s", $data["creditId"], $item['id']),
                     "date"=>$item["qualificació"]
                 ];
                 $dataQualificacioOld = $item["qualificació"];
@@ -222,25 +230,29 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         $dataEnunciatRecOld ="";
         $dataSolucioRecOld ="";
         $dataQualificacioRecOld ="";
-        $datesEAF = json_decode($data["datesEAF"], true);
+        if(is_string($data["datesEAF"])){
+            $datesEAF = json_decode($data["datesEAF"], true);
+        }else{
+            $datesEAF = $data["datesEAF"];
+        }
         foreach ($datesEAF as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
-                    "title"=>sprintf("%s - enunciat %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - enunciat %s", $data["creditId"], $item['id']),
                     "date"=>$item["enunciat"]
                 ];
                 $dataEnunciatOld = $item["enunciat"];
             }
             if($item["hiHaSolucio"] && $dataSolucioOld!=$item["solució"]){
                 $ret[] = [
-                    "title"=>sprintf("%s - solució %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - solució %s", $data["creditId"], $item['id']),
                     "date"=>$item["solució"]
                 ];
                 $dataSolucioOld = $item["solució"];
             }
             if($dataQualificacioOld!=$item["qualificació"]){
                 $ret[] = [
-                    "title"=>sprintf("%s - qualificació %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - qualificació %s", $data["creditId"], $item['id']),
                     "date"=>$item["qualificació"]
                 ];
                 $dataQualificacioOld = $item["qualificació"];
@@ -248,21 +260,21 @@ class ptfplogseProjectModel extends MoodleProjectModel {
             if($item["hiHaEnunciatRecuperacio"]){
                 if($dataEnunciatRecOld!=$item["enunciat recuperació"]){
                     $ret[] = [
-                        "title"=>sprintf("%s - enunciat recuperació %s", $data["modulId"], $item['id']),
+                        "title"=>sprintf("%s - enunciat recuperació %s", $data["creditId"], $item['id']),
                         "date"=>$item["enunciat recuparació"]
                     ];
                     $dataEnunciaRectOld = $item["enunciat recuparació"];
                 }
                 if($item["hiHaSolucio"] && $dataSolucioRecOld!=$item["solució recuperació"]){
                     $ret[] = [
-                        "title"=>sprintf("%s - solució recuperació %s", $data["modulId"], $item['id']),
+                        "title"=>sprintf("%s - solució recuperació %s", $data["creditId"], $item['id']),
                         "date"=>$item["solució recuperació"]
                     ];
                     $dataSolucioRecOld = $item["solució recuperació"];
                 }
                 if($dataQualificacioRecOld!=$item["qualificació recuperació"]){
                     $ret[] = [
-                        "title"=>sprintf("%s - qualificació recuperació %s", $data["modulId"], $item['id']),
+                        "title"=>sprintf("%s - qualificació recuperació %s", $data["creditId"], $item['id']),
                         "date"=>$item["qualificació recuperació"]
                     ];
                     $dataQualificacioRecOld = $item["qualificació recuperació"];
@@ -270,47 +282,51 @@ class ptfplogseProjectModel extends MoodleProjectModel {
             }
         }
 
-        $datesJT = json_decode($data["datesJT"], true);
+        if(is_string($data["datesJT"])){
+            $datesJT = json_decode($data["datesJT"], true);
+        }else{
+            $datesJT = $data["datesJT"];
+        }
         foreach ($datesJT as $item) {
             $ret[] = [
-                "title"=>sprintf("%s - inscripció %s", $data["modulId"], $item['id']),
+                "title"=>sprintf("%s - inscripció %s", $data["creditId"], $item['id']),
                 "date"=>$item["inscripció"]
             ];
             $ret[] = [
-                "title"=>sprintf("%s - llista prov. %s", $data["modulId"], $item['id']),
+                "title"=>sprintf("%s - llista prov. %s", $data["creditId"], $item['id']),
                 "date"=>$item["llista provisional"]
             ];
             $ret[] = [
-                "title"=>sprintf("%s - llista def. %s", $data["modulId"], $item['id']),
+                "title"=>sprintf("%s - llista def. %s", $data["creditId"], $item['id']),
                 "date"=>$item["llista definitiva"]
             ];
             $ret[] = [
-                "title"=>sprintf("%s - jornada tècnica %s", $data["modulId"], $item['id']),
+                "title"=>sprintf("%s - jornada tècnica %s", $data["creditId"], $item['id']),
                 "date"=>$item["data JT"]
             ];
             $ret[] = [
-                "title"=>sprintf("%s - qualificació JT %s", $data["modulId"], $item['id']),
+                "title"=>sprintf("%s - qualificació JT %s", $data["creditId"], $item['id']),
                 "date"=>$item["qualificació"]
             ];
             if($item["hiHaEnunciatRecuperacio"]){
                 $ret[] = [
-                    "title"=>sprintf("%s - inscripció rec. %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - inscripció rec. %s", $data["creditId"], $item['id']),
                     "date"=>$item["inscripció recuperació"]
                 ];
                 $ret[] = [
-                    "title"=>sprintf("%s - llista prov. rec. %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - llista prov. rec. %s", $data["creditId"], $item['id']),
                     "date"=>$item["llista provisional recuperació"]
                 ];
                 $ret[] = [
-                    "title"=>sprintf("%s - llista def. rec %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - llista def. rec %s", $data["creditId"], $item['id']),
                     "date"=>$item["llista definitiva recuperació"]
                 ];
                 $ret[] = [
-                    "title"=>sprintf("%s - jornada tècnica rec. %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - jornada tècnica rec. %s", $data["creditId"], $item['id']),
                     "date"=>$item["data JT recuperació"]
                 ];                
                 $ret[] = [
-                    "title"=>sprintf("%s - qualificació JT rec. %s", $data["modulId"], $item['id']),
+                    "title"=>sprintf("%s - qualificació JT rec. %s", $data["creditId"], $item['id']),
                     "date"=>$item["qualificació recuperació"]
                 ];
             }

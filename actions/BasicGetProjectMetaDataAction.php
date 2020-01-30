@@ -23,10 +23,10 @@ class BasicGetProjectMetaDataAction extends BasicViewProjectMetaDataAction imple
     protected function postAction(&$response) {
         if ($response) {
             if ($this->messageLock) {
-                $response['info'] = $this->addInfoToInfo($response['info'], $this->messageLock);
+                $response['info'] = self::addInfoToInfo($response['info'], $this->messageLock);
             }else {
                 $new_message = $this->generateMessageInfoForSubSetProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_edited');
-                $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
+                $response['info'] = self::addInfoToInfo($response['info'], $new_message);
             }
         }
     }

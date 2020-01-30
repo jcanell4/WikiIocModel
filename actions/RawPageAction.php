@@ -211,7 +211,7 @@ class RawPageAction extends EditPageAction {
         if ($license) $info = [$license];
         $info[] = preg_replace("/<\/*p>/", "", trim($info_m));
         $responseId = $this->params[PageKeys::KEY_ID] . (($this->params[PageKeys::KEY_REV]) ? PageAction::REVISION_SUFFIX : "");
-        $response['info'] = $this->generateInfo('info', $info, $responseId);
+        $response['info'] = self::generateInfo('info', $info, $responseId);
 
         return $response;
     }
@@ -240,10 +240,10 @@ class RawPageAction extends EditPageAction {
 
         //ALERTA [Josep]: De moment cal retornar $resp[recover_local_draft]=true, però cal valorar si cal fer-ho així.
         $resp[PageKeys::KEY_RECOVER_LOCAL_DRAFT] = true;
-        $info = $this->generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
+        $info = self::generateInfo('warning', WikiIocLangManager::getLang('local_draft_editing'));
 
         if (array_key_exists('info', $resp)) {
-            $resp['info'] = $this->addInfoToInfo($resp['info'], $info);
+            $resp['info'] = self::addInfoToInfo($resp['info'], $info);
         }
         return $resp;
     }
@@ -266,10 +266,10 @@ class RawPageAction extends EditPageAction {
         $resp['draft'] = $this->dokuPageModel->getFullDraft();
         $resp = array_merge($resp, $this->_getStructuredHtmlForm($resp['draft']['content']));
         $resp['recover_draft'] = TRUE;
-        $info = $this->generateInfo("warning", WikiIocLangManager::getLang('draft_editing'));
+        $info = self::generateInfo("warning", WikiIocLangManager::getLang('draft_editing'));
 
         if (array_key_exists('info', $resp)) {
-            $info = $this->addInfoToInfo($resp['info'], $info);
+            $info = self::addInfoToInfo($resp['info'], $info);
         }
 
         $resp['info'] = $info;

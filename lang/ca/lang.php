@@ -138,3 +138,10 @@ $lang['save_or_discard_dialog_save'] = 'Desar';
 $lang['search'] = 'Cercar';
 
 $lang['projects']['cancel_editing_with_changes'] = "S'han produït canvis a les dades del projecte. Vols tancar el formulari?";
+
+$lang['MOODLE_EVENTS_HAS_BEEN_UPDATED'] = "S'ha actualitzat el calendari de Moodle";
+$lang['MOODLE_EVENTS_NOT_UPDATED'] = "No s'ha actualitzat el calendari de Moodle";
+$lang['INVALID_COURSE_ID'] = "El codi del curs de Moodle no és vàlid";
+$lang['USER_IS_NOT_MOODLE_USER'] = "No tens permisos per modificar el calendari de moodle";
+$lang['ftp_send_success'] = "Les dades s'han enviat correctament via FTP";
+$lang['ftp_send_error'] = "No s'han pogut enviar les dades via FTP";
