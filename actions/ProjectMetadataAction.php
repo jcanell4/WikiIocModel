@@ -126,7 +126,7 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
         }else{
             $addmessage = "";
         }
-        $new_message = $this->generateInfo("info", WikiIocLangManager::getLang($message), $id);
+        $new_message = self::generateInfo("info", WikiIocLangManager::getLang($message), $id);
         $new_message['message'] .= $addmessage;
         return $new_message;
     }

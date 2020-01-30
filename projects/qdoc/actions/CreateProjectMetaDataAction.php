@@ -11,8 +11,8 @@ class CreateProjectMetaDataAction extends BasicCreateProjectMetaDataAction{
         $ret[ProjectKeys::KEY_GENERATED] = $this->getModel()->directGenerateProject($ret);  //crea el contenido del proyecto en 'pages/'
         
         $mess = ($ret[ProjectKeys::KEY_GENERATED]) ? "project_generated" : "project_not_generated";
-        $new_message = $this->generateInfo("info", WikiIocLangManager::getLang($mess), $ret[ProjectKeys::KEY_ID]);
-        $ret['info'] = $this->addInfoToInfo($ret['info'], $new_message);  //añade info para la zona de mensajes
+        $new_message = self::generateInfo("info", WikiIocLangManager::getLang($mess), $ret[ProjectKeys::KEY_ID]);
+        $ret['info'] = self::addInfoToInfo($ret['info'], $new_message);  //añade info para la zona de mensajes
 
         return $ret;
     }

@@ -39,7 +39,7 @@ class CancelPartialEditPageAction extends CancelEditPageAction {
             // TODO: afegir les revisions
             $response['revs'] = $this->getRevisionList();
         }
-        $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('chunk_closed'), $this->params[PageKeys::KEY_ID]);
+        $response['info'] = self::generateInfo("info", WikiIocLangManager::getLang('chunk_closed'), $this->params[PageKeys::KEY_ID]);
         return $response;
     }
 

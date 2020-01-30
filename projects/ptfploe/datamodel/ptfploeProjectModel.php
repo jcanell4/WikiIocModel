@@ -200,7 +200,11 @@ class ptfploeProjectModel extends MoodleProjectModel {
     public function getCalendarDates() {
         $ret = array();
         $data = $this->getMetaDataProject();
-        $calendari = json_decode($data["calendari"], true);
+        if(is_string($data["calendari"])){
+            $calendari = json_decode($data["calendari"], true);
+        }else{
+            $calendari = $data["calendari"];
+        }
         foreach ($calendari as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inici %s %d U%d", $data["modulId"], $item['tipus període'], $item["període"], $item["unitat"]),
@@ -211,7 +215,11 @@ class ptfploeProjectModel extends MoodleProjectModel {
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
-        $datesAC = json_decode($data["datesAC"], TRUE);
+        if(is_string($data["datesAC"])){
+            $datesAC = json_decode($data["datesAC"], true);
+        }else{
+            $datesAC = $data["datesAC"];
+        }
         foreach ($datesAC as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
@@ -242,7 +250,11 @@ class ptfploeProjectModel extends MoodleProjectModel {
         $dataEnunciatRecOld ="";
         $dataSolucioRecOld ="";
         $dataQualificacioRecOld ="";
-        $datesEAF = json_decode($data["datesEAF"], TRUE);
+        if(is_string($data["datesEAF"])){
+            $datesEAF = json_decode($data["datesEAF"], true);
+        }else{
+            $datesEAF = $data["datesEAF"];
+        }
         foreach ($datesEAF as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
@@ -290,7 +302,11 @@ class ptfploeProjectModel extends MoodleProjectModel {
             }
         }
 
-        $datesJT = json_decode($data["datesJT"], TRUE);
+        if(is_string($data["datesJT"])){
+            $datesJT = json_decode($data["datesJT"], true);
+        }else{
+            $datesJT = $data["datesJT"];
+        }
         foreach ($datesJT as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inscripció %s", $data["modulId"], $item['id']),

@@ -33,9 +33,9 @@ class CreateFolderAction extends ProjectMetadataAction {
             }
 
             if ($this->projectModel->createFolder($id)) {
-                $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('folder_created')." ($id)", $projectId);
+                $response['info'] = self::generateInfo("info", WikiIocLangManager::getLang('folder_created')." ($id)", $projectId);
             }else {
-                $response['info'] = $this->generateInfo("error", WikiIocLangManager::getLang('folder_created_error')." ($id)", $projectId);
+                $response['info'] = self::generateInfo("error", WikiIocLangManager::getLang('folder_created_error')." ($id)", $projectId);
                 $response['alert'] = WikiIocLangManager::getLang('folder_created_error')." ($id)";
             }
         }

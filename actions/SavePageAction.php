@@ -105,7 +105,7 @@ class SavePageAction extends RawPageAction {
 
         $response['lockInfo'] = $this->lockStruct['info'];
         $response['id'] = WikiPageSystemManager::getContainerIdFromPageId($this->params[PageKeys::KEY_ID]);
-        $response['info'] = $this->generateInfo($type, $message, $response[PageKeys::KEY_ID], $duration);
+        $response['info'] = self::generateInfo($type, $message, $response[PageKeys::KEY_ID], $duration);
 
         if ($this->params[PageKeys::KEY_REV]) {
             //Codi per tancar la pestanya de la revisió
