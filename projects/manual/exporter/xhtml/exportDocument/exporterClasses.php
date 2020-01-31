@@ -66,6 +66,7 @@ class exportDocument extends MainRender {
                     "tmp_dir" => $this->cfgExport->tmp_dir,    //directori temporal on crear el pdf
                     "lang" => strtoupper($this->cfgExport->lang),
                     "mode" => isset($this->mode) ? $this->mode : $this->filetype,
+                    "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
                     "data" => array(
                         "header" => ["logo"  => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                                      "wlogo" => 9.9,
@@ -74,8 +75,8 @@ class exportDocument extends MainRender {
                                      "rtext" => $titol],
                         "titol" => ['titol'    => $titol,
                                     'subtitol' => $subtitol,
-                                    'autor'    => $data['mostrarAutor']==="true" || $data['mostrarAutor']===true?$nom_real:"",
-                                    'entitatResponsable'    => $entitat_responsable,
+                                    'autor'    => $data['mostrarAutor']==="true" || $data['mostrarAutor']===true ? $nom_real : "",
+                                    'entitatResponsable' => $entitat_responsable,
                                     'data'     => $data_fitxer],
                         "estil" => $estils['style'],
                         "contingut" => json_decode($data["documentPartsPdf"], TRUE)   //contingut latex ja rendaritzat
