@@ -232,7 +232,7 @@ class SpecialBlockNodeDoc extends StructuredNodeDoc{
     const SOL_TYPE              = 'sol';
     const SOLUCIO_TYPE          = 'solucio';
     const VERD_TYPE             = "verd";
-    const EDITTABLE_TYPE        = "editttable";
+    const EDITTABLE_TYPE        = "edittable";
 
     public function __construct($type) {
         parent::__construct($type);
