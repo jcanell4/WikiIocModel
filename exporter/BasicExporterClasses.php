@@ -386,11 +386,15 @@ class BasicStaticPdfRenderer {
             $iocTcPdf->Ln(3);
         }
 
-        for ($i=0; $i<count($header["content"]); $i++) {
-            self::renderContent($header["content"][$i], $iocTcPdf);
+        if (!empty($header["content"])) {
+            for ($i=0; $i<count($header["content"]); $i++) {
+                self::renderContent($header["content"][$i], $iocTcPdf);
+            }
         }
-        for ($i=0; $i<count($header["children"]); $i++) {
-            self::renderHeader($header["children"][$i], $iocTcPdf);
+        if (!empty($header["children"])) {
+            for ($i=0; $i<count($header["children"]); $i++) {
+                self::renderHeader($header["children"][$i], $iocTcPdf);
+            }
         }
     }
 
