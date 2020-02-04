@@ -55,7 +55,7 @@ class PreviewAction extends DokuAction{
         $response['html'] .= $this->html;
         $response['html'] .= $this->postPrint();
         if ($this->info){
-            $response['info'] = $this->generateInfo("info", $this->info, $this->params[PageKeys::KEY_ID]);
+            $response['info'] = self::generateInfo("info", $this->info, $this->params[PageKeys::KEY_ID]);
         }
         return $response;
     }

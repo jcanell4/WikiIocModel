@@ -55,7 +55,7 @@ class SavePartialPageAction extends SavePageAction{
             }
             // TODO: afegir el 'info' que correspongui
             if (!$response['info']) {
-                $response['info'] = $this->generateInfo(
+                $response['info'] = self::generateInfo(
                     "info",
                     sprintf(WikiIocLangManager::getLang('section_saved'), $this->params[PageKeys::KEY_SECTION_ID]),
                     $response["structure"]["id"],

@@ -180,7 +180,11 @@ class ptfplogseProjectModel extends MoodleProjectModel {
     public function getCalendarDates() {
         $ret = array();
         $data = $this->getDataProject();
-        $calendari = json_decode($data["calendari"], true);
+        if(is_string($data["calendari"])){
+            $calendari = json_decode($data["calendari"], true);
+        }else{
+            $calendari = $data["calendari"];
+        }
         foreach ($calendari as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inici NA%d-U%d", $data["creditId"], $item["nucli activitat"], $item["unitat didàctica"]),
@@ -191,7 +195,11 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
-        $datesAC = json_decode($data["datesAC"], true);
+        if(is_string($data["datesAC"])){
+            $datesAC = json_decode($data["datesAC"], true);
+        }else{
+            $datesAC = $data["datesAC"];
+        }
         foreach ($datesAC as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
@@ -222,7 +230,11 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         $dataEnunciatRecOld ="";
         $dataSolucioRecOld ="";
         $dataQualificacioRecOld ="";
-        $datesEAF = json_decode($data["datesEAF"], true);
+        if(is_string($data["datesEAF"])){
+            $datesEAF = json_decode($data["datesEAF"], true);
+        }else{
+            $datesEAF = $data["datesEAF"];
+        }
         foreach ($datesEAF as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
@@ -270,7 +282,11 @@ class ptfplogseProjectModel extends MoodleProjectModel {
             }
         }
 
-        $datesJT = json_decode($data["datesJT"], true);
+        if(is_string($data["datesJT"])){
+            $datesJT = json_decode($data["datesJT"], true);
+        }else{
+            $datesJT = $data["datesJT"];
+        }
         foreach ($datesJT as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inscripció %s", $data["creditId"], $item['id']),

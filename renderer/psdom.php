@@ -40,7 +40,7 @@ class FigureFrame extends StructuredNodeDoc {
     protected $footer;
     protected $hasBorder;
 
-     public function __construct($type, $id="", $title="", $footer="", $hasBorder=FALSE) {
+    public function __construct($type, $id="", $title="", $footer="", $hasBorder=FALSE) {
         parent::__construct($type);
         $this->id       = $id;
         $this->title    = $title;
@@ -48,7 +48,7 @@ class FigureFrame extends StructuredNodeDoc {
         $this->hasBorder= $hasBorder;
     }
 
-   public function setNodeParams($title="", $footer="", $hasBorder=FALSE) {
+    public function setNodeParams($title="", $footer="", $hasBorder=FALSE) {
         $this->title  = $title;
         $this->footer = $footer;
         $this->hasBorder= $hasBorder;
@@ -175,8 +175,9 @@ class StructuredNodeDoc extends AbstractNodeDoc{
     const SINGLEQUOTE_TYPE      = "singlequote";
     const DOUBLEQUOTE_TYPE      = "doublequote";
     const TABLEROW_TYPE         = "tablerow";
+    const ROOTCONTENT_TYPE      = "rootcontent";
 
-    var $content;
+    protected $content;
 
     public function __construct($type) {
         parent::__construct($type);
@@ -333,18 +334,18 @@ class HeaderNodeDoc extends LeveledNodeDoc{
     }
 }
 
-class FirstParagraphNode extends StructuredNodeDoc{
+class RootContentNode extends StructuredNodeDoc{
     private $rootNode;
 
     public function __construct($rootNode) {
-        parent::__construct(self::PARAGRAPH_TYPE);
+        parent::__construct(self::ROOTCONTENT_TYPE);
         $this->rootNode = $rootNode;
     }
 
     public function getLevel(){
         return 1;
     }
-    
+
     public function getFather(){
         return $this->rootNode;
     }
@@ -363,21 +364,23 @@ class RootNodeDoc extends LeveledNodeDoc{
     }
 
     public function getEncodeJson() {
-        return $this->getChildrenEncodeJson();
+        $content = trim($this->getContentEncodeJson(), "[\n]");
+        $children = trim($this->getChildrenEncodeJson(), "[\n]");
+        return "[\n$content,$children\n]";
     }
 }
 
 class LeafNodeDoc extends AbstractNodeDoc{
-    const LINE_BREAK_TYPE = "lb";
-    const HORIZONTAL_RULE_TYPE = "hr";
-    const APOSTROPHE_TYPE = "apostrophe";
+    const LINE_BREAK_TYPE       = "lb";
+    const HORIZONTAL_RULE_TYPE  = "hr";
+    const APOSTROPHE_TYPE       = "apostrophe";
     const DOUBLEAPOSTROPHE_TYPE = "doubleapostrophe";
-    const BACKSLASH_TYPE = "backslash";
-    const DOUBLEHYPHEN_TYPE = "doublehyphen";
-    const GRAVE_TYPE = "grave";
-    const ACRONYM_TYPE = "acronym";
-    const OP_SINGLEQUOTE_TYPE      = "open_singlequote";
-    const CL_SINGLEQUOTE_TYPE      = "close_singlequote";
+    const BACKSLASH_TYPE        = "backslash";
+    const DOUBLEHYPHEN_TYPE     = "doublehyphen";
+    const GRAVE_TYPE            = "grave";
+    const ACRONYM_TYPE          = "acronym";
+    const OP_SINGLEQUOTE_TYPE   = "open_singlequote";
+    const CL_SINGLEQUOTE_TYPE   = "close_singlequote";
 
     private $acronym;
 
@@ -582,8 +585,13 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function document_start() {
-        if(!isset($this->rootNode)){
+        if (!isset($this->rootNode)){
             $this->rootNode = new RootNodeDoc();
+            if ($this->currentNode === NULL) {
+                $node = new RootContentNode($this->rootNode);
+                $this->rootNode->addContent($node);
+                $this->currentNode = $node;
+            }
         }
     }
 
@@ -600,7 +608,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function header($text, $level, $pos) {
-//        if($this->currentNode!=NULL && method_exists($this->currentNode, "getLevel")){
         if($this->currentNode!=NULL){
             if($this->currentNode->getLevel()<$level){
                 //fill
@@ -643,10 +650,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     function p_open() {
         $paragraph = new StructuredNodeDoc(StructuredNodeDoc::PARAGRAPH_TYPE);
-        if ($this->currentNode === NULL) {
-            $this->currentNode = new FirstParagraphNode($this->rootNode);
-            $this->rootNode->addContent($this->currentNode);
-        }
         $this->currentNode->addContent($paragraph);
         $this->currentNode = $paragraph;
     }

@@ -59,9 +59,9 @@ abstract class DokuAction extends AbstractWikiAction{
                     }else if($key==="info"){
                         if(isset($response["info"])){
                             if(is_string($value)){
-                                $response["info"] = $this->addInfoToInfo($response["info"], $value);
+                                $response["info"] = self::addInfoToInfo($response["info"], $value);
                             }else{
-                                $response["info"] = $this->addInfoToInfo($response["info"], self::generateInfo($value["type"], $value["message"], $value["id"], $value["duration"]));
+                                $response["info"] = self::addInfoToInfo($response["info"], self::generateInfo($value["type"], $value["message"], $value["id"], $value["duration"]));
                             }
                         }else{
                             $response["info"] = self::generateInfo($MSG['lvl'], $MSG['msg']);
@@ -101,9 +101,9 @@ abstract class DokuAction extends AbstractWikiAction{
                     }else if($key==="info"){
                         if(isset($response["info"])){
                             if(is_string($value)){
-                                $response["info"] = $this->addInfoToInfo($response["info"], $value);
+                                $response["info"] = self::addInfoToInfo($response["info"], $value);
                             }else{
-                                $response["info"] = $this->addInfoToInfo($response["info"], self::generateInfo($value["type"], $value["message"], $value["id"], $value["duration"]));
+                                $response["info"] = self::addInfoToInfo($response["info"], self::generateInfo($value["type"], $value["message"], $value["id"], $value["duration"]));
                             }
                         }else{
                             $response["info"] = self::generateInfo($MSG['lvl'], $MSG['msg']);
@@ -131,9 +131,9 @@ abstract class DokuAction extends AbstractWikiAction{
                 if (isset($shown[$hash]))
                     continue; // skip double messages
                 if (isset($response["info"])){
-                    $response["info"] = $this->addInfoToInfo($response["info"], $this->generateInfo($missatge['lvl'], $missatge['msg']));
+                    $response["info"] = self::addInfoToInfo($response["info"], self::generateInfo($missatge['lvl'], $missatge['msg']));
                 }else{
-                    $response["info"] = $this->generateInfo($missatge['lvl'], $missatge['msg']);
+                    $response["info"] = self::generateInfo($missatge['lvl'], $missatge['msg']);
                 }
                 $shown[$hash] = 1;
             }

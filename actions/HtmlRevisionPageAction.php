@@ -29,9 +29,9 @@ class HtmlRevisionPageAction extends HtmlPageAction {
 
         // Si no s'ha especificat cap altre missatge mostrem el de carrega
         if (!$response['info']) {
-            $response['info'] = $this->generateInfo("warning", trim(strip_tags($revisionInfo)), $response['structure']['id']);
+            $response['info'] = self::generateInfo("warning", trim(strip_tags($revisionInfo)), $response['structure']['id']);
         } else {
-            $response['info'] = $this->addInfoToInfo($response['info'], $this->generateInfo("info", trim(strip_tags($revisionInfo)), $response['structure']['id']));
+            $response['info'] = self::addInfoToInfo($response['info'], self::generateInfo("info", trim(strip_tags($revisionInfo)), $response['structure']['id']));
         }
 
         $this->addMetaTocResponse($response);

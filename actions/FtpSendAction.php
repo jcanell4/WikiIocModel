@@ -56,9 +56,9 @@ class FtpSendAction extends DokuAction{
     protected function responseProcess() {
         $id = $this->params[ProjectKeys::KEY_ID];
         if ($this->response) {
-            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('ftp_send_success')." ($id)", $id);
+            $response['info'] = self::generateInfo("info", WikiIocLangManager::getLang('ftp_send_success')." ($id)", $id);
         }else {
-            $response['info'] = $this->generateInfo("error", WikiIocLangManager::getLang('ftp_send_error')." ($id)", $id);
+            $response['info'] = self::generateInfo("error", WikiIocLangManager::getLang('ftp_send_error')." ($id)", $id);
             $response['alert'] = WikiIocLangManager::getLang('ftp_send_error')." ($id)";
         }
         return $response;

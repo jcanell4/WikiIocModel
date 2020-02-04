@@ -44,7 +44,7 @@ class BasicCreateProjectMetaDataAction extends ProjectMetadataAction {
             $params = $model->buildParamsToPersons($ret['projectMetaData'], NULL);
             $model->modifyACLPageAndShortcutToPerson($params);
 
-            $ret['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('project_created'), $id);  //añade info para la zona de mensajes
+            $ret['info'] = self::generateInfo("info", WikiIocLangManager::getLang('project_created'), $id);  //añade info para la zona de mensajes
             $ret[ProjectKeys::KEY_ID] = $this->idToRequestId($id);
             $ret[ProjectKeys::KEY_NS] = $id;
             $ret[ProjectKeys::KEY_PROJECT_TYPE] = $projectType;

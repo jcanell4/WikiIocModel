@@ -65,13 +65,13 @@ class BasicViewProjectMetaDataAction extends ProjectMetadataAction {
 
     protected function postAction(&$response) {
         if ($this->params[ProjectKeys::KEY_REV]) {
-            $new_message = $this->generateInfo("warning", WikiIocLangManager::getLang('project_revision'), $response[ProjectKeys::KEY_ID]);
-            $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
+            $new_message = self::generateInfo("warning", WikiIocLangManager::getLang('project_revision'), $response[ProjectKeys::KEY_ID]);
+            $response['info'] = self::addInfoToInfo($response['info'], $new_message);
         }else {
             $new_message = $this->generateMessageInfoForSubSetProject($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_loaded');
-            $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
+            $response['info'] = self::addInfoToInfo($response['info'], $new_message);
             $new_message = $this->generateMessageInfoForSubSetProject($response[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_METADATA_SUBSET], 'project_view');
-            $response['info'] = $this->addInfoToInfo($response['info'], $new_message);
+            $response['info'] = self::addInfoToInfo($response['info'], $new_message);
         }
     }
 

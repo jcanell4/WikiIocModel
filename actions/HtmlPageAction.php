@@ -32,9 +32,9 @@ class HtmlPageAction extends RenderedPageAction{
 
         // Si no s'ha especificat cap altre missatge mostrem el de carrega
         if (!$response['info']) {
-            $response['info'] = $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded'), $this->params[PageKeys::KEY_ID]);
+            $response['info'] = self::generateInfo("info", WikiIocLangManager::getLang('document_loaded'), $this->params[PageKeys::KEY_ID]);
         }else {
-            $this->addInfoToInfo($response['info'], $this->generateInfo("info", WikiIocLangManager::getLang('document_loaded'), $this->params[PageKeys::KEY_ID]));
+            self::addInfoToInfo($response['info'], self::generateInfo("info", WikiIocLangManager::getLang('document_loaded'), $this->params[PageKeys::KEY_ID]));
         }
 
         // TODO: Afegir els drafts des del responseprocess del pare?
