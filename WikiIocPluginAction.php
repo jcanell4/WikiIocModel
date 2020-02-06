@@ -26,14 +26,16 @@ class WikiIocPluginAction extends DokuWiki_Action_Plugin {
 
         $listProjects = $this->projectMetaDataQuery->getPluginProjectTypes($plugin);
 
-        foreach ($listProjects as $project) {
-            $dir = realpath(DOKU_PLUGIN."$plugin/projects/$project")."/";
-            $action = "{$dir}action.php";
-            if (is_file($action)) {
-                require_once ($action);
-                $classe = "action_plugin_{$plugin}_projects_$project";
-                $accio = new $classe($project, $dir);
-                $accio->register($controller);
+        if (!empty($listProjects)) {
+            foreach ($listProjects as $project) {
+                $dir = realpath(DOKU_PLUGIN."$plugin/projects/$project")."/";
+                $action = "{$dir}action.php";
+                if (is_file($action)) {
+                    require_once ($action);
+                    $classe = "action_plugin_{$plugin}_projects_$project";
+                    $accio = new $classe($project, $dir);
+                    $accio->register($controller);
+                }
             }
         }
     }
