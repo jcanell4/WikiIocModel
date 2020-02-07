@@ -186,7 +186,8 @@ class BasicRenderObject extends renderComposite {
                             $this->_createSessionStyle($renderKeyField['render']);
                             $jsonPart = $render->process($dataField, $item["name"]);
                             $this->_destroySessionStyle();
-                            $arrDocument = array_merge($arrDocument, json_decode($jsonPart));
+                            if (($arrPart = json_decode($jsonPart))) //evita procesar los documentos inexistentes
+                                $arrDocument = array_merge($arrDocument, $arrPart);
                         }
                         $arrayDeDatosParaLaPlantilla[$item["name"]] = json_encode($arrDocument);
                     }

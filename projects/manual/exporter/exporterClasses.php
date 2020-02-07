@@ -134,11 +134,13 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
 
         //continguts
         $iocTcPdf->AddPage();
-        foreach ($params["data"]["contingut"] as $itemsDoc) {
-            self::resolveReferences($itemsDoc);
-        }
-        foreach ($params["data"]["contingut"] as $itemsDoc) {
-            self::renderHeader($itemsDoc, $iocTcPdf);
+        if (!empty($params["data"]["contingut"])) {
+            foreach ($params["data"]["contingut"] as $itemsDoc) {
+                self::resolveReferences($itemsDoc);
+            }
+            foreach ($params["data"]["contingut"] as $itemsDoc) {
+                self::renderHeader($itemsDoc, $iocTcPdf);
+            }
         }
 
         // add a new page for TOC

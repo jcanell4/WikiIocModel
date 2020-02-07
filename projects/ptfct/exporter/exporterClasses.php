@@ -129,13 +129,13 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         }
 
         $iocTcPdf->AddPage();
-
-        $len = count($params["data"]["contingut"]);
-        for ($i=0; $i<$len; $i++){
-            self::resolveReferences($params["data"]["contingut"][$i]);
-        }
-        for($i=0; $i<$len; $i++){
-            self::renderHeader($params["data"]["contingut"][$i], $iocTcPdf);
+        if (!empty($params["data"]["contingut"])) {
+            foreach ($params["data"]["contingut"] as $itemsDoc) {
+                self::resolveReferences($itemsDoc);
+            }
+            foreach ($params["data"]["contingut"] as $itemsDoc) {
+                self::renderHeader($itemsDoc, $iocTcPdf);
+            }
         }
 
         // add a new page for TOC
