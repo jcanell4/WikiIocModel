@@ -62,7 +62,6 @@ class FtpSendAction extends DokuAction{
             $response['info'] = self::generateInfo("info", WikiIocLangManager::getLang('ftp_send_success')." ($id)", $id);
             /*
              * No és necessari
-            $response["structure"]["id"] = $id;
             $response['ftpsend'] = [
                 'remoteUrl' => $this->ftpSender['ftpObjectToSendList'][1]['connectionData']['remoteUrl'],
                 'remoteBase' => $this->ftpSender['ftpObjectToSendList'][1]['connectionData']['remoteBase'],
