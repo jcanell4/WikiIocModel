@@ -25,7 +25,7 @@ class FtpSendAction extends DokuAction{
     }
 
     protected function startProcess() {
-        Logger::init(1);
+        //Logger::init(1);
 //        $reCodi = '/\* \*\*creditcodi\*\*.*?:(.*)\/.*\n/m';
 //        $reCC = '/\* \*\*copylink\*\*.*?:.*http:\/\/creativecommons.*\n/m';
 //        $this->getModel()->init($this->params[ProjectKeys::KEY_ID]);
