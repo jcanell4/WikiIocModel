@@ -60,6 +60,14 @@ class FtpSendAction extends DokuAction{
         $id = $this->params[ProjectKeys::KEY_ID];
         if ($this->ftpResponse) {
             $response['info'] = self::generateInfo("info", WikiIocLangManager::getLang('ftp_send_success')." ($id)", $id);
+            /*
+             * No és necessari
+            $response["structure"]["id"] = $id;
+            $response['ftpsend'] = [
+                'remoteUrl' => $this->ftpSender['ftpObjectToSendList'][1]['connectionData']['remoteUrl'],
+                'remoteBase' => $this->ftpSender['ftpObjectToSendList'][1]['connectionData']['remoteBase'],
+                'remoteDir' => $this->ftpSender['ftpObjectToSendList'][1]['remoteDir']
+            ];*/
         }else {
             $response['info'] = self::generateInfo("error", WikiIocLangManager::getLang('ftp_send_error')." ($id)", $id);
             $response['alert'] = WikiIocLangManager::getLang('ftp_send_error')." ($id)";
