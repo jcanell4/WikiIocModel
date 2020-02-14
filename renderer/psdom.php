@@ -388,8 +388,8 @@ class LeafNodeDoc extends AbstractNodeDoc{
         parent::__construct($type);
     }
 
-    public function convertAcronym($acronym) {
-        $this->acronym = $acronym;
+    public function convertAcronym($key_acronym, $value_acronym) {
+        $this->acronym = $key_acronym; //key:No traduce, value:sí traduce
     }
 
     public function getEncodeJson() {
@@ -849,7 +849,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     function acronym($acronym) {
         $node = new LeafNodeDoc(LeafNodeDoc::ACRONYM_TYPE);
-        $node->convertAcronym($this->acronyms[$acronym]);
+        $node->convertAcronym($acronym, $this->acronyms[$acronym]);
         $this->currentNode->addContent($node);
     }
 

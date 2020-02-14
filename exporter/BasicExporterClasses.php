@@ -629,6 +629,7 @@ class BasicStaticPdfRenderer {
                     $ret.= ' height="'.$content["height"].'"';
                 $ret.= '> ' . $nodiv;
                 break;
+
             case ImageNodeDoc::IMAGE_TYPE:
                 if (preg_match("|\.gif$|", $content["src"], $t)) {
                     //El formato GIF no está soportado
@@ -648,6 +649,9 @@ class BasicStaticPdfRenderer {
                 }
                 break;
 
+            case LeafNodeDoc::ACRONYM_TYPE:
+                $ret = $content['acronym'];
+                break;
             case SmileyNodeDoc::SMILEY_TYPE:
                 preg_match("|.*".DOKU_BASE."(.*)|", $content["src"], $t);
                 $ret = ' <img src="'.DOKU_BASE.$t[1].'" alt="smiley" height="8" width="8"> ';
