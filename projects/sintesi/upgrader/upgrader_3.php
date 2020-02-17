@@ -21,6 +21,17 @@ class upgrader_3 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
+                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                $l1 = strtotime("2020-02-14");
+                $l2 = strtotime("2020-05-15");
+                $now = time();
+                if($l1 < $now && $now < $l2){
+                    $dataProject["semestre"] = 2;
+                }
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 2 to 3 (canvis en els camps)");
+
+                $ret = TRUE;
+                
                 break;
             case "templates":
                 if ($filename===NULL) { 

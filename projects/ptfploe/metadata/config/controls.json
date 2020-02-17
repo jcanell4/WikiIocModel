@@ -31,7 +31,8 @@
                 ],
                 "rols": [
                    "responsable",
-                   "autor"
+                   "autor",
+                   "supervisor"
                 ],
                 "conditions": {
                     "page.action": "'project_view'",
@@ -147,7 +148,8 @@
                 ],
                 "rols": [
                    "responsable",
-                   "autor"
+                   "autor",
+                   "supervisor"
                 ],
                 "conditions": {
                     "page.action": "'project_view'",
