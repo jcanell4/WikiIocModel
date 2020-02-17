@@ -15,6 +15,15 @@
             }
         }        
     ],
+    "metaDataFtpSender": [
+        {
+            "main": {
+                "ge": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html", "linkName":"ge"},
+                "gd": {"local":"mediadir", "type":"pdf", "action":[0], "linkName":"gd"}
+            },
+            "ftpId":"guies_ges"
+        }
+    ],
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",

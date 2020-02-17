@@ -30,7 +30,9 @@
                    "ismanager"
                 ],
                 "rols": [
-                   "responsable"
+                   "responsable",
+                   "supervisor",
+                   "autor"
                 ],
                 "conditions": {
                     "page.action": "'project_view'",
@@ -145,7 +147,9 @@
                    "isprojectmanager"
                 ],
                 "rols": [
-                   "responsable"
+                   "responsable",
+                   "supervisor",
+                   "autor"
                 ],
                 "conditions": {
                     "page.action": "'project_view'",

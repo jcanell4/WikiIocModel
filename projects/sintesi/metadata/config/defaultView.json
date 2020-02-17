@@ -84,6 +84,15 @@
           "required": true,
           "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
         }
+      },
+      "semestre":{
+        "label" : "Semestre (semestre)",
+        "n_columns": 6,
+        "group": "actualitzables",
+        "props": {
+          "required": true,
+          "title": "Aquesta dada s'actualitza automàticament durant el procés d'actualització semestral de dades. Aneu en compta de canviar el valor."
+        }
       },      
       "cicle": {
         "label" : "Nom del cicle (cicle)",
@@ -695,9 +704,6 @@
             "defaultEntryField": "name"
           }
         }
-      },
-      "semestre":{
-        "type" : "hidden"
       }
     }
 }

@@ -15,7 +15,8 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
         $toUpdate = [
             "moodleCourseId" => $response["moodleCourseId"],
             "datesAC" => $response["dadesAC"],
-            "calendari" => $response["calendari"]
+            "calendari" => $response["calendari"],
+            "semestre" => $response["semestre"]
         ];
 
         $confProjectType = $this->modelManager->getConfigProjectType();
@@ -42,6 +43,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                     $response["moodleCourseId"]=$toUpdate["moodleCourseId"];
                     $response["dadesAC"]=$toUpdate["datesAC"];
                     $response["calendari"]=$toUpdate["calendari"];
+                    $response["semestre"]=$toUpdate["semestre"];
                     $metaData = [
                         ProjectKeys::KEY_ID_RESOURCE => $this->params[ProjectKeys::KEY_ID],
                         ProjectKeys::KEY_PROJECT_TYPE => $projectType,
