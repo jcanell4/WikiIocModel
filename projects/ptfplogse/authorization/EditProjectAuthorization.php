@@ -14,8 +14,7 @@ class EditProjectAuthorization extends SupervisorProjectAuthorization {
 
     public function canRun() {
         if (parent::canRun()) {
-            if (($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(array("admin")))
-                    && !$this->isResponsable() && !$this->isAuthor()) {
+            if (!$this->isUserGroup(array("admin")) && !$this->isResponsable() && !$this->isAuthor()) {
                 $this->errorAuth['error'] = TRUE;
                 $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
                 $this->errorAuth['extra_param'] = $this->permission->getIdPage();

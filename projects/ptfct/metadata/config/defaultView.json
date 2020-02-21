@@ -144,7 +144,7 @@
         "required": true
       },
       "config":{
-        "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+        "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin","pla_fct"], "deniedResponse":true}}]},
         "class" : {
           "edit": "IocFilteredList",
           "view": "IocListSelectedItems"
@@ -178,7 +178,7 @@
         "required": true
       },
       "config":{
-        "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+        "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin","pla_fct"], "deniedResponse":true}}]},
         "class" : {
           "edit": "IocFilteredList",
           "view": "IocListSelectedItems"
@@ -205,14 +205,14 @@
     },
     "supervisor": {
       "type": "amd",
-      "label": "Cap de Departament (supervisor)",
+      "label": "Coordinador de cicle (supervisor)",
       "n_columns": 4,
       "group": "authorship",
       "props": {
         "required": true
       },
       "config":{
-        "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+        "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin","pla_fct"], "deniedResponse":true}}]},
         "class" : {
           "edit": "IocFilteredList",
           "view": "IocListSelectedItems"

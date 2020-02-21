@@ -39,5 +39,9 @@ class WikiIocPluginAction extends DokuWiki_Action_Plugin {
             }
         }
     }
+    
+    function getProjectType(){
+        return $this->projectType;
+    }
 
 }
