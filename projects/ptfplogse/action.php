@@ -4,20 +4,12 @@
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once (DOKU_INC . "inc/pageutils.php");
-require_once (WIKI_IOC_MODEL . "WikiIocPluginAction.php");
 
-class action_plugin_wikiiocmodel_projects_ptfplogse extends WikiIocPluginAction {
-    private $dirProjectType;
-    private $viewArray;
+class action_plugin_wikiiocmodel_projects_ptfplogse extends WikiIocProjectPluginAction {
 
     public function __construct($projectType, $dirProjectType) {
-        parent::__construct();
-        $this->projectType = $projectType;
-        $this->dirProjectType = $dirProjectType;
-        $this->viewArray = $this->projectMetaDataQuery->getMetaViewConfig("controls", $projectType);
+        parent::__construct($projectType, $dirProjectType);
     }
 
     function register(Doku_Event_Handler $controller) {
@@ -59,21 +51,5 @@ class action_plugin_wikiiocmodel_projects_ptfplogse extends WikiIocPluginAction 
             }
         }
         return TRUE;
-    }
-
-    function addControlScripts(Doku_Event &$event, $param) {
-        $aux = array(
-            "dirProjectType" => $this->dirProjectType,
-            "viewArray" => $this->viewArray,
-            "projectType" => $this->projectType
-        );
-        IocCommon::addControlScripts($event, $param, $aux);
-    }
-
-    function addWikiIocButtons(Doku_Event &$event, $param) {
-        $aux = array(
-            "viewArray" => $this->viewArray
-        );
-        IocCommon::addWikiIocButtons($event, $param, $aux);
     }
 }
