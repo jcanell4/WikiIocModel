@@ -13,7 +13,7 @@ class ResponsableProjectAuthorization extends ProjectCommandAuthorization {
 
     public function canRun() {
         if (parent::canRun()) {
-            if(!$this->isUserGroup(array("pla_fct","admin"))
+            if(!$this->isUserGroup(array("fctmanager","admin"))
                     && !$this->isResponsable()) {
                 $this->errorAuth['error'] = TRUE;
                 $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
