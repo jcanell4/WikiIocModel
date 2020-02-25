@@ -14,9 +14,9 @@ class Permission extends ProjectPermission {
         return $this->supervisor;
     }
 
-    public function setSupervisor($supervisor) {
-        if(is_string($supervisor) && !empty($supervisor)){
-            $this->supervisor = preg_split("/[\s,]+/", $supervisor);
+    public function setSupervisor($user) {
+        if(is_string($user) && !empty($user)){
+            $this->supervisor = preg_split("/[\s,]+/", $user);
         }        
     }
 

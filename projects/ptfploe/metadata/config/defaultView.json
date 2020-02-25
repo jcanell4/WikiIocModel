@@ -1011,7 +1011,7 @@
             "required": true
         },
         "config":{
-           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+          "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
           "class" : {
             "edit": "IocFilteredList",
             "view": "IocListSelectedItems"
@@ -1045,7 +1045,7 @@
            "required": true
         },
         "config":{
-           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+          "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
           "class" : {
             "edit": "IocFilteredList",
             "view": "IocListSelectedItems"
@@ -1079,7 +1079,7 @@
           "required": true
         },
         "config":{
-          "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByInfoPerm", "data":{"perm":4, "deniedResponse":true}}]},
+          "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
           "class" : {
             "edit": "IocFilteredList",
             "view": "IocListSelectedItems"

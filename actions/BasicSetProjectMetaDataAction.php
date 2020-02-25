@@ -28,6 +28,8 @@ class BasicSetProjectMetaDataAction extends ProjectMetadataAction {
                 throw new UnknownUserException($metaDataValues['autor']." (indicat al camp 'autor') ");
             if (!$model->validaNom($metaDataValues['responsable']))
                 throw new UnknownUserException($metaDataValues['responsable']." (indicat al camp 'responsable') ");
+            if (!empty($metaDataValues['supervisor']) && !$model->validaNom($metaDataValues['supervisor']))
+                throw new UnknownUserException($metaDataValues['supervisor']." (indicat al camp 'supervisor') ");
             if (!$model->validaSubSet($modelAttrib[ProjectKeys::KEY_METADATA_SUBSET]))
                 throw new UnknownUserException($modelAttrib[ProjectKeys::KEY_METADATA_SUBSET]." (indicat al 'metaDataSubSet') ");
 

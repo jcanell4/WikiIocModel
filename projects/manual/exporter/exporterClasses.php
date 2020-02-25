@@ -73,7 +73,7 @@ class IocTcPdf extends TCPDF {
         parent::setHeaderData($ln, $lw, $ht, $hs, $tc, $lc);
         $this->header_logo_height = $lh;
     }
- }
+}
 
 class StaticPdfRenderer extends BasicStaticPdfRenderer {
 
@@ -84,6 +84,7 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
      *      string 'tmp_dir'        //directori temporal on crear el pdf
      *      string 'lang'           //idioma usat (CA, EN, ES, ...)
      *      string 'mode'           //pdf o zip
+     *      int 'max_img_size'
      *      hashArray 'data': [
      *              array d'strings 'titol'     // linies de títol del document (cada ítem és una línia)
      *              string          'contingut' //contingut latex ja rendaritzat
@@ -96,6 +97,7 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, false);
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
         $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
+        self::setMaxImgSize($params['max_img_size']);
 
         // set header and footer fonts
         $iocTcPdf->setHeaderFont(Array(self::$headerFont, '', self::$headerFontSize));
@@ -132,11 +134,13 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
 
         //continguts
         $iocTcPdf->AddPage();
-        foreach ($params["data"]["contingut"] as $itemsDoc) {
-            self::resolveReferences($itemsDoc);
-        }
-        foreach ($params["data"]["contingut"] as $itemsDoc) {
-            self::renderHeader($itemsDoc, $iocTcPdf);
+        if (!empty($params["data"]["contingut"])) {
+            foreach ($params["data"]["contingut"] as $itemsDoc) {
+                self::resolveReferences($itemsDoc);
+            }
+            foreach ($params["data"]["contingut"] as $itemsDoc) {
+                self::renderHeader($itemsDoc, $iocTcPdf);
+            }
         }
 
         // add a new page for TOC

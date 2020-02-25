@@ -186,7 +186,8 @@ class BasicRenderObject extends renderComposite {
                             $this->_createSessionStyle($renderKeyField['render']);
                             $jsonPart = $render->process($dataField, $item["name"]);
                             $this->_destroySessionStyle();
-                            $arrDocument = array_merge($arrDocument, json_decode($jsonPart));
+                            if (($arrPart = json_decode($jsonPart))) //evita procesar los documentos inexistentes
+                                $arrDocument = array_merge($arrDocument, $arrPart);
                         }
                         $arrayDeDatosParaLaPlantilla[$item["name"]] = json_encode($arrDocument);
                     }
@@ -316,6 +317,11 @@ class BasicStaticPdfRenderer {
     static $pagesFont = "helvetica";
     static $state = ["table" => ["type" => "table"]];
     static $tcpdfObj = NULL;
+    static $maxImgSize = 100;
+
+    public function __construct() {
+        self::$maxImgSize = WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel');
+    }
 
     public static function resetStaticDataRender() {
         self::$tableCounter = 0;
@@ -332,6 +338,14 @@ class BasicStaticPdfRenderer {
         self::$firstPageFont = "Times";
         self::$pagesFont = "helvetica";
         self::$state = ["table" => ["type" => "table"]];
+    }
+
+    protected static function setMaxImgSize($max_img_size) {
+        self::$maxImgSize = $max_img_size;
+    }
+
+    protected static function getMaxImgSize() {
+        return self::$maxImgSize;
     }
 
     protected static function resolveReferences($content) {
@@ -372,11 +386,16 @@ class BasicStaticPdfRenderer {
             $iocTcPdf->Cell(0, 0, $title, 0,1, "L");
             $iocTcPdf->Ln(3);
         }
-        for ($i=0; $i<count($header["content"]); $i++) {
-            self::renderContent($header["content"][$i], $iocTcPdf);
+
+        if (!empty($header["content"])) {
+            for ($i=0; $i<count($header["content"]); $i++) {
+                self::renderContent($header["content"][$i], $iocTcPdf);
+            }
         }
-        for ($i=0; $i<count($header["children"]); $i++) {
-            self::renderHeader($header["children"][$i], $iocTcPdf);
+        if (!empty($header["children"])) {
+            for ($i=0; $i<count($header["children"]); $i++) {
+                self::renderHeader($header["children"][$i], $iocTcPdf);
+            }
         }
     }
 
@@ -518,6 +537,28 @@ class BasicStaticPdfRenderer {
         return [$w/5, $h/5];
     }
 
+    private static function getImgReduction($file, $p) {
+        list($w, $h) = getimagesize($file);
+        if ($w > self::getMaxImgSize()) {
+            $wreduc = self::getMaxImgSize() / $w;
+        }
+        if ($h > self::getMaxImgSize()) {
+            $hreduc = self::getMaxImgSize() / $h;
+        }
+        $r0 = ($wreduc < $hreduc) ? $wreduc : $hreduc;
+
+        $wreduc = $hreduc = 1;
+        if ($p['w'] && $p['w'] > self::getMaxImgSize()) {
+            $wreduc = self::getMaxImgSize() / $p['w'];
+        }
+        if ($p['h'] && $p['h'] > self::getMaxImgSize()) {
+            $hreduc = self::getMaxImgSize() / $p['h'];
+        }
+        $r1 = ($wreduc < $hreduc) ? $wreduc : $hreduc;
+
+        return ($r0 < $r1) ? $r0 : $r1;
+    }
+
     protected static function getContent($content ) {
         $char = "";
         $ret = "";
@@ -588,23 +629,29 @@ class BasicStaticPdfRenderer {
                     $ret.= ' height="'.$content["height"].'"';
                 $ret.= '> ' . $nodiv;
                 break;
+
             case ImageNodeDoc::IMAGE_TYPE:
                 if (preg_match("|\.gif$|", $content["src"], $t)) {
                     //El formato GIF no está soportado
                     $ret = " {$content["title"]} ";
                 }else {
                     preg_match("|.*".DOKU_BASE."(.*)|", $content["src"], $t);
+                    $reduc = self::getImgReduction($content["src"], ['w'=>$content["width"], 'h'=>$content["height"]]);
+
                     $ret = ' <img src="'.DOKU_BASE.$t[1].'"';
                     if ($content["title"])
                         $ret.= ' alt="'.$content["title"].'"';
                     if ($content["width"])
-                        $ret.= ' width="'.$content["width"].'"';
+                        $ret.= ' width="' . $content["width"]*$reduc . '"';
                     if ($content["height"])
-                        $ret.= ' height="'.$content["height"].'"';
+                        $ret.= ' height="' . $content["height"]*$reduc . '"';
                     $ret.= '> ';
                 }
                 break;
 
+            case LeafNodeDoc::ACRONYM_TYPE:
+                $ret = $content['acronym'];
+                break;
             case SmileyNodeDoc::SMILEY_TYPE:
                 preg_match("|.*".DOKU_BASE."(.*)|", $content["src"], $t);
                 $ret = ' <img src="'.DOKU_BASE.$t[1].'" alt="smiley" height="8" width="8"> ';

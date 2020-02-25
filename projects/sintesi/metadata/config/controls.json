@@ -30,7 +30,8 @@
                    "ismanager"
                 ],
                 "rols": [
-                   "responsable"
+                   "responsable",
+                   "autor"
                 ],
                 "conditions": {
                     "page.action": "'project_view'",
@@ -65,6 +66,10 @@
                 "path": "ConsolidateDataGetFunction.js"
             },
             "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager"
+                ],
                 "rols": [
                    "responsable",
                    "autor"
@@ -102,6 +107,10 @@
                 "path": "UpdateGetFunction.js"
             },
             "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager"
+                ],
                 "rols": [
                    "responsable",
                    "autor"
@@ -141,11 +150,11 @@
             "updateHandler": {
                 "permissions": [
                    "isadmin",
-                   "ismanager",
-                   "isprojectmanager"
+                   "ismanager"
                 ],
                 "rols": [
-                   "responsable"
+                   "responsable",
+                   "autor"
                 ],
                 "conditions": {
                     "page.action": "'project_view'",

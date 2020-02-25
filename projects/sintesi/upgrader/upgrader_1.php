@@ -45,7 +45,7 @@ class upgrader_1 extends CommonUpgrader {
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade version 22 to 23");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade version 0 to 1");
                 }
                 $ret = !empty($doc);
         }
