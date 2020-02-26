@@ -4,7 +4,6 @@ if (!defined('DOKU_INC')) die();
 class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
 
     protected function runAction() {
-
         $projectModel = $this->getModel();
         $isProjectGenerated = $projectModel->isProjectGenerated();
 
@@ -75,8 +74,8 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
                         if($finestraOberta){
                             $inici = $inici_3;
                             $fi= $fi_3;
-                        }                    
-                    }                    
+                        }
+                    }
                 }
 
                 if ($finestraOberta) {
@@ -86,6 +85,17 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
                 }
             }
         }
+
+        $response[ProjectKeys::KEY_ACTIVA_FTPSEND_BTN] = $projectModel->haveFilesToExportList();
+
+        return $response;
+    }
+
+    public function responseProcess() {
+        $response = parent::responseProcess();
+        $projectModel = $this->getModel();
+        $response[ProjectKeys::KEY_FTPSEND_HTML] = $projectModel->get_ftpsend_metadata();
+        $response['ftpSendFileNames'] = $projectModel->getMetaDataFtpSenderFiles();
         return $response;
     }
 

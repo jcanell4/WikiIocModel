@@ -37,8 +37,15 @@ class exportDocument extends MainRender {
         $output_filename = str_replace(':','_',$this->cfgExport->id);
         $pathTemplate = "xhtml/exportDocument/templates";
 
+        $fileNames = array();
+        $metaDataFtpSender = $this->factory->getProjectModel()->getMetaDataFtpSenderFiles();
+        foreach ($metaDataFtpSender as $value) {
+            $suff = (empty($value['suffix'])) ? "" : "_{$value['suffix']}";
+            $fileNames[$value['type']] = "${output_filename}${suff}.{$value['type']}";
+        }
+
         $zip = new ZipArchive;
-        $zipFile = $this->cfgExport->tmp_dir."/$output_filename.zip";
+        $zipFile = $this->cfgExport->tmp_dir."/{$fileNames['zip']}";
         $res = $zip->open($zipFile, ZipArchive::CREATE);
 
         if ($res === TRUE) {
@@ -57,7 +64,6 @@ class exportDocument extends MainRender {
                 $modul = html_entity_decode(htmlspecialchars_decode($data["codi_modul"], ENT_COMPAT|ENT_QUOTES));
                 $modul .= "-";
                 $modul .= html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
-                //$durada = html_entity_decode(htmlspecialchars_decode($data["dedicacio"], ENT_COMPAT|ENT_QUOTES));
                 $codi = html_entity_decode(htmlspecialchars_decode($data["codi"], ENT_COMPAT|ENT_QUOTES));
                 $versio = html_entity_decode(htmlspecialchars_decode($data["versio"], ENT_COMPAT|ENT_QUOTES));
                 $titol = ["Estudis de GES", "Guia d'estudi", $modul, $trimestre];
@@ -81,18 +87,19 @@ class exportDocument extends MainRender {
                         "contingut" => json_decode($data["pdfge"], TRUE)   //contingut latex ja rendaritzat
                     )
                 );
+
                 StaticPdfRenderer::renderDocument($params, "ge.pdf");
                 $zip->addFile($this->cfgExport->tmp_dir."/ge.pdf", "/ge_sencera/ge.pdf");
 
                 StaticPdfRenderer::resetStaticDataRender();
                 $params["data"]["titol"]=array("Estudis de GES","Guia docent",$modul);
                 $params["data"]["contingut"]=json_decode($data["pdfgd"], TRUE);   //contingut latex ja rendaritzat
-                StaticPdfRenderer::renderDocument($params, "gd.pdf");
+                StaticPdfRenderer::renderDocument($params, $fileNames['pdf']);
 
                 $this->attachMediaFiles($zip);
 
-                $result["files"] = array($zipFile, $this->cfgExport->tmp_dir."/gd.pdf");
-                $result["fileNames"] = array("$output_filename.zip", "{$output_filename}_gd.pdf");
+                $result["files"] = array($zipFile, $this->cfgExport->tmp_dir."/".$fileNames['pdf']);
+                $result["fileNames"] = array_values($fileNames);
                 $result["info"] = "fitxers {$result['fileNames'][0]} i {$result["fileNames"][1]} creats correctement";
             }else{
                 $result['error'] = true;
