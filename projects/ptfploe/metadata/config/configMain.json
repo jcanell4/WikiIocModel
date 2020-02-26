@@ -18,10 +18,11 @@
     "metaDataFtpSender": [
         {
             "main": {
-                "file_1": {"local":"mediadir", "type":"zip", "action":[1]}
-            },
-            "ftpId":"pla_treball",
-            "ftpsend_index":"index.html"
+                "files": {
+                    "Floe1": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"}
+                },
+                "ftpId": "pla_treball"
+            }
         }
     ],
     "metaDataProjectStructure": [

@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of BasicFtpSendAction
+ * Description of BasicFtpProjectSendAction
  */
 if (!defined("DOKU_INC")) die();
 require_once DOKU_INC . "lib/lib_ioc/wikiiocmodel/FtpSender.php";
@@ -18,21 +18,10 @@ class BasicFtpProjectSendAction extends ProjectMetadataAction{
         // $filesToSend es un array de n arrays con el formato ['file', 'local', 'action', 'remoteBase', 'remoteDir']
         $filesToSend = $this->getModel()->filesToExportList(); //crear la funció filesToExportList a cada projectModel amb les dades a tractar
 
-//        // Obtenim la configuració i la passem al FtpSender
-//        $ftpId = $this->getModel()->getProjectMetaDataQuery()->getMetaDataFtpSender(ProjectKeys::KEY_FTPID);
-//        $ftpConfigs =  WikiGlobalConfig::getConf(ProjectKeys::KEY_FTP_CONFIG, 'wikiiocmodel');
-//        
-//        if(!isset($ftpConfigs["default"]) && !isset($ftpConfigs[$ftpId]) ){
-//            throw new Exception("Cal configurar les dades del servidor FTP");
-//        }
-//        $connectionData = !isset($ftpConfigs["default"]) ? [] : $ftpConfigs['default'];
-//        if(isset($ftpConfigs[$ftpId])){
-//            $connectionData  = array_merge($connectionData, $ftpConfigs[$ftpId]);   
-//        }
-        $connectionData = $this->getModel()->getFtpConfigData();
-        $this->ftpSender->setConnectionData($connectionData);
-
         if ($filesToSend) {
+            $connectionData = $this->getModel()->getFtpConfigData();  //datos de conexión de local.protected
+            $this->ftpSender->setConnectionData($connectionData);
+
             foreach ($filesToSend as $afile) {
                 $this->ftpSender->addObjectToSendList($afile['file'], $afile['local'], $afile['remoteBase'], $afile['remoteDir'], $afile['action']);
             }
@@ -40,7 +29,6 @@ class BasicFtpProjectSendAction extends ProjectMetadataAction{
     }
 
     protected function responseProcess() {
-//        Logger::init(1);
         $this->addFilesToSend();
         $ftpResponse = $this->ftpSender->process();
 

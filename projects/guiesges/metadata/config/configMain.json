@@ -18,10 +18,12 @@
     "metaDataFtpSender": [
         {
             "main": {
-                "ge": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html", "linkName":"ge"},
-                "gd": {"local":"mediadir", "type":"pdf", "action":[0], "linkName":"gd"}
-            },
-            "ftpId":"guies_ges"
+                "files": {
+                    "ge": {"local":"mediadir", "suffix":"ge", "type":"zip", "action":[1], "linkName":"ge", "remoteIndex":"index.html"},
+                    "gd": {"local":"mediadir", "suffix":"gd", "type":"pdf", "action":[0], "linkName":"gd"}
+                },
+                "ftpId": "guies_ges"
+            }
         }
     ],
     "metaDataProjectStructure": [

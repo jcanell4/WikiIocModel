@@ -714,7 +714,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                 $revs['show_more_button'] = true;
                 $revs["maxamount"]=$amount;
             }else{
-                $revs["maxamount"]=$revs["totalamount"];            
+                $revs["maxamount"]=$revs["totalamount"];
             }
             $r = $this->getActualRevision();
             $this->setActualRevision(TRUE);
@@ -800,23 +800,60 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     /**
+     * Obtiene la lista de ficheros de la clave metaDataFtpSender del configMain.json
+     * @return array con los nombres de los ficheros
+     */
+    public function getMetaDataFtpSenderFiles() {
+        return $this->_constructArrayFileNames($this->id, $this->getMetaDataFtpSender("files"));
+    }
+
+    /**
+     * Construye la lista de ficheros a partir del array recibido
+     * @return array con los nombres de los ficheros
+     */
+    private function _constructArrayFileNames($name, $metaDataFtpSender=NULL) {
+        if ($metaDataFtpSender) {
+            $ret = array();
+            $output_filename = str_replace(":", "_", $name);
+            foreach ($metaDataFtpSender as $value) {
+                $suff = (empty($value['suffix'])) ? "" : "_{$value['suffix']}";
+                $ret[] = "${output_filename}${suff}.{$value['type']}";
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * Obtiene la lista de ficheros, y sus propiedades, de la clave metaDataFtpSender del configMain.json
+     * @return (si $key==NULL) array asociativo sobre ficheros [name [local, type, action]]
+     * @return (si tiene $key) array
+     */
+    public function getMetaDataFtpSender($key=NULL, $metaDataSubset=FALSE) {
+        return $this->getProjectMetaDataQuery()->getMetaDataFtpSender($key, $metaDataSubset);
+    }
+
+    /**
      * Obtiene la lista de ficheros, y sus propiedades, (del configMain.json) que hay que enviar por FTP
      * @return array
      */
     public function filesToExportList() {
         $ret = array();
-        $metadata = $this->getProjectMetaDataQuery()->getMetaDataFtpSender();
-        if (!empty($metadata)) {
-            foreach ($metadata as $n => $ofile) {
-                $path = ($ofile['local']==='mediadir') ? WikiGlobalConfig::getConf('mediadir')."/". str_replace(':', '/', $this->id)."/" : $ofile['local'];
+        $connData = $this->getFtpConfigData();
+        $metadata = $this->getMetaDataFtpSender();
+        if (!empty($metadata["files"])) {
+            foreach ($metadata["files"] as $n => $objFile) {
+                $suff = (empty($objFile['suffix'])) ? "" : "_{$objFile['suffix']}";
+                $path = ($objFile['local']==='mediadir') ? WikiGlobalConfig::getConf('mediadir')."/".str_replace(':', '/', $this->id)."/" : $objFile['local'];
                 if (($dir = @opendir($path))) {
                     while ($file = readdir($dir)) {
-                        if (!is_dir("$path/$file") && end(explode(".",$file))===$ofile['type']) {
+                        if (!is_dir("$path/$file") && preg_match("/.+${suff}\.{$objFile['type']}$/", $file) ) {
                             $ret[$n]['file'] = $file;
                             $ret[$n]['local'] = $path;
-                            $ret[$n]['action'] = $ofile['action'];
-                            $ret[$n]['remoteBase'] = $ofile['remoteBase'];
-                            $ret[$n]['remoteDir'] = $ofile['remoteDir'];
+                            $ret[$n]['action'] = $objFile['action'];
+                            $rBase = (empty($objFile['remoteBase'])) ? (empty($metadata['remoteBase'])) ? $connData["remoteBase"] : $metadata['remoteBase'] : $objFile['remoteBase'];
+                            $rDir  = (empty($objFile['remoteDir'])) ? (empty($metadata['remoteDir'])) ? $connData["remoteDir"] : $metadata['remoteDir'] : $objFile['remoteDir'];
+                            $ret[$n]['remoteBase'] = $rBase;
+                            $ret[$n]['remoteDir'] = $rDir;
                         }
                     }
                 }
@@ -835,8 +872,8 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     public function getFtpConfigData($ftpId=FALSE){
-        if(!$ftpId){
-            $ftpId = $this->getProjectMetaDataQuery()->getMetaDataFtpSender(ProjectKeys::KEY_FTPID);
+        if (!$ftpId){
+            $ftpId = $this->getMetaDataFtpSender(ProjectKeys::KEY_FTPID);
         }
         $pluguin = $this->getPluginName();
         $ftpConfigs =  WikiGlobalConfig::getConf(ProjectKeys::KEY_FTP_CONFIG, $pluguin);
@@ -844,61 +881,69 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             throw new Exception("Cal configurar les dades del servidor FTP");
         }
         $connectionData = !isset($ftpConfigs["default"]) ? [] : $ftpConfigs['default'];
-        if(isset($ftpConfigs[$ftpId])){
-            $connectionData  = array_merge($connectionData, $ftpConfigs[$ftpId]);
+        if (isset($ftpConfigs[$ftpId])){
+            $connectionData = array_merge($connectionData, $ftpConfigs[$ftpId]);
         }
         return $connectionData;
     }
 
+    /**
+     * Guarda, en el fitxer _wikiIocSystem_.mdpr (chivato), la data del fitxer 'HTML export' que s'ha enviat a FTP
+     * (només s'utilitza el primer fitxer de la llista)
+     */
     public function set_ftpsend_metadata() {
-        $connectionData = $this->getFtpConfigData();
-        if($connectionData["remoteUrl"][strlen($connectionData["remoteUrl"])-1]==='/'){
-            $connectionData["remoteUrl"] = substr($connectionData["remoteUrl"],0, strlen($connectionData["remoteUrl"])-1);
-        }
-        $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $this->id) .'/'.preg_replace('/:/', '_', $this->id) . '.zip';
-        $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_timestamp", filemtime($file));
-        $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_url", $connectionData["remoteUrl"] . '/' . basename($file, '.zip'));
-        $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_index", $this->getProjectMetaDataQuery()->getMetaDataFtpSender('ftpsend_index'));
+        $mdFtpSender = $this->getMetaDataFtpSender();
+        $fileNames = $this->_constructArrayFileNames($this->id, $mdFtpSender["files"]);
 
+        $file = WikiGlobalConfig::getConf('mediadir')."/". preg_replace('/:/', '/', $this->id)."/".$fileNames[0];
+        $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_timestamp", filemtime($file));
     }
 
-    public function get_ftpsend_metadata() { // Nom del fitxer per comprovar la data
-        $ext = ".zip";
-        $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $this->id .'/'.preg_replace('/:/', '_', $this->id)). $ext;
+    /**
+     * Comprova si els fitxers 'HTML export' han estat enviats a FTP
+     * (només s'utilitza el primer fitxer de la llista)
+     * @return string HTML per a les metadades
+     */
+    public function get_ftpsend_metadata() {
+        $connData = $this->getFtpConfigData();
+        $mdFtpSender = $this->getMetaDataFtpSender();
+        $fileNames = $this->_constructArrayFileNames($this->id, $mdFtpSender['files']);
 
-        $P = "";
-        $nP = "";
+        $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $this->id) . '/' . $fileNames[0];
         $class = "mf_zip";
-
         $html = '';
-
         $savedtime = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_timestamp");
 
         $fileexists = @file_exists($file);
-        if ($fileexists){
-            $filetime = filemtime($file);
-        }
+        if ($fileexists) $filetime = filemtime($file);
 
         if ($fileexists && $savedtime === $filetime) {
+            foreach ($mdFtpSender['files'] as $objFile) {
+                $index = (empty($objFile['remoteIndex'])) ? $mdFtpSender['remoteIndex'] : $objFile['remoteIndex'];
+                if (empty($index)) {
+                    $outfile = str_replace(":", "_", $this->id);
+                    $suff = (empty($objFile['suffix'])) ? "" : "_{$objFile['suffix']}";
+                    $index = "${outfile}${suff}.{$objFile['type']}";
+                }
+                $rDir  = (empty($objFile['remoteDir'])) ? (empty($mdFtpSender['remoteDir'])) ? $connData["remoteDir"] : $mdFtpSender['remoteDir'] : $objFile['remoteDir'];
+                if (in_array(1, $objFile['action'])) {
+                    $rDir .= pathinfo($file, PATHINFO_FILENAME)."/";  //es una action del tipo unzip
+                }
+                $url = "{$connData['remoteUrl']}${rDir}${index}";
+                $data = date("d/m/Y H:i:s", $filetime);
+                $class = "mf_{$objFile['type']}";
 
-            $index = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_index");
-
-            $url = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_url") . '/' . $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_index");
-
-            $data = date("d/m/Y H:i:s", $filetime);
-
-            $html.= $P.'<span id="ftpsend" style="word-wrap: break-word;">';
-            $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'. $index .'</a> ';
-            $html.= '<span style="white-space: nowrap;">'.$data.'</span>';
-            $html.= '</span>'.$nP;
+                $html.= '<p><span id="ftpsend" style="word-wrap: break-word;">';
+                $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'.$index.'</a> ';
+                $html.= '<span style="white-space: nowrap;">'.$data.'</span>';
+                $html.= '</span></p>';
+            }
         }else{
-
             $html.= '<span id="ftpsend">';
             $html.= '<p class="media mediafile '.$class.'">No hi ha cap fitxer pujat al FTP</p>';
             $html.= '</span>';
         }
 
         return $html;
-
     }
 }

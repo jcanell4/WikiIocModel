@@ -1,129 +1,130 @@
 {
-  "metaDataClassesNameSpaces": [
-    {
-      "main": {
-        "MetaDataDAO": "defaultProject",
-        "MetaDataEntity": "defaultProject",
-        "MetaDataRender": "ptfct"
-      }
-    }
-  ],
-  "metaDataProjectConfig": [
-    {
-      "main": {
-        "projectTypeConfigFile": "admconfig:fct"
-      }
-    }
-  ],
-  "metaDataFtpSender": [
-    {
-      "main": {
-        "file_1": {"local":"mediadir", "type":"zip", "action":[1]}
-      },
-      "ftpId":"pla_treball",
-      "ftpsend_url":"/fct",
-      "ftpsend_index":"index.html"
-    }
-  ],
-  "metaDataProjectStructure": [
-    {
-      "main": "meta.mdpr",
-      "versions": {
-        "fields": 1,
-        "templates": {
-          "continguts": 2
+    "metaDataClassesNameSpaces": [
+        {
+            "main": {
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "ptfct"
+            }
         }
-      },
-      "mainType": {
-        "type": "object",
-        "typeDef": "pla"
-      },
-      "typesDefinition": {
-        "pla": {
-          "type": "object",
-          "keys": {
-            "semestre": {
-              "type": "number",
-              "mandatory": true,
-              "default": 1
-            },
-            "tipusCicle": {
-              "type": "string",
-              "mandatory": true,
-              "default": "LOE"
-            },
-            "cicle": {
-              "type": "string",
-              "default": "Indiqueu el nom del cicle",
-              "mandatory": true
-            },
-            "durada": {
-              "type": "string",
-              "mandatory": true,
-              "default": 0,
-              "props": {
-                "readonly": true
-              }
-            },
-            "any": {
-              "type": "number",
-              "mandatory": true,
-              "calculatedDefault": {
-                    "class": "CalculateByCurrentDate",
-                    "data": "Y"
+    ],
+    "metaDataProjectConfig": [
+        {
+            "main": {
+                "projectTypeConfigFile": "admconfig:fct"
+            }
+        }
+    ],
+    "metaDataFtpSender": [
+        {
+            "main": {
+                "files": {
+                    "F1": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"}
+                },
+                "ftpId": "pla_treball",
+                "remoteDir": "fct/"
+            }
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+            "versions": {
+                "fields": 1,
+                "templates": {
+                    "continguts": 2
                 }
             },
-            "dataIniciFCT": {
-              "type": "date",
-              "mandatory": true,
-              "default": "01/01/2000"
+            "mainType": {
+                "type": "object",
+                "typeDef": "pla"
             },
-            "dataMaxIniciFCT": {
-              "type": "date",
-              "mandatory": true,
-              "default": "01/01/2000"
-            },
-            "dataApteFCT": {
-              "type": "date",
-              "mandatory": true,
-              "default": "01/01/2000"
-            },
-            "dataMaxApteFCT": {
-              "type": "date",
-              "mandatory": true,
-              "default": "01/01/2000"
-            },
-            "autor": {
-              "type": "string",
-              "mandatory": true
-            },
-            "responsable": {
-              "type": "string",
-              "struc_chars": "40",
-              "mandatory": true
-            },
-            "supervisor": {
-                "type": "string",
-                "struc_chars": "40",
-                "mandatory": true
-            },
-            "coordinador": {
-              "type": "string",
-              "mandatory": true
-            },
-            "fitxercontinguts": {
-              "type": "string",
-              "mandatory": true,
-              "default": "continguts"
-            },
-            "moodleCourseId": {
-                "type": "number",
-                "mandatory": true,
-                "default": 0
+            "typesDefinition": {
+                "pla": {
+                    "type": "object",
+                    "keys": {
+                        "semestre": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 1
+                        },
+                        "tipusCicle": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "LOE"
+                        },
+                        "cicle": {
+                            "type": "string",
+                            "default": "Indiqueu el nom del cicle",
+                            "mandatory": true
+                        },
+                        "durada": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": 0,
+                            "props": {
+                                "readonly": true
+                            }
+                        },
+                        "any": {
+                            "type": "number",
+                            "mandatory": true,
+                            "calculatedDefault": {
+                                "class": "CalculateByCurrentDate",
+                                "data": "Y"
+                            }
+                        },
+                        "dataIniciFCT": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default": "01/01/2000"
+                        },
+                        "dataMaxIniciFCT": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default": "01/01/2000"
+                        },
+                        "dataApteFCT": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default": "01/01/2000"
+                        },
+                        "dataMaxApteFCT": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default": "01/01/2000"
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true
+                        },
+                        "supervisor": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true
+                        },
+                        "coordinador": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "fitxercontinguts": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "continguts"
+                        },
+                        "moodleCourseId": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 0
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  ]
+    ]
 }

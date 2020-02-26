@@ -25,31 +25,15 @@ class FtpSendAction extends DokuAction{
     }
 
     protected function startProcess() {
-        //Logger::init(1);
-//        $reCodi = '/\* \*\*creditcodi\*\*.*?:(.*)\/.*\n/m';
-//        $reCC = '/\* \*\*copylink\*\*.*?:.*http:\/\/creativecommons.*\n/m';
-//        $this->getModel()->init($this->params[ProjectKeys::KEY_ID]);
-//        $pageStruct = $this->getModel()->getRawData();
-//
-//        preg_match($reCodi, $pageStruct['content'], $matches);
-//
-        //$docCode = trim($matches[1]);
-        //$docCode = str_replace('.', '/', trim($matches[1]));
-//        $isProtected = preg_match($reCC, $pageStruct['content'])!=1;
-//        if($isProtected){
-//            $docCode .= "_protected";
-//        }
-        $remoteFilename ="web";
-
         //afegir a la llista d'objectes a enviar quins fitxers i sota quins paràmetres caldrà fer-ho
+        $remoteFilename ="web";
         $filename = str_replace(':', '_', $this->params[ProjectKeys::KEY_ID]).".zip";
-        $dest = str_replace(':', '/', $this->params[ProjectKeys::KEY_ID]);
-        $dest = dirname($dest)."/";
+        $dest = dirname(str_replace(':', '/', $this->params[ProjectKeys::KEY_ID]))."/";
         $remoteDest = str_replace('/', '_', $dest);
         $local = WikiGlobalConfig::getConf('mediadir')."/".$dest;
 
-        $ftpConfigs =  WikiGlobalConfig::getConf(AjaxKeys::KEY_FTP_CONFIG, 'iocexportl');
-        $connectionData  = $ftpConfigs['materials_fp'];
+        $ftpConfigs = WikiGlobalConfig::getConf(AjaxKeys::KEY_FTP_CONFIG, 'iocexportl');
+        $connectionData = $ftpConfigs['materials_fp'];
         $this->ftpSender->setConnectionData($connectionData);
 
         $this->ftpSender->addObjectToSendList($filename, $local, $connectionData["remoteBase"].$connectionData["remoteDir"], "$remoteDest/", [0], "$remoteFilename.zip");
@@ -60,13 +44,6 @@ class FtpSendAction extends DokuAction{
         $id = $this->params[ProjectKeys::KEY_ID];
         if ($this->ftpResponse) {
             $response['info'] = self::generateInfo("info", WikiIocLangManager::getLang('ftp_send_success')." ($id)", $id);
-            /*
-             * No és necessari
-            $response['ftpsend'] = [
-                'remoteUrl' => $this->ftpSender['ftpObjectToSendList'][1]['connectionData']['remoteUrl'],
-                'remoteBase' => $this->ftpSender['ftpObjectToSendList'][1]['connectionData']['remoteBase'],
-                'remoteDir' => $this->ftpSender['ftpObjectToSendList'][1]['remoteDir']
-            ];*/
         }else {
             $response['info'] = self::generateInfo("error", WikiIocLangManager::getLang('ftp_send_error')." ($id)", $id);
             $response['alert'] = WikiIocLangManager::getLang('ftp_send_error')." ($id)";
