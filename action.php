@@ -5,9 +5,6 @@
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
-require_once (WIKI_IOC_MODEL . "WikiIocPluginAction.php");
 
 class action_plugin_wikiiocmodel extends WikiIocPluginAction {
     private $viewMode = false;
@@ -18,40 +15,40 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
         $controller->register_hook('IO_WIKIPAGE_READ', "AFTER", $this, "io_readWikiPage", array());
         $controller->register_hook('PARSER_CACHE_USE', "BEFORE", $this, "cache_use", array());
     }
-    
+
     function setViewMode(&$event, $param){
         switch ($event->data["call"]){
             case "page":
-            case "cancel":  
+            case "cancel":
                 $this->viewMode = true;
                 break;
         }
     }
-    
+
     function cache_use(&$event, $param){
         global $plugin_controller;
-        
+
         $projectOwner =  $plugin_controller->getProjectOwner();
         if($this->viewMode &&  $projectOwner){
             $fileProjetc = $plugin_controller->getProjectFile($projectOwner);
             $event->data->depends["files"] []= $fileProjetc;
-        }        
+        }
     }
-    
+
     function io_readWikiPage(&$event, $param){
         global $plugin_controller;
-        
+
         if($this->viewMode &&  preg_match("/~~USE:WIOCCL~~\n/", $event->result)){
             $counter = 0;
             $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $event->result, 1);
             if(preg_match("/~~WIOCCL_DATA:(.*)~~\n/", $text, $match)){
-               $text = preg_replace("/~~WIOCCL_DATA:(.*)~~\n/", "", $text, 1, $counter); 
+               $text = preg_replace("/~~WIOCCL_DATA:(.*)~~\n/", "", $text, 1, $counter);
                $dataSource = $plugin_controller->getCurrentProjectDataSource($match[1]);
                $event->result = WiocclParser::getValue($text, [], $dataSource);
             }else if($plugin_controller->getProjectOwner()){
                 $dataSource = $plugin_controller->getCurrentProjectDataSource();
                 $event->result = WiocclParser::getValue($text, [], $dataSource);
-            }            
+            }
         }
         return false;
     }
