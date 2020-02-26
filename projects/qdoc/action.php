@@ -11,7 +11,7 @@ class action_plugin_wikiiocmodel_projects_qdoc extends WikiIocProjectPluginActio
     public function __construct($projectType, $dirProjectType) {
         parent::__construct($projectType, $dirProjectType);
     }
-
+    
     function register(Doku_Event_Handler $controller) {
         $controller->register_hook('ADD_TPL_CONTROLS', "AFTER", $this, "addWikiIocButtons", array());
         $controller->register_hook('ADD_TPL_CONTROL_SCRIPTS', "AFTER", $this, "addControlScripts", array());

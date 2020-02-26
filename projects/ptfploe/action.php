@@ -53,5 +53,4 @@ class action_plugin_wikiiocmodel_projects_ptfploe extends WikiIocProjectPluginAc
         }
         return TRUE;
     }
-
 }

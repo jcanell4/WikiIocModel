@@ -41,5 +41,5 @@ class action_plugin_wikiiocmodel_projects_manual extends WikiIocProjectPluginAct
             }
         }
         return TRUE;
-    }
+    }  
 }

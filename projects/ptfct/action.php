@@ -52,5 +52,4 @@ class action_plugin_wikiiocmodel_projects_ptfct extends WikiIocProjectPluginActi
         }
         return TRUE;
     }
-
 }

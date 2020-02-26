@@ -14,7 +14,7 @@ class DeleteProjectAuthorization extends CommandAuthorization {
                 $this->errorAuth['error'] = TRUE;
                 $this->errorAuth['exception'] = 'InsufficientPermissionToDeleteProjectException';
             }else {
-                if (!$this->isUserGroup(array("projectmanager","admin"))) {
+                if (!$this->isUserGroup(array("admin"))) {
                     $this->errorAuth['error'] = TRUE;
                     $this->errorAuth['exception'] = 'UserNotAuthorizedException';
                     $this->errorAuth['extra_param'] = $this->permission->getIdPage();

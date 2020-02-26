@@ -55,5 +55,4 @@ class action_plugin_wikiiocmodel_projects_guiesges extends WikiIocProjectPluginA
         }
         return TRUE;
     }
-
 }

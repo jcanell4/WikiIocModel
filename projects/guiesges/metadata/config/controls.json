@@ -66,6 +66,11 @@
                 "path": "ConsolidateDataGetFunction.js"
             },
             "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "iseditorges"
+                ],
                 "rols": [
                    "responsable",
                    "autor"
@@ -103,6 +108,11 @@
                 "path": "UpdateGetFunction.js"
             },
             "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "iseditorges"
+                ],
                 "rols": [
                    "responsable",
                    "autor"
@@ -143,7 +153,7 @@
                 "permissions": [
                    "isadmin",
                    "ismanager",
-                   "isprojectmanager"
+                   "iseditorges"
                 ],
                 "rols": [
                    "responsable"

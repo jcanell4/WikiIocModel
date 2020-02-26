@@ -16,6 +16,30 @@
         }
 
     },
+    "renameProject": {
+        "parms": { 
+            "DOM": {
+               "id": "renameProjectButton"
+            }
+        },
+
+        "scripts": {
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "ispla_fct"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'"
+                }
+            }
+        }
+
+    },
     "ftpSend": {
         "parms": { 
             "DOM": {
@@ -27,11 +51,11 @@
             "updateHandler": {
                 "permissions": [
                    "isadmin",
-                   "ismanager"
+                   "ismanager",
+                   "ispla_fct"
                 ],
                 "rols": [
                    "responsable",
-                   "supervisor",
                    "autor"
                 ],
                 "conditions": {
@@ -67,6 +91,11 @@
                 "path": "ConsolidateDataGetFunction.js"
             },
             "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "ispla_fct"
+                ],
                 "rols": [
                    "responsable",
                    "autor"
@@ -104,6 +133,11 @@
                 "path": "UpdateGetFunction.js"
             },
             "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager",
+                   "ispla_fct"
+                ],
                 "rols": [
                    "responsable",
                    "autor"
@@ -144,11 +178,10 @@
                 "permissions": [
                    "isadmin",
                    "ismanager",
-                   "isprojectmanager"
+                   "ispla_fct"
                 ],
                 "rols": [
                    "responsable",
-                   "supervisor",
                    "autor"
                 ],
                 "conditions": {
