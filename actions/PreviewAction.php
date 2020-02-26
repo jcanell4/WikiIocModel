@@ -39,8 +39,13 @@ class PreviewAction extends DokuAction{
     }
 
     protected function runProcess(){
-        $info;
-        $this->html = html_secedit(p_render('xhtml', p_get_instructions($this->params[PageKeys::KEY_TEXT]), $info), false);
+
+        $text = $this->params[PageKeys::KEY_TEXT];
+        if ($this->params['contentFormat'] === "Dojo") {
+            $text = Html2DWParser::getValue($text);
+        }
+
+        $this->html = html_secedit(p_render('xhtml', p_get_instructions($text), $info), false);
         $this->info = $info;
     }
 

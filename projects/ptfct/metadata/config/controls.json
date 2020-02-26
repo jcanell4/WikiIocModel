@@ -28,7 +28,7 @@
                 "permissions": [
                    "isadmin",
                    "ismanager",
-                   "ispla_fct"
+                   "isfctmanager"
                 ],
                 "rols": [
                    "responsable"
@@ -52,7 +52,7 @@
                 "permissions": [
                    "isadmin",
                    "ismanager",
-                   "ispla_fct"
+                   "isfctmanager"
                 ],
                 "rols": [
                    "responsable",
@@ -94,7 +94,7 @@
                 "permissions": [
                    "isadmin",
                    "ismanager",
-                   "ispla_fct"
+                   "isfctmanager"
                 ],
                 "rols": [
                    "responsable",
@@ -136,7 +136,7 @@
                 "permissions": [
                    "isadmin",
                    "ismanager",
-                   "ispla_fct"
+                   "isfctmanager"
                 ],
                 "rols": [
                    "responsable",
@@ -178,7 +178,7 @@
                 "permissions": [
                    "isadmin",
                    "ismanager",
-                   "ispla_fct"
+                   "isfctmanager"
                 ],
                 "rols": [
                    "responsable",
