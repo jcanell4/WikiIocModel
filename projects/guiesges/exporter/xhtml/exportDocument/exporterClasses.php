@@ -34,18 +34,19 @@ class exportDocument extends MainRender {
         if (!file_exists($this->cfgExport->tmp_dir)) {
             mkdir($this->cfgExport->tmp_dir, 0775, TRUE);
         }
-        $output_filename = str_replace(':','_',$this->cfgExport->id);
         $pathTemplate = "xhtml/exportDocument/templates";
 
-        $fileNames = array();
-        $metaDataFtpSender = $this->factory->getProjectModel()->getMetaDataFtpSenderFiles();
-        foreach ($metaDataFtpSender as $value) {
-            $suff = (empty($value['suffix'])) ? "" : "_{$value['suffix']}";
-            $fileNames[$value['type']] = "${output_filename}${suff}.{$value['type']}";
+        $fileNames = $this->factory->getProjectModel()->getMetaDataFtpSenderFiles();
+        //Només s'espera que arribin 2 fitxers: un zip i un pdf
+        foreach ($fileNames as $value) {
+            switch (pathinfo($value, PATHINFO_EXTENSION)) {
+                case "zip": $fileZip = $value; break;
+                case "pdf": $filePdf = $value; break;
+            }
         }
 
         $zip = new ZipArchive;
-        $zipFile = $this->cfgExport->tmp_dir."/{$fileNames['zip']}";
+        $zipFile = $this->cfgExport->tmp_dir."/$fileZip";
         $res = $zip->open($zipFile, ZipArchive::CREATE);
 
         if ($res === TRUE) {
@@ -94,11 +95,11 @@ class exportDocument extends MainRender {
                 StaticPdfRenderer::resetStaticDataRender();
                 $params["data"]["titol"]=array("Estudis de GES","Guia docent",$modul);
                 $params["data"]["contingut"]=json_decode($data["pdfgd"], TRUE);   //contingut latex ja rendaritzat
-                StaticPdfRenderer::renderDocument($params, $fileNames['pdf']);
+                StaticPdfRenderer::renderDocument($params, $filePdf);
 
                 $this->attachMediaFiles($zip);
 
-                $result["files"] = array($zipFile, $this->cfgExport->tmp_dir."/".$fileNames['pdf']);
+                $result["files"] = array($zipFile, $this->cfgExport->tmp_dir."/$filePdf");
                 $result["fileNames"] = array_values($fileNames);
                 $result["info"] = "fitxers {$result['fileNames'][0]} i {$result["fileNames"][1]} creats correctement";
             }else{
@@ -218,3 +219,4 @@ class exportDocument extends MainRender {
         return $files;
     }
 }
+
