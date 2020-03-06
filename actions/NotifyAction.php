@@ -117,13 +117,9 @@ class NotifyAction extends AbstractWikiAction {
 
     public function notifyMessageToFrom()
     {
-        global $auth;
-
         $senderId = $this->getCurrentUser();
-        $senderUser = $auth->getUserData($senderId);
-
+        $senderUser = WikiIocInfoManager::getInfo("userinfo");
         $receivers = $this->getReceivers($this->params['to']);
-
         $notification = null;
 
         foreach ($receivers as $receiver) {
@@ -132,7 +128,6 @@ class NotifyAction extends AbstractWikiAction {
             if ($this->params['send_email']) {
                 $this->sendNotificationByEmail($senderUser, $receiver, $notification['title'], $notification['content']['textMail']);
             }
-
             $this->dokuNotifyModel->notifyMessageToFrom($notification['content'], $receiver['id'], $senderId, NotifyDataQuery::MAILBOX_RECEIVED);
 
         }
@@ -141,15 +136,12 @@ class NotifyAction extends AbstractWikiAction {
         $message = $this->buildMessage($this->params['message'], $senderId, $this->params['id'], null, $receiversList, $this->params['rev']);
         $notification = $this->dokuNotifyModel->notifyMessageToFrom($message ['content'], $senderId, null, NotifyDataQuery::MAILBOX_SEND, true);
 
-
         $response['info'] = self::generateInfo('success', sprintf(WikiIocLangManager::getLang("notifation_send_success"), $receiversList));
         $response['notifications']['params']['notification'] = $notification;
         $response['notifications']['action'] = 'notification_sent';
 
         return $response;
     }
-
-
 
     private function getReceiversIdAsString($receivers) {
         $filteredReceivers = [];
