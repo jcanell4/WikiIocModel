@@ -77,7 +77,6 @@ class ProfileAction extends DokuAction{
             }
             if (!isset($MSG) || $MSG[0]['msg']!==$param)
                 $response['info'] = self::generateInfo("info", $param, $id, $info_time_visible );
-            $response['ns'] = $id;
             $response['iframe'] = TRUE;
         }
         else {
