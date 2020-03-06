@@ -7,7 +7,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 require_once DOKU_INC."inc/pluginutils.php";
 require_once DOKU_INC."inc/actions.php";
-require_once DOKU_PLUGIN."ajaxcommand/defkeys/AdminKeys.php";
+require_once DOKU_PLUGIN."ajaxcommand/defkeys/UserStateKeys.php";
 
 class ProfileAction extends DokuAction{
 
@@ -71,6 +71,7 @@ class ProfileAction extends DokuAction{
                     $param = WikiIocLangManager::getLang('menu','usermanager');
                     break;
                 case "modify":
+                    $response['user_state'] = ["editor" => WikiIocInfoManager::getInfo("userinfo")['editor']];
                     $param = WikiIocLangManager::getLang('update_ok','usermanager');
                     break;
             }
@@ -122,10 +123,10 @@ class ProfileAction extends DokuAction{
         ptln("</tr><tr>");
         ptln("<td><label for='modify_usereditor'>".WikiIocLangManager::getLang('user_editor','usermanager').": </label></td>");
         ptln("<td>");
-            $selected = ($this->usrdata['usereditor']=="ACE") ? " selected" : "";
-            $options[] = "<option value=\"ACE\"$selected>ACE</option>";
-            $selected = ($this->usrdata['usereditor']=="Dojo") ? " selected" : "";
-            $options[] = "<option value=\"Dojo\"$selected>Dojo</option>";
+            $selected = ($this->usrdata['usereditor']==UserStateKeys::KEY_ACE) ? " selected" : "";
+            $options[] = "<option value='".UserStateKeys::KEY_ACE."'$selected>".UserStateKeys::KEY_ACE."</option>";
+            $selected = ($this->usrdata['usereditor']==UserStateKeys::KEY_DOJO) ? " selected" : "";
+            $options[] = "<option value='".UserStateKeys::KEY_DOJO."'$selected>".UserStateKeys::KEY_DOJO."</option>";
         ptln("<select id='modify_usereditor' name='usereditor'>");
             foreach ($options as $option) { ptln($option);}
         ptln("</td>");

@@ -10,6 +10,8 @@ require_once DOKU_INC . 'inc/pluginutils.php';
 require_once DOKU_INC . 'inc/actions.php';
 require_once DOKU_INC . 'inc/html.php';
 require_once DOKU_INC . 'inc/parserutils.php';
+require_once DOKU_PLUGIN."ajaxcommand/defkeys/UserStateKeys.php";
+
 
 class PreviewAction extends DokuAction{
     private $info;
@@ -41,7 +43,7 @@ class PreviewAction extends DokuAction{
     protected function runProcess(){
 
         $text = $this->params[PageKeys::KEY_TEXT];
-        if ($this->params['contentFormat'] === "Dojo") {
+        if ($this->params['contentFormat'] === UserStateKeys::KEY_DOJO) {
             $text = Html2DWParser::getValue($text);
         }
 
