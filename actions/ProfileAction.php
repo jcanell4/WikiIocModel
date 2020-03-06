@@ -7,7 +7,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 require_once DOKU_INC."inc/pluginutils.php";
 require_once DOKU_INC."inc/actions.php";
-require_once DOKU_PLUGIN."ajaxcommand/defkeys/AdminKeys.php";
+require_once DOKU_PLUGIN."ajaxcommand/defkeys/UserStateKeys.php";
 
 class ProfileAction extends DokuAction{
 
@@ -49,18 +49,20 @@ class ProfileAction extends DokuAction{
             $cmd = is_array($fn) ? key($fn) : $fn;
 
             if ($cmd === "modify") {
-                $userInfo = $auth->getUserData($this->params['userid']);
+                $userInfo = $auth->getUserData($this->params['userid']); //TODO [JOSEP] Mirar si les dades de la base de dades de l'usuari es guarden a $INFO["userInfo"]. Si és així usar-ho igual que es fa a la resta
                 $this->usrdata = ['userid'  => $this->params['userid'],
                                   'username'=> $this->params['username'],
                                   'usermail'=> $this->params['usermail'],
-                                  'moodle'=> $userInfo['moodle']
+                                  'usereditor'=> $this->params['usereditor'],
+                                  'usermoodle'=> $userInfo['moodle']
                                  ];
             }else {
                 $userInfo = $auth->getUserData(WikiIocInfoManager::getInfo("client"));
                 $this->usrdata = ['userid'  => WikiIocInfoManager::getInfo("client"),
                                   'username'=> WikiIocInfoManager::getInfo("userinfo")['name'],
                                   'usermail'=> WikiIocInfoManager::getInfo("userinfo")['mail'],
-                                  'moodle'=> $userInfo['moodle']
+                                  'usereditor'=> $userInfo['editor'],
+                                  'usermoodle'=> $userInfo['moodle']
                                  ];
             }
             $pageToSend = $this->getHtmlEditProfile();
@@ -71,6 +73,7 @@ class ProfileAction extends DokuAction{
                     $param = WikiIocLangManager::getLang('menu','usermanager');
                     break;
                 case "modify":
+                    $response['user_state'] = ["editor" => WikiIocInfoManager::getInfo("userinfo")['editor']];
                     $param = WikiIocLangManager::getLang('update_ok','usermanager');
                     break;
             }
@@ -97,49 +100,13 @@ class ProfileAction extends DokuAction{
         print p_locale_xhtml('updateprofile');
         ptln("<div class='edit_user'>");
         ptln("<div class='level2'>");
-        /*
-        $form = new FormInTableTwoColumn("dw__user_profile");
-        $form->addHidden( ['do' =>  "profile",
-                           'page' => "usermanager",
-                           'userid' => $this->usrdata['userid'],
-                           'userid_old' => $this->usrdata['userid']
-                          ] );
-        $form->addHeadElement("descripció","valor");
-        $form->addInput(
-                ['user_id' =>  array('type'=>"text", 'size'=>"50", 'value'=>$this->usrdata['userid'], 'attr'=>array('disabled'=>"disabled")),
-                 'username' =>  array('type'=>"text", 'size'=>"50", 'value'=>$this->usrdata['username']),
-                 'usermail' =>  array('type'=>"text", 'size'=>"50", 'value'=>$this->usrdata['usermail'])
-                ]);
-        $form->addHeadElement("Canvi de contrasenya");
-        $form->addInput(
-                ['oldpass' =>  array('type'=>"password", 'size'=>"30"),
-                 'userpass' =>  array('type'=>"password", 'size'=>"30"),
-                 'newpass' =>  array('type'=>"password", 'size'=>"30")
-                ]);
-        $form->addInputButton(
-                ['fn[modify]' => array('class'=>"button", 'type'=>"submit", 'value'=>WikiIocLangManager::getLang('btn_save')),
-                 "fn[edit][{$this->usrdata['userid']}]" => array('class'=>"button", 'type'=>"hidden", 'value'=>"Desfés els canvis")
-                ]);
-
-        $htmlForm = $form->getFormTag();
-        $htmlForm.= $form->getHiddenInputs();
-        $htmlForm.= $form->getInitTable($form->getHeadElement(0));
-        $htmlForm.= $form->getInputElements(0);
-        $htmlForm.= $form->getTrSeparator();
-        $htmlForm.= $form->getHeadElement(1);
-        $htmlForm.= $form->getInputElements(1);
-        $htmlForm.= $form->getEndBody();
-        $htmlForm.= $form->getTrSeparator();
-        $htmlForm.= $form->getTrBlock($form->getEmptyTd(), $form->getInputButtons(0));
-        $htmlForm.= $form->getEndTableFormTag();
-        */
         ptln("<form id='dw__register' action=''>");
         ptln("<div class='no'>");
         ptln("<input name='do' type='hidden' value='profile'>");
         ptln("<input name='page' type='hidden' value='usermanager'>");
         ptln("<input name='userid' type='hidden' value='{$this->usrdata['userid']}'>");
         ptln("<input name='userid_old' type='hidden' value='{$this->usrdata['userid']}'>");
-        ptln("<input name='moodle' type='hidden' value='{$this->usrdata['moodle']}'>");
+        ptln("<input name='usermoodle' type='hidden' value='{$this->usrdata['usermoodle']}'>");
         ptln("</div>");
         ptln("<div class='table'>");
         ptln("<table class='inline'>");
@@ -154,7 +121,17 @@ class ProfileAction extends DokuAction{
         ptln("</tr><tr>");
         ptln("<td><label for='modify_usermail'>".WikiIocLangManager::getLang('email').": </label></td>");
         ptln("<td><input id='modify_usermail' name='usermail' class='edit' type='text' size='50' value='{$this->usrdata['usermail']}'></td>");
-        if(!$this->usrdata['moodle']){
+        ptln("</tr><tr>");
+        ptln("<td><label for='modify_editor'>".WikiIocLangManager::getLang('editor').": </label></td>");
+        $selectedAce = $this->usrdata['usereditor']!= UserStateKeys::KEY_DOJO?" selected=''":"";
+        $selectedDojo = $this->usrdata['usereditor']=="Dojo"?" selected=''":"";
+        ptln("<td><select id='modify_editor' name='usereditor' class='edit' type='text'>");
+        $editorId = UserStateKeys::KEY_ACE;
+        ptln("<option value=\"$editorId\"$selectedAce>$editorId</option>");
+        $editorId = UserStateKeys::KEY_DOJO;
+        ptln("<option value=\"$editorId\"$selectedDojo>$editorId</option>");
+        ptln("</select></td>");
+        if(!$this->usrdata['usermoodle']){
             ptln("</tr><tr><td colspan=2><br /></td></tr><tr>");
             ptln("<thead><tr><th colspan=2>Canvi de contrasenya</th></tr></thead>");
             ptln("</tr><tr>");
