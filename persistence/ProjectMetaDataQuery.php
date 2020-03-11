@@ -544,7 +544,7 @@ class ProjectMetaDataQuery extends DataQuery {
             $prev_date = filemtime($projectFilePathName);
         }
 
-        $contentFile = str_replace("\\r\\n", "\n", "{\"$metaDataSubSet\":$metaDataValue}");
+        $contentFile = $this->_cleanContent("{\"$metaDataSubSet\":$metaDataValue}");
         $resourceCreated = io_saveFile($projectFilePathName, $contentFile);
         if ($resourceCreated) {
             $new_date = filemtime($projectFilePathName);
@@ -553,6 +553,17 @@ class ProjectMetaDataQuery extends DataQuery {
         }
 
         return $resourceCreated;
+    }
+
+    /**
+     * Limpia una cadena de texto de caracteres indeseables a partir de una lista
+     * @param string $content - Texto que se desea limpiar
+     * @return string - Texto limpio
+     */
+    private function _cleanContent($content) {
+        $aSearch = ["\\r\\n", "\\ufeff"];
+        $aReplace = ["\n", " "];
+        return str_replace($aSearch, $aReplace, $content);
     }
 
     private function _createResource($dirProject, $file) {
