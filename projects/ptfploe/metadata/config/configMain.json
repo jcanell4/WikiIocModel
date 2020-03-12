@@ -690,17 +690,20 @@
                         },
                         "autor": {
                             "type": "string",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "responsable": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "supervisor": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "fitxercontinguts": {
                             "type": "string",
