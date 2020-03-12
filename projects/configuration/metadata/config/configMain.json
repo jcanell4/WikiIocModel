@@ -49,11 +49,13 @@
                         "responsable": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "autor": {
                             "type": "string",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "arraytaula": {
                             "type": "subTable",

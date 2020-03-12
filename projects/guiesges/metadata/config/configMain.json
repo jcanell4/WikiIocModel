@@ -163,12 +163,14 @@
                         "autor": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "responsable": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "codi": {
                             "type": "string",

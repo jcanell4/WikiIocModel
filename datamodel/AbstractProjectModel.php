@@ -54,7 +54,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             $this->projectType = $projectType;
             $this->rev = $rev;
             $this->metaDataSubSet = $metadataSubset;
-            $this->viewConfigName=$viewConfigName;
+            $this->viewConfigName=empty($viewConfigName)?"defaultView":$viewConfigName;
         }
         $this->projectMetaDataQuery->init($this->id);
         if($this->projectType){
@@ -178,16 +178,21 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     /**
-     * Obtiene los datos del archivo de datos (meta.mdpr) de un proyecto
+     * Obtiene los datos del proyecto o revisión del proyecto en uso, relativos 
+     * a la clave $metaDataSubset si se passa por paràmetro o a su valor por 
+     * defecto si no se pasa.
      */
     public function getMetaDataProject($metaDataSubset=FALSE) {
+        //Actualitzar a aquí els camps calculats
         $ret = $this->projectMetaDataQuery->getMeta($metaDataSubset, FALSE);
         return json_decode($ret, true);
     }
 
     //Obtiene un array [key, value] con los datos del proyecto solicitado
     public function getDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE, $retData=TRUE) {
-        return $this->projectMetaDataQuery->getDataProject($id, $projectType, $metaDataSubSet, $retData);
+        //Actualitzar a aquí els camps calculats
+        $ret =  $this->projectMetaDataQuery->getDataProject($id, $projectType, $metaDataSubSet, $retData);
+        return $ret;
     }
 
     /**
@@ -224,6 +229,12 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             }
         }
         $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->viewConfigName);
+        //Actualitzar a aquí els camps calculats
+        //   1) if default => UpdateCalculatedFileds (UpdateCalculatedFiedsFromOwndata)
+        //   2) if default => processAutoFields(all)
+        //   3) if not default => processAutoFields(outerData)
+        //   4) UpdateCalculatedFiledFromOuterData
+
 
         $this->mergeFieldConfig($ret['projectMetaData'], $ret['projectViewData']['fields']);
         $this->mergeFieldNameToLayout($ret['projectViewData']['fields']);
@@ -945,5 +956,17 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         }
 
         return $html;
+    }
+    
+    public function getRoleData(){
+        $ret = array();
+        $struct = $this->getMetaDataDefKeys();
+        $data = $this->getMetaDataProject();
+        foreach ($struct as $field => $cfgField) {
+            if(isset($cfgField["isRole"]) && $cfgField["isRole"]){
+                $ret[$field] = $data[$field];
+            }
+        }
+        return $ret;
     }
 }

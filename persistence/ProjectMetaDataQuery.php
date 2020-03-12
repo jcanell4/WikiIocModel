@@ -470,7 +470,6 @@ class ProjectMetaDataQuery extends DataQuery {
      * Extrae, del contenido del fichero, los datos correspondientes a la clave
      * @param string $subSet : clave del contenido
      * @param string $revision : fecha unix de la revisión
-     * @return JSON conteniendo el array de la clave 'metadatasubset' con los datos del proyecto
      */
     public function getMeta($subSet=FALSE, $revision=FALSE) {
         if (!$subSet) $subSet = $this->getProjectSubset();
