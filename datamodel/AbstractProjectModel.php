@@ -182,10 +182,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * a la clave $metaDataSubset si se passa por paràmetro o a su valor por 
      * defecto si no se pasa.
      */
-    public function getCurrentDataProject($metaDataSubset=FALSE) {
+    public function getCurrentDataProject($metaDataSubSet=FALSE) {
 //        $ret = $this->projectMetaDataQuery->getMeta($metaDataSubset, FALSE);
 //        return json_decode($ret, true);
-        return $this->getDataProject(FALSE, FALSE, $metaDataSubset);
+        return $this->getDataProject(FALSE, FALSE, $metaDataSubSet);
     }
 
     //Obtiene un array [key, value] con los datos del proyecto solicitado
@@ -546,7 +546,6 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * @param array $toSet (s'ha generat a l'Action corresponent)
      */
     public function setData($toSet) {
-        //$toSet[ProjectKeys::KEY_METADATA_VALUE] = $this->__preProcessFields($toSet[ProjectKeys::KEY_METADATA_VALUE]);
         $toSet[ProjectKeys::KEY_METADATA_VALUE] = $this->processAutoFieldsOnSave($toSet[ProjectKeys::KEY_METADATA_VALUE]);
         $toSet[ProjectKeys::KEY_METADATA_VALUE] = $this->_updateCalculatedFieldsOnSave($toSet[ProjectKeys::KEY_METADATA_VALUE]);
         $this->metaDataService->setMeta($toSet);
@@ -557,32 +556,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * @param JSON $dataProject Nou contingut de l'arxiu de dades del projecte
      */
     public function setDataProject($dataProject, $summary="") {
-//        $calculatedData = $this->__preProcessFields($dataProject);
         $calculatedData = $this->processAutoFieldsOnSave($dataProject);
         $calculatedData = $this->_updateCalculatedFieldsOnSave($calculatedData);
         $this->projectMetaDataQuery->setMeta($calculatedData, $this->getMetaDataSubSet(), $summary);
     }
-
-//    private function __preProcessFields($data) {
-//        $values = json_decode($data, true);
-//        $configStructure = $this->getMetaDataDefKeys();
-//        foreach ($configStructure as $key => $def) {
-//            if(isset($def["calculate"])){
-//                $value = IocCommon::getCalculateFieldFromFunction($def["calculate"], $this->id, $values, $this->getPersistenceEngine());
-//                $values[$key]=$value;
-//            }elseif ($def["type"] == "boolean" || $def["type"] == "bool") {
-//                if(!isset($values[$key])
-//                        || $values[$key] === false
-//                        || $values[$key] === "false"){
-//                    $values[$key] = "false";
-//                }else{
-//                    $values[$key] = "true";
-//                }
-//            }
-//        }
-//        $data = json_encode($values);
-//        return $data;
-//    }
     
     private function processAutoFieldsOnSave($data) {
         $isArray = is_array($data);
