@@ -68,11 +68,8 @@ class sintesiProjectModel extends MoodleProjectModel {
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFieldsOnSave($data) {
+    public function updateCalculatedFieldsOnSave($values) {
 
-        $isArray = is_array($data);
-        $values = $isArray?$data:json_decode($data, true);
-        
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
 
         if ($taulaCalendari!=NULL){
@@ -83,9 +80,7 @@ class sintesiProjectModel extends MoodleProjectModel {
 
             $values["durada"] = $hores;
         }
-
-        $data = $isArray?$values:json_encode($values);
-        return parent::updateCalculatedFieldsOnSave($data);
+        return parent::updateCalculatedFieldsOnSave($values);
     }
 
     /**
