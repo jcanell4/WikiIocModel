@@ -27,7 +27,7 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
                                        ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET
                                     ]);
             //Obtenir les dades de la configuració per a aquest tipus de projecte
-            $metaDataConfigProject = $configProjectModel->getMetaDataProject($metaDataSubSet);
+            $metaDataConfigProject = $configProjectModel->getCurrentDataProject($metaDataSubSet);
 
             if ($metaDataConfigProject['arraytaula']) {
                 $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);

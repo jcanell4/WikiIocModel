@@ -36,7 +36,7 @@ class BasicDiffProjectMetaDataAction extends ProjectMetadataAction {
             $arev = $this->projectModel->getActualRevision();
             $this->projectModel->setActualRevision(TRUE); //fuerza la obtención de datos de la versión actual (no revisión)
             //array de datos del proyecto actual
-            $rev1 = $this->projectModel->getDataProject();
+            $rev1 = $this->projectModel->getCurrentDataProject();
             $date_rev1 = (string)$this->projectModel->getLastModFileDate();
             $this->projectModel->setActualRevision($arev); //regenera al estado anterior la obtención de datos de la versión actual
             //array de datos de la revisión

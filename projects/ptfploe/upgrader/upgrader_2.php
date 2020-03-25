@@ -21,7 +21,7 @@ class upgrader_2 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
-                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }
@@ -62,7 +62,7 @@ class upgrader_2 extends CommonUpgrader {
                 if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
                     $filename = $this->model->getProjectDocumentName();
                 }
-                $data = $this->model->getDataProject();
+                $data = $this->model->getCurrentDataProject();
                 $template_name = $this->model->getTemplateContentDocumentId($data);
 
                 $file = $this->model->getTemplatePath($template_name, 'v2');

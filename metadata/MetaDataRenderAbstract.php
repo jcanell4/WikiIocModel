@@ -224,8 +224,8 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     private function _getDefaultSingleArray($properties, $types, $defaultRow){
         if(isset($properties["calculatedDefault"])){
             $_values = $this->getCalculateValue($properties["calculatedDefault"]);
-        }elseif(isset($properties["calculate"])){
-            $_values = $this->getCalculateValue($properties["calculate"]);
+//        }elseif(isset($properties["calculate"])){
+//            $_values = $this->getCalculateValue($properties["calculate"]);
         }elseif(isset($properties['default'])){
             $_values = $properties['default'];
         }else{
@@ -255,8 +255,8 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
         $_values = [];
         if(isset($properties["calculatedDefault"])){
             $_values['default'] = $this->getCalculateValue($properties["calculatedDefault"]);
-        }elseif(isset($properties["calculate"])){
-            $_values['default'] = $this->getCalculateValue($properties["calculate"]);
+//        }elseif(isset($properties["calculate"])){
+//            $_values['default'] = $this->getCalculateValue($properties["calculate"]);
         }else{
             $_values['default'] = isset($properties['default'])?$properties['default']:$dv;
         }
@@ -272,8 +272,8 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
         if(!$defRow && (isset($properties['default']) || isset($properties['calculatedDefault']) || isset($properties['calculate']))){
             if(isset($properties['calculatedDefault'])){
                 $_values = $this->getCalculateValue($properties["calculatedDefault"]);
-            }elseif(isset($properties['calculate'])){
-                $_values = $this->getCalculateValue($properties["calculate"]);
+//            }elseif(isset($properties['calculate'])){
+//                $_values = $this->getCalculateValue($properties["calculate"]);
             }else{
                 $_values = $properties['default'];
             }
@@ -301,8 +301,8 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     private function _getDefaultObjectArrayValue($properties, $types, $defaultRow){
         if(isset($properties["calculatedDefault"])){
             $_values = $this->getCalculateValue($properties["calculatedDefault"]);
-        }elseif(isset($properties["calculate"])){
-            $_values = $this->getCalculateValue($properties["calculate"]);
+//        }elseif(isset($properties["calculate"])){
+//            $_values = $this->getCalculateValue($properties["calculate"]);
         }elseif(isset($properties['default'])){
             $_values = $properties['default'];
         }else{

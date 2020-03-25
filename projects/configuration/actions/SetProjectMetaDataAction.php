@@ -3,7 +3,7 @@ if (!defined('DOKU_INC')) die();
 
 class SetProjectMetaDataAction extends BasicSetProjectMetaDataAction{
      protected function responseProcess(){
-         $oldValues = $this->getModel()->getDataProject();
+         $oldValues = $this->getModel()->getCurrentDataProject();
          $oldArraytaula = json_decode($oldValues["arraytaula"], TRUE);
          $newArraytaula = json_decode($this->params["arraytaula"], TRUE);
          for($i=0; $i<count($newArraytaula); $i++) {

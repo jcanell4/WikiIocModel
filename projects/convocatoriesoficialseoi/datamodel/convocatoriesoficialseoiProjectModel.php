@@ -15,7 +15,7 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
     }
 
     public function getProjectDocumentName() {
-        $ret = $this->getMetaDataProject();
+        $ret = $this->getCurrentDataProject();
         return $ret['fitxercontinguts'];
     }
 
@@ -236,14 +236,15 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFields($data) {
-        $values = json_decode($data, true);
+    public function updateCalculatedFieldsOnSave($data) {
+        $isArray = is_array($data);
+        $values = $isArray?$data:json_decode($data, true);
         $values["dataReclamacions"] = $this->sumDate($values["dataResultats"], 3);
         $values["dataProvaNE1"] = $this->sumDate($values["dataProva1"], 5);
         $values["dataProvaNE2"] = $this->sumDate($values["dataProva2"], 5);
 
-        $data = json_encode($values);
-        return parent::updateCalculatedFields($data);
+        $data = $isArray?$values:json_encode($values);
+        return parent::updateCalculatedFieldsOnSave($data);
     }
 
     protected function sumDate($date, $days, $months = 0, $years = 0, $sep = "-") {

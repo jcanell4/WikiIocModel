@@ -15,7 +15,7 @@ class ptfctProjectModel extends MoodleProjectModel {
     }
 
     public function getProjectDocumentName() {
-        $ret = $this->getMetaDataProject();
+        $ret = $this->getCurrentDataProject();
         return $ret['fitxercontinguts'];
     }
 
@@ -114,7 +114,7 @@ class ptfctProjectModel extends MoodleProjectModel {
      */
     public function getCalendarDates() {
         $ret = array();
-        $data = $this->getDataProject();
+        $data = $this->getCurrentDataProject();
         $ret[] = [
             "title"=>"FCT inici",
             "date"=>$data["dataIniciFCT"],
@@ -139,7 +139,7 @@ class ptfctProjectModel extends MoodleProjectModel {
     }
 
     public function getCourseId() {
-        $data = $this->getDataProject();
+        $data = $this->getCurrentDataProject();
         return $data["moodleCourseId"];        
     }
 

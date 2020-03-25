@@ -54,7 +54,7 @@ abstract class ProjectMetadataAction extends AbstractWikiAction {
 
     protected function preResponseProcess() {
         if (!isset($this->params[ProjectKeys::KEY_REV]) || $this->params[ProjectKeys::KEY_REV]==NULL) {
-            if ($this->projectModel->getDataProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_METADATA_SUBSET], FALSE)) {
+            if ($this->projectModel->hasDataProject($this->params[ProjectKeys::KEY_ID], $this->params[ProjectKeys::KEY_PROJECT_TYPE], $this->params[ProjectKeys::KEY_METADATA_SUBSET])) {
                 //Actualiza el la estructura y datos del archivo de sistema del proyecto
                 if (!$this->projectModel->preUpgradeProject($this->params[ProjectKeys::KEY_METADATA_SUBSET])) {
                     throw new Exception ("Error en l'actualització de la versió de l'arxiu de sistema del projecte");

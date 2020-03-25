@@ -24,7 +24,7 @@ class upgrader_7 extends CommonUpgrader {
     public function process($type, $filename = NULL) {
         switch ($type) {
             case "fields":
-                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }

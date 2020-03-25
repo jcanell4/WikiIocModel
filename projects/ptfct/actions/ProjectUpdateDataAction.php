@@ -10,7 +10,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
         $metaDataSubSet = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
 
         $projectModel = $this->getModel();
-        $response = $projectModel->getDataProject();
+        $response = $projectModel->getCurrentDataProject();
 
         $confProjectType = $this->modelManager->getConfigProjectType();
         //obtenir la ruta de la configuració per a aquest tipus de projecte
@@ -26,7 +26,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 
         //Obtenir les dades de la configuració d'aquest tipus de projecte
         $metaDataSubset = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
-        $metaDataConfigProject = $configProjectModel->getMetaDataProject($metaDataSubset);
+        $metaDataConfigProject = $configProjectModel->getCurrentDataProject($metaDataSubset);
 
         if ($metaDataConfigProject['arraytaula']) {
             $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);

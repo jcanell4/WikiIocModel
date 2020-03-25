@@ -15,7 +15,7 @@ class ptfploeProjectModel extends MoodleProjectModel {
     }
 
     public function getProjectDocumentName() {
-        $ret = $this->getMetaDataProject();
+        $ret = $this->getCurrentDataProject();
         return $ret['fitxercontinguts'];
     }
 
@@ -68,10 +68,11 @@ class ptfploeProjectModel extends MoodleProjectModel {
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFields($data) {
+    public function updateCalculatedFieldsOnSave($data) {
 
-        $values = json_decode($data, true);
-
+        $isArray = is_array($data);
+        $values = $isArray?$data:json_decode($data, true);
+        
         $taulaDadesUF = (is_array($values["taulaDadesUF"])) ? $values["taulaDadesUF"] : json_decode($values["taulaDadesUF"], true);
         $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
@@ -149,8 +150,8 @@ class ptfploeProjectModel extends MoodleProjectModel {
             $values["hiHaSolucioPerAC"] = $hiHaSolucio;
         }
 
-        $data = json_encode($values);
-        return parent::updateCalculatedFields($data);
+        $data = $isArray?$values:json_encode($values);
+        return parent::updateCalculatedFieldsOnSave($data);
     }
 
     /**
@@ -199,7 +200,7 @@ class ptfploeProjectModel extends MoodleProjectModel {
      */
     public function getCalendarDates() {
         $ret = array();
-        $data = $this->getMetaDataProject();
+        $data = $this->getCurrentDataProject();
         if(is_string($data["calendari"])){
             $calendari = json_decode($data["calendari"], true);
         }else{
@@ -355,7 +356,7 @@ class ptfploeProjectModel extends MoodleProjectModel {
     }
 
     public function getCourseId() {
-        $data = $this->getDataProject();
+        $data = $this->getCurrentDataProject();
         return $data["moodleCourseId"];
     }
 }

@@ -22,7 +22,7 @@ class upgrader_1 extends CommonUpgrader {
         switch ($type) {
             case "fields":
                 //Transforma los datos del proyecto "ptfploe" desde la estructura de la versión 0 a la versión 1
-                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }

@@ -959,7 +959,7 @@ class ProjectMetaDataQuery extends DataQuery {
     /**
      * @return array Con los datos del proyecto correspondientes a la clave '$metaDataSubSet'
      */
-    public function getDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE, $retData=TRUE) {
+    public function getDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE) {
         if (!$id)
             $id = $this->getProjectId();
         if (!$projectType)
@@ -970,7 +970,16 @@ class ProjectMetaDataQuery extends DataQuery {
         $filename = $this->getFileName($id, [ProjectKeys::KEY_PROJECT_TYPE=>$projectType, ProjectKeys::KEY_METADATA_SUBSET=>$metaDataSubSet]);
         $jsonData = $this->_getMeta($metaDataSubSet, $filename);
         if ($jsonData!==NULL) {
-            return ($retData) ? json_decode($jsonData, TRUE) : TRUE;
+            return json_decode($jsonData, TRUE);
+        }else {
+            return NULL;
+        }
+    }
+    
+    public function hasDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE) {
+        $data = $this->getDataProject($id, $projectType, $metaDataSubSet);
+        if ($data!==NULL) {
+            return TRUE;
         }else {
             return NULL;
         }

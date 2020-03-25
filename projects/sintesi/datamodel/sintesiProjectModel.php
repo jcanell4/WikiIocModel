@@ -15,7 +15,7 @@ class sintesiProjectModel extends MoodleProjectModel {
     }
 
     public function getProjectDocumentName() {
-        $ret = $this->getMetaDataProject();
+        $ret = $this->getCurrentDataProject();
         return $ret['fitxercontinguts'];
     }
 
@@ -68,10 +68,11 @@ class sintesiProjectModel extends MoodleProjectModel {
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFields($data) {
+    public function updateCalculatedFieldsOnSave($data) {
 
-        $values = json_decode($data, true);
-
+        $isArray = is_array($data);
+        $values = $isArray?$data:json_decode($data, true);
+        
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
 
         if ($taulaCalendari!=NULL){
@@ -83,8 +84,8 @@ class sintesiProjectModel extends MoodleProjectModel {
             $values["durada"] = $hores;
         }
 
-        $data = json_encode($values);
-        return parent::updateCalculatedFields($data);
+        $data = $isArray?$values:json_encode($values);
+        return parent::updateCalculatedFieldsOnSave($data);
     }
 
     /**
@@ -127,7 +128,7 @@ class sintesiProjectModel extends MoodleProjectModel {
 
     public function getCalendarDates() {
         $ret = array();
-        $data = $this->getDataProject();
+        $data = $this->getCurrentDataProject();
         if(is_string($data['calendari'])){
             $calendari = json_decode($data["calendari"], true);
         }else{
@@ -169,7 +170,7 @@ class sintesiProjectModel extends MoodleProjectModel {
     }
 
     public function getCourseId() {
-        $data = $this->getDataProject();
+        $data = $this->getCurrentDataProject();
         return $data["moodleCourseId"];
     }
 }

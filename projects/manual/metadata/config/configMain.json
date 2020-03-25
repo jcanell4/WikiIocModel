@@ -127,7 +127,7 @@
                         "nom_real": {
                             "type": "string",
                             "mandatory": true,
-                            "calculate": {
+                            "calculateOnSave": {
                                 "class": "CalculateRealNameFromUsername",
                                 "data": "autor"
                             }
@@ -135,7 +135,7 @@
                         "data_fitxercontinguts": {
                             "type": "string",
                             "mandatory": true,
-                            "calculate": {
+                            "calculateOnRead": {
                                 "class": "CalculateMaxPageDateFromNs",
                                 "data": ""
                             }

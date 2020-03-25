@@ -21,7 +21,7 @@ class upgrader_5 extends CommonUpgrader {
     public function process($type, $filename = NULL) {
         switch ($type) {
             case "fields":
-                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }// cerquem les dades de la paf1 i paf 2 i les qualificacions son de l'any 2019 i canviar-les per la mateixa data però 2020
@@ -46,7 +46,7 @@ class upgrader_5 extends CommonUpgrader {
                 if ($filename === NULL) {
                     $filename = $this->model->getProjectDocumentName();
                 }
-                $data = $this->model->getDataProject();
+                $data = $this->model->getCurrentDataProject();
                 $template_name = $this->model->getTemplateContentDocumentId($data);
 
                 $file = $this->model->getTemplatePath($template_name, 'v5');

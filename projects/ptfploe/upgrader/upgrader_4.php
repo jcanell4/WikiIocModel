@@ -22,7 +22,7 @@ class upgrader_4 extends CommonUpgrader {
         switch ($type) {
             case "fields":
 
-                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }

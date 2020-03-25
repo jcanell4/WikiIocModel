@@ -48,7 +48,7 @@ class ProjectExportAction extends ProjectMetadataAction{
 
         $toInitModel = array(ProjectKeys::KEY_ID =>$this->projectID, ProjectKeys::KEY_PROJECT_TYPE=>$this->projectType, ProjectKeys::KEY_METADATA_SUBSET =>$this->metadataSubset);
         $this->projectModel->init($toInitModel);
-        $this->dataArray = $this->projectModel->getDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
+        $this->dataArray = $this->projectModel->getCurrentDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
     }
 
     public function responseProcess() {

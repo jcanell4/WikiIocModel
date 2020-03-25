@@ -21,7 +21,7 @@ class upgrader_6 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
-                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }
@@ -52,7 +52,7 @@ class upgrader_6 extends CommonUpgrader {
                 }
 
                 //Segunda parte: modificación de los datos del proyecto (archivo .mdpr que está en data/mdprojects/)
-                $dataProject = $this->model->getDataProject();
+                $dataProject = $this->model->getCurrentDataProject();
                 $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
                 $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 5 to 6");
 

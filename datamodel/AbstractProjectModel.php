@@ -182,17 +182,23 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * a la clave $metaDataSubset si se passa por paràmetro o a su valor por 
      * defecto si no se pasa.
      */
-    public function getMetaDataProject($metaDataSubset=FALSE) {
-        //Actualitzar a aquí els camps calculats
-        $ret = $this->projectMetaDataQuery->getMeta($metaDataSubset, FALSE);
-        return json_decode($ret, true);
+    public function getCurrentDataProject($metaDataSubset=FALSE) {
+//        $ret = $this->projectMetaDataQuery->getMeta($metaDataSubset, FALSE);
+//        return json_decode($ret, true);
+        return $this->getDataProject(FALSE, FALSE, $metaDataSubSet);
     }
 
     //Obtiene un array [key, value] con los datos del proyecto solicitado
-    public function getDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE, $retData=TRUE) {
+    public function getDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE) {
         //Actualitzar a aquí els camps calculats
-        $ret =  $this->projectMetaDataQuery->getDataProject($id, $projectType, $metaDataSubSet, $retData);
+        $ret =  $this->projectMetaDataQuery->getDataProject($id, $projectType, $metaDataSubSet);
+        $ret = $this->processAutoFieldsOnRead($ret);
         return $ret;
+    }
+    
+    public function hasDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE){
+       $ret =  $this->projectMetaDataQuery->hasDataProject($id, $projectType, $metaDataSubSet);
+       return $ret;
     }
 
     /**
@@ -229,10 +235,12 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             }
         }
         $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->viewConfigName);
+        
+        $ret['projectMetaData'] = $this->processAutoFieldsOnRead($ret['projectMetaData'], FALSE);
         //Actualitzar a aquí els camps calculats
         //   1) if default => UpdateCalculatedFileds (UpdateCalculatedFiedsFromOwndata)
         //   2) if default => processAutoFields(all)
-        //   3) if not default => processAutoFields(outerData)
+        //   3) if not default => processAutoFields(outerData) __preProcessFields
         //   4) UpdateCalculatedFiledFromOuterData
 
 
@@ -543,8 +551,9 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * @param array $toSet (s'ha generat a l'Action corresponent)
      */
     public function setData($toSet) {
-        $toSet[ProjectKeys::KEY_METADATA_VALUE] = $this->__preProcessFields($toSet[ProjectKeys::KEY_METADATA_VALUE]);
-        $toSet[ProjectKeys::KEY_METADATA_VALUE] = $this->updateCalculatedFields($toSet[ProjectKeys::KEY_METADATA_VALUE]);
+        //$toSet[ProjectKeys::KEY_METADATA_VALUE] = $this->__preProcessFields($toSet[ProjectKeys::KEY_METADATA_VALUE]);
+        $toSet[ProjectKeys::KEY_METADATA_VALUE] = $this->processAutoFieldsOnSave($toSet[ProjectKeys::KEY_METADATA_VALUE]);
+        $toSet[ProjectKeys::KEY_METADATA_VALUE] = $this->updateCalculatedFieldsOnSave($toSet[ProjectKeys::KEY_METADATA_VALUE]);
         $this->metaDataService->setMeta($toSet);
     }
 
@@ -553,17 +562,39 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
      * @param JSON $dataProject Nou contingut de l'arxiu de dades del projecte
      */
     public function setDataProject($dataProject, $summary="") {
-        $calculatedData = $this->__preProcessFields($dataProject);
-        $calculatedData = $this->updateCalculatedFields($calculatedData);
+//        $calculatedData = $this->__preProcessFields($dataProject);
+        $calculatedData = $this->processAutoFieldsOnSave($dataProject);
+        $calculatedData = $this->updateCalculatedFieldsOnSave($calculatedData);
         $this->projectMetaDataQuery->setMeta($calculatedData, $this->getMetaDataSubSet(), $summary);
     }
 
-    private function __preProcessFields($data) {
-        $values = json_decode($data, true);
+//    private function __preProcessFields($data) {
+//        $values = json_decode($data, true);
+//        $configStructure = $this->getMetaDataDefKeys();
+//        foreach ($configStructure as $key => $def) {
+//            if(isset($def["calculate"])){
+//                $value = IocCommon::getCalculateFieldFromFunction($def["calculate"], $this->id, $values, $this->getPersistenceEngine());
+//                $values[$key]=$value;
+//            }elseif ($def["type"] == "boolean" || $def["type"] == "bool") {
+//                if(!isset($values[$key])
+//                        || $values[$key] === false
+//                        || $values[$key] === "false"){
+//                    $values[$key] = "false";
+//                }else{
+//                    $values[$key] = "true";
+//                }
+//            }
+//        }
+//        $data = json_encode($values);
+//        return $data;
+//    }
+    
+    private function processAutoFieldsOnSave($data) {
+        $values = is_array($data)?$data:json_decode($data, true);
         $configStructure = $this->getMetaDataDefKeys();
         foreach ($configStructure as $key => $def) {
-            if(isset($def["calculate"])){
-                $value = IocCommon::getCalculateFieldFromFunction($def["calculate"], $this->id, $values);
+            if(isset($def["calculateOnSave"])){
+                $value = IocCommon::getCalculateFieldFromFunction($def["calculateOnSave"], $this->id, $values, $this->getPersistenceEngine());
                 $values[$key]=$value;
             }elseif ($def["type"] == "boolean" || $def["type"] == "bool") {
                 if(!isset($values[$key])
@@ -575,11 +606,47 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                 }
             }
         }
-        $data = json_encode($values);
+        $data = $isArray?$values:json_encode($values);
+        return $data;
+    }
+    
+    private function processAutoFieldsOnRead($data, $keyValueType=TRUE){
+        if($keyValueType){
+            $data = $this->processAutoFieldsOnReadFromKeyValue($data); 
+        }else{
+            $dataKeyValue=array();
+            foreach ($data as $item){
+                $dataKeyValue[$item["id"]] = $item['value'];
+            }
+            $dataKeyValue = $this->processAutoFieldsOnReadFromKeyValue($dataKeyValue); 
+            foreach ($data as $item){
+                $item['value'] = $dataKeyValue[$item["id"]];
+            }
+        }
+        
+        return $data;    
+    }
+    
+    private function processAutoFieldsOnReadFromKeyValue($data) {
+        $isArray = is_array($data);
+        $values = $isArray?$data:json_decode($data, true);
+        $configStructure = $this->getMetaDataDefKeys();
+        foreach ($configStructure as $key => $def) {
+            if(isset($def["calculateOnRead"])){
+                $value = IocCommon::getCalculateFieldFromFunction($def["calculateOnRead"], $this->id, $values, $this->getPersistenceEngine());
+                $values[$key]=$value;
+            }
+        }
+        $data = $isArray?$values:json_encode($values);
         return $data;
     }
 
-    public function updateCalculatedFields($data) {
+    public function updateCalculatedFieldsOnSave($data) {
+        // A implementar a les subclasses, per defecte no es fa res
+        return $data;
+    }
+
+    public function updateCalculatedFieldsOnRead($data) {
         // A implementar a les subclasses, per defecte no es fa res
         return $data;
     }
@@ -961,7 +1028,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     public function getRoleData(){
         $ret = array();
         $struct = $this->getMetaDataDefKeys();
-        $data = $this->getMetaDataProject();
+        $data = $this->getCurrentDataProject();
         foreach ($struct as $field => $cfgField) {
             if(isset($cfgField["isRole"]) && $cfgField["isRole"]){
                 $ret[$field] = $data[$field];
