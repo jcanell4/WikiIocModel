@@ -8,10 +8,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
 if (!defined('EXPORT_TMP')) define('EXPORT_TMP',DOKU_PLUGIN.'tmp/latex/');
-//define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/convocatoriesoficialseoi/");
 define('WIKI_IOC_PROJECT', DOKU_PLUGIN."wikiiocmodel/projects/convocatoriesoficialseoi/");
-
-//require_once WIKI_IOC_MODEL."persistence/ProjectMetaDataQuery.php";
 
 class ProjectExportAction  extends ProjectMetadataAction{
     const PATH_RENDERER = WIKI_IOC_PROJECT."exporter/";

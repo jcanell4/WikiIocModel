@@ -9,7 +9,6 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 //require_once(DOKU_INC . 'inc/common.php');
 //require_once(DOKU_INC . 'inc/actions.php');
 //require_once(DOKU_INC . 'inc/template.php');
-//require_once DOKU_PLUGIN . "wikiiocmodel/persistence/WikiPageSystemManager.php";
 
 class DraftPageAction extends PageAction {
     private static $infoDuration = 15;

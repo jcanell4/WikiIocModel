@@ -33,7 +33,6 @@ abstract class DokuNotifyModel extends AbstractWikiModel
         if($persistenceEngine){
             $this->dataQuery = $persistenceEngine->createNotifyDataQuery();
         }else{
-            require_once DOKU_PLUGIN . "wikiiocmodel/persistence/NotifyDataQuery.php";
             $this->dataQuery = new NotifyDataQuery();
         }
     }
