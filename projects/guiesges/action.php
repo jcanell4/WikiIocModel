@@ -29,11 +29,13 @@ class action_plugin_wikiiocmodel_projects_guiesges extends WikiIocProjectPluginA
             if (!isset($event->data['responseData'][ProjectKeys::KEY_CODETYPE])) {
                 $result['ns'] = getID();
                 $result['id'] = str_replace(':', '_', $result['ns']);
-                $result['fileNames'] = array_values($event->data['responseData']['ftpSendFileNames']);
-                $dest = preg_replace('/:/', '/', $result['ns']);
-                $path_dest = WikiGlobalConfig::getConf('mediadir').'/'.$dest;
-                foreach ($event->data['responseData']['ftpSendFileNames'] as $file) {
-                    $result['dest'][] = "$path_dest/$file";
+                if ($event->data['responseData']['ftpSendFileNames']) {
+                    $result['fileNames'] = array_values($event->data['responseData']['ftpSendFileNames']);
+                    $dest = preg_replace('/:/', '/', $result['ns']);
+                    $path_dest = WikiGlobalConfig::getConf('mediadir').'/'.$dest;
+                    foreach ($event->data['responseData']['ftpSendFileNames'] as $file) {
+                        $result['dest'][] = "$path_dest/$file";
+                    }
                 }
                 if (class_exists("ResultsWithFiles", TRUE)){
                     $html = ResultsWithFiles::get_html_metadata($result) ;
