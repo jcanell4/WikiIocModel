@@ -505,44 +505,59 @@ class DokuPageModel extends WikiRenderizableDataModel {
 
     public function get_ftpsend_metadata() { // Nom del fitxer per comprovar la data
         $html = '';
+        /*
+        $ext = ".zip";
+        $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $this->id .'/'.preg_replace('/:/', '_', $this->id)). $ext;
 
-//        $ext = ".zip";
-//        $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $this->id .'/'.preg_replace('/:/', '_', $this->id)). $ext;
-//
-//        $P = "";
-//        $nP = "";
-//        $class = "mf_zip";
-//
-//
-//        $savedtime = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_timestamp");
-//
-//        $fileexists = @file_exists($file);
-//        if ($fileexists){
-//            $filetime = filemtime($file);
-//        }
-//
-//        if ($fileexists && $savedtime === $filetime) {
-//
-//            $index = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_index");
-//
-//            $url = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_url") . '/' . $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_index");
-//
-//            $data = date("d/m/Y H:i:s", $filetime);
-//
-//            $html.= $P.'<span id="ftpsend" style="word-wrap: break-word;">';
-//            $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'. $index .'</a> ';
-//            $html.= '<span style="white-space: nowrap;">'.$data.'</span>';
-//            $html.= '</span>'.$nP;
-//        }else{
-//
-//            $html.= '<span id="ftpsend">';
-//            $html.= '<p class="media mediafile '.$class.'">No hi ha cap fitxer pujat al FTP</p>';
-//            $html.= '</span>';
-//        }
+        $P = "";
+        $nP = "";
+        $class = "mf_zip";
 
+
+        $savedtime = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_timestamp");
+
+        $fileexists = @file_exists($file);
+        if ($fileexists){
+            $filetime = filemtime($file);
+        }
+
+        if ($fileexists && $savedtime === $filetime) {
+
+            $index = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_index");
+
+            $url = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_url") . '/' . $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_index");
+
+            $data = date("d/m/Y H:i:s", $filetime);
+
+            $html.= $P.'<span id="ftpsend" style="word-wrap: break-word;">';
+            $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'. $index .'</a> ';
+            $html.= '<span style="white-space: nowrap;">'.$data.'</span>';
+            $html.= '</span>'.$nP;
+        }else{
+
+            $html.= '<span id="ftpsend">';
+            $html.= '<p class="media mediafile '.$class.'">No hi ha cap fitxer pujat al FTP</p>';
+            $html.= '</span>';
+        }
+        */
         return $html;
-
     }
 
+    /**
+     * Canvia el nom del directori indicat a tot l'arbre de directoris de data i
+     * les referències a l'antic nom de directori dins dels fitxers afectats
+     * @param string $ns : ns original del directori
+     * @param string $new_name : nou nom pel directori
+     */
+    public function renameFolder($ns, $new_name) {
+        $base_dir = explode(":", $ns);
+        $old_name = array_pop($base_dir);
+        $base_dir = implode("/", $base_dir);
+
+        $this->pageDataQuery->renameDirNames($base_dir, $old_name, $new_name);
+        $this->pageDataQuery->changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name);
+        $this->pageDataQuery->changeOldPathProjectInACLFile($old_name, $new_name);
+        $this->pageDataQuery->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
+    }
 
 }

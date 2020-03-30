@@ -57,7 +57,7 @@ abstract class PageAction extends DokuAction implements ResourceLockerInterface,
         $ACT = act_clean($ACT);
 
         if (!$this->params[PageKeys::KEY_ID]) {
-            $this->params[PageKeys::KEY_ID] = WikiGlobalConfig::getConf(DW_DEFAULT_PAGE);
+            $this->params[PageKeys::KEY_ID] = WikiGlobalConfig::getConf(PageKeys::DW_DEFAULT_PAGE);
         }
         $ID = $this->params[PageKeys::KEY_ID];
         if ($this->params[PageKeys::KEY_REV]) {
