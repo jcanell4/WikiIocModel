@@ -5,9 +5,9 @@
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
+//if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 require_once (DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php");
-include_once (WIKI_IOC_MODEL . "actions/ProjectMetadataAction.php");
+//include_once (WIKI_IOC_MODEL . "actions/ProjectMetadataAction.php");
 
 class BasicDraftProjectMetaDataAction extends ProjectMetadataAction {
 

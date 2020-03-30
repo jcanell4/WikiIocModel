@@ -4,7 +4,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 
 require_once DOKU_INC . 'inc/inc_ioc/MailerIOC.class.php';
 require_once DOKU_PLUGIN . "wikiiocmodel/LockManager.php";
-require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
+//require_once DOKU_PLUGIN . "wikiiocmodel/actions/AbstractWikiAction.php";
 require_once DOKU_PLUGIN . "ajaxcommand/defkeys/PageKeys.php";
 
 class NotifyAction extends AbstractWikiAction {
