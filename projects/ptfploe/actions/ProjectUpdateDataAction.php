@@ -2,7 +2,7 @@
 if (!defined('DOKU_INC')) die();
 //if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
 //include_once DOKU_PLUGIN."wikiiocmodel/projects/ptfploe/actions/ViewProjectMetaDataAction.php";
-include_once dirname(__FILE__) . "/ViewProjectMetaDataAction.php";
+//include_once dirname(__FILE__) . "/ViewProjectMetaDataAction.php";
 
 class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 

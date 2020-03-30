@@ -35,7 +35,7 @@ require_once(DOKU_PLUGIN . 'acl/admin.php');
 // TODO[Xavi] Afegit per mi per extreure la funcionalitat dels locks a una altra classe
 require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
 require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/actions/NotifyAction.php');
+//require_once(DOKU_PLUGIN . 'wikiiocmodel/actions/NotifyAction.php');
 
 require_once(DOKU_PLUGIN . 'ajaxcommand/defkeys/PageKeys.php');
 

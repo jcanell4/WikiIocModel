@@ -1,7 +1,7 @@
 <?php
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
-include_once DOKU_PLUGIN."wikiiocmodel/projects/ptfct/actions/ViewProjectMetaDataAction.php";
+//if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
+//include_once DOKU_PLUGIN."wikiiocmodel/projects/ptfct/actions/ViewProjectMetaDataAction.php";
 
 class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 
