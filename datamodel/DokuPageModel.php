@@ -543,6 +543,10 @@ class DokuPageModel extends WikiRenderizableDataModel {
         return $html;
     }
 
+    public function haveAnyDirProject($ns) {
+        return $this->pageDataQuery->haveAnyDirProject($ns);
+    }
+
     /**
      * Canvia el nom del directori indicat a tot l'arbre de directoris de data i
      * les referències a l'antic nom de directori dins dels fitxers afectats

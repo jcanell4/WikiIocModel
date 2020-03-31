@@ -17,6 +17,7 @@ $lang['saved'] = "Els canvis s'han guardat correctament";
 $lang['section_saved'] = "S'han guardat els canvis de la secció %s";
 $lang['deleted'] = "La pàgina %s ha estat eliminada";
 $lang['reverted'] = "La reversió s'ha completat correctament";
+$lang['renamed'] = "El canvi de nom del directori s'ha completat correctament";
 $lang['pageNotFound'] = "La pàgina %s no s'ha trobat";
 $lang['pageExists'] = "La pàgina %s ja existeix";
 $lang['metaEditForm'] = "Camps Edició";
