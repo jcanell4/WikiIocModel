@@ -543,10 +543,6 @@ class DokuPageModel extends WikiRenderizableDataModel {
         return $html;
     }
 
-    public function haveAnyDirProject($ns) {
-        return $this->pageDataQuery->haveAnyDirProject($ns);
-    }
-
     /**
      * Canvia el nom del directori indicat a tot l'arbre de directoris de data i
      * les referències a l'antic nom de directori dins dels fitxers afectats
@@ -559,9 +555,20 @@ class DokuPageModel extends WikiRenderizableDataModel {
         $base_dir = implode("/", $base_dir);
 
         $this->pageDataQuery->renameDirNames($base_dir, $old_name, $new_name);
-        $this->pageDataQuery->changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name);
-        $this->pageDataQuery->changeOldPathProjectInACLFile($old_name, $new_name);
-        $this->pageDataQuery->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
+        $this->pageDataQuery->renameRenderGeneratedFiles($base_dir, $old_name, $new_name, $this->_arrayTerminators(), TRUE);
+        $this->pageDataQuery->changeOldPathInRevisionFiles($base_dir, $old_name, $new_name, $this->_arrayTerminators(), TRUE);
+        $this->pageDataQuery->changeOldPathInContentFiles($base_dir, $old_name, $new_name, $this->_arrayTerminators(), TRUE);
+        $this->pageDataQuery->changeOldPathInACLFile($old_name, $new_name);
+    }
+
+    /**
+     * @return array Llista de terminacions de fitxers que contenen el nom del directori
+     */
+    private function _arrayTerminators() {
+        return ['_htmlindex.zip',
+                '_pdfindex.pdf',
+                '_material_paper.pdf'
+               ];
     }
 
 }

@@ -97,11 +97,11 @@ class sintesiProjectModel extends MoodleProjectModel {
         $base_dir = implode("/", $base_dir);
 
         $this->projectMetaDataQuery->renameDirNames($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInACLFile($old_name, $new_name);
+        $this->projectMetaDataQuery->changeOldPathInRevisionFiles($base_dir, $old_name, $new_name);
+        $this->projectMetaDataQuery->changeOldPathInACLFile($old_name, $new_name);
         $this->projectMetaDataQuery->changeOldPathProjectInShortcutFiles($old_name, $new_name, $persons);
         $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_dir, $old_name, $new_name, $this->listGeneratedFilesByRender($base_dir, $old_name));
-        $this->projectMetaDataQuery->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
+        $this->projectMetaDataQuery->changeOldPathInContentFiles($base_dir, $old_name, $new_name);
 
         $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
         $this->setProjectId($new_ns);
