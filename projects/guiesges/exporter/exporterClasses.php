@@ -97,7 +97,7 @@ class IocTcPdf extends TCPDF {
         $this->header_logo_height = $lh;
     }
 
-    public function setFooterData($data, $tc=array(0,0,0), $lc=array(0,0,0)) {
+    public function setFooterDataLocal($data, $tc=array(0,0,0), $lc=array(0,0,0)) {
         parent::setFooterData($tc, $lc);
         $this->peu = $data;
     }
@@ -126,7 +126,7 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
 
         $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
-        $iocTcPdf->setFooterData($params["data"]["peu"]);
+        $iocTcPdf->setFooterDataLocal($params["data"]["peu"]);
 
         $iocTcPdf->setStartingPageNumber(0);
 
