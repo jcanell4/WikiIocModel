@@ -5,16 +5,13 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
-require_once (WIKI_IOC_MODEL . "authorization/ProjectCommandAuthorization.php");
 
 class EditProjectAuthorization extends ProjectCommandAuthorization {
 
     public function canRun() {
         if (parent::canRun()) {
-            if(!$this->isUserGroup(array("editorges", "admin"))
-                    && ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(array("projectmanager")))
+            if(!$this->isUserGroup(["editorges", "admin"])
+                    && ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(["projectmanager"]))
                     && !$this->isResponsable() && !$this->isAuthor()) {
                 $this->errorAuth['error'] = TRUE;
                 $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
