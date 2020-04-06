@@ -1031,11 +1031,13 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
     public function getRoleData(){
         $ret = array();
-        $struct = $this->getMetaDataDefKeys();
         $data = $this->getCurrentDataProject();
-        foreach ($struct as $field => $cfgField) {
-            if(isset($cfgField["isRole"]) && $cfgField["isRole"]){
-                $ret[$field] = $data[$field];
+        if ($data) { //En la creación de proyecto $data es NULL
+            $struct = $this->getMetaDataDefKeys();
+            foreach ($struct as $field => $cfgField) {
+                if(isset($cfgField["isRole"]) && $cfgField["isRole"]){
+                    $ret[$field] = $data[$field];
+                }
             }
         }
         return $ret;
