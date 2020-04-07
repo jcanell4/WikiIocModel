@@ -1014,9 +1014,10 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
                 $url = "{$connData['remoteUrl']}${rDir}${index}";
                 $data = date("d/m/Y H:i:s", $filetime);
                 $class = "mf_{$objFile['type']}";
-
+                
+                $linkRef = empty($objFile['linkName'])?$index:$objFile['linkName'];
                 $html.= '<p><span id="ftpsend" style="word-wrap: break-word;">';
-                $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'.$index.'</a> ';
+                $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'.$linkRef.'</a> ';
                 $html.= '<span style="white-space: nowrap;">'.$data.'</span>';
                 $html.= '</span></p>';
             }
