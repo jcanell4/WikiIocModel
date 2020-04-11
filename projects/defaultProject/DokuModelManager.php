@@ -24,7 +24,7 @@ class DokuModelManager extends AbstractModelManager{
                'Authorization' => array(self::DLI."authorization/", self::DEF."authorization/"),
                 //'Authorization' =>  Si está inactivo es porque los ficheros de estas clases no están en directorios ajenos a este proyecto.
                 //                    Si algún fichero de clase está fuera del directorio de proyecto, éste es el lugar adecuado para indicarlo
-                //'Model' => array(self::MOD."datamodel/") En este caso el modelo se encuentra directamente en el directorio datamodel de wikiiocmodel, y no es necesario especificar la ruta, pues se coge por defecto.
+                //'Model' => array(self::DLI."datamodel/) En este caso el modelo se encuentra directamente en el directorio datamodel de wikiiocmodel, y no es necesario especificar la ruta, pues se coge por defecto.
                'MetaData'      => array(self::MOD."metadata/"),
                'Upgrader'      => array(self::DEF."upgrader/")
            );

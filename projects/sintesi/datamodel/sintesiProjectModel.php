@@ -4,9 +4,6 @@
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
-require_once (WIKI_IOC_MODEL . "datamodel/MoodleProjectModel.php");
 
 class sintesiProjectModel extends MoodleProjectModel {
 
@@ -135,7 +132,7 @@ class sintesiProjectModel extends MoodleProjectModel {
                 "date"=>$item["inici"]
             ];
         }
-        
+
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";

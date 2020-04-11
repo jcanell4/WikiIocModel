@@ -4,9 +4,6 @@
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
-require_once (WIKI_IOC_MODEL . "datamodel/MoodleProjectModel.php");
 
 class ptfploeProjectModel extends MoodleProjectModel {
 
@@ -72,7 +69,7 @@ class ptfploeProjectModel extends MoodleProjectModel {
 
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
-        
+
         $taulaDadesUF = (is_array($values["taulaDadesUF"])) ? $values["taulaDadesUF"] : json_decode($values["taulaDadesUF"], true);
         $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
@@ -212,7 +209,7 @@ class ptfploeProjectModel extends MoodleProjectModel {
                 "date"=>$item["inici"]
             ];
         }
-        
+
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
@@ -244,7 +241,7 @@ class ptfploeProjectModel extends MoodleProjectModel {
                 $dataQualificacioOld = $item["qualificació"];
             }
         }
-        
+
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
@@ -299,7 +296,7 @@ class ptfploeProjectModel extends MoodleProjectModel {
                         "date"=>$item["qualificació recuperació"]
                     ];
                     $dataQualificacioRecOld = $item["qualificació recuperació"];
-                }                
+                }
             }
         }
 
@@ -345,13 +342,13 @@ class ptfploeProjectModel extends MoodleProjectModel {
                 $ret[] = [
                     "title"=>sprintf("%s - jornada tècnica rec. %s", $data["modulId"], $item['id']),
                     "date"=>$item["data JT recuperació"]
-                ];                
+                ];
                 $ret[] = [
                     "title"=>sprintf("%s - qualificació JT rec. %s", $data["modulId"], $item['id']),
                     "date"=>$item["qualificació recuperació"]
                 ];
             }
-        }   
+        }
         return $ret;
     }
 
