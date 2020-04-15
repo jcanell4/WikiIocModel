@@ -13,7 +13,6 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 
 require_once( DOKU_INC . 'inc/JSON.php' );
-require_once (DOKU_PLUGIN."ajaxcommand/defkeys/ProjectKeys.php");
 require_once (WIKI_IOC_MODEL."metadata/MetaDataExceptions.php");
 
 class MetaDataDaoConfig {

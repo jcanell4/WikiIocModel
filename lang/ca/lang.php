@@ -3,8 +3,6 @@
  * Catalan language file
  * @author Joseo Cañellas<jcanell4@ioc.cat>
  */
-require_once (DOKU_INC . 'lib/plugins/ajaxcommand/defkeys/GlobalKeys.php');
-
 const PAG_DEFAULT = "createDefaultText";
 const PAG_SAVED = "saved";
 const PAG_DELETED = "deleted";

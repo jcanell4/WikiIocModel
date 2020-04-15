@@ -11,7 +11,6 @@ require_once (DOKU_INC . 'inc/JSON.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataDaoInterface.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/metadataconfig/MetaDataDaoConfig.php');
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataExceptions.php');
-require_once (DOKU_PLUGIN . 'ajaxcommand/defkeys/ProjectKeys.php');
 
 abstract class MetaDataDaoAbstract implements MetaDataDaoInterface {
     const K_METADATASUBSET  = ProjectKeys::KEY_METADATA_SUBSET;

@@ -12,7 +12,6 @@ require_once (WIKI_IOC_MODEL . 'metadata/MetaDataExceptions.php');
 require_once (WIKI_IOC_MODEL . 'metadata/metadataconfig/MetaDataDaoConfig.php');
 require_once (WIKI_IOC_MODEL . 'metadata/MetaDataRepository.php');
 require_once (WIKI_IOC_MODEL . 'metadata/MetaDataRenderFactory.php');
-require_once (DOKU_PLUGIN . 'ajaxcommand/defkeys/ProjectKeys.php');
 
 class MetaDataService {
     const K_METADATASUBSET  = ProjectKeys::KEY_METADATA_SUBSET;
