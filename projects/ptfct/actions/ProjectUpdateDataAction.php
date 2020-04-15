@@ -1,7 +1,5 @@
 <?php
 if (!defined('DOKU_INC')) die();
-//if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
-//include_once DOKU_PLUGIN."wikiiocmodel/projects/ptfct/actions/ViewProjectMetaDataAction.php";
 
 class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 
@@ -71,11 +69,11 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                     ProjectKeys::KEY_METADATA_VALUE => json_encode($response)
                 ];
                 $projectModel->setData($metaData);    //actualiza el contenido en 'mdprojects/'
-                 
+
                 //canvis als fitxers si n'hi han
                 $projectModel->setRawProjectDocument($elem['parameters']['file'], $dataTemplate, WikiIocLangManager::getLang("update_message"));
 
-                
+
                 $projectModel->setProjectSubSetAttr("updatedDate", time());
 
                 $response = parent::runAction();

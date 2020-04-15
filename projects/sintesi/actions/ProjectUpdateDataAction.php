@@ -1,11 +1,8 @@
 <?php
 if (!defined('DOKU_INC')) die();
-//if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
-//include_once DOKU_PLUGIN."wikiiocmodel/projects/sintesi/actions/ViewProjectMetaDataAction.php";
-//include_once dirname(__FILE__) . "/ViewProjectMetaDataAction.php";
 
 class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
-    
+
     protected function runAction() {
         $projectType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
         $metaDataSubSet = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
@@ -55,7 +52,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 
                     $projectModel->setProjectSubSetAttr("updatedDate", time());
                     $response = parent::runAction();
-                }                    
+                }
             }else{
                 $projectModel->setProjectSubSetAttr("updatedDate", time());
                 $response = parent::runAction();
@@ -64,7 +61,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                 $id = $this->getModel()->getContentDocumentId($response);
                 p_set_metadata($id, array('metadataProjectChanged'=>true));
             }
-            
+
         }
         return $response;
     }

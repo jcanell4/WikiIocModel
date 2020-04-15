@@ -23,8 +23,8 @@ class DokuModelManager extends AbstractModelManager{
     const DLI = DOKU_LIB_IOC . "wikiiocmodel/";
 
     static $defDirClass = array (
-               'Authorization' => array(self::DLI."authorization/", self::DEF."authorization/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
-               'Action'        => array(self::MOD."actions/", self::DEF."actions/extra/"),
+               'Authorization' => array(self::PRJ."authorization/", self::DLI."authorization/", self::DEF."authorization/"),
+               'Action'        => array(self::DLI."actions/", self::DEF."actions/extra/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
                'Model'         => array(self::DLI."datamodel/", self::CFG."datamodel/"),
                'MetaData'      => array(self::DEF."metadata/", self::MOD."metadata/"),
                'Renderer'      => array(self::PRJ."renderer/"),
