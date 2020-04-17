@@ -19,7 +19,7 @@
     "ftpSend": {
         "parms": { 
             "DOM": {
-               "id": "ftpSendButton"
+               "id": "ftpProjectButton"
             }
         },
 
@@ -38,7 +38,7 @@
                     "page.generated":"true",
                     "page.isRevision": "false",
                     "page.updateButton": "0",
-                    "page.ftpSendButton": "true"
+                    "page.ftpProjectButton": "true"
                 }
             }
         }
