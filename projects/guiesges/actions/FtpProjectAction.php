@@ -1,10 +1,10 @@
 <?php
 /**
- * FtpProjectSendAction en el proyecto 'guiesges'
+ * FtpProjectAction en el proyecto 'guiesges'
  */
 if (!defined("DOKU_INC")) die();
 
-class FtpProjectSendAction extends BasicFtpProjectSendAction{
+class FtpProjectAction extends BasicFtpProjectAction{
 
     protected function responseProcess() {
         $this->getModel()->set_ftpsend_metadata();

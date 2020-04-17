@@ -1,12 +1,10 @@
 <?php
 /**
- * Description of FtpProjectSendAction
+ * Description of FtpProjectAction en el projecte 'ptfct'
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
-require_once DOKU_LIB_IOC . "wikiiocmodel/FtpSender.php";
 
-class FtpProjectSendAction extends BasicFtpProjectSendAction{
+class FtpProjectAction extends BasicFtpProjectAction{
 
     protected function responseProcess() {
 
