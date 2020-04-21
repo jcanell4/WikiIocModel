@@ -9,6 +9,12 @@ if (!defined('DOKU_INC')) die();
 
 class EditProjectAuthorization extends SupervisorProjectAuthorization {
 
+    public function __construct() {
+        parent::__construct();
+        array_merge($this->allowedGroups, ['admin']);
+        array_merge($this->allowedRoles, ["responsable", "autor"]);
+    }
+
     public function canRun() {
         if (parent::canRun()) {
             if (!$this->isUserGroup(["admin"]) && !$this->isResponsable() && !$this->isAuthor()) {

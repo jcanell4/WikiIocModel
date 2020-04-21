@@ -16,7 +16,7 @@
         }
 
     },
-    "ftpSend": {
+    "ftpProject": {
         "parms": { 
             "DOM": {
                "id": "ftpProjectButton"
@@ -25,6 +25,7 @@
 
         "scripts": {
             "updateHandler": {
+                "command_authorization": "FtpProject",
                 "permissions": [
                    "isadmin",
                    "ismanager"
