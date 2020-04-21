@@ -4,7 +4,6 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-require_once(__DIR__."/EditProjectAuthorization.php");
 
 class ViewProjectAuthorization extends EditProjectAuthorization {
 
