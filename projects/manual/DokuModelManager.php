@@ -36,7 +36,7 @@ class DokuModelManager extends AbstractModelManager{
                'FactoryExporter'      => self::PRJ."exporter/FactoryExporter.php"
            );
 
-    public function getAuthorizationManager($str_command, $projectType=NULL) {
+    public function getAuthorizationManager($str_command) {
         $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
         return $factory->createAuthorizationManager($str_command);
     }
