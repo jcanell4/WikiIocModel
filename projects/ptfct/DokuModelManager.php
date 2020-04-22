@@ -37,7 +37,7 @@ class DokuModelManager extends AbstractModelManager{
            );
 
     public function getAuthorizationManager($str_command, $projectType=NULL) {
-        $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization'], $projectType);
+        $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
         return $factory->createAuthorizationManager($str_command);
     }
 
