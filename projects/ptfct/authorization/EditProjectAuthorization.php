@@ -6,16 +6,12 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
-require_once (WIKI_IOC_MODEL . "authorization/SupervisorProjectAuthorization.php");
 
 class EditProjectAuthorization extends SupervisorProjectAuthorization {
 
     public function canRun() {
         if (parent::canRun()) {
-            if (!$this->isUserGroup(array("fctmanager","admin"))
-                    && !$this->isResponsable() && !$this->isAuthor()) {
+            if (!$this->isUserGroup(["fctmanager","admin"]) && !$this->isResponsable() && !$this->isAuthor()) {
                 $this->errorAuth['error'] = TRUE;
                 $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
                 $this->errorAuth['extra_param'] = $this->permission->getIdPage();

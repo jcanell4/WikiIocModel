@@ -50,11 +50,11 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
         $base_dir = implode("/", $base_dir);
 
         $this->renameDirNames($base_dir, $old_name, $new_name);
-        $this->changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name);
-        $this->changeOldPathProjectInACLFile($old_name, $new_name);
+        $this->changeOldPathInRevisionFiles($base_dir, $old_name, $new_name);
+        $this->changeOldPathInACLFile($old_name, $new_name);
         $this->changeOldPathProjectInShortcutFiles($old_name, $new_name, $persons);
         $this->renameRenderGeneratedFiles($base_dir, $old_name, $new_name, $this->listGeneratedFilesByRender($base_dir, $old_name) );
-        $this->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
+        $this->changeOldPathInContentFiles($base_dir, $old_name, $new_name);
 
         $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
         $this->setProjectId($new_ns);
@@ -80,9 +80,9 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
      * @param string $old_name : nom actual del projecte
      * @param string $new_name : nou nom del projecte
      */
-    protected function changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name) {
+    protected function changeOldPathInRevisionFiles($base_dir, $old_name, $new_name) {
         try {
-            $this->projectMetaDataQuery->changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name);
+            $this->projectMetaDataQuery->changeOldPathInRevisionFiles($base_dir, $old_name, $new_name);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el contingut de: $e.");
         }
@@ -93,9 +93,9 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
      * @param string $old_name : nom actual del projecte
      * @param string $new_name : nou nom del projecte
      */
-    protected function changeOldPathProjectInACLFile($old_name, $new_name) {
+    protected function changeOldPathInACLFile($old_name, $new_name) {
         try {
-            $this->projectMetaDataQuery->changeOldPathProjectInACLFile($old_name, $new_name);
+            $this->projectMetaDataQuery->changeOldPathInACLFile($old_name, $new_name);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el contingut de: $e.");
         }
@@ -137,9 +137,9 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
      * @param string $new_name : nou nom del projecte
      * @throws Exception
      */
-    protected function changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name) {
+    protected function changeOldPathInContentFiles($base_dir, $old_name, $new_name) {
         try {
-            $this->projectMetaDataQuery->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
+            $this->projectMetaDataQuery->changeOldPathInContentFiles($base_dir, $old_name, $new_name);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el contingut d'algun axiu a: $e.");
         }

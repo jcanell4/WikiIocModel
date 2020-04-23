@@ -178,8 +178,8 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
     }
 
     /**
-     * Obtiene los datos del proyecto o revisión del proyecto en uso, relativos 
-     * a la clave $metaDataSubset si se passa por paràmetro o a su valor por 
+     * Obtiene los datos del proyecto o revisión del proyecto en uso, relativos
+     * a la clave $metaDataSubset si se passa por paràmetro o a su valor por
      * defecto si no se pasa.
      */
     public function getCurrentDataProject($metaDataSubSet=FALSE) {
@@ -196,7 +196,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $ret = $this->_updateCalculatedFieldsOnRead($ret);
         return $ret;
     }
-    
+
     public function hasDataProject($id=FALSE, $projectType=FALSE, $metaDataSubSet=FALSE){
        $ret =  $this->projectMetaDataQuery->hasDataProject($id, $projectType, $metaDataSubSet);
        return $ret;
@@ -236,7 +236,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
             }
         }
         $ret['projectViewData'] = $this->projectMetaDataQuery->getMetaViewConfig($this->viewConfigName);
-        
+
         $ret['projectMetaData'] = $this->processAutoFieldsAndUpdateCalculatedFieldsOnReadFromStructuredData($ret['projectMetaData']);
 
         $this->mergeFieldConfig($ret['projectMetaData'], $ret['projectViewData']['fields']);
@@ -447,11 +447,11 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $base_dir = implode("/", $base_dir);
 
         $this->projectMetaDataQuery->renameDirNames($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInACLFile($old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInShortcutFiles($old_name, $new_name, $persons);
         $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_dir, $old_name, $new_name, ".zip");
-        $this->projectMetaDataQuery->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
+        $this->projectMetaDataQuery->changeOldPathInRevisionFiles($base_dir, $old_name, $new_name);
+        $this->projectMetaDataQuery->changeOldPathInContentFiles($base_dir, $old_name, $new_name);
+        $this->projectMetaDataQuery->changeOldPathInACLFile($old_name, $new_name);
+        $this->projectMetaDataQuery->changeOldPathProjectInShortcutFiles($old_name, $new_name, $persons);
 
         $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
         $this->setProjectId($new_ns);
@@ -560,7 +560,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $calculatedData = $this->_updateCalculatedFieldsOnSave($calculatedData);
         $this->projectMetaDataQuery->setMeta($calculatedData, $this->getMetaDataSubSet(), $summary);
     }
-    
+
     private function processAutoFieldsOnSave($data) {
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
@@ -582,22 +582,22 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $data = $isArray?$values:json_encode($values);
         return $data;
     }
-    
+
 //    private function processAutoFieldsOnRead($data, $keyValueType=TRUE){
 //        if($keyValueType){
-//            $data = $this->processAutoFieldsOnReadFromKeyValue($data); 
+//            $data = $this->processAutoFieldsOnReadFromKeyValue($data);
 //        }else{
 //            $dataKeyValue=array();
 //            foreach ($data as $item){
 //                $dataKeyValue[$item["id"]] = $item['value'];
 //            }
-//            $dataKeyValue = $this->processAutoFieldsOnReadFromKeyValue($dataKeyValue); 
+//            $dataKeyValue = $this->processAutoFieldsOnReadFromKeyValue($dataKeyValue);
 //            foreach ($data as $item){
 //                $item['value'] = $dataKeyValue[$item["id"]];
 //            }
 //        }
-//        
-//        return $data;    
+//
+//        return $data;
 //    }
 
     private function processAutoFieldsAndUpdateCalculatedFieldsOnReadFromStructuredData($data){
@@ -605,14 +605,14 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         foreach ($data as $item){
             $dataKeyValue[$item["id"]] = $item['value'];
         }
-        $dataKeyValue = $this->processAutoFieldsOnRead($dataKeyValue, $data); 
+        $dataKeyValue = $this->processAutoFieldsOnRead($dataKeyValue, $data);
         $dataKeyValue = $this->_updateCalculatedFieldsOnRead($dataKeyValue);
         foreach ($data as $item){
             $item['value'] = $dataKeyValue[$item["id"]];
         }
-        return $data;    
+        return $data;
     }
-    
+
     private function processAutoFieldsOnRead($data, $configStructure=NULL) {
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
@@ -636,7 +636,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $data = $isArray?$values:json_encode($values);
         return $data;
     }
-    
+
     private function _updateCalculatedFieldsOnRead($data) {
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
@@ -644,7 +644,7 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
         $data = $isArray?$values:json_encode($values);
         return $data;
     }
-    
+
     public function updateCalculatedFieldsOnSave($data) {
         // A implementar a les subclasses, per defecte no es fa res
         return $data;
@@ -1029,14 +1029,16 @@ abstract class AbstractProjectModel extends AbstractWikiDataModel{
 
         return $html;
     }
-    
+
     public function getRoleData(){
         $ret = array();
-        $struct = $this->getMetaDataDefKeys();
         $data = $this->getCurrentDataProject();
-        foreach ($struct as $field => $cfgField) {
-            if(isset($cfgField["isRole"]) && $cfgField["isRole"]){
-                $ret[$field] = $data[$field];
+        if ($data) { //En la creación de proyecto $data es NULL
+            $struct = $this->getMetaDataDefKeys();
+            foreach ($struct as $field => $cfgField) {
+                if(isset($cfgField["isRole"]) && $cfgField["isRole"]){
+                    $ret[$field] = $data[$field];
+                }
             }
         }
         return $ret;
