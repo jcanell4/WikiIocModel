@@ -32,9 +32,12 @@ class DokuModelManager extends AbstractModelManager{
     static $defMainClass = array(
                'DokuModelAdapter'     => self::MOD."BasicModelAdapter.php",
                'FactoryAuthorization' => self::PRJ."authorization/FactoryAuthorization.php",
+               'Permission'           => self::PRJ."authorization/Permission.php"
            );
 
     public function getAuthorizationManager($str_command) {
+        require_once(self::$defMainClass['Permission']);
+        require_once(self::$defMainClass['FactoryAuthorization']);
         $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
         return $factory->createAuthorizationManager($str_command);
     }
