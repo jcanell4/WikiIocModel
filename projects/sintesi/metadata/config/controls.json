@@ -25,7 +25,7 @@
 
         "scripts": {
             "updateHandler": {
-                "command": "ftp_project",
+                "command_authorization": "ftp_projectProject",
                 "permissions": [
                    "isadmin",
                    "ismanager"
