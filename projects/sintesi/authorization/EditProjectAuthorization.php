@@ -9,20 +9,21 @@ if (!defined('DOKU_INC')) die();
 
 class EditProjectAuthorization extends SupervisorProjectAuthorization {
 
-    public function __construct() {
-        parent::__construct();
-        array_merge($this->allowedGroups, ['admin']);
-        array_merge($this->allowedRoles, ["responsable", "autor"]);
-    }
+//    public function __construct() {
+//        parent::__construct();
+//        array_merge($this->allowedGroups, ['admin']);
+//        array_merge($this->allowedRoles, [Permission::ROL_RESPONSABLE, Permission::ROL_AUTOR]);
+//    }
 
-    public function canRun() {
-        if (parent::canRun()) {
-            if (!$this->isUserGroup(["admin"]) && !$this->isResponsable() && !$this->isAuthor()) {
-                $this->errorAuth['error'] = TRUE;
-                $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
-                $this->errorAuth['extra_param'] = $this->permission->getIdPage();
-            }
-        }
-        return !$this->errorAuth['error'];
-    }
+//    public function canRun() {
+//        if (parent::canRun()) {
+//            if (!$this->isUserGroup($this->allowedGroups) && !$this->isUserRole($this->allowedRoles)) {
+//                $this->errorAuth['error'] = TRUE;
+//                $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
+//                $this->errorAuth['extra_param'] = $this->permission->getIdPage();
+//            }
+//        }
+//        return !$this->errorAuth['error'];
+//    }
+
 }

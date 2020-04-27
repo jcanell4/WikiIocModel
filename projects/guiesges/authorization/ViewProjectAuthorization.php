@@ -8,11 +8,27 @@ if (!defined('DOKU_INC')) die();
 
 class ViewProjectAuthorization extends ProjectCommandAuthorization {
 
+    public function __construct() {
+        parent::__construct();
+        $this->allowedGroups[] = "ges";
+        $this->allowedGroups[] = "editorges";
+        $this->allowedGroups[] = "projectmanager";
+        $this->allowedRoles = [];
+    }
+
     public function canRun() {
-        if (parent::canRun()) {
-            if(!$this->isUserGroup(["editorges","admin"])
-                    && ($this->permission->getInfoPerm() < AUTH_READ || !$this->isUserGroup(["ges"]))
-                    && ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(["projectmanager"]))) {
+//        if (parent::canRun()) {
+//            if(!$this->isUserGroup(["editorges","admin"])
+//                    && ($this->permission->getInfoPerm() < AUTH_READ || !$this->isUserGroup(["ges"]))
+//                    && ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(["projectmanager"]))) {
+//                $this->errorAuth['error'] = TRUE;
+//                $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
+//                $this->errorAuth['extra_param'] = $this->permission->getIdPage();
+//            }
+//        }
+        if (!parent::canRun()) {
+            if ( ($this->permission->getInfoPerm() < AUTH_READ || !$this->isUserGroup(["ges"])) &&
+                 ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(["projectmanager"])) ) {
                 $this->errorAuth['error'] = TRUE;
                 $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
                 $this->errorAuth['extra_param'] = $this->permission->getIdPage();

@@ -9,8 +9,8 @@ if (!defined('DOKU_INC')) die();
 
 class CommandAuthorization extends BasicCommandAuthorization {
 
-    public function __construct() {
-        parent::__construct();
-    }
+//    public function __construct() {
+//        parent::__construct();
+//    }
 
 }
