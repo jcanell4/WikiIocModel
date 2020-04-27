@@ -47,7 +47,7 @@ class action_plugin_wikiiocmodel_projects_ptfploe extends WikiIocProjectPluginAc
                         $result['id'],
                         $result['id']."_ftpsend",
                         WikiIocLangManager::getLang("metadata_ftpsend_title"),
-                        $event->data['responseData'][ProjectKeys::KEY_FTPSEND_HTML]
+                        $event->data['responseData'][AjaxKeys::KEY_FTPSEND_HTML]
                 );
             }
         }

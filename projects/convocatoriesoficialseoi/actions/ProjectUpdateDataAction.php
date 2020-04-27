@@ -8,7 +8,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 
         $projectModel = $this->getModel();
         $projectModel->setTemplateDocuments($response['projectMetaData']['plantilla']['value'], 'update templates');
-        $response[ProjectKeys::KEY_ACTIVA_UPDATE_BTN] = !$projectModel->validateTemplates()? 1 : 0;
+        $response[AjaxKeys::KEY_ACTIVA_UPDATE_BTN] = !$projectModel->validateTemplates()? 1 : 0;
 
         return $response;
     }
