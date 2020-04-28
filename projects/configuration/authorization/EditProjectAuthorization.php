@@ -15,7 +15,7 @@ class EditProjectAuthorization extends ProjectCommandAuthorization {
         $this->allowedGroups[] = "projectmanager";
     }
 
-    public function canRun() {
+    public function canRun($permis=AUTH_EDIT, $error="Edit") {
 //        if (parent::canRun()) {
 //            if(!$this->isUserGroup(["admin", "projectconfig"])
 //                    && ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(["projectmanager"]))
