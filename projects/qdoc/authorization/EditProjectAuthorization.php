@@ -1,7 +1,7 @@
 <?php
 /**
- * EditProjectAuthorization: Extensión clase Autorización para los comandos
- * que precisan una autorización mínima de AUTH_EDIT y que el usuario sea el Responsable o del grupo "admin" o "projectmanager"
+ * EditProjectAuthorization: Extensión clase Autorización para los comandos del proyecto 'qdoc'
+ * que precisan una autorización que el usuario sea el Responsable o Autor o del grupo "admin"
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
@@ -10,7 +10,7 @@ class EditProjectAuthorization extends ProjectCommandAuthorization {
 
     public function __construct() {
         parent::__construct();
-        $this->allowedGroups = ["admin"];
+        $this->allowedRoles[] = Permission::ROL_AUTOR;
     }
 
 //    public function canRun() {
