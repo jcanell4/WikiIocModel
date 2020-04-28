@@ -81,12 +81,12 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
                 if ($finestraOberta) {
                     $updetedDate = $projectModel->getProjectSubSetAttr("updatedDate");
                     $interval = (!$updetedDate  || $updetedDate < $inici->getTimestamp());
-                    $response[ProjectKeys::KEY_ACTIVA_UPDATE_BTN] = ($interval) ? "1" : "0";
+                    $response[AjaxKeys::KEY_ACTIVA_UPDATE_BTN] = ($interval) ? "1" : "0";
                 }
             }
         }
 
-        $response[ProjectKeys::KEY_ACTIVA_FTPSEND_BTN] = $projectModel->haveFilesToExportList();
+        $response[AjaxKeys::KEY_ACTIVA_FTP_PROJECT_BTN] = $projectModel->haveFilesToExportList();
 
         return $response;
     }
@@ -94,7 +94,7 @@ class ViewProjectMetaDataAction extends BasicViewProjectMetaDataAction{
     public function responseProcess() {
         $response = parent::responseProcess();
         $projectModel = $this->getModel();
-        $response[ProjectKeys::KEY_FTPSEND_HTML] = $projectModel->get_ftpsend_metadata();
+        $response[AjaxKeys::KEY_FTPSEND_HTML] = $projectModel->get_ftpsend_metadata();
         $response['ftpSendFileNames'] = $projectModel->getMetaDataFtpSenderFiles();
         return $response;
     }
