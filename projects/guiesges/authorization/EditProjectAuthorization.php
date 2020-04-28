@@ -11,7 +11,7 @@ class EditProjectAuthorization extends ProjectCommandAuthorization {
     public function __construct() {
         parent::__construct();
         $this->allowedGroups[] = "editorges";
-        $this->allowedGroups[] = "projectmanager";
+        //$this->allowedGroups[] = "projectmanager";
         $this->allowedRoles[] = Permission::ROL_AUTOR;
     }
 
