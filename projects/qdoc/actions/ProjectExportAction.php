@@ -25,7 +25,8 @@ class ProjectExportAction extends ProjectMetadataAction{
     protected $factoryRender;
     protected $metaDataSubSet;
 
-    public function __construct($factory=NULL){
+    public function __construct($factory=NULL) {
+        parent::__construct();
         $this->factoryRender = $factory;
     }
     /**
@@ -64,11 +65,14 @@ class ProjectExportAction extends ProjectMetadataAction{
 
         $result = $render->process($this->dataArray);
         $result['ns'] = $this->projectNS;
+        $result['ext'] = ".{$this->mode}";
         $ret['id'] = str_replace(":", "_", $this->projectID);
         $ret['ns'] = $this->projectNS;
 
         switch ($this->mode) {
             case 'pdf':
+                $result['pdfFile'] = $result['tmp_dir'];
+                $result['pdfName'] = str_replace(":", "_", $this->projectID) . $result['ext'];
                 $ret["meta"] = ResultsWithFiles::get_html_metadata($result);
                 break;
             default:
@@ -120,88 +124,93 @@ class ProjectExportAction extends ProjectMetadataAction{
 
     public static function get_html_metadata($result){
         return ResultsWithFiles::get_html_metadata($result);
-//        if ($result['error']) {
-//            throw new Exception ("Error");
-//        }else{
-//            $path = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $result['ns']);
-//            $file = preg_replace('/:/', '_', $result['ns']);
-//            if ($result["tmp_dir"]) {
-//                self::_copyPdf($result["tmp_dir"], $path, $file.".pdf");
-//            }
-//            $ret.= self::_getHtmlMetadata($result['ns'], "$path/$file", ".pdf");
-//        }
-//        return $ret;
+        /*
+        if ($result['error']) {
+            throw new Exception ("Error");
+        }else{
+            $path = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $result['ns']);
+            $file = preg_replace('/:/', '_', $result['ns']);
+            if ($result["tmp_dir"]) {
+                self::_copyPdf($result["tmp_dir"], $path, $file.".pdf");
+            }
+            $ret.= self::_getHtmlMetadata($result['ns'], "$path/$file", ".pdf");
+        }
+        return $ret;
+         */
     }
+    /*
+    private static function _getHtmlMetadata($ns, $file, $ext) {
+        $P = "<p>"; $nP = "</p>";
+        $class = "mf_pdf";
+        $mode = "PDF";
 
-//    private static function _getHtmlMetadata($ns, $file, $ext) {
-//        $P = "<p>"; $nP = "</p>";
-//        $class = "mf_pdf";
-//        $mode = "PDF";
-//
-//        if (@file_exists($file.$ext)) {
-//            $ret = '';
-//            $filename = str_replace(':','_',basename($ns)).$ext;
-//            $media_path = "lib/exe/fetch.php?media=$ns:$filename";
-//            $data = date("d/m/Y H:i:s", filemtime($file.$ext));
-//            /*
-//            $id = preg_replace('/:/', '_', $ns);
-//            if ($ext === ".pdf") {
-//                $ret.= '<p></p><div class="iocexport">';
-//                $ret.= '<span style="font-weight: bold;">Exportació PDF</span><br />';
-//                $ret.= '<form action="'.WIKI_IOC_MODEL.'renderer/basiclatex.php" id="export__form_'.$id.'" method="post">';
-//                $ret.= '<input name="filetype" value="zip" type="radio"> ZIP &nbsp;&nbsp;&nbsp;';
-//                $ret.= '<input name="filetype" value="pdf" checked type="radio"> PDF ';
-//                $ret.= '</form>';
-//                $ret.= '</div>';
-//            }*/
-//            $ret.= $P.'<span id="exportacio" style="word-wrap: break-word;">';
-//            $ret.= '<a class="media mediafile '.$class.'" href="'.$media_path.'" target="_blank">'.$filename.'</a> ';
-//            $ret.= '<span style="white-space: nowrap;">'.$data.'</span>';
-//            $ret.= '</span>'.$nP;
-//        }else{
-//            $ret.= '<span id="exportacio">';
-//            $ret.= '<p class="media mediafile '.$class.'">No hi ha cap exportació '.$mode.' feta</p>';
-//            $ret.= '</span>';
-//        }
-//        return $ret;
-//    }
-//
-//    private static function _copyPdf($origin, $path, $file){
-//        if (!file_exists($path)){
-//            mkdir($path, 0755, TRUE);
-//        }
-//        $ok = copy($origin, "$path/$file");
-//        return $ok;
-//    }
-//
-//    /**
-//     * Remove specified dir
-//     * @param string $directory
-//     */
+        if (@file_exists($file.$ext)) {
+            $ret = '';
+            $filename = str_replace(':','_',basename($ns)).$ext;
+            $media_path = "lib/exe/fetch.php?media=$ns:$filename";
+            $data = date("d/m/Y H:i:s", filemtime($file.$ext));
+            /*
+            $id = preg_replace('/:/', '_', $ns);
+            if ($ext === ".pdf") {
+                $ret.= '<p></p><div class="iocexport">';
+                $ret.= '<span style="font-weight: bold;">Exportació PDF</span><br />';
+                $ret.= '<form action="'.WIKI_IOC_MODEL.'renderer/basiclatex.php" id="export__form_'.$id.'" method="post">';
+                $ret.= '<input name="filetype" value="zip" type="radio"> ZIP &nbsp;&nbsp;&nbsp;';
+                $ret.= '<input name="filetype" value="pdf" checked type="radio"> PDF ';
+                $ret.= '</form>';
+                $ret.= '</div>';
+            }
+            $ret.= $P.'<span id="exportacio" style="word-wrap: break-word;">';
+            $ret.= '<a class="media mediafile '.$class.'" href="'.$media_path.'" target="_blank">'.$filename.'</a> ';
+            $ret.= '<span style="white-space: nowrap;">'.$data.'</span>';
+            $ret.= '</span>'.$nP;
+        }else{
+            $ret.= '<span id="exportacio">';
+            $ret.= '<p class="media mediafile '.$class.'">No hi ha cap exportació '.$mode.' feta</p>';
+            $ret.= '</span>';
+        }
+        return $ret;
+    }
+    */
+    /*
+    private static function _copyPdf($origin, $path, $file){
+        if (!file_exists($path)){
+            mkdir($path, 0755, TRUE);
+        }
+        $ok = copy($origin, "$path/$file");
+        return $ok;
+    }
+    */
+    /**
+     * Remove specified dir
+     * @param string $directory
+     */
     private function removeDir($directory) {
         return IocCommon::removeDir($directory);
-//        if (!file_exists($directory) || !is_dir($directory) || !is_readable($directory)) {
-//            return FALSE;
-//        }else {
-//            $dh = opendir($directory);
-//            while ($contents = readdir($dh)) {
-//                if ($contents != '.' && $contents != '..') {
-//                    $path = "$directory/$contents";
-//                    if (is_dir($path)) {
-//                        $this->removeDir($path);
-//                    }else {
-//                        unlink($path);
-//                    }
-//                }
-//            }
-//            closedir($dh);
-//
-//            if (file_exists($directory)) {
-//                if (!rmdir($directory)) {
-//                    return FALSE;
-//                }
-//            }
-//            return TRUE;
-//        }
+        /*
+        if (!file_exists($directory) || !is_dir($directory) || !is_readable($directory)) {
+            return FALSE;
+        }else {
+            $dh = opendir($directory);
+            while ($contents = readdir($dh)) {
+                if ($contents != '.' && $contents != '..') {
+                    $path = "$directory/$contents";
+                    if (is_dir($path)) {
+                        $this->removeDir($path);
+                    }else {
+                        unlink($path);
+                    }
+                }
+            }
+            closedir($dh);
+
+            if (file_exists($directory)) {
+                if (!rmdir($directory)) {
+                    return FALSE;
+                }
+            }
+            return TRUE;
+        }
+        */
     }
 }
