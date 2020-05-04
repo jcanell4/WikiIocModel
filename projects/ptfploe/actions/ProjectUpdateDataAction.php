@@ -137,11 +137,11 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 //        return $response;
 //    }
 
-    public function responseProcess() {
-
-        $response = parent::responseProcess();
-        $response[AjaxKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
-
-        return $response;
-    }
+//    public function responseProcess() {
+//
+//        $response = parent::responseProcess();
+//        $response[AjaxKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
+//
+//        return $response;
+//    }
 }
