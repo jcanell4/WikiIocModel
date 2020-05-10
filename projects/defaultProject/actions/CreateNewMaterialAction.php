@@ -35,7 +35,6 @@ class CreateNewMaterialAction extends PageAction {
             $idIndex = $this->params[PageKeys::KEY_ID] . ":htmlindex";
             $params[PageKeys::KEY_ID] = $idIndex;
             $params[PageKeys::KEY_DO] = $this->params[PageKeys::KEY_DO];
-            //$this->params[PageKeys::KEY_TEMPLATE] = "$w_template:htmlindex";
             $params[PageKeys::KEY_TEMPLATE] = "$w_template:htmlindex";
 
             $action = $this->modelManager->getActionInstance("CreatePageAction");
