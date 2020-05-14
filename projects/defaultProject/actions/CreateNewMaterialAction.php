@@ -12,47 +12,41 @@ class CreateNewMaterialAction extends PageAction {
         $response = "";
 
         $base_template = "plantilles:sensecommon:cicle:m99";
-        $unitat_template = "u1";
-        $apartat_template = "a1";
+        $unitat_template = "u9";
+        $apartat_template = "a9";
 
         $template_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $base_template);
-        $destination_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $this->params[AjaxKeys::KEY_ID]);
+//        $destination_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $this->params[AjaxKeys::KEY_ID]);
 
-        //Sólo se ejecuta si no existe previamente el directorio
-        if (!is_file($destination_path)) {
+        $this->action = $this->modelManager->getActionInstance("CreatePageAction");
 
-            $this->action = $this->modelManager->getActionInstance("CreatePageAction");
+        $unitats = json_decode($this->params['unitats'], true);
 
-            $unitats = json_decode($this->params['unitats'], true);
+        //Copia los archivos de la raíz del directorio de plantillas al directorio de destino (módulo)
+        $response = $this->sendFilesToCreate($template_path, $this->params[AjaxKeys::KEY_ID], $base_template);
 
-            //Copia los archivos de la raíz del directorio de plantillas al directorio de destino (módulo)
-            $response = $this->sendFilesToCreate($template_path, $this->params[AjaxKeys::KEY_ID], $base_template);
+        foreach ($unitats as $unitat => $apartats) {
+            //Copia los archivos de la unidad correspondiente
+            $this->sendFilesToCreate("$template_path/$unitat_template", $this->params[AjaxKeys::KEY_ID].":$unitat", "$base_template:$unitat_template");
 
-            foreach ($unitats as $unitat => $apartats) {
-                //Copia los archivos de la unidad correspondiente
-                $this->sendFilesToCreate("$template_path/$unitat_template", $this->params[AjaxKeys::KEY_ID].":$unitat", "$base_template:$unitat_template");
-
-                for ($a=1; $a<=$apartats; $a++) {
-                    //Copia los archivos de los apartados correspondientes a la unidad
-                    $this->sendFilesToCreate("$template_path/$unitat_template/$apartat_template", $this->params[AjaxKeys::KEY_ID].":$unitat:a$a", "$base_template:$unitat_template:$apartat_template");
-                }
+            for ($a=1; $a<=$apartats; $a++) {
+                //Copia los archivos de los apartados correspondientes a la unidad
+                $this->sendFilesToCreate("$template_path/$unitat_template/$apartat_template", $this->params[AjaxKeys::KEY_ID].":$unitat:a$a", "$base_template:$unitat_template:$apartat_template");
             }
-
-            $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID] . ":htmlindex");
-            $info = self::generateInfo("info", "Els materials s'han creat correctament a {$this->params[PageKeys::KEY_ID]}", $id);
-            $response['info'] = self::addInfoToInfo($info, $response['info']);
-        }else {
-            throw new Exception;
         }
+
+        $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID] . ":htmlindex");
+        $info = self::generateInfo("info", "Els materials s'han creat correctament a {$this->params[PageKeys::KEY_ID]}", $id);
+        $response['info'] = self::addInfoToInfo($info, $response['info']);
 
         return $response;
     }
 
-    /** @override */
-    public function get($paramsArr=array()) {
-        $this->params = $paramsArr;
-        return $this->responseProcess();
-    }
+//    /** @override */
+//    public function get($paramsArr=array()) {
+//        $this->params = $paramsArr;
+//        return $this->responseProcess();
+//    }
 
     /**
      * Copia los archivos de plantilla del directorio origen al directorio de destino
@@ -78,6 +72,13 @@ class CreateNewMaterialAction extends PageAction {
         return $ret;
     }
 
-    protected function runProcess() {}
+    protected function runProcess() {
+        $destination_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $this->params[AjaxKeys::KEY_ID]);
+
+        //Sólo se ejecuta si no existe previamente el directorio
+        if (is_dir($destination_path)) {
+            throw new DefaultProjectAlreadyExistsException($this->params[AjaxKeys::KEY_ID]);
+        }
+    }
 
 }
