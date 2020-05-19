@@ -9,21 +9,17 @@ class CreateNewMaterialAction extends PageAction {
     protected $action;
 
     protected function responseProcess() {
-        $response = "";
-
         $base_template = "plantilles:sensecommon:cicle:m99";
         $unitat_template = "u9";
         $apartat_template = "a9";
-
         $template_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $base_template);
-//        $destination_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $this->params[AjaxKeys::KEY_ID]);
 
         $this->action = $this->modelManager->getActionInstance("CreatePageAction");
 
-        $unitats = json_decode($this->params['unitats'], true);
-
         //Copia los archivos de la raíz del directorio de plantillas al directorio de destino (módulo)
         $response = $this->sendFilesToCreate($template_path, $this->params[AjaxKeys::KEY_ID], $base_template);
+
+        $unitats = json_decode($this->params['unitats'], true);
 
         foreach ($unitats as $unitat => $apartats) {
             //Copia los archivos de la unidad correspondiente
@@ -41,12 +37,6 @@ class CreateNewMaterialAction extends PageAction {
 
         return $response;
     }
-
-//    /** @override */
-//    public function get($paramsArr=array()) {
-//        $this->params = $paramsArr;
-//        return $this->responseProcess();
-//    }
 
     /**
      * Copia los archivos de plantilla del directorio origen al directorio de destino
