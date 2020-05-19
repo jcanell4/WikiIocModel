@@ -16,9 +16,6 @@ class CreateNewMaterialAction extends PageAction {
 
         $this->action = $this->modelManager->getActionInstance("CreatePageAction");
 
-        //Copia los archivos de la raíz del directorio de plantillas al directorio de destino (módulo)
-        $response = $this->sendFilesToCreate($template_path, $this->params[AjaxKeys::KEY_ID], $base_template);
-
         $unitats = json_decode($this->params['unitats'], true);
 
         foreach ($unitats as $unitat => $apartats) {
@@ -30,6 +27,9 @@ class CreateNewMaterialAction extends PageAction {
                 $this->sendFilesToCreate("$template_path/$unitat_template/$apartat_template", $this->params[AjaxKeys::KEY_ID].":$unitat:a$a", "$base_template:$unitat_template:$apartat_template");
             }
         }
+
+        //Copia los archivos de la raíz del directorio de plantillas al directorio de destino (módulo)
+        $response = $this->sendFilesToCreate($template_path, $this->params[AjaxKeys::KEY_ID], $base_template);
 
         $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID] . ":htmlindex");
         $info = self::generateInfo("info", "Els materials s'han creat correctament a {$this->params[PageKeys::KEY_ID]}", $id);
@@ -47,7 +47,14 @@ class CreateNewMaterialAction extends PageAction {
      */
     private function sendFilesToCreate($src_path, $wiki_dest, $wiki_base) {
         $ret = "";
+        $indice = "htmlindex.txt";
+
         $files = scandir($src_path);
+        if (($k = array_search($indice, $files))) {
+            unset($files[$k]);
+            $files[] = $indice;
+        }
+
         foreach ($files as $file) {
             if (!is_dir("$src_path/$file")) {
                 $file = basename($file, ".txt");
