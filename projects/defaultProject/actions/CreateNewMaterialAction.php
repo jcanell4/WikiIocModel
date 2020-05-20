@@ -20,11 +20,13 @@ class CreateNewMaterialAction extends PageAction {
 
         foreach ($unitats as $unitat => $apartats) {
             //Copia los archivos de la unidad correspondiente
-            $this->sendFilesToCreate("$template_path/$unitat_template", $this->params[AjaxKeys::KEY_ID].":$unitat", "$base_template:$unitat_template");
+            $ret = $this->sendFilesToCreate("$template_path/$unitat_template", $this->params[AjaxKeys::KEY_ID].":$unitat", "$base_template:$unitat_template");
+            if (isset($ret['alert'])) $response['alert'] = $ret['alert'];
 
             for ($a=1; $a<=$apartats; $a++) {
                 //Copia los archivos de los apartados correspondientes a la unidad
-                $this->sendFilesToCreate("$template_path/$unitat_template/$apartat_template", $this->params[AjaxKeys::KEY_ID].":$unitat:a$a", "$base_template:$unitat_template:$apartat_template");
+                $ret = $this->sendFilesToCreate("$template_path/$unitat_template/$apartat_template", $this->params[AjaxKeys::KEY_ID].":$unitat:a$a", "$base_template:$unitat_template:$apartat_template");
+                if (isset($ret['alert']) && !isset($response['alert'])) $response['alert'] = $ret['alert'];
             }
         }
 
@@ -62,20 +64,24 @@ class CreateNewMaterialAction extends PageAction {
                 $params[PageKeys::KEY_DO] = $this->params[PageKeys::KEY_DO];
                 $params[PageKeys::KEY_TEMPLATE] = "$wiki_base:$file";
 
-                $response = $this->action->get($params);
-                if ($file === "htmlindex") $ret = $response;
+                try {
+                    $response = $this->action->get($params);
+                    if ($file === "htmlindex") $ret = $response;
+                }catch (Exception $e) {
+                    $ret['alert'] = $e->getMessage();
             }
+        }
         }
         return $ret;
     }
 
     protected function runProcess() {
-        $destination_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $this->params[AjaxKeys::KEY_ID]);
-
-        //Sólo se ejecuta si no existe previamente el directorio
-        if (is_dir($destination_path)) {
-            throw new DefaultProjectAlreadyExistsException($this->params[AjaxKeys::KEY_ID]);
-        }
+//        $destination_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $this->params[AjaxKeys::KEY_ID]);
+//
+//        //Sólo se ejecuta si no existe previamente el directorio
+//        if (is_dir($destination_path)) {
+//            throw new DefaultProjectAlreadyExistsException($this->params[AjaxKeys::KEY_ID]);
+//        }
     }
 
 }
