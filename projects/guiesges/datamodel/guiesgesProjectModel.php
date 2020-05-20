@@ -5,7 +5,7 @@
  */
 if (!defined("DOKU_INC")) die();
 
-class guiesgesProjectModel extends AbstractProjectModel {
+class guiesgesProjectModel extends MultiContentFilesProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
@@ -25,20 +25,6 @@ class guiesgesProjectModel extends AbstractProjectModel {
         }
 
         return $ret;
-    }
-
-    public function createTemplateDocument($data){
-        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
-        $scdir = scandir($pdir);
-        foreach($scdir as $file){
-            if ($file !== '.' && $file !== '..' && substr($file, -4)===".txt") {
-                $plantilla = file_get_contents($pdir.$file);
-                $name = substr($file, 0, -4);
-                $this->dokuPageModel->setData([PageKeys::KEY_ID => $this->id.":".$name,
-                                               PageKeys::KEY_WIKITEXT => $plantilla,
-                                               PageKeys::KEY_SUM => "generate project"]);
-            }
-        }
     }
 
     public function llistaDePlantilles() {
