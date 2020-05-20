@@ -49,16 +49,17 @@ class ptfplogseProjectModel extends MoodleProjectModel {
     }
 
     public function createTemplateDocument($data){
-        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
-        // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
-        $file = $this->getTemplateContentDocumentId($data) . ".txt";
-
-        $plantilla = file_get_contents($pdir.$file);
-        $name = substr($file, 0, -4);
-        $destino = $this->getContentDocumentId($name);
-        $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
-                                       PageKeys::KEY_WIKITEXT => $plantilla,
-                                       PageKeys::KEY_SUM => "generate project"]);
+        StaticUniqueContentFileProjectModel::createTemplateDocument($this, $data);
+//        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
+//        // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
+//        $file = $this->getTemplateContentDocumentId($data) . ".txt";
+//
+//        $plantilla = file_get_contents($pdir.$file);
+//        $name = substr($file, 0, -4);
+//        $destino = $this->getContentDocumentId($name);
+//        $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
+//                                       PageKeys::KEY_WIKITEXT => $plantilla,
+//                                       PageKeys::KEY_SUM => "generate project"]);
     }
 
     /**
@@ -129,30 +130,6 @@ class ptfplogseProjectModel extends MoodleProjectModel {
 
         $data = $isArray?$values:json_encode($values);
         return parent::updateCalculatedFieldsOnSave($data);
-    }
-
-    /**
-     * Canvia el nom dels directoris del projecte indicat,
-     * els noms dels fitxers generats amb la base del nom del projecte i
-     * les referències a l'antic nom de projecte dins dels fitxers afectats
-     * @param string $ns : ns original del projecte
-     * @param string $new_name : nou nom pel projecte
-     * @param string $persons : noms dels autors i els responsables separats per ","
-     */
-    public function renameProject($ns, $new_name, $persons) {
-        $base_dir = explode(":", $ns);
-        $old_name = array_pop($base_dir);
-        $base_dir = implode("/", $base_dir);
-
-        $this->projectMetaDataQuery->renameDirNames($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathInRevisionFiles($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathInACLFile($old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInShortcutFiles($old_name, $new_name, $persons);
-        $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_dir, $old_name, $new_name, $this->listGeneratedFilesByRender($base_dir, $old_name));
-        $this->projectMetaDataQuery->changeOldPathInContentFiles($base_dir, $old_name, $new_name);
-
-        $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
-        $this->setProjectId($new_ns);
     }
 
     /**
