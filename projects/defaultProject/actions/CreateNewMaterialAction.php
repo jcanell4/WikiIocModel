@@ -68,6 +68,12 @@ class CreateNewMaterialAction extends PageAction {
                     $response = $this->action->get($params);
                     if ($file === "htmlindex") $ret = $response;
                 }catch (Exception $e) {
+                    if ($file === "htmlindex"){
+                        $pageAction = $this->modelManager->getActionInstance("HtmlPageAction", "wiki");
+                        $pageParams[PageKeys::KEY_ID] = "$wiki_dest:$file";
+                        $pageParams[AjaxKeys::KEY_SECTOK] = $this->params[AjaxKeys::KEY_SECTOK];
+                        $ret = $pageAction->get($pageParams);
+                    }
                     $ret['alert'] = $e->getMessage();
             }
         }
