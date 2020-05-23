@@ -34,12 +34,12 @@ class upgrader_24 extends CommonUpgrader {
 
                 $aTokIns = [
                             ['regexp' => "^En el cas dels EAF establerts amb metodologia de treball en equip,",
-                             'text' => "\n<WIOCCL:IF condition=\"{##treballEquipEAF##}==true\">",
-                             'pos' => 1,
+                             'text' => "<WIOCCL:IF condition=\"{##treballEquipEAF##}==true\">\n",
+                             'pos' => 0,
                              'modif' => "m"
                             ],
-                            ['regexp' => "^\s+\* La recuperació individual fa referència al contingut",
-                             'text' => "\n</WIOCCL:IF>",
+                            ['regexp' => "^\s+\* La recuperació individual fa referència al contingut.*novament en grup\.\n",
+                             'text' => "</WIOCCL:IF>\n",
                              'pos' => 1,
                              'modif' => "m"
                             ],
