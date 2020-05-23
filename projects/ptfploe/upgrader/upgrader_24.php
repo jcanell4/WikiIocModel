@@ -33,14 +33,13 @@ class upgrader_24 extends CommonUpgrader {
                 $doc = $this->model->getRawProjectDocument($filename)."\n";
 
                 $aTokIns = [
-                            ['regexp' => "===== Dates dels EAF i les recuperacions =====###:\n",
-                             'text' => "\n:###\n"
-                                      ."<WIOCCL:IF condition=\"{##treballEquipEAF##}==true\">\n"
-                                      ."En el cas dels EAF establerts amb metodologia de treball en equip, l'estudiant té l'obligació de presentar-se a la convocatòria de l'EAF i només opta a presentar-se a l'EAF de recuperació quan:\n"
-                                      ."  * La recuperació implica tots els membres de l'equip, que han de lliurar de nou i conjuntament una mateixa tasca.\n"
-                                      ."  * La recuperació individual fa referència al contingut de l'exercici i no a la recuperació de les competències de treball en equip, que només es poden superar treballant novament en grup.\n"
-                                      ."</WIOCCL:IF>\n"
-                                      ."###:\n",
+                            ['regexp' => "^En el cas dels EAF establerts amb metodologia de treball en equip,",
+                             'text' => "\n<WIOCCL:IF condition=\"{##treballEquipEAF##}==true\">",
+                             'pos' => 1,
+                             'modif' => "m"
+                            ],
+                            ['regexp' => "^\s+\* La recuperació individual fa referència al contingut",
+                             'text' => "\n</WIOCCL:IF>",
                              'pos' => 1,
                              'modif' => "m"
                             ],

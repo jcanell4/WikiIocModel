@@ -174,14 +174,6 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 ===== Dates dels EAF i les recuperacions =====###:
 
 :###
-<WIOCCL:IF condition="{##treballEquipEAF##}==true">
-En el cas dels EAF establerts amb metodologia de treball en equip, l'estudiant té l'obligació de presentar-se a la convocatòria de l'EAF i només opta a presentar-se a l'EAF de recuperació quan:
-  * La recuperació implica tots els membres de l'equip, que han de lliurar de nou i conjuntament una mateixa tasca.
-  * La recuperació individual fa referència al contingut de l'exercici i no a la recuperació de les competències de treball en equip, que només es poden superar treballant novament en grup.
-</WIOCCL:IF>
-###:
-
-:###
 
 ::table:T06
   :title:Dates clau EAF
@@ -357,10 +349,12 @@ Com que és part de l'avaluació final, l'EAF té dues convocatòries cada semes
 :###
 La convocatòria de l'EAF s'exhaureix tant si l'estudiant s'hi presenta com si no (excepte que l'alumne hagi anul·lat la matrícula). La convocatòria de recuperació de l'EAF només s'exhaureix si l'estudiant s'hi presenta. 
 
+<WIOCCL:IF condition="{##treballEquipEAF##}==true">
 En el cas dels EAF establerts amb metodologia de treball en equip, l'estudiant té l'obligació de presentar-se a la convocatòria de l'EAF i només opta a presentar-se a l'EAF de recuperació quan:
 
   * La recuperació implica tots els membres de l'equip, que han de lliurar de nou i conjuntament una mateixa tasca.
   * La recuperació individual fa referència al contingut de l'exercici i no a la recuperació de les competències de treball en equip, que només es poden superar treballant novament en grup.
+</WIOCCL:IF>
 </WIOCCL:IF>
 
 ###:
