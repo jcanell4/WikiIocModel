@@ -684,6 +684,15 @@
           ]    
         }
       },
+        "treballEquipEAF": {
+            "label": "Treball en equip a l'EAF",
+            "n_columns": 2,
+            "group": "actualitzables",
+            "type": "checkbox",
+            "props": {
+                "title": "Indiqueu si es demana treball en equip a l'EAF"
+            }
+        },
       "datesJT": {
         "label":"Dates importants. JT (datesJT)",
         "n_columns": 12,
