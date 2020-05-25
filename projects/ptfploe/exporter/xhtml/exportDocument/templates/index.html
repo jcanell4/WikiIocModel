@@ -785,7 +785,7 @@
                           name :"UF{##itemUf[unitat formativa]##}",
                           percent: 0
                         },
-<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##filtered##},''ponderació'', ''unitat formativa'', {##itemUf[unitat formativa]##})_#}">
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##itemUf##},''ponderació'', ''unitat formativa'', {##itemUf[unitat formativa]##})_#}">
 <WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}">
                        { 
                           title :"{##item[descripció qualificació]##}",
