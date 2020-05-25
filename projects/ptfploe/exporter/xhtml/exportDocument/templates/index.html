@@ -780,33 +780,37 @@
     var dataArray1 = [
 <WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
                       [
-                        { 
+                        {
                           title :"UF{##itemUf[unitat formativa]##}",
                           name :"UF{##itemUf[unitat formativa]##}",
                           percent: 0
-                        },                        
-<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}">                        
+                        },
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##filtered##},''ponderació'', ''unitat formativa'', {##itemUf[unitat formativa]##})_#}">
+<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}">
                        { 
                           title :"{##item[descripció qualificació]##}",
                           name :"{##item[abreviació qualificació]##}",
                           percent: {##item[ponderació]##}
                         },
 </WIOCCL:FOREACH>
+</WIOCCL:SET>
                       ],
 </WIOCCL:FOREACH>
                       [
-                        { 
+                        {
                           title :"FINAL",
                           name :"FINAL",
                           percent: 0
                         },
-<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">                        
-                       { 
+<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">
+<WIOCCL:SET var="percent_ponderacio" value="{#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}">
+                       {
                           title :"UF{##item[unitat formativa]##}",
                           name :"UF{##item[unitat formativa]##}",
-                          percent: {##item[ponderació]##}
+                          percent: {##percent_ponderacio##}
                         },
-</WIOCCL:FOREACH>                        
+</WIOCCL:SET>
+</WIOCCL:FOREACH>
                       ]
                     ];
 </WIOCCL:SET>
