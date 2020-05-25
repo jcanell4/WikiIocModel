@@ -785,13 +785,15 @@
                           name :"FINAL",
                           percent: 0
                         }
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacio##},''ponderació'')_#}">
 <WIOCCL:FOREACH var="item" array="{##dadesQualificacio##}">
                        ,{
                           title :"{##item[descripció qualificació]##}",
                           name :"{##item[abreviació qualificació]##}",
-                          percent: {##item[ponderació]##}
+                          percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}"
                         }
 </WIOCCL:FOREACH>
+</WIOCCL:SET>
                       ]
                     ];
 </WIOCCL:SET>
