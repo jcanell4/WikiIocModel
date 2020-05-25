@@ -30,8 +30,8 @@
             "main": "meta.mdpr",
 
             "versions": {
-                "fields" : 7,
-                "templates": {"continguts":23}
+                "fields": 8,
+                "templates": {"continguts":24}
             },
             "mainType": {
                 "type": "object",
@@ -593,6 +593,11 @@
                         "datesEAF": {
                             "type": "defDatesEAF",
                             "mandatory": false
+                        },
+                        "treballEquipEAF": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
                         },
                         "hiHaSolucioPerEAF": {
                             "type": "boolean",

@@ -9,31 +9,29 @@ class CreateNewMaterialAction extends PageAction {
     protected $action;
 
     protected function responseProcess() {
-        $response = "";
-
         $base_template = "plantilles:sensecommon:cicle:m99";
         $unitat_template = "u9";
         $apartat_template = "a9";
-
         $template_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $base_template);
-//        $destination_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $this->params[AjaxKeys::KEY_ID]);
 
         $this->action = $this->modelManager->getActionInstance("CreatePageAction");
 
         $unitats = json_decode($this->params['unitats'], true);
 
-        //Copia los archivos de la raíz del directorio de plantillas al directorio de destino (módulo)
-        $response = $this->sendFilesToCreate($template_path, $this->params[AjaxKeys::KEY_ID], $base_template);
-
         foreach ($unitats as $unitat => $apartats) {
             //Copia los archivos de la unidad correspondiente
-            $this->sendFilesToCreate("$template_path/$unitat_template", $this->params[AjaxKeys::KEY_ID].":$unitat", "$base_template:$unitat_template");
+            $ret = $this->sendFilesToCreate("$template_path/$unitat_template", $this->params[AjaxKeys::KEY_ID].":$unitat", "$base_template:$unitat_template");
+            if (isset($ret['alert'])) $response['alert'] = $ret['alert'];
 
             for ($a=1; $a<=$apartats; $a++) {
                 //Copia los archivos de los apartados correspondientes a la unidad
-                $this->sendFilesToCreate("$template_path/$unitat_template/$apartat_template", $this->params[AjaxKeys::KEY_ID].":$unitat:a$a", "$base_template:$unitat_template:$apartat_template");
+                $ret = $this->sendFilesToCreate("$template_path/$unitat_template/$apartat_template", $this->params[AjaxKeys::KEY_ID].":$unitat:a$a", "$base_template:$unitat_template:$apartat_template");
+                if (isset($ret['alert']) && !isset($response['alert'])) $response['alert'] = $ret['alert'];
             }
         }
+
+        //Copia los archivos de la raíz del directorio de plantillas al directorio de destino (módulo)
+        $response = $this->sendFilesToCreate($template_path, $this->params[AjaxKeys::KEY_ID], $base_template);
 
         $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID] . ":htmlindex");
         $info = self::generateInfo("info", "Els materials s'han creat correctament a {$this->params[PageKeys::KEY_ID]}", $id);
@@ -41,12 +39,6 @@ class CreateNewMaterialAction extends PageAction {
 
         return $response;
     }
-
-//    /** @override */
-//    public function get($paramsArr=array()) {
-//        $this->params = $paramsArr;
-//        return $this->responseProcess();
-//    }
 
     /**
      * Copia los archivos de plantilla del directorio origen al directorio de destino
@@ -57,7 +49,14 @@ class CreateNewMaterialAction extends PageAction {
      */
     private function sendFilesToCreate($src_path, $wiki_dest, $wiki_base) {
         $ret = "";
+        $indice = "htmlindex.txt";
+
         $files = scandir($src_path);
+        if (($k = array_search($indice, $files))) {
+            unset($files[$k]);
+            $files[] = $indice;
+        }
+
         foreach ($files as $file) {
             if (!is_dir("$src_path/$file")) {
                 $file = basename($file, ".txt");
@@ -65,20 +64,30 @@ class CreateNewMaterialAction extends PageAction {
                 $params[PageKeys::KEY_DO] = $this->params[PageKeys::KEY_DO];
                 $params[PageKeys::KEY_TEMPLATE] = "$wiki_base:$file";
 
-                $response = $this->action->get($params);
-                if ($file === "htmlindex") $ret = $response;
+                try {
+                    $response = $this->action->get($params);
+                    if ($file === "htmlindex") $ret = $response;
+                }catch (Exception $e) {
+                    if ($file === "htmlindex"){
+                        $pageAction = $this->modelManager->getActionInstance("HtmlPageAction", "wiki");
+                        $pageParams[PageKeys::KEY_ID] = "$wiki_dest:$file";
+                        $pageParams[AjaxKeys::KEY_SECTOK] = $this->params[AjaxKeys::KEY_SECTOK];
+                        $ret = $pageAction->get($pageParams);
+                    }
+                    $ret['alert'] = $e->getMessage();
             }
+        }
         }
         return $ret;
     }
 
     protected function runProcess() {
-        $destination_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $this->params[AjaxKeys::KEY_ID]);
-
-        //Sólo se ejecuta si no existe previamente el directorio
-        if (is_dir($destination_path)) {
-            throw new DefaultProjectAlreadyExistsException($this->params[AjaxKeys::KEY_ID]);
-        }
+//        $destination_path = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $this->params[AjaxKeys::KEY_ID]);
+//
+//        //Sólo se ejecuta si no existe previamente el directorio
+//        if (is_dir($destination_path)) {
+//            throw new DefaultProjectAlreadyExistsException($this->params[AjaxKeys::KEY_ID]);
+//        }
     }
 
 }
