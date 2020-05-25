@@ -1,8 +1,9 @@
 <?php
 /**
- * upgrader_9: Transforma el archivo continguts.txt del proyecto "ptfplogse" desde la versión 6 a la versión 7
+ * upgrader_9: Transforma el archivo continguts.txt del proyecto "ptfplogse" desde la versión 8 a la versión 9
  *              sustituye, en el doc del usuario, el contenido incluido entre los tags protected
- *              por el contenido de los tags protected de la nueva plantilla
+ *              por el contenido de los tags protected de la nueva plantilla,
+ *              o bien, el _wikiIocSystem_.mdpr de los proyectos 'ptfplogse' desde la versión 8 a la versión 9
  * @culpable Josep 06-09-2019
  */
 if (!defined("DOKU_INC")) die();
@@ -24,6 +25,16 @@ class upgrader_9 extends CommonUpgrader {
     public function process($type, $filename = NULL) {
         switch ($type) {
             case "fields":
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+                //Añade un campo en el primer nivel de la estructura de datos
+                $name = "treballEquipEAF";
+                $value = false;
+                $dataProject = $this->addNewField($dataProject, $name, $value);
+
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 8 to 9 (afegir camps). Simultànea a la actualització de 16 a 17 de continguts");
                 $status = TRUE;
                 break;
 
@@ -49,7 +60,7 @@ class upgrader_9 extends CommonUpgrader {
                     ]
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
-                
+
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 8 to 9");
                 }
