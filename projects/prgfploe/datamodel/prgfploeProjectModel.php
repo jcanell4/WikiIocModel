@@ -43,172 +43,52 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
         $basename = str_replace([":","/"], "_", $base_dir) . "_" . $old_name;
         return [$basename.".zip"];
     }
-
-    /**
-     * Llista de les dates a pujar al calendari amb el format següent:
-     *  - title
-     *  - date (en format yyyy-mm-dd)
-     *  - description
-     */
-    public function getCalendarDates() {
-        $ret = array();
-        $data = $this->getCurrentDataProject();
-        if(is_string($data["calendari"])){
-            $calendari = json_decode($data["calendari"], true);
-        }else{
-            $calendari = $data["calendari"];
+    
+     public function updateCalculatedFieldsOnRead($data) {
+         $ufTable = $data["taulaDadesUF"];
+         if(!is_array($ufTable)){
+             $ufTable = json_decode($ufTable, TRUE);
+         }
+         foreach ($ufTable as $key => $value) {
+             if($ufTable[$key]["ponderació"]=="0"){
+                 $ufTable[$key]["ponderació"]=$ufTable[$key]["hores"];
+             }
+         }
+         $data["taulaDadesUF"]=$ufTable;
+         return $data;
+     }
+     
+     public function updateCalculatedFieldsOnSave($data) {
+//         $nfTable = $data["taulaDadesNuclisFormatius"];
+//         if(!is_array($nfTable)){
+//             $nfTable = json_decode($nfTable, TRUE);
+//         }
+//         $totalUfs=array();
+//         foreach ($nfTable as $item){
+//             if(!isset($totalUfs[$item["unitat formativa"]])){
+//                 $totalUfs[$item["unitat formativa"]]=0;
+//             }
+//             $totalUfs[$item["unitat formativa"]] += $item["hores"];a
+//        }
+//         
+        $ufTable = $data["taulaDadesUF"];
+        if(!is_array($ufTable)){
+             $ufTable = json_decode($ufTable, TRUE);
         }
-        foreach ($calendari as $item) {
-            $ret[] = [
-                "title"=>sprintf("%s - inici %s %d U%d", $data["modulId"], $item['tipus període'], $item["període"], $item["unitat"]),
-                "date"=>$item["inici"]
-            ];
+        $blocTotal = 0;
+        $i=0;
+        $size = count($ufTable);
+        while($i<$size) {
+             $ufTable[$i]["hores"] = $ufTable[$i]["horesMinimes"]+$ufTable[$i]["horesLLiureDisposicio"];
+             $blocTotal += $ufTable[$i]["hores"];
+             $currentBloc=$ufTable[$i]["bloc"];
+             $i++;
+             if($i==$size || $ufTable[$i]['bloc']!=$currentBloc){
+                $ufTable[$i-1]["bloc"]=$blocTotal;
+                $blocTotal=0;
+             }
         }
-
-        $dataEnunciatOld ="";
-        $dataSolucioOld ="";
-        $dataQualificacioOld ="";
-        if(is_string($data["datesAC"])){
-            $datesAC = json_decode($data["datesAC"], true);
-        }else{
-            $datesAC = $data["datesAC"];
-        }
-        foreach ($datesAC as $item) {
-            if($dataEnunciatOld!=$item["enunciat"]){
-                $ret[] = [
-                    "title"=>sprintf("%s - enunciat %s", $data["modulId"], $item['id']),
-                    "date"=>$item["enunciat"]
-                ];
-                $dataEnunciatOld = $item["enunciat"];
-            }
-            if($item["hiHaSolucio"] && $dataSolucioOld!=$item["solució"]){
-                $ret[] = [
-                    "title"=>sprintf("%s - solució %s", $data["modulId"], $item['id']),
-                    "date"=>$item["solució"]
-                ];
-                $dataSolucioOld = $item["solució"];
-            }
-            if($dataQualificacioOld!=$item["qualificació"]){
-                $ret[] = [
-                    "title"=>sprintf("%s - qualificació %s", $data["modulId"], $item['id']),
-                    "date"=>$item["qualificació"]
-                ];
-                $dataQualificacioOld = $item["qualificació"];
-            }
-        }
-
-        $dataEnunciatOld ="";
-        $dataSolucioOld ="";
-        $dataQualificacioOld ="";
-        $dataEnunciatRecOld ="";
-        $dataSolucioRecOld ="";
-        $dataQualificacioRecOld ="";
-        if(is_string($data["datesEAF"])){
-            $datesEAF = json_decode($data["datesEAF"], true);
-        }else{
-            $datesEAF = $data["datesEAF"];
-        }
-        foreach ($datesEAF as $item) {
-            if($dataEnunciatOld!=$item["enunciat"]){
-                $ret[] = [
-                    "title"=>sprintf("%s - enunciat %s", $data["modulId"], $item['id']),
-                    "date"=>$item["enunciat"]
-                ];
-                $dataEnunciatOld = $item["enunciat"];
-            }
-            if($item["hiHaSolucio"] && $dataSolucioOld!=$item["solució"]){
-                $ret[] = [
-                    "title"=>sprintf("%s - solució %s", $data["modulId"], $item['id']),
-                    "date"=>$item["solució"]
-                ];
-                $dataSolucioOld = $item["solució"];
-            }
-            if($dataQualificacioOld!=$item["qualificació"]){
-                $ret[] = [
-                    "title"=>sprintf("%s - qualificació %s", $data["modulId"], $item['id']),
-                    "date"=>$item["qualificació"]
-                ];
-                $dataQualificacioOld = $item["qualificació"];
-            }
-            if($item["hiHaEnunciatRecuperacio"]){
-                if($dataEnunciatRecOld!=$item["enunciat recuperació"]){
-                    $ret[] = [
-                        "title"=>sprintf("%s - enunciat recuperació %s", $data["modulId"], $item['id']),
-                        "date"=>$item["enunciat recuparació"]
-                    ];
-                    $dataEnunciaRectOld = $item["enunciat recuparació"];
-                }
-                if($item["hiHaSolucio"] && $dataSolucioRecOld!=$item["solució recuperació"]){
-                    $ret[] = [
-                        "title"=>sprintf("%s - solució recuperació %s", $data["modulId"], $item['id']),
-                        "date"=>$item["solució recuperació"]
-                    ];
-                    $dataSolucioRecOld = $item["solució recuperació"];
-                }
-                if($dataQualificacioRecOld!=$item["qualificació recuperació"]){
-                    $ret[] = [
-                        "title"=>sprintf("%s - qualificació recuperació %s", $data["modulId"], $item['id']),
-                        "date"=>$item["qualificació recuperació"]
-                    ];
-                    $dataQualificacioRecOld = $item["qualificació recuperació"];
-                }
-            }
-        }
-
-        if(is_string($data["datesJT"])){
-            $datesJT = json_decode($data["datesJT"], true);
-        }else{
-            $datesJT = $data["datesJT"];
-        }
-        foreach ($datesJT as $item) {
-            $ret[] = [
-                "title"=>sprintf("%s - inscripció %s", $data["modulId"], $item['id']),
-                "date"=>$item["inscripció"]
-            ];
-            $ret[] = [
-                "title"=>sprintf("%s - llista prov. %s", $data["modulId"], $item['id']),
-                "date"=>$item["llista provisional"]
-            ];
-            $ret[] = [
-                "title"=>sprintf("%s - llista def. %s", $data["modulId"], $item['id']),
-                "date"=>$item["llista definitiva"]
-            ];
-            $ret[] = [
-                "title"=>sprintf("%s - jornada tècnica %s", $data["modulId"], $item['id']),
-                "date"=>$item["data JT"]
-            ];
-            $ret[] = [
-                "title"=>sprintf("%s - qualificació JT %s", $data["modulId"], $item['id']),
-                "date"=>$item["qualificació"]
-            ];
-            if($item["hiHaEnunciatRecuperacio"]){
-                $ret[] = [
-                    "title"=>sprintf("%s - inscripció rec. %s", $data["modulId"], $item['id']),
-                    "date"=>$item["inscripció recuperació"]
-                ];
-                $ret[] = [
-                    "title"=>sprintf("%s - llista prov. rec. %s", $data["modulId"], $item['id']),
-                    "date"=>$item["llista provisional recuperació"]
-                ];
-                $ret[] = [
-                    "title"=>sprintf("%s - llista def. rec %s", $data["modulId"], $item['id']),
-                    "date"=>$item["llista definitiva recuperació"]
-                ];
-                $ret[] = [
-                    "title"=>sprintf("%s - jornada tècnica rec. %s", $data["modulId"], $item['id']),
-                    "date"=>$item["data JT recuperació"]
-                ];
-                $ret[] = [
-                    "title"=>sprintf("%s - qualificació JT rec. %s", $data["modulId"], $item['id']),
-                    "date"=>$item["qualificació recuperació"]
-                ];
-            }
-        }
-        return $ret;
-    }
-
-    public function getCourseId() {
-        $data = $this->getCurrentDataProject();
-        return $data["moodleCourseId"];
+        $data["taulaDadesUF"]=$ufTable;
+        return $data;
     }
 }

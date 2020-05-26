@@ -40,6 +40,25 @@
                     "type": "objectArray",
                     "typeDef":"entradaResultatsAprenentage"
                 },
+                "entradaCriterisAvaluacio": {
+                    "type":"object",
+                    "keys": {
+                        "id": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "CA1.{#_INC(1)_#}"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        }
+                    }                    
+                },
+                "defCriterisAvaluacio": {
+                    "type": "objectArray",
+                    "typeDef":"entradaCriterisAvaluacio"
+                },
                 "entradaQualificacioUFs": {
                     "type":"object",
                     "keys": {
@@ -318,32 +337,6 @@
                 "defCalendari": {
                     "type": "objectArray",
                     "typeDef":"entradaCalendari"
-                },                                                
-                "entradaEinesAprenentatge": {
-                    "type": "object",
-                    "keys": {
-                        "tipus": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "eina": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "opcionalitat": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "opcional"
-                        },
-                        "puntuable": {
-                            "type": "boolean",
-                            "default": false
-                        }
-                    }
-                },
-                "defEinesAprenentatge": {
-                    "type": "objectArray",
-                    "typeDef":"entradaEinesAprenentatge"
                 },
                 "defItinerarisRecomanats": {
                     "type": "objectArray",
@@ -371,11 +364,6 @@
                 "entradaDadesUF": {
                     "type": "object",
                     "keys": {
-                        "bloc": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": "{#_COPY(0)_#}"
-                        },
                         "unitat formativa": {
                             "type": "number",
                             "mandatory": true,
@@ -386,6 +374,16 @@
                             "mandatory": true,
                             "default": "Indiqueu el nom de la UF"
                         },
+                        "horesMinimes": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        },
+                        "horesLLiureDisposicio": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        },
                         "hores": {
                             "type": "number",
                             "mandatory": true,
@@ -395,6 +393,18 @@
                             "type": "number",
                             "mandatory": true,
                             "default": "0"
+                        },
+                        "bloc": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(0)_#}"
+                        },
+                        "horesBloc": {
+                            "type": "number",
+                            "mandatory": true,
+                            "readonly":true,
+                            "validate":true,
+                            "default": "0"
                         }
                     }
                 },
@@ -402,7 +412,7 @@
                     "type": "objectArray",
                     "typeDef":"entradaDadesUF"
                 },                                                
-                "entradaDadesUnitats": {
+                "entradaDadesNucliFormatiu": {
                     "type": "object",
                     "keys": {
                         "unitat formativa": {
@@ -410,7 +420,7 @@
                             "mandatory": true,
                             "default": "{#_INC(1)_#}"
                         },
-                        "unitat": {
+                        "nucli formatiu": {
                             "type": "number",
                             "mandatory": true,
                             "default": "{#_INC(1)_#}"
@@ -423,13 +433,14 @@
                         "hores": {
                             "type": "number",
                             "mandatory": true,
+                            "validate":true,
                             "default": 0
                         }
                     }
                 },
-                "defTaulaDadesUnitats": {
+                "defTaulaDadesNuclisFormatius": {
                     "type": "objectArray",
-                    "typeDef":"entradaDadesUnitats"
+                    "typeDef":"entradaDadesNucliFormatiu"
                 },                                                
                 "entradaActivitatsAprenentatge": {
                     "type": "object",
@@ -495,16 +506,42 @@
                             "default": 2000,
                             "mandatory": true   
                         },
-                        "llei orgànica":{
-                            "type":"string",
-                            "mandatory": true,
-                            "default":"LOE"
+                        "taulaDadesUF": {
+                            "type": "defTaulaDadesUF",
+                            "mandatory": true
+                        },                                                
+                        "taulaDadesNuclisFormatius": {
+                            "type": "defTaulaDadesNuclisFormatius",
+                            "mandatory": true
                         },
-                        "tipusBlocModul":{
-                            "type":"string",
-                            "mandatory": true,
-                            "default":"mòdul"
+                        "estrategiesMetodologiques":{
+                            "type": "string",
+                            "mandatory": false,
+                            "default":"Indicar les estratègies metodològiques aplicades al mòdul en format dokuwiki"
                         },
+                        "notaMinimaUfAprovada":{
+                            "type": "decimal",
+                            "mandatory": true,
+                            "default": 5
+                        },                                                
+                        "recursosNecessaris": {
+                            "type": "array",
+                            "typeDef": "string",
+                            "mandatory": true
+                        },                                                
+                        "resultatsAprenentatge": {
+                            "type": "defResultatsAprenentage",
+                            "mandatory": true
+                        },
+                        "criterisAvaluacio":{
+                            "type": "defCriterisAvaluacio",
+                            "mandatory": true
+                        },
+                        "continguts":{
+                            "type": "defContinguts",
+                            "mandatory": true
+                        }
+                        
                         
                         -----------------------
                         
@@ -529,23 +566,6 @@
                         "itinerarisRecomanats": {
                             "type": "defItinerarisRecomanats",
                             "default":[{"mòdul":"--","itinerariRecomanatS1":"1","itinerariRecomanatS2":"1"}],
-                            "mandatory": true
-                        },
-                        "taulaDadesUF": {
-                            "type": "defTaulaDadesUF",
-                            "mandatory": true
-                        },                                                
-                        "taulaDadesUnitats": {
-                            "type": "defTaulaDadesUnitats",
-                            "mandatory": true
-                        },                                                
-                        "einesAprenentatge": {
-                            "type": "defEinesAprenentatge",
-                            "default":[{"tipus":"lectura","eina":"Llibre de l'aula","opcionalitat":"lectura obligada","puntuable":"false"},{"tipus":"autoavaluació","eina":"Exercicis d'autoavaluació i activitats","opcionalitat":"opcional però recomanat","puntuable":"false"},{"tipus":"fòrum","eina":"Fòrum de l'aula","opcionalitat":"Participació recomanada","puntuable":"false"},{"tipus":"exercicis","eina":"Exercicis d'avaluació contínua","opcionalitat":"opcional","puntuable":"true"}],
-                            "mandatory": true
-                        },                                                
-                        "resultatsAprenentatge": {
-                            "type": "defResultatsAprenentage",
                             "mandatory": true
                         },                                                
                         "activitatsAprenentatge": {
