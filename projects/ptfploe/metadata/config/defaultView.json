@@ -14,7 +14,7 @@
             "frame": true,
             "config":{
                 "collapsable":true,
-                "collapsed":true
+                "collapsed":false
             }
         },
         "actualitzables": {
@@ -253,7 +253,7 @@
               "type": "number"
             },
             "ponderació": {
-              "type": "number"
+              "type": "decimal"
             }
           },
           "layout": [
@@ -284,6 +284,7 @@
                 {
                   "name": "ponderació",
                   "field": "ponderació",
+                  "constraints": "{\"places\":2}",
                   "editable": true
                 }
               ]
@@ -349,7 +350,8 @@
                 {
                   "name": "hores",
                   "field": "hores",
-                  "editable": false
+                  "constraints": "{pattern: '0.00'}",
+                  "editable": true
                 }
               ]
             }
@@ -978,7 +980,7 @@
               "type": "string"
             },
             "ponderació": {
-              "type": "number"
+              "type": "decimal"
             }
           }
         }

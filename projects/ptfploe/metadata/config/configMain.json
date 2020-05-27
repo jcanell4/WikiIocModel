@@ -79,9 +79,9 @@
                             "mandatory": true
                         },
                         "ponderació": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": "0"
+                            "type": "decimal",
+                            "constraints": "{\"places\":2}",
+                            "mandatory": true
                         }
                     }                    
                 },
@@ -409,9 +409,9 @@
                             "default": "0"
                         },
                         "ponderació": {
-                            "type": "number",
+                            "type": "decimal",
                             "mandatory": true,
-                            "default": "0"
+                            "constraints": "{\"places\":2}"
                         }
                     }
                 },
