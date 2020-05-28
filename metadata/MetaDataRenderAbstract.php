@@ -173,6 +173,7 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
             case "date":
             case "boolean":
             case "number":
+            case "decimal":
             case "string":
                 $dv = self::$DEFAULT_SINGLE_VALUES[$properties["type"]];
                 $ret = $this->_getSingleValue($values[$field], $properties, $types, $dv);
