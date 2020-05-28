@@ -44,6 +44,37 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
         return [$basename.".zip"];
     }
     
+    public function validateFields(){
+        $details="";
+        $nfTable = $data["taulaDadesNuclisFormatius"];
+        if(!is_array($nfTable)){
+            $nfTable = json_decode($nfTable, TRUE);
+        }
+        $ufTable = $data["taulaDadesUF"];
+        if(!is_array($ufTable)){
+             $ufTable = json_decode($ufTable, TRUE);
+        }
+        $totalUfs=array();
+        foreach ($nfTable as $item){
+            if(!isset($totalUfs[$item["unitat formativa"]])){
+                $totalUfs[$item["unitat formativa"]]=0;
+            }
+            $totalUfs[$item["unitat formativa"]] += $item["hores"];
+        }
+        
+        foreach ($ufTable as $item) {
+            if($item["hores"]!=$totalUfs[$item["unitat formativa"]]){
+                throw new InvalidDataProjectException(
+                    $this->id, 
+                    sprintf("Les hores de la unitat formativa %s no coincideixen amb la suma de les hores dels seus nuclis foormatius (hores UF=%d, però suma hoes NF=%d)."
+                            ,$item["unitat formativa"]
+                            ,$item["hores"]
+                            , $totalUfs[$item["unitat formativa"]])
+                );
+            }
+        }
+    }
+    
      public function updateCalculatedFieldsOnRead($data) {
          $ufTable = $data["taulaDadesUF"];
          if(!is_array($ufTable)){
@@ -59,18 +90,6 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
      }
      
      public function updateCalculatedFieldsOnSave($data) {
-//         $nfTable = $data["taulaDadesNuclisFormatius"];
-//         if(!is_array($nfTable)){
-//             $nfTable = json_decode($nfTable, TRUE);
-//         }
-//         $totalUfs=array();
-//         foreach ($nfTable as $item){
-//             if(!isset($totalUfs[$item["unitat formativa"]])){
-//                 $totalUfs[$item["unitat formativa"]]=0;
-//             }
-//             $totalUfs[$item["unitat formativa"]] += $item["hores"];a
-//        }
-//         
         $ufTable = $data["taulaDadesUF"];
         if(!is_array($ufTable)){
              $ufTable = json_decode($ufTable, TRUE);
