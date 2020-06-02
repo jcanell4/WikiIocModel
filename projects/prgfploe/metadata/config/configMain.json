@@ -540,10 +540,7 @@
                         "continguts":{
                             "type": "defContinguts",
                             "mandatory": true
-                        }
-                        
-                        
-                        -----------------------
+                        },
                         
                         "urlMaterialDidactic": {
                             "type": "string",
