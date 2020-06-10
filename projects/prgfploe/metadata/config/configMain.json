@@ -24,7 +24,18 @@
                 "entradaResultatsAprenentage": {
                     "type":"object",
                     "keys": {
-                        "id": {
+                        "order": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}",
+                            "readonly":true
+                        },
+                        "uf": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "ra": {
                             "type": "string",
                             "mandatory": true,
                             "default": "RA{#_INC(1)_#}"
@@ -43,15 +54,31 @@
                 "entradaCriterisAvaluacio": {
                     "type":"object",
                     "keys": {
-                        "id": {
+                        "order": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "CA1.{#_INC(1)_#}"
+                            "default": "{#_INC(1)_#}",
+                            "readonly":true
+                        },
+                        "uf": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "ca": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "1.{#_INC(1)_#}"
                         },
                         "descripcio": {
                             "type": "string",
                             "mandatory": true,
                             "default": "dada"
+                        },
+                        "contextualitzat":{
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default": false
                         }
                     }                    
                 },
@@ -59,37 +86,40 @@
                     "type": "objectArray",
                     "typeDef":"entradaCriterisAvaluacio"
                 },
-                "entradaQualificacioUFs": {
+                "entradaContinguts": {
                     "type":"object",
                     "keys": {
-                        "unitat formativa": {
-                            "type": "number",
+                        "order": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}",
+                            "readonly":true
+                        },
+                        "uf": {
+                            "type": "string",
                             "mandatory": true,
                             "default": "{#_INC(1)_#}"
                         },
-                        "tipus qualificació": {
+                        "cont": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "Identificador del tipus de qualificació"
+                            "default": "1.{#_INC(1)_#}"
                         },
-                        "descripció qualificació": {
+                        "descripcio": {
                             "type": "string",
-                            "mandatory": true
-                        },
-                        "abreviació qualificació": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "ponderació": {
-                            "type": "number",
                             "mandatory": true,
-                            "default": "0"
+                            "default": "dada"
+                        },
+                        "contextualitzat":{
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default": false
                         }
                     }                    
                 },
-                "defQualificacioUFs": {
+                "defContinguts": {
                     "type": "objectArray",
-                    "typeDef":"entradaQualificacioUFs"
+                    "typeDef":"entradaContinguts"
                 },
                 "entradaExtres": {
                     "type":"object",
@@ -114,252 +144,6 @@
                 "defExtres": {
                     "type": "objectArray",
                     "typeDef":"entradaExtres"
-                },                
-                "entradaDatesAC": {
-                    "type": "object",
-                    "keys": {
-                        "id": {
-                            "type": "string",
-                            "default": "EAC{#_INC(1)_#}",
-                            "mandatory": true
-                        },
-                        "unitat": {
-                            "type": "number",
-                            "default": "{#_INC(1)_#}",
-                            "mandatory": true
-                        },
-                        "enunciat": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "lliurament": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "hiHaSolucio": {
-                            "type": "boolean",
-                            "mandatory": true,
-                            "default": true
-                        },
-                        "solució": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "qualificació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        }
-                    }
-                },
-                "defDatesAC": {
-                    "type": "objectArray",
-                    "typeDef":"entradaDatesAC"
-                },                                                
-                "entradaDatesEAF": {
-                    "type": "object",
-                    "keys": {
-                        "id": {
-                            "type": "string",
-                            "default": "EAF{#_INC(1)_#}",
-                            "mandatory": true
-                        },
-                        "unitat": {
-                            "type": "number",
-                            "default": "{#_INC(1)_#}",
-                            "mandatory": true
-                        },
-                        "enunciat": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "lliurament": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "hiHaSolucio": {
-                            "type": "boolean",
-                            "mandatory": true,
-                            "default": true
-                        },
-                        "solució": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "qualificació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "hiHaEnunciatRecuperacio": {
-                            "type": "boolean",
-                            "mandatory": true,
-                            "default": true
-                        },
-                        "enunciat recuperació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "lliurament recuperació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "solució recuperació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "qualificació recuperació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        }
-                    }
-                },
-                "defDatesEAF": {
-                    "type": "objectArray",
-                    "typeDef":"entradaDatesEAF"
-                },                                                
-                "entradaDatesJT": {
-                    "type": "object",
-                    "keys": {
-                        "id": {
-                            "type": "string",
-                            "default": "JT",
-                            "mandatory": true
-                        },
-                        "inscripció": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "llista provisional": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "llista definitiva": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "data JT": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "qualificació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "hiHaRecuperacio": {
-                            "type": "boolean",
-                            "mandatory": true,
-                            "default": true
-                        },
-                        "inscripció recuperació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "llista provisional recuperació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "llista definitiva recuperació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "data JT recuperació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "qualificació recuperació": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        }
-                    }
-                },
-                "defDatesJT": {
-                    "type": "objectArray",
-                    "typeDef":"entradaDatesJT"
-                },                                                
-                "entradaCalendari": {
-                    "type": "object",
-                    "keys": {
-                        "unitat": {
-                            "type": "number",
-                            "default": "{#_COPY(1)_#}",
-                            "mandatory": true
-                        },
-                        "període": {
-                            "type": "number",
-                            "default": "{#_INC(1)_#}",
-                            "mandatory": true
-                        },
-                        "tipus període": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "descripció període": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "hores": {
-                            "type": "number",
-                            "mandatory": true
-                        },
-                        "inici": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        },
-                        "final": {
-                            "type": "date",
-                            "default":"{#_TODAY()_#}",
-                            "mandatory": true
-                        }
-                    }
-                },
-                "defCalendari": {
-                    "type": "objectArray",
-                    "typeDef":"entradaCalendari"
-                },
-                "defItinerarisRecomanats": {
-                    "type": "objectArray",
-                    "typeDef":"entradaItinerarisRecomanats"
-                },
-                "entradaItinerarisRecomanats" : {
-                    "type": "object",
-                    "keys": {
-                        "mòdul": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "itinerariRecomanatS1": {
-                            "type": "number",
-                            "default" : "1",
-                            "mandatory": true
-                        },
-                        "itinerariRecomanatS2": {
-                            "type": "number",
-                            "default" : "1",
-                            "mandatory": true
-                        }
-                    }
                 },
                 "entradaDadesUF": {
                     "type": "object",
@@ -405,6 +189,16 @@
                             "readonly":true,
                             "validate":true,
                             "default": "0"
+                        },                                                
+                        "metodologiaUnitatFormativa": {
+                            "type": "formattableText",
+                            "mandatory": true,
+                            "default":"Indiqueu aquí la metoodologia específica de la unitat formativa."
+                        },
+                        "initialAssessment":{
+                            "type": "string",
+                            "mandatory": true,
+                            "default":"sense aavaluació (default) inical, qualificable o no qualificable"
                         }
                     }
                 },
@@ -445,31 +239,58 @@
                 "entradaActivitatsAprenentatge": {
                     "type": "object",
                     "keys": {
-                        "unitat": {
+                        "code": {
                             "type": "number",
-                            "default": "{#_COPY(1)_#}",
-                            "mandatory": true
+                            "mandatory": true,
+                            "default": "A{#_INC(1)_#}"
                         },
-                        "període": {
+                        "unitat formativa": {
                             "type": "number",
-                            "default": "{#_COPY(1)_#}",
-                            "mandatory": true
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
                         },
-                        "eina": {
-                            "type": "string",
-                            "mandatory": true
+                        "nucli formatiu": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
                         },
                         "descripció": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "Descriviu breument l'activitat"
+                            "default": "Indiqueu el nom de la unitat"
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true,
+                            "validate":true,
+                            "default": 0
+                        },
+                        "ra": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": ""
+                        },
+                        "continguts": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": ""
+                        },
+                        "ca": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": ""
+                        },
+                        "instruments d'avaluació": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": ""
                         }
                     }
                 },
-                "defActivitatsAprenentatge": {
+                "defTaulaActivitatsAprenentatge": {
                     "type": "objectArray",
                     "typeDef":"entradaActivitatsAprenentatge"
-                },                                                
+                },
                 "programacio": {
                     "type": "object",
                     "keys": {
@@ -540,80 +361,11 @@
                         "continguts":{
                             "type": "defContinguts",
                             "mandatory": true
-                        }
-                        
-                        
-                        -----------------------
-                        
-                        "urlMaterialDidactic": {
-                            "type": "string",
-                            "default": "http://ioc.xtec.cat/materials/FP/Materials/.../web/html/",
+                        },
+                        "activitatsAprenentatge":{
+                            "type": "defTaulaActivitatsAprenentatge",
                             "mandatory": true
-                        },
-                        "dedicacio": {
-                            "type": "string",
-                            "default": 0,
-                            "mandatory": true
-                        },
-                        "requerimentsMatricula": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "descripcio": {
-                            "type": "string",
-                            "mandatory": true
-                        },
-                        "itinerarisRecomanats": {
-                            "type": "defItinerarisRecomanats",
-                            "default":[{"mòdul":"--","itinerariRecomanatS1":"1","itinerariRecomanatS2":"1"}],
-                            "mandatory": true
-                        },                                                
-                        "activitatsAprenentatge": {
-                            "type": "defActivitatsAprenentatge",
-                            "default":[{"unitat":"1","període":"1","eina":"lectura","descripció":"Lectura de l'apartat 1"},{"unitat":"1","període":"1","eina":"autoavalució","descripció":"fer les activitats i exercicis d'autoavaluació"}],
-                            "mandatory": true
-                        },                                                
-                        "avaluacioInicial": {
-                            "type": "string",
-                            "default":"no",
-                            "mandatory": true
-                        },                                                
-                        "calendari": {
-                            "type": "defCalendari",
-                            "mandatory": true
-                        },
-                        "datesAC": {
-                            "type": "defDatesAC",
-                            "mandatory": true
-                        },
-                        "hiHaSolucioPerAC": {
-                            "type": "boolean",
-                            "mandatory": false,
-                            "default": false
-                        },
-                        "datesEAF": {
-                            "type": "defDatesEAF",
-                            "mandatory": false
-                        },
-                        "hiHaSolucioPerEAF": {
-                            "type": "boolean",
-                            "mandatory": false,
-                            "default":false
-                        },
-                        "hiHaEnunciatRecuperacioPerEAF": {
-                            "type": "boolean",
-                            "mandatory": false,
-                            "default":false
-                        },
-                        "hiHaRecuperacioPerJT": {
-                            "type": "boolean",
-                            "mandatory": false,
-                            "default":false
-                        },
-                        "datesJT": {
-                            "type": "defDatesJT",
-                            "mandatory": false
-                        },                                                
+                        },                                               
                         "notaMinimaAC": {
                             "type": "number",
                             "mandatory": true,
@@ -641,26 +393,6 @@
                             },
                             "default": 0
                         },                                                
-                        "dataPaf1": {
-                            "type": "date",
-                            "mandatory": true,
-                            "default":"01/01/2000"
-                        },                                                
-                        "dataPaf2": {
-                            "type": "date",
-                            "mandatory": true,
-                            "default":"01/01/2000"
-                        },                                                
-                        "dataQualificacioPaf1": {
-                            "type": "date",
-                            "mandatory": true,
-                            "default":"01/01/2000"
-                        },                                                
-                        "dataQualificacioPaf2": {
-                            "type": "date",
-                            "mandatory": true,
-                            "default":"01/01/2000"
-                        },                                                
                         "notaMinimaPAF": {
                             "type": "number",
                             "mandatory": true,
@@ -670,9 +402,9 @@
                                 "max":10
                             },
                             "default": 4
-                        },                                                
-                        "dadesQualificacioUFs": {
-                            "type": "defQualificacioUFs",
+                        },   
+                        "instraumentsAvalauacioPerRa": {
+                            "type": "defInstraumentsAvalauacioPerRa",
                             "mandatory": true
                         },                                                
                         "duradaPAF": {
@@ -683,11 +415,6 @@
                         "dadesExtres": {
                             "type": "defExtres",
                             "mandatory": true
-                        },                                                
-                        "plantilla": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "plantilles:docum_ioc:pla_treball_fp:loe:continguts"
                         },
                         "autor": {
                             "type": "string",
@@ -705,16 +432,6 @@
                             "struc_chars": "40",
                             "mandatory": true,
                             "isRole":true
-                        },
-                        "fitxercontinguts": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "continguts"
-                        },
-                        "moodleCourseId": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": 0
                         }
                     }
                 }
