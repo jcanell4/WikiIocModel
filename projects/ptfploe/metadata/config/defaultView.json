@@ -253,7 +253,7 @@
               "type": "number"
             },
             "ponderació": {
-              "type": "number"
+              "type": "decimal"
             }
           },
           "layout": [
@@ -284,6 +284,7 @@
                 {
                   "name": "ponderació",
                   "field": "ponderació",
+                  "constraints": "{\"places\":2}",
                   "editable": true
                 }
               ]
@@ -978,7 +979,7 @@
               "type": "string"
             },
             "ponderació": {
-              "type": "number"
+              "type": "decimal"
             }
           }
         }

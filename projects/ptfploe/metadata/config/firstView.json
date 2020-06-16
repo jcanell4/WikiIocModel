@@ -292,7 +292,7 @@
                 "type": "number"
               },
               "ponderació": {
-                "type": "number"
+                "type": "decimal"
               }
             },
             "layout": [
@@ -323,6 +323,7 @@
                   {
                     "name": "ponderació",
                     "field": "ponderació",
+                    "constraints": "{\"places\":2}",
                     "editable": true
                   }
                 ]
@@ -913,7 +914,8 @@
               },
               "tipus qualificació": {
                 "type": "select",
-                "options": ["AC", "EAF", "JT", "PAF"]                                       },
+                "options": ["AC", "EAF", "JT", "PAF"]                                       
+              },
               "descripció qualificació": {
                 "type": "string"
               },
@@ -921,7 +923,7 @@
                 "type": "string"
               },
               "ponderació": {
-                "type": "number"
+                "type": "decimal"
               }
             }
           }

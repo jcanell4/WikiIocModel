@@ -21,7 +21,7 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     public static $DEFAULT_SINGLE_VALUES = ["string"=>"", "number"=>0, "boolean"=>false, "date"=>""];
     private $projectId;
     private $values;
-    
+
 //
 //    /**
 //     * Purpose:
@@ -32,17 +32,17 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
 //     */
 //    public function render($metaDataEntityWrapper) {
 //        $toReturn = array();
-//        
+//
 //        for ($i = 0; $i < sizeof($metaDataEntityWrapper); $i++) {
-//            $toReturn[$i]=$metaDataEntityWrapper[$i]->getArrayFromModel();            
+//            $toReturn[$i]=$metaDataEntityWrapper[$i]->getArrayFromModel();
 //        }
 //
 //        return $toReturn;
 //    }
-    
+
     /**
      * @param $metaDataEntityWrapper -> Entities array
-     */    
+     */
     public function render($metaDataEntityWrapper) {
         $objAux = json_decode($metaDataEntityWrapper[0]->getArrayFromModel(), true);
         $this->projectId = $objAux["idResource"];
@@ -59,7 +59,7 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     protected function processValues($values){
         return $values;
     }
-    
+
     protected function runParser($values, $structure, $types){
         //retorna els valors estructurats d'acord amb el seu tipus, el valor emmagatzemat, el valor per defecte i les seves propietats
         return $this->_runParser($values, $structure, $types, "");
@@ -191,7 +191,7 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
             default:
                 if(array_key_exists($properties['type'], $types)){
                     $typeDef = $properties['type'];
-                    $properties['type']=$types[$properties['type']]['type'] ;                     
+                    $properties['type']=$types[$properties['type']]['type'] ;
 //                    if(isset($types[$properties['type']]['typeDef'])){
                     if(isset($types[$typeDef]['typeDef'])){
                         $properties['typeDef']=$types[$typeDef]['typeDef'];
@@ -328,8 +328,8 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
         }
         return $_values;
     }
-    
+
     private function getCalculateValue($calcDefProp) {
         return IocCommon::getCalculateFieldFromFunction($calcDefProp, $this->projectId, $this->values);
-    }    
+    }
 }
