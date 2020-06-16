@@ -427,7 +427,9 @@ La convocatòria corresponent a la PAF 1 s'esgota tant si l'estudiant s'hi prese
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}==1">
 La qualificació final del {##tipusBlocModul##} (QF) es calcula a partir de l'aplicació de la fórmula següent:
 
-**QF = <WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" counter="indx">{##item[abreviació qualificació]##} * {##item[ponderació]##}% <WIOCCL:IF condition="{##indx##}\<{#_SUBS({#_ARRAY_LENGTH({##dadesQualificacioUFs##})_#},1)_#}">+</WIOCCL:IF></WIOCCL:FOREACH>**
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUFs##},''ponderació'')_#}">
+**QF = <WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" counter="indx">{##item[abreviació qualificació]##} * {#_GET_PERCENT({##sum_ponderacio##},{##item[ponderació]##})_#}% <WIOCCL:IF condition="{##indx##}\<{#_SUBS({#_ARRAY_LENGTH({##dadesQualificacioUFs##})_#},1)_#}">+</WIOCCL:IF></WIOCCL:FOREACH>**
+</WIOCCL:SET>
 </WIOCCL:IF>
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}\>1">
@@ -455,8 +457,9 @@ La qualificació final és numèrica de l'1 al 10, sense decimals. Només es con
 Per sumar l'AC s’ha d’obtenir una qualificació mínima de {##notaMinimaPAF##},00 a la PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>{##notaMinimaEAF##},00 a l'EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i {##notaMinimaJT##},00 a la JT</WIOCCL:IF> sense haver fet cap tipus arrodoniment previ.
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}==1">
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUFs##},''ponderació'')_#}">
 <WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''EAF'',''JT''])_#}==0">
-**Si la qualificació de la PAF és inferior a {##notaMinimaPAF##},00, el càlcul de la QF serà el <WIOCCL:SUBSET subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_FIRST({##filtered##}, ''FIRST[ponderació]'')_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF.**
+**Si la qualificació de la PAF és inferior a {##notaMinimaPAF##},00, el càlcul de la QF serà el <WIOCCL:SUBSET subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_GET_PERCENT({##sum_ponderacio##},{#_FIRST({##filtered##}, ''FIRST[ponderació]'')_#})_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF.**
 </WIOCCL:IF>
 <WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''EAF'',''JT''])_#}\>0">
 Si la qualificació d'algun dels instruments d'avaluació obigatoris (PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i JT</WIOCCL:IF>) és inferior a la nota mínima indicada, el càlcul de la QF es farà tal com s'indica a la taula següent:
@@ -465,13 +468,14 @@ Si la qualificació d'algun dels instruments d'avaluació obigatoris (PAF<WIOCCL
   :type:pt_taula
 ^  Element d'avaluació obligatori ^ Nota mínima  ^  Càlcul aplicat per la QF ^
 <WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''PAF''])_#}\>0">
-|  PAF  |  {##notaMinimaPAF##},00  | <WIOCCL:SUBSET subsetvar="filteredPAF" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF  |
+|  PAF  |  {##notaMinimaPAF##},00  | <WIOCCL:SUBSET subsetvar="filteredPAF" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_GET_PERCENT({##sum_ponderacio##},{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#})_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF  |
 </WIOCCL:IF>
 <WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[tipus qualificació]##}==''EAF''||{##item[tipus qualificació]##}==''JT''">
-|  {##item[abreviació qualificació]##}  |  <WIOCCL:IF condition="{##item[tipus qualificació]##}==''EAF''">{##notaMinimaEAF##},00</WIOCCL:IF><WIOCCL:IF condition="{##item[tipus qualificació]##}==''JT''">{##notaMinimaJT##},00</WIOCCL:IF>  | {##item[ponderació]##}% de la nota obtinguda a l'{##item[abreviació qualificació]##} |
+|  {##item[abreviació qualificació]##}  |  <WIOCCL:IF condition="{##item[tipus qualificació]##}==''EAF''">{##notaMinimaEAF##},00</WIOCCL:IF><WIOCCL:IF condition="{##item[tipus qualificació]##}==''JT''">{##notaMinimaJT##},00</WIOCCL:IF>  | {#_GET_PERCENT({##sum_ponderacio##},{##item[ponderació]##})_#}% de la nota obtinguda a l'{##item[abreviació qualificació]##} |
 </WIOCCL:FOREACH>
 :::
 </WIOCCL:IF>
+</WIOCCL:SET>
 </WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}\>1">
 <WIOCCL:SET var="numEafOJt" type="literal" value="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''EAF'',''JT''])_#}">
@@ -485,9 +489,10 @@ Si la qualificació de la PAF és inferior a {##notaMinimaPAF##},00, el càlcul 
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
 <WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
 <WIOCCL:SUBSET subsetvar="filteredDadesQualificacioUFs" array="{##dadesQualificacioUFs##}" arrayitem="itemsubDadesQualificacioUFs" filter="{##itemsubDadesQualificacioUFs[unitat formativa]##}=={##itemUf[unitat formativa]##}">
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##filteredDadesQualificacioUFs##},''ponderació'')_#}">
 <WIOCCL:SUBSET subsetvar="filteredPAF" array="{##filteredDadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">
 <WIOCCL:IF condition="{##numEafOJt##}==0">
-  ***QUF{##itemUf[unitat formativa]##} = {#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#}% de la nota de la UF{##itemUf[unitat formativa]##} obtinguda a la PAF**.
+  ***QUF{##itemUf[unitat formativa]##} = {#_GET_PERCENT({##sum_ponderacio##},{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#})_#}% de la nota de la UF{##itemUf[unitat formativa]##} obtinguda a la PAF**.
 </WIOCCL:IF>
 <WIOCCL:IF condition="{##numEafOJt##}\>0">
 ::table:T10-1.{##itemUf[unitat formativa]##}
@@ -495,14 +500,15 @@ Si la qualificació de la PAF és inferior a {##notaMinimaPAF##},00, el càlcul 
   :type:pt_taula
 ^  Element d'avaluació obligatori ^ Nota mínima  ^  Càlcul aplicat per la QUF{##itemUf[unitat formativa]##}  ^
 <WIOCCL:IF condition="{#_COUNTINARRAY({##filteredDadesQualificacioUFs##},''tipus qualificació'', [''PAF''])_#}\>0">
-|  PAF  |  {##notaMinimaPAF##},00  | <WIOCCL:SUBSET subsetvar="filteredPAF" array="{##filteredDadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF  |
+|  PAF  |  {##notaMinimaPAF##},00  | <WIOCCL:SUBSET subsetvar="filteredPAF" array="{##filteredDadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_GET_PERCENT({##sum_ponderacio##},{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#})_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF  |
 </WIOCCL:IF>
 <WIOCCL:FOREACH var="item" array="{##filteredDadesQualificacioUFs##}" filter="{##item[tipus qualificació]##}==''EAF''||{##item[tipus qualificació]##}==''JT''">
-|  {##item[abreviació qualificació]##}  |  <WIOCCL:IF condition="{##item[tipus qualificació]##}==''EAF''">{##notaMinimaEAF##},00</WIOCCL:IF><WIOCCL:IF condition="{##item[tipus qualificació]##}==''JT''">{##notaMinimaJT##},00</WIOCCL:IF>  | {##item[ponderació]##}% de la nota obtinguda a l'{##item[abreviació qualificació]##} |
+|  {##item[abreviació qualificació]##}  |  <WIOCCL:IF condition="{##item[tipus qualificació]##}==''EAF''">{##notaMinimaEAF##},00</WIOCCL:IF><WIOCCL:IF condition="{##item[tipus qualificació]##}==''JT''">{##notaMinimaJT##},00</WIOCCL:IF>  | {#_GET_PERCENT({##sum_ponderacio##},{##item[ponderació]##})_#}% de la nota obtinguda a l'{##item[abreviació qualificació]##} |
 </WIOCCL:FOREACH>
 :::
 </WIOCCL:IF>
 </WIOCCL:SUBSET>
+</WIOCCL:SET>
 </WIOCCL:SUBSET>
 </WIOCCL:FOREACH>
 </WIOCCL:SET>
@@ -524,7 +530,9 @@ En cas de no superar la UF, el següent semestre s'han de tornar a fer totes les
 
 La superació del mòdul s’obté amb la superació de les UF que el componen. La qualificació final del mòdul (QFM) serà el resultat de la mitjana de les qualificacions de les diferents UF d'acord amb la següent ponderació:
 
-**QFM= <WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}" counter="ind">QUF{##item[unitat formativa]##} * {##item[ponderació]##}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUF##})_#},1)_#}">+</WIOCCL:IF></WIOCCL:FOREACH> **
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUF##},''ponderació'')_#}">
+**QFM= <WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}" counter="ind">QUF{##item[unitat formativa]##} * {#_GET_PERCENT({##sum_ponderacio##},{##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUF##})_#},1)_#}">+</WIOCCL:IF></WIOCCL:FOREACH> **
+</WIOCCL:SET>
 
 En cas de no superar alguna UF el mòdul quedarà pendent. Només es consideren aprovades les qualificacions iguals o superiors a 5,00. <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">La qualificació final del bloc s’expressarà com a Superat o Pendent.</WIOCCL:IF>
 

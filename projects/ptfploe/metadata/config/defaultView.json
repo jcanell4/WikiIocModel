@@ -14,7 +14,7 @@
             "frame": true,
             "config":{
                 "collapsable":true,
-                "collapsed":false
+                "collapsed":true
             }
         },
         "actualitzables": {
@@ -350,8 +350,7 @@
                 {
                   "name": "hores",
                   "field": "hores",
-                  "constraints": "{pattern: '0.00'}",
-                  "editable": true
+                  "editable": false
                 }
               ]
             }

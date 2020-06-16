@@ -389,8 +389,7 @@
                   {
                     "name": "hores",
                     "field": "hores",
-                    "constraints": "{pattern: '0,000'}",
-                    "editable": true
+                    "editable": false
                   }
                 ]
               }
