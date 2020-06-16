@@ -48,35 +48,39 @@ class CreateNewMaterialAction extends PageAction {
      * @return array|string : blanco o, en el caso de htmlindex, array con la respuesta de la Action
      */
     private function sendFilesToCreate($src_path, $wiki_dest, $wiki_base) {
-        $ret = "";
+        $ret = [];
         $indice = "htmlindex.txt";
 
-        $files = scandir($src_path);
-        if (($k = array_search($indice, $files))) {
-            unset($files[$k]);
-            $files[] = $indice;
-        }
-
-        foreach ($files as $file) {
-            if (!is_dir("$src_path/$file")) {
-                $file = basename($file, ".txt");
-                $params[PageKeys::KEY_ID] = "$wiki_dest:$file";
-                $params[PageKeys::KEY_DO] = $this->params[PageKeys::KEY_DO];
-                $params[PageKeys::KEY_TEMPLATE] = "$wiki_base:$file";
-
-                try {
-                    $response = $this->action->get($params);
-                    if ($file === "htmlindex") $ret = $response;
-                }catch (Exception $e) {
-                    if ($file === "htmlindex"){
-                        $pageAction = $this->modelManager->getActionInstance("HtmlPageAction", "wiki");
-                        $pageParams[PageKeys::KEY_ID] = "$wiki_dest:$file";
-                        $pageParams[AjaxKeys::KEY_SECTOK] = $this->params[AjaxKeys::KEY_SECTOK];
-                        $ret = $pageAction->get($pageParams);
-                    }
-                    $ret['alert'] = $e->getMessage();
+        if (is_dir($src_path)) {
+            $files = scandir($src_path);
+            if (($k = array_search($indice, $files))) {
+                unset($files[$k]);
+                $files[] = $indice;
             }
-        }
+
+            foreach ($files as $file) {
+                if (!is_dir("$src_path/$file")) {
+                    $file = basename($file, ".txt");
+                    $params[PageKeys::KEY_ID] = "$wiki_dest:$file";
+                    $params[PageKeys::KEY_DO] = $this->params[PageKeys::KEY_DO];
+                    $params[PageKeys::KEY_TEMPLATE] = "$wiki_base:$file";
+
+                    try {
+                        $response = $this->action->get($params);
+                        if ($file === "htmlindex") $ret = $response;
+                    }catch (Exception $e) {
+                        if ($file === "htmlindex"){
+                            $pageAction = $this->modelManager->getActionInstance("HtmlPageAction", "wiki");
+                            $pageParams[PageKeys::KEY_ID] = "$wiki_dest:$file";
+                            $pageParams[AjaxKeys::KEY_SECTOK] = $this->params[AjaxKeys::KEY_SECTOK];
+                            $ret = $pageAction->get($pageParams);
+                        }
+                        $ret['alert'] = $e->getMessage();
+                    }
+                }
+            }
+        }else {
+            $ret['alert'] = "$src_path no és un directori.";
         }
         return $ret;
     }
