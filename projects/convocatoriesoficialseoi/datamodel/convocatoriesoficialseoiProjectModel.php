@@ -200,7 +200,7 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
         }
     }
 
-    public function createTemplateDocument($data) {
+    public function createTemplateDocument($data=NULL) {
         $templates = $data['projectMetaData']["plantilla"]['value'];
         $this->setTemplateDocuments($templates);
     }

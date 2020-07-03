@@ -48,7 +48,7 @@ class sintesiProjectModel extends MoodleProjectModel {
         return $ret;
     }
 
-    public function createTemplateDocument($data){
+    public function createTemplateDocument($data=NULL){
         StaticUniqueContentFileProjectModel::createTemplateDocument($this);
     }
 

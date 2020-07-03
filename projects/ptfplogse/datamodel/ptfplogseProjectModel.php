@@ -48,7 +48,7 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         return $ret;
     }
 
-    public function createTemplateDocument($data){
+    public function createTemplateDocument($data=NULL){
         StaticUniqueContentFileProjectModel::createTemplateDocument($this, $data);
 //        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
 //        // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
