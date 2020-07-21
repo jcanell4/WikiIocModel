@@ -54,7 +54,10 @@
     {##documentPartsHtml##}  
     <div id="printbtn" onclick="printDoc()"><span>Descarrega't el PDF</span></div>
   </div>
-    
+
   <script src="js/main.js"></script>
+<WIOCCL:IF condition="{##amagarMenuInici##}==true">
+  <script>closeNav()</script>
+</WIOCCL:IF>
 </body>
 </html>
