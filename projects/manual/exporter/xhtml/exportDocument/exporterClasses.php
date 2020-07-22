@@ -112,13 +112,31 @@ class exportDocument extends MainRender {
         $document = WiocclParser::getValue($tmplt, [], $data);
 
         foreach ($this->cfgExport->toc as $tocKey => $tocItem) {
-            $toc ="";
+            $toc = "";
+            $nivel = 0;
+            $ndiv = 0;
             if ($tocItem){
+                $toc = "<div id='expandCollapse' class='less' onclick='expandCollapse()'></div>";
                 foreach ($tocItem as $elem) {
                     if ($elem['level'] <= $data['nivells']) {
-                        $toc .= "<a href='{$elem['link']}' class='toc_level_{$elem['level']}'>".htmlentities($elem['title'])."</a>\n";
+                        if ($elem['level'] === 1) {
+                            if ($nivel === 1) {$toc .= "</div>\n";}
+                            if ($nivel === 2) {$toc .= "</div>\n</div>\n";}
+                            $nivel = 1;
+                            $ndiv++;
+                            $toc .= "<div id='toc_div_id_level_1_{$ndiv}' onclick='expandCollapse()'>\n";
+                            $toc .= "<a href='{$elem['link']}' class='toc_level_{$elem['level']}'>".htmlentities($elem['title'])."</a>\n";
+                        }else {
+                            if ($elem['level'] === 2 && $nivel === 1) {
+                                $toc .= "<div id='toc_div_id_level_2_{$ndiv}' class='more'>\n";
+                                $nivel = 2;
+                            }
+                            $toc .= "<a href='{$elem['link']}' class='toc_level_{$elem['level']}'>".htmlentities($elem['title'])."</a>\n";
+                        }
                     }
                 }
+                if ($nivel === 1) {$toc .= "</div>\n";}
+                if ($nivel === 2) {$toc .= "</div>\n</div>\n";}
             }
             $document = str_replace("@@TOC($tocKey)@@", $toc, $document);
         }
