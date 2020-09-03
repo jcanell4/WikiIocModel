@@ -1,17 +1,14 @@
 <?php
 if (!defined('DOKU_INC')) die();
-//if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
-//include_once DOKU_PLUGIN."wikiiocmodel/projects/sintesi/actions/ViewProjectMetaDataAction.php";
-include_once dirname(__FILE__) . "/ViewProjectMetaDataAction.php";
 
 class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
-    
+
     protected function runAction() {
         $projectType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
-        $metaDataSubSet = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
+        $metaDataSubSet = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
 
         $projectModel = $this->getModel();
-        $response = $projectModel->getDataProject();
+        $response = $projectModel->getCurrentDataProject();
         $toUpdate = [
             "moodleCourseId" => $response["moodleCourseId"],
             "datesAC" => $response["dadesAC"],
@@ -32,8 +29,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                                 ]);
 
         //Obtenir les dades de la configuració d'aquest tipus de projecte
-        $metaDataSubset = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
-        $metaDataConfigProject = $configProjectModel->getMetaDataProject($metaDataSubset);
+        $metaDataConfigProject = $configProjectModel->getCurrentDataProject($metaDataSubSet);
 
         if ($metaDataConfigProject['arraytaula']) {
             $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
@@ -55,7 +51,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 
                     $projectModel->setProjectSubSetAttr("updatedDate", time());
                     $response = parent::runAction();
-                }                    
+                }
             }else{
                 $projectModel->setProjectSubSetAttr("updatedDate", time());
                 $response = parent::runAction();
@@ -64,17 +60,17 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                 $id = $this->getModel()->getContentDocumentId($response);
                 p_set_metadata($id, array('metadataProjectChanged'=>true));
             }
-            
+        }else {
+            throw new ConfigurationProjectNotAvailableException($projectTypeConfigFile);
         }
+
         return $response;
     }
 
 
     public function responseProcess() {
-
         $response = parent::responseProcess();
-        $response[ProjectKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
-
+        $response[AjaxKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
         return $response;
     }
 }

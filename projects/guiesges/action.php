@@ -17,6 +17,7 @@ class action_plugin_wikiiocmodel_projects_guiesges extends WikiIocProjectPluginA
         $controller->register_hook('ADD_TPL_CONTROL_SCRIPTS', "AFTER", $this, "addControlScripts", array());
         $controller->register_hook('WIOC_PROCESS_RESPONSE_project', "AFTER", $this, "setExtraMeta", array());
         $controller->register_hook('WIOC_PROCESS_RESPONSE_projectUpdate', "AFTER", $this, "setExtraMeta", array());
+        $controller->register_hook('WIOC_PROCESS_RESPONSE_projectExport', "AFTER", $this, "setExtraMeta", array());
     }
 
     /**
@@ -29,11 +30,13 @@ class action_plugin_wikiiocmodel_projects_guiesges extends WikiIocProjectPluginA
             if (!isset($event->data['responseData'][ProjectKeys::KEY_CODETYPE])) {
                 $result['ns'] = getID();
                 $result['id'] = str_replace(':', '_', $result['ns']);
-                $result['fileNames'] = array_values($event->data['responseData']['ftpSendFileNames']);
-                $dest = preg_replace('/:/', '/', $result['ns']);
-                $path_dest = WikiGlobalConfig::getConf('mediadir').'/'.$dest;
-                foreach ($event->data['responseData']['ftpSendFileNames'] as $file) {
-                    $result['dest'][] = "$path_dest/$file";
+                if ($event->data['responseData']['ftpSendFileNames']) {
+                    $result['fileNames'] = array_values($event->data['responseData']['ftpSendFileNames']);
+                    $dest = preg_replace('/:/', '/', $result['ns']);
+                    $path_dest = WikiGlobalConfig::getConf('mediadir').'/'.$dest;
+                    foreach ($event->data['responseData']['ftpSendFileNames'] as $file) {
+                        $result['dest'][] = "$path_dest/$file";
+                    }
                 }
                 if (class_exists("ResultsWithFiles", TRUE)){
                     $html = ResultsWithFiles::get_html_metadata($result) ;
@@ -49,7 +52,7 @@ class action_plugin_wikiiocmodel_projects_guiesges extends WikiIocProjectPluginA
                             $result['id'],
                             $result['id']."_ftpsend",
                             WikiIocLangManager::getLang("metadata_ftpsend_title"),
-                            $event->data['responseData'][ProjectKeys::KEY_FTPSEND_HTML]
+                            $event->data['responseData'][AjaxKeys::KEY_FTPSEND_HTML]
                 );
             }
         }

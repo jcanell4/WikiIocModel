@@ -4,8 +4,8 @@
  * exportDocument: clase que renderiza grupos de elementos
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
+if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
+if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
 class exportDocument extends MainRender {
 
@@ -57,7 +57,7 @@ class exportDocument extends MainRender {
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $zip->addFile($allPathTemplate."/main.css", "main.css");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "ge_sencera", TRUE);
-                $this->addFilesToZip($zip, WIKI_IOC_MODEL."exporter/xhtml", "ge_sencera/", "css");
+                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL."exporter/xhtml", "ge_sencera/", "css");
                 $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/ge_sencera/ge.tpl");
                 $zip->addFromString('/ge_sencera/ge.html', $ptSencer);
 

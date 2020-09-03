@@ -16,34 +16,44 @@
         }
     ]
     ,
-    "metaDataProjectStructure":
-            [{
-                    "defaultSubSet": "fptx.mdpr",
-                    "keysDefinition": {
-                        "user": {
-                            "mandatory": true
-                        },
-                        "rol": {
-                            "mandatory": false
-                        },
-                        "estat": {
-                            "mandatory": false
-                        }
-                    }
+    "metaDataMaterialsTemplates": [
+        {
+            "main": {
+                "base": "plantilles:sensecommon:cicle:m99",
+                "unitat": "u1",
+                "apartat": "a1"
+            }
+        }        
+    ],
+    "metaDataProjectStructure": [
+        {
+            "defaultSubSet": "fptx.mdpr",
+            "keysDefinition": {
+                "user": {
+                    "mandatory": true
                 },
-                {
-                    "Authorization": "fptx.mdpr",
-                    "keysDefinition": {
-                        "user": {
-                            "mandatory": true
-                        },
-                        "rol": {
-                            "mandatory": true
-                        },
-                        "estat": {
-                            "mandatory": false
-                        }
-                    }
-                }]
+                "rol": {
+                    "mandatory": false
+                },
+                "estat": {
+                    "mandatory": false
+                }
+            }
+        },
+        {
+            "Authorization": "fptx.mdpr",
+            "keysDefinition": {
+                "user": {
+                    "mandatory": true
+                },
+                "rol": {
+                    "mandatory": true
+                },
+                "estat": {
+                    "mandatory": false
+                }
+            }
+        }
+    ]
 }
 

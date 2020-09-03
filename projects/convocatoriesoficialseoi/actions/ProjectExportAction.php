@@ -8,10 +8,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
 if (!defined('EXPORT_TMP')) define('EXPORT_TMP',DOKU_PLUGIN.'tmp/latex/');
-//define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/convocatoriesoficialseoi/");
-define('WIKI_IOC_PROJECT', DOKU_PLUGIN."wikiiocmodel/projects/convocatoriesoficialseoi/");
-
-//require_once WIKI_IOC_MODEL."persistence/ProjectMetaDataQuery.php";
+define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL."projects/convocatoriesoficialseoi/");
 
 class ProjectExportAction  extends ProjectMetadataAction{
     const PATH_RENDERER = WIKI_IOC_PROJECT."exporter/";
@@ -59,7 +56,7 @@ class ProjectExportAction  extends ProjectMetadataAction{
 //        $this->dataArray = $this->getProjectDataFile($projectfilepath, $this->metaDataSubSet);
         $toInitModel = array(ProjectKeys::KEY_ID =>$this->projectID, ProjectKeys::KEY_PROJECT_TYPE=>$this->projectType, ProjectKeys::KEY_METADATA_SUBSET =>$this->metadataSubset);
         $this->projectModel->init($toInitModel);
-        $this->dataArray = $this->projectModel->getDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
+        $this->dataArray = $this->projectModel->getCurrentDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
     }
 
     public function responseProcess() {

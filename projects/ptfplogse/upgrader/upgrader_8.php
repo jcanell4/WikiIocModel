@@ -24,7 +24,7 @@ class upgrader_8 extends CommonUpgrader {
     public function process($type, $filename = NULL) {
         switch ($type) {
             case "fields":
-                $dataProject = $this->model->getMetaDataProject($this->metaDataSubSet);
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 $matches=array();
                 preg_match("/([MC]\d{2})? *-? *(.+)/", $dataProject["credit"], $matches); 
                 if(empty($matches[1])){

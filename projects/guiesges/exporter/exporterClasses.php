@@ -6,9 +6,6 @@
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
-if (!defined('EXPORT_TMP')) define('EXPORT_TMP', DOKU_PLUGIN."tmp/latex/");
-require_once DOKU_PLUGIN."wikiiocmodel/exporter/BasicExporterClasses.php";
 
 class renderObject extends BasicRenderObject {
 
@@ -100,7 +97,7 @@ class IocTcPdf extends TCPDF {
         $this->header_logo_height = $lh;
     }
 
-    public function setFooterData($data, $tc=array(0,0,0), $lc=array(0,0,0)) {
+    public function setFooterDataLocal($data, $tc=array(0,0,0), $lc=array(0,0,0)) {
         parent::setFooterData($tc, $lc);
         $this->peu = $data;
     }
@@ -129,7 +126,7 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
 
         $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
-        $iocTcPdf->setFooterData($params["data"]["peu"]);
+        $iocTcPdf->setFooterDataLocal($params["data"]["peu"]);
 
         $iocTcPdf->setStartingPageNumber(0);
 

@@ -1,17 +1,13 @@
 <?php
+/**
+ * Description of DokuMediaModel
+ * @author josep
+ */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-
-require_once DOKU_PLUGIN."wikiiocmodel/datamodel/AbstractWikiModel.php";
 require_once DOKU_INC."inc/media.php";
 require_once(DOKU_INC. 'inc/pageutils.php');
 require_once(DOKU_INC. 'inc/common.php');
 
-/**
- * Description of DokuMediaModel
- *
- * @author josep
- */
 class DokuMediaModel extends AbstractWikiModel {
     protected $id;
     protected $mediaName;

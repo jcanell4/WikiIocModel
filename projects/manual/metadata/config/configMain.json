@@ -26,6 +26,9 @@
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
+            "versions": {
+                "fields": 1
+            },
             "mainType": {
                 "type": "object",
                 "typeDef": "manual"
@@ -89,12 +92,14 @@
                         },
                         "autor": {
                             "type": "string",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "responsable": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },                                                
                         "dadesExtres": {
                             "type": "defExtres",
@@ -118,6 +123,11 @@
                             "mandatory": true,
                             "default":true
                         },
+                        "amagarMenuInici": {
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default":false
+                        },
                         "documents": {
                             "type": "extraDoc",
                             "default": [{"ordre":1, "nom":"continguts"}]
@@ -125,7 +135,7 @@
                         "nom_real": {
                             "type": "string",
                             "mandatory": true,
-                            "calculate": {
+                            "calculateOnSave": {
                                 "class": "CalculateRealNameFromUsername",
                                 "data": "autor"
                             }
@@ -133,7 +143,7 @@
                         "data_fitxercontinguts": {
                             "type": "string",
                             "mandatory": true,
-                            "calculate": {
+                            "calculateOnRead": {
                                 "class": "CalculateMaxPageDateFromNs",
                                 "data": ""
                             }

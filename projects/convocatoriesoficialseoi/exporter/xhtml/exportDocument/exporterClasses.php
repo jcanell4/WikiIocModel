@@ -4,8 +4,8 @@
  * exportDocument: clase que renderiza grupos de elementos
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
+if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
+if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
 class exportDocument extends MainRender {
 
@@ -40,7 +40,7 @@ class exportDocument extends MainRender {
         $result["files"] = array();
         $result["fileNames"] = array();
         $result["error"] = false;
-        
+
         $result = $this->createZipFiles('a2', $data, $result);
         if(!$result['error']){
             $result = $this->createZipFiles('b1', $data, $result);
@@ -48,7 +48,7 @@ class exportDocument extends MainRender {
         if(!$result['error']){
             $result = $this->createZipFiles('b2', $data, $result);
         }
-        if(!$result['error']){    
+        if(!$result['error']){
             $result["info"] = "fitxers {$result['fileNames'][0]}, {$result["fileNames"][1]} i {$result["fileNames"][2]} creats correctement";
         }
 
@@ -70,7 +70,7 @@ class exportDocument extends MainRender {
                 $allPathTemplate = $this->cfgExport->rendererPath . "/$pathTemplate";
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $zip->addFile($allPathTemplate . "/main.css", "main.css");
-                $this->addFilesToZip($zip, WIKI_IOC_MODEL . "exporter/xhtml", "c_sencer/", "css");
+                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL . "exporter/xhtml", "c_sencer/", "css");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "c_sencer", TRUE);
 
                 $this->addFilesToZip($zip, $this->cfgExport->rendererPath, "c_sencer/", "resources");

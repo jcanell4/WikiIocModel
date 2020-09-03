@@ -1,20 +1,18 @@
 <?php
-if (!defined('DOKU_INC')) die();
-
-require_once(DOKU_PLUGIN . 'wikiiocmodel/persistence/WikiPageSystemManager.php'); //CAL Canviar de ruta quan es WikiPagerSystemmanager passi al plugin de persistència
-require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelAdapter.php'); 
-require_once(DOKU_INC . 'inc/actions.php');
 /**
  * Class DraftManager
- *
  * Gestiona la creació, eliminació, actualització i recuperació d'esborranys
- *
  * @author Xavier García <xaviergaro.dev@gmail.com>
  */
+if (!defined('DOKU_INC')) die();
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+require_once(DOKU_INC . 'inc/actions.php');
+require_once(DOKU_PLUGIN . 'wikiiocmodel/projects/defaultProject/DokuModelAdapter.php');
+
 class DraftManager
 {
 //    private static $infoDuration = 15;
-//    
+//
 //    public static function saveDraft($draft)
 //    {
 //
@@ -47,7 +45,7 @@ class DraftManager
 //                if(isset($draft["section_id"])){
 //                    return self::removeStructuredDraft($draft['id'], $draft["section_id"]);
 //                }else{
-//                    return self::removeStructuredDraftAll($draft['id']);                    
+//                    return self::removeStructuredDraftAll($draft['id']);
 //                }
 //                break;
 //

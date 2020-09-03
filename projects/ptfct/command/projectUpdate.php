@@ -22,7 +22,9 @@ class command_plugin_wikiiocmodel_projects_ptfct_projectUpdate extends abstract_
                   );
         $action = $this->getModelManager()->getActionInstance("ProjectUpdateDataAction");
         $projectMetaData = $action->get($params);
-        if (!$projectMetaData) throw new UnknownProjectException();
+        if (!$projectMetaData)
+            throw new UnknownProjectException();
+        $this->_addExtraData($projectMetaData);
         return $projectMetaData;
     }
 

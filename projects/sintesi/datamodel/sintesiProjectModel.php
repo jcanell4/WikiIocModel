@@ -4,9 +4,6 @@
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
-require_once (WIKI_IOC_MODEL . "datamodel/MoodleProjectModel.php");
 
 class sintesiProjectModel extends MoodleProjectModel {
 
@@ -15,7 +12,7 @@ class sintesiProjectModel extends MoodleProjectModel {
     }
 
     public function getProjectDocumentName() {
-        $ret = $this->getMetaDataProject();
+        $ret = $this->getCurrentDataProject();
         return $ret['fitxercontinguts'];
     }
 
@@ -51,26 +48,15 @@ class sintesiProjectModel extends MoodleProjectModel {
         return $ret;
     }
 
-    public function createTemplateDocument($data){
-        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
-        // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
-        $file = $this->getTemplateContentDocumentId("continguts") . ".txt";
-
-        $plantilla = file_get_contents($pdir.$file);
-        $name = substr($file, 0, -4);
-        $destino = $this->getContentDocumentId($name);
-        $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
-                                       PageKeys::KEY_WIKITEXT => $plantilla,
-                                       PageKeys::KEY_SUM => "generate project"]);
+    public function createTemplateDocument($data=NULL){
+        StaticUniqueContentFileProjectModel::createTemplateDocument($this);
     }
 
     /**
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFields($data) {
-
-        $values = json_decode($data, true);
+    public function updateCalculatedFieldsOnSave($values) {
 
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
 
@@ -82,33 +68,7 @@ class sintesiProjectModel extends MoodleProjectModel {
 
             $values["durada"] = $hores;
         }
-
-        $data = json_encode($values);
-        return parent::updateCalculatedFields($data);
-    }
-
-    /**
-     * Canvia el nom dels directoris del projecte indicat,
-     * els noms dels fitxers generats amb la base del nom del projecte i
-     * les referències a l'antic nom de projecte dins dels fitxers afectats
-     * @param string $ns : ns original del projecte
-     * @param string $new_name : nou nom pel projecte
-     * @param string $persons : noms dels autors i els responsables separats per ","
-     */
-    public function renameProject($ns, $new_name, $persons) {
-        $base_dir = explode(":", $ns);
-        $old_name = array_pop($base_dir);
-        $base_dir = implode("/", $base_dir);
-
-        $this->projectMetaDataQuery->renameDirNames($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInACLFile($old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInShortcutFiles($old_name, $new_name, $persons);
-        $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_dir, $old_name, $new_name, $this->listGeneratedFilesByRender($base_dir, $old_name));
-        $this->projectMetaDataQuery->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
-
-        $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
-        $this->setProjectId($new_ns);
+        return parent::updateCalculatedFieldsOnSave($values);
     }
 
     /**
@@ -127,7 +87,7 @@ class sintesiProjectModel extends MoodleProjectModel {
 
     public function getCalendarDates() {
         $ret = array();
-        $data = $this->getDataProject();
+        $data = $this->getCurrentDataProject();
         if(is_string($data['calendari'])){
             $calendari = json_decode($data["calendari"], true);
         }else{
@@ -139,7 +99,7 @@ class sintesiProjectModel extends MoodleProjectModel {
                 "date"=>$item["inici"]
             ];
         }
-        
+
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
@@ -169,7 +129,7 @@ class sintesiProjectModel extends MoodleProjectModel {
     }
 
     public function getCourseId() {
-        $data = $this->getDataProject();
+        $data = $this->getCurrentDataProject();
         return $data["moodleCourseId"];
     }
 }

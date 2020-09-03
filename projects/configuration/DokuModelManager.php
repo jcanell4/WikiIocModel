@@ -1,7 +1,7 @@
 <?php
 /**
  * DokuModelManager:
- * - proporciona acceso a las Autorizaciones, ModelAdapter y Renderer del proyecto
+ * - proporciona acceso a las Autorizaciones, ModelAdapter y Renderer del proyecto 'configuration'
  * - define las rutas de las clases y las clases por defecto necesarias para este proyecto
  * @author Rafael Claver
  */
@@ -19,11 +19,12 @@ class DokuModelManager extends AbstractModelManager{
     const MOD = WIKI_IOC_MODEL;
     const DEF = WIKI_IOC_MODEL . "projects/defaultProject/";
     const PRJ = __DIR__ . "/";
+    const DLI = DOKU_LIB_IOC . "wikiiocmodel/";
 
     static $defDirClass = array (
-               'Authorization' => array(self::MOD."authorization/", self::DEF."authorization/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
-               'Action'        => array(self::MOD."actions/", self::DEF."actions/extra/"),
-               'Model'         => array(self::MOD."datamodel/"),
+               'Authorization' => array(self::DLI."authorization/", self::DEF."authorization/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
+               'Action'        => array(self::DLI."actions/", self::DEF."actions/extra/"),
+               'Model'         => array(self::DLI."datamodel/", self::PRJ."datamodel/"),
                'MetaData'      => array(self::DEF."metadata/", self::MOD."metadata/"),
                'Renderer'      => array(self::PRJ."renderer/"),
                'Upgrader'      => array(self::PRJ."upgrader/")
@@ -31,9 +32,12 @@ class DokuModelManager extends AbstractModelManager{
     static $defMainClass = array(
                'DokuModelAdapter'     => self::MOD."BasicModelAdapter.php",
                'FactoryAuthorization' => self::PRJ."authorization/FactoryAuthorization.php",
+               'Permission'           => self::PRJ."authorization/Permission.php"
            );
 
     public function getAuthorizationManager($str_command) {
+        require_once(self::$defMainClass['Permission']);
+        require_once(self::$defMainClass['FactoryAuthorization']);
         $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
         return $factory->createAuthorizationManager($str_command);
     }

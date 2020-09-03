@@ -45,7 +45,7 @@ class ProjectExportAction  extends ProjectMetadataAction{
 
         $toInitModel = array(ProjectKeys::KEY_ID =>$this->projectID, ProjectKeys::KEY_PROJECT_TYPE=>$this->projectType, ProjectKeys::KEY_METADATA_SUBSET =>$this->metaDataSubSet);
         $this->projectModel->init($toInitModel);
-        $this->dataArray = $this->projectModel->getDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
+        $this->dataArray = $this->projectModel->getCurrentDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
     }
 
     public function responseProcess() {
@@ -77,8 +77,8 @@ class ProjectExportAction  extends ProjectMetadataAction{
             IocCommon::removeDir($result["tmp_dir"]);
         }
 
-        $ret[ProjectKeys::KEY_ACTIVA_FTPSEND_BTN] = $this->getModel()->haveFilesToExportList();
-        $ret[ProjectKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
+        $ret[AjaxKeys::KEY_ACTIVA_FTP_PROJECT_BTN] = $this->getModel()->haveFilesToExportList();
+        $ret[AjaxKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
 
         return $ret;
     }

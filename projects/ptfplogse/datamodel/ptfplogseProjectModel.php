@@ -4,9 +4,6 @@
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . 'wikiiocmodel/');
-require_once (WIKI_IOC_MODEL . "datamodel/MoodleProjectModel.php");
 
 class ptfplogseProjectModel extends MoodleProjectModel {
 
@@ -15,7 +12,7 @@ class ptfplogseProjectModel extends MoodleProjectModel {
     }
 
     public function getProjectDocumentName() {
-        $ret = $this->getMetaDataProject();
+        $ret = $this->getCurrentDataProject();
         return $ret['fitxercontinguts'];
     }
 
@@ -51,26 +48,28 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         return $ret;
     }
 
-    public function createTemplateDocument($data){
-        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
-        // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
-        $file = $this->getTemplateContentDocumentId($data) . ".txt";
-
-        $plantilla = file_get_contents($pdir.$file);
-        $name = substr($file, 0, -4);
-        $destino = $this->getContentDocumentId($name);
-        $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
-                                       PageKeys::KEY_WIKITEXT => $plantilla,
-                                       PageKeys::KEY_SUM => "generate project"]);
+    public function createTemplateDocument($data=NULL){
+        StaticUniqueContentFileProjectModel::createTemplateDocument($this, $data);
+//        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
+//        // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
+//        $file = $this->getTemplateContentDocumentId($data) . ".txt";
+//
+//        $plantilla = file_get_contents($pdir.$file);
+//        $name = substr($file, 0, -4);
+//        $destino = $this->getContentDocumentId($name);
+//        $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
+//                                       PageKeys::KEY_WIKITEXT => $plantilla,
+//                                       PageKeys::KEY_SUM => "generate project"]);
     }
 
     /**
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFields($data) {
+    public function updateCalculatedFieldsOnSave($data) {
 
-        $values = json_decode($data, true);
+        $isArray = is_array($data);
+        $values = $isArray?$data:json_decode($data, true);
 
         $taulaDadesUnitats = (is_array($values["taulaDadesUD"])) ? $values["taulaDadesUD"] : json_decode($values["taulaDadesUD"], true);
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
@@ -129,32 +128,8 @@ class ptfplogseProjectModel extends MoodleProjectModel {
             $values["taulaDadesUD"] = $taulaDadesUnitats;
         }
 
-        $data = json_encode($values);
-        return parent::updateCalculatedFields($data);
-    }
-
-    /**
-     * Canvia el nom dels directoris del projecte indicat,
-     * els noms dels fitxers generats amb la base del nom del projecte i
-     * les referències a l'antic nom de projecte dins dels fitxers afectats
-     * @param string $ns : ns original del projecte
-     * @param string $new_name : nou nom pel projecte
-     * @param string $persons : noms dels autors i els responsables separats per ","
-     */
-    public function renameProject($ns, $new_name, $persons) {
-        $base_dir = explode(":", $ns);
-        $old_name = array_pop($base_dir);
-        $base_dir = implode("/", $base_dir);
-
-        $this->projectMetaDataQuery->renameDirNames($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInRevisionFiles($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInACLFile($old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathProjectInShortcutFiles($old_name, $new_name, $persons);
-        $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_dir, $old_name, $new_name, $this->listGeneratedFilesByRender($base_dir, $old_name));
-        $this->projectMetaDataQuery->changeOldPathProjectInContentFiles($base_dir, $old_name, $new_name);
-
-        $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
-        $this->setProjectId($new_ns);
+        $data = $isArray?$values:json_encode($values);
+        return parent::updateCalculatedFieldsOnSave($data);
     }
 
     /**
@@ -179,7 +154,7 @@ class ptfplogseProjectModel extends MoodleProjectModel {
      */
     public function getCalendarDates() {
         $ret = array();
-        $data = $this->getDataProject();
+        $data = $this->getCurrentDataProject();
         if(is_string($data["calendari"])){
             $calendari = json_decode($data["calendari"], true);
         }else{
@@ -191,7 +166,7 @@ class ptfplogseProjectModel extends MoodleProjectModel {
                 "date"=>$item["inici"]
             ];
         }
-        
+
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
@@ -223,7 +198,7 @@ class ptfplogseProjectModel extends MoodleProjectModel {
                 $dataQualificacioOld = $item["qualificació"];
             }
         }
-        
+
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
@@ -278,7 +253,7 @@ class ptfplogseProjectModel extends MoodleProjectModel {
                         "date"=>$item["qualificació recuperació"]
                     ];
                     $dataQualificacioRecOld = $item["qualificació recuperació"];
-                }                
+                }
             }
         }
 
@@ -324,18 +299,18 @@ class ptfplogseProjectModel extends MoodleProjectModel {
                 $ret[] = [
                     "title"=>sprintf("%s - jornada tècnica rec. %s", $data["creditId"], $item['id']),
                     "date"=>$item["data JT recuperació"]
-                ];                
+                ];
                 $ret[] = [
                     "title"=>sprintf("%s - qualificació JT rec. %s", $data["creditId"], $item['id']),
                     "date"=>$item["qualificació recuperació"]
                 ];
             }
-        }    
+        }
         return $ret;
     }
 
     public function getCourseId() {
-        $data = $this->getDataProject();
+        $data = $this->getCurrentDataProject();
         return $data["moodleCourseId"];
     }
 }

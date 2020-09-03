@@ -586,7 +586,7 @@
     <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> requereix l'assistència a les jornades tècniques (JT). A continuació se'n detallen les dates importants:</p>
     <table class="own_table">
       <tr>
-        <th>Inscrició</th>
+        <th>Inscripció</th>
         <th>Llista provisional</th>
         <th>Llista definitiva</th>
         <th>Data de la JT</th>
@@ -780,33 +780,37 @@
     var dataArray1 = [
 <WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
                       [
-                        { 
+                        {
                           title :"UF{##itemUf[unitat formativa]##}",
                           name :"UF{##itemUf[unitat formativa]##}",
                           percent: 0
-                        },                        
-<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}">                        
+                        },
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUFs##},''ponderació'', ''unitat formativa'', ''{##itemUf[unitat formativa]##}'')_#}">
+<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}">
                        { 
                           title :"{##item[descripció qualificació]##}",
                           name :"{##item[abreviació qualificació]##}",
-                          percent: {##item[ponderació]##}
+                          percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}"
                         },
 </WIOCCL:FOREACH>
+</WIOCCL:SET>
                       ],
 </WIOCCL:FOREACH>
                       [
-                        { 
+                        {
                           title :"FINAL",
                           name :"FINAL",
                           percent: 0
                         },
-<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">                        
-                       { 
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUF##},''ponderació'')_#}">
+<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">
+                       {
                           title :"UF{##item[unitat formativa]##}",
                           name :"UF{##item[unitat formativa]##}",
-                          percent: {##item[ponderació]##}
+                          percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}"
                         },
-</WIOCCL:FOREACH>                        
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
                       ]
                     ];
 </WIOCCL:SET>

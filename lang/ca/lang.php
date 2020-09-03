@@ -3,8 +3,6 @@
  * Catalan language file
  * @author Joseo Cañellas<jcanell4@ioc.cat>
  */
-require_once (DOKU_INC . 'lib/plugins/ajaxcommand/defkeys/GlobalKeys.php');
-
 const PAG_DEFAULT = "createDefaultText";
 const PAG_SAVED = "saved";
 const PAG_DELETED = "deleted";
@@ -17,6 +15,7 @@ $lang['saved'] = "Els canvis s'han guardat correctament";
 $lang['section_saved'] = "S'han guardat els canvis de la secció %s";
 $lang['deleted'] = "La pàgina %s ha estat eliminada";
 $lang['reverted'] = "La reversió s'ha completat correctament";
+$lang['renamed'] = "El canvi de nom del directori s'ha completat correctament";
 $lang['pageNotFound'] = "La pàgina %s no s'ha trobat";
 $lang['pageExists'] = "La pàgina %s ja existeix";
 $lang['metaEditForm'] = "Camps Edició";
@@ -103,6 +102,7 @@ $lang['projectException']['insufficientPermissionToEditProject'] = 'Vosté no t�
 $lang['projectException']['insufficientPermissionToCreateProject'] = 'Vosté no té permís per crear el projecte %s aquí';
 $lang['projectException']['insufficientPermissionToDeleteProject'] = 'Vosté no té permís per eliminar el projecte %s';
 $lang['projectException']['insufficientPermissionToGenerateProject'] = 'Vosté no té permís per generar el projecte %s';
+$lang['projectException']['InvalidDataProjectException'] = 'Hi ha dades del projecte que no són vàlides';
 
 $lang['title_message_notification'] = 'Missatge de %s';
 $lang['title_message_notification_with_id'] = 'Missatge de %s (document %s)';

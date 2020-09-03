@@ -25,6 +25,8 @@ class command_plugin_wikiiocmodel_projects_sintesi_projectUpdate extends abstrac
 
         if (!$projectMetaData)
             throw new UnknownProjectException();
+
+        $this->_addExtraData($projectMetaData);
         
         return $projectMetaData;
     }

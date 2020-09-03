@@ -5,17 +5,30 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
-require_once (WIKI_IOC_MODEL . "authorization/ProjectCommandAuthorization.php");
 
 class ViewProjectAuthorization extends ProjectCommandAuthorization {
 
-    public function canRun() {
-        if (parent::canRun()) {
-            if(!$this->isUserGroup(array("editorges","admin"))
-                    && ($this->permission->getInfoPerm() < AUTH_READ || !$this->isUserGroup(array("ges")))
-                    && ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(array("projectmanager")))) {
+    public function __construct() {
+        parent::__construct();
+        $this->allowedGroups[] = "ges";
+        $this->allowedGroups[] = "editorges";
+        $this->allowedGroups[] = "projectmanager";
+        $this->allowedRoles = [];
+    }
+
+    public function canRun($permis=AUTH_NONE, $type_exception="View") {
+//        if (parent::canRun()) {
+//            if(!$this->isUserGroup(["editorges","admin"])
+//                    && ($this->permission->getInfoPerm() < AUTH_READ || !$this->isUserGroup(["ges"]))
+//                    && ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(["projectmanager"]))) {
+//                $this->errorAuth['error'] = TRUE;
+//                $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
+//                $this->errorAuth['extra_param'] = $this->permission->getIdPage();
+//            }
+//        }
+        if (!parent::canRun($permis, $type_exception)) {
+            if ( ($this->permission->getInfoPerm() < AUTH_READ || !$this->isUserGroup(["ges"])) &&
+                 ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(["projectmanager"])) ) {
                 $this->errorAuth['error'] = TRUE;
                 $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
                 $this->errorAuth['extra_param'] = $this->permission->getIdPage();

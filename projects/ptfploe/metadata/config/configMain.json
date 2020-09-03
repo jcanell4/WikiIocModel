@@ -30,8 +30,8 @@
             "main": "meta.mdpr",
 
             "versions": {
-                "fields" : 7,
-                "templates": {"continguts":23}
+                "fields": 8,
+                "templates": {"continguts":25}
             },
             "mainType": {
                 "type": "object",
@@ -79,9 +79,9 @@
                             "mandatory": true
                         },
                         "ponderació": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": "0"
+                            "type": "decimal",
+                            "constraints": "{\"places\":2}",
+                            "mandatory": true
                         }
                     }                    
                 },
@@ -409,9 +409,9 @@
                             "default": "0"
                         },
                         "ponderació": {
-                            "type": "number",
+                            "type": "decimal",
                             "mandatory": true,
-                            "default": "0"
+                            "constraints": "{\"places\":2}"
                         }
                     }
                 },
@@ -594,6 +594,11 @@
                             "type": "defDatesEAF",
                             "mandatory": false
                         },
+                        "treballEquipEAF": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
                         "hiHaSolucioPerEAF": {
                             "type": "boolean",
                             "mandatory": false,
@@ -690,17 +695,20 @@
                         },
                         "autor": {
                             "type": "string",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "responsable": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "supervisor": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "fitxercontinguts": {
                             "type": "string",

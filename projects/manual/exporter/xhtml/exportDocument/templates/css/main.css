@@ -366,6 +366,46 @@ div.footfigure {
     padding: 6px 8px 6px 82px !important;
 }
 
+#expandCollapse.more {
+    background: url("../img/more.png") no-repeat scroll 0 0 transparent;
+    position: relative;
+    float: right;
+    right: 20px;
+    height: 12px;
+    top: -14px;
+    width: 12px;
+}
+
+#expandCollapse.less {
+    background: url("../img/less.png") no-repeat scroll 0 0 transparent;
+    position: relative;
+    float: right;
+    right: 20px;
+    height: 12px;
+    top: -14px;
+    width: 12px;
+}
+
+#toc_div_id_level_2_1.more,
+#toc_div_id_level_2_2.more,
+#toc_div_id_level_2_3.more,
+#toc_div_id_level_2_4.more,
+#toc_div_id_level_2_5.more,
+#toc_div_id_level_2_6.more,
+#toc_div_id_level_2_7.more {
+    display: block;
+}
+
+#toc_div_id_level_2_1.less,
+#toc_div_id_level_2_2.less,
+#toc_div_id_level_2_3.less,
+#toc_div_id_level_2_4.less,
+#toc_div_id_level_2_5.less,
+#toc_div_id_level_2_6.less,
+#toc_div_id_level_2_7.less {
+    display: none;
+}
+
 /* Botó imprimir*/
 #printbtn {
     display: flex;

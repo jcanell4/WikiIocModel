@@ -1,7 +1,5 @@
 <?php
 if (!defined('DOKU_INC')) die();
-//if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
-//include_once DOKU_PLUGIN . "wikiiocmodel/projects/guiesges/actions/ViewProjectMetaDataAction.php";
 
 class CancelProjectMetaDataAction extends ViewProjectMetaDataAction {
 

@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_7: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
- *             desde la versión 6 a la versión 7
+ * upgrader_8: Transforma el archivo continguts.txt o el _wikiIocSystem_.mdpr de los proyectos 'ptfploe'
+ *             desde la versión 7 a la versión 8
  * @author rafael
  */
 if (!defined("DOKU_INC")) die();
@@ -21,6 +21,16 @@ class upgrader_8 extends CommonUpgrader {
     public function process($type, $filename=NULL) {
         switch ($type) {
             case "fields":
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+                //Añade un campo en el primer nivel de la estructura de datos
+                $name = "treballEquipEAF";
+                $value = false;
+                $dataProject = $this->addNewField($dataProject, $name, $value);
+
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 7 to 8 (afegir camps). Simultànea a la actualització de 23 a 24 de continguts");
                 $status = TRUE;
                 break;
 

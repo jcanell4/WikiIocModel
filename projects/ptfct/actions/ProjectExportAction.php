@@ -10,8 +10,6 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmod
 if (!defined('EXPORT_TMP')) define('EXPORT_TMP',DOKU_PLUGIN.'tmp/latex/');
 define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/ptfct/");
 
-//require_once WIKI_IOC_MODEL."persistence/ProjectMetaDataQuery.php";
-
 class ProjectExportAction  extends ProjectMetadataAction{
     const PATH_RENDERER = WIKI_IOC_PROJECT."exporter/";
     const PATH_CONFIG_FILE = WIKI_IOC_PROJECT."metadata/config/";
@@ -43,12 +41,12 @@ class ProjectExportAction  extends ProjectMetadataAction{
         $this->projectType = $params[ProjectKeys::KEY_PROJECT_TYPE];
         $this->projectID   = $params[ProjectKeys::KEY_ID];
         $this->metaDataSubSet = $params[ProjectKeys::KEY_METADATA_SUBSET];
-        
+
         $this->projectNS   = $params[ProjectKeys::KEY_NS]?$params[ProjectKeys::KEY_NS]:$this->projectID;
-        
+
         $this->typesRender = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
         $this->defaultValueForObjectFields = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "defaultValueForObjectFields");
-            
+
         $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $this->metaDataSubSet);
         $this->mainTypeName = $cfgArray['mainType']['typeDef'];
         $this->typesDefinition = $cfgArray['typesDefinition'];
@@ -58,11 +56,11 @@ class ProjectExportAction  extends ProjectMetadataAction{
 //        $this->dataArray = $this->getProjectDataFile($projectfilepath, $this->metaDataSubSet);
         $toInitModel = array(ProjectKeys::KEY_ID =>$this->projectID, ProjectKeys::KEY_PROJECT_TYPE=>$this->projectType, ProjectKeys::KEY_METADATA_SUBSET =>$this->metadataSubset);
         $this->projectModel->init($toInitModel);
-        $this->dataArray = $this->projectModel->getDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
+        $this->dataArray = $this->projectModel->getCurrentDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
     }
 
     public function responseProcess() {
-        $ret = array();        
+        $ret = array();
         $fRenderer = $this->factoryRender;
         $fRenderer->init(['mode'            => $this->mode,
                           'filetype'        => $this->filetype,
@@ -89,10 +87,9 @@ class ProjectExportAction  extends ProjectMetadataAction{
                 $this->removeDir($result["tmp_dir"]);
         }
 
-        $ret[ProjectKeys::KEY_ACTIVA_FTPSEND_BTN] = $this->getModel()->haveFilesToExportList();
+        $ret[AjaxKeys::KEY_ACTIVA_FTP_PROJECT_BTN] = $this->getModel()->haveFilesToExportList();
+        $ret[AjaxKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
 
-        $ret[ProjectKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
-        
         return $ret;
     }
 
@@ -113,7 +110,7 @@ class ProjectExportAction  extends ProjectMetadataAction{
                     }
                 }
             }else{
-                $ret = $array[$rama]; 
+                $ret = $array[$rama];
             }
             return $ret;
         }
@@ -215,7 +212,7 @@ class ProjectExportAction  extends ProjectMetadataAction{
 //        $ok = copy($result["zipFile"], $path_dest.'/'.$result["zipName"]);
 //        return $ok;
 //    }
-//    
+//
 //    /**
 //     * Remove specified dir
 //     * @param string $directory
@@ -245,5 +242,5 @@ class ProjectExportAction  extends ProjectMetadataAction{
 //            }
 //            return TRUE;
 //        }
-    }    
+    }
 }

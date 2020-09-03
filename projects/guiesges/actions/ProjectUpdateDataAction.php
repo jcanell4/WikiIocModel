@@ -5,10 +5,10 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
 
     protected function runAction() {
         $projectType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
-        $metaDataSubSet = $this->params[ProjectKeys::KEY_METADATA_SUBSET];
+        $metaDataSubSet = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
 
         $projectModel = $this->getModel();
-        $response = $projectModel->getDataProject();
+        $response = $projectModel->getCurrentDataProject();
 
         $confProjectType = $this->modelManager->getConfigProjectType();
         //obtenir la ruta de la configuració per a aquest tipus de projecte
@@ -23,8 +23,7 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                                 ]);
 
         //Obtenir les dades de la configuració d'aquest tipus de projecte
-        $metaDataSubset = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;
-        $metaDataConfigProject = $configProjectModel->getMetaDataProject($metaDataSubset);
+        $metaDataConfigProject = $configProjectModel->getCurrentDataProject($metaDataSubSet);
 
         if ($metaDataConfigProject['arraytaula']) {
             $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
@@ -45,13 +44,15 @@ class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
                 $id = $this->getModel()->getContentDocumentId($response);
                 p_set_metadata($id, array('metadataProjectChanged'=>true));
             }
+        }else {
+            throw new ConfigurationProjectNotAvailableException($projectTypeConfigFile);
         }
         return $response;
     }
 
     public function responseProcess() {
         $response = parent::responseProcess();
-        $response[ProjectKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
+        $response[AjaxKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
         return $response;
     }
 

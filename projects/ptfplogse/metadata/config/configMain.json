@@ -30,10 +30,8 @@
         {
             "main": "meta.mdpr",
             "versions": {
-                "fields": 8,
-                "templates": {
-                    "continguts": 16
-                }
+                "fields": 9,
+                "templates": {"continguts": 18}
             },
             "mainType": {
                 "type": "object",
@@ -587,6 +585,11 @@
                             "type": "defDatesEAF",
                             "mandatory": false
                         },
+                        "treballEquipEAF": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
                         "hiHaSolucioPerEAF": {
                             "type": "boolean",
                             "mandatory": false,
@@ -682,17 +685,20 @@
                         },
                         "autor": {
                             "type": "string",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "responsable": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "supervisor": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "fitxercontinguts": {
                             "type": "string",

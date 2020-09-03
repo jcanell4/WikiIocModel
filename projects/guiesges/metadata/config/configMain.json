@@ -19,8 +19,8 @@
         {
             "main": {
                 "files": {
-                    "ge": {"local":"mediadir", "suffix":"ge", "type":"zip", "action":[1], "linkName":"ge", "remoteIndex":"index.html"},
-                    "gd": {"local":"mediadir", "suffix":"gd", "type":"pdf", "action":[0], "linkName":"gd"}
+                    "ge": {"local":"mediadir", "suffix":"ge", "type":"zip", "action":[1], "linkName":"ge", "remoteIndex":"index.html", "remoteDir": "ge/"},
+                    "gd": {"local":"mediadir", "suffix":"gd", "type":"pdf", "action":[0], "linkName":"gd", "remoteDir": "gd/"}
                 },
                 "ftpId": "guies_ges"
             }
@@ -163,12 +163,14 @@
                         "autor": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "responsable": {
                             "type": "string",
                             "struc_chars": "40",
-                            "mandatory": true
+                            "mandatory": true,
+                            "isRole":true
                         },
                         "codi": {
                             "type": "string",
