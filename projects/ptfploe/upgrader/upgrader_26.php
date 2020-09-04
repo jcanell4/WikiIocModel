@@ -30,10 +30,8 @@ class upgrader_26 extends CommonUpgrader {
                 }
                 $doc = $this->model->getRawProjectDocument($filename);
 
-                $aTokRep = [["^::table:T10(.*\s)*?:::$",
-                             "::table:T10\n"
-                            ."  :title:Dates PAFs\n"
-                            ."  :type:pt_taula\n"
+                $aTokRep = [["(^::table:T10\s+:title:Dates PAFs\s+)(.*\s)*?:::$",
+                             "$1:type:pt_taula\n"
                             ."  :footer:La vostra data i hora de la PAF es comunicarà al Taulell de Tutoria.\n"
                             ."^  PAF  ^  Data  ^  Publicació qualificació  ^\n"
                             ."|  1  |  {#_DATE(\"{##dataPaf11##}\")_#} o {#_DATE(\"{##dataPaf12##}\")_#}  |  {#_DATE(\"{##dataQualificacioPaf1##}\")_#}  |\n"
