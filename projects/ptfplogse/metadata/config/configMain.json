@@ -30,8 +30,8 @@
         {
             "main": "meta.mdpr",
             "versions": {
-                "fields": 9,
-                "templates": {"continguts": 18}
+                "fields": 10,
+                "templates": {"continguts": 19}
             },
             "mainType": {
                 "type": "object",
@@ -636,12 +636,22 @@
                             },
                             "default": 0
                         },
-                        "dataPaf1": {
+                        "dataPaf11": {
                             "type": "date",
                             "mandatory": true,
                             "default": "01/01/2000"
                         },
-                        "dataPaf2": {
+                        "dataPaf12": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default": "01/01/2000"
+                        },
+                        "dataPaf21": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default": "01/01/2000"
+                        },
+                        "dataPaf22": {
                             "type": "date",
                             "mandatory": true,
                             "default": "01/01/2000"
