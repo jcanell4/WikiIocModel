@@ -1045,13 +1045,19 @@
         "dadesExtres": {
           "type" : "hidden"
         },
-        "dataPaf1": {
+        "dataPaf11": {
+          "type" : "hidden"
+        },
+        "dataPaf12": {
           "type" : "hidden"
         },
         "dataQualificacioPaf1": {
           "type" : "hidden"
         },
-        "dataPaf2": {
+        "dataPaf21": {
+          "type" : "hidden"
+        },
+        "dataPaf22": {
           "type" : "hidden"
         },
         "dataQualificacioPaf2": {
