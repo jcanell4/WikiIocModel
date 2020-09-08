@@ -63,6 +63,12 @@ p.llegenda {
     font-size: 120%
 }
 
+.foottable {
+    text-align: center;
+    padding-top: 3px;
+    font-size: 90%;
+}
+
 /* Sidebar navigation */
 
 .sidenav {
@@ -101,7 +107,7 @@ p.llegenda {
     font-size: 30px;
     cursor: pointer;
     margin-left: 14px;
-    color: #fdf0f6;
+    color: #fda6cd;
     opacity: 1;
     transition: opacity .1s;
     transition-delay: .3s;

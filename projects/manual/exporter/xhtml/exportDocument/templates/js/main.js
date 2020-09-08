@@ -22,6 +22,7 @@ function printDoc() {
 
 var menuExpanded = true;
 function expandCollapse() {
+    return;
     if (menuExpanded) {
         document.getElementById("expandCollapse").classList.remove("less");
         document.getElementById("expandCollapse").classList.add("more");
