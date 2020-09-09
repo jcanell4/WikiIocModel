@@ -30,13 +30,19 @@ class upgrader_26 extends CommonUpgrader {
                 }
                 $doc = $this->model->getRawProjectDocument($filename);
 
-                $aTokRep = [["(^::table:T10\s+:title:Dates PAFs\s+)(.*\s)*?:::$",
-                             "$1:type:pt_taula\n"
+                $aTokRep = [
+                    ["(^::table:T10\s+:title:Dates PAFs\s+)(.*\s)*?:::$",
+                     "$1:type:pt_taula\n"
                             ."  :footer:La vostra data i hora de la PAF es comunicarà al Taulell de Tutoria.\n"
                             ."^  PAF  ^  Data  ^  Publicació qualificació  ^\n"
                             ."|  1  |  {#_DATE(\"{##dataPaf11##}\")_#} o {#_DATE(\"{##dataPaf12##}\")_#}  |  {#_DATE(\"{##dataQualificacioPaf1##}\")_#}  |\n"
                             ."|  2  |  {#_DATE(\"{##dataPaf21##}\")_#} o {#_DATE(\"{##dataPaf22##}\")_#}  |  {#_DATE(\"{##dataQualificacioPaf2##}\")_#}  |\n"
-                            .":::"]];
+                            .":::"],
+                    ["presencial i obligatòria", "obligatòria"],
+                    ["Per poder presentar-s'hi, ..cal confirmar.. l'assistència en el període establert.\\\n\\\n", ""],
+                    ["frases V.F", "test, frases V/F"],
+                    ["PAF 1 i PAF 2", "convocatòria PAF 1 i convocatòria PAF 2"]
+                ];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (!empty($dataChanged)) {

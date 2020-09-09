@@ -400,20 +400,18 @@ S'ofereixen dues convocatòries cada semestre: JT i recuperació JT. Només es t
 :###===== Prova d'avaluació final (PAF) =====###:
 
 :###
-Al final de cada semestre, l’alumne s’ha de presentar a una prova d’avaluació final (PAF) **presencial i obligatòria** per aprovar cada UF (consulteu dates clau a la taula::table:T10:).
-
-Per poder presentar-s'hi, **cal confirmar** l'assistència en el període establert.
+Al final de cada semestre, l’alumne s’ha de presentar a una prova d’avaluació final (PAF) **obligatòria** per aprovar cada UF (consulteu dates clau a la taula::table:T10:).
 
 La prova d'avaluació final (PAF):
 
   * Té una durada d'**{##duradaPAF##}**
-  * Consistirà en diversos exercicis: frases V/F, preguntes obertes, resolució d'un cas pràctic, etc.
+  * Consistirà en diversos exercicis: test, frases V/F, preguntes obertes, resolució d'un cas pràctic, etc.
   * S'avalua numèricament del 0 al 10, amb dos decimals.
   * NO inclou retroacció.
   * Té una ponderació  a la qualificació final (QF) de la UF (vegeu l'apartat <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">"Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">"Qualificació final de cada UF"</WIOCCL:IF>).
   * S'ha d'obtenir una **nota mínima de {##notaMinimaPAF##},00 sense arrodoniment** per poder aplicar el càlcul de la QF.
 
-S'ofereixen dues convocatòries cada semestre: PAF 1 i PAF 2 (consulteu dates clau a la taula::table:T10:). L'alumne pot:
+S'ofereixen dues convocatòries cada semestre: convocatòria PAF 1 i convocatòria PAF 2 (consulteu dates clau a la taula::table:T10:). L'alumne pot:
 
   * Presentar-se a la PAF 1 i en cas de no superar-la, presentar-se a la PAF 2 del mateix semestre (2 setmanes després de la PAF 1). En cap cas es pot presentar a la PAF 2  per pujar nota tenint la PAF 1 superada.
   * Presentar-se directament a la PAF 2.
