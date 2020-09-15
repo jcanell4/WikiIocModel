@@ -113,34 +113,46 @@ class exportDocument extends MainRender {
 
         foreach ($this->cfgExport->toc as $tocKey => $tocItem) {
             $toc = "";
-            $nivel = 0;
-            $ndiv = 0;
+            $nivel_anterior = 1; //nivel anterior
+            $ntoc = 0;           //número de tocItem actual
+
             if ($tocItem){
-                $toc = "<div id='expandCollapse' class='less' onclick='expandCollapse()'></div>";
                 foreach ($tocItem as $elem) {
                     if ($elem['level'] <= $data['nivells']) {
-                        if ($elem['level'] === 1) {
-                            if ($nivel === 1) {$toc .= "</div>\n";}
-                            if ($nivel === 2) {$toc .= "</div>\n</div>\n";}
-                            $nivel = 1;
-                            $ndiv++;
-                            $toc .= "<div id='toc_div_id_level_1_{$ndiv}' onclick='expandCollapse()'>\n";
-                            $toc .= "<a href='{$elem['link']}' class='toc_level_{$elem['level']}'>".htmlentities($elem['title'])."</a>\n";
-                        }else {
-                            if ($elem['level'] === 2 && $nivel === 1) {
-                                $toc .= "<div id='toc_div_id_level_2_{$ndiv}' class='more'>\n";
-                                $nivel = 2;
-                            }
-                            $toc .= "<a href='{$elem['link']}' class='toc_level_{$elem['level']}'>".htmlentities($elem['title'])."</a>\n";
+                        if ($elem['level'] > $nivel_anterior) {
+                            $toc .= "<div class='hidden'>\n";
                         }
+                        if ($elem['level'] <= $nivel_anterior) {
+                            $toc .= $this->_add_close(($nivel_anterior-$elem['level'])*2+1);
+                        }
+                        $toc .= "<div class='toc_level_{$elem['level']}'>\n";
+                        $toc .= "<span>\n";
+                        if ($tocItem[$ntoc+1]['level'] > $elem['level']) { //si el elemento siguiente es de nivel inferior
+                            $toc .= "<span onclick='switchopcl(this)' class='button_index cl'>&nbsp;&nbsp;&nbsp;&nbsp;</span>\n";
+                        }else {
+                            $toc .= "<span class='button_index'>&nbsp;&nbsp;&nbsp;&nbsp;</span>\n";
+                        }
+                        $toc .= "<a href='{$elem['link']}'>".htmlentities($elem['title'])."</a>\n";
+                        $toc .= "</span>\n";
+
+                        $nivel_anterior = $elem['level'];
+                        $ntoc++;
                     }
                 }
-                if ($nivel === 1) {$toc .= "</div>\n";}
-                if ($nivel === 2) {$toc .= "</div>\n</div>\n";}
+                $toc .= $this->_add_close(($nivel_anterior-1)*2);
+                $toc = substr($toc, 7) . "</div>\n";
             }
             $document = str_replace("@@TOC($tocKey)@@", $toc, $document);
         }
         return $document;
+    }
+
+    private function _add_close($n) {
+        $toc = "";
+        for ($i=1; $i<=$n; $i++) {
+            $toc .= "</div>\n";
+        }
+        return $toc;
     }
 
     private function attachMediaFiles(&$zip) {
