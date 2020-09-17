@@ -11,7 +11,7 @@ class EditProjectAuthorization extends SupervisorProjectAuthorization {
 
     public function __construct() {
         parent::__construct();
-        $this->allowedGroups = ["admin", "fctmanager"];
+        $this->allowedGroups[] = "fctmanager";
     }
 
 //    public function canRun() {
