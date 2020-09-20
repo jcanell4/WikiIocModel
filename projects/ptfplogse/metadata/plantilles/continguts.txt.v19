@@ -257,7 +257,7 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
   :title:Dates PAFs
   :type:pt_taula
   :footer:La vostra data i hora de la PAF es comunicarà al Taulell de Tutoria.
-^  PAF  ^  Data  ^  Publicació qualificació ^
+^  PAF  ^  Data  ^  Publicació qualificació  ^
 |  1  |  {#_DATE("{##dataPaf11##}")_#} o {#_DATE("{##dataPaf12##}")_#}  |  {#_DATE("{##dataQualificacioPaf1##}")_#}  |
 |  2  |  {#_DATE("{##dataPaf21##}")_#} o {#_DATE("{##dataPaf22##}")_#}  |  {#_DATE("{##dataQualificacioPaf2##}")_#}  |
 :::
@@ -291,7 +291,7 @@ L'AC es fa a distància, es concreta en:
 
   * UNITAT DIDÀCTICA {##itemUD[unitat didàctica]##}
 <WIOCCL:FOREACH var="item" array="{##datesAC##}" filter="{##item[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
-      * {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##item[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#})_#} ({##item[id]##})
+      * {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##item[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#},'' '')_#} ({##item[id]##})
 </WIOCCL:FOREACH>
 </WIOCCL:FOREACH>
 
@@ -389,20 +389,18 @@ S'ofereixen dues convocatòries cada semestre: JT i recuperació JT. Només es t
 
 :###
 
-Al final de cada semestre, l’alumne s’ha de presentar a una prova d’avaluació final (PAF) **presencial i obligatòria** per aprovar el {##tipusBlocCredit##} (consulteu dates clau a la taula::table:T10:).
-
-Per poder presentar-s'hi, **cal confirmar** l'assistència en el període establert.
+Al final de cada semestre, l’alumne s’ha de presentar a una prova d’avaluació final (PAF) **obligatòria** per aprovar el {##tipusBlocCredit##} (consulteu dates clau a la taula::table:T10:).
 
 La prova d'avaluació final (PAF):
 
   * Té una durada d'**{##duradaPAF##}**
-  * Consistirà en diversos exercicis: frases V/F, preguntes obertes, resolució d'un cas pràctic, etc.
+  * Consistirà en diversos exercicis: test, frases V/F, preguntes obertes, resolució d'un cas pràctic, etc.
   * S'avalua numèricament del 0 al 10, amb dos decimals.
   * NO inclou retroacció.
   * Té una ponderació a la qualificació final (QF) (vegeu l'apartat <WIOCCL:IF condition="''crèdit''=={##tipusBlocCredit##}">"Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">"Qualificació final de cada bloc"</WIOCCL:IF>).
   * S'ha d'obtenir una **nota mínima de {##notaMinimaPAF##},00 sense arrodoniment** per poder aplicar el càlcul de la QF.
 
-S'ofereixen dues convocatòries cada semestre: PAF 1 i PAF 2 (consulteu dates clau a la taula::table:T10:). L'alumne pot:
+S'ofereixen dues convocatòries cada semestre: convocatòria PAF 1 i convocatòria PAF 2 (consulteu dates clau a la taula::table:T10:). L'alumne pot:
 
   * Presentar-se a la PAF 1 i, en cas de no superar-la, presentar-se a la PAF 2 del mateix semestre (2 setmanes després de la PAF 1). En cap cas es pot presentar a la PAF 2 per pujar nota tenint la PAF 1 superada.
   * Presentar-se directament a la PAF 2.
@@ -420,9 +418,13 @@ La qualificació final del {##tipusBlocCredit##} (QF) es calcula a partir de l'a
 <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacio##},''ponderació'')_#}">
 <WIOCCL:IF condition="''crèdit''=={##tipusBlocCredit##}">
 **QF = <WIOCCL:FOREACH var="item" array="{##dadesQualificacio##}" counter="indx">{##item[abreviació qualificació]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##indx##}\<{#_SUBS({#_ARRAY_LENGTH({##dadesQualificacio##})_#},1)_#}">+ </WIOCCL:IF></WIOCCL:FOREACH>**
+
 </WIOCCL:IF>
+
 <WIOCCL:IF condition="''crèdit''!={##tipusBlocCredit##}">
+
 **QFbloc{##nbloc##} = <WIOCCL:FOREACH var="item" array="{##dadesQualificacio##}"  counter="indx">{##item[abreviació qualificació]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##indx##}\<{#_SUBS({#_ARRAY_LENGTH({##dadesQualificacio##})_#},1)_#}">+ </WIOCCL:IF></WIOCCL:FOREACH>**
+
 </WIOCCL:IF>
 
 Per sumar l'AC s’ha d’obtenir una qualificació mínima de {##notaMinimaPAF##},00 a la PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>{##notaMinimaEAF##},00 a l'EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i {##notaMinimaJT##},00 a la JT</WIOCCL:IF> sense haver fet cap tipus arrodoniment previ.
@@ -482,11 +484,11 @@ La planificació establerta per a la UD{##itemUD[unitat didàctica]##} és la se
 <WIOCCL:SUBSET  subsetvar="filteredEAF" array="{##datesEAF##}" arrayitem="itemsubEAF" filter="{##itemsubEAF[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
  <WIOCCL:SUBSET  subsetvar="filteredAC" array="{##datesAC##}" arrayitem="itemsubAC" filter="{##itemsubAC[unitat didàctica]##}=={##itemUD[unitat didàctica]##}">
 <WIOCCL:FOREACH  var="itemAval" array="{##filteredAC##}" counter="idItemAval">
-^ <WIOCCL:IF condition="{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[id]##}: {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##itemAval[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#})_#}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredEAF##})_#}==0&&{#_ARRAY_LENGTH({##filteredAC##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
+^ <WIOCCL:IF condition="{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[id]##}: {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##itemAval[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#}, '' '')_#}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredEAF##})_#}==0&&{#_ARRAY_LENGTH({##filteredAC##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
 
 </WIOCCL:FOREACH>
 <WIOCCL:FOREACH  var="itemAval" array="{##filteredEAF##}" counter="idItemAval">
-^ <WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredAC##})_#}==0&&{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesAC##})_#}\=0||{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[id]##}: {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##itemAval[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#})_#}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredEAF##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
+^ <WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredAC##})_#}==0&&{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredAC##})_#}\>0||{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[id]##}: {#_ARRAY_GET_VALUE(''descripció qualificació'',{#_SEARCH_VALUE(''{##itemAval[id]##}'',{##dadesQualificacio##},''abreviació qualificació'')_#}, '' '')_#}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filteredEAF##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
 
 </WIOCCL:FOREACH>
 </WIOCCL:SUBSET>

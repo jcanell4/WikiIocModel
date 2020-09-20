@@ -787,7 +787,7 @@ hr {
   -ms-flex-line-pack: justify;
   align-content: space-between;
   margin: 0 auto;
-  width: 280px;
+  /*width: 280px;*/
   height: 300px;
 
 }
@@ -1094,7 +1094,7 @@ hr {
   /* Own container media query */
 
   .own_container {
-    width: 500px;
+    width: 570px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -1540,7 +1540,7 @@ hr {
   }
 
   .section7 .panell_pafs {
-    width: 380px;
+    width: 570px;
     margin-bottom: 28px;
   }
 

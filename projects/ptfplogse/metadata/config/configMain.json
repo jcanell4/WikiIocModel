@@ -21,8 +21,7 @@
                 "files": {
                     "flogse1": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"}
                 },
-                "ftpId": "pla_treball",
-                "remoteDir": "logse/"
+                "ftpId": "pla_treball"
             }
         }
     ],

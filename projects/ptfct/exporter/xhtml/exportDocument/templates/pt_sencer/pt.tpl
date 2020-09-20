@@ -3,6 +3,8 @@
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">

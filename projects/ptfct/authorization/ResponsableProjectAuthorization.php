@@ -8,9 +8,10 @@ if (!defined('DOKU_INC')) die();
 
 class ResponsableProjectAuthorization extends ProjectCommandAuthorization {
 
-    public function __construct() {
+     public function __construct() {
         parent::__construct();
-        $this->allowedGroups = ["fctmanager"];
+        $this->allowedRoles[] = Permission::ROL_RESPONSABLE;
+        $this->allowedGroups[] = "fctmanager";
     }
 
 //    public function canRun() {

@@ -45,12 +45,12 @@ class upgrader_17 extends CommonUpgrader {
                 $doc = $this->updateTemplateByInsert($doc, $aTokIns);
 
                 $aTokIns = [
-                            ['regexp' => "^La qualificació final del .*fórmula següent:$",
+                            ['regexp' => "^La qualificació final del .*fórmula següent:\\\n$",
                              'text' => "\n<WIOCCL:SET var=\"sum_ponderacio\" type=\"literal\" value=\"{#_ARRAY_GET_SUM({##dadesQualificacio##},''ponderació'')_#}\">",
                              'pos' => 1,
                              'modif' => "m"
                             ],
-                            ['regexp' => "^Per sumar l'AC s’ha d’obtenir una qualificació mínima de",
+                            ['regexp' => "^\\\nPer sumar l'AC s’ha d’obtenir una qualificació mínima de",
                              'text' => "</WIOCCL:SET>\n",
                              'pos' => 0,
                              'modif' => "m"
