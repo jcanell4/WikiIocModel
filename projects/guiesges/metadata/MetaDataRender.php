@@ -3,7 +3,7 @@
  * Component: Project / MetaData
  */
 namespace guiesges;
-require_once(DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderAbstract.php');
+if (!defined("DOKU_INC")) die();
 
 class MetaDataRender extends \MetaDataRenderAbstract {
     protected function processValues($values){

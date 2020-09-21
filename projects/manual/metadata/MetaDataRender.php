@@ -3,7 +3,7 @@
  * Component: Project / MetaData
  */
 namespace manual;
-require_once(DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderAbstract.php');
+if (!defined("DOKU_INC")) die();
 
 class MetaDataRender extends \MetaDataRenderAbstract {
 //    public static $DEFAULT_SINGLE_VALUES = ["string"=>"", "number"=>0, "boolean"=>false, "date"=>""];
