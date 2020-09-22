@@ -68,7 +68,7 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
      */
     protected function changeOldPathInACLFile($base_dir, $old_name, $new_name) {
         try {
-            $this->projectMetaDataQuery->changeOldPathInACLFile($base_dir, $old_name, $new_name);
+            $this->projectMetaDataQuery->changeOldPathInACLFile($base_dir, $old_name, $base_dir, $new_name);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el contingut de: $e.");
         }
