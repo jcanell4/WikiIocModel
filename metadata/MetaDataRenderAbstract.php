@@ -249,7 +249,11 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
         $_values['defaultRow'] = $this->_getDefaultSingleArrayItem($properties, $types);
         $_values['default'] = $this->_getDefaultSingleArray($properties, $types, $_values['defaultRow']);
         if ($values) {
-            $_values['value'] = $values;
+            $_values['value'] = is_string($values)?json_decode($values, true):$values;
+            $rows = isset($properties['array_rows'])?$properties['array_rows']:0;
+            for($i= count($_values['value']); $i<$rows; $i++){
+                $_values['value'][]= $_values['defaultRow'];
+            }
         }else{
             $_values['value'] =$_values['default'];
         }
