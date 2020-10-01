@@ -84,7 +84,8 @@ class exportDocument extends MainRender {
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
                     )
                 );
-                StaticPdfRenderer::renderDocument($params, "pt.pdf");
+                $pdfRenderer = new PdfRenderer();
+                $pdfRenderer->renderDocument($params, "pt.pdf");
                 $zip->addFile($this->cfgExport->tmp_dir."/pt.pdf", "/pt_sencer/pt.pdf");
 
                 $this->attachMediaFiles($zip);

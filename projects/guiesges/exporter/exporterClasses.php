@@ -103,7 +103,7 @@ class IocTcPdf extends TCPDF {
     }
 }
 
-class StaticPdfRenderer extends BasicStaticPdfRenderer {
+class PdfRenderer extends BasicPdfRenderer {
 
     /**
      * params = hashArray:{
@@ -116,8 +116,8 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
      *              titol:array os string    // linies de títol del document (cada ítem és una línia)
      *              contingut: string   //contingut latex ja rendaritzat
      */
-    public static function renderDocument($params, $output_filename="") {
-        StaticPdfRenderer::resetStaticDataRender();
+    public function renderDocument($params, $output_filename="") {
+        $this->resetDataRender();
         if (empty($output_filename)){
             $output_filename = str_replace(":", "_", $params["id"]);
         }
@@ -131,8 +131,8 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->setStartingPageNumber(0);
 
         // set header and footer fonts
-        $iocTcPdf->setHeaderFont(Array(self::$headerFont, '', self::$headerFontSize));
-        $iocTcPdf->setFooterFont(Array(self::$footerFont, '', self::$footerFontSize));
+        $iocTcPdf->setHeaderFont(Array($this->headerFont, '', $this->headerFontSize));
+        $iocTcPdf->setFooterFont(Array($this->footerFont, '', $this->footerFontSize));
 
         $iocTcPdf->SetDefaultMonospacedFont("Courier");
         $iocTcPdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -148,13 +148,13 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->SetX(100);
         $iocTcPdf->SetY($y=100);
 
-        $iocTcPdf->SetFont(self::$firstPageFont, 'B', 35);
+        $iocTcPdf->SetFont($this->firstPageFont, 'B', 35);
         for ($i=0; $i<2; $i++){
             $iocTcPdf->Cell(0, 0, $params["data"]["titol"][$i], 0, 1);
         }
         $iocTcPdf->SetY($y+=100);
 
-        $iocTcPdf->SetFont(self::$firstPageFont, 'B', 20);
+        $iocTcPdf->SetFont($this->firstPageFont, 'B', 20);
         for ($i=2; $i<count($params["data"]["titol"]); $i++){
             $iocTcPdf->Cell(0, 0, $params["data"]["titol"][$i], 0, 1);
         }
@@ -162,10 +162,10 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->AddPage();
         if (!empty($params["data"]["contingut"])) {
             foreach ($params["data"]["contingut"] as $itemsDoc) {
-                self::resolveReferences($itemsDoc);
+                $this->resolveReferences($itemsDoc);
             }
             foreach ($params["data"]["contingut"] as $itemsDoc) {
-                self::renderHeader($itemsDoc, $iocTcPdf);
+                $this->renderHeader($itemsDoc, $iocTcPdf);
             }
         }
 

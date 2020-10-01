@@ -93,7 +93,7 @@ class IocTcPdf extends TCPDF {
     }
  }
 
-class StaticPdfRenderer extends BasicStaticPdfRenderer {
+class PdfRenderer extends BasicPdfRenderer {
 
     /**
      * params = hashArray:{
@@ -106,7 +106,7 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
      *              array  'peu'       //dades del peu de pàgina
      *              string 'contingut' //contingut latex ja rendaritzat
      */
-    public static function renderDocument($params, $output_filename="") {
+    public function renderDocument($params, $output_filename="") {
         if (empty($output_filename)) {
             $output_filename = str_replace(":", "_", $params["id"]);
         }
@@ -117,8 +117,8 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->setFooterDataLocal($params["data"]["peu"]);
 
         // set header and footer fonts
-        $iocTcPdf->setHeaderFont(Array(self::$headerFont, '', self::$headerFontSize));
-        $iocTcPdf->setFooterFont(Array(self::$footerFont, '', self::$footerFontSize));
+        $iocTcPdf->setHeaderFont(Array($this->headerFont, '', $this->headerFontSize));
+        $iocTcPdf->setFooterFont(Array($this->footerFont, '', $this->footerFontSize));
 
         $iocTcPdf->SetDefaultMonospacedFont("Courier");
         $iocTcPdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -133,10 +133,10 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->AddPage();
         if (!empty($params["data"]["contingut"])) {
             foreach ($params["data"]["contingut"] as $itemsDoc) {
-                self::resolveReferences($itemsDoc);
+                $this->resolveReferences($itemsDoc);
             }
             foreach ($params["data"]["contingut"] as $itemsDoc) {
-                self::renderHeader($itemsDoc, $iocTcPdf);
+                $this->renderHeader($itemsDoc, $iocTcPdf);
             }
         }
 

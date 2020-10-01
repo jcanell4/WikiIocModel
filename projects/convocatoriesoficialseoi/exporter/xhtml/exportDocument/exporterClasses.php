@@ -98,9 +98,10 @@ class exportDocument extends MainRender {
                 $params["data"]["contingut"] = json_decode($data["pdfconvocatoria_" . $block], TRUE);   //contingut latex ja rendaritzat
 
                 $pdfFilename = "c-" . $block . ".pdf";
-                StaticPdfRenderer::renderDocument($params, $pdfFilename);
+                $pdfRenderer = new PdfRenderer();
+                $pdfRenderer->renderDocument($params, $pdfFilename);
                 $zip->addFile($this->cfgExport->tmp_dir ."/". $pdfFilename, $pdfFilename);
-                StaticPdfRenderer::resetStaticDataRender();
+                $pdfRenderer->resetDataRender();
 
                 $this->attachMediaFiles($zip);
 

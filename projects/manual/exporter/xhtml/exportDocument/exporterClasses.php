@@ -83,7 +83,8 @@ class exportDocument extends MainRender {
                     )
                 );
                 $filenamepdf = "manual.pdf";    //$filenamepdf = "manual_".end(explode($this->cfgExport->id)).".pdf";
-                StaticPdfRenderer::renderDocument($params, $filenamepdf);
+                $pdfRenderer = new PdfRenderer();                
+                $pdfRenderer->renderDocument($params, $filenamepdf);
                 $zip->addFile($this->cfgExport->tmp_dir."/$filenamepdf", "/$filenamepdf");
 
                 $this->attachMediaFiles($zip);

@@ -72,7 +72,7 @@ class IocTcPdf extends TCPDF
     }
 }
 
-class StaticPdfRenderer extends BasicStaticPdfRenderer
+class PdfRenderer extends BasicPdfRenderer
 {
 
     /**
@@ -86,7 +86,7 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer
      *              titol:array os string    // linies de títol del document (cada ítem és una línia)
      *              contingut: string   //contingut latex ja rendaritzat
      */
-    public static function renderDocument($params, $output_filename = "") {
+    public function renderDocument($params, $output_filename = "") {
         if (empty($output_filename)) {
             $output_filename = str_replace(":", "_", $params["id"]);
         }
@@ -96,8 +96,8 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer
         $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
 
         // set header and footer fonts
-        $iocTcPdf->setHeaderFont(Array(self::$headerFont, '', self::$headerFontSize));
-        $iocTcPdf->setFooterFont(Array(self::$footerFont, '', self::$footerFontSize));
+        $iocTcPdf->setHeaderFont(Array($this->headerFont, '', $this->headerFontSize));
+        $iocTcPdf->setFooterFont(Array($this->footerFont, '', $this->footerFontSize));
 
         $iocTcPdf->setStartingPageNumber(1);
 
@@ -115,17 +115,17 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer
         $iocTcPdf->SetX(100);
         $iocTcPdf->SetY($y = 28);
 
-        $iocTcPdf->SetFont(static::$firstPageFont, 'B', 16);
+        $iocTcPdf->SetFont($this->firstPageFont, 'B', 16);
         $iocTcPdf->MultiCell(0, 0, html_entity_decode($params["data"]["titol"], ENT_QUOTES), 0, false, 'C');
 
         $iocTcPdf->SetY($y = 35);
 
         $len = count($params["data"]["contingut"]);
         for ($i = 0; $i < $len; $i++) {
-            static::resolveReferences($params["data"]["contingut"][$i]);
+            $this->resolveReferences($params["data"]["contingut"][$i]);
         }
         for ($i = 0; $i < $len; $i++) {
-            static::renderHeader($params["data"]["contingut"][$i], $iocTcPdf);
+            $this->renderHeader($params["data"]["contingut"][$i], $iocTcPdf);
         }
 
         $iocTcPdf->Output("{$params['tmp_dir']}/$output_filename", 'F');
@@ -134,12 +134,12 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer
     }
 
     // override
-    protected static function getContent($content)
+    protected function getContent($content)
     {
 
         switch ($content["type"]) {
             case EoiBlockNodeDoc::BLOCK:
-                $ret = "<table cellspacing=\"10\" style=\"border: 1px solid black;page-break-after: always\" ><tr><td>" . trim(static::getStructuredContent($content), " ") . "</td></tr></table>";
+                $ret = "<table cellspacing=\"10\" style=\"border: 1px solid black;page-break-after: always\" ><tr><td>" . trim($this->getStructuredContent($content), " ") . "</td></tr></table>";
                 return $ret;
 
             case EoiMapTableNodeDoc::MAP_TABLE:
@@ -153,7 +153,7 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer
                 // Cel·la 2 Fila 2 (url)
                 $content['content'][0]['content'][1]['content'][1]['align'] = "right";
 
-                $aux = trim(static::getStructuredContent($content), " ");
+                $aux = trim($this->getStructuredContent($content), " ");
 
                 return $aux;
 

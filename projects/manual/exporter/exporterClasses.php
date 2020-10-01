@@ -72,7 +72,7 @@ class IocTcPdf extends TCPDF {
     }
 }
 
-class StaticPdfRenderer extends BasicStaticPdfRenderer {
+class PdfRenderer extends BasicPdfRenderer {
 
     /**
      * params = hashArray:{
@@ -86,7 +86,7 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
      *              array d'strings 'titol'     // linies de títol del document (cada ítem és una línia)
      *              string          'contingut' //contingut latex ja rendaritzat
      */
-    public static function renderDocument($params, $output_filename="") {
+    public function renderDocument($params, $output_filename="") {
         if (empty($output_filename)) {
             $output_filename = str_replace(":", "_", $params["id"]);
         }
@@ -94,11 +94,11 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, false);
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
         $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
-        self::setMaxImgSize($params['max_img_size']);
+        $this->setMaxImgSize($params['max_img_size']);
 
         // set header and footer fonts
-        $iocTcPdf->setHeaderFont(Array(self::$headerFont, '', self::$headerFontSize));
-        $iocTcPdf->setFooterFont(Array(self::$footerFont, '', self::$footerFontSize));
+        $iocTcPdf->setHeaderFont(Array($this->headerFont, '', $this->headerFontSize));
+        $iocTcPdf->setFooterFont(Array($this->footerFont, '', $this->footerFontSize));
 
         $iocTcPdf->SetDefaultMonospacedFont("Courier");
         $iocTcPdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -114,13 +114,13 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->SetX(100);
         $iocTcPdf->SetY($y=80);
 
-        $iocTcPdf->SetFont(self::$firstPageFont, 'B', 35);
+        $iocTcPdf->SetFont($this->firstPageFont, 'B', 35);
         $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"]["titol"], 0, 'L');
         $iocTcPdf->SetY($y+=30);
-        $iocTcPdf->SetFont(self::$firstPageFont, 'B', 25);
+        $iocTcPdf->SetFont($this->firstPageFont, 'B', 25);
         $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"]["subtitol"], 0, 'L');
         $iocTcPdf->SetY($y+=80);
-        $iocTcPdf->SetFont(self::$firstPageFont, 'B', 15);
+        $iocTcPdf->SetFont($this->firstPageFont, 'B', 15);
         if(!empty($params["data"]["titol"]['autor'])){
             $iocTcPdf->Cell(0, 0, $params["data"]["titol"]['autor'], 0, 1);
         }
@@ -133,10 +133,10 @@ class StaticPdfRenderer extends BasicStaticPdfRenderer {
         $iocTcPdf->AddPage();
         if (!empty($params["data"]["contingut"])) {
             foreach ($params["data"]["contingut"] as $itemsDoc) {
-                self::resolveReferences($itemsDoc);
+                $this->resolveReferences($itemsDoc);
             }
             foreach ($params["data"]["contingut"] as $itemsDoc) {
-                self::renderHeader($itemsDoc, $iocTcPdf);
+                $this->renderHeader($itemsDoc, $iocTcPdf);
             }
         }
 

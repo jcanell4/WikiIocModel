@@ -32,6 +32,48 @@ abstract class AbstractNodeDoc{
     public abstract function getEncodeJson();
 }
 
+class IocElemNodeDoc extends StructuredNodeDoc {
+    const IOC_ELEM_TYPE_EXAMPLE = "example";
+    const IOC_ELEM_TYPE_IMPORTANT = "important";
+    const IOC_ELEM_TYPE_COMP = "text";
+    const IOC_ELEM_TYPE_COMP_LARGE = "textl";
+    const IOC_ELEM_TYPE_NOTE = "note";
+    const IOC_ELEM_TYPE_REF = "reference";
+    const IOC_ELEM_TYPE_QUOTE = "quote  ";
+    
+    protected $title;
+    protected $offset;
+    protected $width;
+    
+    public function __construct($type, $title, $offset=FALSE, $width=FALSE) {
+        parent::__construct($type);
+        $this->title = $title;
+        $this->offset = $offset;
+        $this->width= $width;
+    }
+    
+    public function setNodeParams($title, $offset=FALSE, $width=FALSE) {
+        $this->title = $title;
+        $this->offset = $offset;
+        $this->width= $width;
+    }
+    
+    public function getEncodeJson() {
+        $ret = "{\n\"type\":\"".trim($this->type)."\""
+                .",\n\"title\":\"".trim($this->title)."\"";
+        if($this->offset){
+            $ret .= ",\n\"offset\":\"".trim($this->offset)."mm\"";
+        }
+        if($this->width){
+            $ret .= ",\n\"width\":\"".trim($this->width)."mm\"";
+        }
+        $ret .= ",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= "\n}";
+        return $ret;
+    }
+
+}
+
 class FigureFrame extends StructuredNodeDoc {
     const FRAME_TYPE_FIGURE = "frameFigure";
 
@@ -402,23 +444,6 @@ class LeafNodeDoc extends AbstractNodeDoc{
     }
 }
 
-class CodeNodeDoc extends TextNodeDoc{
-    const CODE_TEXT_TYPE = "code";
-    var $language;
-
-    public function __construct($type, $text, $lang) {
-        parent::__construct($type, $text);
-        $this->language = $lang;
-    }
-
-    public function getEncodeJson() {
-        return "{\n\"type\":\"".$this->type."\""
-                .",\n\"language\":\"".$this->language."\""
-                .",\n\"text\":\"".$this->text."\""
-                ."\n}";
-    }
-}
-
 class ReferenceNodeDoc extends AbstractNodeDoc{
     const REFERENCE_TYPE = "reference";
     const REF_FIGURE_TYPE = "fig";
@@ -460,13 +485,37 @@ class TextNodeDoc extends AbstractNodeDoc{
     }
 
     public function getEncodeJson() {
-        $text = preg_replace(array("/\t/", "/\n/", "/\r/"), array("    ", " ", ""), $this->text);
+        if(($this->type=== self::PREFORMATED_TEXT_TYPE)
+                || ($this->type=== self::UNFORMATED_TEXT_TYPE)){
+            $cr = "<br>";
+        }else{
+            $cr = " ";
+        }
+        $text = preg_replace(array("/\t/", "/ *\r\n/", "/ *\n/"), array("    ", $cr, $cr), $this->text);
         $ret = "{\n\"type\":\"".$this->type."\""
                 .",\n\"text\":\"".$text."\"";
         $ret .= "\n}";
         return $ret;
     }
 
+}
+
+class CodeNodeDoc extends TextNodeDoc{
+    const CODE_TEXT_TYPE = "code";
+    var $language;
+
+    public function __construct($type, $text, $lang) {
+        parent::__construct($type, $text);
+        $this->language = $lang;
+    }
+
+    public function getEncodeJson() {
+        $text = preg_replace(array("/\t/", "/ *\r\n/", "/ *\n/", "/\"/"), array("    ", "<br>", "<br>", "\\\""), $this->text);
+        return "{\n\"type\":\"".$this->type."\""
+                .",\n\"language\":\"".$this->language."\""
+                .",\n\"text\":\"".$text."\""
+                ."\n}";
+    }
 }
 
 class ImageNodeDoc extends AbstractNodeDoc {
@@ -780,6 +829,10 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::UNFORMATED_TEXT_TYPE, $this->_xmlEntities($text)));
     }
 
+    function code($text, $language="", $filename=null) {
+        $this->currentNode->addContent(new CodeNodeDoc(CodeNodeDoc::CODE_TEXT_TYPE, $text, $language));
+    }
+
     function php($text, $wrapper="code") {
         global $conf;
         if ($conf['phpok']){
@@ -945,6 +998,10 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     function tablecell_close(){
         $this->currentNode = $this->currentNode->getOwner();
     }
+    
+    function _xmlEntities($string) {
+        return htmlspecialchars($string,ENT_QUOTES,'UTF-8');
+    }
 
     private function _isBorderTypeTable($types=NULL){
         if($types==NULL){
@@ -974,10 +1031,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     public function setCurrentNode($node){
         return $this->currentNode = $node;
-    }
-
-    private function _xmlEntities($string) {
-        return htmlspecialchars($string,ENT_QUOTES,'UTF-8');
     }
 
     private function _media ($src, $title=null, $align=null, $width=null, $height=null) {
