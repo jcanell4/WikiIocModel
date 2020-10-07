@@ -149,7 +149,7 @@
             },
             "config":{
                 "options":[
-                    {"description":"estil normal", "value":"main.css"}
+                    {"description":"estil normal", "value":"main"}
                 ]
             }
         },

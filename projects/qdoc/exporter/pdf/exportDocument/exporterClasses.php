@@ -5,7 +5,7 @@
  */
 if (!defined('DOKU_INC')) die();
 
-class exportDocument extends MainRender {
+class exportDocument extends renderHtmlDocument {
 
     public function __construct($factory, $typedef, $renderdef, $params=NULL) {
         parent::__construct($factory, $typedef, $renderdef);

@@ -33,6 +33,7 @@ abstract class AbstractNodeDoc{
 }
 
 class IocElemNodeDoc extends StructuredNodeDoc {
+    const IOC_ELEM_TYPE = "iocElemType";
     const IOC_ELEM_TYPE_EXAMPLE = "example";
     const IOC_ELEM_TYPE_IMPORTANT = "important";
     const IOC_ELEM_TYPE_COMP = "text";
@@ -44,15 +45,18 @@ class IocElemNodeDoc extends StructuredNodeDoc {
     protected $title;
     protected $offset;
     protected $width;
+    protected $elemType;
     
     public function __construct($type, $title, $offset=FALSE, $width=FALSE) {
-        parent::__construct($type);
+        parent::__construct(self::IOC_ELEM_TYPE);
+        $this->elemType= $type;
         $this->title = $title;
         $this->offset = $offset;
         $this->width= $width;
     }
     
-    public function setNodeParams($title, $offset=FALSE, $width=FALSE) {
+    public function setNodeParams($type, $title, $offset=FALSE, $width=FALSE) {
+        $this->elemType= $type;
         $this->title = $title;
         $this->offset = $offset;
         $this->width= $width;
@@ -60,6 +64,7 @@ class IocElemNodeDoc extends StructuredNodeDoc {
     
     public function getEncodeJson() {
         $ret = "{\n\"type\":\"".trim($this->type)."\""
+                .",\n\"elemType\":\"".trim($this->elemType)."\""
                 .",\n\"title\":\"".trim($this->title)."\"";
         if($this->offset){
             $ret .= ",\n\"offset\":\"".trim($this->offset)."mm\"";

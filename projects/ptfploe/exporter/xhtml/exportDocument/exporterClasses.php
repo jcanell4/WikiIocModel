@@ -7,7 +7,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
-class exportDocument extends MainRender {
+class exportDocument extends renderHtmlDocument {
 
     public function __construct($factory, $typedef, $renderdef, $params=NULL) {
         parent::__construct($factory, $typedef, $renderdef);
