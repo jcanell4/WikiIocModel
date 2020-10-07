@@ -5,118 +5,133 @@
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-require_once DOKU_INC."inc/parserutils.php";
+/**
+ * class IocTcPdf
+ */
+require_once (DOKU_INC.'inc/inc_ioc/tcpdf/tcpdf_include.php');
 
-class MainRender extends renderObject {
-    protected $max_menu;
-    protected $max_navmenu;
-    protected $media_path = 'lib/exe/fetch.php?media=';
-    protected $menu_html = '';
-    protected $tree_names = array();
-    protected $web_folder = 'WebContent';
-    protected $initialized = FALSE;
+class IocTcPdf extends TCPDF {
+    private $header_logo_height = 10;
+    private $peu = array();
 
-    public function initParams(){
-        $langFile = $this->cfgExport->langDir.$this->cfgExport->lang.'.conf';
-        if (!file_exists($langFile)){
-            $this->cfgExport->lang = 'ca';
-            $langFile = $this->cfgExport->langDir.$this->cfgExport->lang.'.conf';
-        }
-        if (file_exists($langFile)) {
-            $this->cfgExport->aLang = confToHash($langFile);
-        }
-        $this->initialized = TRUE;
-    }
-}
-
-class renderDate extends AbstractRenderer {
-    private $sep;
-
-    public function __construct($factory, $cfgExport=NULL, $sep="-") {
-        parent::__construct($factory, $cfgExport);
-        $this->sep = $sep;
+    public function __construct($orientation='P', $unit='mm', $format='A4', $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false) {
+        parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
+        $this->header_logo_width = 8;
+        $this->SetMargins(20, 20);
+        $this->head = 20;
+        $this->header_font = "helvetica";
     }
 
-    public function process($date) {
-        $dt = strtotime(str_replace('/', '-', $date));
-        return date("d". $this->sep."m".$this->sep."Y", $dt);
+    //Page header
+    public function Header() {
+        $margins = $this->getMargins();
+
+        // Logo
+        $image_file = K_PATH_IMAGES.$this->header_logo;
+        $this->Image($image_file, $margins['left'], 5, $this->header_logo_width, $this->header_logo_height, 'JPG', '', 'T', true, 300, '', false, false, 0, false, false, false);
+
+        $headerfont = $this->getHeaderFont();
+        $cell_height = $this->getCellHeight($headerfont[2] / $this->k);
+        $header_x = $margins['left'] + $margins['padding_left'] + ($this->header_logo_width * 1.1);
+        $header_w = 105 - $header_x;
+
+        $this->SetTextColorArray($this->header_text_color);
+        // header title
+        $this->SetFont($headerfont[0], $headerfont[1], $headerfont[2]);
+        $this->SetX($header_x);
+        $this->MultiCell($header_w, $cell_height, $this->header_title, 0, 'L', 0, 0, "", "", true);
+
+        // header string
+        $this->MultiCell(0, $cell_height, $this->header_string, 0, 'R', 0, 0, "", "", true);
+        $this->Line($margins['left'], 19, $this->getPageWidth()-$margins['right'], 19);
     }
 
-}
+    // Page footer
+    public function Footer() {
+        $margins = $this->getMargins();
+        $footerfont = $this->getFooterFont();
+        $cell_height = $this->getCellHeight($footerfont[2]) / 2;
+        $y_position = -($cell_height*2 + 15);
 
-class renderText extends AbstractRenderer {
+        $this->SetFont($footerfont[0], $footerfont[1], $footerfont[2]);
+        $this->SetY($y_position);   //Position from bottom
 
-    public function process($data) {
-        return htmlentities($data, ENT_QUOTES);
+        $codi = " codi: ".$this->peu['codi'];
+        $versio = " versió: ".$this->peu['versio'];
+        $w1 = max(10, strlen($codi), strlen($versio)) * 2;
+        $w1 = min(30, $w1);
+        $w2 = 22;
+
+        $this->MultiCell($w1, $cell_height, $codi, 1, 'L', 0, 1, "", "", true, 0, false, true, $cell_height, 'M');
+        $this->MultiCell($w1, $cell_height, $versio, 1, 'L', 0, 0, "", "", true, 0, false, true, $cell_height, 'M');
+        $this->SetY($y_position);
+        $titol_w = $this->getPageWidth()-$margins['right']-($w1+$w2-5);
+        $this->MultiCell($titol_w, $cell_height*2, $this->peu['titol'], 1, 'C', 0, 0, "", "", true, 0, false, true, $cell_height*2, 'M');
+        $page_number = "pàgina ".$this->getPage()."/".$this->getNumPages()." ";
+        $this->MultiCell($w2, $cell_height*2, $page_number, 1, 'R', 0, 1, "", "", true, 0, false, true, $cell_height*2, 'M');
     }
-}
 
-class renderField extends AbstractRenderer {
-
-    public function process($data) {
-        return $data;
+    public function setHeaderData($ln='', $lw=0, $lh=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)) {
+        parent::setHeaderData($ln, $lw, $ht, $hs, $tc, $lc);
+        $this->header_logo_height = $lh;
     }
-}
 
-class renderRenderizableText extends AbstractRenderer {
-
-    public function process($data) {
-        $instructions = p_get_instructions($data);
-        $html = p_render('wikiiocmodel_ptxhtml', $instructions, $info);
-        return $html;
+    public function setFooterDataLocal($data, $tc=array(0,0,0), $lc=array(0,0,0)) {
+        parent::setFooterData($tc, $lc);
+        $this->peu = $data;
     }
-}
+ }
 
-class renderFileToPsDom extends renderFile {
+class PdfRenderer extends BasicPdfRenderer {
 
-    protected function render($instructions, &$renderData){
-        return p_latex_render('wikiiocmodel_psdom', $instructions, $renderData);
-    }
-}
-
-class renderFile extends AbstractRenderer {
-
-    public function process($data, $alias="") {
-        global $plugin_controller;
-
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-            $startedHere = true;
-        }
-        $_SESSION['export_html'] = $this->cfgExport->export_html;
-        $_SESSION['tmp_dir'] = $this->cfgExport->tmp_dir;
-        $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
-        $_SESSION['media_files'] = &$this->cfgExport->media_files;
-        $_SESSION['graphviz_images'] = &$this->cfgExport->graphviz_images;
-        $_SESSION['gif_images'] = &$this->cfgExport->gif_images;
-        $_SESSION['alternateAddress'] = TRUE;
-
-        if(preg_match("/".$this->cfgExport->id."/", $data)!=1){
-            $fns = $this->cfgExport->id.":".$data;
-        }
-        $file = wikiFN($fns);
-        $text = io_readFile($file);
-
-        $counter = 0;
-        $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $text, 1, $counter);
-        if($counter>0){
-            $dataSource = $plugin_controller->getCurrentProjectDataSource($this->cfgExport->id, $plugin_controller->getCurrentProject());
-            $text = WiocclParser::getValue($text, [], $dataSource);
+    /**
+     * params = hashArray:{
+     *      string 'id'             //id del projecte
+     *      string 'tmp_dir'        //directori temporal on crear el pdf
+     *      string 'lang'           //idioma usat (CA, EN, ES, ...)
+     *      string 'mode'           //pdf o zip
+     *      hashArray 'data': [
+     *              array  'header'    //dades de la capçalera de pàgina
+     *              array  'peu'       //dades del peu de pàgina
+     *              string 'contingut' //contingut latex ja rendaritzat
+     */
+    public function renderDocument($params, $output_filename="") {
+        if (empty($output_filename)) {
+            $output_filename = str_replace(":", "_", $params["id"]);
         }
 
-        $instructions = p_get_instructions($text);
-        $renderData = array();
-        $html = $this->render($instructions, $renderData);
-        if(empty($alias)){
-            $alias=$data;
+        $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, false);
+        $iocTcPdf->SetCreator("DOKUWIKI IOC");
+        $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
+        $iocTcPdf->setFooterDataLocal($params["data"]["peu"]);
+
+        // set header and footer fonts
+        $iocTcPdf->setHeaderFont(Array($this->headerFont, '', $this->headerFontSize));
+        $iocTcPdf->setFooterFont(Array($this->footerFont, '', $this->footerFontSize));
+
+        $iocTcPdf->SetDefaultMonospacedFont("Courier");
+        $iocTcPdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $iocTcPdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // set margins
+        $iocTcPdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $iocTcPdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $iocTcPdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        //pàgina de continguts
+        $iocTcPdf->AddPage();
+        if (!empty($params["data"]["contingut"])) {
+            foreach ($params["data"]["contingut"] as $itemsDoc) {
+                $this->resolveReferences($itemsDoc);
+            }
+            foreach ($params["data"]["contingut"] as $itemsDoc) {
+                $this->renderHeader($itemsDoc, $iocTcPdf);
+            }
         }
-        $this->cfgExport->toc[$alias] = $renderData["tocItems"];
-        if ($startedHere) session_destroy();
 
-        return $html;
+        $iocTcPdf->Output("{$params['tmp_dir']}/$output_filename", 'F');
+
+        return TRUE;
     }
 
-    protected function render($instructions, &$renderData){
-        return p_render('wikiiocmodel_ptxhtml', $instructions, $renderData);
-    }
 }

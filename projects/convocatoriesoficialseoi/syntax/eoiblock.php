@@ -9,6 +9,48 @@
 if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 require_once(DOKU_PLUGIN.'syntax.php');
+require_once(DOKU_INC . 'lib/plugins/wikiiocmodel/renderer/psdom.php');
+
+class EoiBlockNodeDoc extends StructuredNodeDoc
+{
+    const BLOCK = "block";
+
+    public function __construct($type)
+    {
+        parent::__construct($type);
+    }
+
+}
+
+class EoiMapTableNodeDoc extends StructuredNodeDoc
+{
+    const MAP_TABLE = "map-table";
+
+    public function __construct($type)
+    {
+        parent::__construct($type);
+    }
+
+}
+
+class ImgResourcePrjNodeDoc extends ImageNodeDoc
+{
+    const IMG_RESOURCE_PRJ = "img-resource-prj";
+
+    // TODO[Xavi]: En lloc de fer servir una mida fixa extreurela de la etiqueta <img-resource-prj>
+    public function __construct($height = NULL, $width=NULL, $align=NULL)
+    {
+        parent::__construct('', NULL, $align, $width, $height, NULL, NULL);
+
+        $this->type = self::IMG_RESOURCE_PRJ;
+    }
+
+    public function setSource($src)
+    {
+        $this->src = $src;
+    }
+
+}
 
 class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_eoiblock extends DokuWiki_Syntax_Plugin {
 

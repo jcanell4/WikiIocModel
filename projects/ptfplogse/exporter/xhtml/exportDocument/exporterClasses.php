@@ -7,7 +7,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
-class exportDocument extends MainRender {
+class exportDocument extends renderHtmlDocument {
 
     public function __construct($factory, $typedef, $renderdef, $params=NULL) {
         parent::__construct($factory, $typedef, $renderdef);
@@ -84,7 +84,8 @@ class exportDocument extends MainRender {
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
                     )
                 );
-                StaticPdfRenderer::renderDocument($params, "pt.pdf");
+                $pdfRenderer = new PdfRenderer();
+                $pdfRenderer->renderDocument($params, "pt.pdf");
                 $zip->addFile($this->cfgExport->tmp_dir."/pt.pdf", "/pt_sencer/pt.pdf");
 
                 $this->attachMediaFiles($zip);

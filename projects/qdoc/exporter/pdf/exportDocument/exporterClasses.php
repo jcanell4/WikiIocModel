@@ -5,7 +5,7 @@
  */
 if (!defined('DOKU_INC')) die();
 
-class exportDocument extends MainRender {
+class exportDocument extends renderHtmlDocument {
 
     public function __construct($factory, $typedef, $renderdef, $params=NULL) {
         parent::__construct($factory, $typedef, $renderdef);
@@ -51,7 +51,8 @@ class exportDocument extends MainRender {
                 "contingut" => json_decode($data["fitxercontinguts"], TRUE)   //contingut latex ja rendaritzat
             )
         );
-        StaticPdfRenderer::renderDocument($params, "pt.pdf");
+        $pdfRenderer = new PdfRenderer();
+        $pdfRenderer->renderDocument($params, "pt.pdf");
         $result["tmp_dir"] = $this->cfgExport->tmp_dir."/pt.pdf";
         return $result;
     }

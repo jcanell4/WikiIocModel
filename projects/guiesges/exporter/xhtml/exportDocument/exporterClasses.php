@@ -7,7 +7,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
-class exportDocument extends MainRender {
+class exportDocument extends renderHtmlDocument {
 
     public function __construct($factory, $typedef, $renderdef, $params=NULL) {
         parent::__construct($factory, $typedef, $renderdef);
@@ -88,14 +88,14 @@ class exportDocument extends MainRender {
                         "contingut" => json_decode($data["pdfge"], TRUE)   //contingut latex ja rendaritzat
                     )
                 );
-
-                StaticPdfRenderer::renderDocument($params, "ge.pdf");
+                $pdfRenderer = new PdfRenderer();
+                $pdfRenderer->renderDocument($params, "ge.pdf");
                 $zip->addFile($this->cfgExport->tmp_dir."/ge.pdf", "/ge_sencera/ge.pdf");
 
-                StaticPdfRenderer::resetStaticDataRender();
+                $pdfRenderer->resetDataRender();
                 $params["data"]["titol"]=array("Estudis de GES","Guia docent",$modul);
                 $params["data"]["contingut"]=json_decode($data["pdfgd"], TRUE);   //contingut latex ja rendaritzat
-                StaticPdfRenderer::renderDocument($params, $filePdf);
+                $pdfRenderer->renderDocument($params, $filePdf);
 
                 $this->attachMediaFiles($zip);
 

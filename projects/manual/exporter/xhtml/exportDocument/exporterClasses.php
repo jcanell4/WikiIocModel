@@ -7,7 +7,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
-class exportDocument extends MainRender {
+class exportDocument extends renderHtmlDocument {
 
     public function __construct($factory, $typedef, $renderdef, $params=NULL) {
         parent::__construct($factory, $typedef, $renderdef);
@@ -47,7 +47,7 @@ class exportDocument extends MainRender {
 
             if ($zip->addFromString('index.html', $document)) {
                 $allPathTemplate = $this->cfgExport->rendererPath . "/$pathTemplate";
-                $this->addFilesToZip($zip, $allPathTemplate, "", "css", FALSE, $data['estil']);
+                $this->addFilesToZip($zip, $allPathTemplate, "", "css", FALSE, $data['estil'].".css");
                 $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL."exporter/xhtml", "", "css");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "js");
@@ -58,7 +58,7 @@ class exportDocument extends MainRender {
                 $data_fitxer = html_entity_decode(htmlspecialchars_decode($data["data_fitxercontinguts"], ENT_COMPAT|ENT_QUOTES));
                 $entitat_responsable = html_entity_decode(htmlspecialchars_decode($data["entitatResponsable"], ENT_COMPAT|ENT_QUOTES));
 
-                $estils = $this->getPdfStyleAttributes($this->cfgExport->rendererPath . "/xhtml/exportDocument/pdf");
+                $estils = $this->getPdfStyleAttributes($this->cfgExport->rendererPath . "/xhtml/exportDocument/pdf", $data['estil']);
 
                 $params = array(
                     "id" => $this->cfgExport->id,
@@ -83,7 +83,8 @@ class exportDocument extends MainRender {
                     )
                 );
                 $filenamepdf = "manual.pdf";    //$filenamepdf = "manual_".end(explode($this->cfgExport->id)).".pdf";
-                StaticPdfRenderer::renderDocument($params, $filenamepdf);
+                $pdfRenderer = new PdfRenderer();                
+                $pdfRenderer->renderDocument($params, $filenamepdf);
                 $zip->addFile($this->cfgExport->tmp_dir."/$filenamepdf", "/$filenamepdf");
 
                 $this->attachMediaFiles($zip);
@@ -243,7 +244,7 @@ class exportDocument extends MainRender {
             $dh = opendir($dir);
             while ($file = readdir($dh)) {
                 if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
-                    if (preg_match('/.*?\.stypdf|.*?\.css/', $file)){
+                    if (preg_match('/.*?\.stypdf/', $file)){
                         $json = file_get_contents("$dir/$file");
                         $estils = array_merge($estils, json_decode($json, true));
                     }
