@@ -41,7 +41,7 @@ class systemUpgrader {
                             $v_project[$key][$k] = $ver; //asignamos a la versión del template el valor antiguo
                         }
                     }else {
-                        $v_project[$key] = $value; //asignamos a fields el valor actual (no hay valor antiguo)
+                        $v_project[$key] = 0; //asignamos a fields el valor 0 (no hay valor antiguo) empezamos desde cero
                     }
                 }
             }
