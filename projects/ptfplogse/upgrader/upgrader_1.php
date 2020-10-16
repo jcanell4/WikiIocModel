@@ -18,7 +18,7 @@ class upgrader_1 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 //Transforma los datos del proyecto "ptfplogse" desde la estructura de la versión 0 a la versión 1
@@ -26,10 +26,10 @@ class upgrader_1 extends CommonUpgrader {
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }
+                $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
                 //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
                 $dataProject = $this->addFieldInMultiRow($dataProject, "datesJT", "hiHaRecuperacio", TRUE);
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 0 to 1");
-                $status = TRUE;
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":
@@ -48,16 +48,10 @@ class upgrader_1 extends CommonUpgrader {
                 $aTokRep[] = ["(Aquest \<WIOCCL:IF condition.*tipusBlocCredit.*tipusBlocCredit.*del.*crèdit.*credit.*)( tracta de )(.*descripcio.*\n)",
                               "$1 $3"];
                 $dataChanged = $this->updateTemplateByReplace($doc1, $aTokRep);
-                if (!empty($dataChanged)) {
+                if (($status = !empty($dataChanged))) {
                     $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
                 }
 
-                //Segunda parte: modificación de los datos del proyecto (archivo .mdpr que está en data/mdprojects/)
-                $dataProject = $this->model->getCurrentDataProject();
-                $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 0 to 1");
-
-                $status = !empty($dataChanged);
                 break;
         }
         return $status;

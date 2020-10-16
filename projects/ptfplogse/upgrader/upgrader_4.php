@@ -18,7 +18,7 @@ class upgrader_4 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename = NULL) {
+    public function process($type, $ver, $filename = NULL) {
         switch ($type) {
             case "fields":
 
@@ -34,9 +34,7 @@ class upgrader_4 extends CommonUpgrader {
                 $dataProject['dataQualificacioPaf1'] = str_replace("2019", "2020", $dataProject['dataQualificacioPaf1']);
                 $dataProject['dataQualificacioPaf2'] = str_replace("2019", "2020", $dataProject['dataQualificacioPaf2']);
 
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 3 to 4");
-
-                $status = TRUE;
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":

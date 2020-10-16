@@ -18,7 +18,7 @@ class upgrader_1 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
@@ -28,9 +28,7 @@ class upgrader_1 extends CommonUpgrader {
                 $dataProject['moodleCourseId'] = 0;
 
 
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 0 to 1 (s'afegeix el camp 'moodleCourseId'");
-
-                $ret = TRUE;
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
                 break;
             case "templates":
                 if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro

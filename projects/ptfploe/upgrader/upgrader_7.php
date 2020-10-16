@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_7: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_7: Transforma la estructura de datos y el archivo continguts.txt de los proyectos 'ptfploe'
  *             desde la versión 6 a la versión 7
  * @author rafael
  */
@@ -18,12 +18,12 @@ class upgrader_7 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 $matches=array();
-                preg_match("/([MC]\d{2})? *-? *(.+)/", $dataProject["modul"], $matches); 
+                preg_match("/([MC]\d{2})? *-? *(.+)/", $dataProject["modul"], $matches);
                 if(empty($matches[1])){
                     $dataProject['modulId']="";
                 }else{
@@ -31,9 +31,7 @@ class upgrader_7 extends CommonUpgrader {
                 }
                 $dataProject['modul'] = $matches[2];
 
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 6 to 7 (canvis en els camps)");
-
-                $status = TRUE;
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":
@@ -68,10 +66,10 @@ class upgrader_7 extends CommonUpgrader {
                              ];
                 $doc = $this->updateTemplateByInsert($doc, $aTokIns);
 
-                if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 6 to 7");
+                if (($status = !empty($doc))) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $status = !empty($doc);
+                break;
         }
         return $status;
     }

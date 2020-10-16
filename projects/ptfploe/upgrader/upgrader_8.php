@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_8: Transforma el archivo continguts.txt o el _wikiIocSystem_.mdpr de los proyectos 'ptfploe'
+ * upgrader_8: Transforma la estructura de datos y el archivo continguts.txt de los proyectos 'ptfploe'
  *             desde la versión 7 a la versión 8
  * @author rafael
  */
@@ -18,7 +18,7 @@ class upgrader_8 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
@@ -30,13 +30,11 @@ class upgrader_8 extends CommonUpgrader {
                 $value = false;
                 $dataProject = $this->addNewField($dataProject, $name, $value);
 
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 7 to 8 (afegir camps). Simultànea a la actualització de 23 a 24 de continguts");
-                $status = TRUE;
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver (simultànea a l'actualització de 23 a 24 de templates)", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":
                 $doc = $this->model->getRawProjectDocument($filename);
-
 
                 //INSERT
                 $aTokIns = [
@@ -117,12 +115,10 @@ class upgrader_8 extends CommonUpgrader {
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
-
-
-                if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 7 to 8");
+                if (($status = !empty($doc))) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $status = !empty($doc);
+                break;
         }
         return $status;
     }

@@ -21,7 +21,7 @@ class upgrader_7 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename = NULL) {
+    public function process($type, $ver, $filename = NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
@@ -30,10 +30,7 @@ class upgrader_7 extends CommonUpgrader {
                 }
                 $dataProject['moodleCourseId'] = 0;
 
-
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 6 to 7 (s'afegeix el camp 'moodleCourseId'");
-
-                $status = TRUE;
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":
@@ -58,7 +55,7 @@ class upgrader_7 extends CommonUpgrader {
                     ]
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
-                
+
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 6 to 7");
                 }

@@ -1,8 +1,6 @@
 <?php
 /**
- * upgrader_20: Transforma el archivo continguts.txt del proyecto "ptfploe" desde la versión 11 a la versión 12
- *              sustituye, en el doc del usuario, el contenido incluido entre los tags protected
- *              por el contenido de los tags protected de la nueva plantilla
+ * upgrader_20: Transforma el archivo continguts.txt del proyecto "ptfploe" desde la versión 19 a la versión 20
  * @culpable Josep 16-09-2019
  */
 if (!defined("DOKU_INC")) die();
@@ -21,7 +19,7 @@ class upgrader_20 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename = NULL) {
+    public function process($type, $ver, $filename = NULL) {
         switch ($type) {
             case "fields":
                 $status = TRUE;
@@ -44,7 +42,7 @@ class upgrader_20 extends CommonUpgrader {
                     ],
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
-                
+
                 //actualiza el doc del usuario en base a la plantilla
                 $doc = $this->updateDocFromTemplateUsingProtectecTags($plantilla, $doc);
 
@@ -55,16 +53,16 @@ class upgrader_20 extends CommonUpgrader {
                 */
                 $aTokRep = [
                     [
-                        "\\| \\<WIOCCL:FOREACH  var\\=\"item_act\" array\\=\"\\{##activitatsAprenentatge##\\}\" filter\\=\"\\{##item_act\\[unitat\\]##\\}\\=\\=\\{##item_per\\[unitat\\]##\\}\\&\\&\\{##item_act\\[període\\]##\\}\\=\\=\\{##item_per\\[període\\]##\\}\"\\>\\- \\{##item_act\\[descripció\\]##\\} \\\\ \<\/WIOCCL:FOREACH\>", 
+                        "\\| \\<WIOCCL:FOREACH  var\\=\"item_act\" array\\=\"\\{##activitatsAprenentatge##\\}\" filter\\=\"\\{##item_act\\[unitat\\]##\\}\\=\\=\\{##item_per\\[unitat\\]##\\}\\&\\&\\{##item_act\\[període\\]##\\}\\=\\=\\{##item_per\\[període\\]##\\}\"\\>\\- \\{##item_act\\[descripció\\]##\\} \\\\ \<\/WIOCCL:FOREACH\>",
                         "| <WIOCCL:FOREACH  var=\"item_act\" array=\"{##activitatsAprenentatge##}\" filter=\"{##item_act[unitat]##}=={##item_per[unitat]##}&&{##item_act[període]##}=={##item_per[període]##}\">- {##item_act[descripció]##} \\\\\\\\ </WIOCCL:FOREACH>"
                     ]
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 19 to 20");
+                if (($status = !empty($doc))) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $status = !empty($doc);
+                break;
         }
         return $status;
     }

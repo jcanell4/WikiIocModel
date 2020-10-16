@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_1: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_1: Transforma la estructura de datos y el archivo continguts.txt de los proyectos 'ptfploe'
  *             desde la versión 0 a la versión 1
  * @author rafael
  */
@@ -18,7 +18,7 @@ class upgrader_1 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 //Transforma los datos del proyecto "ptfploe" desde la estructura de la versión 0 a la versión 1
@@ -28,8 +28,8 @@ class upgrader_1 extends CommonUpgrader {
                 }
                 //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
                 $dataProject = $this->addFieldInMultiRow($dataProject, "datesJT", "hiHaRecuperacio", TRUE);
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 0 to 1");
-                $ret = TRUE;
+
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":
@@ -47,10 +47,10 @@ class upgrader_1 extends CommonUpgrader {
                              "{#_DATE(\"{##itemc[inici]##}\", \".\")_#}-{#_DATE(\"{##itemc[final]##}"]];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
+                if (($ret = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $ret = !empty($dataChanged);
+                break;
         }
         return $ret;
     }

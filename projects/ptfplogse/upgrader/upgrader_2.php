@@ -18,7 +18,7 @@ class upgrader_2 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
@@ -27,19 +27,19 @@ class upgrader_2 extends CommonUpgrader {
                 }
                 //Añade el campo 'hiHaSolucio' a la tabla 'datesEAF'
                 $dataProject = $this->addFieldInMultiRow($dataProject, "datesEAF", "hiHaSolucio", TRUE);
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 1 to 2");
-                return TRUE;
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
+                break;
 
             case "templates":
-
                 $doc = $this->model->getRawProjectDocument($filename);
                 $aTokRep = [["\| \{##item\[id\]##\}  \|  \{##item\[unitat didàctica\]##\}  \|","| {##item[id]##} |  {##item[unitat didàctica]##}  |"]];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
-                if (!empty($dataChanged)) {
+                if (($ret = !empty($dataChanged))) {
                     $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 1 to 2");
                 }
-                return !empty($dataChanged);
+                break;
         }
+        return $ret;
     }
 
 }

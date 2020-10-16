@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_3: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_3: Transforma la estructura de datos (y el archivo continguts.txt) de los proyectos 'ptfploe'
  *             desde la versión 2 a la versión 3
  * @author rafael
  */
@@ -18,7 +18,7 @@ class upgrader_3 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
@@ -32,9 +32,7 @@ class upgrader_3 extends CommonUpgrader {
                 //Añade el campo 'hiHaSolucio' a la tabla 'datesAC'
                 $dataProject = $this->addFieldInMultiRow($dataProject, "datesAC", "hiHaSolucio", TRUE);
 
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 2 to 3");
-
-                $ret = TRUE;
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":
@@ -54,11 +52,12 @@ class upgrader_3 extends CommonUpgrader {
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 2 to 3");
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
                 $ret = !empty($dataChanged);
                 */
                 $ret = TRUE;
+                break;
         }
         return $ret;
     }
