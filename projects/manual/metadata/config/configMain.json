@@ -26,6 +26,9 @@
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
+            "versions": {
+                "fields": 1
+            },
             "mainType": {
                 "type": "object",
                 "typeDef": "manual"
@@ -119,6 +122,11 @@
                             "type": "boolean",
                             "mandatory": true,
                             "default":true
+                        },
+                        "amagarMenuInici": {
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default":false
                         },
                         "documents": {
                             "type": "extraDoc",

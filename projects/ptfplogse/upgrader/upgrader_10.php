@@ -1,9 +1,9 @@
 <?php
 /**
- * upgrader_10: Transforma el archivo continguts.txt del proyecto "ptfplogse" desde la versión 6 a la versión 7
- *              sustituye, en el doc del usuario, el contenido incluido entre los tags protected
- *              por el contenido de los tags protected de la nueva plantilla
+ * upgrader_10: Transforma el archivo de proyecto 'ptfplogse' desde la versión 9 a la versión 10
+ *              y el archivo continguts.txt
  * @culpable Josep 06-09-2019
+ * @author rafael <rclaver@xtec.cat>
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC . "lib/lib_ioc/");
@@ -24,6 +24,20 @@ class upgrader_10 extends CommonUpgrader {
     public function process($type, $filename = NULL) {
         switch ($type) {
             case "fields":
+                //Transforma los datos del proyecto "ptfplogse" desde la estructura de la versión 9 a la versión 10
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+                //Cambia el nombre del campo
+                $dataProject = $this->changeFieldName($dataProject, "dataPaf1", "dataPaf11");
+                $dataProject = $this->changeFieldName($dataProject, "dataPaf2", "dataPaf21");
+
+                //Añade un campo en el primer nivel de la estructura de datos
+                $dataProject = $this->addNewField($dataProject, "dataPaf12", $dataProject['dataPaf11']);
+                $dataProject = $this->addNewField($dataProject, "dataPaf22", $dataProject['dataPaf21']);
+
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 9 to 10 (afegir camps). Simultànea a la actualització de 18 a 19 de continguts");
                 $status = TRUE;
                 break;
 
@@ -49,7 +63,7 @@ class upgrader_10 extends CommonUpgrader {
                     ]
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
-                
+
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 9 to 10");
                 }

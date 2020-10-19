@@ -5,120 +5,164 @@
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', realpath(DOKU_INC."lib/plugins/"));
-require_once DOKU_INC."inc/parserutils.php";
+require_once (DOKU_INC.'inc/inc_ioc/tcpdf/tcpdf_include.php');
 
-class MainRender extends renderObject {
-    protected $max_menu;
-    protected $max_navmenu;
-    protected $media_path = 'lib/exe/fetch.php?media=';
-    protected $menu_html = '';
-    protected $tree_names = array();
-    protected $web_folder = 'WebContent';
-    protected $initialized = FALSE;
+class IocTcPdf extends TCPDF {
+    private $header_logo_height = 10;
 
-    public function initParams(){
-        $langFile = $this->cfgExport->langDir.$this->cfgExport->lang.'.conf';
-        if (!file_exists($langFile)){
-            $this->cfgExport->lang = 'ca';
-            $langFile = $this->cfgExport->langDir.$this->cfgExport->lang.'.conf';
-        }
-        if (file_exists($langFile)) {
-            $this->cfgExport->aLang = confToHash($langFile);
-        }
-        $this->initialized = TRUE;
+    public function __construct($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = true, $encoding = 'UTF-8', $diskcache = false, $pdfa = false) {
+        parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
+        $this->header_logo_width = 8;
+        $this->SetMargins(20, 20);
+        $this->head = 20;
+        $this->header_font = "helvetica";
     }
+
+    //Page header
+    public function Header() {
+        if ($this->PageNo() == 1) return;
+
+        $margins = $this->getMargins();
+        $subtitol = $this->Subtitle($this->header_string);
+
+        // Logo
+        $image_file = K_PATH_IMAGES.$this->header_logo;
+        $this->Image($image_file, $margins['left'], 5, $this->header_logo_width, $this->header_logo_height, 'JPG', '', 'T', true, 300, '', false, false, 0, false, false, false);
+
+        $headerfont = $this->getHeaderFont();
+        $cell_height = $this->getCellHeight($headerfont[2] / $this->k);
+        $header_x = $margins['left'] + $margins['padding_left'] + ($this->header_logo_width * 1.1);
+        $header_w = 105 - $header_x;
+
+        // header title
+        $this->SetTextColorArray($this->header_text_color);
+        $this->SetFont($headerfont[0], $headerfont[1], $headerfont[2]);
+        $this->SetX($header_x);
+        $this->MultiCell($header_w, $cell_height, $this->header_title, 0, 'L', 0, 0, "", "", true);
+
+        // header string
+        $this->MultiCell(0, $cell_height, $subtitol, 0, 'R', 0, 0, "", "", true);
+        $this->Line($margins['left'], 19, $this->getPageWidth()-$margins['right'], 19);
+    }
+
+    // Page footer
+    public function Footer() {
+        if ($this->PageNo() == 1) return;
+
+        $this->SetY(-15);   //Position at 15 mm from bottom
+        $this->SetFont($this->footer_font[0], $this->footer_font[1], $this->footer_font[2]);
+        $this->Cell(0, 10, 'pàgina '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');  //Page number
+    }
+
+    public function setHeaderData($ln='', $lw=0, $lh=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)) {
+        parent::setHeaderData($ln, $lw, $ht, $hs, $tc, $lc);
+        $this->header_logo_height = $lh;
+    }
+
+    private function Subtitle($title) {
+        $title = str_replace("/", "|", $title);
+        $title = str_replace("\n", "|", $title);
+        $arr_subtitol = explode("|", $title);
+        $c = count($arr_subtitol);
+        $arr_subtitol[0] = BasicPdfRenderer::getText($arr_subtitol[0], 100, $this);
+        return $arr_subtitol[0] . "\n" . $arr_subtitol[$c-2] . "\n" . $arr_subtitol[$c-1];
+    }
+
 }
 
-class renderDate extends AbstractRenderer {
-    private $sep;
+class PdfRenderer extends BasicPdfRenderer {
 
-    public function __construct($factory, $cfgExport=NULL, $sep="-") {
-        parent::__construct($factory, $cfgExport);
-        $this->sep = $sep;
-    }
-
-    public function process($date) {
-        $dt = strtotime(str_replace('/', '-', $date));
-        return date("d". $this->sep."m".$this->sep."Y", $dt);
-    }
-
-}
-
-class renderText extends AbstractRenderer {
-
-    public function process($data) {
-        return htmlentities($data, ENT_QUOTES);
-    }
-}
-
-class renderField extends AbstractRenderer {
-
-    public function process($data) {
-        return $data;
-    }
-}
-
-class renderRenderizableText extends AbstractRenderer {
-
-    public function process($data) {
-        $instructions = p_get_instructions($data);
-        $html = p_render('wikiiocmodel_ptxhtml', $instructions, $info);
-        return $html;
-    }
-}
-
-class renderFileToPsDom extends renderFile {
-    protected function render($instructions, &$renderData){
-        $ret = p_latex_render('wikiiocmodel_psdom', $instructions, $renderData);
-        Logger::debug("psDom: $ret", 0, 0, 0, 1, FALSE);
-        return $ret;
-    }
-}
-
-class renderFile extends AbstractRenderer {
-
-    public function process($data, $alias="") {
-        global $plugin_controller;
-
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-            $startedHere = true;
-        }
-        $_SESSION['export_html'] = $this->cfgExport->export_html;
-        $_SESSION['tmp_dir'] = $this->cfgExport->tmp_dir;
-        $_SESSION['latex_images'] = &$this->cfgExport->latex_images;
-        $_SESSION['media_files'] = &$this->cfgExport->media_files;
-        $_SESSION['graphviz_images'] = &$this->cfgExport->graphviz_images;
-        $_SESSION['gif_images'] = &$this->cfgExport->gif_images;
-        $_SESSION['alternateAddress'] = TRUE;
-
-        if(preg_match("/".$this->cfgExport->id."/", $data)!=1){
-            $fns = $this->cfgExport->id.":".$data;
-        }
-        $file = wikiFN($fns);
-        $text = io_readFile($file);
-
-        $counter = 0;
-        $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $text, 1, $counter);
-        if($counter>0){
-            $dataSource = $plugin_controller->getCurrentProjectDataSource($this->cfgExport->id, $plugin_controller->getCurrentProject());
-            $text = WiocclParser::getValue($text, [], $dataSource);
+    /**
+     * params = hashArray:{
+     *      id: string  //id del projecte
+     *      path_templates:string,  // directori on es troben les plantilles latex usades per crear el pdf
+     *      tmp_dir: string,    //directori temporal on crear el pdf
+     *      lang: string  // idioma usat (CA, EN, ES, ...)
+     *      mode: string  // pdf o zip
+     *      data: hashArray:{
+     *              titol:array os string    // linies de títol del document (cada ítem és una línia)
+     *              contingut: string   //contingut latex ja rendaritzat
+     */
+    public function renderDocument($params, $output_filename="") {
+        if (empty($output_filename)){
+            $output_filename = str_replace(":", "_", $params["id"]);
         }
 
-        $instructions = p_get_instructions($text);
-        $renderData = array();
-        $html = $this->render($instructions, $renderData);
-        if(empty($alias)){
-            $alias=$data;
+        $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $iocTcPdf->SetCreator("DOKUWIKI IOC");
+        $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
+
+        // set header and footer fonts
+        $iocTcPdf->setHeaderFont(Array($this->headerFont, '', $this->headerFontSize));
+        $iocTcPdf->setFooterFont(Array($this->footerFont, '', $this->footerFontSize));
+
+        $iocTcPdf->setStartingPageNumber(0);
+
+        $iocTcPdf->SetDefaultMonospacedFont("Courier");
+        $iocTcPdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $iocTcPdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // set margins
+        $iocTcPdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $iocTcPdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $iocTcPdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        //primera pàgina
+        $iocTcPdf->AddPage();
+
+        $lin = 0;
+        for ($i=2; $i<count($params["data"]["titol"]); $i++){
+            $arr_subtitol = explode("|", str_replace("/", "|", $params["data"]["titol"][$i]));
+            $lin += count($arr_subtitol);
         }
-        $this->cfgExport->toc[$alias] = $renderData["tocItems"];
-        if ($startedHere) session_destroy();
+        $row_offset = $lin * 4;   //espai vertical que cal desplaçar per encabir un títol multilínia
 
-        return $html;
+        $iocTcPdf->SetX(100);
+        $iocTcPdf->SetY($y=100-$row_offset);
+
+        $iocTcPdf->SetFont($this->firstPageFont, 'B', 35);
+        for ($i=0; $i<2; $i++){
+            $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"][$i], 0, 1);
+        }
+        $iocTcPdf->SetY($y+=100-$row_offset);
+
+        $iocTcPdf->SetFont($this->firstPageFont, 'B', 20);
+        for ($i=2; $i<count($params["data"]["titol"]); $i++){
+            $text = str_replace("/", "|", $params["data"]["titol"][$i]);
+            $arr_subtitol = explode("|", $text);
+            foreach ($arr_subtitol as $subtitol) {
+                $iocTcPdf->MultiCell(0, 0, trim($subtitol), 0, 1);
+            }
+        }
+
+        $iocTcPdf->AddPage();
+        if (!empty($params["data"]["contingut"])) {
+            foreach ($params["data"]["contingut"] as $itemsDoc) {
+                $this->resolveReferences($itemsDoc);
+            }
+            foreach ($params["data"]["contingut"] as $itemsDoc) {
+                $this->renderHeader($itemsDoc, $iocTcPdf);
+            }
+        }
+
+        // add a new page for TOC
+        $iocTcPdf->addTOCPage();
+
+        // write the TOC title
+        $iocTcPdf->SetFont('Times', 'B', 16);
+        $iocTcPdf->MultiCell(0, 0, 'Índex', 0, 'C', 0, 1, '', '', true, 0);
+        $iocTcPdf->Ln();
+
+        // add a simple Table Of Content at first page
+        $iocTcPdf->SetFont('Times', '', 12);
+        $iocTcPdf->addTOC(2, 'courier', '.', 'INDEX', 'B', array(128,0,0));
+
+        // end of TOC page
+        $iocTcPdf->endTOCPage();
+
+        $iocTcPdf->Output("{$params['tmp_dir']}/$output_filename", 'F');
+
+        return TRUE;
     }
 
-    protected function render($instructions, &$renderData){
-        return p_render('wikiiocmodel_ptxhtml', $instructions, $renderData);
-    }
 }

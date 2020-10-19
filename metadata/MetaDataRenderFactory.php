@@ -31,6 +31,8 @@ class MetaDataRenderFactory {
         $metadataPath = "$dir/$nameMetaDataRender/metadata/MetaDataRender.php";
         if (! file_exists($metadataPath))
             $metadataPath = WIKI_IOC_MODEL . "projects/$nameMetaDataRender/metadata/MetaDataRender.php";
+        $abstractMetadataPath = WIKI_IOC_MODEL . "metadata/MetaDataRenderAbstract.php";
+        require_once ($abstractMetadataPath);
         require_once ($metadataPath);
 
         $fully_qualified_name = "$nameMetaDataRender\\MetaDataRender";

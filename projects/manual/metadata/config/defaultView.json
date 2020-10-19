@@ -140,7 +140,7 @@
       },
       "estil":{
             "type":"select",
-            "n_columns": 6,
+            "n_columns": 4,
             "label": "Estil",
             "group": "main",
             "props": {
@@ -149,13 +149,13 @@
             },
             "config":{
                 "options":[
-                    {"description":"estil normal", "value":"main.css"}
+                    {"description":"estil normal", "value":"main"}
                 ]
             }
         },
         "nivells":{
             "type":"select",
-            "n_columns": 6,
+            "n_columns": 4,
             "label": "nivells de la taula de continguts",
             "group": "main",
             "props": {
@@ -171,6 +171,16 @@
                     {"description":"5", "value":"5"},
                     {"description":"6", "value":"6"}
                 ]
+            }
+        },
+        "amagarMenuInici": {
+            "type" : "checkbox",
+            "label" : "Amagar el menú a l'inici?",
+            "n_columns": 4,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "Indiqueu si voleu amagar el menú a l'inici"
             }
         },
         "documents": {

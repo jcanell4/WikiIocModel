@@ -153,20 +153,6 @@ class ptfploeProjectModel extends MoodleProjectModel {
     }
 
     /**
-     * Devuelve la lista de archivos que se generan a partir de la configuración
-     * indicada en el archivo 'configRender.json'
-     * Esos archivos se guardan en WikiGlobalConfig::getConf('mediadir')
-     * El nombre de estos archivos se construyó, en el momento de su creación, usando el nombre del proyecto
-     * @param string $base_dir : directori wiki del projecte
-     * @param string $old_name : nom actual del projecte
-     * @return array : lista de ficheros
-     */
-    protected function listGeneratedFilesByRender($base_dir, $old_name) {
-        $basename = str_replace([":","/"], "_", $base_dir) . "_" . $old_name;
-        return [$basename.".zip"];
-    }
-
-    /**
      * Llista de les dates a pujar al calendari amb el format següent:
      *  - title
      *  - date (en format yyyy-mm-dd)

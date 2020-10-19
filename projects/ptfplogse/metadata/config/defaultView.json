@@ -809,36 +809,54 @@
           ]  
         }
       },
-      "dataPaf1": {
-        "label": "Data de la PAF 1 (dataPaf1)",
-        "n_columns":6,
+      "dataPaf11": {
+        "label": "Data de la PAF 1 dissabte (dataPaf11)",
+        "n_columns":4,
         "group": "actualitzables",
         "props": {
           "required": true,
-          "title": "Indiqueu la data en que es realitzarà la PAF 1"
+          "title": "Indiqueu la data en que es realitzarà la PAF 1 dissabte"
+        }
+      },
+      "dataPaf12": {
+        "label": "Data de la PAF 1 diumenge (dataPaf12)",
+        "n_columns":4,
+        "group": "actualitzables",
+        "props": {
+          "required": true,
+          "title": "Indiqueu la data en que es realitzarà la PAF 1 diumenge"
         }
       },
       "dataQualificacioPaf1": {
         "label": "Data de la qualificació de la PAF 1 (dataQualificacioPaf1)",
-        "n_columns":6,
+        "n_columns":4,
         "group": "actualitzables",
         "props": {
           "required": true,
           "title": "Indiqueu la data en que es realitzarà la PAF 1"
         }
       },
-      "dataPaf2": {
-        "label": "Data de la PAF 2 (dataPaf2)",
-        "n_columns":6,
+      "dataPaf21": {
+        "label": "Data de la PAF 2 dissabte (dataPaf21)",
+        "n_columns":4,
         "group": "actualitzables",
         "props": {
           "required": true,
-          "title": "Indiqueu la data en que es realitzarà la PAF 2"
+          "title": "Indiqueu la data en que es realitzarà la PAF 2 dissabte"
+        }
+      },
+      "dataPaf22": {
+        "label": "Data de la PAF 2 diumenge (dataPaf22)",
+        "n_columns":4,
+        "group": "actualitzables",
+        "props": {
+          "required": true,
+          "title": "Indiqueu la data en que es realitzarà la PAF 2 diumenge"
         }
       },
       "dataQualificacioPaf2": {
         "label": "Data de la qualificació de la PAF 2 (dataQualificacioPaf2)",
-        "n_columns":6,
+        "n_columns":4,
         "group": "actualitzables",
         "props": {
           "required": true,

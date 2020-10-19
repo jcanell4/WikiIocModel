@@ -48,7 +48,7 @@ class ptfctProjectModel extends MoodleProjectModel {
         return $ret;
     }
 
-    public function createTemplateDocument($data){
+    public function createTemplateDocument($data=NULL){
         StaticUniqueContentFileProjectModel::createTemplateDocument($this, $data);
 //        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
 //        // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
@@ -64,20 +64,6 @@ class ptfctProjectModel extends MoodleProjectModel {
 
     public function getTemplateContentDocumentId($responseData){
         return "continguts";
-    }
-
-    /**
-     * Devuelve la lista de archivos que se generan a partir de la configuración
-     * indicada en el archivo 'configRender.json'
-     * Esos archivos se guardan en WikiGlobalConfig::getConf('mediadir')
-     * El nombre de estos archivos se construyó, en el momento de su creación, usando el nombre del proyecto
-     * @param string $base_dir : directori wiki del projecte
-     * @param string $old_name : nom actual del projecte
-     * @return array : lista de ficheros
-     */
-    protected function listGeneratedFilesByRender($base_dir, $old_name) {
-        $basename = str_replace([":","/"], "_", $base_dir) . "_" . $old_name;
-        return [$basename.".zip"];
     }
 
     /**

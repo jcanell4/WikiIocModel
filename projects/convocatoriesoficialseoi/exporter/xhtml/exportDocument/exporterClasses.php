@@ -7,7 +7,7 @@ if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
-class exportDocument extends MainRender {
+class exportDocument extends renderHtmlDocument {
 
     public function __construct($factory, $typedef, $renderdef, $params=NULL) {
         parent::__construct($factory, $typedef, $renderdef);
@@ -98,9 +98,10 @@ class exportDocument extends MainRender {
                 $params["data"]["contingut"] = json_decode($data["pdfconvocatoria_" . $block], TRUE);   //contingut latex ja rendaritzat
 
                 $pdfFilename = "c-" . $block . ".pdf";
-                StaticPdfRenderer::renderDocument($params, $pdfFilename);
+                $pdfRenderer = new PdfRenderer();
+                $pdfRenderer->renderDocument($params, $pdfFilename);
                 $zip->addFile($this->cfgExport->tmp_dir ."/". $pdfFilename, $pdfFilename);
-                StaticPdfRenderer::resetStaticDataRender();
+                $pdfRenderer->resetDataRender();
 
                 $this->attachMediaFiles($zip);
 

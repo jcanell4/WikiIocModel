@@ -18,7 +18,7 @@ require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderInterface.php')
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataExceptions.php');
 
 abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
-    public static $DEFAULT_SINGLE_VALUES = ["string"=>"", "number"=>0, "boolean"=>false, "date"=>""];
+    public static $DEFAULT_SINGLE_VALUES = ["string"=>"", "textarea"=>"", "number"=>0, "boolean"=>false, "date"=>""];
     private $projectId;
     private $values;
 
@@ -113,6 +113,9 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
                 if (isset($_values['defaultRow'])) {
                     $tree[$field]['defaultRow'] = $_values['defaultRow'];
                 }
+                if (isset($_values['rowTypes'])) {
+                    $tree[$field]['rowTypes'] = $_values['rowTypes'];
+                }
                 if (isset($values[$field])) {
                     $tree[$field]['value'] = $_values['value'];
                 }else{
@@ -175,6 +178,7 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
             case "number":
             case "decimal":
             case "string":
+            case "textarea":
                 $dv = self::$DEFAULT_SINGLE_VALUES[$properties["type"]];
                 $ret = $this->_getSingleValue($values[$field], $properties, $types, $dv);
                 break;
@@ -245,7 +249,11 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
         $_values['defaultRow'] = $this->_getDefaultSingleArrayItem($properties, $types);
         $_values['default'] = $this->_getDefaultSingleArray($properties, $types, $_values['defaultRow']);
         if ($values) {
-            $_values['value'] = $values;
+            $_values['value'] = is_string($values)?json_decode($values, true):$values;
+            $rows = isset($properties['array_rows'])?$properties['array_rows']:0;
+            for($i= count($_values['value']); $i<$rows; $i++){
+                $_values['value'][]= $_values['defaultRow'];
+            }
         }else{
             $_values['value'] =$_values['default'];
         }
@@ -299,6 +307,15 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
         return $_values;
     }
 
+    private function _getObjectArrayTypes($properties, $types){
+        $_structure = $this->_getObjectStructureKeys($properties, $types);
+        $_types = [];
+        foreach ($_structure as $key => $value) {
+            $_types[$key] = $value["type"];
+        }
+        return $_types;
+    }
+
     private function _getDefaultObjectArrayValue($properties, $types, $defaultRow){
         if(isset($properties["calculatedDefault"])){
             $_values = $this->getCalculateValue($properties["calculatedDefault"]);
@@ -321,6 +338,7 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
         $_values = [];
         $_values['defaultRow'] = $this->_getObjectValue("", array(), $properties, $types, true)['value'];
         $_values['default'] = $this->_getDefaultObjectArrayValue($properties, $types, $_values['defaultRow']);
+        $_values["rowTypes"] = $this->_getObjectArrayTypes($properties, $types);
         if (isset($values[$field]) && !empty($values[$field])) {
             $_values['value'] = $values[$field];
         }else{

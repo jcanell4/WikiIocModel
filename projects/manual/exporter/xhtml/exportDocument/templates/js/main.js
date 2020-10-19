@@ -22,3 +22,9 @@ function printDoc() {
     window.open("manual.pdf");
 }
 
+function switchopcl(bt){
+    var childrenDiv = bt.parentNode.nextElementSibling;
+    bt.classList.toggle("cl");
+    bt.classList.toggle("op");
+    childrenDiv.classList.toggle("hidden");
+}

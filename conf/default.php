@@ -24,8 +24,8 @@ $conf['system_warning_start_date'] = '31-12-2000 00:00';
 $conf['system_warning_end_date']   = '31-12-2000 00:00';
 $conf['system_warning_type']       = 'warning';
 $conf['max_img_size']              = 200;
-
-$conf['projects']['dataSystem'] = "_wikiIocSystem_.mdpr";
+$conf['maxVarLengthFTP']           = 1048576; //tamany màxim (en bytes) d'una variable a ser enviada per FTP
+$conf['projects']['dataSystem']    = "_wikiIocSystem_.mdpr";
 $conf['projects']['configuration'] = "configuration";  //nombre del proyecto en el que se definen las configuraciones de los tipos de proyectos
 
 

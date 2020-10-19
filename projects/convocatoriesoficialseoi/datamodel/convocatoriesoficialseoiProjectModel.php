@@ -66,9 +66,9 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
      * @param string $old_name : nom actual del projecte
      * @param string $new_name : nou nom del projecte
      */
-    protected function changeOldPathInACLFile($old_name, $new_name) {
+    protected function changeOldPathInACLFile($base_dir, $old_name, $new_name) {
         try {
-            $this->projectMetaDataQuery->changeOldPathInACLFile($old_name, $new_name);
+            $this->projectMetaDataQuery->changeOldPathInACLFile($base_dir, $old_name, $new_name);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el contingut de: $e.");
         }
@@ -200,7 +200,7 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
         }
     }
 
-    public function createTemplateDocument($data) {
+    public function createTemplateDocument($data=NULL) {
         $templates = $data['projectMetaData']["plantilla"]['value'];
         $this->setTemplateDocuments($templates);
     }
