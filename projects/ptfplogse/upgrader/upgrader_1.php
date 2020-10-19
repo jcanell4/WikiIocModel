@@ -29,7 +29,7 @@ class upgrader_1 extends CommonUpgrader {
                 $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
                 //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
                 $dataProject = $this->addFieldInMultiRow($dataProject, "datesJT", "hiHaRecuperacio", TRUE);
-                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
 
             case "templates":
@@ -48,10 +48,10 @@ class upgrader_1 extends CommonUpgrader {
                 $aTokRep[] = ["(Aquest \<WIOCCL:IF condition.*tipusBlocCredit.*tipusBlocCredit.*del.*crèdit.*credit.*)( tracta de )(.*descripcio.*\n)",
                               "$1 $3"];
                 $dataChanged = $this->updateTemplateByReplace($doc1, $aTokRep);
-                if (($status = !empty($dataChanged))) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
-                }
 
+                if (($status = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
+                }
                 break;
         }
         return $status;

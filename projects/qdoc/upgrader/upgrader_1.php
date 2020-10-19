@@ -21,6 +21,7 @@ class upgrader_1 extends CommonUpgrader {
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
+                $ret = TRUE;
                 break;
 
             case "templates":
@@ -31,11 +32,13 @@ class upgrader_1 extends CommonUpgrader {
                 $aTokRep = [["texto original",
                              "texto nuevo"]];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
-                if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
+                
+                if (($ret = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                return !empty($dataChanged);
+                break;
         }
+        return $ret;
     }
 
 }

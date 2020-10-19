@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_2: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_2: Transforma el archivo _wikiIocSystem_.mdpr y continguts.txt de los proyectos 'sintesi'
  *             desde la versión 1 a la versión 2
  * @author rafael
  */
@@ -23,16 +23,17 @@ class upgrader_2 extends CommonUpgrader {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 $matches=array();
-                preg_match("/([MC]\d{2})? *-? *(.+)/", $dataProject["modul"], $matches); 
-                if(!empty($matches[1])){
+                preg_match("/([MC]\d{2})? *-? *(.+)/", $dataProject["modul"], $matches);
+                if (!empty($matches[1])){
                     $dataProject['modulId']=$matches[1];
                 }
                 $dataProject['modul'] = $matches[2];
 
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
+
             case "templates":
-                if ($filename===NULL) { 
+                if ($filename===NULL) {
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename)."\n";
@@ -43,10 +44,10 @@ class upgrader_2 extends CommonUpgrader {
                            ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade version 1 to 2");
+                if (($ret = !empty($doc))) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $ret = !empty($doc);
+                break;
         }
         return $ret;
     }

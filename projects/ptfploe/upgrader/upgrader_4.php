@@ -28,13 +28,12 @@ class upgrader_4 extends CommonUpgrader {
                 }
 
                 // cerquem les dades de la paf1 i paf 2 i les qualificacions son de l'any 2019 i canviar-les per la mateixa data però 2020
-
                 $dataProject['dataPaf1'] = str_replace("2019", "2020", $dataProject['dataPaf1']);
                 $dataProject['dataPaf2'] = str_replace("2019", "2020", $dataProject['dataPaf2']);
                 $dataProject['dataQualificacioPaf1'] = str_replace("2019", "2020", $dataProject['dataQualificacioPaf1']);
                 $dataProject['dataQualificacioPaf2'] = str_replace("2019", "2020", $dataProject['dataQualificacioPaf2']);
 
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver");
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
 
             case "templates":

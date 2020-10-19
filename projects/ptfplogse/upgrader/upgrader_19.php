@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_19: Transforma el archivo continguts.tx del proyecto 'ptfploe'
+ * upgrader_19: Transforma el archivo continguts.tx del proyecto 'ptfplogse'
  *              desde la versión 18 a la versión 19 (asociado a la actualización de 9 a 10 de los datos del proyecto)
  * @author rafael <rclaver@xtec.cat>
  */

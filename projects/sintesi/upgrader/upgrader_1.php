@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_1: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_1: Transforma el archivo _wikiIocSystem_.mdpr y continguts.txt de los proyectos 'sintesi'
  *             desde la versión 0 a la versión 1
  * @author rafael
  */
@@ -27,9 +27,9 @@ class upgrader_1 extends CommonUpgrader {
                 }
                 $dataProject['moodleCourseId'] = 0;
 
-
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", "{'fields':".($ver-1)."}");
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
+
             case "templates":
                 if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
                     $filename = $this->model->getProjectDocumentName();
@@ -42,10 +42,10 @@ class upgrader_1 extends CommonUpgrader {
                            ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade version 0 to 1");
+                if (($ret = !empty($doc))) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $ret = !empty($doc);
+                break;
         }
         return $ret;
     }

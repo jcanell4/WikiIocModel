@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_2: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
- *             desde la versión 0 a la versión 2
+ * upgrader_2: Transforma el archivo continguts.txt de los proyectos 'ptfct'
+ *             desde la versión 1 a la versión 2
  * @author rafael
  */
 if (!defined("DOKU_INC")) die();
@@ -23,15 +23,18 @@ class upgrader_2 extends CommonUpgrader {
             case "fields":
                 $ret = TRUE;
                 break;
+
             case "templates":
                 // Força una copia del continguta al disc per tal que es desactivi l'edició parcial
                 if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename)."\n";
-                
-                $this->model->setRawProjectDocument($filename, $doc, "Upgrade to version 2");
-                $ret = true;
+
+                if (($ret = !empty($doc))) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
+                }
+                break;
         }
         return $ret;
     }
