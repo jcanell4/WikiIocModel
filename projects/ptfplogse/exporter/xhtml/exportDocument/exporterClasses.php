@@ -50,7 +50,8 @@ class exportDocument extends renderHtmlDocument {
                 $allPathTemplate = $this->cfgExport->rendererPath . "/$pathTemplate";
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $zip->addFile($allPathTemplate."/main.css", "main.css");
-                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL."exporter/xhtml", "pt_sencer/", "css");
+//                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL."exporter/xhtml", "pt_sencer/", "css");
+                $this->addDefaultCssFilesToZip($zip, "pt_sencer/");                
                 $this->addFilesToZip($zip, $allPathTemplate, "", "pt_sencer", TRUE);
                 $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/pt_sencer/pt.tpl");
                 $zip->addFromString('/pt_sencer/pt.html', $ptSencer);
@@ -169,54 +170,54 @@ class exportDocument extends renderHtmlDocument {
         if (session_status() == PHP_SESSION_ACTIVE) session_destroy();
     }
 
-    private function addFilesToZip(&$zip, $base, $d, $dir, $recursive=FALSE) {
-        $zip->addEmptyDir("$d$dir");
-        $files = $this->getDirFiles("$base/$dir");
-        foreach($files as $f){
-            $zip->addFile($f, "$d$dir/".basename($f));
-        }
-        if($recursive){
-            $dirs = $this->getDirs("$base/$dir");
-            foreach($dirs as $dd){
-                $this->addFilesToZip($zip, "$base/$dir", "$d$dir/", basename($dd));
-            }
-        }
-    }
+//    private function addFilesToZip(&$zip, $base, $d, $dir, $recursive=FALSE) {
+//        $zip->addEmptyDir("$d$dir");
+//        $files = $this->getDirFiles("$base/$dir");
+//        foreach($files as $f){
+//            $zip->addFile($f, "$d$dir/".basename($f));
+//        }
+//        if($recursive){
+//            $dirs = $this->getDirs("$base/$dir");
+//            foreach($dirs as $dd){
+//                $this->addFilesToZip($zip, "$base/$dir", "$d$dir/", basename($dd));
+//            }
+//        }
+//    }
 
-    /**
-     * Fill files var with all media files stored on directory var
-     * @param string $directory
-     * @param string $files
-     */
-    private function getDirs($dir){
-        $files = array();
-        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-            $dh = opendir($dir);
-            while ($file = readdir($dh)) {
-                if ($file != '.' && $file != '..' && is_dir("$dir/$file")) {
-                    array_push($files, "$dir/$file");
-                }
-            }
-            closedir($dh);
-        }
-        return $files;
-    }
+//    /**
+//     * Fill files var with all media files stored on directory var
+//     * @param string $directory
+//     * @param string $files
+//     */
+//    private function getDirs($dir){
+//        $files = array();
+//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
+//            $dh = opendir($dir);
+//            while ($file = readdir($dh)) {
+//                if ($file != '.' && $file != '..' && is_dir("$dir/$file")) {
+//                    array_push($files, "$dir/$file");
+//                }
+//            }
+//            closedir($dh);
+//        }
+//        return $files;
+//    }
 
-    private function getDirFiles($dir){
-        $files = array();
-        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-            $dh = opendir($dir);
-            while ($file = readdir($dh)) {
-                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
-                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg|.*?\.gif|.*?\.ico|.*?\.css|.*?\.js|.*?\.htm|.*?\.html|.*?\.svg/', $file)){
-                        array_push($files, "$dir/$file");
-                    }
-                }
-            }
-            closedir($dh);
-        }
-        return $files;
-    }
+//    private function getDirFiles($dir){
+//        $files = array();
+//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
+//            $dh = opendir($dir);
+//            while ($file = readdir($dh)) {
+//                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
+//                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg|.*?\.gif|.*?\.ico|.*?\.css|.*?\.js|.*?\.htm|.*?\.html|.*?\.svg/', $file)){
+//                        array_push($files, "$dir/$file");
+//                    }
+//                }
+//            }
+//            closedir($dh);
+//        }
+//        return $files;
+//    }
 }
 
 //class render_title extends renderField {
