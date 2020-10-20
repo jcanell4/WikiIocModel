@@ -48,7 +48,8 @@ class exportDocument extends renderHtmlDocument {
             if ($zip->addFromString('index.html', $document)) {
                 $allPathTemplate = $this->cfgExport->rendererPath . "/$pathTemplate";
                 $this->addFilesToZip($zip, $allPathTemplate, "", "css", FALSE, $data['estil'].".css");
-                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL."exporter/xhtml", "", "css");
+//                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL."exporter/xhtml", "", "css");
+                $this->addDefaultCssFilesToZip($zip, "");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "js");
 
@@ -133,7 +134,7 @@ class exportDocument extends renderHtmlDocument {
                         }else {
                             $toc .= "<span class='button_index'>&nbsp;&nbsp;&nbsp;&nbsp;</span>\n";
                         }
-                        $toc .= "<a href='{$elem['link']}'>".htmlentities($elem['title'])."</a>\n";
+                        $toc .= "<a href='{$elem['link']}' onclick='closeNav(); return true'>".htmlentities($elem['title'])."</a>\n";
                         $toc .= "</span>\n";
 
                         $nivel_anterior = $elem['level'];
@@ -187,56 +188,56 @@ class exportDocument extends renderHtmlDocument {
         if (session_status() == PHP_SESSION_ACTIVE) session_destroy();
     }
 
-    private function addFilesToZip(&$zip, $base, $d, $dir, $recursive=FALSE, $file=FALSE) {
-        $zip->addEmptyDir("$d$dir");
-        $files = $this->getDirFiles("$base/$dir");
-        foreach($files as $f) {
-            if (!$file || basename($f) === $file) {
-                $zip->addFile($f, "$d$dir/".basename($f));
-            }
-        }
-        if ($recursive) {
-            $dirs = $this->getDirs("$base/$dir");
-            foreach($dirs as $dd){
-                $this->addFilesToZip($zip, "$base/$dir", "$d$dir/", basename($dd));
-            }
-        }
-    }
+//    private function addFilesToZip(&$zip, $base, $d, $dir, $recursive=FALSE, $file=FALSE) {
+//        $zip->addEmptyDir("$d$dir");
+//        $files = $this->getDirFiles("$base/$dir");
+//        foreach($files as $f) {
+//            if (!$file || basename($f) === $file) {
+//                $zip->addFile($f, "$d$dir/".basename($f));
+//            }
+//        }
+//        if ($recursive) {
+//            $dirs = $this->getDirs("$base/$dir");
+//            foreach($dirs as $dd){
+//                $this->addFilesToZip($zip, "$base/$dir", "$d$dir/", basename($dd));
+//            }
+//        }
+//    }
 
-    /**
-     * Fill files var with all media files stored on directory var
-     * @param string $directory
-     * @param string $files
-     */
-    private function getDirs($dir){
-        $files = array();
-        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-            $dh = opendir($dir);
-            while ($file = readdir($dh)) {
-                if ($file != '.' && $file != '..' && is_dir("$dir/$file")) {
-                    array_push($files, "$dir/$file");
-                }
-            }
-            closedir($dh);
-        }
-        return $files;
-    }
+//    /**
+//     * Fill files var with all media files stored on directory var
+//     * @param string $directory
+//     * @param string $files
+//     */
+//    private function getDirs($dir){
+//        $files = array();
+//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
+//            $dh = opendir($dir);
+//            while ($file = readdir($dh)) {
+//                if ($file != '.' && $file != '..' && is_dir("$dir/$file")) {
+//                    array_push($files, "$dir/$file");
+//                }
+//            }
+//            closedir($dh);
+//        }
+//        return $files;
+//    }
 
-    private function getDirFiles($dir){
-        $files = array();
-        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-            $dh = opendir($dir);
-            while ($file = readdir($dh)) {
-                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
-                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg|.*?\.gif|.*?\.ico|.*?\.css|.*?\.js|.*?\.htm|.*?\.html|.*?\.svg/', $file)){
-                        array_push($files, "$dir/$file");
-                    }
-                }
-            }
-            closedir($dh);
-        }
-        return $files;
-    }
+//    private function getDirFiles($dir){
+//        $files = array();
+//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
+//            $dh = opendir($dir);
+//            while ($file = readdir($dh)) {
+//                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
+//                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg|.*?\.gif|.*?\.ico|.*?\.css|.*?\.js|.*?\.htm|.*?\.html|.*?\.svg/', $file)){
+//                        array_push($files, "$dir/$file");
+//                    }
+//                }
+//            }
+//            closedir($dh);
+//        }
+//        return $files;
+//    }
 
     private function getPdfStyleAttributes($dir) {
         $estils = array();

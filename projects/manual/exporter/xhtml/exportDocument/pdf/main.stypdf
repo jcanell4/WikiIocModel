@@ -8,5 +8,12 @@
         "padding": "5mm",
         "margin": {"left":"15mm", "right":"15mm"},
         "background-color": "#ccc",
+    },
+    "text":{
+        "padding": "5mm",
+        "margin": {"left":"15mm", "right":"15mm"},
+        "background-color": "#ccc",
+    },
+    "note":{
     }
 }
