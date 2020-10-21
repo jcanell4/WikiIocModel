@@ -201,12 +201,12 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
 
     function p_open() {
         $this->doc .= DOKU_LF.'<p>'.DOKU_LF;
-        $this->_openContent();
+        $this->openForContentB("p");
     }
 
     function p_close() {
         $this->doc .= DOKU_LF.'</p>'.DOKU_LF;
-        $this->_closeContent();
+        $this->closeForContentB("p");
     }
 
     function linebreak() {
@@ -321,18 +321,22 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     
     function listu_open() {
         $this->doc .= '<ul>'.DOKU_LF;
+        $this->openForContentB("ul");
     }
 
     function listu_close() {
         $this->doc .= '</ul>'.DOKU_LF;
+        $this->closeForContentB("ul");
     }
 
     function listo_open() {
         $this->doc .= '<ol>'.DOKU_LF;
+        $this->openForContentB("ol");
     }
 
     function listo_close() {
         $this->doc .= '</ol>'.DOKU_LF;
+        $this->closeForContentB("ol");
     }
 
     function listitem_open($level) {
@@ -345,12 +349,10 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
 
         function listcontent_open() {
         $this->doc .= '<div class="li">';
-        $this->_openContent();
     }
 
     function listcontent_close() {
         $this->doc .= '</div>'.DOKU_LF;
-        $this->_closeContent();
     }
 
     function unformatted($text) {
@@ -406,12 +408,12 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
 
     function quote_open() {
         $this->doc .= '<blockquote><div class="no">'.DOKU_LF;
-        $this->_openContent();
+        $this->openForContentB("blockquote");
     }
 
     function quote_close() {
         $this->doc .= '</div></blockquote>'.DOKU_LF;
-        $this->_closeContent();
+        $this->closeForContentB("blockquote");
     }
 
     function preformatted($text) {
@@ -1169,36 +1171,42 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         return $link;
     }
     
-    private function _openContent(){
+    public function openForContentB($origin){
         //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text, 
         //ja que a la versió WEB No hi ha columna B. Per tal de renderitzar correctament la coluna B
         //al render XHTML i PDF, el seu contingut es troba sempre per sobre del paràgraf al que fa referècia.
         //És  necessari baixar-lo un paràgraf en aquest renderer.
-        if($this->tmpData["renderIocElems"]){
-            $this->tmpData["renderDefaultIocElems"] = TRUE;
-        }        
+        if(!isset($this->tmpData["origin"])){
+            if($this->tmpData["renderIocElems"]){
+                $this->tmpData["renderDefaultIocElems"] = TRUE;
+            }        
+            $this->tmpData["origin"] = $origin;
+        }
     }
     
-    private function _closeContent(){
+    public function closeForContentB($origin){
         //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text, 
         //ja que a la versió WEB No hi ha columna B. Per tal de renderitzar correctament la coluna B
         //al render XHTML i PDF, el seu contingut es troba sempre per sobre del paràgraf l que fa referècia.
         //És  necessari baixar-lo un paràgraf en aquest renderer.
-        if(!empty($this->bIocElemsRefQueue)){
-            while($this->bIocElemsRefQueue[0]){
-                $id = array_shift($this->bIocElemsRefQueue);
-                $text = $this->bIocElems[self::REFERRED_B_IOC_ELEMS_TYPE][$id];
-                $this->doc.=$text;
+        if($this->tmpData["origin"]===$origin){
+            if(!empty($this->bIocElemsRefQueue)){
+                while($this->bIocElemsRefQueue[0]){
+                    $id = array_shift($this->bIocElemsRefQueue);
+                    $text = $this->bIocElems[self::REFERRED_B_IOC_ELEMS_TYPE][$id];
+                    $this->doc.=$text;
+                }
             }
+            if(isset($this->tmpData["renderDefaultIocElems"]) && $this->tmpData["renderDefaultIocElems"]){
+                while($this->bIocElems[self::UNREFERRED_B_IOC_ELEMS_TYPE][0]){
+                    $text = array_shift($this->bIocElems[self::UNREFERRED_B_IOC_ELEMS_TYPE]);
+                    $this->doc.=$text;
+                }
+                $this->tmpData["renderIocElems"] = FALSE;
+                $this->tmpData["renderDefaultIocElems"]=FALSE;            
+            }    
+            unset($this->tmpData["origin"]);
         }
-        if(isset($this->tmpData["renderDefaultIocElems"]) && $this->tmpData["renderDefaultIocElems"]){
-            while($this->bIocElems[self::UNREFERRED_B_IOC_ELEMS_TYPE][0]){
-                $text = array_shift($this->bIocElems[self::UNREFERRED_B_IOC_ELEMS_TYPE]);
-                $this->doc.=$text;
-            }
-            $this->tmpData["renderIocElems"] = FALSE;
-            $this->tmpData["renderDefaultIocElems"]=FALSE;            
-        }        
     }
 
     public function storeCurrent($clean=FALSE){
