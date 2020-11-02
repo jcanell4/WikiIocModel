@@ -67,10 +67,10 @@ class IocElemNodeDoc extends StructuredNodeDoc {
                 .",\n\"elemType\":\"".trim($this->elemType)."\""
                 .",\n\"title\":\"".trim($this->title)."\"";
         if($this->offset){
-            $ret .= ",\n\"offset\":\"".trim($this->offset)."mm\"";
+            $ret .= ",\n\"offset\":\"".trim($this->offset)."\"";
         }
         if($this->width){
-            $ret .= ",\n\"width\":\"".trim($this->width)."mm\"";
+            $ret .= ",\n\"width\":\"".trim($this->width)."\"";
         }
         $ret .= ",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
@@ -515,7 +515,7 @@ class CodeNodeDoc extends TextNodeDoc{
     }
 
     public function getEncodeJson() {
-        $text = preg_replace(array("/\t/", "/ *\r\n/", "/ *\n/", "/\"/"), array("    ", "<br>", "<br>", "\\\""), $this->text);
+        $text = preg_replace(array("/\\\/", "/\t/", "/ *\r\n/", "/ *\n/", "/\"/"), array("&#92;", "    ", "<br>", "<br>", "\\\""), $this->text);
         return "{\n\"type\":\"".$this->type."\""
                 .",\n\"language\":\"".$this->language."\""
                 .",\n\"text\":\"".$text."\""

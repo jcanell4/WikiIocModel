@@ -59,8 +59,6 @@ class exportDocument extends renderHtmlDocument {
                 $data_fitxer = html_entity_decode(htmlspecialchars_decode($data["data_fitxercontinguts"], ENT_COMPAT|ENT_QUOTES));
                 $entitat_responsable = html_entity_decode(htmlspecialchars_decode($data["entitatResponsable"], ENT_COMPAT|ENT_QUOTES));
 
-                $estils = $this->getPdfStyleAttributes($this->cfgExport->rendererPath . "/xhtml/exportDocument/pdf", $data['estil']);
-
                 $params = array(
                     "id" => $this->cfgExport->id,
                     "path_templates" => $this->cfgExport->rendererPath . "/pdf/exportDocument/templates",  // directori on es troben les plantilles latex usades per crear el pdf
@@ -68,6 +66,7 @@ class exportDocument extends renderHtmlDocument {
                     "lang" => strtoupper($this->cfgExport->lang),
                     "mode" => isset($this->mode) ? $this->mode : $this->filetype,
                     "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
+                    "style" => $this->cfgExport->rendererPath . "/xhtml/exportDocument/pdf/".$data["estil"].".stypdf",
                     "data" => array(
                         "header" => ["logo"  => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                                      "wlogo" => 9.9,
@@ -78,8 +77,7 @@ class exportDocument extends renderHtmlDocument {
                                     'subtitol' => $subtitol,
                                     'autor'    => $data['mostrarAutor']==="true" || $data['mostrarAutor']===true ? $nom_real : "",
                                     'entitatResponsable' => $entitat_responsable,
-                                    'data'     => $data_fitxer],
-                        "estil" => $estils['style'],
+                                    'data'     => $data_fitxer],                       
                         "contingut" => json_decode($data["documentPartsPdf"], TRUE)   //contingut latex ja rendaritzat
                     )
                 );
@@ -238,22 +236,22 @@ class exportDocument extends renderHtmlDocument {
 //        }
 //        return $files;
 //    }
-
-    private function getPdfStyleAttributes($dir) {
-        $estils = array();
-        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-            $dh = opendir($dir);
-            while ($file = readdir($dh)) {
-                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
-                    if (preg_match('/.*?\.stypdf/', $file)){
-                        $json = file_get_contents("$dir/$file");
-                        $estils = array_merge($estils, json_decode($json, true));
-                    }
-                }
-            }
-            closedir($dh);
-        }
-
-        return $estils;
-    }
+//
+//    private function getPdfStyleAttributes($dir) {
+//        $estils = array();
+//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
+//            $dh = opendir($dir);
+//            while ($file = readdir($dh)) {
+//                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
+//                    if (preg_match('/.*?\.stypdf/', $file)){
+//                        $json = file_get_contents("$dir/$file");
+//                        $estils = array_merge($estils, json_decode($json, true));
+//                    }
+//                }
+//            }
+//            closedir($dh);
+//        }
+//
+//        return $estils;
+//    }
 }

@@ -123,7 +123,7 @@ class PdfRenderer extends BasicPdfRenderer {
 
         $iocTcPdf->SetFont($this->firstPageFont, 'B', 35);
         for ($i=0; $i<2; $i++){
-            $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"][$i], 0, 1);
+            $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"][$i], 0, "", 0, 1);
         }
         $iocTcPdf->SetY($y+=100-$row_offset);
 
@@ -132,7 +132,7 @@ class PdfRenderer extends BasicPdfRenderer {
             $text = str_replace("/", "|", $params["data"]["titol"][$i]);
             $arr_subtitol = explode("|", $text);
             foreach ($arr_subtitol as $subtitol) {
-                $iocTcPdf->MultiCell(0, 0, trim($subtitol), 0, 1);
+                $iocTcPdf->MultiCell(0, 0, trim($subtitol), 0, "", 0, 1);
             }
         }
 

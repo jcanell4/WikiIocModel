@@ -214,7 +214,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     }
 
     function hr() {
-        $this->doc .= '<hr />'.DOKU_LF;
+        //$this->doc .= '<hr />'.DOKU_LF;
     }
 
     function strong_open() {

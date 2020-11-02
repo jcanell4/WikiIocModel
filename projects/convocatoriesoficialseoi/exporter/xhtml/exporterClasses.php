@@ -79,7 +79,7 @@ class PdfRenderer extends BasicPdfRenderer
         if (empty($output_filename)) {
             $output_filename = str_replace(":", "_", $params["id"]);
         }
-
+        
         $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $iocTcPdf->SetCreator("DOKUWIKI IOC");
         $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);

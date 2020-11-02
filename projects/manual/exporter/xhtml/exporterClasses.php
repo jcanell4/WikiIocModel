@@ -24,15 +24,10 @@ class renderFile extends BasicRenderFile {
  */
 require_once (DOKU_INC.'inc/inc_ioc/tcpdf/tcpdf_include.php');
 
-class IocTcPdf extends TCPDF {
-    private $header_logo_height = 10;
+class IocTcPdf extends BasicIocTcPdf {
 
-    public function __construct($orientation='P', $unit='mm', $format='A4', $unicode=true, $encoding='UTF-8', $diskcache=false, $pdfa=false) {
-        parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
-        $this->header_logo_width = 8;
-        $this->SetMargins(20, 20);
-        $this->head = 20;
-        $this->header_font = "helvetica";
+    public function __construct(TcPdfStyle &$stile) {
+        parent::__construct($stile);
     }
 
     //Page header
@@ -90,77 +85,44 @@ class PdfRenderer extends BasicPdfRenderer {
      *              string          'contingut' //contingut latex ja rendaritzat
      */
     public function renderDocument($params, $output_filename="") {
-        if (empty($output_filename)) {
-            $output_filename = str_replace(":", "_", $params["id"]);
-        }
-
-        $iocTcPdf = new IocTcPdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, false);
-        $iocTcPdf->SetCreator("DOKUWIKI IOC");
-        $iocTcPdf->setHeaderData($params["data"]["header"]["logo"], $params["data"]["header"]["wlogo"], $params["data"]["header"]["hlogo"], $params["data"]["header"]["ltext"], $params["data"]["header"]["rtext"]);
-        $this->setMaxImgSize($params['max_img_size']);
-
-        // set header and footer fonts
-        $iocTcPdf->setHeaderFont(Array($this->headerFont, '', $this->headerFontSize));
-        $iocTcPdf->setFooterFont(Array($this->footerFont, '', $this->footerFontSize));
-
-        $iocTcPdf->SetDefaultMonospacedFont("Courier");
-        $iocTcPdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-        $iocTcPdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-        // set margins
-        $iocTcPdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-        $iocTcPdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        $iocTcPdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
+        parent::renderDocument($params, $output_filename);
+        
         //primera pàgina
-        $iocTcPdf->AddPage();
-        $iocTcPdf->SetX(100);
-        $iocTcPdf->SetY($y=80);
+        $this->iocTcPdf->AddPage();
+        $this->iocTcPdf->SetX(100);
+        $this->iocTcPdf->SetY($y=80);
 
-        $iocTcPdf->SetFont($this->firstPageFont, 'B', 35);
-        $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"]["titol"], 0, 'L');
-        $iocTcPdf->SetY($y+=30);
-        $iocTcPdf->SetFont($this->firstPageFont, 'B', 25);
-        $iocTcPdf->MultiCell(0, 0, $params["data"]["titol"]["subtitol"], 0, 'L');
-        $iocTcPdf->SetY($y+=80);
-        $iocTcPdf->SetFont($this->firstPageFont, 'B', 15);
+        $this->iocTcPdf->SetFont($this->firstPageFont, 'B', 35);
+        $this->iocTcPdf->MultiCell(0, 0, $params["data"]["titol"]["titol"], 0, 'L');
+        $this->iocTcPdf->SetY($y+=30);
+        $this->iocTcPdf->SetFont($this->firstPageFont, 'B', 25);
+        $this->iocTcPdf->MultiCell(0, 0, $params["data"]["titol"]["subtitol"], 0, 'L');
+        $this->iocTcPdf->SetY($y+=80);
+        $this->iocTcPdf->SetFont($this->firstPageFont, 'B', 15);
         if(!empty($params["data"]["titol"]['autor'])){
-            $iocTcPdf->Cell(0, 0, $params["data"]["titol"]['autor'], 0, 1);
+            $this->iocTcPdf->Cell(0, 0, $params["data"]["titol"]['autor'], 0, 1);
         }
         if(!empty($params["data"]["titol"]['entitatResponsable'])){
-            $iocTcPdf->Cell(0, 0, $params["data"]["titol"]['entitatResponsable'], 0, 1);
+            $this->iocTcPdf->Cell(0, 0, $params["data"]["titol"]['entitatResponsable'], 0, 1);
         }
-        $iocTcPdf->Cell(0, 0, $params["data"]["titol"]['data'], 0, 1);
+        $this->iocTcPdf->Cell(0, 0, $params["data"]["titol"]['data'], 0, 1);
 
         //continguts
-        $iocTcPdf->AddPage();
+        $this->iocTcPdf->AddPage();
         if (!empty($params["data"]["contingut"])) {
             foreach ($params["data"]["contingut"] as $itemsDoc) {
                 $this->resolveReferences($itemsDoc);
             }
             foreach ($params["data"]["contingut"] as $itemsDoc) {
-                $this->renderHeader($itemsDoc, $iocTcPdf);
+                $this->renderHeader($itemsDoc, $this->iocTcPdf);
             }
         }
 
         // add a new page for TOC
-        $iocTcPdf->addTOCPage();
+        $this->renderToc();
 
-        // write the TOC title
-        $iocTcPdf->SetFont('Times', 'B', 16);
-        $iocTcPdf->MultiCell(0, 0, 'Índex', 0, 'C', 0, 1, '', '', true, 0);
-        $iocTcPdf->Ln();
-
-        // add a simple Table Of Content at first page
-        $iocTcPdf->SetFont('Times', '', 12);
-        $iocTcPdf->addTOC(2, 'courier', '.', 'INDEX', 'B', array(128,0,0));
-
-        // end of TOC page
-        $iocTcPdf->endTOCPage();
-
-        $iocTcPdf->Output("{$params['tmp_dir']}/$output_filename", 'F');
+        $this->iocTcPdf->Output("{$params['tmp_dir']}/$output_filename", 'F');
 
         return TRUE;
     }
-
 }
