@@ -71,6 +71,8 @@ class exportDocument extends renderHtmlDocument {
                     "tmp_dir" => $this->cfgExport->tmp_dir,    //directori temporal on crear el pdf
                     "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
                     "mode" => isset($this->mode) ? $this->mode : $this->filetype,
+                    "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
+                    "style" => "main.stypdf",
                     "data" => array(
                         "header" => ["logo" => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                                      "wlogo" => 9.9,
@@ -138,7 +140,7 @@ class exportDocument extends renderHtmlDocument {
     private function attachMediaFiles(&$zip) {
         global $conf;
         //Attach media files
-        foreach($this->cfgExport->media_files as $f){
+        foreach(array_unique($this->cfgExport->media_files) as $f){
             resolve_mediaid(getNS($f), $f, $exists);
             if ($exists) {
                 //eliminamos el primer nivel del ns
@@ -150,19 +152,19 @@ class exportDocument extends renderHtmlDocument {
         $this->cfgExport->media_files = array();
 
         //Attach latex files
-        foreach($this->cfgExport->latex_images as $f){
+        foreach(array_unique($this->cfgExport->latex_images) as $f){
             if (file_exists($f)) $zip->addFile($f, 'img/'.basename($f));
         }
         $this->cfgExport->latex_images = array();
 
         //Attach graphviz files
-        foreach($this->cfgExport->graphviz_images as $f){
+        foreach(array_unique($this->cfgExport->graphviz_images) as $f){
             if (file_exists($f)) $zip->addFile($f, 'img/'.basename($f));
         }
         $this->cfgExport->graphviz_images = array();
 
         //Attach gif (png, jpg, etc) files
-        foreach($this->cfgExport->gif_images as $m){
+        foreach(array_unique($this->cfgExport->gif_images) as $m){
             if (file_exists(mediaFN($m))) $zip->addFile(mediaFN($m), "img/". str_replace(":", "/", $m));
         }
         $this->cfgExport->gif_images = array();

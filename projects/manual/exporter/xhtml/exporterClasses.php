@@ -6,24 +6,9 @@
  */
 if (!defined('DOKU_INC')) die();
 
-class renderFile extends BasicRenderFile {
-
-    public function process($data, $alias="") {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-            $startedHere = true;
-        }
-        $_SESSION['styletype'] = $this->cfgExport->styletype;
-        $html = parent::process($data, $alias);
-        return $html;
-    }
-}
-
 /**
  * class IocTcPdf
  */
-require_once (DOKU_INC.'inc/inc_ioc/tcpdf/tcpdf_include.php');
-
 class IocTcPdf extends BasicIocTcPdf {
 
     public function __construct(TcPdfStyle &$stile) {
@@ -36,7 +21,7 @@ class IocTcPdf extends BasicIocTcPdf {
 
         $margins = $this->getMargins();
         // Logo
-        $image_file = K_PATH_IMAGES.$this->header_logo;
+        $image_file = $this->header_logo;
         $this->Image($image_file, $margins['left'], 5, $this->header_logo_width, $this->header_logo_height, 'JPG', '', 'T', true, 300, '', false, false, 0, false, false, false);
 
         $headerfont = $this->getHeaderFont();

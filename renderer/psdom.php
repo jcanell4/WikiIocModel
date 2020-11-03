@@ -450,7 +450,7 @@ class LeafNodeDoc extends AbstractNodeDoc{
 }
 
 class ReferenceNodeDoc extends AbstractNodeDoc{
-    const REFERENCE_TYPE = "reference";
+    const REFERENCE_TYPE = "reference_to";
     const REF_FIGURE_TYPE = "ref_fig";
     const REF_TABLE_TYPE = "ref_tab";
     const REF_WIKI_LINK = "wikilink";
@@ -1068,7 +1068,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     }
     
-    public function openForContentB(){
+    public function openForContentB($origin){
         //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text, 
         //ja que a la versió WEB No hi ha columna B. Per tal de renderitzar correctament la coluna B
         //al render XHTML i PDF, el seu contingut es troba sempre per sobre del paràgraf al que fa referècia.
@@ -1077,10 +1077,11 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
             if($this->tmpData["renderIocElems"]){
                 $this->tmpData["renderDefaultIocElems"] = TRUE;
             }        
+            $this->tmpData["origin"] = $origin;
         }
     }
     
-    public function closeForContentB(){
+    public function closeForContentB($origin){
         //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text, 
         //ja que a la versió WEB No hi ha columna B. Per tal de renderitzar correctament la coluna B
         //al render XHTML i PDF, el seu contingut es troba sempre per sobre del paràgraf l que fa referècia.
@@ -1100,7 +1101,8 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
                 }
                 $this->tmpData["renderIocElems"] = FALSE;
                 $this->tmpData["renderDefaultIocElems"]=FALSE;            
-            }        
+            }    
+            unset($this->tmpData["origin"]);
         }
     }
 }
