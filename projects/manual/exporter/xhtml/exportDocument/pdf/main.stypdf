@@ -104,6 +104,13 @@
                     }
                 }
             }
+            },
+            "framefigure":{
+                "style":{
+                    "align": "C",
+                    "margin": "auto"
+                }
+            }
         },
         "styleTypes":{}
     }
