@@ -103,13 +103,12 @@
                         }                        
                     }
                 }
-            }
             },
-            "framefigure":{
+            "frameFigure":{
                 "style":{
-                    "align": "C",
-                    "margin": "auto"
-                }
+                    "align": "C"
+                },
+                "styleTypes":{}
             }
         },
         "styleTypes":{}
