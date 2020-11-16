@@ -209,12 +209,12 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFieldsOnSave($values) {
+    public function updateCalculatedFieldsOnSave($values, $originalDataKeyValue=FALSE) {
         $values["dataReclamacions"] = $this->sumDate($values["dataResultats"], 3);
         $values["dataProvaNE1"] = $this->sumDate($values["dataProva1"], 5);
         $values["dataProvaNE2"] = $this->sumDate($values["dataProva2"], 5);
 
-        return parent::updateCalculatedFieldsOnSave($values);
+        return parent::updateCalculatedFieldsOnSave($values, $originalDataKeyValue);
     }
 
     protected function sumDate($date, $days, $months = 0, $years = 0, $sep = "-") {

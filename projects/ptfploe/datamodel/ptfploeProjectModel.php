@@ -62,11 +62,65 @@ class ptfploeProjectModel extends MoodleProjectModel {
 //                                       PageKeys::KEY_SUM => "generate project"]);
     }
 
+    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE) {
+        $data = parent::updateCalculatedFieldsOnRead($data);
+        $isArray = is_array($data);
+        $values = $isArray?$data:json_decode($data, true);
+        $originalValues = $isArray?$originalDataKeyValue:json_decode($originalDataKeyValue, true);
+
+        $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
+        $originalTaulaDadesUnitats = (is_array($originalValues["taulaDadesUnitats"])) ? $originalValues["taulaDadesUnitats"] : json_decode($originalValues["taulaDadesUnitats"], true);
+        if($values["nsProgramacio"]){
+            $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
+            if(!is_array($dataPrg)){
+                $dataPrg = json_decode($dataPrg, true);
+            }
+            $taulaDadesNF = (is_array($dataPrg["taulaDadesNuclisFormatius"])) ? $dataPrg["taulaDadesNuclisFormatius"] : json_decode($dataPrg["taulaDadesNuclisFormatius"], true);
+
+            $taulaDadesUFPrg = (is_array($dataPrg["taulaDadesUF"])) ? $dataPrg["taulaDadesUF"] : json_decode($dataPrg["taulaDadesUF"], true);
+            $taulaDadesNFFiltrada = array();
+            $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc"]);
+            foreach ($taulaDadesNF as $row) {
+                $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["unitat formativa"]);
+                if($rowBlocId==$blocId){
+                    $taulaDadesNFFiltrada[] = $row;
+                }
+            }
+        }else{
+            $taulaDadesNF = FALSE;
+        }
+        
+        if(!empty($taulaDadesNFFiltrada)){
+             for ($i=0; $i<count($taulaDadesUnitats); $i++){
+                if(empty($originalTaulaDadesUnitats[$i]["nom"])){
+                    $taulaDadesUnitats[$i]["nom"] = $taulaDadesNFFiltrada[$i]["nom"];
+                }else{
+                    $taulaDadesUnitats[$i]["nom"] = $originalTaulaDadesUnitats[$i]["nom"];
+                }
+             }
+        }
+        $values["taulaDadesUnitats"] = $taulaDadesUnitats;
+        
+        $ufTable = $values["taulaDadesUF"];
+        if(!is_array($ufTable)){
+            $ufTable = json_decode($ufTable, TRUE);
+        }
+        foreach ($ufTable as $key => $value) {
+            if($ufTable[$key]["ponderació"]=="0"){
+                $ufTable[$key]["ponderació"]=$ufTable[$key]["hores"];
+            }
+        }
+        $values["taulaDadesUF"]=$ufTable;
+
+        $data = $isArray?$values:json_encode($values);
+        return $data;
+    }
+    
     /**
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFieldsOnSave($data) {
+    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE) {
 
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
@@ -75,6 +129,25 @@ class ptfploeProjectModel extends MoodleProjectModel {
         $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
 
+        if($values["nsProgramacio"]){
+            $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
+            if(!is_array($dataPrg)){
+                $dataPrg = json_decode($dataPrg, true);
+            }
+            $taulaDadesNF = (is_array($dataPrg["taulaDadesNuclisFormatius"])) ? $dataPrg["taulaDadesNuclisFormatius"] : json_decode($dataPrg["taulaDadesNuclisFormatius"], true);
+            $taulaDadesUFPrg = (is_array($dataPrg["taulaDadesUF"])) ? $dataPrg["taulaDadesUF"] : json_decode($dataPrg["taulaDadesUF"], true);
+            $taulaDadesNFFiltrada = array();
+            $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc"]);
+            foreach ($taulaDadesNF as $row) {
+                $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["unitat formativa"]);
+                if($rowBlocId==$blocId){
+                    $taulaDadesNFFiltrada[] = $row;
+                }
+            }
+        }else{
+            $taulaDadesNF = FALSE;
+        }
+        
         if ($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
             $hores = array();
             for ($i=0; $i<count($taulaCalendari); $i++){
@@ -97,7 +170,12 @@ class ptfploeProjectModel extends MoodleProjectModel {
                     $horesUF[$idUf]=0;
                 }
                 $horesUF[0]+= $taulaDadesUnitats[$i]["hores"];
-                $horesUF[$idUf]+= $taulaDadesUnitats[$i]["hores"];
+                $horesUF[$idUf]+= $taulaDadesUnitats[$i]["hores"]; 
+                if(!empty($taulaDadesNFFiltrada)){
+                    if($taulaDadesUnitats[$i]["nom"]==$taulaDadesNFFiltrada[$i]["nom"]){
+                        $taulaDadesUnitats[$i]["nom"] = "";
+                    }
+                }
             }
 
             if ($taulaDadesUF!=NULL){
@@ -105,6 +183,9 @@ class ptfploeProjectModel extends MoodleProjectModel {
                     $idUf = intval($taulaDadesUF[$i]["unitat formativa"]);
                     if (isset($horesUF[$idUf])){
                         $taulaDadesUF[$i]["hores"]=$horesUF[$idUf];
+                    }
+                    if($taulaDadesUF[$i]["ponderació"]==$taulaDadesUF[$i]["hores"]){
+                        $taulaDadesUF[$i]["ponderació"]==0;
                     }
                 }
             }
@@ -149,7 +230,18 @@ class ptfploeProjectModel extends MoodleProjectModel {
         }
 
         $data = $isArray?$values:json_encode($values);
-        return parent::updateCalculatedFieldsOnSave($data);
+        return parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
+    }
+    
+    private function getBlocIdFromTaulaUF($taulaUF, $uf){
+        $rowBlocId = -1;
+        foreach ($taulaUF as $item) {
+            if($item["unitat formativa"]==$uf){
+                $rowBlocId = $item["bloc"];
+                break;
+            }            
+        }      
+        return $rowBlocId;
     }
 
     /**
