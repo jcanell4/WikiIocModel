@@ -5,16 +5,12 @@ class ViewProjectMetaDataAction extends BasicViewUpdatableProjectMetaDataAction{
 
     protected function runAction() {
 
-        $model = $this->getModel();
-        if (!$model->isProjectGenerated()) {
-            $model->setViewConfigName("firstView");
-        }
+        $model = $this->getModel();        
 
         $response = parent::runAction();
-
-        // Si els documents no coincideixen amb les plantilles es mostra el botó update
-        $plantilla = $response['projectMetaData']['plantilla']['value'];
-        $response[AjaxKeys::KEY_ACTIVA_UPDATE_BTN] = !$model->validateTemplates($plantilla) ? 1 : 0;
+        
+        $exportOk = $this->getModel()->validateProjectDates()? 1 : 0;
+        $response[AjaxKeys::KEY_EXTRA_STATE] = [AjaxKeys::KEY_EXTRA_STATE_ID => "exportOk", AjaxKeys::KEY_EXTRA_STATE_VALUE => $exportOk];
 
         return $response;
     }

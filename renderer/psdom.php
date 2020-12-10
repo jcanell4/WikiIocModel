@@ -32,6 +32,22 @@ abstract class AbstractNodeDoc{
     public abstract function getEncodeJson();
 }
 
+class IocExtraWidthNodeDoc extends StructuredNodeDoc {
+    const OPEN_EXTRA_WIDTH_TYPE = "openExtrawidth";
+    const CLOSE_EXTRA_WIDTH_TYPE = "closeExtrawidth";
+    
+    public function __construct($type) {
+        parent::__construct($type);
+    }
+
+    public function getEncodeJson() {
+        $ret = "{\n\"type\":\"".trim($this->type)."\"";
+        $ret .= ",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= "\n}";
+        return $ret;
+    }
+}
+
 class IocElemNodeDoc extends StructuredNodeDoc {
     const IOC_ELEM_TYPE = "iocElemType";
     const IOC_ELEM_TYPE_EXAMPLE = "example";
@@ -428,6 +444,7 @@ class LeafNodeDoc extends AbstractNodeDoc{
     const ACRONYM_TYPE          = "acronym";
     const OP_SINGLEQUOTE_TYPE   = "open_singlequote";
     const CL_SINGLEQUOTE_TYPE   = "close_singlequote";
+    const NO_BREAK_SPACE_TYPE   = "nbsp";
 
     private $acronym;
 

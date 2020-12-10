@@ -16,17 +16,17 @@ class command_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_projectUpdat
     }
 
     protected function process()
-    {
-        $params = array(ProjectKeys::KEY_ID => $this->params[ProjectKeys::KEY_ID],
-            ProjectKeys::KEY_NS => $this->params[ProjectKeys::KEY_ID],
-            ProjectKeys::PROJECT_TYPE => $this->params[ProjectKeys::PROJECT_TYPE],
-            ProjectKeys::KEY_DO => "view",
-            ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
-        );
-        $action = $this->getModelManager()->getActionInstance("ProjectUpdateDataAction");
-        $projectMetaData = $action->get($params);
-        if (!$projectMetaData) throw new UnknownProjectException();
-        return $projectMetaData;
+    {   //COMMMAND ANULAT
+//        $params = array(ProjectKeys::KEY_ID => $this->params[ProjectKeys::KEY_ID],
+//            ProjectKeys::KEY_NS => $this->params[ProjectKeys::KEY_ID],
+//            ProjectKeys::PROJECT_TYPE => $this->params[ProjectKeys::PROJECT_TYPE],
+//            ProjectKeys::KEY_DO => "view",
+//            ProjectKeys::KEY_METADATA_SUBSET => $this->params[ProjectKeys::KEY_METADATA_SUBSET]
+//        );
+//        $action = $this->getModelManager()->getActionInstance("ProjectUpdateDataAction");
+//        $projectMetaData = $action->get($params);
+//        if (!$projectMetaData) throw new UnknownProjectException();
+//        return $projectMetaData;
     }
 
     public function getAuthorizationType()

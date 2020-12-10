@@ -18,7 +18,7 @@ require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataRenderInterface.php')
 require_once (DOKU_PLUGIN . 'wikiiocmodel/metadata/MetaDataExceptions.php');
 
 abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
-    public static $DEFAULT_SINGLE_VALUES = ["string"=>"", "textarea"=>"", "number"=>0, "boolean"=>false, "date"=>""];
+    public static $DEFAULT_SINGLE_VALUES = ["string"=>"", "textarea"=>"", "number"=>0, "boolean"=>false, "bool"=>false, "date"=>""];
     private $projectId;
     private $values;
 
@@ -174,6 +174,7 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
         $ret;
         switch ($properties["type"]) {
             case "date":
+            case "bool":
             case "boolean":
             case "number":
             case "decimal":

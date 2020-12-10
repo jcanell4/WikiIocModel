@@ -70,6 +70,8 @@ class ptfploeProjectModel extends MoodleProjectModel {
 
         $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
         $originalTaulaDadesUnitats = (is_array($originalValues["taulaDadesUnitats"])) ? $originalValues["taulaDadesUnitats"] : json_decode($originalValues["taulaDadesUnitats"], true);
+        $resultatsAprenentatge = (is_array($values["resultatsAprenentatge"])) ? $values["resultatsAprenentatge"] : json_decode($values["resultatsAprenentatge"], true);
+        $originalResultatsAprenentatge = (is_array($originalValues["resultatsAprenentatge"])) ? $originalValues["resultatsAprenentatge"] : json_decode($originalValues["resultatsAprenentatge"], true);
         if($values["nsProgramacio"]){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
             if(!is_array($dataPrg)){
@@ -85,13 +87,14 @@ class ptfploeProjectModel extends MoodleProjectModel {
                 if($rowBlocId==$blocId){
                     $taulaDadesNFFiltrada[] = $row;
                 }
-            }
+            }            
         }else{
             $taulaDadesNF = FALSE;
         }
         
         if(!empty($taulaDadesNFFiltrada)){
              for ($i=0; $i<count($taulaDadesUnitats); $i++){
+                $taulaDadesUnitats[$i]["unitat"] = $originalTaulaDadesUnitats[$i]["unitat"];
                 if(empty($originalTaulaDadesUnitats[$i]["nom"])){
                     $taulaDadesUnitats[$i]["nom"] = $taulaDadesNFFiltrada[$i]["nom"];
                 }else{
@@ -100,6 +103,13 @@ class ptfploeProjectModel extends MoodleProjectModel {
              }
         }
         $values["taulaDadesUnitats"] = $taulaDadesUnitats;
+
+        for ($i=0; $i<count($resultatsAprenentatge); $i++){
+           if(!empty($originalResultatsAprenentatge[$i]["id"])){
+               $resultatsAprenentatge[$i]["id"] = $originalResultatsAprenentatge[$i]["id"];
+           }
+        }
+        $values["resultatsAprenentatge"] = $resultatsAprenentatge;
         
         $ufTable = $values["taulaDadesUF"];
         if(!is_array($ufTable)){
@@ -128,6 +138,7 @@ class ptfploeProjectModel extends MoodleProjectModel {
         $taulaDadesUF = (is_array($values["taulaDadesUF"])) ? $values["taulaDadesUF"] : json_decode($values["taulaDadesUF"], true);
         $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
+        $resultatsAprenentatge = (is_array($values["resultatsAprenentatge"])) ? $values["resultatsAprenentatge"] : json_decode($values["resultatsAprenentatge"], true);
 
         if($values["nsProgramacio"]){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
@@ -142,6 +153,15 @@ class ptfploeProjectModel extends MoodleProjectModel {
                 $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["unitat formativa"]);
                 if($rowBlocId==$blocId){
                     $taulaDadesNFFiltrada[] = $row;
+                }
+            }
+            $resultatsAprenentatgePrg = (is_array($dataPrg["resultatsAprenentatge"])) ? $dataPrg["resultatsAprenentatge"] : json_decode($dataPrg["resultatsAprenentatge"], true);
+            $resultatsAprenentatgeFiltrats = array();
+            $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc"]);
+            foreach ($resultatsAprenentatgePrg as $row) {
+                $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["uf"]);
+                if($rowBlocId==$blocId){
+                    $resultatsAprenentatgeFiltrats[] = $row;
                 }
             }
         }else{
@@ -177,6 +197,16 @@ class ptfploeProjectModel extends MoodleProjectModel {
                     }
                 }
             }
+            
+            if($resultatsAprenentatge){
+                for ($i=0; $i<count($resultatsAprenentatge); $i++){
+                    if(!empty($resultatsAprenentatgeFiltrats)){
+                        if($resultatsAprenentatge[$i]["id"]=="UF".$resultatsAprenentatgeFiltrats[$i]["uf"].".".$resultatsAprenentatgeFiltrats[$i]["ra"]){
+                            $resultatsAprenentatge[$i]["id"] = "";
+                        }
+                    }
+                }
+            }
 
             if ($taulaDadesUF!=NULL){
                 for ($i=0; $i<count($taulaDadesUF); $i++){
@@ -190,6 +220,7 @@ class ptfploeProjectModel extends MoodleProjectModel {
                 }
             }
 
+            $values["resultatsAprenentatge"]=$resultatsAprenentatge;
             $values["durada"] = $horesUF[0];
             $values["taulaDadesUnitats"] = $taulaDadesUnitats;
             $values["taulaDadesUF"] = $taulaDadesUF;
@@ -405,6 +436,13 @@ class ptfploeProjectModel extends MoodleProjectModel {
             }
         }
         return $ret;
+    }
+    
+    public function validateFields($data = NULL) {
+        parent::validateFields($data);
+        //comprova si avaluació inicialde pla i progamació coincideixen
+        //validar la ponderció de AC+PAF+EAF*...
+        //Validar les nomes mínimes
     }
 
     public function getCourseId() {

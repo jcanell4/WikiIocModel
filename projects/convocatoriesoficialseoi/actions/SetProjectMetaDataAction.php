@@ -17,6 +17,8 @@ class SetProjectMetaDataAction extends BasicSetProjectMetaDataAction
         }
 
         $response[ProjectKeys::KEY_GENERATED] = $model->generateProject();
+        $response[AjaxKeys::KEY_ACTIVA_UPDATE_BTN] = !$model->$this->validateProjectDates()? 1 : 0;
+
 
         return $response;
     }

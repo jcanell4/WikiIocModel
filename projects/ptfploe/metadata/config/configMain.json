@@ -733,7 +733,88 @@
                         },                                                
                         "resultatsAprenentatge": {
                             "type": "defResultatsAprenentage",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateArrayObjectFromExternalField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field": "resultatsAprenentatge",
+                                    "filterCondition":{
+                                        "_type_":"operation",
+                                       "values":[{
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayAndGetPosition",
+                                            "values":{"blocName":["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]},
+                                            "variables":{
+                                                "pla":"$values"
+                                            },
+                                            "data":{
+                                                "field":"blocName",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "name": "tipusBlocModul",
+                                                    "values":"$pla"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayObjectAndGetFieldValue",
+                                            "values":"$externalValues",
+                                            "variables":{
+                                                "ufRow":"$rowValue"
+                                            },
+                                            "data":{
+                                                "field":"taulaDadesUF",
+                                                "fieldToSearch":"unitat formativa",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "values":"$ufRow",
+                                                    "name":"uf"
+                                                },
+                                                "fieldToReturn":"bloc"
+                                            }
+                                        }],
+                                        "operation":"=="
+                                    },
+                                    "resultRow":{
+                                        "id":{
+                                            "_type_":"operation",
+                                            "values":[
+                                                "UF",
+                                                {
+                                                    "_type_":"field",
+                                                    "name":"uf",
+                                                    "values":"$rowValue"
+                                                },
+                                                ".RA",
+                                                {
+                                                    "_type_":"field",
+                                                    "name":"ra",
+                                                    "values":"$rowValue"                                                    
+                                                }
+                                            ],
+                                            "operation":"concat"
+                                            
+                                        },
+                                        "descripcio":{
+                                           "_type_":"field",
+                                            "name":"descripcio",
+                                            "values":"$rowValue"
+                                        }
+                                    },
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"resultatsAprenentatge",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },                                                
                         "activitatsAprenentatge": {
                             "type": "defActivitatsAprenentatge",
@@ -744,7 +825,7 @@
                             "type": "string",
                             "default":"no",
                             "mandatory": true
-                        },                                                
+                        },
                         "calendari": {
                             "type": "defCalendari",
                             "mandatory": true
