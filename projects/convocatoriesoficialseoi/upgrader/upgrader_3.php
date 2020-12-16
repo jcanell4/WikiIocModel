@@ -26,11 +26,11 @@ class upgrader_3 extends CommonUpgrader {
                     $dataProject = json_decode($dataProject, TRUE);
                 }
                 //A2
-                $dataProject["dadesEspecifiquesProvaA2"]["seu"]["provaVirtual"] = "false";
+                $dataProject["dadesEspecifiquesProvaA2"]["seu"]["provaVirtual"] = false;
                 //B1
-                $dataProject["dadesEspecifiquesProvaB1"]["seu"]["provaVirtual"] = "false";
+                $dataProject["dadesEspecifiquesProvaB1"]["seu"]["provaVirtual"] = false;
                 //B2
-                $dataProject["dadesEspecifiquesProvaB2"]["seu"]["provaVirtual"] = "false";
+                $dataProject["dadesEspecifiquesProvaB2"]["seu"]["provaVirtual"] = false;
 
                 $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
