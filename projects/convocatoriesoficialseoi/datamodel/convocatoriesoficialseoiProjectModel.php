@@ -26,11 +26,8 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
     }
 
     public function generateProject() {
-        // Considerem que el projecte està generat si les dates son correctes, això permet fer l'exportació
-        $success = $this->validateProjectDates();
-        $ret = ($success) ? $this->projectMetaDataQuery->setProjectGenerated() : FALSE;
-        $this->projectMetaDataQuery->setProjectSystemStateAttr("generated", $ret);
-        return $ret;
+        $ret = $this->projectMetaDataQuery->setProjectGenerated();
+        return TRUE;
     }
 
     /**

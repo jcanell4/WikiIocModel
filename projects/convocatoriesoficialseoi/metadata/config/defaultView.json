@@ -699,6 +699,33 @@
         "required": true,
         "title": "Enllaç a GoogleMaps per la prova B2"
       }
+    },
+    "dadesEspecifiquesProvaA2#seu#provaVirtual": {
+      "label": "Es realitzarà de forma virtual la prova A2?",
+      "type" : "checkbox",
+      "n_columns": 6,
+      "group": "dadesA2Seu",
+      "props": {
+        "title": "Marca la casella per indicar que la prova A2 es realitzarà de forma virtual"
+      }
+    },
+    "dadesEspecifiquesProvaB1#seu#provaVirtual": {
+      "label": "Es realitzarà de forma virtual la prova B1?",
+      "type" : "checkbox",
+      "n_columns": 6,
+      "group": "dadesB1Seu",
+      "props": {
+        "title": "Marca la casella per indicar que la prova B1 es realitzarà de forma virtual"
+      }
+    },
+    "dadesEspecifiquesProvaB2#seu#provaVirtual": {
+      "label": "Es realitzarà de forma virtual la prova B2?",
+      "type" : "checkbox",
+      "n_columns": 6,
+      "group": "dadesB2Seu",
+      "props": {
+        "title": "Marca la casella per indicar que la prova B2 es realitzarà de forma virtual"
+      }
     },    
     "legislacioReclamacio": {
       "label": "URL de la legislació referent a les reclamacions",

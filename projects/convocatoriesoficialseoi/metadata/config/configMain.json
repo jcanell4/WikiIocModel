@@ -31,8 +31,8 @@
     {
       "main": "meta.mdpr",
       "versions": {
-            "fields": 1,
-            "templates": {"convocatoria_a2":2, "convocatoria_b1":2, "convocatoria_b2":2}
+            "fields": 3,
+            "templates": {"convocatoria_a2":3, "convocatoria_b1":3, "convocatoria_b2":3}
       },
       "mainType": {
         "type": "object",
@@ -81,6 +81,11 @@
                "type":"string",
                "mandatory":true,
                "default":"https://www.google.es/maps/place/Institut+Obert+de+Catalunya/@41.3747868,2.1661139,17z/data=!3m1!4b1!4m5!3m4!1s0x12a4a25c3e20e6ed:0x5cb6bf3bb3a98bd6!8m2!3d41.3747828!4d2.1683026"
+            },
+            "provaVirtual":{
+               "type":"boolean",
+               "mandatory":true,
+               "default":false
             }
           }                    
         },
