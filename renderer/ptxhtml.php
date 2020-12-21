@@ -339,7 +339,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         $this->closeForContentB("ol");
     }
 
-    function listitem_open($level) {
+    function listitem_open($level, $node=false) {
         $this->doc .= '<li class="level'.$level.'">';
     }
 

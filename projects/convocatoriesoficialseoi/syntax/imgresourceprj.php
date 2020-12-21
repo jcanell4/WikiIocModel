@@ -53,7 +53,7 @@ class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_imgresourcepr
     /**
      * Handle the match
      */
-    function handle($match, $state, $pos, &$handler)
+    function handle($match, $state, $pos, Doku_Handler $handler)
     {
         preg_match('/height="(.*?)"/', $match, $matches);
         $height = $matches[1] ? $matches[1] : NULL;
@@ -68,7 +68,7 @@ class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_imgresourcepr
         return [$state, $match, $height, $width, $align];
     }
 
-    function render($mode, &$renderer, $data)
+    function render($mode, Doku_Renderer $renderer, $data)
     {
         global $plugin_controller;
 

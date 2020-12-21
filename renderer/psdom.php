@@ -853,7 +853,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $this->closeForContentB(StructuredNodeDoc::ORDERED_LIST_TYPE); 
     }
 
-    function listitem_open($level) {
+    function listitem_open($level, $node=false) {
         $node = new ListItemNodeDoc($level);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;

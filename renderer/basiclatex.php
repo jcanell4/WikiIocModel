@@ -832,7 +832,7 @@ class renderer_plugin_wikiiocmodel_basiclatex extends Doku_Renderer {
         }
     }
 
-    function listitem_open($level) {
+    function listitem_open($level, $node=false) {
         $this->doc .= '\item ';
     }
 
