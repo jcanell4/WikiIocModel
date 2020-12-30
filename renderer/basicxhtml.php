@@ -314,7 +314,7 @@ class renderer_plugin_wikiiocmodel_basicxhtml extends Doku_Renderer {
         $this->doc .= '</ol>'.DOKU_LF;
     }
 
-    function listitem_open($level) {
+    function listitem_open($level, $node=false) {
         $this->doc .= '<li class="level'.$level.'">';
     }
 
