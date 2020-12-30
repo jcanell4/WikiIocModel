@@ -1,0 +1,14 @@
+<?php
+if (!defined('DOKU_INC')) die();
+
+class GetProjectMetaDataAction extends BasicGetProjectMetaDataAction {
+
+    function runAction() {
+        if (!$this->getModel()->isProjectGenerated()) {
+            $this->getModel()->setViewConfigName("firstView");
+        }
+        $response = parent::runAction();
+
+        return $response;
+    }
+}
