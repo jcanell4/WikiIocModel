@@ -1,8 +1,6 @@
 <?php
 /**
- * upgrader_21: Transforma el archivo continguts.txt del proyecto "ptfploe" desde la versión 11 a la versión 12
- *              sustituye, en el doc del usuario, el contenido incluido entre los tags protected
- *              por el contenido de los tags protected de la nueva plantilla
+ * upgrader_21: Transforma el archivo continguts.txt del proyecto "ptfploe" desde la versión 20 a la versión 21
  * @culpable rafael 09-07-2019
  */
 if (!defined("DOKU_INC")) die();
@@ -21,7 +19,7 @@ class upgrader_21 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename = NULL) {
+    public function process($type, $ver, $filename = NULL) {
         switch ($type) {
             case "fields":
                 $status = TRUE;
@@ -44,16 +42,16 @@ class upgrader_21 extends CommonUpgrader {
                 */
                 $aTokRep = [
                     [
-                        "\\| \\<WIOCCL:FOREACH  var\\=\"item_act\" array\\=\"\\{##activitatsAprenentatge##\\}\" filter\\=\"\\{##item_act\\[unitat\\]##\\}\\=\\=\\{##item_per\\[unitat\\]##\\}\\&\\&\\{##item_act\\[període\\]##\\}\\=\\=\\{##item_per\\[període\\]##\\}\"\\>\\- \\{##item_act\\[descripció\\]##\\} \\\\ \<\/WIOCCL:FOREACH\>", 
+                        "\\| \\<WIOCCL:FOREACH  var\\=\"item_act\" array\\=\"\\{##activitatsAprenentatge##\\}\" filter\\=\"\\{##item_act\\[unitat\\]##\\}\\=\\=\\{##item_per\\[unitat\\]##\\}\\&\\&\\{##item_act\\[període\\]##\\}\\=\\=\\{##item_per\\[període\\]##\\}\"\\>\\- \\{##item_act\\[descripció\\]##\\} \\\\ \<\/WIOCCL:FOREACH\>",
                         "| <WIOCCL:FOREACH  var=\"item_act\" array=\"{##activitatsAprenentatge##}\" filter=\"{##item_act[unitat]##}=={##item_per[unitat]##}&&{##item_act[període]##}=={##item_per[període]##}\">- {##item_act[descripció]##} \\\\\\\\ </WIOCCL:FOREACH>"
                     ]
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 20 to 21");
+                if (($status = !empty($doc))) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $status = !empty($doc);
+                break;
         }
         return $status;
     }

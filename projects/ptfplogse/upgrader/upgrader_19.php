@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_19: Transforma el archivo continguts.tx del proyecto 'ptfploe'
+ * upgrader_19: Transforma el archivo continguts.tx del proyecto 'ptfplogse'
  *              desde la versión 18 a la versión 19 (asociado a la actualización de 9 a 10 de los datos del proyecto)
  * @author rafael <rclaver@xtec.cat>
  */
@@ -18,7 +18,7 @@ class upgrader_19 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $ret = TRUE;

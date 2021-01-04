@@ -1,0 +1,38 @@
+{
+    PageStyle:{
+        page-size: A3|A4|A5
+        page-orientation: P|L    //(portrait|landscape)
+        unit: pt|mm|cm|in    //(point|millimeter|centimeter|inch)
+        page-magin-header: [0, +inf)
+        page-magin-footer: [0, +inf)
+        page-magin-top: [0, +inf)
+        page-magin-bottom: [0, +inf)
+        page-magin-left: [0, +inf)
+        page-magin-right: [0, +inf)
+        page-font-name:(font name list)
+        page-font-size:[0, +inf)
+        image-basedir: (string)
+        image-filenameMap: map(of name(string), {filepath: (string), needBaseDir:TRUE|FALSE})
+    },
+    ContainerStyle:{
+        Style:{
+            align: L|R|C|J    //(left|right|center|justify)
+            padding: [0,+inf) | {top: [0,+inf), right: [0,+inf), bottom: [0,+inf), left: [0,+inf)}
+            margin: [0,+inf) | {top: [0,+inf), right: [0,+inf), bottom: [0,+inf), left: [0,+inf)}
+            border: TRUE|FALSE | {top: TRUE|FALSE, right: TRUE|FALSE, bottom: TRUE|FALSE, left: TRUE|FALSE}
+            bordercolor: [#000000, #ffffff] | {top: [#000000, #ffffff], right: [#000000, #ffffff], bottom: [#000000, #ffffff], left: [#000000, #ffffff]}
+            font-color: [#000000, #ffffff]
+            font-name: (font name list)
+            font-size: [0,+inf)    
+            font-attribute: B|I|U|D|O       //(bold/italic/underline|line through|overline)
+            background-color:[#000000, #ffffff]
+            pos-x: [0,+inf)
+            pos-y: [0,+inf)
+            width: [0,+inf)
+            height:  [0,+inf)
+            replace-rule: array(of {type: (key list), keyToReplace: @@CONTENT@@|(symbol), textBase: (STRING contenint la clau keyToReplace)}  //exemple; {"type":"content",keyToReplace":"@@CONTENT@@","textBase":"<strong>@@CONTENT@@</strong>"})
+        }
+        childrenContainers: array(of map(of keyString, ContainerStyle))
+        styleTypes: array(of map(of keyString, ContainerStyle)
+    }
+}

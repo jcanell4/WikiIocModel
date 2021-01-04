@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_1: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_1: Transforma el archivo continguts.txt de los proyectos 'ptfct'
  *             desde la versión 0 a la versión 1
  * @author rafael
  */
@@ -18,7 +18,7 @@ class upgrader_1 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
@@ -27,11 +27,9 @@ class upgrader_1 extends CommonUpgrader {
                 }
                 $dataProject['moodleCourseId'] = 0;
 
-
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 0 to 1 (s'afegeix el camp 'moodleCourseId'");
-
-                $ret = TRUE;
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
+
             case "templates":
                 // Línia 96.  Es canvia "  :title:Taula Unitats" per "  :title:Apartats"
                 // Línia 102. Es canvia "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[inici]##}" per "{#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[final]##}"
@@ -52,7 +50,7 @@ class upgrader_1 extends CommonUpgrader {
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 0 to 1");
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
                 $ret = !empty($dataChanged);
         }

@@ -26,11 +26,8 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
     }
 
     public function generateProject() {
-        // Considerem que el projecte està generat si les dates son correctes, això permet fer l'exportació
-        $success = $this->validateProjectDates();
-        $ret = ($success) ? $this->projectMetaDataQuery->setProjectGenerated() : FALSE;
-        $this->projectMetaDataQuery->setProjectSystemStateAttr("generated", $ret);
-        return $ret;
+        $ret = $this->projectMetaDataQuery->setProjectGenerated();
+        return TRUE;
     }
 
     /**
@@ -132,19 +129,20 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
         return [$basename."_a2.zip", $basename."_b1.zip", $basename."_b2.zip"];
     }
 
-    protected function validateProjectDates() {
-        $projectData = $this->getData();
+    public function validateProjectDates() {
+        $projectData = $this->getDataProject();
 
         $today = new DateTime();
-        $dataProva1 = DateTime::createFromFormat('Y-m-d', $projectData['projectMetaData']['dataProva1']['value']);
-        $dataProva2 = DateTime::createFromFormat('Y-m-d', $projectData['projectMetaData']['dataProva2']['value']);
-        $dataResultats = DateTime::createFromFormat('Y-m-d', $projectData['projectMetaData']['dataResultats']['value']);
-        $dataDemandaNE = DateTime::createFromFormat('Y-m-d', $projectData['projectMetaData']['dataDemandaNE']['value']);
+        $dataProvaA2 = DateTime::createFromFormat('Y-m-d', $projectData["dadesEspecifiquesProvaA2"]["dataProva"]);
+        $dataProvaB1 = DateTime::createFromFormat('Y-m-d', $projectData["dadesEspecifiquesProvaB1"]["dataProva"]);
+        $dataProvaB2 = DateTime::createFromFormat('Y-m-d', $projectData["dadesEspecifiquesProvaB2"]["dataProva"]);
+        $dataResultats = DateTime::createFromFormat('Y-m-d', $projectData['dataResultats']);
+        $dataDemandaNE = DateTime::createFromFormat('Y-m-d', $projectData['dataDemandaNE']);
 
         $validated = true;
-        $validated &= $dataProva1 > $today && $dataProva2 > $today;
-        $validated &= $dataResultats > $dataProva1 && $dataResultats > $dataProva2;
-        $validated &= $dataDemandaNE > $today && $dataDemandaNE < $dataProva1 && $dataDemandaNE < $dataProva2;
+        $validated &= $dataProvaA2 > $today && $dataProvaB1 > $today && $dataProvaB2 > $today;
+        $validated &= $dataResultats > $dataProvaA2 && $dataResultats > $dataProvaB1 && $dataResultats > $dataProvaB2;
+        $validated &= $dataDemandaNE > $today && $dataDemandaNE < $dataProvaA2 && $dataDemandaNE < $dataProvaB1 && $dataDemandaNE < $dataProvaB2;
 
         return $validated;
     }
@@ -209,12 +207,13 @@ class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFieldsOnSave($values) {
+    public function updateCalculatedFieldsOnSave($values, $originalDataKeyValue=FALSE) {
         $values["dataReclamacions"] = $this->sumDate($values["dataResultats"], 3);
-        $values["dataProvaNE1"] = $this->sumDate($values["dataProva1"], 5);
-        $values["dataProvaNE2"] = $this->sumDate($values["dataProva2"], 5);
+        $values["dadesEspecifiquesProvaA2"]["dataProvaNE"] = $this->sumDate($values["dadesEspecifiquesProvaA2"]["dataProva"], 5);
+        $values["dadesEspecifiquesProvaB1"]["dataProvaNE"] = $this->sumDate($values["dadesEspecifiquesProvaB1"]["dataProva"], 5);
+        $values["dadesEspecifiquesProvaB2"]["dataProvaNE"] = $this->sumDate($values["dadesEspecifiquesProvaB2"]["dataProva"], 5);
 
-        return parent::updateCalculatedFieldsOnSave($values);
+        return parent::updateCalculatedFieldsOnSave($values, $originalDataKeyValue);
     }
 
     protected function sumDate($date, $days, $months = 0, $years = 0, $sep = "-") {

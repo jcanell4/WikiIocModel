@@ -18,7 +18,7 @@ class upgrader_1 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
 
         switch ($type) {
             case "fields":
@@ -29,8 +29,7 @@ class upgrader_1 extends CommonUpgrader {
                 }
                 //Añade el campo 'amagarMenuInici' a la estructura
                 $dataProject = $this->addNewField($dataProject, "amagarMenuInici", "false");
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 0 to 1");
-                $ret = TRUE;
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
 
             case "templates":

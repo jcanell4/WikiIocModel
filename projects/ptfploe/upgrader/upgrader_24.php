@@ -18,7 +18,7 @@ class upgrader_24 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
 
         switch ($type) {
             case "fields":
@@ -63,10 +63,10 @@ class upgrader_24 extends CommonUpgrader {
                            ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade version 23 to 24 (Simultànea a la actualització de 7 a 8 de _wikiIocSystem_.mdpr)");
+                if (($ret = !empty($doc))) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver (simultànea a la actualització de 7 a 8 de fields)");
                 }
-                $ret = !empty($doc);
+                break;
         }
         return $ret;
     }

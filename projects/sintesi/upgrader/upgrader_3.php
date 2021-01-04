@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_3: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_3: Transforma el archivo _wikiIocSystem_.mdpr y continguts.txt de los proyectos 'sintesi'
  *             desde la versión 2 a la versión 3
  * @author josep
  */
@@ -18,23 +18,21 @@ class upgrader_3 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 $l1 = strtotime("2020-02-14");
                 $l2 = strtotime("2020-05-15");
                 $now = time();
-                if($l1 < $now && $now < $l2){
+                if ($l1 < $now && $now < $l2){
                     $dataProject["semestre"] = 2;
                 }
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 2 to 3 (canvis en els camps)");
-
-                $ret = TRUE;
-                
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
+
             case "templates":
-                if ($filename===NULL) { 
+                if ($filename===NULL) {
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename)."\n";
@@ -45,10 +43,10 @@ class upgrader_3 extends CommonUpgrader {
                            ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade version 2 to 3");
+                if (($ret = !empty($doc))) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $ret = !empty($doc);
+                break;
         }
         return $ret;
     }

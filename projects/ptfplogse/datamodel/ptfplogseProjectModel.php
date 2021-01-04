@@ -66,7 +66,7 @@ class ptfplogseProjectModel extends MoodleProjectModel {
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFieldsOnSave($data) {
+    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE) {
 
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
@@ -129,7 +129,7 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         }
 
         $data = $isArray?$values:json_encode($values);
-        return parent::updateCalculatedFieldsOnSave($data);
+        return parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
     }
 
     /**

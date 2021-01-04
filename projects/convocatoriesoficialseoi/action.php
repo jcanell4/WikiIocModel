@@ -17,13 +17,15 @@ class action_plugin_wikiiocmodel_projects_convocatoriesoficialseoi extends WikiI
         $controller->register_hook('ADD_TPL_CONTROL_SCRIPTS', "AFTER", $this, "addControlScripts", array());
         $controller->register_hook('WIOC_PROCESS_RESPONSE_project', "AFTER", $this, "setExtraMeta", array());
         $controller->register_hook('WIOC_PROCESS_RESPONSE_projectUpdate', "AFTER", $this, "setExtraMeta", array());
+        $controller->register_hook('WIOC_PROCESS_RESPONSE_projectExport', "AFTER", $this, "setExtraMeta", array());
     }
 
     /**
      * Rellena de información una pestaña de la zona de MetaInformación
      */
     function setExtraMeta(&$event, $param) {
-
+        global $plugin_controller;
+        
         //controlar que se trata del proyecto en curso
         if ($event->data['requestParams']['projectType'] === $this->projectType) {
 
@@ -37,6 +39,7 @@ class action_plugin_wikiiocmodel_projects_convocatoriesoficialseoi extends WikiI
                 if (class_exists("ResultsWithFiles", TRUE)){
                     $html = ResultsWithFiles::get_html_metadata($result) ;
                 }
+                $html_metaFtp = $plugin_controller->get_ftpsend_metadata(getID(), $this->projectType);
 
                 $event->data["ajaxCmdResponseGenerator"]->addExtraMetadata(
                             $result['id'],
@@ -44,6 +47,13 @@ class action_plugin_wikiiocmodel_projects_convocatoriesoficialseoi extends WikiI
                             WikiIocLangManager::getLang("metadata_export_title"),
                             $html
                             );
+                $event->data["ajaxCmdResponseGenerator"]->addExtraMetadata(
+                            $result['id'],
+                            $result['id']."_ftpsend",
+                            WikiIocLangManager::getLang("metadata_ftpsend_title"),
+//                            $event->data['responseData'][AjaxKeys::KEY_FTPSEND_HTML]
+                            $html_metaFtp
+                );
             }
         }
         return TRUE;

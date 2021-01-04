@@ -559,7 +559,7 @@ class DokuModelAdapter extends BasicModelAdapter {
             $this->mediaManagerFileList();
             $content .= ob_get_clean();
             // check permissions again - the action may have changed
-            $ACT = act_permcheck($ACT);
+            $ACT = IocCommon::act_permcheck($ACT);
         }
         $this->runAfterPreprocess($content);
 
@@ -893,7 +893,7 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         $content = "";
         if ($this->runBeforePreprocess($content)) {
-            act_permcheck($ACT);
+            IocCommon::act_permcheck($ACT);
             unlock($ID);
         }
 
@@ -1002,6 +1002,11 @@ class DokuModelAdapter extends BasicModelAdapter {
         $value["pluginsSelector"] = "form.plugins:submit";
     }
 
+    public function getExtensionSelectors(&$value) {
+        $value["hrefSelector"] = "div#extension__manager ul.tabs a:href";
+        $value["extensionsSelector"] = "form#extension__list:submit";
+    }
+
     /**
      * Afegeix al paràmetre $value els selectors css que es
      * fan servir per seleccionar els forms al html del pluguin CONFIG
@@ -1037,6 +1042,11 @@ class DokuModelAdapter extends BasicModelAdapter {
     public function getRevertSelectors(&$value)
     {
         $value["revertSelector"] = "#admin_revert form:submit";
+    }
+
+    public function getSmtpSelectors(&$value)
+    {
+        $value["smtpSelector"] = "#admin_smtp form:submit";
     }
 
     /**
@@ -1147,7 +1157,7 @@ class DokuModelAdapter extends BasicModelAdapter {
             $ret = $this->mediaDetailsContent();
             $ret['content'] = $content . $ret['content'];
             // check permissions again - the action may have changed
-            $ACT = act_permcheck($ACT);
+            $ACT = IocCommon::act_permcheck($ACT);
         }
         $this->runAfterPreprocess($ret['content']);
         return $ret;
@@ -1506,7 +1516,7 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         $content = "";
         if ($this->runBeforePreprocess($content)) {
-            act_permcheck($ACT);
+            IocCommon::act_permcheck($ACT);
         }
 
         $this->runAfterPreprocess($content);
@@ -1514,12 +1524,13 @@ class DokuModelAdapter extends BasicModelAdapter {
         $this->startUpLang();
 
         // DO real
-        $revisions = getRevisions($ID, -1, 50);
+        $pagelog = new PageChangeLog($ID);
+        $revisions = $pagelog->getRevisions(-1, 50);
 
         $ret = [];
 
         foreach ($revisions as $revision) {
-            $ret[$revision] = getRevisionInfo($ID, $revision);
+            $ret[$revision] = $pagelog->getRevisionInfo($revision);
             $ret[$revision]['date'] = $this->extractDateFromRevision($ret[$revision]['date']);
             //unset ($ret[$revision]['id']);
         }

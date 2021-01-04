@@ -18,7 +18,7 @@ class upgrader_26 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $ret = TRUE;
@@ -45,10 +45,10 @@ class upgrader_26 extends CommonUpgrader {
                 ];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 25 to 26");
+                if (($ret = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver (simultànea a la actualització de 8 a 9 de fields)");
                 }
-                $ret = !empty($dataChanged);
+                break;
         }
         return $ret;
     }

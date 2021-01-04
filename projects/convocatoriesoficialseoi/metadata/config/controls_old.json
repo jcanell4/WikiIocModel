@@ -1,0 +1,92 @@
+{
+  "generateProject": {
+    "parms": {
+      "DOM": {
+        "id": "generateProjectButton"
+      }
+    },
+    "scripts": {
+      "updateHandler": {
+        "conditions": {
+          "page.isRevision": "false",
+          "page.action": "'never'"
+        }
+      }
+    }
+  },
+  "eoiUpdateDataProject": {
+    "class": "WikiIocButton",
+    "parms": {
+      "DOM": {
+        "id": "eoiUpdateDataProject",
+        "title": "Actualització del Projecte",
+        "class": "iocDisplayBlock"
+      },
+      "DJO": {
+        "query": "'do=edit'",
+        "autoSize": true,
+        "visible": false,
+        "iconClass": "'iocUpdateDataIcon'",
+        "urlBase": "'lib/exe/ioc_ajax.php?call=projectUpdate'",
+        "standbyId": "'bodyContent'",
+        "disableOnSend": true
+      }
+    },
+    "scripts": {
+      "getFunctions": {
+        "path": "UpdateGetFunction.js"
+      },
+      "updateHandler": {
+        "rols": [
+          "responsable",
+          "autor"
+        ],
+        "conditions": {
+          "page.updateButton": "1",
+          "page.isRevision": "false",
+          "page.generated": "true"
+        }
+      }
+    }
+  },
+  "eoiHtmlExport": {
+    "class": "WikiIocButton",
+    "parms": {
+      "DOM": {
+        "id": "eoiHtmlExport",
+        "title": "eoiHtmlExport",
+        "class": "iocDisplayBlock"
+      },
+      "DJO": {
+        "query": "'do=edit'",
+        "autoSize": true,
+        "visible": false,
+        "iconClass": "'iocExportHtmlIcon'",
+        "urlBase": "'lib/exe/ioc_ajax.php?call=projectExport'",
+        "standbyId": "'bodyContent'",
+        "disableOnSend": true
+      }
+    },
+    "scripts": {
+      "getFunctions": {
+        "path": "HtmlExportGetFunction.js"
+      },
+      "updateHandler": {
+        "permissions": [
+          "isadmin",
+          "ismanager",
+          "isprojectmanager"
+        ],
+        "rols": [
+          "responsable"
+        ],
+        "conditions": {
+          "page.action": "'project_view'",
+          "page.isRevision": "false",
+          "page.generated": "true",
+          "page.updateButton": "0"
+        }
+      }
+    }
+  }
+}

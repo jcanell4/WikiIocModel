@@ -22,7 +22,7 @@ class upgrader_9 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename = NULL) {
+    public function process($type, $ver, $filename = NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
@@ -34,8 +34,7 @@ class upgrader_9 extends CommonUpgrader {
                 $value = false;
                 $dataProject = $this->addNewField($dataProject, $name, $value);
 
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 8 to 9 (afegir camps). Simultànea a la actualització de 16 a 17 de continguts");
-                $status = TRUE;
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver. Simultànea a l'actualització de 16 a 17 de templates", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":

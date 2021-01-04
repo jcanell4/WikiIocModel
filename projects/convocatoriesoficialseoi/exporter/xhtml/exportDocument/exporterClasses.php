@@ -70,7 +70,8 @@ class exportDocument extends renderHtmlDocument {
                 $allPathTemplate = $this->cfgExport->rendererPath . "/$pathTemplate";
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $zip->addFile($allPathTemplate . "/main.css", "main.css");
-                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL . "exporter/xhtml", "c_sencer/", "css");
+//                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL . "exporter/xhtml", "c_sencer/", "css");
+                $this->addDefaultCssFilesToZip($zip, "c_sencer/");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "c_sencer", TRUE);
 
                 $this->addFilesToZip($zip, $this->cfgExport->rendererPath, "c_sencer/", "resources");
@@ -85,6 +86,8 @@ class exportDocument extends renderHtmlDocument {
                     "tmp_dir" => $this->cfgExport->tmp_dir,    //directori temporal on crear el pdf
                     "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
                     "mode" => isset($this->mode) ? $this->mode : $this->filetype,
+                    "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
+                    "style" => "main.stypdf",
                     "data" => array(
                         "header_page_logo" => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                         "header_page_wlogo" => 16,
@@ -152,7 +155,7 @@ class exportDocument extends renderHtmlDocument {
     private function attachMediaFiles(&$zip) {
         global $conf;
         //Attach media files
-        foreach($this->cfgExport->media_files as $f){
+        foreach(array_unique($this->cfgExport->media_files) as $f){
             resolve_mediaid(getNS($f), $f, $exists);
             if ($exists) {
                 //eliminamos el primer nivel del ns
@@ -164,19 +167,19 @@ class exportDocument extends renderHtmlDocument {
         $this->cfgExport->media_files = array();
 
         //Attach latex files
-        foreach($this->cfgExport->latex_images as $f){
+        foreach(array_unique($this->cfgExport->latex_images) as $f){
             if (file_exists($f)) $zip->addFile($f, 'img/'.basename($f));
         }
         $this->cfgExport->latex_images = array();
 
         //Attach graphviz files
-        foreach($this->cfgExport->graphviz_images as $f){
+        foreach(array_unique($this->cfgExport->graphviz_images) as $f){
             if (file_exists($f)) $zip->addFile($f, 'img/'.basename($f));
         }
         $this->cfgExport->graphviz_images = array();
 
         //Attach gif (png, jpg, etc) files
-        foreach($this->cfgExport->gif_images as $m){
+        foreach(array_unique($this->cfgExport->gif_images) as $m){
             if (file_exists(mediaFN($m))) $zip->addFile(mediaFN($m), "img/". str_replace(":", "/", $m));
         }
         $this->cfgExport->gif_images = array();
@@ -184,52 +187,52 @@ class exportDocument extends renderHtmlDocument {
         if (session_status() == PHP_SESSION_ACTIVE) session_destroy();
     }
 
-    private function addFilesToZip(&$zip, $base, $d, $dir, $recursive=FALSE) {
-        $zip->addEmptyDir("$d$dir");
-        $files = $this->getDirFiles("$base/$dir");
-        foreach($files as $f){
-            $zip->addFile($f, "$d$dir/".basename($f));
-        }
-        if($recursive){
-            $dirs = $this->getDirs("$base/$dir");
-            foreach($dirs as $dd){
-                $this->addFilesToZip($zip, "$base/$dir", "$d$dir/", basename($dd));
-            }
-        }
-    }
+//    private function addFilesToZip(&$zip, $base, $d, $dir, $recursive=FALSE) {
+//        $zip->addEmptyDir("$d$dir");
+//        $files = $this->getDirFiles("$base/$dir");
+//        foreach($files as $f){
+//            $zip->addFile($f, "$d$dir/".basename($f));
+//        }
+//        if($recursive){
+//            $dirs = $this->getDirs("$base/$dir");
+//            foreach($dirs as $dd){
+//                $this->addFilesToZip($zip, "$base/$dir", "$d$dir/", basename($dd));
+//            }
+//        }
+//    }
 
-    /**
-     * Fill files var with all media files stored on directory var
-     * @param string $directory
-     * @param string $files
-     */
-    private function getDirs($dir){
-        $files = array();
-        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-            $dh = opendir($dir);
-            while ($file = readdir($dh)) {
-                if ($file != '.' && $file != '..' && is_dir("$dir/$file")) {
-                    array_push($files, "$dir/$file");
-                }
-            }
-            closedir($dh);
-        }
-        return $files;
-    }
+//    /**
+//     * Fill files var with all media files stored on directory var
+//     * @param string $directory
+//     * @param string $files
+//     */
+//    private function getDirs($dir){
+//        $files = array();
+//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
+//            $dh = opendir($dir);
+//            while ($file = readdir($dh)) {
+//                if ($file != '.' && $file != '..' && is_dir("$dir/$file")) {
+//                    array_push($files, "$dir/$file");
+//                }
+//            }
+//            closedir($dh);
+//        }
+//        return $files;
+//    }
 
-    private function getDirFiles($dir){
-        $files = array();
-        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-            $dh = opendir($dir);
-            while ($file = readdir($dh)) {
-                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
-                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg|.*?\.gif|.*?\.ico|.*?\.css|.*?\.js|.*?\.htm|.*?\.html|.*?\.svg/', $file)){
-                        array_push($files, "$dir/$file");
-                    }
-                }
-            }
-            closedir($dh);
-        }
-        return $files;
-    }
+//    private function getDirFiles($dir){
+//        $files = array();
+//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
+//            $dh = opendir($dir);
+//            while ($file = readdir($dh)) {
+//                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
+//                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg|.*?\.gif|.*?\.ico|.*?\.css|.*?\.js|.*?\.htm|.*?\.html|.*?\.svg/', $file)){
+//                        array_push($files, "$dir/$file");
+//                    }
+//                }
+//            }
+//            closedir($dh);
+//        }
+//        return $files;
+//    }
 }

@@ -18,7 +18,7 @@ class upgrader_15 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $ret = TRUE;

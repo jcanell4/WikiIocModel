@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_9: Transforma el archivo de proyecto 'ptfploe' desde la versión 8 a la versión 9
- *             y el archivo continguts.txt de los proyectos 'ptfploe' desde la versión 8 a la versión 9
+ * upgrader_9: Transforma la estructura de datos y el archivo continguts.txt de los proyectos 'ptfploe'
+ *             desde la versión 8 a la versión 9
  * @author rafael <rclaver@xtec.cat>
  */
 if (!defined("DOKU_INC")) die();
@@ -18,7 +18,7 @@ class upgrader_9 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 //Transforma los datos del proyecto "ptfploe" desde la estructura de la versión 8 a la versión 9
@@ -34,8 +34,7 @@ class upgrader_9 extends CommonUpgrader {
                 $dataProject = $this->addNewField($dataProject, "dataPaf12", $dataProject['dataPaf11']);
                 $dataProject = $this->addNewField($dataProject, "dataPaf22", $dataProject['dataPaf21']);
 
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 8 to 9 (afegir camps). Simultànea a la actualització de 25 a 26 de continguts");
-                $status = TRUE;
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver (simultànea a la actualització de 25 a 26 de templates)", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":
@@ -65,10 +64,10 @@ class upgrader_9 extends CommonUpgrader {
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 8 to 9");
+                if (($status = !empty($doc))) {
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $status = !empty($doc);
+                break;
         }
         return $status;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_4: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_4: Transforma la estructura de datos y el archivo continguts.txt de los proyectos 'ptfploe'
  *             desde la versión 3 a la versión 4
  * @author rafael
  */
@@ -18,7 +18,7 @@ class upgrader_4 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
 
@@ -28,15 +28,12 @@ class upgrader_4 extends CommonUpgrader {
                 }
 
                 // cerquem les dades de la paf1 i paf 2 i les qualificacions son de l'any 2019 i canviar-les per la mateixa data però 2020
-
                 $dataProject['dataPaf1'] = str_replace("2019", "2020", $dataProject['dataPaf1']);
                 $dataProject['dataPaf2'] = str_replace("2019", "2020", $dataProject['dataPaf2']);
                 $dataProject['dataQualificacioPaf1'] = str_replace("2019", "2020", $dataProject['dataQualificacioPaf1']);
                 $dataProject['dataQualificacioPaf2'] = str_replace("2019", "2020", $dataProject['dataQualificacioPaf2']);
 
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 3 to 4");
-
-                $ret = TRUE;
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
 
             case "templates":
@@ -53,10 +50,10 @@ class upgrader_4 extends CommonUpgrader {
                              "filter=\"{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}"]];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 3 to 4");
+                if (($ret = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $ret = !empty($dataChanged);
+                break;
         }
         return $ret;
     }

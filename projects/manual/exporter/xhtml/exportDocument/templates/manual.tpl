@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
     <!-- Own files -->
     <link rel="stylesheet" href="css/basic.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/{##estil##}.css">
     <title>IOC - Manual - {##titol##}</title>
 </head>
 <body>

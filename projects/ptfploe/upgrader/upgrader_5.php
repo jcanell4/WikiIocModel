@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_5: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_5: Transforma la estructura de datos y el archivo continguts.txt de los proyectos 'ptfploe'
  *             desde la versión 4 a la versión 5
  * @author rafael
  */
@@ -18,14 +18,13 @@ class upgrader_5 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename = NULL) {
+    public function process($type, $ver, $filename = NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }// cerquem les dades de la paf1 i paf 2 i les qualificacions son de l'any 2019 i canviar-les per la mateixa data però 2020
-
 
                 $dataProject['itinerarisRecomanats'] = [
                     [
@@ -35,14 +34,10 @@ class upgrader_5 extends CommonUpgrader {
                     ]
                 ];
 
-
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 4 to 5");
-
-                $ret = TRUE;
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
 
             case "templates":
-
                 if ($filename === NULL) {
                     $filename = $this->model->getProjectDocumentName();
                 }
@@ -57,10 +52,10 @@ class upgrader_5 extends CommonUpgrader {
 
                 $dataChanged = $this->updateTemplateBySubstitute($doc0, $doc1, $aTokSub);
 
-                if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 4 to 5");
+                if (($ret = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $ret = !empty($dataChanged);
+                break;
         }
         return $ret;
     }

@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_20: Transforma el archivo continguts.tx del proyecto 'ptfploe'
- *              desde la versión 18 a la versión 20 (asociado a la actualización de 9 a 10 de los datos del proyecto)
+ * upgrader_20: Transforma el archivo continguts.tx del proyecto 'ptfplogse'
+ *              desde la versión 19 a la versión 20
  * @author rafael <rclaver@xtec.cat>
  */
 if (!defined("DOKU_INC")) die();
@@ -18,7 +18,7 @@ class upgrader_20 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $ret = TRUE;
@@ -36,10 +36,10 @@ class upgrader_20 extends CommonUpgrader {
                 ]];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 19 to 20");
+                if (($ret = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $ret = !empty($dataChanged);
+                break;
         }
         return $ret;
     }

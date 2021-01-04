@@ -21,7 +21,7 @@ class upgrader_10 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename = NULL) {
+    public function process($type, $ver, $filename = NULL) {
         switch ($type) {
             case "fields":
                 //Transforma los datos del proyecto "ptfplogse" desde la estructura de la versión 9 a la versión 10
@@ -37,8 +37,7 @@ class upgrader_10 extends CommonUpgrader {
                 $dataProject = $this->addNewField($dataProject, "dataPaf12", $dataProject['dataPaf11']);
                 $dataProject = $this->addNewField($dataProject, "dataPaf22", $dataProject['dataPaf21']);
 
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 9 to 10 (afegir camps). Simultànea a la actualització de 18 a 19 de continguts");
-                $status = TRUE;
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver. Simultànea a l'actualització de 18 a 19 de templates", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":

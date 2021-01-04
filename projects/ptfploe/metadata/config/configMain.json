@@ -479,6 +479,12 @@
                 "pla": {
                     "type": "object",
                     "keys": {
+                        "nsProgramacio": {
+                            "type":"string",
+                            "viewType":"hidden",
+                            "mandatory": true,
+                            "default":""
+                        },
                         "semestre": {
                             "type": "number",
                             "mandatory": true,
@@ -492,17 +498,71 @@
                         "cicle": {
                             "type": "string",
                             "default": "Indiqueu el cicle",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "cicle",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"cicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
+
                         },
                         "modulId": {
                             "type": "string",
                             "default": "MXX",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "modulId",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"modulId",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "modul": {
                             "type": "string",
                             "default": "Indiqueu el nom mòdul",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field": "modul",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"modul",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "durada": {
                             "type": "string",
@@ -513,9 +573,26 @@
                             }
                         },
                         "duradaCicle": {
-                            "type": "string",
+                            "type": "number",
                             "default": 2000,
-                            "mandatory": true   
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field": "duradaCicle",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"duradaCicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            }   
                         },
                         "professors": {
                             "type": "string",
@@ -552,11 +629,102 @@
                         },
                         "taulaDadesUF": {
                             "type": "defTaulaDadesUF",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateArrayObjectFromExternalField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "taulaDadesUF",
+                                    "externalFieldSubset":[
+                                        "bloc",
+                                        "unitat formativa",
+                                        "nom",
+                                        "hores",
+                                        "ponderació"
+                                    ],
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"taulaDadesUF",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },                                                
                         "taulaDadesUnitats": {
                             "type": "defTaulaDadesUnitats",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateArrayObjectFromExternalField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "taulaDadesNuclisFormatius",
+                                    "filterCondition":{
+                                        "_type_":"operation",
+                                       "values":[{
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayAndGetPosition",
+                                            "values":{"blocName":["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]},
+                                            "variables":{
+                                                "pla":"$values"
+                                            },
+                                            "data":{
+                                                "field":"blocName",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "name": "tipusBlocModul",
+                                                    "values":"$pla"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayObjectAndGetFieldValue",
+                                            "values":"$externalValues",
+                                            "variables":{
+                                                "ufRow":"$rowValue"
+                                            },
+                                            "data":{
+                                                "field":"taulaDadesUF",
+                                                "fieldToSearch":"unitat formativa",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "values":"$ufRow",
+                                                    "name":"unitat formativa"
+                                                },
+                                                "fieldToReturn":"bloc"
+                                            }
+                                        }],
+                                        "operation":"=="
+                                    },
+                                    "externalFieldSubset":[
+                                        "unitat formativa",
+                                        "nucli formatiu",
+                                        "hores"
+                                    ],
+                                    "fieldSubset":[
+                                        "unitat formativa",
+                                        "unitat",
+                                        "hores"
+                                    ],
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"taulaDadesUnitats",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },                                                
                         "einesAprenentatge": {
                             "type": "defEinesAprenentatge",
@@ -565,7 +733,88 @@
                         },                                                
                         "resultatsAprenentatge": {
                             "type": "defResultatsAprenentage",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateArrayObjectFromExternalField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field": "resultatsAprenentatge",
+                                    "filterCondition":{
+                                        "_type_":"operation",
+                                       "values":[{
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayAndGetPosition",
+                                            "values":{"blocName":["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]},
+                                            "variables":{
+                                                "pla":"$values"
+                                            },
+                                            "data":{
+                                                "field":"blocName",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "name": "tipusBlocModul",
+                                                    "values":"$pla"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayObjectAndGetFieldValue",
+                                            "values":"$externalValues",
+                                            "variables":{
+                                                "ufRow":"$rowValue"
+                                            },
+                                            "data":{
+                                                "field":"taulaDadesUF",
+                                                "fieldToSearch":"unitat formativa",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "values":"$ufRow",
+                                                    "name":"uf"
+                                                },
+                                                "fieldToReturn":"bloc"
+                                            }
+                                        }],
+                                        "operation":"=="
+                                    },
+                                    "resultRow":{
+                                        "id":{
+                                            "_type_":"operation",
+                                            "values":[
+                                                "UF",
+                                                {
+                                                    "_type_":"field",
+                                                    "name":"uf",
+                                                    "values":"$rowValue"
+                                                },
+                                                ".RA",
+                                                {
+                                                    "_type_":"field",
+                                                    "name":"ra",
+                                                    "values":"$rowValue"                                                    
+                                                }
+                                            ],
+                                            "operation":"concat"
+                                            
+                                        },
+                                        "descripcio":{
+                                           "_type_":"field",
+                                            "name":"descripcio",
+                                            "values":"$rowValue"
+                                        }
+                                    },
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"resultatsAprenentatge",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },                                                
                         "activitatsAprenentatge": {
                             "type": "defActivitatsAprenentatge",
@@ -576,7 +825,7 @@
                             "type": "string",
                             "default":"no",
                             "mandatory": true
-                        },                                                
+                        },
                         "calendari": {
                             "type": "defCalendari",
                             "mandatory": true

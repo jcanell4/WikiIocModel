@@ -11,3 +11,10 @@
     width: 32px;
     height: 32px;    
 }
+
+.block-border{
+    padding: 15px;
+    background-color: #fcebd4;
+    border: #f3a22d;
+    font-size: 18px;
+}

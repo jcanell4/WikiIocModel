@@ -18,7 +18,7 @@ class upgrader_6 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
@@ -26,8 +26,8 @@ class upgrader_6 extends CommonUpgrader {
                     $dataProject = json_decode($dataProject, TRUE);
                 }
                 $dataProject['moodleCourseId'] = 0;
-
-                $ret = TRUE;
+                $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
 
             case "templates":
@@ -47,16 +47,16 @@ class upgrader_6 extends CommonUpgrader {
                               "$1 $3"];
                 $dataChanged = $this->updateTemplateByReplace($doc1, $aTokRep);
 
-                if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 5 to 6");
+                if (($ret = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-
+                /* ANULADO
                 //Segunda parte: modificación de los datos del proyecto (archivo .mdpr que está en data/mdprojects/)
                 $dataProject = $this->model->getCurrentDataProject();
                 $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 5 to 6");
-
-                $ret = !empty($dataChanged);
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
+                */
+                break;
         }
         return $ret;
     }

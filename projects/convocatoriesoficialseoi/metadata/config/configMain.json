@@ -8,6 +8,18 @@
       }
     }
   ],
+  "metaDataFtpSender": [
+    {
+        "main": {
+            "files": {
+                "a2": {"local":"mediadir", "suffix":"a2", "type":"zip", "action":[1], "linkName":"a2", "remoteIndex":"index.html"},
+                "b1": {"local":"mediadir", "suffix":"b1", "type":"zip", "action":[1], "linkName":"b1", "remoteIndex":"index.html"},
+                "b2": {"local":"mediadir", "suffix":"b2", "type":"zip", "action":[1], "linkName":"b2", "remoteIndex":"index.html"}
+            },
+            "ftpId": "conv_eoi"
+        }
+    }
+  ],
   "metaDataProjectConfig": [
     {
       "main": {
@@ -19,25 +31,171 @@
     {
       "main": "meta.mdpr",
       "versions": {
-            "fields": 0,
-            "templates": {"convocatoria_a2":1, "convocatoria_b1":1, "convocatoria_b2":1}
+            "fields": 3,
+            "templates": {"convocatoria_a2":3, "convocatoria_b1":3, "convocatoria_b2":3}
       },
       "mainType": {
         "type": "object",
         "typeDef": "convocatories"
       },
       "typesDefinition": {
+        "seuExamen":{
+          "type": "object",
+          "keys": {
+            "nom":{
+               "type":"string",
+               "mandatory":true,
+               "default":"Indiqueu el nom de la seu"
+            },
+            "via":{
+               "type":"string",
+               "mandatory":true,
+               "default":"Indiqueu el nom i el número del carrer"
+            },
+            "municipi":{
+               "type":"string",
+               "mandatory":true,
+               "default":"Indiqueu el nom i del municipi"
+            },
+            "codiPostal":{
+               "type":"string",
+               "mandatory":true,
+               "default":"Indiqueu el codi postal"
+            },
+            "metro":{
+               "type":"string",
+               "mandatory":true,
+               "default":"Indiqueu la parada de metro més propera"
+            },
+            "bus":{
+               "type":"string",
+               "mandatory":true,
+               "default":"Indiqueu els busos més propers"
+            },
+            "mapImg":{
+               "type":"string",
+               "mandatory":true,
+               "default":"mapa-ioc.jpg"
+            },
+            "interactiveMap":{
+               "type":"string",
+               "mandatory":true,
+               "default":"https://www.google.es/maps/place/Institut+Obert+de+Catalunya/@41.3747868,2.1661139,17z/data=!3m1!4b1!4m5!3m4!1s0x12a4a25c3e20e6ed:0x5cb6bf3bb3a98bd6!8m2!3d41.3747828!4d2.1683026"
+            },
+            "provaVirtual":{
+               "type":"boolean",
+               "mandatory":true,
+               "default":false
+            }
+          }                    
+        },
+        "dadesProva":{
+          "type":"object",
+          "keys":{
+              "title":{
+                "type": "string",
+                "mandatory": true,
+                "default": "EOI IOC. Prova per a l'obtenció del certificat de nivell ..."
+              },
+              "dataProva":{
+                "type": "date",
+                "mandatory": true,
+                "default": "01/01/2000"         
+              },
+              "dataProvaNE":{
+                "type": "date",
+                "mandatory": true,
+                "default": "01/01/2000"         
+              },
+              "horariProvaEscrita":{
+                "type": "string",
+                "mandatory": true,
+                "default": "de les 9:30 a les 13:30"         
+              },
+              "horariProvaOral":{
+                "type": "string",
+                "mandatory": true,
+                "default": "de les 15:30 a les 20:00"         
+              },
+              "instruccionsProvaEscrita":{
+                "type": "string",
+                "mandatory": true,
+                "default": "cal ser-hi 30 minuts abans del començament de la prova"         
+              },
+              "instruccionsProvaOral":{
+                "type": "string",
+                "mandatory": true,
+                "default": "cal ser-hi 30 minuts abans del començament de la prova"         
+              },
+              "provaCertificat":{
+              "type": "string",
+              "mandatory": true
+              },
+              "seu":{
+                "type": "object",
+                "typeDef":"seuExamen",
+                "mandatory": true
+              }
+          }
+        },
+        "entradaNormativa":{
+          "type":"object",
+          "keys":{
+              "nom":{
+                "type": "string",
+                "mandatory": true,
+                "default": "Per exemple: RESOLUCIÓ EDU/4039/2010"         
+              },
+              "de data":{
+                "type": "string",
+                "mandatory": true,
+                "default": "Per exemple: de 15 de desembre"         
+              },
+              "descripció":{
+                "type": "string",
+                "mandatory": true,
+                "default": "Resum de la normativa"         
+              },
+              "url":{
+                "type": "string",
+                "mandatory": true,
+                "default": "Url de la normativa."         
+              },
+              "mostrar":{
+                "type": "boolean",
+                "mandatory": true,
+                "default": false         
+              }
+          }
+        },
         "convocatories": {
           "type": "object",
           "keys": {
+            "dadesEspecifiquesProvaA2":{
+                "type": "object",
+                "typeDef": "dadesProva",
+                "mandatory": true
+            },
+            "dadesEspecifiquesProvaB1":{
+                "type": "object",
+                "typeDef": "dadesProva",
+                "mandatory": true
+            },
+            "dadesEspecifiquesProvaB2":{
+                "type": "object",
+                "typeDef": "dadesProva",
+                "mandatory": true
+            },
             "dataProva1": {
               "type": "date",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "01/01/2000"
             },
             "dataProva2": {
               "type": "date",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "01/01/2000"
             },
             "dataResultats": {
@@ -57,12 +215,14 @@
             },
             "dataProvaNE1": {
               "type": "date",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "01/01/2000"
             },
             "dataProvaNE2": {
               "type": "date",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "01/01/2000"
             },
             "autor": {
@@ -78,82 +238,96 @@
             },
             "plantilla": {
               "type": "string",
+              "viewType":"hidden",
               "mandatory": true,
               "default": "convocatoria_a2,convocatoria_b1,convocatoria_b2"
             },
             "title_a2": {
               "type": "string",
-              "mandatory": true,
+              "mandatory": false,
               "default": "EOI IOC. Prova per a l'obtenció del certificat de nivell bàsic A2"
             },
             "title_b1": {
               "type": "string",
-              "mandatory": true,
+              "mandatory": false,
               "default": "EOI IOC. Prova per a l'obtenció del certificat de nivell intermedi B1"
             },
             "title_b2": {
               "type": "string",
-              "mandatory": true,
+              "mandatory": false,
               "default": "EOI IOC. Prova per a l'obtenció del certificat de nivell intermedi B2"
             },
             "urlMap_A2B1": {
               "type": "string",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "https://goo.gl/maps/PncUtYcbS252"
             },
             "urlMap_B2": {
               "type": "string",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "https://goo.gl/maps/6g7m1mGwdTJ2"
             },
-            "14_EDU_34_2009": {
+            "legislacioReclamacio": {
               "type": "string",
               "mandatory": true,
-              "default": "http://cido.diba.cat/legislacio/1144481/ordre-edu342009-de-30-de-gener-per-la-qual-sorganitzen-les-proves-especifiques-de-certificacio-dels-nivells-intermedi-i-avancat-dels-ensenyaments-didiomes-de-regim-especial-que-simparteixen-a-les-escoles-oficials-didiomes"
+              "default": "http://cido.diba.cat/legislacio/1144481/ordre-edu342009-de-30-de-gener-per-la-qual-sorganitzen-les-proves-especifiques-de-certificacio-dels-nivells-intermedi-i-avancat-dels-ensenyaments-didiomes-de-regim-especial-que-simparteixen-a-les-escoles-oficials-didiomes",
+              "oldField":"14_EDU_34_2009"                            
+            },
+            "textLegislacioReclamacio": {
+              "type": "string",
+              "mandatory": false
             },
             "EDU_4039_2010": {
               "type": "string",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "https://www.gencat.cat/diari/5781/10349020.htm"
             },
             "EDU_34_2009": {
               "type": "string",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "https://dogc.gencat.cat/ca/pdogc_canals_interns/pdogc_resultats_fitxa/?action=fitxa&documentId=462817&language=ca_ES"
             },
             "Decret_4_2009": {
               "type": "string",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "http://www.gencat.cat/diari/5297/09009001.htm"
             },
             "Decret_73_2014": {
               "type": "string",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "https://portaljuridic.gencat.cat/ca/pjur_ocults/pjur_resultats_fitxa/?action=fitxa&mode=single&documentId=663362&language=ca_ES"
             },
             "ReialDecret_1041_2017": {
               "type": "string",
-              "mandatory": true,
+              "viewType":"hidden",
+              "mandatory": false,
               "default": "https://www.boe.es/boe/dias/2017/12/23/pdfs/BOE-A-2017-15367.pdf"
             },
-            "model_i67": {
+            "modelReclamacio": {
               "type": "string",
               "mandatory": true,
-              "default": "http://ioc.xtec.cat/materials/qualitat/Secretaria/Secretaria_IOC/Model_I67.pdf"
+              "default": "http://ioc.xtec.cat/materials/qualitat/Secretaria/Secretaria_IOC/Model_I67.pdf",
+              "oldField":"model_i67"
             },
             "provaCertificat_A2": {
               "type": "string",
-              "mandatory": true,
+              "mandatory": false,
               "default": "https://ioc.xtec.cat/campus/course/view.php?id=6972&section=10"
             },
             "provaCertificat_B1": {
               "type": "string",
-              "mandatory": true,
+              "mandatory": false,
               "default": "https://ioc.xtec.cat/campus/course/view.php?id=7086&section=10"
             },
             "provaCertificat_B2": {
               "type": "string",
-              "mandatory": true,
+              "mandatory": false,
               "default": "https://ioc.xtec.cat/campus/course/view.php?id=6978&section=10"
             },
             "correu": {
@@ -165,6 +339,24 @@
               "type": "string",
               "mandatory": true,
               "default": "ididacademica@ioc.cat"
+            },
+            "taulaNormativa": {
+              "type": "objectArray",
+              "typeDef":"entradaNormativa",
+              "mandatory": true
+            },
+            "mostrarNormativa": {
+              "type": "boolean",
+              "viewType":"hidden",
+              "mandatory": true,
+              "calculateOnSave":{
+                  "class":"CalculateExistValueInArrayObject",
+                  "data":{
+                     "field":"taulaNormativa",
+                     "searchField":"mostrar",
+                     "searchValue":true
+                  }
+              }
             }
           }
         }

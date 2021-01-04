@@ -8,7 +8,9 @@ class systemUpgrader {
 
     /**
      * Esta función se encarga de actualizar, en caso necesario, la estructura y los datos
-     * del archivo de sistema "_wikiIocSystem_.mdpr" del proyecto
+     * del archivo de sistema "_wikiIocSystem_.mdpr" del proyecto, así como de adaptar aquellos 
+     * cambios en la configuració que sean de tipo genèrico que precisen un cambio con independència 
+     * temporal y sin importar la versión en la qual se encuentran. 
      * Los valores constantes de esta función son constantes porque describen la historia real de los cambios
      */
     public static function preUpgrade($model, $subSet) {
@@ -41,7 +43,7 @@ class systemUpgrader {
                             $v_project[$key][$k] = $ver; //asignamos a la versión del template el valor antiguo
                         }
                     }else {
-                        $v_project[$key] = $value; //asignamos a fields el valor actual (no hay valor antiguo)
+                        $v_project[$key] = 0; //asignamos a fields el valor 0 (no hay valor antiguo) empezamos desde cero
                     }
                 }
             }

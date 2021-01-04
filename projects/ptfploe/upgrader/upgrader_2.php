@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_2: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_2: Transforma la estructura de datos y el archivo continguts.txt de los proyectos 'ptfploe'
  *             desde la versión 1 a la versión 2
  * @author rafael
  */
@@ -18,17 +18,16 @@ class upgrader_2 extends CommonUpgrader {
         $this->metaDataSubSet = $this->model->getMetaDataSubSet();
     }
 
-    public function process($type, $filename=NULL) {
+    public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }
-                //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
+                //Añade el campo 'hiHaSolucio' a la tabla 'datesEAF'
                 $dataProject = $this->addFieldInMultiRow($dataProject, "datesEAF", "hiHaSolucio", TRUE);
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade: version 1 to 2");
-                $ret = TRUE;
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
                 break;
 
             case "templates":
@@ -75,10 +74,10 @@ class upgrader_2 extends CommonUpgrader {
                             "(====== Planificació ======\n)(.*\n)*"];
                 $dataChanged = $this->updateTemplateBySubstitute($doc0, $doc1, $aTokSub);
 
-                if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade: version 1 to 2");
+                if (($ret = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
                 }
-                $ret = !empty($dataChanged);
+                break;
         }
         return $ret;
     }

@@ -32,6 +32,22 @@ abstract class AbstractNodeDoc{
     public abstract function getEncodeJson();
 }
 
+class IocExtraWidthNodeDoc extends StructuredNodeDoc {
+    const OPEN_EXTRA_WIDTH_TYPE = "openExtrawidth";
+    const CLOSE_EXTRA_WIDTH_TYPE = "closeExtrawidth";
+    
+    public function __construct($type) {
+        parent::__construct($type);
+    }
+
+    public function getEncodeJson() {
+        $ret = "{\n\"type\":\"".trim($this->type)."\"";
+        $ret .= ",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= "\n}";
+        return $ret;
+    }
+}
+
 class IocElemNodeDoc extends StructuredNodeDoc {
     const IOC_ELEM_TYPE = "iocElemType";
     const IOC_ELEM_TYPE_EXAMPLE = "example";
@@ -40,7 +56,7 @@ class IocElemNodeDoc extends StructuredNodeDoc {
     const IOC_ELEM_TYPE_COMP_LARGE = "textl";
     const IOC_ELEM_TYPE_NOTE = "note";
     const IOC_ELEM_TYPE_REF = "reference";
-    const IOC_ELEM_TYPE_QUOTE = "quote  ";
+    const IOC_ELEM_TYPE_QUOTE = "quote";
     
     protected $title;
     protected $offset;
@@ -67,10 +83,10 @@ class IocElemNodeDoc extends StructuredNodeDoc {
                 .",\n\"elemType\":\"".trim($this->elemType)."\""
                 .",\n\"title\":\"".trim($this->title)."\"";
         if($this->offset){
-            $ret .= ",\n\"offset\":\"".trim($this->offset)."mm\"";
+            $ret .= ",\n\"offset\":\"".trim($this->offset)."\"";
         }
         if($this->width){
-            $ret .= ",\n\"width\":\"".trim($this->width)."mm\"";
+            $ret .= ",\n\"width\":\"".trim($this->width)."\"";
         }
         $ret .= ",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
@@ -428,6 +444,7 @@ class LeafNodeDoc extends AbstractNodeDoc{
     const ACRONYM_TYPE          = "acronym";
     const OP_SINGLEQUOTE_TYPE   = "open_singlequote";
     const CL_SINGLEQUOTE_TYPE   = "close_singlequote";
+    const NO_BREAK_SPACE_TYPE   = "nbsp";
 
     private $acronym;
 
@@ -450,9 +467,9 @@ class LeafNodeDoc extends AbstractNodeDoc{
 }
 
 class ReferenceNodeDoc extends AbstractNodeDoc{
-    const REFERENCE_TYPE = "reference";
-    const REF_FIGURE_TYPE = "fig";
-    const REF_TABLE_TYPE = "tab";
+    const REFERENCE_TYPE = "reference_to";
+    const REF_FIGURE_TYPE = "ref_fig";
+    const REF_TABLE_TYPE = "ref_tab";
     const REF_WIKI_LINK = "wikilink";
     const REF_INTERNAL_LINK = "internallink";
     const REF_EXTERNAL_LINK = "externallink";
@@ -515,7 +532,7 @@ class CodeNodeDoc extends TextNodeDoc{
     }
 
     public function getEncodeJson() {
-        $text = preg_replace(array("/\t/", "/ *\r\n/", "/ *\n/", "/\"/"), array("    ", "<br>", "<br>", "\\\""), $this->text);
+        $text = preg_replace(array("/\\\/", "/\t/", "/ *\r\n/", "/ *\n/", "/\"/"), array("&#92;", "    ", "<br>", "<br>", "\\\""), $this->text);
         return "{\n\"type\":\"".$this->type."\""
                 .",\n\"language\":\"".$this->language."\""
                 .",\n\"text\":\"".$text."\""
@@ -609,13 +626,23 @@ class LatexMathNodeDoc extends AbstractNodeDoc {
  * class renderer_plugin_wikiiocmodel_psdom
  */
 class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
+    const UNEXISTENT_B_IOC_ELEMS_TYPE = -1;
+    const REFERRED_B_IOC_ELEMS_TYPE = 0;
+    const UNREFERRED_B_IOC_ELEMS_TYPE = 1;
     const BORDER_TYPES = ["pt_taula"];
 
     var $toc = NULL;
     var $rootNode = NULL;
     var $currentNode = NULL;
     var $table_types = "";
-
+    
+    var $tmpData=array();
+     
+    var $storeNode = NULL;
+    var $bIocElems = array(array(),  array());
+    var $currentBIocElemsType = self::UNEXISTENT_B_IOC_ELEMS_TYPE;
+    var $bIocElemsRefQueue = array();
+    
     /**
      * Esta función construye el renderer a partir de las parámetros de configuración recibidos
      * @param array $params
@@ -706,10 +733,12 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $paragraph = new StructuredNodeDoc(StructuredNodeDoc::PARAGRAPH_TYPE);
         $this->currentNode->addContent($paragraph);
         $this->currentNode = $paragraph;
+        $this->openForContentB("p");
     }
 
     function p_close() {
         $this->currentNode = $this->currentNode->getOwner();
+        $this->closeForContentB("p");
     }
 
     function linebreak() {
@@ -804,23 +833,27 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $node = new StructuredNodeDoc(StructuredNodeDoc::UNORDERED_LIST_TYPE);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;
+        $this->openForContentB(StructuredNodeDoc::UNORDERED_LIST_TYPE);
     }
 
     function listu_close() {
         $this->currentNode = $this->currentNode->getOwner();
+        $this->closeForContentB(StructuredNodeDoc::UNORDERED_LIST_TYPE); 
     }
 
     function listo_open() {
         $node = new StructuredNodeDoc(StructuredNodeDoc::ORDERED_LIST_TYPE);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;
+        $this->openForContentB(StructuredNodeDoc::ORDERED_LIST_TYPE);
     }
 
     function listo_close() {
         $this->currentNode = $this->currentNode->getOwner();
+        $this->closeForContentB(StructuredNodeDoc::ORDERED_LIST_TYPE); 
     }
 
-    function listitem_open($level) {
+    function listitem_open($level, $node=false) {
         $node = new ListItemNodeDoc($level);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;
@@ -879,10 +912,12 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $node = new StructuredNodeDoc(StructuredNodeDoc::QUOTE_TYPE);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;
+        $renderer->openForContentB(StructuredNodeDoc::QUOTE_TYPE);
     }
 
     function quote_close() {
         $this->currentNode = $this->currentNode->getOwner();
+        $renderer->closeForContentB(StructuredNodeDoc::QUOTE_TYPE);
     }
 
     function singlequoteopening() {
@@ -1037,8 +1072,54 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     public function setCurrentNode($node){
         return $this->currentNode = $node;
     }
+    
+    public function storeCurrent(){
+        $this->storeNode = $this->currentNode;
+    }
 
+    public function restoreCurrent(){
+        $this->currentNode = $this->storeNode;
+    }
+    
     private function _media ($src, $title=null, $align=null, $width=null, $height=null) {
 
+    }
+    
+    public function openForContentB($origin){
+        //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text, 
+        //ja que a la versió WEB No hi ha columna B. Per tal de renderitzar correctament la coluna B
+        //al render XHTML i PDF, el seu contingut es troba sempre per sobre del paràgraf al que fa referècia.
+        //És  necessari baixar-lo un paràgraf en aquest renderer.
+        if(!isset($this->tmpData["origin"])){
+            if($this->tmpData["renderIocElems"]){
+                $this->tmpData["renderDefaultIocElems"] = TRUE;
+            }        
+            $this->tmpData["origin"] = $origin;
+        }
+    }
+    
+    public function closeForContentB($origin){
+        //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text, 
+        //ja que a la versió WEB No hi ha columna B. Per tal de renderitzar correctament la coluna B
+        //al render XHTML i PDF, el seu contingut es troba sempre per sobre del paràgraf l que fa referècia.
+        //És  necessari baixar-lo un paràgraf en aquest renderer.
+        if($this->tmpData["origin"]===$origin){
+            if(!empty($this->bIocElemsRefQueue)){
+                while($this->bIocElemsRefQueue[0]){
+                    $id = array_shift($this->bIocElemsRefQueue);
+                    $node = $this->bIocElems[self::REFERRED_B_IOC_ELEMS_TYPE][$id];
+                    $this->currentNode->addContent($node);
+                }
+            }
+            if(isset($this->tmpData["renderDefaultIocElems"]) && $this->tmpData["renderDefaultIocElems"]){
+                while($this->bIocElems[self::UNREFERRED_B_IOC_ELEMS_TYPE][0]){
+                    $node = array_shift($this->bIocElems[self::UNREFERRED_B_IOC_ELEMS_TYPE]);
+                    $this->currentNode->addContent($node);
+                }
+                $this->tmpData["renderIocElems"] = FALSE;
+                $this->tmpData["renderDefaultIocElems"]=FALSE;            
+            }    
+            unset($this->tmpData["origin"]);
+        }
     }
 }

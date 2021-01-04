@@ -66,14 +66,14 @@ class syntax_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_eoimaptable e
     /**
      * Handle the match
      */
-    function handle($match, $state, $pos, &$handler){
+    function handle($match, $state, $pos, Doku_Handler $handler){
         return array($state, $match);
     }
 
     /**
      * Create output
      */
-    function render($mode, &$renderer, $data)
+    function render($mode, Doku_Renderer $renderer, $data)
     {
 
         list($state, $text) = $data;

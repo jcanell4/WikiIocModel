@@ -4,6 +4,8 @@
  * exportDocument: clase que renderiza grupos de elementos
  */
 if (!defined('DOKU_INC')) die();
+if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
+if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
 class exportDocument extends renderHtmlDocument {
 
@@ -40,6 +42,8 @@ class exportDocument extends renderHtmlDocument {
             "tmp_dir" => $this->cfgExport->tmp_dir,    //directori temporal on crear el pdf
             "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
             "mode" => isset($this->mode) ? $this->mode : $this->filetype,
+    	    "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
+            "style" => "main.stypdf",
             "data" => array(
                 "header" => ["logo"  => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                              "wlogo" => 9.9,
