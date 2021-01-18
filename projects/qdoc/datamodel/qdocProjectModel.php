@@ -9,6 +9,7 @@ class qdocProjectModel extends AbstractProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
+        $this->needGenerateAction=false;
     }
 
     public function getProjectDocumentName() {

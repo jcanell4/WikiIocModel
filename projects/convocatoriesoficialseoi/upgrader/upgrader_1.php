@@ -111,9 +111,9 @@ class upgrader_1 extends CommonUpgrader {
 
             case "templates":
                 // Força una copia del continguta al disc per tal que es desactivi l'edició parcial
-                if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
-                    $filename = $this->model->getProjectDocumentName();
-                }
+//                if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
+//                    $filename = $this->model->getProjectDocumentName();
+//                }
                 $doc = $this->model->getRawProjectDocument($filename)."\n";
 
                 if (($ret = !empty($doc))) {

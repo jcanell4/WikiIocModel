@@ -9,6 +9,7 @@ class manualProjectModel extends AbstractProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
+        $this->needGenerateAction=false;
     }
 
     public function generateProject() {} //abstract obligatorio

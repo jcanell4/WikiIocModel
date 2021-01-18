@@ -874,6 +874,23 @@
                                 "min":0,
                                 "max":10
                             },
+                            "calculateOnRead":{
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data":{
+                                    "projectId":{
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field":"notaMinimaAC",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"notaMinimaAC",
+                                        "values": "$values"
+                                    }
+                                }
+                            },
                             "default": 0
                         },
                         "notaMinimaEAF": {
@@ -883,6 +900,23 @@
                                 "min": 0,
                                 "max": 10
                             },
+                            "calculateOnRead":{
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data":{
+                                    "projectId":{
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field":"notaMinimaEAF",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"notaMinimaEAF",
+                                        "values": "$values"
+                                    }
+                                }
+                            },
                             "default": 4
                         },
                         "notaMinimaJT": {
@@ -891,6 +925,23 @@
                             "props": {
                                 "min": 0,
                                 "max": 10
+                            },
+                            "calculateOnRead":{
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data":{
+                                    "projectId":{
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field":"notaMinimaJT",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"notaMinimaJT",
+                                        "values": "$values"
+                                    }
+                                }
                             },
                             "default": 0
                         },                                                
@@ -932,11 +983,105 @@
                                 "min":0,
                                 "max":10
                             },
+                            "calculateOnRead":{
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data":{
+                                    "projectId":{
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field":"notaMinimaPAF",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"notaMinimaPAF",
+                                        "values": "$values"
+                                    }
+                                }
+                            },
                             "default": 4
                         },                                                
                         "dadesQualificacioUFs": {
                             "type": "defQualificacioUFs",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateArrayObjectFromExternalField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field": "taulaInstrumentsAvaluacio",
+                                    "filterCondition":{
+                                        "_type_":"operation",
+                                       "values":[{
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayAndGetPosition",
+                                            "values":{"blocName":["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]},
+                                            "variables":{
+                                                "pla":"$values"
+                                            },
+                                            "data":{
+                                                "field":"blocName",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "name": "tipusBlocModul",
+                                                    "values":"$pla"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayObjectAndGetFieldValue",
+                                            "values":"$externalValues",
+                                            "variables":{
+                                                "ufRow":"$rowValue"
+                                            },
+                                            "data":{
+                                                "field":"taulaDadesUF",
+                                                "fieldToSearch":"unitat formativa",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "values":"$ufRow",
+                                                    "name":"unitat formativa"
+                                                },
+                                                "fieldToReturn":"bloc"
+                                            }
+                                        }],
+                                        "operation":"=="
+                                    },
+                                    "resultRow":{
+                                        "unitat formativa":{
+                                            "_type_":"field",
+                                            "name":"unitat formativa",
+                                            "values":"$rowValue"
+                                        },
+                                        "tipus qualificació": {
+                                            "_type_":"field",
+                                            "name":"tipus",
+                                            "values":"$rowValue"
+                                        },
+                                        "abreviació qualificació": {
+                                            "_type_":"field",
+                                            "name":"id",
+                                            "values":"$rowValue"
+                                        },
+                                        "ponderació": {                                        
+                                           "_type_":"field",
+                                            "name":"ponderacio",
+                                            "values":"$rowValue"
+                                        }
+                                    },
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"dadesQualificacioUFs",
+                                        "values": "$values"
+                                    }
+                                }
+                            }                            
                         },                                                
                         "duradaPAF": {
                             "type": "string",

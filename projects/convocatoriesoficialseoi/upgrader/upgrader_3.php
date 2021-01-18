@@ -36,9 +36,9 @@ class upgrader_3 extends CommonUpgrader {
                 break;
 
             case "templates":
-                if ($filename===NULL) { //Ahora se pasan por parámetro cada uno de los ficheros (uno cada vez)
-                    $filename = $this->model->getProjectDocumentName();
-                }
+//                if ($filename===NULL) { //Ahora se pasan por parámetro cada uno de los ficheros (uno cada vez)
+//                    $filename = $this->model->getProjectDocumentName();
+//                }
                 $conv = $this->model->getRawProjectDocument($filename);
 
                 //Tratamiento común a todas las convocatorias

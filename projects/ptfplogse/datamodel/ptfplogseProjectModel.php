@@ -5,10 +5,11 @@
  */
 if (!defined("DOKU_INC")) die();
 
-class ptfplogseProjectModel extends MoodleProjectModel {
+class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
+        $this->needGenerateAction=false;
     }
 
     public function getProjectDocumentName() {
@@ -16,51 +17,28 @@ class ptfplogseProjectModel extends MoodleProjectModel {
         return $ret['fitxercontinguts'];
     }
 
-    protected function getContentDocumentIdFromResponse($responseData){
-        if ($responseData['projectMetaData']["fitxercontinguts"]['value']){
-            $contentName = $responseData['projectMetaData']["fitxercontinguts"]['value'];
-        }else{
-            $contentName = end(explode(":", $this->getTemplateContentDocumentId($responseData)));
-        }
-        return $this->id.":" .$contentName;
-    }
-
-    public function generateProject() {
-        $ret = array();
-        //0. Obtiene los datos del proyecto
-        $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
-
-        //2. Establece la marca de 'proyecto generado'
-        $ret[ProjectKeys::KEY_GENERATED] = $this->getProjectMetaDataQuery()->setProjectGenerated();
-
-        if ($ret[ProjectKeys::KEY_GENERATED]) {
-            try {
-                //3. Otorga, a las Persons, permisos sobre el directorio de proyecto y añade enlace a dreceres
-                $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
-                $this->modifyACLPageAndShortcutToPerson($params);
-            }
-            catch (Exception $e) {
-                $ret[ProjectKeys::KEY_GENERATED] = FALSE;
-                $this->getProjectMetaDataQuery()->setProjectSystemStateAttr("generated", FALSE);
-            }
-        }
-
-        return $ret;
-    }
-
-    public function createTemplateDocument($data=NULL){
-        StaticUniqueContentFileProjectModel::createTemplateDocument($this, $data);
-//        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
-//        // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
-//        $file = $this->getTemplateContentDocumentId($data) . ".txt";
+//    public function generateProject() {
+//        $ret = array();
+//        //0. Obtiene los datos del proyecto
+//        $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
 //
-//        $plantilla = file_get_contents($pdir.$file);
-//        $name = substr($file, 0, -4);
-//        $destino = $this->getContentDocumentId($name);
-//        $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
-//                                       PageKeys::KEY_WIKITEXT => $plantilla,
-//                                       PageKeys::KEY_SUM => "generate project"]);
-    }
+//        //2. Establece la marca de 'proyecto generado'
+//        $ret[ProjectKeys::KEY_GENERATED] = $this->getProjectMetaDataQuery()->setProjectGenerated();
+//
+//        if ($ret[ProjectKeys::KEY_GENERATED]) {
+//            try {
+//                //3. Otorga, a las Persons, permisos sobre el directorio de proyecto y añade enlace a dreceres
+//                $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
+//                $this->modifyACLPageAndShortcutToPerson($params);
+//            }
+//            catch (Exception $e) {
+//                $ret[ProjectKeys::KEY_GENERATED] = FALSE;
+//                $this->getProjectMetaDataQuery()->setProjectSystemStateAttr("generated", FALSE);
+//            }
+//        }
+//
+//        return $ret;
+//    }
 
     /**
      * Calcula el valor de los campos calculables
