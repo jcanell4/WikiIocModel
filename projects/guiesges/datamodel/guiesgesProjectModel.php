@@ -9,34 +9,24 @@ class guiesgesProjectModel extends MultiContentFilesProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
+        $this->needGenerateAction=false;
     }
 
-    public function generateProject() {
-        //0. Obtiene los datos del proyecto
-        $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
-
-        //2. Establece la marca de 'proyecto generado'
-        $ret[ProjectKeys::KEY_GENERATED] = $this->projectMetaDataQuery->setProjectGenerated();
-
-        if ($ret[ProjectKeys::KEY_GENERATED]) {
-            //3. Otorga, a cada 'person', permisos adecuados sobre el directorio de proyecto y añade shortcut
-            $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
-            $this->modifyACLPageAndShortcutToPerson($params);
-        }
-
-        return $ret;
-    }
-
-    public function llistaDePlantilles() {
-        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
-        $scdir = scandir($pdir);
-        foreach($scdir as $file){
-            if ($file !== '.' && $file !== '..' && substr($file, -4)===".txt") {
-                $arrTemplates[] = $this->id.":".substr($file, 0, -4);
-            }
-        }
-        return $arrTemplates;
-    }
+//    public function generateProject() {
+//        //0. Obtiene los datos del proyecto
+//        $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
+//
+//        //2. Establece la marca de 'proyecto generado'
+//        $ret[ProjectKeys::KEY_GENERATED] = $this->projectMetaDataQuery->setProjectGenerated();
+//
+//        if ($ret[ProjectKeys::KEY_GENERATED]) {
+//            //3. Otorga, a cada 'person', permisos adecuados sobre el directorio de proyecto y añade shortcut
+//            $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
+//            $this->modifyACLPageAndShortcutToPerson($params);
+//        }
+//
+//        return $ret;
+//    }
 
     /**
      * Canvia el nom dels directoris del projecte, els noms dels fitxers generats amb la base del nom del projecte i

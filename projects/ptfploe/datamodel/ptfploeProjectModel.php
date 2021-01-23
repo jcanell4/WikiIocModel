@@ -5,10 +5,11 @@
  */
 if (!defined("DOKU_INC")) die();
 
-class ptfploeProjectModel extends MoodleProjectModel {
+class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
+        $this->needGenerateAction=false;        
     }
 
     public function getProjectDocumentName() {
@@ -16,51 +17,28 @@ class ptfploeProjectModel extends MoodleProjectModel {
         return $ret['fitxercontinguts'];
     }
 
-    protected function getContentDocumentIdFromResponse($responseData){
-        if ($responseData['projectMetaData']["fitxercontinguts"]['value']){
-            $contentName = $responseData['projectMetaData']["fitxercontinguts"]['value'];
-        }else{
-            $contentName = end(explode(":", $this->getTemplateContentDocumentId($responseData)));
-        }
-        return $this->id.":" .$contentName;
-    }
-
-    public function generateProject() {
-        $ret = array();
-        //0. Obtiene los datos del proyecto
-        $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
-
-        //2. Establece la marca de 'proyecto generado'
-        $ret[ProjectKeys::KEY_GENERATED] = $this->getProjectMetaDataQuery()->setProjectGenerated();
-
-        if ($ret[ProjectKeys::KEY_GENERATED]) {
-            try {
-                //3. Otorga, a las Persons, permisos sobre el directorio de proyecto y añade enlace a dreceres
-                $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
-                $this->modifyACLPageAndShortcutToPerson($params);
-            }
-            catch (Exception $e) {
-                $ret[ProjectKeys::KEY_GENERATED] = FALSE;
-                $this->getProjectMetaDataQuery()->setProjectSystemStateAttr("generated", FALSE);
-            }
-        }
-
-        return $ret;
-    }
-
-    public function createTemplateDocument($data = NULL){
-        StaticUniqueContentFileProjectModel::createTemplateDocument($this, $data);
-//        $pdir = $this->getProjectMetaDataQuery()->getProjectTypeDir()."metadata/plantilles/";
-//        // TODO: $file ha de ser el nom del fitxer de la plantilla, amb extensió?
-//        $file = $this->getTemplateContentDocumentId($data) . ".txt";
+//    public function generateProject() {
+//        $ret = array();
+//        //0. Obtiene los datos del proyecto
+//        $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
 //
-//        $plantilla = file_get_contents($pdir.$file);
-//        $name = substr($file, 0, -4);
-//        $destino = $this->getContentDocumentId($name);
-//        $this->dokuPageModel->setData([PageKeys::KEY_ID => $destino,
-//                                       PageKeys::KEY_WIKITEXT => $plantilla,
-//                                       PageKeys::KEY_SUM => "generate project"]);
-    }
+//        //2. Establece la marca de 'proyecto generado'
+//        $ret[ProjectKeys::KEY_GENERATED] = $this->getProjectMetaDataQuery()->setProjectGenerated();
+//
+//        if ($ret[ProjectKeys::KEY_GENERATED]) {
+//            try {
+//                //3. Otorga, a las Persons, permisos sobre el directorio de proyecto y añade enlace a dreceres
+//                $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
+//                $this->modifyACLPageAndShortcutToPerson($params);
+//            }
+//            catch (Exception $e) {
+//                $ret[ProjectKeys::KEY_GENERATED] = FALSE;
+//                $this->getProjectMetaDataQuery()->setProjectSystemStateAttr("generated", FALSE);
+//            }
+//        }
+//
+//        return $ret;
+//    }
 
     public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE) {
         $data = parent::updateCalculatedFieldsOnRead($data);
@@ -72,6 +50,8 @@ class ptfploeProjectModel extends MoodleProjectModel {
         $originalTaulaDadesUnitats = (is_array($originalValues["taulaDadesUnitats"])) ? $originalValues["taulaDadesUnitats"] : json_decode($originalValues["taulaDadesUnitats"], true);
         $resultatsAprenentatge = (is_array($values["resultatsAprenentatge"])) ? $values["resultatsAprenentatge"] : json_decode($values["resultatsAprenentatge"], true);
         $originalResultatsAprenentatge = (is_array($originalValues["resultatsAprenentatge"])) ? $originalValues["resultatsAprenentatge"] : json_decode($originalValues["resultatsAprenentatge"], true);
+        $dadesQualificacioUFs = (is_array($values["dadesQualificacioUFs"])) ? $values["dadesQualificacioUFs"] : json_decode($values["dadesQualificacioUFs"], true);
+        $originalDadesQualificacioUFs = (is_array($originalValues["dadesQualificacioUFs"])) ? $originalValues["dadesQualificacioUFs"] : json_decode($originalValues["dadesQualificacioUFs"], true);
         if($values["nsProgramacio"]){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
             if(!is_array($dataPrg)){
@@ -110,6 +90,31 @@ class ptfploeProjectModel extends MoodleProjectModel {
            }
         }
         $values["resultatsAprenentatge"] = $resultatsAprenentatge;
+        
+        for ($i=0; $i<count($dadesQualificacioUFs); $i++){
+           if($dadesQualificacioUFs[$i]["abreviació qualificació"]==$originalDadesQualificacioUFs[$i]["abreviació qualificació"]
+                   || $dadesQualificacioUFs[$i]["tipus qualificació"]==$originalDadesQualificacioUFs[$i]["tipus qualificació"]
+                   && $dadesQualificacioUFs[$i]["tipus qualificació"]=="PAF"){
+               $pos = $i;
+           }else{
+               $pos = -1;
+               $j=0;
+               foreach ($originalDadesQualificacioUFs as $item) {
+                   if($item["abreviació qualificació"]==$dadesQualificacioUFs[$i]["abreviació qualificació"]
+                            || $dadesQualificacioUFs[$i]["tipus qualificació"]==$item["tipus qualificació"]
+                            && $item["tipus qualificació"]=="PAF"){
+                       $pos = $j;
+                   }
+                   $j++;
+               }
+           }
+           if($pos!=-1 && !empty($originalDadesQualificacioUFs[$pos]["descripció qualificació"])){
+               $dadesQualificacioUFs[$i]["descripció qualificació"] = $originalDadesQualificacioUFs[$pos]["descripció qualificació"];
+           }
+        }
+        $values["dadesQualificacioUFs"] = $dadesQualificacioUFs;
+        
+        
         
         $ufTable = $values["taulaDadesUF"];
         if(!is_array($ufTable)){

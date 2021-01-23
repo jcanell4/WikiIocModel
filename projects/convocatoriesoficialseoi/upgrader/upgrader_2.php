@@ -27,9 +27,9 @@ class upgrader_2 extends CommonUpgrader {
 
             case "templates":
                 // Es copia totl
-                if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
-                    $filename = $this->model->getProjectDocumentName();
-                }
+//                if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
+//                    $filename = $this->model->getProjectDocumentName();
+//                }
                 
                 $plantilla = $this->model->getRawProjectTemplate($filename, $ver);
                 

@@ -5,24 +5,16 @@
  */
 if (!defined("DOKU_INC")) die();
 
-class convocatoriesoficialseoiProjectModel extends AbstractProjectModel {
+class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel {
 
     public function __construct($persistenceEngine) {
         parent::__construct($persistenceEngine);
+        $this->needGenerateAction=false;
     }
 
     public function getProjectDocumentName() {
         $ret = $this->getCurrentDataProject();
         return $ret['fitxercontinguts'];
-    }
-
-    protected function getContentDocumentIdFromResponse($responseData) {
-        if ($responseData['projectMetaData']["fitxercontinguts"]['value']) {
-            $contentName = $responseData['projectMetaData']["fitxercontinguts"]['value'];
-        } else {
-            $contentName = end(explode(":", $this->getTemplateContentDocumentId($responseData)));
-        }
-        return $this->id . ":" . $contentName;
     }
 
     public function generateProject() {

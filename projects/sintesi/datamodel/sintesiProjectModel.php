@@ -5,10 +5,11 @@
  */
 if (!defined("DOKU_INC")) die();
 
-class sintesiProjectModel extends MoodleProjectModel {
+class sintesiProjectModel extends MoodleUniqueContentFilesProjectModel{
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
+        $this->needGenerateAction=false;
     }
 
     public function getProjectDocumentName() {
@@ -16,41 +17,32 @@ class sintesiProjectModel extends MoodleProjectModel {
         return $ret['fitxercontinguts'];
     }
 
-    protected function getContentDocumentIdFromResponse($responseData){
-        if ($responseData['projectMetaData']["fitxercontinguts"]['value']){
-            $contentName = $responseData['projectMetaData']["fitxercontinguts"]['value'];
-        }else{
-            $contentName = end(explode(":", $this->getTemplateContentDocumentId($responseData)));
-        }
-        return $this->id.":" .$contentName;
-    }
+//    public function generateProject() {
+//        $ret = array();
+//        //0. Obtiene los datos del proyecto
+//        $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
+//
+//        //2. Establece la marca de 'proyecto generado'
+//        $ret[ProjectKeys::KEY_GENERATED] = $this->getProjectMetaDataQuery()->setProjectGenerated();
+//
+//        if ($ret[ProjectKeys::KEY_GENERATED]) {
+//            try {
+//                //3. Otorga, a las Persons, permisos sobre el directorio de proyecto y añade enlace a dreceres
+//                $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
+//                $this->modifyACLPageAndShortcutToPerson($params);
+//            }
+//            catch (Exception $e) {
+//                $ret[ProjectKeys::KEY_GENERATED] = FALSE;
+//                $this->getProjectMetaDataQuery()->setProjectSystemStateAttr("generated", FALSE);
+//            }
+//        }
+//
+//        return $ret;
+//    }
 
-    public function generateProject() {
-        $ret = array();
-        //0. Obtiene los datos del proyecto
-        $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
-
-        //2. Establece la marca de 'proyecto generado'
-        $ret[ProjectKeys::KEY_GENERATED] = $this->getProjectMetaDataQuery()->setProjectGenerated();
-
-        if ($ret[ProjectKeys::KEY_GENERATED]) {
-            try {
-                //3. Otorga, a las Persons, permisos sobre el directorio de proyecto y añade enlace a dreceres
-                $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
-                $this->modifyACLPageAndShortcutToPerson($params);
-            }
-            catch (Exception $e) {
-                $ret[ProjectKeys::KEY_GENERATED] = FALSE;
-                $this->getProjectMetaDataQuery()->setProjectSystemStateAttr("generated", FALSE);
-            }
-        }
-
-        return $ret;
-    }
-
-    public function createTemplateDocument($data=NULL){
-        StaticUniqueContentFileProjectModel::createTemplateDocument($this);
-    }
+//    public function createTemplateDocument($data=NULL){
+//        StaticUniqueContentFileProjectModel::createTemplateDocument($this);
+//    }
 
     /**
      * Calcula el valor de los campos calculables
