@@ -5,4 +5,6 @@
  */
 if (!defined('DOKU_INC') ) die();
 
-class Permission extends BasicPermission {}
+class Permission extends BasicPermission {
+    // ANULADA
+}

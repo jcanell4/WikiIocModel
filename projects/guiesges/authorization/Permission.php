@@ -6,4 +6,5 @@
 if (!defined('DOKU_INC') ) die();
 
 class Permission extends ProjectPermission {
+    // ANULADA
 }

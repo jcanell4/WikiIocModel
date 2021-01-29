@@ -3,9 +3,11 @@
  * FactoryAuthorization: carga las clases de autorización de los comandos del proyecto "ptfplogse"
  * @author Rafael Claver
  */
+namespace ptfplogse;
+
 if (!defined('DOKU_INC')) die();
 
-class FactoryAuthorization extends ProjectFactoryAuthorization {
+class FactoryAuthorization extends \ProjectFactoryAuthorization {
 
     const PROJECT_AUTH = __DIR__ . "/";
 

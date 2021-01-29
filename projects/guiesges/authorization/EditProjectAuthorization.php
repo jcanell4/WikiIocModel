@@ -12,19 +12,10 @@ class EditProjectAuthorization extends ProjectCommandAuthorization {
         parent::__construct();
         $this->allowedGroups[] = "editorges";
         //$this->allowedGroups[] = "projectmanager";
-        $this->allowedRoles[] = Permission::ROL_AUTOR;
+        $this->allowedRoles[] = ProjectPermission::ROL_AUTOR;
     }
 
     public function canRun($permis=AUTH_NONE, $type_exception="Edit") {
-//        if (parent::canRun()) {
-//            if(!$this->isUserGroup(["editorges", "admin"])
-//                    && ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(["projectmanager"]))
-//                    && !$this->isResponsable() && !$this->isAuthor()) {
-//                $this->errorAuth['error'] = TRUE;
-//                $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
-//                $this->errorAuth['extra_param'] = $this->permission->getIdPage();
-//            }
-//        }
         if (!parent::canRun($permis, $type_exception)) {
             if ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(["projectmanager"])) {
                 $this->errorAuth['error'] = TRUE;

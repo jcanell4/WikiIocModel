@@ -13,7 +13,7 @@ define('WIKI_IOC_PROJECT', DOKU_PLUGIN . "wikiiocmodel/projects/defaultProject/"
 
 require_once(WIKI_IOC_PROJECT . 'DokuModelAdapter.php');
 
-class DokuModelManager extends AbstractModelManager{
+class defaultProjectDokuModelManager extends AbstractModelManager{
 
     const MOD = WIKI_IOC_MODEL;
     const DEF = WIKI_IOC_PROJECT;
@@ -31,13 +31,13 @@ class DokuModelManager extends AbstractModelManager{
     static $defMainClass = array(
                 'DokuModelAdapter'     => self::DEF."DokuModelAdapter.php",
                 'FactoryAuthorization' => self::DEF."authorization/FactoryAuthorization.php",
-                'Permission'           => self::DEF."authorization/Permission.php"
+                'Permission'           => self::DLI."authorization/BasicPermission.php"
            );
 
     public function getAuthorizationManager($str_command) {
         require_once(self::$defMainClass['Permission']);
         require_once(self::$defMainClass['FactoryAuthorization']);
-        $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
+        $factory = \defaultProject\FactoryAuthorization::Instance(self::$defDirClass['Authorization'], "\defaultProject");
         return $factory->createAuthorizationManager($str_command);
     }
 

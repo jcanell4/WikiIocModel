@@ -10,18 +10,8 @@ class ResponsableProjectAuthorization extends ProjectCommandAuthorization {
 
      public function __construct() {
         parent::__construct();
-        $this->allowedRoles[] = Permission::ROL_RESPONSABLE;
+        $this->allowedRoles[] = ProjectPermission::ROL_RESPONSABLE;
         $this->allowedGroups[] = "fctmanager";
     }
-
-//    public function canRun() {
-//        if (parent::canRun()) {
-//            if(!$this->isUserGroup(["fctmanager","admin"]) && !$this->isResponsable()) {
-//                $this->errorAuth['error'] = TRUE;
-//                $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
-//                $this->errorAuth['extra_param'] = $this->permission->getIdPage();
-//            }
-//        }
-//        return !$this->errorAuth['error'];
-//    }
+    
 }

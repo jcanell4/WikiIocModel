@@ -1,8 +1,6 @@
 <?php
-
 /**
- * Description of FtpProjectAuthorization
- *
+ * FtpProjectAuthorization
  * @author josep
  */
 if (!defined('DOKU_INC')) die();
@@ -13,6 +11,7 @@ class FtpProjectAuthorization extends ProjectCommandAuthorization {
         parent::__construct();
         $this->allowedGroups[] = "manager";
         $this->allowedGroups[] = "editorges";
-        $this->allowedRoles[] = Permission::ROL_AUTOR;
+        $this->allowedRoles[] = ProjectPermission::ROL_AUTOR;
     }
+    
 }
