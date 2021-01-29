@@ -26,14 +26,6 @@
         "scripts": {
             "updateHandler": {
                 "command_authorization": "ftp_projectProject",
-                "permissions": [
-                   "isadmin",
-                   "ismanager"
-                ],
-                "rols": [
-                   "responsable",
-                   "autor"
-                ],
                 "conditions": {
                     "page.action": "'project_view'",
                     "page.generated":"true",
