@@ -31,7 +31,7 @@ class defaultProjectDokuModelManager extends AbstractModelManager{
     static $defMainClass = array(
                 'DokuModelAdapter'     => self::DEF."DokuModelAdapter.php",
                 'FactoryAuthorization' => self::DEF."authorization/FactoryAuthorization.php",
-                'Permission'           => self::DLI."authorization/BasicPermission.php"
+                'Permission'           => self::DEF."authorization/Permission.php"
            );
 
     public function getAuthorizationManager($str_command) {

@@ -32,7 +32,7 @@ class configurationDokuModelManager extends AbstractModelManager{
     static $defMainClass = array(
                'DokuModelAdapter'     => self::MOD."BasicModelAdapter.php",
                'FactoryAuthorization' => self::PRJ."authorization/FactoryAuthorization.php",
-               'Permission'           => self::DLI."authorization/ProjectPermission.php"
+               'Permission'           => self::PRJ."authorization/Permission.php"
            );
 
     public function getAuthorizationManager($str_command) {

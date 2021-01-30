@@ -5,7 +5,7 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-
+//[JOSEP] ALERTA => RAFA: deprecated vol dir que no es fa servir? ui fa aquest canrun?
 class EditProjectAuthorization extends ProjectCommandAuthorization {
 
     public function __construct() {

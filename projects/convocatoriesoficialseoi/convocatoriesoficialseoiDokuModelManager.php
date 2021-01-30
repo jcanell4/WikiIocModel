@@ -34,7 +34,7 @@ class convocatoriesoficialseoiDokuModelManager extends AbstractModelManager{
                'DokuModelAdapter'     => self::MOD."BasicModelAdapter.php",
                'FactoryAuthorization' => self::PRJ."authorization/FactoryAuthorization.php",
                'FactoryExporter'      => self::PRJ."exporter/FactoryExporter.php",
-               'Permission'           => self::DLI."authorization/ProjectPermission.php"
+               'Permission'           => self::PRJ."authorization/Permission.php"
            );
 
     public function getAuthorizationManager($str_command) {
