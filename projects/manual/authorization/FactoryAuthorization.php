@@ -3,9 +3,11 @@
  * FactoryAuthorization: carga las clases de autorización de los comandos del proyecto "manual"
  * @author Rafael Claver
  */
+namespace manual;
+
 if (!defined('DOKU_INC')) die();
 
-class FactoryAuthorization extends ProjectFactoryAuthorization {
+class FactoryAuthorization extends \ProjectFactoryAuthorization {
 
     const PROJECT_AUTH = __DIR__ . "/";
 

@@ -1,11 +1,13 @@
 <?php
 /**
- * FactoryAuthorization: carga las clases de autorización de los comandos del proyecto "ptfplogse"
+ * FactoryAuthorization: carga las clases de autorización de los comandos del proyecto "convocatoriesoficialseoi"
  * @author Rafael Claver
  */
+namespace convocatoriesoficialseoi;
+
 if (!defined('DOKU_INC')) die();
 
-class FactoryAuthorization extends ProjectFactoryAuthorization {
+class FactoryAuthorization extends \ProjectFactoryAuthorization {
 
     const PROJECT_AUTH = __DIR__ . "/";
 

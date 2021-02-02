@@ -5,23 +5,15 @@
  * @author Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
-
+//[JOSEP] ALERTA => RAFA: deprecated vol dir que no es fa servir? ui fa aquest canrun?
 class EditProjectAuthorization extends ProjectCommandAuthorization {
 
     public function __construct() {
         parent::__construct();
-        $this->allowedRoles[] = Permission::ROL_AUTOR;
+        $this->allowedRoles[] = ProjectPermission::ROL_AUTOR;
     }
 
     public function canRun($permis=AUTH_NONE, $type_exception="Edit") {
-//        if (parent::canRun()) {
-//            if (($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup(["admin"]))
-//                    && !$this->isResponsable() && !$this->isAuthor()) {
-//                $this->errorAuth['error'] = TRUE;
-//                $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
-//                $this->errorAuth['extra_param'] = $this->permission->getIdPage();
-//            }
-//        }
         if (!parent::canRun($permis, $type_exception)) {
             if ($this->permission->getInfoPerm() < AUTH_EDIT || !$this->isUserGroup($this->allowedGroups)) {
                 $this->errorAuth['error'] = TRUE;

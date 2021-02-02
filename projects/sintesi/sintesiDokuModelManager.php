@@ -1,7 +1,7 @@
 <?php
 /**
  * DokuModelManager:
- * - proporciona acceso a las Autorizaciones, ModelAdapter y Renderer del proyecto 'ptfplogse'
+ * - proporciona acceso a las Autorizaciones, ModelAdapter y Renderer del proyecto 'sintesi'
  * - define las rutas de las clases y las clases por defecto necesarias para este proyecto
  * @author Rafael Claver
  */
@@ -14,7 +14,7 @@ require_once(DOKU_LIB_IOC . "wikiiocmodel/ProjectModelExceptions.php");
 require_once(WIKI_IOC_MODEL . "metadata/MetaDataService.php");
 require_once(WIKI_IOC_MODEL . "BasicModelAdapter.php");
 
-class DokuModelManager extends AbstractModelManager{
+class sintesiDokuModelManager extends AbstractModelManager{
 
     const MOD = WIKI_IOC_MODEL;
     const DEF = WIKI_IOC_MODEL . "projects/defaultProject/";
@@ -38,9 +38,10 @@ class DokuModelManager extends AbstractModelManager{
            );
 
     public function getAuthorizationManager($str_command) {
+        $namespace = "\sintesi";
         require_once(self::$defMainClass['Permission']);
         require_once(self::$defMainClass['FactoryAuthorization']);
-        $factory = \FactoryAuthorization::Instance(self::$defDirClass['Authorization']);
+        $factory = \sintesi\FactoryAuthorization::Instance(self::$defDirClass['Authorization'], $namespace);
         return $factory->createAuthorizationManager($str_command);
     }
 

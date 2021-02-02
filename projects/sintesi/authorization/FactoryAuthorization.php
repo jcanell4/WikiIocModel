@@ -3,9 +3,11 @@
  * FactoryAuthorization: carga las clases de autorización de los comandos del proyecto "sintesi"
  * @author Rafael Claver
  */
+namespace sintesi;
+
 if (!defined('DOKU_INC')) die();
 
-class FactoryAuthorization extends ProjectFactoryAuthorization {
+class FactoryAuthorization extends \ProjectFactoryAuthorization {
 
     const PROJECT_AUTH = __DIR__ . "/";
 
