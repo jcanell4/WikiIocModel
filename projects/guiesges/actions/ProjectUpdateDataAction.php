@@ -1,7 +1,7 @@
 <?php
 if (!defined('DOKU_INC')) die();
 
-class ProjectUpdateDataAction extends ViewProjectMetaDataAction {
+class ProjectUpdateDataAction extends ViewProjectAction {
 
     protected function runAction() {
         $projectType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];

@@ -7,7 +7,7 @@
 if (!defined('DOKU_INC')) die();
 define('WIKI_IOC_PROJECT', realpath(__DIR__ . "/../") . "/");
 
-class ProjectExportAction extends ProjectMetadataAction{
+class ProjectExportAction extends ProjectAction{
     const PATH_RENDERER = WIKI_IOC_PROJECT."exporter/";
     const PATH_CONFIG_FILE = WIKI_IOC_PROJECT."metadata/config/";
     const CONFIG_TYPE_FILENAME = "configMain.json";

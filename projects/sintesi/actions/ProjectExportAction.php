@@ -9,7 +9,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
 define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/sintesi/");
 
-class ProjectExportAction  extends ProjectMetadataAction{
+class ProjectExportAction  extends ProjectAction{
     const PATH_RENDERER = WIKI_IOC_PROJECT."exporter/";
     const PATH_CONFIG_FILE = WIKI_IOC_PROJECT."metadata/config/";
     const CONFIG_TYPE_FILENAME = "configMain.json";

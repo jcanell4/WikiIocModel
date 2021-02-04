@@ -6,7 +6,7 @@
  */
 if (!defined('DOKU_INC')) die();
 
-class ProjectExportAction  extends ProjectMetadataAction{
+class ProjectExportAction  extends ProjectAction{
     const CONFIG_TYPE_FILENAME = "configMain.json";
     const CONFIG_RENDER_FILENAME = "configRender.json";
 
