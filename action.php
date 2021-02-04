@@ -43,7 +43,7 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
             $text = preg_replace("/~~USE:WIOCCL~~\n/", "", $event->result, 1);
             if(preg_match("/~~WIOCCL_DATA:(.*)~~\n/", $text, $match)){
                $text = preg_replace("/~~WIOCCL_DATA:(.*)~~\n/", "", $text, 1, $counter);
-               $dataSource = $plugin_controller->getCurrentProjectDataSource($match[1]);
+               $dataSource = $plugin_controller->getProjectDataSourceFromProjectId($match[1]);
                $event->result = WiocclParser::getValue($text, [], $dataSource);
             }else if($plugin_controller->getProjectOwner()){
                 $dataSource = $plugin_controller->getCurrentProjectDataSource();

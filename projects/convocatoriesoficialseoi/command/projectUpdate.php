@@ -45,13 +45,6 @@ class command_plugin_wikiiocmodel_projects_convocatoriesoficialseoi_projectUpdat
      */
     protected function getDefaultResponse($response, &$responseGenerator)
     {
-
-        $id = $response[ProjectKeys::KEY_ID];
-
-        if (isset($response[AjaxKeys::KEY_ACTIVA_UPDATE_BTN])) {
-            $responseGenerator->addExtraContentStateResponse($id, "updateButton", $response[AjaxKeys::KEY_ACTIVA_UPDATE_BTN]);
-        }
-
         return parent::getDefaultResponse($response, $responseGenerator);
     }
 
