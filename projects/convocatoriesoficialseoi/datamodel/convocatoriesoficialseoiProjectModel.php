@@ -142,7 +142,7 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
     public function validateTemplates($configTemplates=NULL) {
         if ($configTemplates == NULL) {
             $data = $this->getData();
-            $configTemplates = $data['projectMetaData']['plantilla']['value'];
+            $configTemplates = $data[ProjectKeys::KEY_PROJECT_METADATA]['plantilla']['value'];
         }
         $projectTemplatesDates = explode(',', $configTemplates);
         $projectFileDates = [];
@@ -191,7 +191,7 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
     }
 
     public function createTemplateDocument($data=NULL) {
-        $templates = $data['projectMetaData']["plantilla"]['value'];
+        $templates = $data[ProjectKeys::KEY_PROJECT_METADATA]["plantilla"]['value'];
         $this->setTemplateDocuments($templates);
     }
 

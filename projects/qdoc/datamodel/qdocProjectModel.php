@@ -21,7 +21,7 @@ class qdocProjectModel extends AbstractProjectModel {
 
     public function directGenerateProject($data) {
         //1. $data
-        $plantilla = $data['projectMetaData']["plantilla"]['value'];
+        $plantilla = $data[ProjectKeys::KEY_PROJECT_METADATA]["plantilla"]['value'];
         $destino = $this->id.":".end(explode(":", $plantilla));
         $this->createPageFromTemplate($destino, $plantilla, NULL, "generate project");
 
