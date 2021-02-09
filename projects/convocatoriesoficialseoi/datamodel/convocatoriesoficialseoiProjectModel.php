@@ -116,7 +116,7 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
      * @param string $old_name : nom actual del projecte
      * @return array : lista de ficheros
      */
-    protected function listGeneratedFilesByRender($base_dir, $old_name) {
+    protected function listGeneratedFilesByRender($base_dir=NULL, $old_name=NULL) {
         $basename = str_replace([":","/"], "_", $base_dir) . "_" . $old_name;
         return [$basename."_a2.zip", $basename."_b1.zip", $basename."_b2.zip"];
     }

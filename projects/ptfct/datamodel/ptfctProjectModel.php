@@ -40,7 +40,7 @@ class ptfctProjectModel extends MoodleUniqueContentFilesProjectModel {
 //        return $ret;
 //    }
 
-    public function getTemplateContentDocumentId($responseData){
+    public function getTemplateContentDocumentId($responseData=NULL){
         return "continguts";
     }
 
