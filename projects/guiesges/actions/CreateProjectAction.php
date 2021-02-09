@@ -6,7 +6,7 @@ class CreateProjectAction extends BasicCreateProjectAction{
     public function responseProcess() {
         $this->getModel()->setViewConfigName("firstView");
         $ret = parent::responseProcess();
-        $this->getModel()->createTemplateDocument($ret);
+//        $this->getModel()->createTemplateDocument($ret);
         return $ret;
     }    
 }

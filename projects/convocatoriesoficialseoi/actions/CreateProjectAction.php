@@ -5,7 +5,7 @@ class CreateProjectAction extends BasicCreateProjectAction{
     
     public function responseProcess() {
         $ret = parent::responseProcess();
-        $this->getModel()->createTemplateDocument($ret);
+//        $this->getModel()->createTemplateDocument($ret);
         return $ret;
     }    
 }
