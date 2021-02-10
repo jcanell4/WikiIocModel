@@ -18,8 +18,26 @@
     height: 32px;    
 }
 
-.iocValidateDataProjectIcon{
-    background-image: url("img/iocValidateDataProject.png"); 
+.iocStartEditDataProjectIcon{
+    background-image: url("img/iocStartEditDataProject.png"); 
+    width: 32px;
+    height: 32px;    
+}
+
+.iocMarkAutorDataProjectIcon{
+    background-image: url("img/iocMarkAutorDataProject.png"); 
+    width: 32px;
+    height: 32px;    
+}
+
+.iocMarkRevisorDataProjectIcon{
+    background-image: url("img/iocMarkRevisorDataProject.png"); 
+    width: 32px;
+    height: 32px;    
+}
+
+.iocMarkValidatorDataProjectIcon{
+    background-image: url("img/iocMarkValidatorDataProject.png"); 
     width: 32px;
     height: 32px;    
 }
