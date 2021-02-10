@@ -1,43 +1,43 @@
 /* Estilos de wikiiocmodel
 */
 .iocUpdateDataIcon{
-    background-image: url("img/iocUpdateDataProject.png"); 
+    background-image: url("img/iocUpdateDataProject.png");
     width: 32px;
     height: 32px;    
 }
 
 .iocConsolidateIcon{
-    background-image: url("img/iocConsolidateProject.png"); 
+    background-image: url("img/iocConsolidateProject.png");
     width: 32px;
     height: 32px;    
 }
 
 .iocImportProjectIcon{
-    background-image: url("img/iocImportProject.png"); 
+    background-image: url("img/iocImportProject.png");
     width: 32px;
     height: 32px;    
 }
 
-.iocStartEditDataProjectIcon{
-    background-image: url("img/iocStartEditDataProject.png"); 
+.iocToModifyDataProjectIcon{
+    background-image: url("img/iocToModifyDataProject.png");
     width: 32px;
     height: 32px;    
 }
 
-.iocMarkAutorDataProjectIcon{
-    background-image: url("img/iocMarkAutorDataProject.png"); 
+.iocToReviseDataProjectIcon{
+    background-image: url("img/iocToReviseDataProject.png");
     width: 32px;
     height: 32px;    
 }
 
-.iocMarkRevisorDataProjectIcon{
-    background-image: url("img/iocMarkRevisorDataProject.png"); 
+.iocToValidateDataProjectIcon{
+    background-image: url("img/iocToValidateDataProject.png");
     width: 32px;
     height: 32px;    
 }
 
-.iocMarkValidatorDataProjectIcon{
-    background-image: url("img/iocMarkValidatorDataProject.png"); 
+.iocValidateDataProjectIcon{
+    background-image: url("img/iocValidateDataProject.png");
     width: 32px;
     height: 32px;    
 }
