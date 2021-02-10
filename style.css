@@ -18,6 +18,12 @@
     height: 32px;    
 }
 
+.iocValidateDataProjectIcon{
+    background-image: url("img/iocValidateDataProject.png"); 
+    width: 32px;
+    height: 32px;    
+}
+
 .block-border{
     padding: 15px;
     background-color: #fcebd4;
