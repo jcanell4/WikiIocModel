@@ -449,23 +449,6 @@
           }
         }
       },
-      "avaluacioInicial":{
-        "label": "Avaluació inicial (avaluacioInicial)",
-        "type":"select",
-        "n_columns":6,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada UF"      
-        },
-         "config":{
-            "options":[
-                {"description":"No es fa","value":"NO"}, 
-                {"description":"A l'inci","value":"INICI"}, 
-                {"description":"Per cada UF","value":"PER_UF"}
-            ]
-         }            
-      },
       "calendari": {
         "label": "Temporització (calendari)",
         "n_columns": 12,
@@ -754,7 +737,7 @@
       },
         "treballEquipEAF": {
             "label": "Treball en equip a l'EAF",
-            "n_columns": 2,
+            "n_columns": 6,
             "group": "actualitzables",
             "type": "checkbox",
             "props": {
@@ -932,16 +915,33 @@
       },
       "duradaPAF": {
         "label": "Durada de la PAF (duradaPAF)",
+        "n_columns":12,
+        "group": "actualitzables",
+        "props": {
+          "required": true,
+          "title": "Text per informar de la durada de la PAF i/o de les Unitats Formatives"
+        }
+      },
+      "avaluacioInicial":{
+        "label": "Avaluació inicial (avaluacioInicial)",
+        "type":"select",
         "n_columns":6,
         "group": "main",
         "props": {
           "required": true,
-          "title": "Indiqueu la durada màxima de la PAF"
-        }
+          "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada UF"      
+        },
+         "config":{
+            "options":[
+                {"description":"No es fa","value":"NO"}, 
+                {"description":"A l'inci","value":"INICI"}, 
+                {"description":"Per cada UF","value":"PER_UF"}
+            ]
+         }            
       },
       "notaMinimaPAF": {
         "label": "Nota mínima a la PAF (notaMinimaPAF)",
-        "n_columns":4,
+        "n_columns":6,
         "group": "main",
         "props": {
           "required": true,
@@ -950,7 +950,7 @@
       },
       "notaMinimaEAF": {
         "label": "Nota mínima a l'EAF (notaMinimaEAF)",
-        "n_columns":4,
+        "n_columns":6,
         "group": "main",
         "props": {
           "required": true,
@@ -959,7 +959,7 @@
       },
       "notaMinimaJT": {
         "label": "Nota mínima a la JT (notaMinimaJT)",
-        "n_columns":4,
+        "n_columns":6,
         "group": "main",
         "props": {
           "required": true,

@@ -24,7 +24,15 @@ class upgrader_11 extends CommonUpgrader {
     public function process($type, $ver, $filename = NULL) {
         switch ($type) {
             case "fields":
-                $status = TRUE;
+                 //Transforma los datos del proyecto "ptfplogse" desde la estructura de la versión 19 a la versión 11
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+
+                $dataProject['duradaPAF'] = "Té una durada d'".$dataProject['duradaPAF'];
+
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver. Simultànea a l'actualització de 18 a 19 de templates", "{'fields':".($ver-1)."}");
                 break;
 
             case "templates":

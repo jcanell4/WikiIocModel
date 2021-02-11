@@ -30,8 +30,8 @@
             "main": "meta.mdpr",
 
             "versions": {
-                "fields": 9,
-                "templates": {"continguts":26}
+                "fields": 10,
+                "templates": {"continguts":27}
             },
             "mainType": {
                 "type": "object",
@@ -1086,7 +1086,7 @@
                         "duradaPAF": {
                             "type": "string",
                             "mandatory": true,
-                            "default":"1 hora i 50 minuts"
+                            "default":"Té una durada d'1 hora i 50 minuts"
                         },                                                
                         "dadesExtres": {
                             "type": "defExtres",
