@@ -10,7 +10,6 @@ if (!defined('DOKU_INC')) die();
  * class IocTcPdf
  */
 class IocTcPdf extends BasicIocTcPdf {
-    private $header_logo_height = 10;
     public function __construct(TcPdfStyle &$stile) {
         parent::__construct($stile);
     }
