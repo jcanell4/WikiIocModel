@@ -33,7 +33,7 @@ class CreateNewMaterialAction extends PageAction {
         //Copia los archivos de la raíz del directorio de plantillas al directorio de destino (módulo)
         $response = $this->sendFilesToCreate($template_path, $this->params[AjaxKeys::KEY_ID], $base_template);
 
-        $id = str_replace(":", "_", $this->params[PageKeys::KEY_ID] . ":htmlindex");
+        $id = $this->idToRequestId($this->params[PageKeys::KEY_ID] . ":htmlindex");
         $info = self::generateInfo("info", "Els materials s'han creat correctament a {$this->params[PageKeys::KEY_ID]}", $id);
         $response['info'] = self::addInfoToInfo($info, $response['info']);
 

@@ -75,7 +75,7 @@ class ProjectExportAction  extends ProjectAction{
 //        $result['ns'] = $this->projectID; JOSEP: ID O NS?
 
         $result['ns'] = $this->projectNS;
-        $ret=["id" => str_replace(":", "_", $this->projectID)];
+        $ret=["id" => $this->idToRequestId($this->projectID)];
         $ret["ns"] = $this->projectNS;
         switch ($this->mode) {
             case 'xhtml':

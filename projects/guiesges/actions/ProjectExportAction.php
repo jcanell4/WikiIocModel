@@ -64,7 +64,7 @@ class ProjectExportAction  extends ProjectAction{
 
         $result = $render->process($this->dataArray);
         $result['ns'] = $this->projectNS;
-        $ret['id'] = str_replace(":", "_", $this->projectID);
+        $ret['id'] = $this->idToRequestId($this->projectID);
         $ret['ns'] = $this->projectNS;
 
         if ($this->mode === 'xhtml') {
