@@ -24,13 +24,13 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
 
     /**
      * Canvia el nom dels directoris del projecte indicat
-     * @param string $base_dir : directori wiki del projecte
+     * @param string $base_old_dir : directori wiki del projecte
      * @param string $old_name : nom actual del projecte
      * @param string $new_name : nou nom del projecte
      */
-    protected function renameDirNames($base_dir, $old_name, $new_name) {
+    protected function renameDirNames($base_old_dir, $old_name, $new_name) {
         try {
-            $this->projectMetaDataQuery->renameDirNames($base_dir, $old_name, $new_name);
+            $this->projectMetaDataQuery->renameDirNames($base_old_dir, $old_name, $base_old_dir, $new_name);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el nom del projecte. $e.");
         }
@@ -38,13 +38,13 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
 
     /**
      * Canvia el contingut dels arxius ".changes" i ".meta" que contenen la ruta del projecte per la ruta amb el nou nom de projecte
-     * @param string $base_dir : directori wiki del projecte
+     * @param string $base_old_dir : directori wiki del projecte
      * @param string $old_name : nom actual del projecte
      * @param string $new_name : nou nom del projecte
      */
-    protected function changeOldPathInRevisionFiles($base_dir, $old_name, $new_name) {
+    protected function changeOldPathInRevisionFiles($base_old_dir, $old_name, $new_name) {
         try {
-            $this->projectMetaDataQuery->changeOldPathInRevisionFiles($base_dir, $old_name, $new_name);
+            $this->projectMetaDataQuery->changeOldPathInRevisionFiles($base_old_dir, $old_name, $base_old_dir, $new_name);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el contingut de: $e.");
         }
@@ -55,9 +55,9 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
      * @param string $old_name : nom actual del projecte
      * @param string $new_name : nou nom del projecte
      */
-    protected function changeOldPathInACLFile($base_dir, $old_name, $new_name) {
+    protected function changeOldPathInACLFile($base_old_dir, $old_name, $new_name) {
         try {
-            $this->projectMetaDataQuery->changeOldPathInACLFile($base_dir, $old_name, $new_name);
+            $this->projectMetaDataQuery->changeOldPathInACLFile($base_old_dir, $old_name, $base_old_dir, $new_name);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el contingut de: $e.");
         }
@@ -79,14 +79,14 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
 
     /**
      * Canvia el nom dels arxius $filetype que contenen (en el nom) l'antiga ruta del projecte
-     * @param string $base_dir : directori wiki del projecte
+     * @param string $base_old_dir : directori wiki del projecte
      * @param string $old_name : nom actual del projecte
      * @param string $new_name : nou nom del projecte
      * @param array $listfiles : llista d'arxius generats pel render que cal renombrar
      */
-    protected function renameRenderGeneratedFiles($base_dir, $old_name, $new_name, $listfiles=[]) {
+    protected function renameRenderGeneratedFiles($base_old_dir, $old_name, $new_name, $listfiles=[]) {
         try {
-            $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_dir, $old_name, $new_name, $listfiles);
+            $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_old_dir, $old_name, $base_old_dir, $new_name, $listfiles);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el nom de l'arxiu: $e.");
         }
@@ -94,14 +94,14 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
 
     /**
      * Canvia el contingut dels arxius que contenen l'antiga ruta del projecte (normalment la ruta absoluta a les imatges)
-     * @param string $base_dir : directori wiki del projecte
+     * @param string $base_old_dir : directori wiki del projecte
      * @param string $old_name : nom actual del projecte
      * @param string $new_name : nou nom del projecte
      * @throws Exception
      */
-    protected function changeOldPathInContentFiles($base_dir, $old_name, $new_name) {
+    protected function changeOldPathInContentFiles($base_old_dir, $old_name, $new_name) {
         try {
-            $this->projectMetaDataQuery->changeOldPathInContentFiles($base_dir, $old_name, $new_name);
+            $this->projectMetaDataQuery->changeOldPathInContentFiles($base_old_dir, $old_name, $base_old_dir, $new_name);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el contingut d'algun axiu a: $e.");
         }

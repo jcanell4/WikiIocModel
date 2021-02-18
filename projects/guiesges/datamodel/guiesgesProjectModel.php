@@ -12,22 +12,6 @@ class guiesgesProjectModel extends MultiContentFilesProjectModel {
         $this->needGenerateAction=false;
     }
 
-//    public function generateProject() {
-//        //0. Obtiene los datos del proyecto
-//        $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
-//
-//        //2. Establece la marca de 'proyecto generado'
-//        $ret[ProjectKeys::KEY_GENERATED] = $this->projectMetaDataQuery->setProjectGenerated();
-//
-//        if ($ret[ProjectKeys::KEY_GENERATED]) {
-//            //3. Otorga, a cada 'person', permisos adecuados sobre el directorio de proyecto y añade shortcut
-//            $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
-//            $this->modifyACLPageAndShortcutToPerson($params);
-//        }
-//
-//        return $ret;
-//    }
-
     /**
      * Canvia el nom dels directoris del projecte, els noms dels fitxers generats amb la base del nom del projecte i
      * les referències a l'antic nom de projecte dins dels fitxers afectats
@@ -36,15 +20,15 @@ class guiesgesProjectModel extends MultiContentFilesProjectModel {
      * @param string $persons : noms dels autors i els responsables separats per ","
      */
     public function renameProject($ns, $new_name, $persons) {
-        $base_dir = explode(":", $ns);
-        $old_name = array_pop($base_dir);
-        $base_dir = implode("/", $base_dir);
+        $base_old_dir = explode(":", $ns);
+        $old_name = array_pop($base_old_dir);
+        $base_old_dir = implode("/", $base_old_dir);
 
-        $this->projectMetaDataQuery->renameDirNames($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_dir, $old_name, $new_name, ["extension","\.zip","\.pdf"]);
-        $this->projectMetaDataQuery->changeOldPathInRevisionFiles($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathInContentFiles($base_dir, $old_name, $new_name);
-        $this->projectMetaDataQuery->changeOldPathInACLFile($base_dir, $old_name, $new_name);
+        $this->projectMetaDataQuery->renameDirNames($base_old_dir, $old_name, $base_old_dir, $new_name);
+        $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_old_dir, $old_name, $base_old_dir, $new_name, ["extension","\.zip","\.pdf"]);
+        $this->projectMetaDataQuery->changeOldPathInRevisionFiles($base_old_dir, $old_name, $base_old_dir, $new_name);
+        $this->projectMetaDataQuery->changeOldPathInContentFiles($base_old_dir, $old_name, $base_old_dir, $new_name);
+        $this->projectMetaDataQuery->changeOldPathInACLFile($base_old_dir, $old_name, $base_old_dir, $new_name);
         $this->projectMetaDataQuery->changeOldPathProjectInShortcutFiles($old_name, $new_name, $persons);
 
         $new_ns = preg_replace("/:[^:]*$/", ":$new_name", $ns);
