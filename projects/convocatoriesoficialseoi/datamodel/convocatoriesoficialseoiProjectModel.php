@@ -78,7 +78,7 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
     }
 
     /**
-     * Canvia el nom dels arxius $filetype que contenen (en el nom) l'antiga ruta del projecte
+     * Canvia el nom dels arxius del tipus $listfiles que contenen (en el nom) l'antiga ruta del projecte
      * @param string $base_old_dir : directori wiki del projecte
      * @param string $old_name : nom actual del projecte
      * @param string $new_name : nou nom del projecte
@@ -86,7 +86,7 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
      */
     protected function renameRenderGeneratedFiles($base_old_dir, $old_name, $new_name, $listfiles=[]) {
         try {
-            $this->projectMetaDataQuery->renameRenderGeneratedFiles($base_old_dir, $old_name, $base_old_dir, $new_name, $listfiles);
+            $this->projectMetaDataQuery->renameRenderGeneratedFiles("$base_old_dir/$old_name", "$base_old_dir/$new_name", $listfiles);
         }catch (Exception $e) {
             throw new Exception("renameProject: Error mentre canviava el nom de l'arxiu: $e.");
         }
