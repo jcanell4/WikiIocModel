@@ -21,15 +21,4 @@ class ViewProjectAction extends BasicViewUpdatableProjectAction{
         return $response;
     }
 
-    /**
-     * Retorna una data UNIX a partir de:
-     * @param string $diames en format "01/06"
-     * @param string $anyActual
-     * @return object DateTime
-     */
-    private function _obtenirData($diames, $anyActual) {
-        $mesdia = explode("/", $diames);
-        return date_create($anyActual."/".$mesdia[1]."/".$mesdia[0]);
-    }
-
 }
