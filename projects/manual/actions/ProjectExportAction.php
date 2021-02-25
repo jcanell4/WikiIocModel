@@ -44,11 +44,17 @@ class ProjectExportAction extends ProjectAction{
             $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $this->metaDataSubSet);
         $this->mainTypeName = $cfgArray['mainType']['typeDef'];
         $this->typesDefinition = $cfgArray['typesDefinition'];
-            $toInitModel = array(ProjectKeys::KEY_ID =>$this->projectID, ProjectKeys::KEY_PROJECT_TYPE=>$this->projectType, ProjectKeys::KEY_METADATA_SUBSET =>$this->metadataSubset);
-        $this->projectModel->init($toInitModel);
+        $this->projectModel->init([ProjectKeys::KEY_ID              => $this->projectID,
+                                   ProjectKeys::KEY_PROJECT_TYPE    => $this->projectType,
+                                   ProjectKeys::KEY_METADATA_SUBSET => $this->metadataSubset]);
          $this->dataArray = $this->projectModel->getCurrentDataProject();
-//        $ext = $this->projectModel->getExtendedData($this->projectID, $data['autor'], $data['fitxercontinguts']);
-//        $this->dataArray = array_merge($data, $ext);
+    }
+
+    protected function preResponseProcess() {
+        parent::preResponseProcess();
+        //Guarda una revisió del zip existent abans no es guardi la nova versió
+        $output_filename = $this->projectID . ":". str_replace(':', '_', $this->projectID).".zip";
+        media_saveOldRevision($output_filename);
     }
 
     public function responseProcess() {

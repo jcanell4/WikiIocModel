@@ -41,22 +41,24 @@ class ProjectExportAction  extends ProjectAction{
         $this->projectType = $params[ProjectKeys::KEY_PROJECT_TYPE];
         $this->projectID   = $params[ProjectKeys::KEY_ID];
         $this->metaDataSubSet = $params[ProjectKeys::KEY_METADATA_SUBSET];
-
         $this->projectNS   = $params[ProjectKeys::KEY_NS]?$params[ProjectKeys::KEY_NS]:$this->projectID;
-
         $this->typesRender = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
         $this->defaultValueForObjectFields = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "defaultValueForObjectFields");
 
         $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $this->metaDataSubSet);
         $this->mainTypeName = $cfgArray['mainType']['typeDef'];
         $this->typesDefinition = $cfgArray['typesDefinition'];
-//            $projectfilename = $cfgArray[$this->metaDataSubSet];
-//            $idResoucePath = WikiGlobalConfig::getConf('mdprojects')."/".str_replace(":", "/", $this->projectID);
-//            $projectfilepath = "$idResoucePath/".$this->projectType."/$projectfilename";
-//        $this->dataArray = $this->getProjectDataFile($projectfilepath, $this->metaDataSubSet);
-        $toInitModel = array(ProjectKeys::KEY_ID =>$this->projectID, ProjectKeys::KEY_PROJECT_TYPE=>$this->projectType, ProjectKeys::KEY_METADATA_SUBSET =>$this->metadataSubset);
-        $this->projectModel->init($toInitModel);
-        $this->dataArray = $this->projectModel->getCurrentDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
+        $this->projectModel->init([ProjectKeys::KEY_ID              => $this->projectID,
+                                   ProjectKeys::KEY_PROJECT_TYPE    => $this->projectType,
+                                   ProjectKeys::KEY_METADATA_SUBSET => $this->metadataSubset]);
+        $this->dataArray = $this->projectModel->getCurrentDataProject();
+    }
+
+    protected function preResponseProcess() {
+        parent::preResponseProcess();
+        //Guarda una revisió del zip existent abans no es guardi la nova versió
+        $output_filename = $this->projectID . ":". str_replace(':', '_', $this->projectID).".zip";
+        media_saveOldRevision($output_filename);
     }
 
     public function responseProcess() {
@@ -71,11 +73,10 @@ class ProjectExportAction  extends ProjectAction{
                                            $this->typesRender[$this->mainTypeName],
                                            array(ProjectKeys::KEY_ID => $this->projectID));
         $result = $render->process($this->dataArray);
-//        $result['ns'] = $this->projectID; JOSEP: ID O NS?
-
         $result['ns'] = $this->projectNS;
-        $ret=["id" => $this->idToRequestId($this->projectID)];
-        $ret["ns"] = $this->projectNS;
+        $ret = ["id" => $this->idToRequestId($this->projectID),
+                "ns" => $this->projectNS];
+
         switch ($this->mode) {
             case 'xhtml':
                 $ret["meta"] = ResultsWithFiles::get_html_metadata($result);

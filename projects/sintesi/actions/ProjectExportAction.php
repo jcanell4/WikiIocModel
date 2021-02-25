@@ -9,7 +9,7 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
 define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/sintesi/");
 
-class ProjectExportAction  extends ProjectAction{
+class ProjectExportAction extends ProjectAction{
     const PATH_RENDERER = WIKI_IOC_PROJECT."exporter/";
     const PATH_CONFIG_FILE = WIKI_IOC_PROJECT."metadata/config/";
     const CONFIG_TYPE_FILENAME = "configMain.json";
@@ -47,9 +47,17 @@ class ProjectExportAction  extends ProjectAction{
             $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $this->metaDataSubSet);
         $this->mainTypeName    = $cfgArray['mainType']['typeDef'];
         $this->typesDefinition = $cfgArray['typesDefinition'];
-            $toInitModel = array(ProjectKeys::KEY_ID =>$this->projectID, ProjectKeys::KEY_PROJECT_TYPE=>$this->projectType, ProjectKeys::KEY_METADATA_SUBSET =>$this->metadataSubset);
-        $this->projectModel->init($toInitModel);
+        $this->projectModel->init([ProjectKeys::KEY_ID              => $this->projectID,
+                                   ProjectKeys::KEY_PROJECT_TYPE    => $this->projectType,
+                                   ProjectKeys::KEY_METADATA_SUBSET => $this->metadataSubset]);
         $this->dataArray = $this->projectModel->getCurrentDataProject();
+    }
+
+    protected function preResponseProcess() {
+        parent::preResponseProcess();
+        //Guarda una revisió del zip existent abans no es guardi la nova versió
+        $output_filename = $this->projectID . ":". str_replace(':', '_', $this->projectID).".zip";
+        media_saveOldRevision($output_filename);
     }
 
     public function responseProcess() {
@@ -59,17 +67,16 @@ class ProjectExportAction  extends ProjectAction{
                           'filetype'        => $this->filetype,
                           'typesDefinition' => $this->typesDefinition,
                           'typesRender'     => $this->typesRender,
-                          'defaultValueForObjectFields'     => $this->defaultValueForObjectFields ]);
+                          'defaultValueForObjectFields' => $this->defaultValueForObjectFields ]);
 
         $render = $fRenderer->createRender($this->typesDefinition[$this->mainTypeName],
                                            $this->typesRender[$this->mainTypeName],
                                            array(ProjectKeys::KEY_ID => $this->projectID));
 
         $result = $render->process($this->dataArray);
-
         $result['ns'] = $this->projectNS;
-        $ret=["id" => $this->idToRequestId($this->projectID)];
-        $ret["ns"] = $this->projectNS;
+        $ret = ["id" => $this->idToRequestId($this->projectID),
+                "ns" => $this->projectNS];
 
         switch ($this->mode) {
             case 'xhtml':
