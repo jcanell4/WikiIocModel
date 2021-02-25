@@ -1,0 +1,311 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10,
+        "rows_row": 1
+    },
+    "groups": {
+        "authorship": {
+            "parent": "",
+            "label": "Autoria",
+            "n_columns": 12,
+            "frame": true,
+            "config": {
+                "collapsable": true,
+                "collapsed": true
+            }
+        }
+    },
+    "fields": {
+        "autor": {
+            "label": "Autor",
+            "group": "authorship",
+            "n_columns": 6,
+            "type": "amd",
+            "props": {
+                "required": true
+            },
+            "config": {
+                "readonly": {
+                    "and": [
+                        {
+                            "class": "ValidationByRoles",
+                            "data": {
+                                "roles": [
+                                    "responsable"
+                                ],
+                                "deniedResponse": true
+                            }
+                        },
+                        {
+                            "class": "ValidationByInfoPerm",
+                            "data": {
+                                "perm": 4,
+                                "deniedResponse": true
+                            }
+                        }
+                    ]
+                },
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns": "",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "autor",
+                    "dialogTitle": "Cercar autor",
+                    "dialogButtonLabel": "Afegir autor",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "responsable": {
+            "label": "Responsable de la creació",
+            "group": "authorship",
+            "n_columns": 4,
+            "type": "amd",
+            "props": {
+                "required": true
+            },
+            "config": {
+                "readonly": {
+                    "and": [
+                        {
+                            "class": "ValidationByRoles",
+                            "data": {
+                                "roles": [
+                                    "responsable"
+                                ],
+                                "deniedResponse": true
+                            }
+                        },
+                        {
+                            "class": "ValidationByInfoPerm",
+                            "data": {
+                              "perm": 4,
+                              "deniedResponse": true
+                            }
+                        }
+                    ]
+                },
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns": "",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "responsable",
+                    "dialogTitle": "Cercar responsable",
+                    "dialogButtonLabel": "Afegir responsable",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "dadesEspecifiquesProvaA2#dataProva": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#dataProva": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#dataProva": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#horariProvaEscrita": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#horariProvaEscrita": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#horariProvaEscrita": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#instruccionsProvaEscrita": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#instruccionsProvaEscrita": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#instruccionsProvaEscrita": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#horariProvaOral": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#horariProvaOral": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#horariProvaOral": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#instruccionsProvaOral": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#instruccionsProvaOral": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#instruccionsProvaOral": {
+            "type": "hidden"
+        },
+        "dataResultats": {
+            "type": "hidden"
+        },
+        "dataReclamacions": {
+          "type": "hidden"
+        },
+        "dataDemandaNE": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#dataProvaNE": {
+          "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#dataProvaNE": {
+          "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#dataProvaNE": {
+          "type": "hidden"
+        },
+        "plantilla": {
+          "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#title": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#title": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#title": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#provaCertificat": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#provaCertificat": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#provaCertificat": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#seu#nom": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#seu#nom": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#seu#nom": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#seu#via": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#seu#via": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#seu#via": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#seu#codiPostal": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#seu#codiPostal": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#seu#codiPostal": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#seu#municipi": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#seu#municipi": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#seu#municipi": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#seu#metro": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#seu#metro": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#seu#metro": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#seu#bus": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#seu#bus": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#seu#bus": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#seu#mapImg": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#seu#mapImg": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#seu#mapImg": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#seu#interactiveMap": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#seu#interactiveMap": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#seu#interactiveMap": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaA2#seu#provaVirtual": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB1#seu#provaVirtual": {
+            "type": "hidden"
+        },
+        "dadesEspecifiquesProvaB2#seu#provaVirtual": {
+            "type": "hidden"
+        },
+        "legislacioReclamacio": {
+            "type": "hidden"
+        },
+        "textLegislacioReclamacio": {
+            "type": "hidden"
+        },
+        "modelReclamacio": {
+            "type": "hidden"
+        },
+        "correu": {
+            "type": "hidden"
+        },
+        "correuReclamacio": {
+            "type": "hidden"
+        },
+        "taulaNormativa": {
+            "type": "hidden"
+        }
+    }
+}

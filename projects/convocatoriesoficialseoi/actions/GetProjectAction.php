@@ -1,14 +1,15 @@
 <?php
 if (!defined('DOKU_INC')) die();
 
-class GetProjectAction extends BasicGetProjectAction {
+class GetProjectAction extends BasicGetUpdatableProjectAction {
 
     function runAction() {
-        if (!$this->getModel()->isProjectGenerated()) {
-            $this->getModel()->setViewConfigName("firstView");
-        }
-        $response = parent::runAction();
+        $model = $this->getModel();
 
-        return $response;
+        if (! $model->isProjectGenerated()) {
+            $model->setViewConfigName("firstView");
+        }
+        return parent::runAction();
     }
+
 }

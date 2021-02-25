@@ -1,0 +1,160 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10,
+        "rows_row": 1
+    },
+    "groups": {
+        "authorship": {
+            "parent": "",
+            "label": "Autoria",
+            "n_columns": 12,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        }
+    },
+    "fields": {
+        "tipusCicle":{
+            "type": "hidden"
+        },
+        "moodleCourseId": {
+            "type": "hidden"
+        },
+        "cicle": {
+            "type": "hidden"
+        },
+        "durada": {
+            "type": "hidden"
+        },
+        "semestre": {
+            "type": "hidden"
+        },
+        "any": {
+            "type": "hidden"
+        },
+        "coordinador": {
+            "type": "hidden"
+        },
+        "dataIniciFCT": {
+            "type": "hidden"
+        },
+        "dataMaxIniciFCT": {
+            "type": "hidden"
+        },
+        "dataApteFCT": {
+            "type": "hidden"
+        },
+        "dataMaxApteFCT": {
+            "type": "hidden"
+        },
+        "responsable": {
+            "label": "Responsable de la creació (responsable)",
+            "group": "authorship",
+            "n_columns": 4,
+            "type": "amd",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin","fctmanager"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "responsable",
+                    "dialogTitle": "Cercar responsable",
+                    "dialogButtonLabel": "Afegir responsable",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "autor": {
+            "label": "Autor (autor)",
+            "group": "authorship",
+            "n_columns": 4,
+            "type": "amd",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin","fctmanager"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "autor",
+                    "dialogTitle": "Cercar autor",
+                    "dialogButtonLabel": "Afegir autor",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "supervisor": {
+            "label": "Coordinador de cicle (supervisor)",
+            "group": "authorship",
+            "n_columns": 4,
+            "type": "amd",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin","fctmanager"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "supervisor",
+                    "dialogTitle": "Cercar Cap de Departament",
+                    "dialogButtonLabel": "Afegir Cap de Departament",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "fitxercontinguts": {
+            "type": "hidden"
+        }
+    }
+}
