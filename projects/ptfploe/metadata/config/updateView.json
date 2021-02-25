@@ -8,7 +8,7 @@
     "groups": {
         "authorship": {
             "parent": "",
-            "label": "Autoria (CONJUNT D'AUTORS)",
+            "label": "Autoria",
             "n_columns": 12,
             "frame": true,
             "config":{
