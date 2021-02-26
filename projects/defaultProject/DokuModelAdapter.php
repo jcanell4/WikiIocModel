@@ -339,8 +339,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         $value["summaryId"] = "edit__summary";
     }
 
-    protected function runBeforePreprocess(&$content)
-    {
+    private function runBeforePreprocess(&$content) {
         global $ACT;
 
         $brun = FALSE;
@@ -353,8 +352,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $brun;
     }
 
-    protected function runAfterPreprocess(&$content)
-    {
+    private function runAfterPreprocess(&$content) {
         ob_start();
         $this->ppEvt->advise_after();
         $content .= ob_get_clean();
@@ -374,12 +372,9 @@ class DokuModelAdapter extends BasicModelAdapter {
      * @throws PageNotFoundException
      */
     //[Alerta Josep] Es crida des de la comanda edit
-    public function getDraftDialog($params)
-    {/*$pid, $prev = NULL, $prange = NULL, $psum = NULL ) {*/
+    public function getDraftDialog($params) { /*$pid, $prev = NULL, $prange = NULL, $psum = NULL ) {*/
         //[TODO Josep] Normalitzar:...
-
         global $lang;
-
         $response = $this->getCodePage($params);
 
         if (WikiIocInfoManager::getInfo('locked')) {
@@ -388,11 +383,8 @@ class DokuModelAdapter extends BasicModelAdapter {
         } else {
             $response['show_draft_dialog'] = TRUE;
         }
-
-
         return $response;
     }
-
 
     /**
      * Neteja una id passada per argument per poder fer-la servir amb els fitxers i si no es passa l'argument
@@ -407,88 +399,16 @@ class DokuModelAdapter extends BasicModelAdapter {
         return WikiPageSystemManager::getContainerIdFromPageId($id);
     }
 
-    private function getCommonPage($id, $title, $content)
-    {
+    private function getCommonPage($id, $title, $content) {
         $contentData = array(
             'id' => $id,
             'title' => $title,
             'content' => $content
         );
-
         return $contentData;
     }
 
-    /**
-     * és la crida principal de la comanda media
-     * Miguel Angel Lozano 12/12/2014
-     */
-    public function getMediaManager($image=NULL, $fromPage=NULL, $prev=NULL) {
-        //[TODO Josep] Normalitzar: start do get ...
-        global $lang, $NS, $INPUT, $JSINFO;
-
-        $error = $this->startMediaManager(PageKeys::DW_ACT_MEDIA_MANAGER, $image, $fromPage, $prev);
-        if ($error == 401) {
-            throw new HttpErrorCodeException("Access denied", $error);
-        } else if ($error == 404) {
-            throw new HttpErrorCodeException("Resource " . $image . " not found.", $error);
-        }
-        $title = $lang['img_manager'];
-        $nou = trigger_event('IOC_WF_INTER', $ACT);
-        $ret = array(
-            "content" => $this->doMediaManagerPreProcess(),      //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-            "id" => "media",
-            "title" => "media",
-            "ns" => $NS,
-            "imageTitle" => $title,
-            "image" => $image,
-            "fromId" => $fromPage,
-            "modifyImageLabel" => $lang['img_manager'],
-            "closeDialogLabel" => $lang['img_backto']
-        );
-        $JSINFO = array('id' => "media", 'namespace' => $NS);
-        return $ret;
-    }
-
-//    /**
-//     * Init per a l'obtenció del MediaManager
-//     * Nota: aquesta funció ha tingut com a base startMediaProcess, però la separem per les següents raons:
-//     * - ha de considerar que és un altre $pdo
-//     * - ha de consdierar que l'Id de la imatge pot ser null
-//     * - en el futur volem partir la resposta de getMediaManager per ubicar cada component en l'àrea adient
-//     *   de la nostra pàgina principal de la dokuwiki_30
-//     */
-//    private function startDeleteMediaManager($pImage = NULL, $pFromId = NULL, $prev = NULL)
-//    {
-//        global $DEL;
-//
-//        $DEL  = $this->params['delete'] = $pImage;
-//
-//        $ret = $this->startMediaManager($pdo, $pImage, $pFromId, $prev);
-//         if ($pImage) {
-//            if ($AUTH < AUTH_DELETE) {
-//                // no auth
-//                $ret = $ERROR = 401;
-//            }
-//        }
-//        return $ret;
-//    }
-
-    //[Rafa] NO SE UTILIZA
-//    private function doDeleteMediaManagerPreProcess(){
-//        global $DEL;
-//
-//        $content = "";
-//        if ($this->runBeforePreprocess($content)) {
-//            $res = 0;
-//            if(checkSecurityToken()) {
-//                $res = media_delete($DEL,$AUTH);
-//            }
-//        }
-//        $this->runAfterPreprocess($content);
-//        return $res;
-//    }
-
-    protected function doMediaManagerPreProcess() {
+    public function doMediaManagerPreProcess() {
         global $ACT;
 
         $content = "";
