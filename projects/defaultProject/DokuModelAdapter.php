@@ -922,92 +922,50 @@ class DokuModelAdapter extends BasicModelAdapter {
         $value["dotest"] = "dotest"; // input name test
     }
 
-    /**
-     * Miguel Angel Lozano 21/04/2015
-     * MEDIA DETAILS: Obtenció dels detalls de un media. És la crida principal de la comanda mediadetails
-     */
-    public function getMediaDetails($image) {
-        //[TODO Josep] Normalitzar: start do get ...
-        global $NS, $JSINFO, $MSG, $INPUT;
+//    /**
+//     * Miguel Angel Lozano 21/04/2015
+//     * MEDIA DETAILS: Obtenció dels detalls de un media. És la crida principal de la comanda mediadetails
+//     */
+//    public function getMediaDetails($image) {
+//        //[TODO Josep] Normalitzar: start do get ...
+//        global $NS, $JSINFO, $MSG, $INPUT;
+//
+//        $error = $this->startMediaDetails(PageKeys::DW_ACT_MEDIA_DETAILS, $image);
+//        if ($error == 401) {
+//            throw new HttpErrorCodeException("Access denied", $error);
+//        } else if ($error == 404) {
+//            throw new HttpErrorCodeException("Resource " . $image . " not found.", $error);
+//        }
+//
+//        $mdpp = $this->doMediaDetailsPreProcess();
+//        if ($mdpp['error']) {
+//            throw new UnknownMimeTypeException();
+//        }
+//        if ($mdpp['newImage']) {
+//            $image = $mdpp['newImage'];
+//        }
+//        $ret = array(
+//            "content" => $mdpp['content'],   //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
+//            "id" => $image,
+//            "title" => $image,
+//            "ns" => $NS,
+//            "imageTitle" => $image,
+//            "image" => $image,
+//            "newImage" => ($mdpp['newImage']) ? TRUE : NULL
+//        );
+//        $do = $INPUT->str('mediado');
+//        if ($do === 'diff') {
+//            $ret["mediado"] = $do;
+//        }
+//        if ($MSG[0] && $MSG[0]['lvl'] == 'error') {
+//            throw new HttpErrorCodeException($MSG[0]['msg'], 404);
+//        }
+//        $JSINFO = array('id' => $image, 'namespace' => $NS);
+//
+//        return $ret;
+//    }
 
-        $error = $this->startMediaDetails(PageKeys::DW_ACT_MEDIA_DETAILS, $image);
-        if ($error == 401) {
-            throw new HttpErrorCodeException("Access denied", $error);
-        } else if ($error == 404) {
-            throw new HttpErrorCodeException("Resource " . $image . " not found.", $error);
-        }
-
-        $mdpp = $this->doMediaDetailsPreProcess();
-        if ($mdpp['error']) {
-            throw new UnknownMimeTypeException();
-        }
-        if ($mdpp['newImage']) {
-            $image = $mdpp['newImage'];
-        }
-        $ret = array(
-            "content" => $mdpp['content'],   //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-            "id" => $image,
-            "title" => $image,
-            "ns" => $NS,
-            "imageTitle" => $image,
-            "image" => $image,
-            "newImage" => ($mdpp['newImage']) ? TRUE : NULL
-        );
-        $do = $INPUT->str('mediado');
-        if ($do === 'diff') {
-            $ret["mediado"] = $do;
-        }
-        if ($MSG[0] && $MSG[0]['lvl'] == 'error') {
-            throw new HttpErrorCodeException($MSG[0]['msg'], 404);
-        }
-        $JSINFO = array('id' => $image, 'namespace' => $NS);
-
-        return $ret;
-    }
-
-    /**
-     * Omple alguns valors de $this->params
-     * Retorna l'ERROR de permisos de la imatge
-     */
-    private function startMediaDetails($pdo, $pImage) {
-        global $ID, $AUTH, $IMG, $ERROR, $SRC, $REV, $INPUT;
-
-        $ret = $ERROR = 0;
-        $this->params['action'] = $pdo;
-        $ID = $pImage;
-
-        if ($pImage) {
-            $IMG = $this->params['image'] = $pImage;
-            $AUTH = auth_quickaclcheck($pImage);
-            if ($AUTH >= AUTH_READ) {
-                $SRC = mediaFN($pImage);
-                if (!file_exists($SRC)) {
-                    $ret = $ERROR = 404;
-                }
-            } else {
-                $ret = $ERROR = 401;
-            }
-        }
-
-        if(!$this->params['ns'] && !$this->params['img']){
-            $INPUT->set('img', $IMG);
-        }
-
-        if ($ret != 0) {
-            return $ret;
-        }
-
-        WikiIocInfoManager::loadMediaInfo();
-        $this->startUpLang();
-
-        //detect revision
-        $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("rev"); //$INFO comes from the DokuWiki core
-
-        $this->triggerStartEvents();
-        return $ret;
-    }
-
-    private function doMediaDetailsPreProcess() {
+    public function doMediaDetailsPreProcess() {
         global $ACT;
 
         $content = "";
@@ -1424,15 +1382,5 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $toc;
     }
 
-    /**
-     * MOGUT a: login_command i notify_command
-     *****************************************
-    // ALERTA[Xavi] $secure : si és true s'ha cridat des d'un client d'admin
-    public function notify($params, $isAdmin = false) // Alerta[Xavi] Canviar per getEdit per fer-lo consistent amb getEditPartial?
-    {
-        $action = new NotifyAction($this->persistenceEngine, $isAdmin);
-        $contentData = $action->get($params);
-        return $contentData;
-    }*/
 }
 
