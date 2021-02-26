@@ -339,7 +339,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         $value["summaryId"] = "edit__summary";
     }
 
-    private function runBeforePreprocess(&$content)
+    protected function runBeforePreprocess(&$content)
     {
         global $ACT;
 
@@ -353,7 +353,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $brun;
     }
 
-    private function runAfterPreprocess(&$content)
+    protected function runAfterPreprocess(&$content)
     {
         ob_start();
         $this->ppEvt->advise_after();
@@ -449,90 +449,29 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $ret;
     }
 
-    /**
-     * Init per a l'obtenció del MediaManager
-     * Nota: aquesta funció ha tingut com a base startMediaProcess, però la separem per les següents raons:
-     * - ha de considerar que és un altre $pdo
-     * - ha de consdierar que l'Id de la imatge pot ser null
-     * - en el futur volem partir la resposta de getMediaManager per ubicar cada component en l'àrea adient
-     *   de la nostra pàgina principal de la dokuwiki_30
-     */
-    private function startDeleteMediaManager($pImage = NULL, $pFromId = NULL, $prev = NULL)
-    {
-        global $DEL;
-
-        $DEL  = $this->params['delete'] = $pImage;
-
-        $ret = $this->startMediaManager($pdo, $pImage, $pFromId, $prev);
-         if ($pImage) {
-            if ($AUTH < AUTH_DELETE) {
-                // no auth
-                $ret = $ERROR = 401;
-            }
-        }
-        return $ret;
-    }
-
-    private function startMediaManager($pdo, $pImage = NULL, $pFromId = NULL, $prev = NULL)
-    {
-        global $ID;
-        global $AUTH;
-        global $vector_action;
-        global $IMG;
-        global $ERROR;
-        global $SRC;
-        global $REV;
-
-        $ret = $ERROR = 0;
-
-        $this->params['action'] = $pdo;
-
-        if ($pdo === PageKeys::DW_ACT_MEDIA_MANAGER) {
-            $vector_action = $GET["vecdo"] = $this->params['vector_action'] = "media";
-        }
-
-        if ($pImage) {
-            $IMG = $this->params['image'] = $pImage;
-        }
-        if ($pFromId) {
-            $ID = $this->params['id'] = $pFromId;
-        }
-        if ($prev) {
-            $REV = $this->params['rev'] = $prev;
-        }
-        // check image permissions
-        if ($pImage) {
-            $AUTH = auth_quickaclcheck($pImage);
-            if ($AUTH >= AUTH_READ) {
-                // check if image exists
-                $SRC = mediaFN($pImage);
-                if (!file_exists($SRC)) {
-                    $ret = $ERROR = 404;
-                }
-            } else {
-                // no auth
-                $ret = $ERROR = 401;
-            }
-        }
-
-        if ($ret != 0) {
-            return $ret;
-        }
-
-        WikiIocInfoManager::loadMediaInfo();
-
-        $this->startUpLang();
-
-        //detect revision
-        $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("rev"); //$INFO comes from the DokuWiki core
-        if ($this->params['rev'] < 1) {
-            $REV = $this->params['rev'] = (int)WikiIocInfoManager::getInfo("lastmod");
-        }
-
-        $this->triggerStartEvents();
-
-        return $ret;
-    }
+//    /**
+//     * Init per a l'obtenció del MediaManager
+//     * Nota: aquesta funció ha tingut com a base startMediaProcess, però la separem per les següents raons:
+//     * - ha de considerar que és un altre $pdo
+//     * - ha de consdierar que l'Id de la imatge pot ser null
+//     * - en el futur volem partir la resposta de getMediaManager per ubicar cada component en l'àrea adient
+//     *   de la nostra pàgina principal de la dokuwiki_30
+//     */
+//    private function startDeleteMediaManager($pImage = NULL, $pFromId = NULL, $prev = NULL)
+//    {
+//        global $DEL;
+//
+//        $DEL  = $this->params['delete'] = $pImage;
+//
+//        $ret = $this->startMediaManager($pdo, $pImage, $pFromId, $prev);
+//         if ($pImage) {
+//            if ($AUTH < AUTH_DELETE) {
+//                // no auth
+//                $ret = $ERROR = 401;
+//            }
+//        }
+//        return $ret;
+//    }
 
     //[Rafa] NO SE UTILIZA
 //    private function doDeleteMediaManagerPreProcess(){
@@ -549,7 +488,7 @@ class DokuModelAdapter extends BasicModelAdapter {
 //        return $res;
 //    }
 
-    private function doMediaManagerPreProcess() {
+    protected function doMediaManagerPreProcess() {
         global $ACT;
 
         $content = "";
