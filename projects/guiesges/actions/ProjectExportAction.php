@@ -23,6 +23,7 @@ class ProjectExportAction  extends ProjectAction{
     protected $metaDataSubSet;
 
     public function __construct($factory=NULL){
+        parent::__construct();
         $this->factoryRender = $factory;
     }
     /**
@@ -42,10 +43,18 @@ class ProjectExportAction  extends ProjectAction{
         $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $this->metaDataSubSet);
         $this->mainTypeName = $cfgArray['mainType']['typeDef'];
         $this->typesDefinition = $cfgArray['typesDefinition'];
+        $this->projectModel->init([ProjectKeys::KEY_ID              => $this->projectID,
+                                   ProjectKeys::KEY_PROJECT_TYPE    => $this->projectType,
+                                   ProjectKeys::KEY_METADATA_SUBSET => $this->metadataSubset]);
+        $this->dataArray = $this->projectModel->getCurrentDataProject();
+    }
 
-        $toInitModel = array(ProjectKeys::KEY_ID =>$this->projectID, ProjectKeys::KEY_PROJECT_TYPE=>$this->projectType, ProjectKeys::KEY_METADATA_SUBSET =>$this->metaDataSubSet);
-        $this->projectModel->init($toInitModel);
-        $this->dataArray = $this->projectModel->getCurrentDataProject(); //JOSEP: AIXÍ ESTÀ BË PERQUÈ DELEGUEM EN EL MODEL
+    protected function preResponseProcess() {
+        parent::preResponseProcess();
+        //Guarda una revisió del pdf existent abans no es guardi la nova versió
+        $ext = ($this->mode === "xhtml") ? ".zip" : ".pdf";
+        $output_filename = $this->projectID . ":" . str_replace(':', '_', $this->projectID) . $ext;
+        media_saveOldRevision($output_filename);
     }
 
     public function responseProcess() {

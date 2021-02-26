@@ -28,6 +28,7 @@ class ProjectExportAction extends ProjectAction{
     protected $metaDataSubSet;
 
     public function __construct($factory=NULL){
+        parent::__construct();
         $this->factoryRender = $factory;
     }
     /**
