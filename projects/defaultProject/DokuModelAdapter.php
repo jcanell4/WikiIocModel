@@ -922,49 +922,6 @@ class DokuModelAdapter extends BasicModelAdapter {
         $value["dotest"] = "dotest"; // input name test
     }
 
-//    /**
-//     * Miguel Angel Lozano 21/04/2015
-//     * MEDIA DETAILS: Obtenció dels detalls de un media. És la crida principal de la comanda mediadetails
-//     */
-//    public function getMediaDetails($image) {
-//        //[TODO Josep] Normalitzar: start do get ...
-//        global $NS, $JSINFO, $MSG, $INPUT;
-//
-//        $error = $this->startMediaDetails(PageKeys::DW_ACT_MEDIA_DETAILS, $image);
-//        if ($error == 401) {
-//            throw new HttpErrorCodeException("Access denied", $error);
-//        } else if ($error == 404) {
-//            throw new HttpErrorCodeException("Resource " . $image . " not found.", $error);
-//        }
-//
-//        $mdpp = $this->doMediaDetailsPreProcess();
-//        if ($mdpp['error']) {
-//            throw new UnknownMimeTypeException();
-//        }
-//        if ($mdpp['newImage']) {
-//            $image = $mdpp['newImage'];
-//        }
-//        $ret = array(
-//            "content" => $mdpp['content'],   //[ALERTA Josep] Pot venir amb un fragment de HTML i caldria veure què es fa amb ell.
-//            "id" => $image,
-//            "title" => $image,
-//            "ns" => $NS,
-//            "imageTitle" => $image,
-//            "image" => $image,
-//            "newImage" => ($mdpp['newImage']) ? TRUE : NULL
-//        );
-//        $do = $INPUT->str('mediado');
-//        if ($do === 'diff') {
-//            $ret["mediado"] = $do;
-//        }
-//        if ($MSG[0] && $MSG[0]['lvl'] == 'error') {
-//            throw new HttpErrorCodeException($MSG[0]['msg'], 404);
-//        }
-//        $JSINFO = array('id' => $image, 'namespace' => $NS);
-//
-//        return $ret;
-//    }
-
     public function doMediaDetailsPreProcess() {
         global $ACT;
 
