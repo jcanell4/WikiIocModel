@@ -941,7 +941,7 @@ class DokuModelAdapter extends BasicModelAdapter {
      * Prints full-screen media details
      */
     function mediaDetailsContent() {
-        global $NS, $IMG, $JUMPTO, $REV, $lang, $conf, $fullscreen, $INPUT, $AUTH, $MSG;
+        global $NS, $IMG, $JUMPTO, $REV, $fullscreen, $INPUT, $AUTH;
         $fullscreen = TRUE;
         require_once DOKU_INC . 'lib/exe/mediamanager.php';
 
@@ -992,6 +992,7 @@ class DokuModelAdapter extends BasicModelAdapter {
 
             echo '<div style="float:left;width:20%;">' . NL;
             echo '<h1>Dades de ' . $image . '</h1>';
+            $this->media_link($image, $rev, $meta);
             media_details($image, $AUTH, $rev, $meta);
             echo '</div>' . NL;
 
@@ -1022,6 +1023,25 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $ret;
     }
 
+    function media_link($image, $rev='', $meta=false) {
+        global $lang;
+        $size = media_image_preview_size($image, $rev, $meta);
+        if ($size) {
+            $more = array();
+            if ($rev) {
+                $more['rev'] = $rev;
+            } else {
+                $more['t'] = @filemtime(mediaFN($image));
+            }
+            $more['w'] = $size[0];
+            $more['h'] = $size[1];
+            $src = ml($image, $more);
+            echo '<dl><dt>Enllaç:</dt><dd>';
+            echo '<a href="'.$src.'" target="_blank" title="'.$lang['mediaview'].'">'.$image.'</a>';
+            echo '</dd></dl>'.NL;
+        }
+    }
+
     /**
      * Omple la pestanya històric de la zona de metadades del mediadetails
      */
@@ -1036,10 +1056,8 @@ class DokuModelAdapter extends BasicModelAdapter {
         $content = ob_get_clean();
 
         // Substitució de l'id del form per fer-ho variable
-        $patrones = array();
-        $patrones[0] = '/form id="page__revisions"/';
-        $sustituciones = array();
-        $sustituciones[0] = 'form id="page__revisions_' . $image . '"';
+        $patrones = ['/form id="page__revisions"/'];
+        $sustituciones = ['form id="page__revisions_' . $image . '"'];
         $content = preg_replace($patrones, $sustituciones, $content);
         return $content;
     }
