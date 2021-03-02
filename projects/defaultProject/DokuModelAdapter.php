@@ -758,8 +758,8 @@ class DokuModelAdapter extends BasicModelAdapter {
 
         $this->startUpLang();
 
-        if ($INPUT->ref('difftype')) {
-            $difftype = $INPUT->ref('difftype');
+        if ($INPUT->ref(MediaKeys::KEY_DIFFTYPE)) {
+            $difftype = $INPUT->ref(MediaKeys::KEY_DIFFTYPE);
         } else {
             $difftype = 'sidebyside';
         }
@@ -965,7 +965,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         }
 
         $content = "";
-        $do = $INPUT->str('mediado');
+        $do = $INPUT->str(MediaKeys::KEY_MEDIA_DO);
         if ($do == 'diff') {
             echo '<div id="panelMedia_' . $image . '" class="panelContent">' . NL;
             media_diff($image, $NS, $AUTH);
@@ -993,6 +993,7 @@ class DokuModelAdapter extends BasicModelAdapter {
             echo '<div style="float:left;width:20%;">' . NL;
             echo '<h1>Dades de ' . $image . '</h1>';
             $this->media_link($image, $rev, $meta);
+            $this->media_rev($rev);
             media_details($image, $AUTH, $rev, $meta);
             echo '</div>' . NL;
 
@@ -1039,6 +1040,13 @@ class DokuModelAdapter extends BasicModelAdapter {
             echo '<dl><dt>Enllaç:</dt><dd>';
             echo '<a href="'.$src.'" target="_blank" title="'.$lang['mediaview'].'">'.$image.'</a>';
             echo '</dd></dl>'.NL;
+        }
+    }
+
+    function media_rev($rev=NULL) {
+        if (!empty($rev) && $rev > 0) {
+            echo '<dl><dt>És una revisió:</dt>';
+            echo '<dd>'.WikiPageSystemManager::extractDateFromRevision($rev).'</dd></dl>'.NL;
         }
     }
 
