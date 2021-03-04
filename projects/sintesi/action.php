@@ -25,7 +25,7 @@ class action_plugin_wikiiocmodel_projects_sintesi extends WikiIocProjectPluginAc
      */
     function setExtraMeta(&$event, $param) {
         //controlar que se trata del proyecto en curso
-        if ($event->data['requestParams']['projectType'] === $this->projectType) {
+        if ($event->data['requestParams'][ProjectKeys::KEY_PROJECT_TYPE] === $this->projectType) {
 
             if (!isset($event->data['responseData'][ProjectKeys::KEY_CODETYPE])) {
                 $result['ns'] = getID();
