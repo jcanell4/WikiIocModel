@@ -49,7 +49,6 @@ class exportDocument extends renderHtmlDocument {
                 $allPathTemplate = $this->cfgExport->rendererPath . "/$pathTemplate";
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $zip->addFile($allPathTemplate."/main.css", "main.css");
-//                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL."exporter/xhtml", "pt_sencer/", "css");
                 $this->addDefaultCssFilesToZip($zip, "pt_sencer/");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "pt_sencer", TRUE);
                 $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/pt_sencer/pt.tpl");
@@ -60,9 +59,6 @@ class exportDocument extends renderHtmlDocument {
                 $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
                 $modulId = html_entity_decode(htmlspecialchars_decode($data["modulId"], ENT_COMPAT|ENT_QUOTES));
                 $tipusBlocModul = html_entity_decode(htmlspecialchars_decode($data["tipusBlocModul"], ENT_COMPAT|ENT_QUOTES));
-                //$durada = html_entity_decode(htmlspecialchars_decode($data["durada"], ENT_COMPAT|ENT_QUOTES));
-                //$professors = html_entity_decode(htmlspecialchars_decode($data["professors"], ENT_COMPAT|ENT_QUOTES));
-                //$coordinador = html_entity_decode(htmlspecialchars_decode($data["coordinador"], ENT_COMPAT|ENT_QUOTES));
 
                 $params = array(
                     "id" => $this->cfgExport->id,
@@ -71,7 +67,7 @@ class exportDocument extends renderHtmlDocument {
                     "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
                     "mode" => isset($this->mode) ? $this->mode : $this->filetype,
 		    "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
-                    "style" => "main.stypdf",
+                    "style" => $this->cfgExport->rendererPath."/xhtml/exportDocument/pdf/main.stypdf",
                     "data" => array(
                         "header" => ["logo" => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                                      "wlogo" => 9.9,
@@ -112,14 +108,6 @@ class exportDocument extends renderHtmlDocument {
         }
         return $result;
     }
-
-//    private function getParsedDocument($data, $document) {
-//        $ret = array();
-//        $tmplt = $this->loadTemplateFile($document);
-//        $ret["data"] = WiocclParser::getValue($tmplt, [], $data);
-//        $ret["toc"] = $this->cfgExport->toc;
-//        return $ret;
-//    }
 
     private function replaceInTemplate($data, $file) {
         $tmplt = $this->loadTemplateFile($file);
@@ -173,59 +161,4 @@ class exportDocument extends renderHtmlDocument {
         if (session_status() == PHP_SESSION_ACTIVE) session_destroy();
     }
 
-//    private function addFilesToZip(&$zip, $base, $d, $dir, $recursive=FALSE) {
-//        $zip->addEmptyDir("$d$dir");
-//        $files = $this->getDirFiles("$base/$dir");
-//        foreach($files as $f){
-//            $zip->addFile($f, "$d$dir/".basename($f));
-//        }
-//        if($recursive){
-//            $dirs = $this->getDirs("$base/$dir");
-//            foreach($dirs as $dd){
-//                $this->addFilesToZip($zip, "$base/$dir", "$d$dir/", basename($dd));
-//            }
-//        }
-//    }
-
-//    /**
-//     * Fill files var with all media files stored on directory var
-//     * @param string $directory
-//     * @param string $files
-//     */
-//    private function getDirs($dir){
-//        $files = array();
-//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-//            $dh = opendir($dir);
-//            while ($file = readdir($dh)) {
-//                if ($file != '.' && $file != '..' && is_dir("$dir/$file")) {
-//                    array_push($files, "$dir/$file");
-//                }
-//            }
-//            closedir($dh);
-//        }
-//        return $files;
-//    }
-
-//    private function getDirFiles($dir){
-//        $files = array();
-//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-//            $dh = opendir($dir);
-//            while ($file = readdir($dh)) {
-//                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
-//                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg|.*?\.gif|.*?\.ico|.*?\.css|.*?\.js|.*?\.htm|.*?\.html|.*?\.svg/', $file)){
-//                        array_push($files, "$dir/$file");
-//                    }
-//                }
-//            }
-//            closedir($dh);
-//        }
-//        return $files;
-//    }
 }
-
-//class render_title extends renderField {
-//    public function process($data) {
-//        $ret = parent::process($data);
-//        return $ret;
-//    }
-//}

@@ -43,7 +43,7 @@ class exportDocument extends renderHtmlDocument {
             "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
             "mode" => isset($this->mode) ? $this->mode : $this->filetype,
     	    "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
-            "style" => "main.stypdf",
+            "style" => $this->cfgExport->rendererPath."/pdf/exportDocument/styles/main.stypdf",
             "data" => array(
                 "header" => ["logo"  => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
                              "wlogo" => 9.9,
