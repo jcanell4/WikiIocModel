@@ -32,22 +32,6 @@ abstract class AbstractNodeDoc{
     public abstract function getEncodeJson();
 }
 
-class IocExtraWidthNodeDoc extends StructuredNodeDoc {
-    const OPEN_EXTRA_WIDTH_TYPE = "openExtrawidth";
-    const CLOSE_EXTRA_WIDTH_TYPE = "closeExtrawidth";
-    
-    public function __construct($type) {
-        parent::__construct($type);
-    }
-
-    public function getEncodeJson() {
-        $ret = "{\n\"type\":\"".trim($this->type)."\"";
-        $ret .= ",\n\"content\":".$this->getContentEncodeJson();
-        $ret .= "\n}";
-        return $ret;
-    }
-}
-
 class IocElemNodeDoc extends StructuredNodeDoc {
     const IOC_ELEM_TYPE = "iocElemType";
     const IOC_ELEM_TYPE_EXAMPLE = "example";
@@ -222,23 +206,23 @@ class TableNodeDoc extends StructuredNodeDoc{
 }
 
 class StructuredNodeDoc extends AbstractNodeDoc{
-    const PARAGRAPH_TYPE        = "p";
-    const STRONG_TYPE           = "strong";
+    const DELETED_TYPE          = "del";
+    const DOUBLEQUOTE_TYPE      = "doublequote";
     const EMPHASIS_TYPE         = "em";
-    const UNDERLINE_TYPE        = "u";
+    const FOOT_NOTE_TYPE        = "footnote";
+    const LIST_CONTENT_TYPE     = "listcontent";
     const MONOSPACE_TYPE        = "mono";
+    const ORDERED_LIST_TYPE     = "ol";
+    const PARAGRAPH_TYPE        = "p";
+    const QUOTE_TYPE            = "quote";
+    const ROOTCONTENT_TYPE      = "rootcontent";
+    const SINGLEQUOTE_TYPE      = "singlequote";
+    const STRONG_TYPE           = "strong";
     const SUBSCRIPT_TYPE        = "sub";
     const SUPERSCRIPT_TYPE      = "sup";
-    const DELETED_TYPE          = "del";
-    const FOOT_NOTE_TYPE        = "footnote";
-    const UNORDERED_LIST_TYPE   = "ul";
-    const ORDERED_LIST_TYPE     = "ol";
-    const LIST_CONTENT_TYPE     = "listcontent";
-    const QUOTE_TYPE            = "quote";
-    const SINGLEQUOTE_TYPE      = "singlequote";
-    const DOUBLEQUOTE_TYPE      = "doublequote";
     const TABLEROW_TYPE         = "tablerow";
-    const ROOTCONTENT_TYPE      = "rootcontent";
+    const UNDERLINE_TYPE        = "u";
+    const UNORDERED_LIST_TYPE   = "ul";
 
     protected $content;
 
@@ -445,6 +429,8 @@ class LeafNodeDoc extends AbstractNodeDoc{
     const OP_SINGLEQUOTE_TYPE   = "open_singlequote";
     const CL_SINGLEQUOTE_TYPE   = "close_singlequote";
     const NO_BREAK_SPACE_TYPE   = "nbsp";
+    const EXTRA_WIDTH_TYPE      = "ExtraWidth";
+    const NORMAL_WIDTH_TYPE     = "NormalWidth";
 
     private $acronym;
 
