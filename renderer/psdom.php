@@ -148,6 +148,41 @@ class TableFrame extends StructuredNodeDoc {
     }
 }
 
+class RowNodeDoc extends StructuredNodeDoc {
+    var $isHead = false;
+    var $openHead = NULL;
+    var $closeHead = NULL;
+    var $yo = "";
+    var $n = 0;
+
+    public function addContent(&$node){
+        parent::addContent($node);
+        $this->yo .= "yo-".$this->n++."--";
+        $this->isHead = ($node->type === CellNodeDoc::TABLEHEADER_TYPE);
+        $pare = $this->getOwner();
+        $germa = $pare->getContent($pare->sizeContent()-1);
+        if ($this == $germa) {
+            $germa = $pare->getContent($pare->sizeContent()-2);
+        }
+        if ($this->isHead) {
+            $this->openHead = ($germa->openHead) ? NULL : TRUE;
+        }else {
+            $this->closeHead = ($germa->closeHead) ? NULL : TRUE;
+        }
+    }
+
+    public function getEncodeJson() {
+        $openHead = ($this->openHead) ? ",\n\"openHead\":\"".$this->openHead."\"" : "";
+        $closeHead = ($this->closeHead) ? ",\n\"closeHead\":\"".$this->closeHead."\"" : "";
+        $ret = "{\n\"type\":\"".$this->type."\""
+              .$openHead
+              .$closeHead
+              .",\n\"content\":".$this->getContentEncodeJson();
+        $ret .= "\n}";
+        return $ret;
+    }
+}
+
 class CellNodeDoc extends StructuredNodeDoc{
     const TABLEHEADER_TYPE = "tableheader";
     const TABLECELL_TYPE = "tablecell";
@@ -994,7 +1029,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function tablerow_open(){
-        $node = new StructuredNodeDoc(StructuredNodeDoc::TABLEROW_TYPE);
+        $node = new RowNodeDoc(StructuredNodeDoc::TABLEROW_TYPE);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;
     }
