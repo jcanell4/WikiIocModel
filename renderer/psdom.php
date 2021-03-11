@@ -149,22 +149,15 @@ class TableFrame extends StructuredNodeDoc {
 }
 
 class RowNodeDoc extends StructuredNodeDoc {
-    var $isHead = false;
     var $openHead = NULL;
     var $closeHead = NULL;
-    var $yo = "";
-    var $n = 0;
 
     public function addContent(&$node){
         parent::addContent($node);
-        $this->yo .= "yo-".$this->n++."--";
-        $this->isHead = ($node->type === CellNodeDoc::TABLEHEADER_TYPE);
+        $isHead = ($node->type === CellNodeDoc::TABLEHEADER_TYPE);
         $pare = $this->getOwner();
-        $germa = $pare->getContent($pare->sizeContent()-1);
-        if ($this == $germa) {
-            $germa = $pare->getContent($pare->sizeContent()-2);
-        }
-        if ($this->isHead) {
+        $germa = $pare->getContent($pare->sizeContent()-1, FALSE);
+        if ($isHead) {
             $this->openHead = ($germa->openHead) ? NULL : TRUE;
         }else {
             $this->closeHead = ($germa->closeHead) ? NULL : TRUE;
@@ -271,8 +264,8 @@ class StructuredNodeDoc extends AbstractNodeDoc{
         $node->setOwner($this);
     }
 
-    public function getContent($i = -1){
-        if ($i === -1) {
+    public function getContent($i = -1, $forceFull=TRUE){
+        if ($i === -1 && $forceFull) {
             $ret = $this->content;
         }else{
             $ret = $this->content[$i];
