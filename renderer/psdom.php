@@ -156,12 +156,20 @@ class RowNodeDoc extends StructuredNodeDoc {
         parent::addContent($node);
         $isHead = ($node->type === CellNodeDoc::TABLEHEADER_TYPE);
         $pare = $this->getOwner();
-        $germa = $pare->getContent($pare->sizeContent()-1, FALSE);
+        $g = ($pare->sizeContent() > 1) ? 2 : (($pare->sizeContent() == 1) ? 1 : 0);
+        $germa = $pare->getContent($pare->sizeContent()-$g, FALSE);
         if ($isHead) {
             $this->openHead = ($germa->openHead) ? NULL : TRUE;
         }else {
-            $this->closeHead = ($germa->closeHead) ? NULL : TRUE;
+            $this->closeHead = ($germa->openHead && !$germa->closeHead) ? TRUE : NULL;
         }
+        $s = str_pad(($this===$germa) ? "TRUE" : "FALSE",15) . "| ";
+        $s .= str_pad($node->type,12) . "| ";
+        $s .= str_pad((is_null($germa->openHead) ? "null" : (($germa->openHead) ? "TRUE" : "FALSE")), 17) . "| ";
+        $s .= str_pad((is_null($germa->closeHead) ? "null" : (($germa->closeHead) ? "TRUE" : "FALSE")), 18) . "| ";
+        $s .= str_pad((is_null($this->openHead) ? "null" : (($this->openHead) ? "TRUE" : "FALSE")), 16) . "| ";
+        $s .= str_pad((is_null($this->closeHead) ? "null" : (($this->closeHead) ? "TRUE" : "FALSE")), 17) . "\n";
+        file_put_contents("/home/rafael/nb-projectes/wiki18/data/pages/docs/kk_2.txt", $s, FILE_APPEND);
     }
 
     public function getEncodeJson() {
