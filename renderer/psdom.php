@@ -150,7 +150,8 @@ class TableFrame extends StructuredNodeDoc {
 
 class RowNodeDoc extends StructuredNodeDoc {
     var $openHead = NULL;
-    var $closeHead = FALSE;
+    var $closeHead = NULL;
+    var $isOpened = FALSE;
     var $isClosed = FALSE;
 
     public function addContent(&$node){
@@ -161,20 +162,12 @@ class RowNodeDoc extends StructuredNodeDoc {
         $germa = $pare->getContent($pare->sizeContent()-$g, FALSE);
         $primer_germa = $pare->getContent(0, FALSE);
         if ($isHead) {
-            $this->openHead = ($germa->openHead) ? NULL : TRUE;
+            $this->openHead = ($this->openHead || (!$this->openHead && !$germa->isOpened)) ? TRUE : NULL;
+            $this->isOpened  = $germa->isOpened || $this->openHead;
         }else {
-            $this->closeHead = ($primer_germa->openHead && !$germa->isClosed && !$germa->closeHead) ? TRUE : FALSE;
+            $this->closeHead = ($primer_germa->openHead && !$germa->isClosed && !$germa->closeHead) ? TRUE : NULL;
             $this->isClosed = $germa->isClosed || $this->closeHead;
         }
-//        $s = str_pad(($this===$germa) ? "TRUE" : "FALSE",15) . "| ";
-//        $s = str_pad($node->type,12) . "| ";
-//        $s .= str_pad((is_null($primer_germa->openHead) ? "null" : (($primer_germa->openHead) ? "TRUE" : "FALSE")), 15) . "| ";
-//        $s .= str_pad((is_null($germa->openHead) ? "null" : (($germa->openHead) ? "TRUE" : "FALSE")), 13) . "| ";
-//        $s .= str_pad((is_null($this->openHead) ? "null" : (($this->openHead) ? "TRUE" : "FALSE")), 12) . "| ";
-//        $s .= str_pad((is_null($primer_germa->closeHead) ? "null" : (($primer_germa->closeHead) ? "TRUE" : "FALSE")), 16) . "| ";
-//        $s .= str_pad((is_null($germa->closeHead) ? "null" : (($germa->closeHead) ? "TRUE" : "FALSE")), 14) . "| ";
-//        $s .= str_pad((is_null($this->closeHead) ? "null" : (($this->closeHead) ? "TRUE" : "FALSE")), 13) . "\n";
-//        file_put_contents("/home/rafael/nb-projectes/wiki18/data/pages/docs/kk_2.txt", $s, FILE_APPEND);
     }
 
     public function getEncodeJson() {
