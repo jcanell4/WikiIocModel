@@ -48,3 +48,12 @@
     border: #f3a22d;
     font-size: 18px;
 }
+
+.resultatErroni{
+    background-color: #dca7a7;
+    font-weight: bold;
+}
+
+.resultatAlerta{
+    background-color: #ffff00;
+}
