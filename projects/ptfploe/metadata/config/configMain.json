@@ -1086,7 +1086,25 @@
                         "duradaPAF": {
                             "type": "string",
                             "mandatory": true,
-                            "default":"Té una durada d'1 hora i 50 minuts"
+                            "default":"Té una durada d'1 hora i 50 minuts",
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "duradaPAF",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"duradaPAF",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },                                                
                         "dadesExtres": {
                             "type": "defExtres",
