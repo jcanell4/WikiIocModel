@@ -13,7 +13,8 @@ require([
             var id = disp.getGlobalState().getCurrentId();
             if (id) {
                 var page = disp.getGlobalState().getContent(id);
-                if (page && page.projectType === '%_projectType_%') {
+//                if (page && page.projectType === '%_projectType_%') {
+                if('%_conditionToProcess_%'){
                     //%_VarsIsButtonVisible_%
                     if (disp.getGlobalState().login) {
                         if (Object.keys(disp.getGlobalState().permissions).length > 0) {
