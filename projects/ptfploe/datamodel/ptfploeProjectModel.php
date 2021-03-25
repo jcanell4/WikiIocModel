@@ -52,6 +52,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         $originalResultatsAprenentatge = (is_array($originalValues["resultatsAprenentatge"])) ? $originalValues["resultatsAprenentatge"] : json_decode($originalValues["resultatsAprenentatge"], true);
         $dadesQualificacioUFs = (is_array($values["dadesQualificacioUFs"])) ? $values["dadesQualificacioUFs"] : json_decode($values["dadesQualificacioUFs"], true);
         $originalDadesQualificacioUFs = (is_array($originalValues["dadesQualificacioUFs"])) ? $originalValues["dadesQualificacioUFs"] : json_decode($originalValues["dadesQualificacioUFs"], true);
+        $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc"]);
         if($values["nsProgramacio"]){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
             if(!is_array($dataPrg)){
@@ -60,8 +61,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             $taulaDadesNF = (is_array($dataPrg["taulaDadesNuclisFormatius"])) ? $dataPrg["taulaDadesNuclisFormatius"] : json_decode($dataPrg["taulaDadesNuclisFormatius"], true);
 
             $taulaDadesUFPrg = (is_array($dataPrg["taulaDadesUF"])) ? $dataPrg["taulaDadesUF"] : json_decode($dataPrg["taulaDadesUF"], true);
-            $taulaDadesNFFiltrada = array();
-            $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc"]);
+            $taulaDadesNFFiltrada = array();            
             foreach ($taulaDadesNF as $row) {
                 $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["unitat formativa"]);
                 if($rowBlocId==$blocId){
@@ -125,7 +125,25 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
                 $ufTable[$key]["ponderació"]=$ufTable[$key]["hores"];
             }
         }
+        
+        $nAvaluacioInicial=0;
+        if($taulaDadesUFPrg){
+            foreach ($taulaDadesUFPrg as $item) {
+                if($blocId == $item["bloc"] && $item["avaluacioInicial"]!=="No en té"){
+                    $nAvaluacioInicial++;
+                }
+            }            
+        }
+        
         $values["taulaDadesUF"]=$ufTable;
+        if($nAvaluacioInicial==0){
+            $avaluacioInicial = "NO";
+        }elseif($nAvaluacioInicial==1){
+            $avaluacioInicial = "INICI";
+        }else{
+            $avaluacioInicial = "PER_UF";
+        }
+        $values["avaluacioInicial"]= $avaluacioInicial;
 
         $data = $isArray?$values:json_encode($values);
         return $data;
