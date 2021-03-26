@@ -1030,25 +1030,26 @@ class DokuModelAdapter extends BasicModelAdapter {
 //        }
 //    }
 
-    /**
-     * Omple la pestanya històric de la zona de metadades del mediadetails
-     */
-    function mediaDetailsHistory($ns, $image) {
-        global $NS, $IMG, $INPUT;
-        $NS = $ns;
-        $IMG = $image;
-
-        ob_start();
-        $first = $INPUT->int('first');
-        html_revisions($first, $image);
-        $content = ob_get_clean();
-
-        // Substitució de l'id del form per fer-ho variable
-        $patrones = ['/form id="page__revisions"/'];
-        $sustituciones = ['form id="page__revisions_' . $image . '"'];
-        $content = preg_replace($patrones, $sustituciones, $content);
-        return $content;
-    }
+// TRASPASADO a abstract class WikiIocResponseHandler
+//     /**
+//     * Omple la pestanya històric de la zona de metadades del mediadetails
+//     */
+//    function mediaDetailsHistory($ns, $image) {
+//        global $NS, $IMG, $INPUT;
+//        $NS = $ns;
+//        $IMG = $image;
+//
+//        ob_start();
+//        $first = $INPUT->int('first');
+//        html_revisions($first, $image);
+//        $content = ob_get_clean();
+//
+//        // Substitució de l'id del form per fer-ho variable
+//        $patrones = ['/form id="page__revisions"/'];
+//        $sustituciones = ['form id="page__revisions_' . $image . '"'];
+//        $content = preg_replace($patrones, $sustituciones, $content);
+//        return $content;
+//    }
 
     // TODO[Xavi] PER SUBISTIUIR PEL PLUGIN DEL RENDER
     private static function getInstructionsForDocument($id, $rev = null)
