@@ -898,7 +898,7 @@ class DokuModelAdapter extends BasicModelAdapter {
         $value["dotest"] = "dotest"; // input name test
     }
 
-// TRASPASADO a class ViewMediaAction
+// TRASPASADO a class ViewMediaDetailsAction
 //    public function doMediaDetailsPreProcess() {
 //        global $ACT;
 //
@@ -914,118 +914,121 @@ class DokuModelAdapter extends BasicModelAdapter {
 //        return $ret;
 //    }
 
-    /**
-     * Prints full-screen media details
-     */
-    function mediaDetailsContent() {
-        global $NS, $IMG, $JUMPTO, $REV, $fullscreen, $INPUT, $AUTH;
-        $fullscreen = TRUE;
-        require_once DOKU_INC . 'lib/exe/mediamanager.php';
+// TRASPASADO a class ViewMediaDetailsAction
+//    /**
+//     * Prints full-screen media details
+//     */
+//    function mediaDetailsContent() {
+//        global $NS, $IMG, $JUMPTO, $REV, $fullscreen, $INPUT, $AUTH;
+//        $fullscreen = TRUE;
+//        require_once DOKU_INC . 'lib/exe/mediamanager.php';
+//
+//        $rev = '';
+//        $image = cleanID($INPUT->str('image'));
+//        if (isset($IMG)) {
+//            $image = $IMG;
+//        }
+//        if (isset($JUMPTO)) {
+//            if ($JUMPTO === false) {
+//                $ret['error'] = "UnknownMimeType";
+//                return $ret;
+//            }elseif ($JUMPTO != $image) {
+//                //éste es el caso de un nuevo fichero con un nuevo nombre, cuando se hace upload en una página mediadetails
+//                $ret['newImage'] = $JUMPTO;
+//                $image = $JUMPTO;
+//            }
+//        }
+//        if (isset($REV) && !$JUMPTO) {
+//            $rev = $REV;
+//        }
+//
+//        $content = "";
+//        $do = $INPUT->str(MediaKeys::KEY_MEDIA_DO);
+//        if ($do == 'diff') {
+//            echo '<div id="panelMedia_' . $image . '" class="panelContent">' . NL;
+//            media_diff($image, $NS, $AUTH);
+//            echo '</div>' . NL;
+//            $content .= ob_get_clean();
+//            $patrones = array();
+//            $patrones[0] = '/<form id="mediamanager__btn_restore"/';
+//            $patrones[1] = '/<form id="mediamanager__btn_delete"/';
+//            $patrones[2] = '/<form id="mediamanager__btn_update"/';
+//            $sustituciones = array();
+//            $sustituciones[0] = '<form id="mediamanager__btn_restore_' . $image . '"';
+//            $sustituciones[1] = '<form id="mediamanager__btn_delete_' . $image . '"';
+//            $sustituciones[2] = '<form id="mediamanager__btn_update_' . $image . '"';
+//            $content = preg_replace($patrones, $sustituciones, $content);
+//        } else {
+//            echo '<div id="panelMedia_' . $image . '" class="panelContent">' . NL;
+//            $meta = new JpegMeta(mediaFN($image, $rev));
+//            $size = media_image_preview_size($image, $rev, $meta);
+//            if ($size) {
+//                echo '<div style="float:left;width:47%;margin-right:10px;">' . NL;
+//                media_preview($image, $AUTH, $rev, $meta);
+//                echo '</div>' . NL;
+//            }
+//
+//            echo '<div style="float:left;width:20%;">' . NL;
+//            echo '<h1>Dades de ' . $image . '</h1>';
+//            $this->media_link($image, $rev, $meta);
+//            $this->media_rev($rev);
+//            media_details($image, $AUTH, $rev, $meta);
+//            echo '</div>' . NL;
+//
+//            if ($_REQUEST['tab_details']) {
+//                if (!$size) {
+//                    throw new HttpErrorCodeException("No es poden editar les dades d'aquest element", -1);//JOSEP: Alerta! Excepció incorrecta, cal buscar o crear una execpció adient!
+//                } else {
+//                    if ($_REQUEST['tab_details'] == 'edit') {
+//                        //$this->params['id'] = "form_".$image;
+//                        echo '<div style="float:right;margin-right:5px;width:29%;">' . NL;
+//                        echo "<h1>Formulari d'edició de " . $image . '</h1>';
+//                        media_metaform($image, $AUTH);
+//                        echo '</div>' . NL;
+//                    }
+//                }
+//            }
+//            echo '</div>' . NL;
+//            $content .= ob_get_clean();
+//            $patrones = array();
+//            $patrones[0] = '/<form/';
+//            $patrones[1] = '/style="max-width:+\s+\d+px;"/';
+//            $sustituciones = array();
+//            $sustituciones[0] = '<form id="form_' . $image . '"';
+//            $sustituciones[1] = '<img style="width: 60%;"';
+//            $content = preg_replace($patrones, $sustituciones, $content);
+//        }
+//        $ret['content'] = $content;
+//        return $ret;
+//    }
 
-        $rev = '';
-        $image = cleanID($INPUT->str('image'));
-        if (isset($IMG)) {
-            $image = $IMG;
-        }
-        if (isset($JUMPTO)) {
-            if ($JUMPTO === false) {
-                $ret['error'] = "UnknownMimeType";
-                return $ret;
-            }elseif ($JUMPTO != $image) {
-                //éste es el caso de un nuevo fichero con un nuevo nombre, cuando se hace upload en una página mediadetails
-                $ret['newImage'] = $JUMPTO;
-                $image = $JUMPTO;
-            }
-        }
-        if (isset($REV) && !$JUMPTO) {
-            $rev = $REV;
-        }
+// TRASPASADO a class ViewMediaDetailsAction
+//    function media_link($image, $rev='', $meta=false) {
+//        global $lang;
+//        $size = media_image_preview_size($image, $rev, $meta);
+//        if ($size) {
+//            $more = array();
+//            if ($rev) {
+//                $more['rev'] = $rev;
+//            } else {
+//                $more['t'] = @filemtime(mediaFN($image));
+//            }
+//            $more['w'] = $size[0];
+//            $more['h'] = $size[1];
+//            $src = ml($image, $more);
+//            echo '<dl><dt>Enllaç:</dt><dd>';
+//            echo '<a href="'.$src.'" target="_blank" title="'.$lang['mediaview'].'">'.$image.'</a>';
+//            echo '</dd></dl>'.NL;
+//        }
+//    }
 
-        $content = "";
-        $do = $INPUT->str(MediaKeys::KEY_MEDIA_DO);
-        if ($do == 'diff') {
-            echo '<div id="panelMedia_' . $image . '" class="panelContent">' . NL;
-            media_diff($image, $NS, $AUTH);
-            echo '</div>' . NL;
-            $content .= ob_get_clean();
-            $patrones = array();
-            $patrones[0] = '/<form id="mediamanager__btn_restore"/';
-            $patrones[1] = '/<form id="mediamanager__btn_delete"/';
-            $patrones[2] = '/<form id="mediamanager__btn_update"/';
-            $sustituciones = array();
-            $sustituciones[0] = '<form id="mediamanager__btn_restore_' . $image . '"';
-            $sustituciones[1] = '<form id="mediamanager__btn_delete_' . $image . '"';
-            $sustituciones[2] = '<form id="mediamanager__btn_update_' . $image . '"';
-            $content = preg_replace($patrones, $sustituciones, $content);
-        } else {
-            echo '<div id="panelMedia_' . $image . '" class="panelContent">' . NL;
-            $meta = new JpegMeta(mediaFN($image, $rev));
-            $size = media_image_preview_size($image, $rev, $meta);
-            if ($size) {
-                echo '<div style="float:left;width:47%;margin-right:10px;">' . NL;
-                media_preview($image, $AUTH, $rev, $meta);
-                echo '</div>' . NL;
-            }
-
-            echo '<div style="float:left;width:20%;">' . NL;
-            echo '<h1>Dades de ' . $image . '</h1>';
-            $this->media_link($image, $rev, $meta);
-            $this->media_rev($rev);
-            media_details($image, $AUTH, $rev, $meta);
-            echo '</div>' . NL;
-
-            if ($_REQUEST['tab_details']) {
-                if (!$size) {
-                    throw new HttpErrorCodeException("No es poden editar les dades d'aquest element", -1);//JOSEP: Alerta! Excepció incorrecta, cal buscar o crear una execpció adient!
-                } else {
-                    if ($_REQUEST['tab_details'] == 'edit') {
-                        //$this->params['id'] = "form_".$image;
-                        echo '<div style="float:right;margin-right:5px;width:29%;">' . NL;
-                        echo "<h1>Formulari d'edició de " . $image . '</h1>';
-                        media_metaform($image, $AUTH);
-                        echo '</div>' . NL;
-                    }
-                }
-            }
-            echo '</div>' . NL;
-            $content .= ob_get_clean();
-            $patrones = array();
-            $patrones[0] = '/<form/';
-            $patrones[1] = '/style="max-width:+\s+\d+px;"/';
-            $sustituciones = array();
-            $sustituciones[0] = '<form id="form_' . $image . '"';
-            $sustituciones[1] = '<img style="width: 60%;"';
-            $content = preg_replace($patrones, $sustituciones, $content);
-        }
-        $ret['content'] = $content;
-        return $ret;
-    }
-
-    function media_link($image, $rev='', $meta=false) {
-        global $lang;
-        $size = media_image_preview_size($image, $rev, $meta);
-        if ($size) {
-            $more = array();
-            if ($rev) {
-                $more['rev'] = $rev;
-            } else {
-                $more['t'] = @filemtime(mediaFN($image));
-            }
-            $more['w'] = $size[0];
-            $more['h'] = $size[1];
-            $src = ml($image, $more);
-            echo '<dl><dt>Enllaç:</dt><dd>';
-            echo '<a href="'.$src.'" target="_blank" title="'.$lang['mediaview'].'">'.$image.'</a>';
-            echo '</dd></dl>'.NL;
-        }
-    }
-
-    function media_rev($rev=NULL) {
-        if (!empty($rev) && $rev > 0) {
-            echo '<dl><dt>És una revisió:</dt>';
-            echo '<dd>'.WikiPageSystemManager::extractDateFromRevision($rev).'</dd></dl>'.NL;
-        }
-    }
+// TRASPASADO a class ViewMediaDetailsAction
+//    function media_rev($rev=NULL) {
+//        if (!empty($rev) && $rev > 0) {
+//            echo '<dl><dt>És una revisió:</dt>';
+//            echo '<dd>'.WikiPageSystemManager::extractDateFromRevision($rev).'</dd></dl>'.NL;
+//        }
+//    }
 
     /**
      * Omple la pestanya històric de la zona de metadades del mediadetails
