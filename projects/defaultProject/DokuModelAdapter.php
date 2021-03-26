@@ -91,32 +91,6 @@ class DokuModelAdapter extends BasicModelAdapter {
     }
 
     /**
-     * MOGUT a NsTreeAction
-     *****************************************
-     * És la crida principal de la comanda ns_tree_rest
-     *//*
-    public function getNsTree($currentnode, $sortBy, $onlyDirs=FALSE, $expandProject=FALSE, $hiddenProjects=FALSE, $fromRoot=FALSE)
-    {
-        $dataQuery = $this->persistenceEngine->createPageDataQuery();
-        if($fromRoot){
-            $root=$fromRoot;
-        }
-        return $dataQuery->getNsTree($currentnode, $sortBy, $onlyDirs, $expandProject, $hiddenProjects, $root);
-    }*/
-
-    /**
-     * Obté el missatge traduit a l'idioma actual.
-     * @global type $lang
-     * @param type $id
-     * @return type
-     *//*
-    public function getGlobalMessage($id)
-    {
-        return WikiIocLangManager::getLang($id);
-    }*/
-
-
-    /**
      * Inicia tractament d'una pàgina de la dokuwiki
      */
     private function startMediaProcess($pdo, $pImageId = NULL, $pFromId = NULL)
@@ -527,113 +501,115 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $ret;
     }
 
-    public function getMediaTabFileOptions()
-    {
-        global $INPUT;
+// TRASPASADO a abstract class WikiIocResponseHandler
+//    public function getMediaTabFileOptions()
+//    {
+//        global $INPUT;
+//
+//        $checkThumbs = "checked";
+//        $checkRows = "";
+//        if ($INPUT->str('list')) {
+//            if ($INPUT->str('list') == "rows") {
+//                $checkThumbs = "";
+//                $checkRows = "checked";
+//            }
+//        }
+//        ob_start();
+//        echo '<span style="font-weight: bold;">Visualització</span></br>';
+//        echo '<div style="margin-left:10px;">';
+//        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="thumbs" value="thumbs" ' . $checkThumbs . '/>
+//                <label for="radioOne">Thumbnails</label> <br />';
+//        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="rows" value="rows" ' . $checkRows . '/>
+//                <label for="radioTwo">Rows</label> <br/><br/></div>';
+//        $strData = ob_get_clean();
+//        /*$tree_ret = array(
+//            'id'      => 'metaMediafileoptions',
+//            'title'   => "Visualització",
+//            'content' => $strData
+//        );*/
+//
+//        //return $tree_ret;
+//        return $strData;
+//    }
 
-        $checkThumbs = "checked";
-        $checkRows = "";
-        if ($INPUT->str('list')) {
-            if ($INPUT->str('list') == "rows") {
-                $checkThumbs = "";
-                $checkRows = "checked";
-            }
-        }
-        ob_start();
-        echo '<span style="font-weight: bold;">Visualització</span></br>';
-        echo '<div style="margin-left:10px;">';
-        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="thumbs" value="thumbs" ' . $checkThumbs . '/>
-                <label for="radioOne">Thumbnails</label> <br />';
-        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="fileoptions" id="rows" value="rows" ' . $checkRows . '/>
-                <label for="radioTwo">Rows</label> <br/><br/></div>';
-        $strData = ob_get_clean();
-        /*$tree_ret = array(
-            'id'      => 'metaMediafileoptions',
-            'title'   => "Visualització",
-            'content' => $strData
-        );*/
+// TRASPASADO a abstract class WikiIocResponseHandler
+//    public function getMediaTabFileSort()
+//    {
+//        global $INPUT;
+//        $checkedNom = "checked";
+//        $checkedData = "";
+//        if ($INPUT->str('sort')) {
+//            if ($INPUT->str('sort') == "date") {
+//                $checkedNom = "";
+//                $checkedData = "checked";
+//            }
+//        }
+//
+//        ob_start();
+//        /*echo '  <input type="radio" name="drink" id="radioOne" checked value="tea"/>
+//                <label for="radioOne">Tea</label> <br />';*/
+//        echo '<span style="font-weight: bold;">Ordenació</span></br>';
+//        echo '<div style="margin-left:10px;">';
+//        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="nom" value="name" ' . $checkedNom . '/>
+//                <label for="nom">Nom</label> <br />';
+//        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="data" value="date" ' . $checkedData . '/>
+//                <label for="data">Data</label> <br/><br/></div>';
+//        //echo '<div class="panelContent dokuwiki" id="metamedia__fileoptions">' . NL;
+//        //media_tab_files_options();
+//        //echo '</div>' . NL;
+//        $strData = ob_get_clean();
+//        /*$tree_ret = array(
+//            'id'      => 'metaMediafilesort',
+//            'title'   => "Ordenació",
+//            'content' => $strData
+//        );*/
+//
+//        //return $tree_ret;
+//        return $strData;
+//    }
 
-        //return $tree_ret;
-        return $strData;
-    }
+// TRASPASADO a abstract class WikiIocResponseHandler
+//    public function getMediaTabSearch()
+//    {
+//        global $NS;
+//        ob_start();
+//        echo '<span style="font-weight: bold;">Cerca</span></br>';
+//        echo '<div class="search" style="margin-left:10px;">';
+//        echo '<form accept-charset="utf-8" method="post"  id="dw__mediasearch">';
+//        echo '<div class="no">';
+//        //echo '<p><label><span>Cerca pel nom de fitxer: </span>';
+//        echo '<p>';
+//        echo '<input type="text" id="mediaSearchq" placeholder = "Nom de fitxer" title="Cerca en: ' . $NS . '" class="edit" name="q">';
+//        echo '</label>';
+//        echo '<input type="submit" class="button" value="Filtrar" id="mediaSearchs">';
+//        echo '<input style="display:none" type="submit" class="button" value="Desfer filtre" id="mediaSearchr">';
+//        echo '</p>';
+//        echo '</div></form></div>';
+//
+//        $strData = ob_get_clean();
+//        /*$tree_ret = array(
+//            'id'      => 'metaMediaSearch',
+//            'title'   => "Cerca",
+//            'content' => $strData
+//        );*/
+//
+//        //return $tree_ret;
+//        return $strData;
+//    }
 
-    public function getMediaTabFileSort()
-    {
-        global $INPUT;
-        $checkedNom = "checked";
-        $checkedData = "";
-        if ($INPUT->str('sort')) {
-            if ($INPUT->str('sort') == "date") {
-                $checkedNom = "";
-                $checkedData = "checked";
-            }
-        }
-
-        ob_start();
-        /*echo '  <input type="radio" name="drink" id="radioOne" checked value="tea"/>
-                <label for="radioOne">Tea</label> <br />';*/
-        echo '<span style="font-weight: bold;">Ordenació</span></br>';
-        echo '<div style="margin-left:10px;">';
-        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="nom" value="name" ' . $checkedNom . '/>
-                <label for="nom">Nom</label> <br />';
-        echo '  <input type="radio" data-dojo-type="dijit/form/RadioButton" name="filesort" id="data" value="date" ' . $checkedData . '/>
-                <label for="data">Data</label> <br/><br/></div>';
-        //echo '<div class="panelContent dokuwiki" id="metamedia__fileoptions">' . NL;
-        //media_tab_files_options();
-        //echo '</div>' . NL;
-        $strData = ob_get_clean();
-        /*$tree_ret = array(
-            'id'      => 'metaMediafilesort',
-            'title'   => "Ordenació",
-            'content' => $strData
-        );*/
-
-        //return $tree_ret;
-        return $strData;
-    }
-
-    public function getMediaTabSearch()
-    {
-        global $NS;
-        ob_start();
-        echo '<span style="font-weight: bold;">Cerca</span></br>';
-        echo '<div class="search" style="margin-left:10px;">';
-        echo '<form accept-charset="utf-8" method="post"  id="dw__mediasearch">';
-        echo '<div class="no">';
-        //echo '<p><label><span>Cerca pel nom de fitxer: </span>';
-        echo '<p>';
-        echo '<input type="text" id="mediaSearchq" placeholder = "Nom de fitxer" title="Cerca en: ' . $NS . '" class="edit" name="q">';
-        echo '</label>';
-        echo '<input type="submit" class="button" value="Filtrar" id="mediaSearchs">';
-        echo '<input style="display:none" type="submit" class="button" value="Desfer filtre" id="mediaSearchr">';
-        echo '</p>';
-        echo '</div></form></div>';
-
-        $strData = ob_get_clean();
-        /*$tree_ret = array(
-            'id'      => 'metaMediaSearch',
-            'title'   => "Cerca",
-            'content' => $strData
-        );*/
-
-        //return $tree_ret;
-        return $strData;
-    }
-
-    public function getMediaFileUpload()
-    {
-        global $NS, $AUTH, $JUMPTO;
-        ob_start();
-        media_tab_upload($NS, $AUTH, $JUMPTO);
-        $strData = ob_get_clean();
-        $tree_ret = array(
-            'id' => 'metaMediafileupload',
-            'title' => "Càrrega de fitxers",
-            'content' => $strData
-        );
-
-        return $tree_ret;
-    }
+// TRASPASADO a abstract class WikiIocResponseHandler
+//    public function getMediaFileUpload() {
+//        global $NS, $AUTH, $JUMPTO;
+//        ob_start();
+//        media_tab_upload($NS, $AUTH, $JUMPTO);
+//        $strData = ob_get_clean();
+//        $tree_ret = array(
+//            'id' => 'metaMediafileupload',
+//            'title' => "Càrrega de fitxers",
+//            'content' => $strData
+//        );
+//        return $tree_ret;
+//    }
 
     function MediaUpload()
     {
@@ -922,20 +898,21 @@ class DokuModelAdapter extends BasicModelAdapter {
         $value["dotest"] = "dotest"; // input name test
     }
 
-    public function doMediaDetailsPreProcess() {
-        global $ACT;
-
-        $content = "";
-        if ($this->runBeforePreprocess($content)) {
-            ob_start();
-            $ret = $this->mediaDetailsContent();
-            $ret['content'] = $content . $ret['content'];
-            // check permissions again - the action may have changed
-            $ACT = IocCommon::act_permcheck($ACT);
-        }
-        $this->runAfterPreprocess($ret['content']);
-        return $ret;
-    }
+// TRASPASADO a class ViewMediaAction
+//    public function doMediaDetailsPreProcess() {
+//        global $ACT;
+//
+//        $content = "";
+//        if ($this->runBeforePreprocess($content)) {
+//            ob_start();
+//            $ret = $this->mediaDetailsContent();
+//            $ret['content'] = $content . $ret['content'];
+//            // check permissions again - the action may have changed
+//            $ACT = IocCommon::act_permcheck($ACT);
+//        }
+//        $this->runAfterPreprocess($ret['content']);
+//        return $ret;
+//    }
 
     /**
      * Prints full-screen media details
