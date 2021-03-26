@@ -382,71 +382,73 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $contentData;
     }
 
-    public function doMediaManagerPreProcess() {
-        global $ACT;
+// TRASPASADO a ViewMediaAction
+//    public function doMediaManagerPreProcess() {
+//        global $ACT;
+//
+//        $content = "";
+//        if ($this->runBeforePreprocess($content)) {
+//            ob_start();
+//            //crida parcial: només a la llista de fitxers del directori
+//            $this->mediaManagerFileList();
+//            $content .= ob_get_clean();
+//            // check permissions again - the action may have changed
+//            $ACT = IocCommon::act_permcheck($ACT);
+//        }
+//        $this->runAfterPreprocess($content);
+//
+//        return $content;
+//    }
 
-        $content = "";
-        if ($this->runBeforePreprocess($content)) {
-            ob_start();
-            //crida parcial: només a la llista de fitxers del directori
-            $this->mediaManagerFileList();
-            $content .= ob_get_clean();
-            // check permissions again - the action may have changed
-            $ACT = IocCommon::act_permcheck($ACT);
-        }
-        $this->runAfterPreprocess($content);
-
-        return $content;
-    }
-
-    /**
-     * Prints full-screen media manager
-     *
-     * @author Kate Arzamastseva <pshns@ukr.net>
-     */
-
-    function mediaManagerFileList()
-    {
-        global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT, $AUTH;
-        $fullscreen = TRUE;
-        require_once DOKU_INC . 'lib/exe/mediamanager.php';
-
-        $rev = '';
-        $image = cleanID($INPUT->str('image'));
-        if (isset($IMG)) {
-            $image = $IMG;
-        }
-        if (isset($JUMPTO)) {
-            $image = $JUMPTO;
-        }
-        if (isset($REV) && !$JUMPTO) {
-            $rev = $REV;
-        }
-
-        echo '<div id="mediamanager__page">' . NL;
-        if ($NS == "") {
-            echo '<h1>Documents de l\'arrel de documents</h1>';
-        } else {
-            echo '<h1>Documents de ' . $NS . '</h1>';
-        }
-
-
-        echo '<div class="panel filelist ui-resizable">' . NL;
-        echo '<div class="panelContent">' . NL;
-        $do = $AUTH;
-        $query = $_REQUEST['q'];
-        if (!$query) {
-            $query = '';
-        }
-        if ($do == 'searchlist' || $query) {
-            media_searchlist($query, $NS, $AUTH, TRUE, $_REQUEST['sort']);
-        } else {
-            media_tab_files($NS, $AUTH, $JUMPTO);
-        }
-        echo '</div>' . NL;
-        echo '</div>' . NL;
-        echo '</div>' . NL;
-    }
+// TRASPASADO a ViewMediaAction y a MediaAction
+//    /**
+//     * Prints full-screen media manager
+//     *
+//     * @author Kate Arzamastseva <pshns@ukr.net>
+//     */
+//
+//    function mediaManagerFileList()
+//    {
+//        global $NS, $IMG, $JUMPTO, $REV, $lang, $fullscreen, $INPUT, $AUTH;
+//        $fullscreen = TRUE;
+//        require_once DOKU_INC . 'lib/exe/mediamanager.php';
+//
+//        $rev = '';
+//        $image = cleanID($INPUT->str('image'));
+//        if (isset($IMG)) {
+//            $image = $IMG;
+//        }
+//        if (isset($JUMPTO)) {
+//            $image = $JUMPTO;
+//        }
+//        if (isset($REV) && !$JUMPTO) {
+//            $rev = $REV;
+//        }
+//
+//        echo '<div id="mediamanager__page">' . NL;
+//        if ($NS == "") {
+//            echo '<h1>Documents de l\'arrel de documents</h1>';
+//        } else {
+//            echo '<h1>Documents de ' . $NS . '</h1>';
+//        }
+//
+//
+//        echo '<div class="panel filelist ui-resizable">' . NL;
+//        echo '<div class="panelContent">' . NL;
+//        $do = $AUTH;
+//        $query = $_REQUEST['q'];
+//        if (!$query) {
+//            $query = '';
+//        }
+//        if ($do == 'searchlist' || $query) {
+//            media_searchlist($query, $NS, $AUTH, TRUE, $_REQUEST['sort']);
+//        } else {
+//            media_tab_files($NS, $AUTH, $JUMPTO);
+//        }
+//        echo '</div>' . NL;
+//        echo '</div>' . NL;
+//        echo '</div>' . NL;
+//    }
 
     public function getMediaMetaResponse()
     {
