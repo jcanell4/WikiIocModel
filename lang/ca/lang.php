@@ -106,10 +106,10 @@ $lang['projectException']['InvalidDataProjectException'] = 'Hi ha dades del proj
 
 $lang['title_message_notification'] = 'Missatge de %s';
 $lang['title_message_notification_with_id'] = 'Missatge de %s (document %s)';
-$lang['doc_message'] = 'Missatge referent a: [[%s|%s]].';
-$lang['doc_message_with_rev'] = 'Missatge referent a: [[%s|%s (%s)]].';
-$lang['mail_message'] = "S'ha enviat una notificació a la [[%s|wiki]] referent a //%s//, amb el missatge següent: ";
-$lang['message_notification_receivers'] = '**Destinataris**: %s';
+$lang['doc_message'] = 'Missatge referent a: <a href="%s" class="urlextern" title="%s" rel="nofollow" %s>%s</a>.';
+$lang['doc_message_with_rev'] = 'Missatge referent a: <a href="%s" class="urlextern" title="%s" rel="nofollow" %s>%s (%s)</a>[[%s|%s (%s)]].';
+$lang['mail_message'] = "S'ha enviat una notificació a la <a href=\"%s\" class=\"urlextern\" title=\"%s\" rel=\"nofollow\">wiki</a> referent a <strong>%s</strong>, amb el missatge següent: ";
+$lang['message_notification_receivers'] = '<strong>Destinataris</strong>: %s';
 $lang['notifation_send_success'] = 'Notificación enviada amb èxit. Destinataris: %s';
 
 
