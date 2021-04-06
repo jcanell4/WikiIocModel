@@ -59,7 +59,9 @@ class IocTcPdf extends BasicIocTcPdf {
         $this->SetY($y_position);
         $titol_w = $this->getPageWidth()-$margins['right']-($w1+$w2-5);
         $this->MultiCell($titol_w, $cell_height*2, $this->peu['titol'], 1, 'C', 0, 0, "", "", true, 0, false, true, $cell_height*2, 'M');
-        $page_number = "pàgina ".$this->getPage()."/".$this->getNumPages()." ";
+        // codi de pàgina actual: $this->getAliasNumPage() = {:pnp:} -> problema: ocupa 7 caracters en el render
+        // codi de total pàgines: $this->getAliasNbPages() = {:ptp:} -> es calcula l'espai ocupat abans d'obtenir el valor real
+        $page_number = "pàgina ".$this->getPage()."/".$this->getAliasNbPages();
         $this->MultiCell($w2, $cell_height*2, $page_number, 1, 'R', 0, 1, "", "", true, 0, false, true, $cell_height*2, 'M');
     }
 
