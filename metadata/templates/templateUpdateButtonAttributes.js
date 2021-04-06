@@ -18,7 +18,7 @@ require([
                     buttons.forEach(function(buttonAttributes){
                         var buttonId = buttonAttributes.id;
                         var button = registry.byId(buttonId);
-                        var condition = page.projectType + (page.workflowState) ? page.workflowState : "";
+                        var condition = page.projectType + ((page.workflowState) ? page.workflowState : "");
 
                         if (oldValues[condition] === undefined || oldValues[condition][buttonId] === undefined){
                             if (oldValues[condition] === undefined){
