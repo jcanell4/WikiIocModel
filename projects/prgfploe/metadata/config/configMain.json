@@ -1,0 +1,723 @@
+{
+    "metaDataClassesNameSpaces": [
+        {
+            "main": {
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "prgfploe"
+            }
+        },
+        {
+            "management":{
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "prgfploe"
+            }            
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+
+            "versions": {
+                "fields" : 0,
+                "templates": {"continguts":0}
+            },
+            "mainType": {
+                "type": "object",
+                "typeDef": "programacio"
+            },
+            "typesDefinition": {
+                "entradaResultatsAprenentatge": {
+                    "type":"object",
+                    "keys": {
+                        "uf": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "ra": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        },
+                        "ponderacio": {
+                            "type": "decimal",
+                            "mandatory": true,
+                            "default": "0"
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        }
+                    }                    
+                },
+                "defResultatsAprenentatge": {
+                    "type": "objectArray",
+                    "typeDef":"entradaResultatsAprenentatge"
+                },
+                "entradaCriterisAvaluacio": {
+                    "type":"object",
+                    "keys": {
+                        "uf": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "ra": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "ca": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "1.{#_INC(1)_#}"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        },
+                        "contextualitzat":{
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default": false
+                        }
+                    }                    
+                },
+                "defCriterisAvaluacio": {
+                    "type": "objectArray",
+                    "typeDef":"entradaCriterisAvaluacio"
+                },
+                "entradaContinguts": {
+                    "type":"object",
+                    "keys": {
+                        "uf": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "cont": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "1.{#_INC(1)_#}"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        },
+                        "contextualitzat":{
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default": false
+                        }
+                    }                    
+                },
+                "defContinguts": {
+                    "type": "objectArray",
+                    "typeDef":"entradaContinguts"
+                },
+                "entradaExtres": {
+                    "type":"object",
+                    "keys": {
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu la dada extra que necessiteu"
+                        },
+                        "tipus": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        },
+                        "valor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Escriviu el valor de la dada aquí"
+                        }
+                    }                    
+                },
+                "defExtres": {
+                    "type": "objectArray",
+                    "typeDef":"entradaExtres"
+                },
+                "entradaDadeBlocs": {
+                    "type": "object",
+                    "keys": {
+                        "bloc": {
+                            "type": "number",
+                            "mandatory": true
+                        },
+                        "horesBloc": {
+                            "type": "number",
+                            "mandatory": true
+                        }
+                    }
+                },
+                "defTaulaDadesBlocs": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDadeBlocs"
+                },
+                "entradaDadesUF": {
+                    "type": "object",
+                    "keys": {
+                        "unitat formativa": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu el nom de la UF"
+                        },
+                        "horesMinimes": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        },
+                        "horesLLiureDisposicio": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        },
+                        "ponderació": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        },
+                        "avaluacioInicial":{
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "bloc": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(0)_#}"
+                        },
+                        "ordreImparticio": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        }
+                    }
+                },
+                "defTaulaDadesUF": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDadesUF"
+                },                      
+                "entradaInstrumentsAvaluacio": {
+                    "type": "object",
+                    "keys": {
+                        "unitat formativa": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "tipus": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_COPY(\"AC\")_#}"
+                        },
+                        "id": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_COPY(\"EAC1\")_#}"
+                        },
+                        "descripcio":{
+                            "type": "string",
+                            "mandatory": false,
+                            "default": ""
+                        },
+                        "treballEnEquip": {
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default": false
+                        },
+                        "esObligatori": {
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default": true
+                        },
+                        "notaMinima": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 4
+                        },
+                        "ponderacio": {
+                            "type": "decimal",
+                            "mandatory": true,
+                            "default": 10
+                        }
+                    }
+                },
+                "entradaDadesNucliFormatiu": {
+                    "type": "object",
+                    "keys": {
+                        "unitat formativa": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "nucli formatiu": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu el nom del nucli formatiu"
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true,
+                            "validate":true,
+                            "default": 0
+                        }
+                    }
+                },
+                "defTaulaDadesNuclisFormatius": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDadesNucliFormatiu"
+                },                                                
+                "entradaActivitatsAprenentatge": {
+                    "type": "object",
+                    "keys": {
+                        "code": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "A{#_INC(1)_#}"
+                        },
+                        "unitat formativa": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "nucli formatiu": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu el nom de l'activitat"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Lectura de l'apartat corresponent del material IOC i realització dels exercicis indicats."
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true,
+                            "validate":true,
+                            "default": 0
+                        },
+                        "ra": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": ""
+                        },
+                        "continguts": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": ""
+                        },
+                        "ca": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": ""
+                        },
+                        "instruments d'avaluació": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": ""
+                        }
+                    }
+                },
+                "defTaulaActivitatsAprenentatge": {
+                    "type": "objectArray",
+                    "typeDef":"entradaActivitatsAprenentatge"
+                },
+                "entradaPonderacioRA":{
+                    "type":"object",
+                    "keys":{
+                        "uf":{
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "ra":{
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "instAvaluacio":{
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "EAC"
+                        },
+                        "ponderacio":{
+                            "type": "decimal",
+                            "mandatory": true,
+                            "default": 10
+                        }
+                    }
+                },
+                "entradaCc_historic":{
+                    "type":"object",
+                    "keys":{
+                        "data":{
+                            "type": "date",
+                           "mandatory": true,
+                           "props" : {
+                               "readonly" : true
+                            }
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "modificacions": {
+                            "type": "string",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        }
+                    }
+                },
+                "dadesGestioDocument":{
+                    "type":"object",
+                    "keys":{
+                        "nomGestor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "carrec": {
+                            "type": "string",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "dataDeLaGestio": {
+                            "type": "date",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "signatura": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default":"pendent",
+                            "props" : {
+                                "readonly" : true
+                            }
+                        }
+                    }
+                },
+                "programacio": {
+                    "type": "object",
+                    "keys": {
+                        "departament": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default":"Indiqueu de quin departament és la programació."
+                        },
+                        "cicle": {
+                            "type": "string",
+                            "default": "Indiqueu el cicle",
+                            "mandatory": true
+                        },
+                        "modulId": {
+                            "type": "string",
+                            "default": "MXX",
+                            "mandatory": true
+                        },
+                        "modul": {
+                            "type": "string",
+                            "default": "Indiqueu el nom mòdul",
+                            "mandatory": true
+                        },
+                        "durada": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": 0,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "duradaCicle": {
+                            "type": "number",
+                            "default": 2000,
+                            "mandatory": true   
+                        },
+                        "horesLliureDisposicioModul":{
+                            "type": "number",
+                            "viewType":"hidden",
+                            "mandatory": true,
+                             "calculateOnSave": {
+                                "class": "CalculateSumOfArrayObjectValues",
+                                "data": {
+                                    "arrayObjectfield":"taulaDadesUF",
+                                    "fieldToAdd":"horesLLiureDisposicio"
+                                }
+                             }
+                        },
+                        "taulaDadesBlocs": {
+                            "type": "defTaulaDadesBlocs",
+                            "viewType":"hidden",
+                            "mandatory": true
+                        },
+                        "taulaDadesUF": {
+                            "type": "defTaulaDadesUF",
+                            "mandatory": true
+                        },
+                        "taulaDadesNuclisFormatius": {
+                            "type": "defTaulaDadesNuclisFormatius",
+                            "mandatory": true
+                        },
+                        "estrategiesMetodologiques":{
+                            "type": "string",
+                            "mandatory": false
+                        },
+                        "notaMinimaUfAprovada":{
+                            "type": "decimal",
+                            "mandatory": true,
+                            "default": 5
+                        },                                                
+                        "recursosNecessaris": {
+                            "type": "array",
+                            "typeDef": "string",
+                            "mandatory": true
+                        },                                                
+                        "resultatsAprenentatge": {
+                            "type": "defResultatsAprenentatge",
+                            "mandatory": true
+                        },
+                        "criterisAvaluacio":{
+                            "type": "defCriterisAvaluacio",
+                            "mandatory": true
+                        },
+                        "continguts":{
+                            "type": "defContinguts",
+                            "mandatory": true
+                        },
+                        "activitatsAprenentatge":{
+                            "type": "defTaulaActivitatsAprenentatge",
+                            "mandatory": true
+                        },                                               
+                        "notaMinimaAC": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min":0,
+                                "max":10
+                            },
+                            "default": 0
+                        },
+                        "notaMinimaEAF": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min": 0,
+                                "max": 10
+                            },
+                            "default": 4
+                        },
+                        "notaMinimaJT": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min": 0,
+                                "max": 10
+                            },
+                            "default": 0
+                        },                                                
+                        "notaMinimaPAF": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default":4,
+                            "props": {
+                                "min":0,
+                                "max":10
+                            },
+                            "default": 4
+                        },                                                 
+                        "taulaInstrumentsAvaluacio": {
+                            "type": "objectArray",
+                            "typeDef":"entradaInstrumentsAvaluacio",
+                            "mandatory": true
+                        },
+                        "taulaPonderacioRA": {
+                            "type": "objectArray",
+                            "typeDef":"entradaPonderacioRA",
+                            "mandatory": true
+                        },
+                        "duradaPAF": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default":"Té una durada màxima d'1 hora i 50 minuts"
+                        },   
+                        "dadesExtres": {
+                            "type": "defExtres",
+                            "mandatory": true
+                        },
+                        "cc_historic": {
+                            "type": "objectArray",
+                            "typeDef":"entradaCc_historic",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "cc_raonsModificacio": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "cc_dadesAutor": {
+                            "type": "object",
+                            "typeDef": "dadesGestioDocument",
+                            "mandatory": true
+                        },
+                        "cc_dadesRevisor": {
+                            "type": "object",
+                            "typeDef": "dadesGestioDocument",
+                            "mandatory": true
+                        },
+                        "cc_dadesValidador": {
+                            "type": "object",
+                            "typeDef": "dadesGestioDocument",
+                            "mandatory": true
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "isRole":true,
+                            "roleProperties":{
+                                "wiki_permission":16,
+                                "shortcut":true
+                            }
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true,
+                            "roleProperties":{
+                                "wiki_permission":16,
+                                "shortcut":true
+                            }
+                        },
+                        "revisor": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true,
+                            "roleProperties":{
+                                "wiki_permission":4,
+                                "shortcut":false,
+                                "order":2
+                            }
+                        },
+                        "validador": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true,
+                            "roleProperties":{
+                                "wiki_permission":4,
+                                "shortcut":true,
+                                "order":1
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "management": "management.mdpr",
+            "versions": {
+                "fields" : 0
+            },
+            "mainType": {
+                "type": "object",
+                "typeDef": "management"
+            },
+            "typesDefinition": {
+                "wfStateHistoryEntry":{
+                    "type": "object",
+                    "keys": {
+                        "changeDate":{
+                            "type": "date",
+                            "mandatory": true
+                        },
+                        "oldState":{
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "newState":{
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "changeAction":{
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "user":{
+                            "type": "string",
+                            "mandatory": true
+                        }
+                    }                    
+                },
+                "workflowType":{
+                    "type": "object",
+                    "keys": {
+                        "currentState":{
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "undefined"
+                        },
+                        "stateHistory":{
+                            "type": "objectArray",
+                            "typeDef":"wfStateHistoryEntry"                            
+                        }
+                    }                    
+                },
+                "management": {
+                    "type": "object",
+                    "keys": {
+                        "workflow": {
+                            "type": "object",
+                            "typeDef": "workflowType",
+                            "mandatory": true
+                        }                        
+                    }
+                }
+            }            
+        }
+    ]
+}

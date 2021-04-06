@@ -1,0 +1,20 @@
+{
+    "typesDefinition": {
+        "programacio": {
+            "render": {
+                "typeDef":"programacio",
+                "class": "exportDocument",
+                "fields": "ALL",
+                "extraFields": [{"name":"pdfDocument", "valueType":"page", "value":"continguts"}]
+            },
+            "keys": {
+                "descripcio": {
+                    "render": {"class": "renderRenderizableText"}
+                },
+                "pdfDocument": {
+                    "render": {"class": "renderFileToPsDom"}
+                }
+            }
+        }
+    }
+}

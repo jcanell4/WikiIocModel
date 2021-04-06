@@ -1,0 +1,624 @@
+{
+    "creating": {
+        "actions": {
+            "view": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor",
+                        "revisor",
+                        "validador"
+                    ]
+                },
+                "views": {
+                    "groups": {
+                    },
+                    "rols": {
+                        "responsable":"firstView"
+                    }
+                }                
+            },
+            "edit": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "editProjectButton",
+                    "toSet": {
+                        "title": "Edició general",
+                        "query": "do=workflow&action=edit"
+                    },
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'"
+                            }
+                        }
+                    }
+                },
+                "views": {
+                    "groups": {
+                    },
+                    "rols": {
+                        "responsable":"firstView"
+                    }
+                }
+            },
+            "generate": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable"
+                    ]
+                },
+                "button": {
+                    "id": "generateProjectButton",
+                    "class": "WikiIocButton",
+                    "parms": {
+                        "DOM": {
+                           "id": "generateProjectButton"
+                        },
+                        "DJO": {
+                           "visible": false
+                        }
+                    },
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.isRevision": "false",
+                                "page.action": "'never'"
+                            }
+                        }
+                    }
+                }
+            },
+            "save": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "saveProjectButton",
+                    "toSet": {
+                        "title": "Desa les dades",
+                        "query": "do=workflow&action=save"
+                    },
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_edit'"
+                            }
+                        }
+                    }
+                }
+            },
+            "cancel": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "cancelProjectButton",
+                    "toSet": {
+                        "title": "Tancar l'edició",
+                        "query": "do=workflow&action=cancel"
+                    },
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_edit'"
+                            }
+                        }
+                    }
+                }
+            },
+            "import": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "prgfploeImportProjectButton",
+                    "class": "WikiIocButton",
+                    "parms": {
+                        "DOM": {
+                           "id": "prgfploeImportProjectButton",
+                           "title": "Importar dades d'un pla de treball",
+                           "class": "iocDisplayBlock"
+                        },
+                        "DJO": {
+                           "autoSize": true,
+                           "visible": false,
+                           "iconClass": "'iocImportProjectIcon'",
+                           "NomProjectelabel": "'Ruta del Projecte'",
+                           "NomProjectelplaceHolder": "'Ruta del Projecte'",
+                           "labelButtonAcceptar": "'Acceptar'",
+                           "labelButtonCancellar": "'Cancel·lar'",
+                           "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
+                           "projectType": ["ptfct", "ptfploe", "sintesi"],
+                           "standbyId": "'bodyContent'",
+                           "disableOnSend": true
+                        }
+                    },
+                    "scripts": {
+                        "getFunctions": {
+                            "path": "importButton.js"
+                        },
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view' | 'project_edit'",
+                                "page.isRevision": "false"
+                            }
+                        }
+                    }
+                }
+            },
+            "toRevise": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "prgfploeToReviseProjectButton",
+                    "class": "WikiIocButton",
+                    "parms": {
+                        "DOM": {
+                            "id": "prgfploeToReviseProjectButton",
+                            "title": "Marcar per revisar",
+                            "class": "iocDisplayBlock"
+                        },
+                        "DJO": {
+                           "autoSize": true,
+                           "visible": true,
+                           "iconClass": "'iocToReviseDataProjectIcon'",
+                           "labelText": "'Marca Edició completad i disponible per a Revisió. Vols continuar?'",
+                           "labelButtonAcceptar": "'Acceptar'",
+                           "labelButtonCancellar": "'Cancel·lar'",
+                           "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
+                           "standbyId": "'bodyContent'",
+                           "disableOnSend": true
+                        }
+                    },
+                    "scripts": {
+                        "getFunctions": {
+                            "path": "ToReviseButton.js"
+                        },
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'",
+                                "page.isRevision": "false"
+                            }
+                        }
+                    }
+                },
+                "changeStateTo": "revising"
+            },
+            "pdfExport": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager",
+                        "projectmanager"
+                    ],
+                    "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "prgfploePdfExportButton",
+                    "class": "WikiIocButton",
+                    "parms": {
+                        "DOM": {
+                           "id": "prgfploePdfExportButton",
+                           "title": "prgfploe PDF Export",
+                           "class": "iocDisplayBlock"
+                        },
+                        "DJO": {
+                           "query": "'do=edit'",
+                           "autoSize": true,
+                           "visible": false,
+                           "iconClass": "'iocExportPdfIcon'",
+                           "urlBase": "'lib/exe/ioc_ajax.php?call=projectExport'",
+                           "standbyId": "'bodyContent'",
+                           "disableOnSend": true
+                        }
+                    },
+                    "scripts": {
+                        "getFunctions": {
+                            "path": "PdfExportGetFunction.js"
+                        },
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'",
+                                "page.isRevision": "false"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "revising": {
+        "actions": {
+            "view": {
+                "shortcut":  "creating",
+                 "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor",
+                        "revisor",
+                        "validador"
+                    ]
+                }
+            },
+            "edit": {
+                "shortcut":  "creating",
+                "permissions": {
+                    "groups": [],
+                     "rols": []
+                },
+                "button": {
+                    "id": "editProjectButton",
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'never'"
+                            }
+                        }
+                    }
+                }
+            },
+            "save": {
+                "shortcut":  "creating",
+                "permissions": {
+                    "groups": [],
+                     "rols": []
+                },
+                "button": {
+                    "id": "editProjectButton",
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'never'"
+                            }
+                        }
+                    }
+                }
+            },
+            "cancel": {
+                "shortcut":  "creating"
+            },
+            "pdfExport": {
+                "shortcut":  "creating",
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                    ],
+                    "rols": [
+                        "responsable",
+                        "autor",
+                        "revisor"
+                    ]
+                }
+            },            
+            "toValidate": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "revisor"
+                    ]
+                },
+                "button": {
+                    "id": "prgfploeToValidateProjectButton",
+                    "class": "WikiIocButton",
+                    "parms": {
+                        "DOM": {
+                            "id": "prgfploeToValidateProjectButton",
+                            "title": "Marca Revisió Completada",
+                            "class": "iocDisplayBlock"
+                        },
+                        "DJO": {
+                           "autoSize": true,
+                           "visible": true,
+                           "iconClass": "'iocToValidateDataProjectIcon'",
+                           "labelText": "'Marca Revisió Completada'",
+                           "labelButtonAcceptar": "'Acceptar'",
+                           "labelButtonCancellar": "'Cancel·lar'",
+                           "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
+                           "standbyId": "'bodyContent'",
+                           "disableOnSend": true
+                        }
+                    },
+                    "scripts": {
+                        "getFunctions": {
+                            "path": "ToValidateButton.js"
+                        },
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'",
+                                "page.isRevision": "false"
+                            }
+                        }
+                    }
+                },
+                "changeStateTo":"validating"
+            }
+        }
+    },
+    "validating": {
+        "actions": {
+            "view": {
+                "shortcut":  "creating"
+            },
+            "edit": {
+                "permissions": {
+                    "groups": [],
+                     "rols": []
+                },
+                "button": {
+                    "id": "editProjectButton",
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'never'"
+                            }
+                        }
+                    }
+                }
+            },
+            "save": {
+                "shortcut":  "creating",
+                "permissions": {
+                    "groups": [],
+                     "rols": []
+                },
+                "button": {
+                    "id": "editProjectButton",
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'never'"
+                            }
+                        }
+                    }
+                }
+            },
+            "cancel": {
+                "shortcut":  "creating"
+            },
+            "pdfExport": {
+                "shortcut":  "creating",
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                    ],
+                    "rols": [
+                        "responsable",
+                        "autor",
+                        "revisor",
+                        "validador"
+                    ]
+                }
+            },
+            "validate": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "validador"
+                    ]
+                },
+                "button": {
+                    "id": "prgfploeValidateProjectButton",
+                    "class": "WikiIocButton",
+                    "parms": {
+                        "DOM": {
+                            "id": "prgfploeValidateProjectButton",
+                            "title": "Validació de les dades",
+                            "class": "iocDisplayBlock"
+                        },
+                        "DJO": {
+                           "autoSize": true,
+                           "visible": true,
+                           "iconClass": "'iocValidateDataProjectIcon'",
+                           "DateLabel": "'Indica la data de la validació'",
+                           "labelButtonAcceptar": "'Acceptar'",
+                           "labelButtonCancellar": "'Cancel·lar'",
+                           "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
+                           "standbyId": "'bodyContent'",
+                           "disableOnSend": true
+                        }
+                    },
+                    "scripts": {
+                        "getFunctions": {
+                            "path": "ValidateButton.js"
+                        },
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'",
+                                "page.isRevision": "false"
+                            }
+                        }
+                    }
+                },
+                "changeStateTo":"validated"
+            }
+        }
+    },
+    "validated": {
+        "actions": {
+            "view": {
+                "shortcut":  "creating"
+            },
+            "edit": {
+                "permissions": {
+                    "groups": [],
+                     "rols": []
+                },
+                "button": {
+                    "id": "editProjectButton",
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'never'"
+                            }
+                        }
+                    }
+                }
+            },
+            "save": {
+                "shortcut":  "creating",
+                "permissions": {
+                    "groups": [],
+                     "rols": []
+                },
+                "button": {
+                    "id": "editProjectButton",
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'never'"
+                            }
+                        }
+                    }
+                }
+            },
+            "cancel": {
+                "shortcut":  "creating"
+            },
+            "pdfExport": {
+                "shortcut":  "creating",
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                    ],
+                    "rols": [
+                        "responsable",
+                        "autor",
+                        "revisor",
+                        "validador"
+                    ]
+                }
+            },
+            "toModify": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "prgfploeToModifyProjectButton",
+                    "class": "WikiIocButton",
+                    "parms": {
+                        "DOM": {
+                            "id": "prgfploeToModifyProjectButton",
+                            "title": "Editar i iniciar el cicle de revisió",
+                            "class": "iocDisplayBlock"
+                        },
+                        "DJO": {
+                           "autoSize": true,
+                           "visible": true,
+                           "iconClass": "'iocToModifyDataProjectIcon'",
+                           "labelText": "'Atenció: Aquest procès de modificació de les dades requerirà una revisió i validació posterior. Vols continuar?'",
+                           "labelButtonAcceptar": "'Acceptar'",
+                           "labelButtonCancellar": "'Cancel·lar'",
+                           "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
+                           "standbyId": "'bodyContent'",
+                           "disableOnSend": true
+                        }
+                    },
+                    "scripts": {
+                        "getFunctions": {
+                            "path": "ToModifyButton.js"
+                        },
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'",
+                                "page.isRevision": "false"
+                            }
+                        }
+                    }
+                },
+                "changeStateTo": "modifiying"
+            }
+        }
+    },
+    "modifiying": {
+        "actions": {
+            "view": {
+                "shortcut":  "creating"
+            },
+            "edit": {
+                "shortcut":  "creating"
+            },
+            "save": {
+                "shortcut":  "creating"
+            },
+            "cancel": {
+                "shortcut":  "creating"
+            },
+            "pdfExport": {
+                "shortcut":  "creating"
+            },
+            "toRevise": {
+                "shortcut":  "creating"
+            }
+        }
+    }
+}
