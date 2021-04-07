@@ -111,8 +111,6 @@ $lang['doc_message_with_rev'] = 'Missatge referent a: <a href="%s" class="urlext
 $lang['mail_message'] = "S'ha enviat una notificació a la <a href=\"%s\" class=\"urlextern\" title=\"%s\" rel=\"nofollow\">wiki</a> referent a <strong>%s</strong>, amb el missatge següent: ";
 $lang['message_notification_receivers'] = '<strong>Destinataris</strong>: %s';
 $lang['notifation_send_success'] = 'Notificación enviada amb èxit. Destinataris: %s';
-
-
 $lang['notification_form_title'] = 'Enviar notificacions';
 $lang['notification_form_to'] = 'Destinatari';
 $lang['notification_form_check_add_id'] = 'Afegir enllaç al document %s';
@@ -145,3 +143,9 @@ $lang['INVALID_COURSE_ID'] = "El codi del curs de Moodle no és vàlid";
 $lang['USER_IS_NOT_MOODLE_USER'] = "No tens permisos per modificar el calendari de moodle";
 $lang['ftp_send_success'] = "Les dades s'han enviat correctament via FTP";
 $lang['ftp_send_error'] = "No s'han pogut enviar les dades via FTP";
+
+$lang['workflowState']['creating'] = "creació";
+$lang['workflowState']['revising'] = "revisió";
+$lang['workflowState']['validating'] = "validació";
+$lang['workflowState']['validated'] = "validat";
+$lang['workflowState']['modifiying'] = "modificació";
