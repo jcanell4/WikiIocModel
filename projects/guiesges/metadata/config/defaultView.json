@@ -585,7 +585,8 @@
               "username": "Nom d'usuari",
               "name": "Nom"
             },
-            "fieldId": "username"
+            "fieldId": "username",
+            "defaultEntryField": "name"
           }
         }        
       },
@@ -618,7 +619,8 @@
               "username": "Nom d'usuari",
               "name": "Nom"
             },
-            "fieldId": "username"
+            "fieldId": "username",
+            "defaultEntryField": "name"
           }
         }
       },
