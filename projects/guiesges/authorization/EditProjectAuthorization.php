@@ -13,6 +13,7 @@ class EditProjectAuthorization extends ProjectCommandAuthorization {
         $this->allowedGroups[] = "editorges";
         //$this->allowedGroups[] = "projectmanager";
         $this->allowedRoles[] = ProjectPermission::ROL_AUTOR;
+        $this->adminGroups[] = "editorges";
     }
 
     public function canRun($permis=AUTH_NONE, $type_exception="Edit") {
