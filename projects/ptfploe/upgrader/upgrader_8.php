@@ -30,7 +30,7 @@ class upgrader_8 extends CommonUpgrader {
                 $value = false;
                 $dataProject = $this->addNewField($dataProject, $name, $value);
 
-                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver (simultànea a l'actualització de 23 a 24 de templates)", "{'fields':".($ver-1)."}");
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver (simultànea a l'actualització de 23 a 24 de templates)", '{"fields":'.($ver-1).'}');
                 break;
 
             case "templates":
