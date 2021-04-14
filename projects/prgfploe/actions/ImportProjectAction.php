@@ -97,7 +97,7 @@ class ImportProjectAction extends ViewProjectAction {
                             ,"descripcio" => ""
                             ,"treballEnEquip" => false
                             ,"esObligatori" => ($instAvToImport["tipus qualificació"]=="AC"?false:true)
-                            ,"notaMinima" => $this->__getNotaMinimaInstrumentsAvaluacio($instAvToImport["tipus qualificació"], $importData)
+                            ,"notaMinima" => $this->__getNotaMinimaInstrumentsAvaluacio($instAvToImport["tipus qualificació"], $import_data)
                             ,"ponderacio" => $instAvToImport["ponderació"]
                         ];
                     }
@@ -137,8 +137,14 @@ class ImportProjectAction extends ViewProjectAction {
                         $dataProject["taulaDadesNuclisFormatius"]=array();
                     }
                     foreach ($import_data['taulaDadesUnitats'] as $value) {
+                        if(isset($U) && $U['unitat formativa'] == $value['unitat formativa']){
+                            $nf++;
+                        }else{
+                            $nf=1;
+                        }
                         $U['unitat formativa'] = $value['unitat formativa'];
-                        $U['nucli formatiu'] = $value['unitat'];
+                        $U['nucli formatiu'] = $nf;
+                        $U['unitat al pla de treball'] = $value['unitat'];
                         $U['nom'] = $value['nom'];
                         $U['hores'] = $value['hores'];
                         $dataProject['taulaDadesNuclisFormatius'][] = $U;
@@ -151,9 +157,9 @@ class ImportProjectAction extends ViewProjectAction {
                         $dataProject["resultatsAprenentatge"]=array();
                     }
                     foreach ($import_data["resultatsAprenentatge"] as $value) {
-                        if (preg_match('/((UF(\d)){0,1}.{0,1})RA(\d)/', $value['id'], $match)) {
-                            $Z['uf'] = $match[3];
-                            $Z['ra'] = $match[4];
+                        if (preg_match('/(UF(\d).{0,1})RA(\d)/', $value['id'], $match)) {
+                            $Z['uf'] = $match[2];
+                            $Z['ra'] = $match[3];
                         }elseif (preg_match('/RA(\d)(.{0,1}(UF(\d)){0,1})/', $value['id'], $match)) {
                             $Z['uf'] = $match[4];
                             $Z['ra'] = $match[1];
@@ -168,18 +174,25 @@ class ImportProjectAction extends ViewProjectAction {
                     }
 
                     $summary = "Importació de dades correcta des del projecte '{$this->params['project_import']}'";
-                    $response = parent::responseProcess();
                     if ($model->setDataProject(json_encode($dataProject), $summary)) {
-                        $response['info'] = self::generateInfo("info", $summary, $projectID);
+                        $resp['info'] = self::generateInfo("info", $summary, $projectID);
                     }else {
-                        $response['info'] = self::generateInfo("error", "Error en la $summary", $projectID);
-                        $response['alert'] = "Error en la $summary";
+                        $resp['info'] = self::generateInfo("error", "Error en la $summary", $projectID);
+                        $resp['alert'] = "Error en la $summary";
                     }
 
                     $import_data['nsProgramacio'] = $projectID;
                     if (! $import_metaDataQuery->setMeta(json_encode($import_data), "main", "Dades importades pel projecte '$projectID'")) {
-                        $response['info'] = self::generateInfo("error", "Error en l'actualització de les dades a '{$this->params['project_import']}' després de la importació.", $projectID);
+                        $resp['info'] = self::generateInfo("error", "Error en l'actualització de les dades a '{$this->params['project_import']}' després de la importació.", $projectID);
                     }
+                    $response = parent::responseProcess();
+                    if($resp["info"]){
+                        $response["info"]= $resp["info"];
+                    }
+                    if($resp["alert"]){
+                        $response["alert"]= $resp["alert"];
+                    }
+
                 }else {
                     $response['info'] = self::generateInfo("error", "El projecte '{$this->params['project_import']}' ja ha estat importat anteriorment.", $projectID);
                     $response['alert'] = "El projecte '{$this->params['project_import']}' ja ha estat importat anteriorment.";

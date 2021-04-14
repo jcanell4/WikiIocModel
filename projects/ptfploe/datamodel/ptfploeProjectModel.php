@@ -74,9 +74,11 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         
         if(!empty($taulaDadesNFFiltrada)){
              for ($i=0; $i<count($taulaDadesUnitats); $i++){
-                $taulaDadesUnitats[$i]["unitat"] = $originalTaulaDadesUnitats[$i]["unitat"];
+                if(isset($originalTaulaDadesUnitats[$i]["unitat"])){                  
+                    $taulaDadesUnitats[$i]["unitat"] = $originalTaulaDadesUnitats[$i]["unitat"];
+                }
                 if(empty($originalTaulaDadesUnitats[$i]["nom"])){
-                    $taulaDadesUnitats[$i]["nom"] = $taulaDadesNFFiltrada[$i]["nom"];
+                    $taulaDadesUnitats[$i]["nom"] = $this->getRowFromField($taulaDadesNFFiltrada, "unitat al pla de treball",  $taulaDadesUnitats[$i]["unitat"], $i, true)["nom"];
                 }else{
                     $taulaDadesUnitats[$i]["nom"] = $originalTaulaDadesUnitats[$i]["nom"];
                 }
@@ -215,7 +217,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
                 $horesUF[0]+= $taulaDadesUnitats[$i]["hores"];
                 $horesUF[$idUf]+= $taulaDadesUnitats[$i]["hores"]; 
                 if(!empty($taulaDadesNFFiltrada)){
-                    if($taulaDadesUnitats[$i]["nom"]==$taulaDadesNFFiltrada[$i]["nom"]){
+                    if($taulaDadesUnitats[$i]["nom"]==$this->getRowFromField($taulaDadesNFFiltrada, "unitat al pla de treball",  $taulaDadesUnitats[$i]["unitat"], $i, true)["nom"]){
                         $taulaDadesUnitats[$i]["nom"] = "";
                     }
                 }
@@ -224,7 +226,9 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             if($resultatsAprenentatge){
                 for ($i=0; $i<count($resultatsAprenentatge); $i++){
                     if(!empty($resultatsAprenentatgeFiltrats)){
-                        if($resultatsAprenentatge[$i]["id"]=="UF".$resultatsAprenentatgeFiltrats[$i]["uf"].".".$resultatsAprenentatgeFiltrats[$i]["ra"]){
+                        if($resultatsAprenentatge[$i]["id"]=="UF".$resultatsAprenentatgeFiltrats[$i]["uf"].".RA".$resultatsAprenentatgeFiltrats[$i]["ra"]){
+                            $resultatsAprenentatge[$i]["id"] = "";                            
+                        }elseif($resultatsAprenentatge[$i]["id"]=="RA".$resultatsAprenentatgeFiltrats[$i]["ra"].".UF".$resultatsAprenentatgeFiltrats[$i]["uf"]){
                             $resultatsAprenentatge[$i]["id"] = "";
                         }
                     }
@@ -285,6 +289,28 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
 
         $data = $isArray?$values:json_encode($values);
         return parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
+    }
+    
+    private function getRowFromField($taula, $field, $value, $fromPosition=0, $defaultFromPossition=false){
+        $trobat=false;
+        $max = count($taula);
+        if($fromPosition<$max){
+            $i=$fromPosition;
+            do{
+                $trobat=$taula[$i][$field]==$value;
+                if($taula[$i][$field]==$value){
+                    $trobat = true;
+                }else{
+                    $i = ($i+1)%$max;
+                }
+            }while ($i!=$fromPosition && !$trobat);
+        }
+        if($defaultFromPossition){
+            $default = $taula[$fromPosition];
+        }else{
+            $default = false;
+        }
+        return $trobat?$taula[$i]:$false;
     }
     
     private function getBlocIdFromTaulaUF($taulaUF, $uf){

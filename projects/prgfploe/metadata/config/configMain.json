@@ -287,6 +287,10 @@
                             "mandatory": true,
                             "validate":true,
                             "default": 0
+                        },
+                        "unitat al pla de treball":{
+                            "type": "number",
+                            "mandatory": true
                         }
                     }
                 },
