@@ -51,7 +51,7 @@ class upgrader_13 extends CommonUpgrader {
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
                 
                 if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 12 to 13");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 $status = !empty($doc);
         }

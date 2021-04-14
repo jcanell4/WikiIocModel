@@ -34,7 +34,7 @@ class upgrader_9 extends CommonUpgrader {
                 $value = false;
                 $dataProject = $this->addNewField($dataProject, $name, $value);
 
-                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver. Simultànea a l'actualització de 16 a 17 de templates", '{"fields":'.($ver-1).'}');
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver. Simultànea a l'actualització de 16 a 17 de templates", '{"fields":'.$ver.'}');
                 break;
 
             case "templates":
@@ -61,7 +61,7 @@ class upgrader_9 extends CommonUpgrader {
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 8 to 9");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 $status = !empty($doc);
         }

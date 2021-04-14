@@ -32,7 +32,7 @@ class upgrader_3 extends CommonUpgrader {
                 //B2
                 $dataProject["dadesEspecifiquesProvaB2"]["seu"]["provaVirtual"] = false;
 
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;
 
             case "templates":
@@ -95,7 +95,7 @@ class upgrader_3 extends CommonUpgrader {
                 }
 
                 if (($ret = !empty($conv))) {
-                    $this->model->setRawProjectDocument($filename, $conv, "Upgrade template '$filename': version ".($ver-1)." to $ver");
+                    $this->model->setRawProjectDocument($filename, $conv, "Upgrade template: version ".($ver-1)." to $ver", $ver);
                 }
                 break;
         }

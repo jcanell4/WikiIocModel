@@ -29,7 +29,7 @@ class upgrader_1 extends CommonUpgrader {
                 $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
                 //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
                 $dataProject = $this->addFieldInMultiRow($dataProject, "datesJT", "hiHaRecuperacio", TRUE);
-                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;
 
             case "templates":
@@ -50,7 +50,7 @@ class upgrader_1 extends CommonUpgrader {
                 $dataChanged = $this->updateTemplateByReplace($doc1, $aTokRep);
 
                 if (($status = !empty($dataChanged))) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 break;
         }

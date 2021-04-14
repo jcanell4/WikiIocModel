@@ -30,7 +30,7 @@ class upgrader_14 extends CommonUpgrader {
                 }
                 $doc = $this->model->getRawProjectDocument($filename)."\n";
                 
-                $this->model->setRawProjectDocument($filename, $doc, "Upgrade to version 14");
+                $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 $ret = true;
         }
         return $ret;

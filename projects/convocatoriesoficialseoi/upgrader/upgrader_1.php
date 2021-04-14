@@ -100,11 +100,10 @@ class upgrader_1 extends CommonUpgrader {
                 $dataProject["taulaNormativa"][] = ["nom" => "Decret 73/2014", "de data" => "de 27 de maig", "descripció" => "de modificació del Decret 4/2009, de 13 de gener, pel qual s'estableix l'ordenació i el currículum dels ensenyaments d'idiomes de règim especial.", "url" => $dataProject["Decret_73_2014"]];
                 $dataProject["taulaNormativa"][] = ["nom" => "Reial Decret 1041/2017", "de data" => "de 22 de desembre", "descripció" => "por el que se fijan las exigencias mínimas del nivel básico a efectos de certificación, se establece el currículo básico de los niveles Intermedio B1, Intermedio B2, Avanzado C1, y Avanzado C2, de las Enseñanzas de idiomas de régimen especial reguladas por la Ley Orgánica 2/2006, de 3 de mayo, de Educación, y se establecen las equivalencias entre las Enseñanzas de idiomas de régimen especial reguladas en diversos planes de estudios y las de este real decreto.", "url" => $dataProject["ReialDecret_1041_2017"]];
                 
-
 //                //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
 //                $dataProject = $this->addFieldInMultiRow($dataProject, "datesJT", "hiHaRecuperacio", TRUE);
 //
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');                
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');                
                 
                 $ret = TRUE;
                 break;
@@ -117,7 +116,7 @@ class upgrader_1 extends CommonUpgrader {
                 $doc = $this->model->getRawProjectDocument($filename)."\n";
 
                 if (($ret = !empty($doc))) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 break;
         }

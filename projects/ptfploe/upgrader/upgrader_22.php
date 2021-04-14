@@ -32,7 +32,7 @@ class upgrader_22 extends CommonUpgrader {
                 $doc = $this->model->getRawProjectDocument($filename)."\n";
 
                 if (($ret = !empty($doc))) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 break;
         }

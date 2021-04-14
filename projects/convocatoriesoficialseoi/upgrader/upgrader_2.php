@@ -21,21 +21,17 @@ class upgrader_2 extends CommonUpgrader {
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
-                
                 $ret = TRUE;
                 break;
-
             case "templates":
                 // Es copia totl
 //                if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
 //                    $filename = $this->model->getProjectDocumentName();
 //                }
-                
                 $plantilla = $this->model->getRawProjectTemplate($filename, $ver);
                 
-
                 if (($ret = !empty($plantilla))) {
-                    $this->model->setRawProjectDocument($filename, $plantilla, "Upgrade templates: version ".($ver-1)." to $ver");
+                    $this->model->setRawProjectDocument($filename, $plantilla, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 break;
         }

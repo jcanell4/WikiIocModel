@@ -34,7 +34,7 @@ class upgrader_8 extends CommonUpgrader {
                 }
                 $dataProject['credit'] = $matches[2];
 
-                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;
 
             case "templates":
@@ -61,7 +61,7 @@ class upgrader_8 extends CommonUpgrader {
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
                 
                 if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 7 to 8");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 $status = !empty($doc);
         }

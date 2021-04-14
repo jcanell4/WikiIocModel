@@ -64,7 +64,7 @@ class upgrader_24 extends CommonUpgrader {
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (($ret = !empty($doc))) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver (simultànea a la actualització de 7 a 8 de fields)");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver (simultànea a l'actualització de 7 a 8 de fields)", $ver);
                 }
                 break;
         }

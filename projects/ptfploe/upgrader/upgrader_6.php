@@ -27,7 +27,7 @@ class upgrader_6 extends CommonUpgrader {
                 }
                 $dataProject['moodleCourseId'] = 0;
                 $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;
 
             case "templates":
@@ -48,13 +48,13 @@ class upgrader_6 extends CommonUpgrader {
                 $dataChanged = $this->updateTemplateByReplace($doc1, $aTokRep);
 
                 if (($ret = !empty($dataChanged))) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 /* ANULADO
                 //Segunda parte: modificación de los datos del proyecto (archivo .mdpr que está en data/mdprojects/)
                 $dataProject = $this->model->getCurrentDataProject();
                 $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
-                $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
+                $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 */
                 break;
         }

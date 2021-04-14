@@ -58,7 +58,7 @@ class upgrader_18 extends CommonUpgrader {
                 $doc = $this->updateTemplateByInsert($doc, $aTokIns);
 
                 if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade -templates- version 17 to 18");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 $ret = !empty($doc);
         }

@@ -66,7 +66,7 @@ class upgrader_17 extends CommonUpgrader {
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (!empty($doc)) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade: version 16 to 17 (Simultànea a la actualització de 8 a 9 de _wikiIocSystem_.mdpr)");
+                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver (Simultànea a la actualització de 8 a 9 de fields)", $ver);
                 }
                 $status = !empty($doc);
         }

@@ -27,7 +27,7 @@ class upgrader_1 extends CommonUpgrader {
                 }
                 $dataProject['moodleCourseId'] = 0;
 
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;
 
             case "templates":
@@ -50,7 +50,7 @@ class upgrader_1 extends CommonUpgrader {
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (!empty($dataChanged)) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 $ret = !empty($dataChanged);
         }

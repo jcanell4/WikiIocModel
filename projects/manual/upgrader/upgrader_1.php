@@ -29,7 +29,7 @@ class upgrader_1 extends CommonUpgrader {
                 }
                 //Añade el campo 'amagarMenuInici' a la estructura
                 $dataProject = $this->addNewField($dataProject, "amagarMenuInici", "false");
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":"'.($ver-1).'"}');
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;
 
             case "templates":

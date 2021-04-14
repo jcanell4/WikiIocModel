@@ -37,7 +37,7 @@ class upgrader_21 extends CommonUpgrader {
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
                 if (($ret = !empty($dataChanged))) {
-                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver");
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 break;
         }
