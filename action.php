@@ -12,6 +12,7 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
     function register(Doku_Event_Handler $controller) {
         parent::register($controller);
         $controller->register_hook('WIOC_AJAX_COMMAND', "BEFORE", $this, "setViewMode", array());
+        $controller->register_hook('IO_WIKIPAGE_WRITE', "BEFORE", $this, "io_writeWikiPage", array());
         $controller->register_hook('IO_WIKIPAGE_READ', "AFTER", $this, "io_readWikiPage", array());
         $controller->register_hook('PARSER_CACHE_USE', "BEFORE", $this, "cache_use", array());
     }
@@ -33,6 +34,15 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
             $fileProjetc = $plugin_controller->getProjectFile($projectOwner);
             $event->data->depends["files"] []= $fileProjetc;
         }
+    }
+
+    function io_writeWikiPage(&$event, $param){
+        global $plugin_controller;
+        $id = $event->data[1];   //El mismo valor que $projectOwner
+        $rev = $event->data[3];
+        $file = $event->data[0][0];
+        $content = $event->data[0][1];
+        $projectOwner = $plugin_controller->getProjectOwner();
     }
 
     function io_readWikiPage(&$event, $param){
