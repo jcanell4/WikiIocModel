@@ -334,6 +334,9 @@
             },
             "hores": {
               "type": "number"
+            },
+            "unitat al pla de treball": {
+              "type": "number"
             }
           },
           "layout": [
@@ -364,6 +367,13 @@
                 {
                   "name": "Hores del N.F.",
                   "field": "hores",
+                   "width":"10%",
+                  "editable": true
+                },
+
+                {
+                  "name": "Unitat P.T.",
+                  "field": "unitat al pla de treball",
                    "width":"10%",
                   "editable": true
                 }
