@@ -57,7 +57,6 @@ class exportDocument extends renderHtmlDocument {
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $zip->addFile($allPathTemplate."/main.css", "main.css");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "ge_sencera", TRUE);
-//                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL."exporter/xhtml", "ge_sencera/", "css");
                 $this->addDefaultCssFilesToZip($zip, "ge_sencera/");
                 $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/ge_sencera/ge.tpl");
                 $zip->addFromString('/ge_sencera/ge.html', $ptSencer);
@@ -104,7 +103,9 @@ class exportDocument extends renderHtmlDocument {
 
                 $result["files"] = array($zipFile, $this->cfgExport->tmp_dir."/$filePdf");
                 $result["fileNames"] = array_values($fileNames);
-                $result["info"] = "fitxers {$result['fileNames'][0]} i {$result["fileNames"][1]} creats correctement";
+                foreach ($result["fileNames"] as $name) {
+                    $result["info"][] = "fitxer $name creat correctement";
+                }
             }else{
                 $result['error'] = true;
                 $result['info'] = $this->cfgExport->aLang['nozipfile'];

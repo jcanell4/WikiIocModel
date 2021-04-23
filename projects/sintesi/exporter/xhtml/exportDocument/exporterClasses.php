@@ -49,7 +49,6 @@ class exportDocument extends renderHtmlDocument {
                 $allPathTemplate = $this->cfgExport->rendererPath . "/$pathTemplate";
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $zip->addFile($allPathTemplate."/main.css", "main.css");
-//                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL."exporter/xhtml", "pt_sencer/", "css");
                 $this->addDefaultCssFilesToZip($zip, "pt_sencer/");                
                 $this->addFilesToZip($zip, $allPathTemplate, "", "pt_sencer", TRUE);
                 $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/pt_sencer/pt.tpl");
@@ -91,9 +90,9 @@ class exportDocument extends renderHtmlDocument {
 
                 $this->attachMediaFiles($zip);
 
-                $result["zipFile"] = $zipFile;
-                $result["zipName"] = "$output_filename.zip";
-                $result["info"] = "fitxer {$result['zipName']} creat correctement";
+                $result["files"] = array($zipFile);
+                $result["fileNames"] = array("$output_filename.zip");
+                $result["info"] = array("fitxer {$result['fileNames'][0]} creat correctement");
             }else{
                 $result['error'] = true;
                 $result['info'] = $this->cfgExport->aLang['nozipfile'];
