@@ -4,7 +4,6 @@ require([
      "dijit/registry",
     "dojo/domReady!"
     ], function (getDispatcher, UpdateViewHandler, registry) {
-        var oldValues = {};
         var wikiIocDispatcher = getDispatcher();
         var updateHandler = new UpdateViewHandler();
         updateHandler.update = function () {
@@ -19,26 +18,34 @@ require([
                         var buttonId = buttonAttributes.id;
                         var button = registry.byId(buttonId);
                         var condition = page.projectType + ((page.workflowState) ? page.workflowState : "");
-
-                        if (oldValues[condition] === undefined || oldValues[condition][buttonId] === undefined){
-                            if (oldValues[condition] === undefined){
-                                oldValues[condition] = {};
-                            }
-                            oldValues[condition][buttonId] = {"toSet":{}, "toDelete":[]};
-                            if (buttonAttributes.toDelete && buttonAttributes.toDelete.length > 0) {
-                                buttonAttributes.toDelete.forEach(function(key){
-                                    if (button[key] !== undefined){
-                                        oldValues[condition][buttonId]["toSet"][key] = button[key];
+                        if (buttonAttributes.toDelete && buttonAttributes.toDelete.length > 0) {
+                            buttonAttributes.toDelete.forEach(function(key){
+                                if (button[key] !== undefined){
+                                    if(wikiIocDispatcher.originalButtonAttributes[buttonId]===undefined){
+                                        wikiIocDispatcher.originalButtonAttributes[buttonId]={"toSet":{}};
+                                    }else if(wikiIocDispatcher.originalButtonAttributes[buttonId]["toSet"] == undefined){
+                                        wikiIocDispatcher.originalButtonAttributes[buttonId]["toSet"] = {};
                                     }
-                                });
-                            }
-                            if (buttonAttributes.toSet){
-                                for (const [key, value] of Object.entries(buttonAttributes.toSet)) {
-                                    if (button[key] === undefined){
-                                        oldValues[condition][buttonId]["toDelete"] = key
-                                    }else{
-                                        oldValues[condition][buttonId]["toSet"][key] = button[key];
+                                    wikiIocDispatcher.originalButtonAttributes[buttonId]["toSet"][key] = button[key];
+                                }
+                            });
+                        }
+                        if (buttonAttributes.toSet){
+                            for (const [key, value] of Object.entries(buttonAttributes.toSet)) {
+                                if (button[key] === undefined){
+                                    if(wikiIocDispatcher.originalButtonAttributes[buttonId]===undefined){
+                                        wikiIocDispatcher.originalButtonAttributes[buttonId]={"toDelete":{}};
+                                    }else if(wikiIocDispatcher.originalButtonAttributes[buttonId]["toDelete"] == undefined){
+                                        wikiIocDispatcher.originalButtonAttributes[buttonId]["toDelete"] = [];
                                     }
+                                    wikiIocDispatcher.originalButtonAttributes[buttonId]["toDelete"].push(key);
+                                }else{
+                                    if(wikiIocDispatcher.originalButtonAttributes[buttonId]===undefined){
+                                        wikiIocDispatcher.originalButtonAttributes[buttonId]={"toSet":{}};
+                                    }else if(wikiIocDispatcher.originalButtonAttributes[buttonId]["toSet"] == undefined){
+                                        wikiIocDispatcher.originalButtonAttributes[buttonId]["toSet"] = {};
+                                    }
+                                    wikiIocDispatcher.originalButtonAttributes[buttonId]["toSet"][key] = button[key];
                                 }
                             }
                         }
@@ -55,17 +62,6 @@ require([
                            }
                         }
                     });
-
-                }else if(oldValues['%_projectType_%%_workflowState_%'] !== undefined){
-                    for (const [buttonId, actions] of Object.entries(oldValues['%_projectType_%%_workflowState_%'])) {
-                        var button = registry.byId(buttonId);
-                        actions["toDelete"].forEach(function(element){
-                            delete button[element];
-                        });      
-                        for (const [key, value] of Object.entries(actions['toSet'])) {
-                            button.set(key, value);
-                        }
-                    }
                 }
             }
         };

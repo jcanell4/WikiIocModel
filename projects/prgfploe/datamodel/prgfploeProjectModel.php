@@ -35,93 +35,12 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
  
     public function validateFields($data=NULL){
         //EL responsable no pot ser buit
-        
-        
-        
-        
-        
-//        $insAvTable = $data["taulaInstrumentsAvaluacio"];
-//        if(!is_array($insAvTable)){
-//            $insAvTable = json_decode($insAvTable, TRUE);
-//        }
-//        $aaTable = $data["activitatsAprenentatge"];
-//        if(!is_array($aaTable)){
-//            $aaTable = json_decode($aaTable, TRUE);
-//        }
-//        $nfTable = $data["taulaDadesNuclisFormatius"];
-//        if(!is_array($nfTable)){
-//            $nfTable = json_decode($nfTable, TRUE);
-//        }
-//        $ufTable = $data["taulaDadesUF"];
-//        if(!is_array($ufTable)){
-//             $ufTable = json_decode($ufTable, TRUE);
-//        }
-//        $totalNFs = array();
-//        foreach ($aaTable as $item){
-//            if(!isset($totalNFs[$item["unitat formativa"]])){
-//                $totalNFs[$item["unitat formativa"]]=array();
-//            }
-//            if(!isset($totalNFs[$item["unitat formativa"]][$item["nucli formatiu"]])){
-//                $totalNFs[$item["unitat formativa"]][$item["nucli formatiu"]]=0;
-//            }
-//            $totalNFs[$item["unitat formativa"]][$item["nucli formatiu"]] += $item["hores"];
-//        }
-//
-//        $totalUfs = array();
-//        if (!empty($nfTable)){
-//            foreach ($nfTable as $item){
-//                if ($item["hores"] != $totalNFs[$item["unitat formativa"]][$item["nucli formatiu"]]){
-//                    throw new InvalidDataProjectException(
-//                        $this->id,
-//                        sprintf("Les hores del nucli formatiu %s  de la UF %d no coincideixen amb la suma de les hores de les seves activitats d'aprenentatge (hores NF=%d, però suma hoes AA=%d)."
-//                                ,$item["nucli formatiu"]
-//                                ,$item["unitat formativa"]
-//                                ,$item["hores"]
-//                                ,$totalNFs[$item["unitat formativa"]][$item["nucli formatiu"]])
-//                    );
-//                }
-//                if (!isset($totalUfs[$item["unitat formativa"]])){
-//                    $totalUfs[$item["unitat formativa"]] = 0;
-//                }
-//                $totalUfs[$item["unitat formativa"]] += $item["hores"];
-//            }
-//        }
-
-//        if (!empty($ufTable)){
-//            foreach ($ufTable as $item) {
-//                if ($item["hores"] != $totalUfs[$item["unitat formativa"]]){
-//                    throw new InvalidDataProjectException(
-//                        $this->id,
-//                        sprintf("Les hores de la unitat formativa %s no coincideixen amb la suma de les hores dels seus nuclis foormatius (hores UF=%d, però suma hoes NF=%d)."
-//                                ,$item["unitat formativa"]
-//                                ,$item["hores"]
-//                                , $totalUfs[$item["unitat formativa"]])
-//                    );
-//                }
-//            }
-//        }
-
-//        if(!empty($insAvTable)){
-//            $sum=[];
-//            foreach ($insAvTable as $item) {
-//                if(!isset($sum[$item["unitat formativa"]])){
-//                    $sum[$item["unitat formativa"]]=0;
-//                }
-//                $sum[$item["unitat formativa"]] += $item["ponderacio"];
-//            }
-//            foreach ($insAvTable as $item) {
-//                if($item['tipus']=="PAF" && $item["ponderacio"]/$sum[$item["unitat formativa"]]>0.6){
-//                    throw new InvalidDataProjectException(
-//                        $this->id,
-//                        sprintf("La ponderació de la PAF de la unitat formativa %d pren el valor de %d sobre %d i per tant, supera el llindar del 60%s"
-//                                ,$item["unitat formativa"]
-//                                ,$item["ponderacio"]
-//                                ,$sum[$item["unitat formativa"]]
-//                                ,"%")
-//                    );
-//                }
-//            }
-//        }
+        if(!isset($data["responsable"]) || empty($data["responsable"])){
+            throw new InvalidDataProjectException(
+                    $this->id,
+                    "El camp responsable no pot quedar buit"
+            );            
+        }
     }
 
     public function getErrorFields($data=NULL) {
@@ -144,14 +63,14 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
             ,["typeField"=>"SF","field"=>"modulId", "accioNecessaria"=>"hi poseu el codi del mòdul"]
             ,["typeField"=>"SF","field"=>"modul", "accioNecessaria"=>"hi poseu el nom del mòdul"]
             ,["typeField"=>"SF","field"=>"estrategiesMetodologiques", "accioNecessaria"=>"hi poseu les estratègies moetodològiques del mòdul"]
-            ,["typeField"=>"SF","field"=>"taulaDadesUF", "accioNecessaria"=>"hi afegiu les unitats formatives del mòdul"]
-            ,["typeField"=>"SF","field"=>"taulaInstrumentsAvaluacio", "accioNecessaria"=>"hi afegiu els instruments d'avalaució de cada UF"]
-            ,["typeField"=>"SF","field"=>"resultatsAprenentatge", "accioNecessaria"=>"hi afegiu els resultats d'avalaució de cada UF"]
-            ,["typeField"=>"SF","field"=>"taulaPonderacioRA", "accioNecessaria"=>"hi afegiu la ponderació que cada instrument d'avaluació representa sobre cada RA."]
-            ,["typeField"=>"SF","field"=>"criterisAvaluacio", "accioNecessaria"=>"hi afegiu els criteris d'avaluaciḉo associats a cada RA"]
-            ,["typeField"=>"SF","field"=>"continguts", "accioNecessaria"=>"hi afegiu els continguts associats a cada UF"]
-            ,["typeField"=>"SF","field"=>"taulaDadesNuclisFormatius", "accioNecessaria"=>"hi afegiu els nuclis formatius associats a cada UF"]
-            ,["typeField"=>"SF","field"=>"activitatsAprenentatge", "accioNecessaria"=>"hi afegiu les activitats d'aprenentatge associades a cada nucli formatiu"]
+            ,["typeField"=>"TF","field"=>"taulaDadesUF", "accioNecessaria"=>"hi afegiu les unitats formatives del mòdul"]
+            ,["typeField"=>"TF","field"=>"taulaInstrumentsAvaluacio", "accioNecessaria"=>"hi afegiu els instruments d'avalaució de cada UF"]
+            ,["typeField"=>"TF","field"=>"resultatsAprenentatge", "accioNecessaria"=>"hi afegiu els resultats d'avalaució de cada UF"]
+            ,["typeField"=>"TF","field"=>"taulaPonderacioRA", "accioNecessaria"=>"hi afegiu la ponderació que cada instrument d'avaluació representa sobre cada RA."]
+            ,["typeField"=>"TF","field"=>"criterisAvaluacio", "accioNecessaria"=>"hi afegiu els criteris d'avaluaciḉo associats a cada RA"]
+            ,["typeField"=>"TF","field"=>"continguts", "accioNecessaria"=>"hi afegiu els continguts associats a cada UF"]
+            ,["typeField"=>"TF","field"=>"taulaDadesNuclisFormatius", "accioNecessaria"=>"hi afegiu els nuclis formatius associats a cada UF"]
+            ,["typeField"=>"TF","field"=>"activitatsAprenentatge", "accioNecessaria"=>"hi afegiu les activitats d'aprenentatge associades a cada nucli formatiu"]
             ,["typeField"=>"SF","field"=>"cc_raonsModificacio", "accioNecessaria"=>"hi assigneu una raó per la modificació actual de la programació"]
             // ALERTA! Aquests camps no es corresponen amb els IDs que s'asignen als camps
             //,["typeField"=>"OF","field"=>"cc_dadesAutor#nomGestor", "accioNecessaria"=>"hi assigneu un autor", "fieldName" => "autor"]
@@ -164,6 +83,14 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
         ];
         foreach ($campsAComprovar as $item) {
             if($item["typeField"]=="SF" && (!isset($data[$item["field"]]) || $data[$item["field"]]["value"]==$data[$item["field"]]["default"])){
+                $result["ERROR"][] = [
+                        'responseType' => $responseType,
+                        'field' => $item["field"],
+                        'message' => sprintf($message
+                                            ,$item["field"]
+                                            ,$item["accioNecessaria"])
+                    ];                
+            }elseif($item["typeField"]=="TF" && (!isset($data[$item["field"]]) || empty ($data[$item["field"]]["value"]) || $data[$item["field"]]["value"]=="[]" || $data[$item["field"]]["value"]==$data[$item["field"]]["default"])){
                 $result["ERROR"][] = [
                         'responseType' => $responseType,
                         'field' => $item["field"],
