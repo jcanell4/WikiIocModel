@@ -10,6 +10,8 @@ if (!defined('DOKU_INC')) die();
  */
 class IocTcPdf extends BasicIocTcPdf {
     private $peu = array();
+    private $titol = array();
+
     public function __construct(TcPdfStyle &$stile) {
         parent::__construct($stile);
     }
@@ -40,7 +42,6 @@ class IocTcPdf extends BasicIocTcPdf {
 
     // Page footer
     public function Footer() {
-        //$margins = $this->getMargins();
         $footerfont = $this->getFooterFont();
         $cell_height = $this->getCellHeight($footerfont[2]) / 2;
         $y_position = -($cell_height*2 + 15);
@@ -48,17 +49,30 @@ class IocTcPdf extends BasicIocTcPdf {
         $this->SetFont($footerfont[0], $footerfont[1], $footerfont[2]);
         $this->SetY($y_position);   //Position from bottom
 
-        $cicle = " cicle: ".$this->peu['cicle'];
-        $modulId = " modulId: ".$this->peu['modulId'];
-        $w1 = max(10, strlen($cicle), strlen($modulId)) * 2;
+        // Logo
+        $f = $this->peu['logo'];
+        $w = $this->peu['wlogo'];
+        $h = $this->peu['hlogo'];
+        $w0 = $w+4;
+        $x = $this->GetX()+1;
+        $y = $this->GetY()+1;
+        $this->SetTextColor(255,255,255);
+        $this->MultiCell($w0, $cell_height*2, $this->Image($f,$x,$y,$w,$h,'JPG','','',true,300,'',false,false,0,['CM']), 0, 'L', 0, 0, "", "", true, 0, false, true, $cell_height*2, 'M');
+        $this->SetTextColor(0);
+
+        $codi = " codi: ".$this->peu['codi'];
+        $versio = " versió: ".$this->peu['versió'];
+        $w1 = max(10, strlen($codi), strlen($versio)) * 2;
         $w1 = min(30, $w1);
         $w2 = 22;
+        $this->MultiCell($w1, $cell_height, $codi, 1, 'L', 0, 1, "", "", true, 0, false, true, $cell_height, 'M');
+        $this->SetX($this->GetX()+$w0);
+        $this->MultiCell($w1, $cell_height, $versio, 1, 'L', 0, 0, "", "", true, 0, false, true, $cell_height, 'M');
 
-        $this->MultiCell($w1, $cell_height, $cicle, 1, 'L', 0, 1, "", "", true, 0, false, true, $cell_height, 'M');
-        $this->MultiCell($w1, $cell_height, $modulId, 1, 'L', 0, 0, "", "", true, 0, false, true, $cell_height, 'M');
         $this->SetY($y_position);
-        $titol_w = $this->getPageWidth()-($w1+$w2);
-        $this->MultiCell($titol_w, $cell_height*2, $this->peu['departament'], 1, 'C', 0, 0, "", "", true, 0, false, true, $cell_height*2, 'M');
+        $titol_w = $this->getPageWidth()-($w0+$w1+$w2);
+        $this->MultiCell($titol_w, $cell_height*2, "Programacions de cicles formatius (LOGSE)", 1, 'C', 0, 0, "", "", true, 0, false, true, $cell_height*2, 'M');
+
         // codi de pàgina actual: $this->getAliasNumPage() = {:pnp:} -> problema: ocupa 7 caracters en el render
         // codi de total pàgines: $this->getAliasNbPages() = {:ptp:} -> es calcula l'espai ocupat abans d'obtenir el valor real
         $page_number = "pàgina ".$this->getPage()."/".$this->getAliasNbPages();
@@ -70,10 +84,12 @@ class IocTcPdf extends BasicIocTcPdf {
         $this->header_logo_height = $lh;
     }
 
-    public function setFooterDataLocal($data, $tc=array(0,0,0), $lc=array(0,0,0)) {
+    public function setFooterDataLocal($peu, $titol, $tc=array(0,0,0), $lc=array(0,0,0)) {
         parent::setFooterData($tc, $lc);
-        $this->peu = $data;
+        $this->peu = $peu;
+        $this->titol = $titol;
     }
+
  }
 
 class PdfRenderer extends BasicPdfRenderer {
@@ -92,7 +108,24 @@ class PdfRenderer extends BasicPdfRenderer {
     public function renderDocument($params, $output_filename="") {
         parent::renderDocument($params, $output_filename);
 
-        $this->iocTcPdf->setFooterDataLocal($params["data"]["peu"]);
+        //primera pàgina
+        $this->iocTcPdf->AddPage();
+        $this->iocTcPdf->SetX(100);
+        $this->iocTcPdf->SetY($y=80);
+        $this->iocTcPdf->SetFont($this->firstPageFont, 'B', 25);
+        $this->iocTcPdf->Write(25, "Programacions de cicles formatius", '', false, "L");
+
+        $this->iocTcPdf->SetY($y+=60);
+        $this->iocTcPdf->SetFont($this->firstPageFont, 'B', 15);
+        $titol = $params['data']['titol'];
+        $text = "Departament: {$titol['departament']}\n"
+              . "Cicle formatiu: {$titol['cicle']}\n"
+              . "Mòdul {$titol['modulId']}: {$titol['modul']}\n"
+              . "Hores totals: {$titol['hores']}";
+        $this->iocTcPdf->Write(8, $text, '', false, "L");
+
+        //peu de pàgina
+        $this->iocTcPdf->setFooterDataLocal($params["data"]["peu"], $params['data']['titol']);
 
         //pàgina de continguts
         $this->iocTcPdf->AddPage();
@@ -104,7 +137,6 @@ class PdfRenderer extends BasicPdfRenderer {
                 $this->renderHeader($itemsDoc, $this->iocTcPdf);
             }
         }
-
         $this->iocTcPdf->Output("{$params['tmp_dir']}/$output_filename", 'F');
 
         return TRUE;

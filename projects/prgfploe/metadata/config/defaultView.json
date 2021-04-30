@@ -1286,7 +1286,11 @@
       },
        "cc_dadesValidador#signatura":{
         "type" : "hidden"            
-       }
+      },
+       "documentVersion":{
+        "type" : "hidden"
+      }
        
     }
+    
 }

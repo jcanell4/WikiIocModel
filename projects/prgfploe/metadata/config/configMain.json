@@ -657,6 +657,11 @@
                                 "shortcut":true,
                                 "order":1
                             }
+                        },
+                        "documentVersion": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 0
                         }
                     }
                 }
