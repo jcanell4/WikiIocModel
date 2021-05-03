@@ -103,51 +103,6 @@
                              "padding-left": 5,
                              "margin": {"left":15, "right":15}
                         }
-                    },
-                    "title":{
-                        "style":{
-                            "align":"center",
-                            "font-weight":"bold"
-                        }
-                    },
-                    "footer":{
-                        "style":{
-                            "align":"justify",
-                            "font-name":"Arial",
-                            "font-size":"8px",
-                            "color":"gray"
-                        }
-                    }
-                },
-                "childrenContainers":{
-                    "table":{
-                        "style":{
-                             "padding": {"left":5, "top":0, "right":0, "bottom":0},
-                             "margin": {"left":1, "top":0, "right":1, "bottom":0}
-                        },
-                        "childrenContainers":{
-                            "tablerow": {
-                                "style":{
-                                    "background-color": "#fff"
-                                }
-                            },
-                            "tableheader": {
-                                "style":{
-                                    "align":"center",
-                                    "border":"1px solid black",
-                                    "border-collapse":"collapse",
-                                    "font-weight":"bold",
-                                    "background-color":"#F0F0F0"
-                                }
-                            },
-                            "tablecell": {
-                                "style":{
-                                    "align":"center",
-                                    "border":"1px solid black",
-                                    "border-collapse":"collapse"
-                                }
-                            }
-                        }
                     }
                 }
             },
