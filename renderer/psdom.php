@@ -114,6 +114,7 @@ class FigureFrame extends StructuredNodeDoc {
 }
 
 class TableFrame extends StructuredNodeDoc {
+    const FRAME_TABLE= "frameTable";
     const TABLEFRAME_TYPE_TABLE= "tableframetypetable";
     const TABLEFRAME_TYPE_ACCOUNTING = "tableframetypeaccounting";
 
@@ -125,12 +126,12 @@ class TableFrame extends StructuredNodeDoc {
     protected $hasBorder;
 
     public function __construct($type, $id="", $title="", $footer="", $widths="", $types="", $hasBorder=FALSE) {
-        parent::__construct($type);
+        parent::__construct(self::FRAME_TABLE);
         $this->id       = $id==NULL ? "" : $id;
         $this->title    = $title==NULL ? "" : $title;
         $this->footer   = $footer==NULL ? "" : $footer;
         $this->widths   = $widths==NULL ? "" : $widths;
-        $this->types    = $types==NULL ? "" : $types;
+        $this->types    = $types==NULL ? ($type==self::TABLEFRAME_TYPE_TABLE ? "table" : "accounting") : $types;
         $this->hasBorder= $hasBorder==NULL ? FALSE : $hasBorder;
     }
 

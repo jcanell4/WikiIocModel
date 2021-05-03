@@ -90,7 +90,7 @@
                 },
                 "styleTypes":{}
             },
-            "frametable":{
+            "frameTable":{
                 "style":{
                      "padding-left": 5,
                      "margin": {"left":15, "right":15}
