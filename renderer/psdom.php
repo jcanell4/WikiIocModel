@@ -131,7 +131,7 @@ class TableFrame extends StructuredNodeDoc {
         $this->title    = $title==NULL ? "" : $title;
         $this->footer   = $footer==NULL ? "" : $footer;
         $this->widths   = $widths==NULL ? "" : $widths;
-        $this->types    = $types==NULL ? ($type==self::TABLEFRAME_TYPE_TABLE ? "table" : "accounting") : $types;
+        $this->types    = $types==NULL ? ($type==self::TABLEFRAME_TYPE_TABLE ? "typetable" : "typeaccounting") : $types;
         $this->hasBorder= $hasBorder==NULL ? FALSE : $hasBorder;
     }
 
