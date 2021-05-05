@@ -1,0 +1,605 @@
+{
+    "metaDataClassesNameSpaces": [
+        {
+            "main": {
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "prgfplogse"
+            }
+        },
+        {
+            "management":{
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "prgfplogse"
+            }            
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+
+            "versions": {
+                "fields" : 0,
+                "templates": {"continguts":0}
+            },
+            "mainType": {
+                "type": "object",
+                "typeDef": "programacio"
+            },
+            "typesDefinition": {
+                "entradaObjectius": {
+                    "type":"object",
+                    "keys": {
+                        "ud": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "id": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        }
+                    }                    
+                },
+                "defObjectius": {
+                    "type": "objectArray",
+                    "typeDef":"entradaObjectius"
+                },
+                "entradaConceptes": {
+                    "type":"object",
+                    "keys": {
+                        "ud": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "id": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "1.{#_INC(1)_#}"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        }
+                    }                    
+                },
+                "defConceptes": {
+                    "type": "objectArray",
+                    "typeDef":"entradaConceptes"
+                },
+                "entradaProcediments": {
+                    "type":"object",
+                    "keys": {
+                        "ud": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "id": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "1.{#_INC(1)_#}"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        }
+                    }                    
+                },
+                "defProcediments": {
+                    "type": "objectArray",
+                    "typeDef":"entradaProcediments"
+                },
+                "entradaActituds": {
+                    "type":"object",
+                    "keys": {
+                        "ud": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "id": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "1.{#_INC(1)_#}"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        }
+                    }                    
+                },
+                "defActituds": {
+                    "type": "objectArray",
+                    "typeDef":"entradaActituds"
+                },
+                "entradaExtres": {
+                    "type":"object",
+                    "keys": {
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu la dada extra que necessiteu"
+                        },
+                        "tipus": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        },
+                        "valor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Escriviu el valor de la dada aquí"
+                        }
+                    }                    
+                },
+                "defExtres": {
+                    "type": "objectArray",
+                    "typeDef":"entradaExtres"
+                },
+                "entradaDadeBlocs": {
+                    "type": "object",
+                    "keys": {
+                        "bloc": {
+                            "type": "number",
+                            "mandatory": true
+                        },
+                        "horesBloc": {
+                            "type": "number",
+                            "mandatory": true
+                        },
+                        "avaluacioIncial": {
+                            "type": "boolean",
+                            "mandatory": false
+                        }
+                    }
+                },
+                "defTaulaDadesBlocs": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDadeBlocs"
+                },
+                "entradaDadesUD": {
+                    "type": "object",
+                    "keys": {
+                        "unitat didàctica": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu el nom de la UD"
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        },
+                        "bloc": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(0)_#}"
+                        }
+                    }
+                },
+                "defTaulaDadesUD": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDadesUD"
+                },                      
+                "entradaInstrumentsAvaluacio": {
+                    "type": "object",
+                    "keys": {
+                        "tipus": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_COPY(\"AC\")_#}"
+                        },
+                        "id": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_COPY(\"EAC1\")_#}"
+                        },
+                        "descripcio":{
+                            "type": "string",
+                            "mandatory": false,
+                            "default": ""
+                        },
+                        "treballEnEquip": {
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default": false
+                        },
+                        "esObligatori": {
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default": true
+                        },
+                        "notaMinima": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 4
+                        },
+                        "ponderacio": {
+                            "type": "decimal",
+                            "mandatory": true,
+                            "default": 10
+                        }
+                    }
+                },
+                "entradaDadesNuclisActivitat": {
+                    "type": "object",
+                    "keys": {
+                        "unitat didàctica": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "nucli activitat": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu el nom del nucli d'activitat"
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 0
+                        }
+                    }
+                },
+                "defTaulaDadesNuclisActivitat": {
+                    "type": "objectArray",
+                    "typeDef": "entradaDadesNuclisActivitat"
+                },
+                "entradaCc_historic":{
+                    "type":"object",
+                    "keys":{
+                        "data":{
+                            "type": "date",
+                           "mandatory": true,
+                           "props" : {
+                               "readonly" : true
+                            }
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "modificacions": {
+                            "type": "string",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        }
+                    }
+                },
+                "dadesGestioDocument":{
+                    "type":"object",
+                    "keys":{
+                        "nomGestor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "carrec": {
+                            "type": "string",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "dataDeLaGestio": {
+                            "type": "date",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "signatura": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default":"pendent",
+                            "props" : {
+                                "readonly" : true
+                            }
+                        }
+                    }
+                },
+                "programacio": {
+                    "type": "object",
+                    "keys": {
+                        "departament": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default":"Indiqueu de quin departament és la programació."
+                        },
+                        "cicle": {
+                            "type": "string",
+                            "default": "Indiqueu el cicle",
+                            "mandatory": true
+                        },
+                        "creditId": {
+                            "type": "string",
+                            "default": "CXX",
+                            "mandatory": true
+                        },
+                        "credit": {
+                            "type": "string",
+                            "default": "Indiqueu el nom del crèdit",
+                            "mandatory": true
+                        },
+                        "durada": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": 0
+                        },
+                        "duradaCicle": {
+                            "type": "number",
+                            "default": 2000,
+                            "mandatory": true   
+                        },
+                        "horesLliureDisposicioCredit":{
+                            "type": "number",
+                            "mandatory": true                       
+                        },
+                        "taulaDadesBlocs": {
+                            "type": "defTaulaDadesBlocs",
+                            "viewType":"hidden",
+                            "mandatory": true
+                        },
+                        "taulaDadesUD": {
+                            "type": "defTaulaDadesUD",
+                            "mandatory": true
+                        },
+                        "estrategiesMetodologiques":{
+                            "type": "string",
+                            "mandatory": false
+                        },
+                        "notaMinimaCreditAprovat":{
+                            "type": "decimal",
+                            "mandatory": true,
+                            "default": 5
+                        },                                                
+                        "recursosNecessaris": {
+                            "type": "array",
+                            "typeDef": "string",
+                            "mandatory": true
+                        },                                                
+                        "objectius": {
+                            "type": "defObjectius",
+                            "mandatory": true
+                        },
+                        "conceptes":{
+                            "type": "defConceptes",
+                            "mandatory": true
+                        },
+                        "procediments":{
+                            "type": "defProcediments",
+                            "mandatory": true
+                        },
+                        "actituds":{
+                            "type": "defActituds",
+                            "mandatory": true
+                        },
+                        "taulaNuclisActivitat":{
+                            "type": "defTaulaDadesNuclisActivitat",
+                            "mandatory": true
+                        },
+                        "avaluacioInicial": {
+                            "type": "string",
+                            "default": "NO",
+                            "mandatory": true
+                        },                                               
+                        "notaMinimaAC": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min":0,
+                                "max":10
+                            },
+                            "default": 0
+                        },
+                        "notaMinimaEAF": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min": 0,
+                                "max": 10
+                            },
+                            "default": 4
+                        },
+                        "notaMinimaJT": {
+                            "type": "number",
+                            "mandatory": true,
+                            "props": {
+                                "min": 0,
+                                "max": 10
+                            },
+                            "default": 0
+                        },                                                
+                        "notaMinimaPAF": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default":4,
+                            "props": {
+                                "min":0,
+                                "max":10
+                            },
+                            "default": 4
+                        },                                                 
+                        "taulaInstrumentsAvaluacio": {
+                            "type": "objectArray",
+                            "typeDef":"entradaInstrumentsAvaluacio",
+                            "mandatory": true
+                        },
+                        "duradaPAF": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default":"Té una durada màxima d'1 hora i 50 minuts"
+                        },   
+                        "dadesExtres": {
+                            "type": "defExtres",
+                            "mandatory": true
+                        },
+                        "cc_historic": {
+                            "type": "objectArray",
+                            "typeDef":"entradaCc_historic",
+                            "mandatory": true,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "cc_raonsModificacio": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "cc_dadesAutor": {
+                            "type": "object",
+                            "typeDef": "dadesGestioDocument",
+                            "mandatory": true
+                        },
+                        "cc_dadesRevisor": {
+                            "type": "object",
+                            "typeDef": "dadesGestioDocument",
+                            "mandatory": true
+                        },
+                        "cc_dadesValidador": {
+                            "type": "object",
+                            "typeDef": "dadesGestioDocument",
+                            "mandatory": true
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "isRole":true,
+                            "roleProperties":{
+                                "wiki_permission":16,
+                                "shortcut":true
+                            }
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true,
+                            "roleProperties":{
+                                "wiki_permission":16,
+                                "shortcut":true
+                            }
+                        },
+                        "revisor": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true,
+                            "roleProperties":{
+                                "wiki_permission":4,
+                                "shortcut":false,
+                                "order":2
+                            }
+                        },
+                        "validador": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true,
+                            "roleProperties":{
+                                "wiki_permission":4,
+                                "shortcut":true,
+                                "order":1
+                            }
+                        },
+                        "documentVersion": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 7
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "management": "management.mdpr",
+            "versions": {
+                "fields" : 0
+            },
+            "mainType": {
+                "type": "object",
+                "typeDef": "management"
+            },
+            "typesDefinition": {
+                "wfStateHistoryEntry":{
+                    "type": "object",
+                    "keys": {
+                        "changeDate":{
+                            "type": "date",
+                            "mandatory": true
+                        },
+                        "oldState":{
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "newState":{
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "changeAction":{
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "user":{
+                            "type": "string",
+                            "mandatory": true
+                        }
+                    }                    
+                },
+                "workflowType":{
+                    "type": "object",
+                    "keys": {
+                        "currentState":{
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "undefined"
+                        },
+                        "stateHistory":{
+                            "type": "objectArray",
+                            "typeDef":"wfStateHistoryEntry"                            
+                        }
+                    }                    
+                },
+                "management": {
+                    "type": "object",
+                    "keys": {
+                        "workflow": {
+                            "type": "object",
+                            "typeDef": "workflowType",
+                            "mandatory": true
+                        }                        
+                    }
+                }
+            }            
+        }
+    ]
+}
