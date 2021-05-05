@@ -9,6 +9,7 @@ Aquest mòdul <WIOCCL:IF condition="{##horesLliureDisposicioModul##}==0">no disp
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}==1">
 ::table:T1
   :title:UNITATS FORMATIVES
+  :widths:1,4,2,2,2
   :type:pt_taula
   :footer:(*) S'indiquen les hores mínimes establertes al currículum més les hores de lliure disposició assignades a la unitat formativa
 ^  Núm. UF  ^  TÍTOL UNITAT FORMATIVA  ^  Hores mínimes  ^  Hores lliure disp.  ^  Durada (*)  ^
@@ -17,9 +18,10 @@ Aquest mòdul <WIOCCL:IF condition="{##horesLliureDisposicioModul##}==0">no disp
 </WIOCCL:FOREACH>
 :::
 </WIOCCL:IF>
-<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>1>
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>1">
 ::table:T1
   :title:UNITATS FORMATIVES
+  :widths:1,1,4,2,2,2
   :type:pt_taula
   :footer:(*) S'indiquen les hores mínimes establertes al currículum més les hores de lliure disposició assignades a la unitat formativa
 ^  Bloc  ^  Núm. UF  ^  TÍTOL UNITAT FORMATIVA  ^  Hores mínimes  ^  Hores lliure disp.  ^  Durada (*)  ^
@@ -43,8 +45,9 @@ La data prevista d'inici i finalització de cada unitat formativa és l'establer
 ###:
 
 :###
-::table:T03
+::table:T02
   :title:NUCLIS FORMATIUS
+  :widths:1,4,1
   :type:pt_taula
 <WIOCCL:SET var="primer" type="literal" value="1">
 <WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}">
@@ -131,7 +134,7 @@ Els recursos necessaris per cursar aquest mòdul són:
 :###==== Resultats d’aprenentatge (RA), criteris d’avaluació (CA) i continguts ====###:
 
 :###
-::table:T03
+::table:T03-{##itemUf[unitat formativa]##}
   :title:RA, CA i CONTINGUTS
   :widths:1,2,2
   :force_widths
@@ -147,7 +150,7 @@ Els recursos necessaris per cursar aquest mòdul són:
 
 :###
 <WIOCCL:FOREACH var="itemNf" array="{##taulaDadesNuclisFormatius##}" filter="{##itemUf[unitat formativa]##}=={##itemNf[unitat formativa]##}">
-::table:T04.{##itemNf[nucli formatiu]##}
+::table:T04-{##itemUf[unitat formativa]##}-{##itemNf[nucli formatiu]##}
   :title:Activitats d'aprenentatge pel NF{##itemNf[nucli formatiu]##}
   :type:pt_taula
   :widths:6,1,1,2,2,3
@@ -360,7 +363,7 @@ La qualificació de la UF s’obté segons la següent ponderació dels RA:
 </WIOCCL:SET>
 </WIOCCL:SET>
 
-::table:T5
+::table:T05-{##itemUf[unitat formativa]##}
   :title:Qualificació dels instruments d'avalaució sobre els RA
   :type:pt_taula
 ^  Qualificació dels RA  <WIOCCL:FOREACH var="itemInst" array="{##taulaInstrumentsAvaluacio##}" counter="ind" counterFromZero="true" filter="{##itemInst[unitat formativa]##}=={##itemUf[unitat formativa]##} && {##itemInst[ponderacio]##}\>0">^<WIOCCL:IF condition="{##ind##}==0">  Instruments d’avaluació (%)  </WIOCCL:IF></WIOCCL:FOREACH>^
@@ -389,26 +392,28 @@ No es requiereixen espais, equipaments ni recursos específics.
 ###:
 
 :###
+~~NORMAL WIDTH~~
 ====== CONTROL DE CANVIS ======
 
-::table:T6
+::table:T06
   :title:Històric del control de canvis
+  :widths:1,1,3
   :type:pt_taula
 ^  Data d'aprovació  ^  Modificat per:  ^  Modificacions  ^
 <WIOCCL:FOREACH var="item" array="{##cc_historic##}">
-|  {#_DATE("{##item[data]##}")_#}  |  {##item[autor]##}  |  {##item[modificacions]##}  |
+|  {#_DATE("{##item[data]##}")_#}  |  {##item[autor]##}  |  {##item[modificacions]##}    |
 </WIOCCL:FOREACH>  
 :::
 
 ====== GESTIÓ DEL DOCUMENT ======
 
-::table:T7
+::table:T07
   :title:Dades de la gestió de la darrera modificació
   :type:pt_taula
-^              ^                 Elaborat per:                    ^                   Revisat per:                     ^               Aprovat i validat per:                 ^
-| Nom i cognom | {##cc_dadesAutor#nomGestor##}                    | {##cc_dadesRevisor#nomGestor##}                    | {##cc_dadesValidador#nomGestor##}                    |
-| Càrrec       | {##cc_dadesAutor#carrec##}                       | {##cc_dadesRevisor#carrec##}                       | {##cc_dadesValidador#carrec##}                       |
-| Data         | {#_DATE("{##cc_dadesAutor#dataDeLaGestio##}")_#} | {#_DATE("{##cc_dadesRevisor#dataDeLaGestio##}")_#} | {#_DATE("{##cc_dadesValidador#dataDeLaGestio##}")_#} |
-| Signatura    | {##cc_dadesAutor#signatura##}                    | {##cc_dadesRevisor#signatura##}                    | {##cc_dadesValidador#signatura##}                    |
+^               ^                  Elaborat per:                    ^                   Revisat per:                      ^                Aprovat i validat per:                 ^
+| Nom i cognom  | {##cc_dadesAutor#nomGestor##}                     | {##cc_dadesRevisor#nomGestor##}                     | {##cc_dadesValidador#nomGestor##}                     |
+| Càrrec        | {##cc_dadesAutor#carrec##}                        | {##cc_dadesRevisor#carrec##}                        | {##cc_dadesValidador#carrec##}                        |
+| Data          | {#_DATE("{##cc_dadesAutor#dataDeLaGestio##}")_#}  | {#_DATE("{##cc_dadesRevisor#dataDeLaGestio##}")_#}  | {#_DATE("{##cc_dadesValidador#dataDeLaGestio##}")_#}  |
+| Signatura     | {##cc_dadesAutor#signatura##}                     | {##cc_dadesRevisor#signatura##}                     | {##cc_dadesValidador#signatura##}                     |
 :::
 ###:
