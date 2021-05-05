@@ -51,8 +51,7 @@ class ImportProjectAction extends ViewProjectAction {
         $action = $model->getMetaDataActionWorkflowFile($data_management['workflow']['currentState'], $actionCommand);
         $validProjectTypes = $action['button']['parms']['DJO'][ProjectKeys::KEY_PROJECT_TYPE];
 
-        if ($importProjectType == $validProjectTypes || in_array($importProjectType, $validProjectTypes))   {
-            
+        if ($importProjectType == $validProjectTypes || in_array($importProjectType, $validProjectTypes))   {            
             //
             // 2. Verificar permisos sobre el proyecto a importar
             //

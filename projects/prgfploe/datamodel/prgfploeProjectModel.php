@@ -62,7 +62,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
             ,["typeField"=>"SF","field"=>"cicle", "accioNecessaria"=>"hi poseu el nom del cicle"]
             ,["typeField"=>"SF","field"=>"modulId", "accioNecessaria"=>"hi poseu el codi del mòdul"]
             ,["typeField"=>"SF","field"=>"modul", "accioNecessaria"=>"hi poseu el nom del mòdul"]
-            ,["typeField"=>"SF","field"=>"estrategiesMetodologiques", "accioNecessaria"=>"hi poseu les estratègies moetodològiques del mòdul"]
+//            ,["typeField"=>"SF","field"=>"estrategiesMetodologiques", "accioNecessaria"=>"hi poseu les estratègies moetodològiques del mòdul"]
             ,["typeField"=>"TF","field"=>"taulaDadesUF", "accioNecessaria"=>"hi afegiu les unitats formatives del mòdul"]
             ,["typeField"=>"TF","field"=>"taulaInstrumentsAvaluacio", "accioNecessaria"=>"hi afegiu els instruments d'avalaució de cada UF"]
             ,["typeField"=>"TF","field"=>"resultatsAprenentatge", "accioNecessaria"=>"hi afegiu els resultats d'avalaució de cada UF"]
