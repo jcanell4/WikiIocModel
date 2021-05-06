@@ -187,8 +187,8 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir un recurs",
-            "remove_rows": "Eliminar els recursod seleccionats",
-            "add_default_row_before": "Afegir un recus abans de la fila seleccionada"
+            "remove_rows": "Eliminar els recursos seleccionats",
+            "add_default_row_before": "Afegir un recurs abans de la fila seleccionada"
           }
         }
       },
