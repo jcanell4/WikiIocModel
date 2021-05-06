@@ -95,8 +95,8 @@ function (registry,dom,domConstruct,BorderContainer,Dialog,ContentPane,Form,Text
                 dialog.dialogTree = dialogTree;
 
                 dialogTree.tree.onClick=function(item) {
-                    if (importButton.projectType.includes(item.projectType)) {
-                        dom.byId('textBoxProjectImport').value= item.id;
+                    if (item.type==="d" || importButton.projectType.includes(item.projectType)) {
+                        dom.byId('textBoxProjectImport').value = item.id;
                         dom.byId('textBoxProjectImport').focus();
                     }else {
                         alert("El tipus de projecte " + item.projectType + " no està permés.");
@@ -121,7 +121,7 @@ function (registry,dom,domConstruct,BorderContainer,Dialog,ContentPane,Form,Text
 
                 var ProjectImport = new TextBox({
                     id: 'textBoxProjectImport',
-                    placeHolder: importButton.NomProjectelplaceHolder
+                    placeHolder: importButton.NomProjecteplaceHolder
                 }).placeAt(divProjectImport);
                 dialog.textBoxProjectImport = ProjectImport;
 

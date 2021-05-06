@@ -153,7 +153,7 @@
                     "parms": {
                         "DOM": {
                            "id": "prgfploeImportProjectButton",
-                           "title": "Importar dades d'un pla de treball",
+                           "title": "Importar dades d`un pla de treball",
                            "class": "iocDisplayBlock"
                         },
                         "DJO": {
@@ -161,11 +161,11 @@
                            "visible": false,
                            "iconClass": "'iocImportProjectIcon'",
                            "NomProjectelabel": "'Ruta del Projecte'",
-                           "NomProjectelplaceHolder": "'Ruta del Projecte'",
+                           "NomProjecteplaceHolder": "'Ruta del Projecte'",
                            "labelButtonAcceptar": "'Acceptar'",
                            "labelButtonCancellar": "'Cancel·lar'",
                            "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
-                           "projectType": ["ptfct", "ptfploe", "sintesi"],
+                           "projectType": ["ptfploe", "sintesi"],
                            "standbyId": "'bodyContent'",
                            "disableOnSend": true
                         }
