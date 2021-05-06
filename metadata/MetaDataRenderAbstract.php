@@ -171,7 +171,9 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
     }
 
     private function _getValue($field, $values, $properties, $types){
-        $ret;
+        if ($values === "") {
+            $values = [$field];
+        }
         switch ($properties["type"]) {
             case "date":
             case "bool":
