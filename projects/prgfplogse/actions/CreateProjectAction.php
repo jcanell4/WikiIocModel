@@ -6,8 +6,9 @@ class CreateProjectAction extends BasicCreateProjectAction {
     public function responseProcess() {
         $ret = parent::responseProcess();
         $model = $this->getModel();
+        $ret[ProjectKeys::KEY_GENERATED] = $model->directGenerateProject();
         $res = ["cc_historic"=>array()];
-        $model->addHistoricGestioDocument($res);        
+        $model->addHistoricGestioDocument($res);
         $ret["projectMetaData"]["cc_historic"]["value"] = json_encode($res["cc_historic"]);
         return $ret;
     }

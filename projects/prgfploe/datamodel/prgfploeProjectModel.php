@@ -13,6 +13,11 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
         $this->externalCallMethods["createTableRAPonderation"]="__createTableRAPonderation";
     }
     
+    public function directGenerateProject() {
+        //4. Establece la marca de 'proyecto generado'
+        return $this->projectMetaDataQuery->setProjectGenerated();
+    }
+
     protected function __createTableRAPonderation($data){
         $tableRaPonderation =[];
         $resApren = $data["resultatsAprenentatge"];

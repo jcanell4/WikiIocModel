@@ -13,6 +13,11 @@ class prgfplogseProjectModel extends UniqueContentFileProjectModel{
         $this->externalCallMethods["createTableRAPonderation"]="__createTableRAPonderation";
     }
     
+    public function directGenerateProject() {
+        //4. Establece la marca de 'proyecto generado'
+        return $this->projectMetaDataQuery->setProjectGenerated();
+    }
+
     public function validateFields($data=NULL){
         //EL responsable no pot ser buit
         if(!isset($data["responsable"]) || empty($data["responsable"])){
