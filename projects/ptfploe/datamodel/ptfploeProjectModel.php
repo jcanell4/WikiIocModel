@@ -61,13 +61,15 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             $taulaDadesNF = (is_array($dataPrg["taulaDadesNuclisFormatius"])) ? $dataPrg["taulaDadesNuclisFormatius"] : json_decode($dataPrg["taulaDadesNuclisFormatius"], true);
 
             $taulaDadesUFPrg = (is_array($dataPrg["taulaDadesUF"])) ? $dataPrg["taulaDadesUF"] : json_decode($dataPrg["taulaDadesUF"], true);
-            $taulaDadesNFFiltrada = array();            
-            foreach ($taulaDadesNF as $row) {
-                $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["unitat formativa"]);
-                if($rowBlocId==$blocId){
-                    $taulaDadesNFFiltrada[] = $row;
+            $taulaDadesNFFiltrada = array();
+            if (!empty($taulaDadesNF)) {
+                foreach ($taulaDadesNF as $row) {
+                    $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["unitat formativa"]);
+                    if($rowBlocId==$blocId){
+                        $taulaDadesNFFiltrada[] = $row;
+                    }
                 }
-            }            
+            }
         }else{
             $taulaDadesNF = FALSE;
         }
