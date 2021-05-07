@@ -22,8 +22,10 @@ class ToReviseResponseHandler extends ProjectResponseHandler {
 
     protected function response($requestParams, $responseData, &$ajaxCmdResponseGenerator) {
         $this->remoteViewResponse($requestParams, $responseData, $ajaxCmdResponseGenerator);
-        foreach ($response['notifications'] as $notification) {
-            $ajaxCmdResponseGenerator->addNotificationResponse($notification['action'], $notification['params']);
+        if ($responseData['notifications']) {
+            foreach ($responseData['notifications'] as $notification) {
+                $ajaxCmdResponseGenerator->addNotificationResponse($notification['action'], $notification['params']);
+            }
         }
     }
 }
