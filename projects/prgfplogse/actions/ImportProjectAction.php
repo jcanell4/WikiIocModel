@@ -67,11 +67,11 @@ class ImportProjectAction extends ViewProjectAction {
                         // Taula d'importació
                         //camps directes
                         $dataProject['cicle']                     = $import_data['cicle'];
-                        $dataProject['creditId']                  = $import_data['creditId'];
-                        $dataProject['credit']                    = $import_data['credit'];
                         $dataProject['duradaCicle']               = $import_data['duradaCicle'];
                     
                         if(!$import_data["tipusCicle"]){
+                            $dataProject['creditId']                  = $import_data['creditId'];
+                            $dataProject['credit']                    = $import_data['credit'];
                             $dataProject['notaMinimaAC']              = $import_data['notaMinimaAC'];
                             $dataProject['notaMinimaEAF']             = $import_data['notaMinimaEAF'];
                             $dataProject['notaMinimaJT']              = $import_data['notaMinimaJT'];
@@ -155,6 +155,8 @@ class ImportProjectAction extends ViewProjectAction {
                                 $dataProject['taulaNuclisActivitat'][] = $U;
                             }
                         }else{
+                            $dataProject['creditId']                  = $import_data['modulId'];
+                            $dataProject['credit']                    = $import_data['modul'];
                             if (!is_array($dataProject['taulaDadesBlocs'])) $dataProject['taulaDadesBlocs'] = json_decode($dataProject['taulaDadesBlocs'], TRUE);
                             $T = ['bloc' => 0,
                                   'horesBloc' => $import_data['durada'],
