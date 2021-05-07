@@ -65,19 +65,9 @@
                 },
                 "button": {
                     "id": "generateProjectButton",
-                    "class": "WikiIocButton",
-                    "parms": {
-                        "DOM": {
-                           "id": "generateProjectButton"
-                        },
-                        "DJO": {
-                           "visible": false
-                        }
-                    },
                     "scripts": {
                         "updateHandler": {
                             "conditions": {
-                                "page.isRevision": "false",
                                 "page.action": "'never'"
                             }
                         }
