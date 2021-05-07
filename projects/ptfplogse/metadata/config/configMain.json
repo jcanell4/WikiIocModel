@@ -435,6 +435,12 @@
                 "pla": {
                     "type": "object",
                     "keys": {
+                        "nsProgramacio": {
+                            "type":"string",
+                            "viewType":"hidden",
+                            "mandatory": true,
+                            "default":""
+                        },
                         "semestre": {
                             "type": "number",
                             "mandatory": true,
@@ -448,17 +454,71 @@
                         "cicle": {
                             "type": "string",
                             "default": "Indiqueu el cicle",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "cicle",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"cicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "creditId": {
                             "type": "string",
                             "default": "CXX",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "creditId",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"creditId",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "credit": {
                             "type": "string",
                             "default": "Indiqueu el nom crèdit",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "credit",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"credit",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "durada": {
                             "type": "string",
@@ -471,7 +531,25 @@
                         "duradaCicle": {
                             "type": "string",
                             "default": 2000,
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "duradaCicle",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"duradaCicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "professors": {
                             "type": "string",
@@ -508,11 +586,137 @@
                         },
                         "taulaDadesUD": {
                             "type": "defTaulaDadesUD",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateArrayObjectFromExternalField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "taulaDadesUD",
+                                    "filterCondition":{
+                                        "_type_":"operation",
+                                       "values":[{
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayAndGetPosition",
+                                            "values":{"blocName":["crèdit", "1r. bloc", "2n. bloc", "3r. bloc"]},
+                                            "variables":{
+                                                "pla":"$values"
+                                            },
+                                            "data":{
+                                                "field":"blocName",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "name": "tipusBlocCredit",
+                                                    "values":"$pla"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSimpleValue",
+                                            "values":"$rowValue",
+                                            "data":{
+                                                "field":"bloc"
+                                            }
+                                        }],
+                                        "operation":"=="
+                                    },
+                                    "externalFieldSubset":[
+                                        "bloc",
+                                        "unitat didàctica",
+                                        "nom",
+                                        "hores"
+                                    ],
+                                    "fieldSubset":[
+                                        "bloc",
+                                        "unitat didàctica",
+                                        "nom",
+                                        "hores"
+                                    ],
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"taulaDadesUD",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "calendari": {
                             "type": "defTaulaDadesNuclisActivitat",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateArrayObjectFromExternalField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "taulaNuclisActivitat",
+                                    "filterCondition":{
+                                        "_type_":"operation",
+                                       "values":[{
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayAndGetPosition",
+                                            "values":{"blocName":["crèdit", "1r. bloc", "2n. bloc", "3r. bloc"]},
+                                            "variables":{
+                                                "pla":"$values"
+                                            },
+                                            "data":{
+                                                "field":"blocName",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "name": "tipusBlocCredit",
+                                                    "values":"$pla"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayObjectAndGetFieldValue",
+                                            "values":"$externalValues",
+                                            "variables":{
+                                                "ufRow":"$rowValue"
+                                            },
+                                            "data":{
+                                                "field":"taulaDadesUD",
+                                                "fieldToSearch":"unitat didàctica",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "values":"$ufRow",
+                                                    "name":"unitat didàctica"
+                                                },
+                                                "fieldToReturn":"bloc"
+                                            }
+                                        }],
+                                        "operation":"=="
+                                    },
+                                    "externalFieldSubset":[
+                                        "unitat didàctica",
+                                        "nucli activitat",
+                                        "nom",
+                                        "hores"
+                                    ],
+                                    "fieldSubset":[
+                                        "unitat didàctica",
+                                        "nucli activitat",
+                                        "nom",
+                                        "hores"
+                                    ],
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"calendari",
+                                        "values": "$values"
+                                    }
+                                }
+                            }                            
                         },
                         "einesAprenentatge": {
                             "type": "defEinesAprenentatge",
@@ -615,7 +819,25 @@
                                 "min": 0,
                                 "max": 10
                             },
-                            "default": 0
+                            "default": 0,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "notaMinimaAC",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"notaMinimaAC",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "notaMinimaEAF": {
                             "type": "number",
@@ -624,7 +846,25 @@
                                 "min": 0,
                                 "max": 10
                             },
-                            "default": 4
+                            "default": 4,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "notaMinimaEAF",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"notaMinimaEAF",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "notaMinimaJT": {
                             "type": "number",
@@ -633,7 +873,25 @@
                                 "min": 0,
                                 "max": 10
                             },
-                            "default": 0
+                            "default": 0,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "notaMinimaJT",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"notaMinimaJT",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "dataPaf11": {
                             "type": "date",
@@ -672,16 +930,87 @@
                             "props": {
                                 "min": 0,
                                 "max": 10
+                            },
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "notaMinimaPAF",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"notaMinimaPAF",
+                                        "values": "$values"
+                                    }
+                                }
                             }
                         },
                         "dadesQualificacio": {
                             "type": "defQualificacio",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateArrayObjectFromExternalField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field": "taulaInstrumentsAvaluacio",
+                                    "resultRow":{
+                                        "tipus qualificació": {
+                                            "_type_":"field",
+                                            "name":"tipus",
+                                            "values":"$rowValue"
+                                        },
+                                        "descripció qualificació": "ERROR",
+                                        "abreviació qualificació": {
+                                            "_type_":"field",
+                                            "name":"id",
+                                            "values":"$rowValue"
+                                        },
+                                        "ponderació": {                                        
+                                           "_type_":"field",
+                                            "name":"ponderacio",
+                                            "values":"$rowValue"
+                                        }
+                                    },
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"dadesQualificacio",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "duradaPAF": {
                             "type": "string",
                             "mandatory": true,
-                            "default":"Té una durada d'1 hora i 50 minuts"
+                            "default":"Té una durada d'1 hora i 50 minuts",
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "duradaPAF",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"duradaPAF",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "dadesExtres": {
                             "type": "defExtres",
