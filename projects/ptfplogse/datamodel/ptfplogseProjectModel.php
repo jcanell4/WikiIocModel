@@ -40,6 +40,93 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
 //        return $ret;
 //    }
 
+
+    /**
+     * Calcula el valor de los campos calculables
+     * @param JSON $data
+     */
+    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE) {
+        $data = parent::updateCalculatedFieldsOnRead($data);
+        $isArray = is_array($data);
+        $values = $isArray?$data:json_decode($data, true);
+        $originalValues = $isArray?$originalDataKeyValue:json_decode($originalDataKeyValue, true);
+
+        $dadesQualificacio = (is_array($values["dadesQualificacio"])) ? $values["dadesQualificacio"] : json_decode($values["dadesQualificacio"], true);
+        $originalDadesQualificacio = (is_array($originalValues["dadesQualificacio"])) ? $originalValues["dadesQualificacio"] : json_decode($originalValues["dadesQualificacio"], true);
+        $calendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
+        $originalCalendari= (is_array($originalValues["calendari"])) ? $originalValues["calendari"] : json_decode($originalValues["calendari"], true);
+        $blocId = array_search($values["tipusBlocCredit"], ["crèdit", "1r. bloc", "2n. bloc", "3r. bloc"]);
+        if($values["nsProgramacio"]){
+            $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
+            if(!is_array($dataPrg)){
+                $dataPrg = json_decode($dataPrg, true);
+            }            
+            //valors a sobrescriure  des de la programació, si n'hi ha
+            $avaluacioInicial_prg = $dataPrg["avaluacioInicial"];
+        }else{
+            //valors per defecte si n'hi ha.
+        }        
+
+        if(!empty($dadesQualificacio)){
+            for ($i=0; $i<count($dadesQualificacio); $i++){
+               if($dadesQualificacio[$i]["abreviació qualificació"]==$originalDadesQualificacio[$i]["abreviació qualificació"]
+                       || $dadesQualificacio[$i]["tipus qualificació"]==$originalDadesQualificacio[$i]["tipus qualificació"]
+                       && $dadesQualificacio[$i]["tipus qualificació"]=="PAF"){
+                   $pos = $i;
+               }else{
+                   $pos = -1;
+                   $j=0;
+                   foreach ($originalDadesQualificacio as $item) {
+                       if($item["abreviació qualificació"]==$dadesQualificacio[$i]["abreviació qualificació"]
+                                || $dadesQualificacio[$i]["tipus qualificació"]==$item["tipus qualificació"]
+                                && $item["tipus qualificació"]=="PAF"){
+                           $pos = $j;
+                       }
+                       $j++;
+                   }
+               }
+               if($pos!=-1 && !empty($originalDadesQualificacio[$pos]["descripció qualificació"])){
+                   $dadesQualificacio[$i]["descripció qualificació"] = $originalDadesQualificacio[$pos]["descripció qualificació"];
+               }
+            }
+            $values["dadesQualificacio"] = $dadesQualificacio;
+        }
+        
+        if(!empty($calendari)){
+            for ($i=0; $i<count($calendari); $i++){
+                $pos = -1;
+                $j=0;
+                foreach ($originalCalendari as $item) {
+                    if($item["unitat didàctica"]==$calendari[$i]["unitat didàctica"]
+                             && $calendari[$i]["nucli activitat"]==$item["nucli activitat"]){
+                        $pos = $j;
+                    }
+                    $j++;
+                }
+               if($pos!=-1){
+                   $calendari[$i]["inici"] = $originalCalendari[$pos]["inici"];
+                   $calendari[$i]["final"] = $originalCalendari[$pos]["final"];
+               }
+            }
+            $values["calendari"] = $calendari;
+        }
+        
+        switch ($avaluacioInicial_prg){
+            case "NO":
+                $avaluacioInicial = $avaluacioInicial_prg;
+                break;
+            case "B":
+                $avaluacioInicial = $blocId<2?"SI":"NO";
+                break;
+            case "C":
+                $avaluacioInicial = "SI";                
+        }
+        $values["avaluacioInicial"] = $avaluacioInicial;
+
+        $data = $isArray?$values:json_encode($values);
+        return $data;
+    }
+    
     /**
      * Calcula el valor de los campos calculables
      * @param JSON $data

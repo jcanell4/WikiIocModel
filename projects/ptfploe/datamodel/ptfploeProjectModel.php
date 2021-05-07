@@ -173,7 +173,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             $taulaDadesNF = (is_array($dataPrg["taulaDadesNuclisFormatius"])) ? $dataPrg["taulaDadesNuclisFormatius"] : json_decode($dataPrg["taulaDadesNuclisFormatius"], true);
             $taulaDadesUFPrg = (is_array($dataPrg["taulaDadesUF"])) ? $dataPrg["taulaDadesUF"] : json_decode($dataPrg["taulaDadesUF"], true);
             $taulaDadesNFFiltrada = array();
-            $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc"]);
+            $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]);
             foreach ($taulaDadesNF as $row) {
                 $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["unitat formativa"]);
                 if($rowBlocId==$blocId){
@@ -182,7 +182,6 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             }
             $resultatsAprenentatgePrg = (is_array($dataPrg["resultatsAprenentatge"])) ? $dataPrg["resultatsAprenentatge"] : json_decode($dataPrg["resultatsAprenentatge"], true);
             $resultatsAprenentatgeFiltrats = array();
-            $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc"]);
             foreach ($resultatsAprenentatgePrg as $row) {
                 $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["uf"]);
                 if($rowBlocId==$blocId){
