@@ -736,7 +736,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
         //Creació de l'arxiu de metadades corresponent al workflow
         $subSet = "management";
         $metaDataQuery = $this->getPersistenceEngine()->createProjectMetaDataQuery($this->id, $subSet, $this->projectType);
-        $metaDataManagement['workflow']['currentState'] = "creating";
+        $metaDataManagement = ['workflow'=>['currentState'=>"creating"]];
         $metaDataQuery->setMeta(json_encode($metaDataManagement), $subSet, "creació", NULL);
     }
 
