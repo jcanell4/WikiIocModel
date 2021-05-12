@@ -28,16 +28,6 @@
                 "collapsed":false
             }
         },
-        "extres": {
-            "parent": "",
-            "label": "Informació extra per aquest pla de treball",
-            "n_columns": 12,
-            "frame": true,
-            "config":{
-                "collapsable":true,
-                "collapsed":false
-            }
-        },
         "gestioDocument": {
             "parent": "",
             "label": "Informació sobre la gestió del document i el control dels canvis",
@@ -704,34 +694,6 @@
               ]
             }
           ]
-        }
-      },
-      "dadesExtres": {
-        "n_columns": 12,
-        "group": "extres",
-        "n_rows": 4,
-        "type": "editableObject",
-        "props": {
-          "data-editable-element": "table"
-        },
-        "config": {
-          "actions": {
-            "add_default_row": "Afegir una nova dada",
-            "remove_rows": "Eliminar les dades seleccionades",
-            "add_default_row_before": "Afegir dada abans de la fila seleccionada"
-          },
-          "fields": {
-            "nom": {
-              "type": "string"
-            },
-            "tipus": {
-              "type": "select",
-              "options": ["dada"]                           
-            },
-            "valor": {
-              "type": "string"
-            }
-          }
         }
       },
       "cc_raonsModificacio":{

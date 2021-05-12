@@ -124,30 +124,6 @@
                     "type": "objectArray",
                     "typeDef":"entradaActituds"
                 },
-                "entradaExtres": {
-                    "type":"object",
-                    "keys": {
-                        "nom": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "Indiqueu la dada extra que necessiteu"
-                        },
-                        "tipus": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "dada"
-                        },
-                        "valor": {
-                            "type": "string",
-                            "mandatory": true,
-                            "default": "Escriviu el valor de la dada aquí"
-                        }
-                    }                    
-                },
-                "defExtres": {
-                    "type": "objectArray",
-                    "typeDef":"entradaExtres"
-                },
                 "entradaDadeBlocs": {
                     "type": "object",
                     "keys": {
@@ -458,10 +434,6 @@
                             "type": "string",
                             "mandatory": true,
                             "default":"Té una durada màxima d'1 hora i 50 minuts"
-                        },   
-                        "dadesExtres": {
-                            "type": "defExtres",
-                            "mandatory": true
                         },
                         "cc_historic": {
                             "type": "objectArray",
