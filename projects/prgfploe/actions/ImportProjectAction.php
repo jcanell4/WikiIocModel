@@ -55,39 +55,39 @@ class ImportProjectAction extends ViewProjectAction {
             //
             // 2. Verificar permisos sobre el proyecto a importar
             //
-            $permissions = $action['permissions'];
             $import_modelManager = AbstractModelManager::Instance($importProjectType);
             $import_authorization = $import_modelManager->getAuthorizationManager('editProject');
-            $has_perm_group = $this->array_in_array($permissions['groups'], $import_authorization->getAllowedGroups());
-            $has_perm_rol = $this->array_in_array($permissions['rols'], $import_authorization->getAllowedRoles());
+            $has_perm_group = $this->array_in_array($this->params['groups'], $import_authorization->getAllowedGroups());
+            $has_perm_rol = $this->array_in_array($this->params['roles'], $import_authorization->getAllowedRoles());
 
             if ($has_perm_group || $has_perm_rol) {
                 $dataProject = $model->getCurrentDataProject();
                 $import_metaDataQuery = $model->getPersistenceEngine()->createProjectMetaDataQuery($this->params['project_import'], "main", $importProjectType);
                 $import_data = $import_metaDataQuery->getDataProject($this->params['project_import'], $importProjectType, "main");
-                if(!$import_data["tipusCicle"] || $import_data["tipusCicle"] == "LOE"){
+
+                if (!$import_data["tipusCicle"] || $import_data["tipusCicle"] == "LOE"){
                     // 3. Verificar una importació anterior
                     if (empty($import_data['nsProgramacio'])) {
                         //JOSEP: TODO- Caldrà plantejar una importació diferrnt en funció del tipus de pojecte (ptfploe, sintesi o fct). Aquesta correspon a ptfploe.
                         // Taula d'importació
                         //camps directes
-                        $dataProject['cicle']                     = $import_data['cicle'];
-                        $dataProject['modulId']                   = $import_data['modulId'];
-                        $dataProject['modul']                     = $import_data['modul'];
-                        $dataProject['duradaCicle']               = $import_data['duradaCicle'];
+                        $dataProject['cicle']       = $import_data['cicle'];
+                        $dataProject['modulId']     = $import_data['modulId'];
+                        $dataProject['modul']       = $import_data['modul'];
+                        $dataProject['duradaCicle'] = $import_data['duradaCicle'];
 
-                        if(!$import_data["tipusCicle"]){
-                            $dataProject['notaMinimaAC']              = $import_data['notaMinimaAC'];
-                            $dataProject['notaMinimaEAF']             = $import_data['notaMinimaEAF'];
-                            $dataProject['notaMinimaJT']              = $import_data['notaMinimaJT'];
-                            $dataProject['notaMinimaPAF']             = $import_data['notaMinimaPAF'];
-                            $dataProject['duradaPAF']                 = $import_data['duradaPAF'];
+                        if (!$import_data["tipusCicle"]) {
+                            $dataProject['notaMinimaAC']  = $import_data['notaMinimaAC'];
+                            $dataProject['notaMinimaEAF'] = $import_data['notaMinimaEAF'];
+                            $dataProject['notaMinimaJT']  = $import_data['notaMinimaJT'];
+                            $dataProject['notaMinimaPAF'] = $import_data['notaMinimaPAF'];
+                            $dataProject['duradaPAF']     = $import_data['duradaPAF'];
                         
                             //Camps amb importació parcial
                             //taulaInstrumentsAvaluacio
-                            if(!is_array($import_data["dadesQualificacioUFs"])) $import_data["dadesQualificacioUFs"]= json_decode ($import_data["dadesQualificacioUFs"], TRUE);
-                            if(isset($dataProject["taulaInstrumentsAvaluacio"])){
-                                if(!is_array($dataProject["taulaInstrumentsAvaluacio"])) $dataProject["taulaInstrumentsAvaluacio"]= json_decode ($dataProject["taulaInstrumentsAvaluacio"], TRUE);
+                            if (!is_array($import_data["dadesQualificacioUFs"])) $import_data["dadesQualificacioUFs"]= json_decode ($import_data["dadesQualificacioUFs"], TRUE);
+                            if (isset($dataProject["taulaInstrumentsAvaluacio"])){
+                                if (!is_array($dataProject["taulaInstrumentsAvaluacio"])) $dataProject["taulaInstrumentsAvaluacio"]= json_decode ($dataProject["taulaInstrumentsAvaluacio"], TRUE);
                             }else{
                                 $dataProject["taulaInstrumentsAvaluacio"]=array();
                             }
@@ -111,13 +111,13 @@ class ImportProjectAction extends ViewProjectAction {
                             $dataProject['taulaDadesBlocs'][] = $T;
                             
                             //taulaDadesUF
-                            if(!is_array($import_data["taulaDadesUF"])) $import_data["taulaDadesUF"]= json_decode ($import_data["taulaDadesUF"], TRUE);
-                            if(isset($dataProject["taulaDadesUF"])){
-                                if(!is_array($dataProject["taulaDadesUF"])) $dataProject["taulaDadesUF"]= json_decode ($dataProject["taulaDadesUF"], TRUE);
+                            if (!is_array($import_data["taulaDadesUF"])) $import_data["taulaDadesUF"]= json_decode ($import_data["taulaDadesUF"], TRUE);
+                            if (isset($dataProject["taulaDadesUF"])){
+                                if (!is_array($dataProject["taulaDadesUF"])) $dataProject["taulaDadesUF"]= json_decode ($dataProject["taulaDadesUF"], TRUE);
                             }else{
                                 $dataProject["taulaDadesUF"]=array();
                             }
-                            if(empty($dataProject["taulaDadesUF"])){
+                            if (empty($dataProject["taulaDadesUF"])){
                                 foreach ($import_data['taulaDadesUF'] as $key => $toImport) {
                                     $dataProject['taulaDadesUF'][] = [
                                         "unitat formativa" => $toImport["unitat formativa"],
@@ -133,14 +133,14 @@ class ImportProjectAction extends ViewProjectAction {
                                 }
                             }
                             //taulaDadesNuclisFormatius
-                            if(!is_array($import_data["taulaDadesUnitats"])) $import_data["taulaDadesUnitats"]= json_decode ($import_data["taulaDadesUnitats"], TRUE);
-                            if(isset($dataProject["taulaDadesNuclisFormatius"])){
-                                if(!is_array($dataProject["taulaDadesNuclisFormatius"])) $dataProject["taulaDadesNuclisFormatius"]= json_decode ($dataProject["taulaDadesNuclisFormatius"], TRUE);
+                            if (!is_array($import_data["taulaDadesUnitats"])) $import_data["taulaDadesUnitats"]= json_decode ($import_data["taulaDadesUnitats"], TRUE);
+                            if (isset($dataProject["taulaDadesNuclisFormatius"])){
+                                if (!is_array($dataProject["taulaDadesNuclisFormatius"])) $dataProject["taulaDadesNuclisFormatius"]= json_decode ($dataProject["taulaDadesNuclisFormatius"], TRUE);
                             }else{
                                 $dataProject["taulaDadesNuclisFormatius"]=array();
                             }
                             foreach ($import_data['taulaDadesUnitats'] as $value) {
-                                if(isset($U) && $U['unitat formativa'] == $value['unitat formativa']){
+                                if (isset($U) && $U['unitat formativa'] == $value['unitat formativa']){
                                     $nf++;
                                 }else{
                                     $nf=1;
@@ -160,9 +160,9 @@ class ImportProjectAction extends ViewProjectAction {
                         }
                         
                         //resultatsAprenentatge
-                        if(!is_array($import_data["resultatsAprenentatge"])) $import_data["resultatsAprenentatge"]= json_decode ($import_data["resultatsAprenentatge"], TRUE);
-                        if(isset($dataProject["resultatsAprenentatge"])){
-                            if(!is_array($dataProject["resultatsAprenentatge"])) $dataProject["resultatsAprenentatge"]= json_decode ($dataProject["resultatsAprenentatge"], TRUE);
+                        if (!is_array($import_data["resultatsAprenentatge"])) $import_data["resultatsAprenentatge"]= json_decode ($import_data["resultatsAprenentatge"], TRUE);
+                        if (isset($dataProject["resultatsAprenentatge"])){
+                            if (!is_array($dataProject["resultatsAprenentatge"])) $dataProject["resultatsAprenentatge"]= json_decode ($dataProject["resultatsAprenentatge"], TRUE);
                         }else{
                             $dataProject["resultatsAprenentatge"]=array();
                         }
@@ -223,6 +223,8 @@ class ImportProjectAction extends ViewProjectAction {
     // Busca si algún elemento de $array1 está incluido en $array2
     public function array_in_array($array1, $array2) {
         $has = FALSE;
+        if (!is_array($array1)) $array1 = array($array1);
+        if (!is_array($array2)) $array2 = array($array2);
         foreach ($array1 as $elem) {
             if (in_array($elem, $array2)) {
                 $has = TRUE;
