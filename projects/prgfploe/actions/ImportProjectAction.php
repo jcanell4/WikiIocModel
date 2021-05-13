@@ -51,24 +51,26 @@ class ImportProjectAction extends ViewProjectAction {
         $action = $model->getMetaDataActionWorkflowFile($data_management['workflow']['currentState'], $actionCommand);
         $validProjectTypes = $action['button']['parms']['DJO'][ProjectKeys::KEY_PROJECT_TYPE];
 
-        if ($importProjectType == $validProjectTypes || in_array($importProjectType, $validProjectTypes))   {            
-            //
+        if ($importProjectType == $validProjectTypes || in_array($importProjectType, $validProjectTypes)) {
+
             // 2. Verificar permisos sobre el proyecto a importar
-            //
+            $importRoles = $this->getModelManager()->getProjectRoleData($this->params['project_import'], $importProjectType);
             $import_modelManager = AbstractModelManager::Instance($importProjectType);
             $import_authorization = $import_modelManager->getAuthorizationManager('editProject');
-            $has_perm_group = $this->array_in_array($this->params['groups'], $import_authorization->getAllowedGroups());
-            $has_perm_rol = $this->array_in_array($this->params['roles'], $import_authorization->getAllowedRoles());
+            $has_perm_group = IocCommon::array_in_array($this->params['groups'], $import_authorization->getAllowedGroups());
+            $has_perm_rol = in_array(WikiIocInfoManager::getInfo('client'), $importRoles['roleData']);
 
             if ($has_perm_group || $has_perm_rol) {
                 $dataProject = $model->getCurrentDataProject();
                 $import_metaDataQuery = $model->getPersistenceEngine()->createProjectMetaDataQuery($this->params['project_import'], "main", $importProjectType);
                 $import_data = $import_metaDataQuery->getDataProject($this->params['project_import'], $importProjectType, "main");
 
-                if (!$import_data["tipusCicle"] || $import_data["tipusCicle"] == "LOE"){
-                    // 3. Verificar una importació anterior
-                    if (empty($import_data['nsProgramacio'])) {
-                        //JOSEP: TODO- Caldrà plantejar una importació diferrnt en funció del tipus de pojecte (ptfploe, sintesi o fct). Aquesta correspon a ptfploe.
+                // 3. Verificar una importació anterior
+                if (empty($import_data['nsProgramacio'])) {
+                    
+                    // 4. Verificar que les dades a importar son del tipus adequat
+                    if (!$import_data["tipusCicle"] || $import_data["tipusCicle"] == "LOE"){
+                        //JOSEP: TODO- Caldrà plantejar una importació diferent en funció del tipus de pojecte (ptfploe, sintesi o fct). Aquesta correspon a ptfploe.
                         // Taula d'importació
                         //camps directes
                         $dataProject['cicle']       = $import_data['cicle'];
@@ -195,26 +197,21 @@ class ImportProjectAction extends ViewProjectAction {
                         if (! $import_metaDataQuery->setMeta(json_encode($import_data), "main", "Dades importades pel projecte '$projectID'")) {
                             $resp['info'] = self::generateInfo("error", "Error en l'actualització de les dades a '{$this->params['project_import']}' després de la importació.", $projectID);
                         }
+                        
                         $response = parent::responseProcess();
-                        if($resp["info"]){
-                            $response["info"]= $resp["info"];
-                        }
-                        if($resp["alert"]){
-                            $response["alert"]= $resp["alert"];
-                        }
-
+                        if ($resp["info"]) $response["info"] = $resp["info"];
+                        if ($resp["alert"]) $response["alert"] = $resp["alert"];
                     }else {
-                        $response['info'] = self::generateInfo("error", "El projecte '{$this->params['project_import']}' ja ha estat importat anteriorment.", $projectID);
-                        $response['alert'] = "El projecte '{$this->params['project_import']}' ja ha estat importat anteriorment.";
+                        throw new Exception("El tipus de projecte no és de tipus LOE i no és vàlid per a la importació.");
                     }
                 }else{
-                    $response['alert'] = "El tipus de projecte no és de tipus LOE i no és vàlid per a la importació.";                    
+                    throw new Exception("El projecte '{$this->params['project_import']}' ja ha estat importat anteriorment.");
                 }
             }else {
-                $response['alert'] = "No tens permissos per a importar dades del projecte '{$this->params['project_import']}'.";
+                throw new Exception("No tens permissos per a importar dades del projecte '{$this->params['project_import']}'.");
             }
         }else {
-            $response['alert'] = "El tipus de projecte $importProjectType no és un tipus vàlid per a la importació.";
+            throw new Exception("El tipus de projecte $importProjectType no és un tipus vàlid per a la importació.");
         }
 
         return $response;
