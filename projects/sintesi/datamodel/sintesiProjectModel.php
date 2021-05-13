@@ -44,6 +44,40 @@ class sintesiProjectModel extends MoodleUniqueContentFilesProjectModel{
 //        StaticUniqueContentFileProjectModel::createTemplateDocument($this);
 //    }
 
+    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE) {
+        $data = parent::updateCalculatedFieldsOnRead($data);
+        $isArray = is_array($data);
+        $values = $isArray?$data:json_decode($data, true);
+        $originalValues = $isArray?$originalDataKeyValue:json_decode($originalDataKeyValue, true);
+
+        $resultatsAprenentatge = (is_array($values["resultatsAprenentatge"])) ? $values["resultatsAprenentatge"] : json_decode($values["resultatsAprenentatge"], true);
+        $originalResultatsAprenentatge = (is_array($originalValues["resultatsAprenentatge"])) ? $originalValues["resultatsAprenentatge"] : json_decode($originalValues["resultatsAprenentatge"], true);
+        $blocId = 0;
+        if($values["nsProgramacio"]){
+            $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
+            if(!is_array($dataPrg)){
+                $dataPrg = json_decode($dataPrg, true);
+            }
+            $taulaDadesNF = (is_array($dataPrg["taulaDadesNuclisFormatius"])) ? $dataPrg["taulaDadesNuclisFormatius"] : json_decode($dataPrg["taulaDadesNuclisFormatius"], true);
+
+            $taulaDadesUFPrg = (is_array($dataPrg["taulaDadesUF"])) ? $dataPrg["taulaDadesUF"] : json_decode($dataPrg["taulaDadesUF"], true);
+        }else{
+            $taulaDadesNF = FALSE;
+        }
+        
+        
+        for ($i=0; $i<count($resultatsAprenentatge); $i++){
+           if(!empty($originalResultatsAprenentatge[$i]["id"])){
+               $resultatsAprenentatge[$i]["id"] = $originalResultatsAprenentatge[$i]["id"];
+           }
+        }
+        $values["resultatsAprenentatge"] = $resultatsAprenentatge;
+        
+
+        $data = $isArray?$values:json_encode($values);
+        return $data;
+    }
+
     /**
      * Calcula el valor de los campos calculables
      * @param JSON $data

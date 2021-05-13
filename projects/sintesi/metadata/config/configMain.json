@@ -256,12 +256,47 @@
                         "duradaCicle": {
                             "type": "string",
                             "default": 2000,
-                            "mandatory": true   
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field": "duradaCicle",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"duradaCicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            }   
                         },
                         "cicle": {
                             "type": "string",
                             "default": "Indiqueu el cicle",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "cicle",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"cicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "coordinador": {
                             "type": "string",
