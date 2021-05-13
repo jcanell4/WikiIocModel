@@ -558,7 +558,7 @@
       },
       "responsable": {
         "type" : "amd",
-        "label": "Responsable de la creació",
+        "label": "Responsable",
         "n_columns": 6,
         "group": "authorship",
         "props": {
