@@ -482,7 +482,8 @@
                         },
                         "estrategiesMetodologiques":{
                             "type": "string",
-                            "mandatory": false
+                            "mandatory": false,
+                            "parseOnView": true
                         },
                         "notaMinimaUfAprovada":{
                             "type": "decimal",
