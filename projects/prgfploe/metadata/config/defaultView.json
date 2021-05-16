@@ -689,8 +689,8 @@
                   "editable": true,
                   "config": {
                     "fieldsource": "resultatsAprenentatge",
-                    "filterByKeySource": "uf",
-                    "filterByKeyOwn": "uf",
+                    "filterByKeySource": ["uf","ra"],
+                    "filterByKeyOwn": ["uf","ra"],
                     "labelFields": ["ra", "descripcio"],
                     "labelSeparator": ": ",
                     "outputFields": ["ra"],
@@ -936,8 +936,8 @@
                   "editable": true,
                   "config": {
                     "fieldsource": "criterisAvaluacio",
-                    "filterByKeySource": "uf",
-                    "filterByKeyOwn": "unitat formativa",
+                    "filterByKeySource": ["uf","ra"],
+                    "filterByKeyOwn": ["unitat formativa","ra"],
                     "labelFields": ["ca", "descripcio"],
                     "labelSeparator": ": ",
                     "outputFields": ["ca"],
