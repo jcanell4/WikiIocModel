@@ -40,6 +40,7 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
 
         if ($this->viewMode) {
             $counter = 0; //only variables can be passed by reference
+            $text = $event->result;
             if (preg_match("/~~FIELD_VERSION:(.*)?~~\n/", $text)) {
                 $text = preg_replace("/~~FIELD_VERSION:(.*)?~~\n/", "", $text, 1, $counter);
                 $dataSource = $plugin_controller->getCurrentProjectDataSource();
