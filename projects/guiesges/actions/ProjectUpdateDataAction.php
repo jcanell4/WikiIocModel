@@ -38,7 +38,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
                 $projectModel->setData($metaData);    //actualiza el contenido en 'mdprojects/'
 
                 $response = parent::runAction();
-                $projectModel->setProjectSubSetAttr("updatedDate", time());
+                $projectModel->setProjectSystemSubSetAttr("updatedDate", time());
             }
             if($this->getModel()->isProjectGenerated()){
                 $id = $this->getModel()->getContentDocumentId($response);

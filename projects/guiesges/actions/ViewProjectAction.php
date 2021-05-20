@@ -79,7 +79,7 @@ class ViewProjectAction extends BasicViewProjectAction{
                 }
 
                 if ($finestraOberta) {
-                    $updetedDate = $projectModel->getProjectSubSetAttr("updatedDate");
+                    $updetedDate = $projectModel->getProjectSystemSubSetAttr("updatedDate");
                     $interval = (!$updetedDate  || $updetedDate < $inici->getTimestamp());
                     $response[AjaxKeys::KEY_ACTIVA_UPDATE_BTN] = ($interval) ? "1" : "0";
                 }

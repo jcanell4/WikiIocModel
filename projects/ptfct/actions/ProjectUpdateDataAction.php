@@ -34,6 +34,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
                     if($elem['type']==="templateFile"){
                         $dataTemplate = $projectModel->getRawDocument($elem['value']);
                         $dataTemplate = ":###".preg_replace(["/:###/","/###:/","/~~WIOCCL_DATA.+~~/"], "", $dataTemplate)."###:";
+                        $elemTemplate = $elem;
                     }else{
                         $processor = ucwords($elem['type'])."ProjectUpdateProcessor";
                         if ( !isset($processArray[$processor]) ) {
@@ -56,9 +57,11 @@ class ProjectUpdateDataAction extends ViewProjectAction {
                 $projectModel->setData($metaData);    //actualiza el contenido en 'mdprojects/'
 
                 //canvis als fitxers si n'hi han
-                $projectModel->setRawProjectDocument($elem['parameters']['file'], $dataTemplate, WikiIocLangManager::getLang("update_message"));
+                if ($elemTemplate) {
+                    $projectModel->setRawProjectDocument($elemTemplate['parameters']['file'], $dataTemplate, WikiIocLangManager::getLang("update_message"));
+                }
 
-                $projectModel->setProjectSubSetAttr("updatedDate", time());
+                $projectModel->setProjectSystemSubSetAttr("updatedDate", time());
 
                 $response = parent::runAction();
                 if ($this->getModel()->isProjectGenerated()){

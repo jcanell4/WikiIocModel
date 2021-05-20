@@ -33,7 +33,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
 
         if ($metaDataConfigProject['arraytaula']) {
             $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
-            $restoreData = !$projectModel->getProjectSubSetAttr("updatedDate");
+            $restoreData = !$projectModel->getProjectSystemSubSetAttr("updatedDate");
             if(!$restoreData){
                 if(ManagerProjectUpdateProcessor::updateAll($arraytaula, $toUpdate)){
                     $response["moodleCourseId"]=$toUpdate["moodleCourseId"];
@@ -49,11 +49,11 @@ class ProjectUpdateDataAction extends ViewProjectAction {
                     ];
                     $projectModel->setData($metaData);    //actualiza el contenido en 'mdprojects/'
 
-                    $projectModel->setProjectSubSetAttr("updatedDate", time());
+                    $projectModel->setProjectSystemSubSetAttr("updatedDate", time());
                     $response = parent::runAction();
                 }
             }else{
-                $projectModel->setProjectSubSetAttr("updatedDate", time());
+                $projectModel->setProjectSystemSubSetAttr("updatedDate", time());
                 $response = parent::runAction();
             }
             if($this->getModel()->isProjectGenerated()){

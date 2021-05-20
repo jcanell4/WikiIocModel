@@ -27,7 +27,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
 
         if ($metaDataConfigProject['arraytaula']) {
             $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
-            $restoreData = !$projectModel->getProjectSubSetAttr("updatedDate");
+            $restoreData = !$projectModel->getProjectSystemSubSetAttr("updatedDate");
             if($restoreData){
                 //La primera vegada aquests camps no s'actualitzen!
                 $calendari = $response["calendari"];
@@ -51,7 +51,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
                     ProjectKeys::KEY_METADATA_VALUE => json_encode($response)
                 ];
                 $projectModel->setData($metaData);    //actualiza el contenido en 'mdprojects/'
-                $projectModel->setProjectSubSetAttr("updatedDate", time());
+                $projectModel->setProjectSystemSubSetAttr("updatedDate", time());
                 $response = parent::runAction();
             }
             if($this->getModel()->isProjectGenerated()){
