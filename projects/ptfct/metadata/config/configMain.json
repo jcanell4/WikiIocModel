@@ -50,12 +50,48 @@
                         "tipusCicle": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "LOE"
+                            "default": "LOE",
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values": "$values",
+                                        "defaultValue": ""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "tipusCicle",
+                                    "defaultValue":{
+                                        "_type_": "field",
+                                        "name": "tipusCicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "cicle": {
                             "type": "string",
+                            "mandatory": true,
                             "default": "Indiqueu el nom del cicle",
-                            "mandatory": true
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values": "$values",
+                                        "defaultValue": ""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "cicle",
+                                    "defaultValue":{
+                                        "_type_": "field",
+                                        "name": "cicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
                         },
                         "durada": {
                             "type": "string",
@@ -63,6 +99,24 @@
                             "default": 0,
                             "props": {
                                 "readonly": true
+                            },
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values": "$values",
+                                        "defaultValue": ""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "durada",
+                                    "defaultValue":{
+                                        "_type_": "field",
+                                        "name": "durada",
+                                        "values": "$values"
+                                    }
+                                }
                             }
                         },
                         "any": {
