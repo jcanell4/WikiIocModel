@@ -57,7 +57,7 @@ class IocTcPdf extends BasicIocTcPdf {
         $x = $this->GetX()+1;
         $y = $this->GetY()+1;
         $this->SetTextColor(255,255,255);
-        $this->MultiCell($w0, $cell_height*2, $this->Image($f,$x,$y,$w,$h,'JPG','','',true,300,'',false,false,0,['CM']), 0, 'L', 0, 0, "", "", true, 0, false, true, $cell_height*2, 'M');
+        $this->MultiCell($w0, $cell_height*2, $this->Image($f,$x,$y,$w,$h,'JPG','','',true,300,'',false,false,0,'CM'), 0, 'L', 0, 0, "", "", true, 0, false, true, $cell_height*2, 'M');
         $this->SetTextColor(0);
 
         $codi = " codi: ".$this->peu['codi'];
