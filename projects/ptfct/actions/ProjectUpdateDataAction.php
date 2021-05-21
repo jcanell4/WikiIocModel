@@ -72,7 +72,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
         }else {
             throw new ConfigurationProjectNotAvailableException($projectTypeConfigFile);
         }
-
+        unset($response[AjaxKeys::KEY_ACTIVA_UPDATE_BTN]);
         return $response;
     }
 
