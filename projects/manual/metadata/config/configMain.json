@@ -51,6 +51,11 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "Escriviu el valor de la dada aquí"
+                        },
+                        "parametres": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Escriviu els paràmetres per a dadaActualitzable"
                         }
                     }                    
                 },

@@ -1022,7 +1022,7 @@
             },
             "tipus": {
               "type": "select",
-              "options": ["dada"]                           
+              "options": ["dada","dadaActualitzable"]
             },
             "valor": {
               "type": "string"
