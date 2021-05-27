@@ -47,7 +47,6 @@ class IocElemNodeDoc extends LeveledNodeDoc {
     protected $offset;
     protected $width;
     protected $elemType;
-//    protected $level;
     
     public function __construct($type, $title, $offset=FALSE, $width=FALSE, $level=0) {
         parent::__construct(self::IOC_ELEM_TYPE, $level);
@@ -55,21 +54,8 @@ class IocElemNodeDoc extends LeveledNodeDoc {
         $this->title = $title;
         $this->offset = $offset;
         $this->width= $width;
-//        $this->level = $level;
     }
     
-//    public function setNodeParams($type, $title, $offset=FALSE, $width=FALSE, $level=0) {
-//        $this->elemType= $type;
-//        $this->title = $title;
-//        $this->offset = $offset;
-//        $this->width= $width;
-//        $this->level = $level;
-//    }
-    
-//    public function getLevel(){
-//        return $this->level;
-//    }
-
     public function getEncodeJson() {
         $ret = "{\n\"type\":\"".trim($this->type)."\""
                 .",\n\"elemType\":\"".trim($this->elemType)."\""
