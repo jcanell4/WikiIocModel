@@ -32,7 +32,7 @@ abstract class AbstractNodeDoc{
     public abstract function getEncodeJson();
 }
 
-class IocElemNodeDoc extends StructuredNodeDoc {
+class IocElemNodeDoc extends LeveledNodeDoc {
     const IOC_ELEM_TYPE = "iocElemType";
     const IOC_ELEM_TYPE_EXAMPLE = "example";
     const IOC_ELEM_TYPE_IMPORTANT = "important";
@@ -41,27 +41,35 @@ class IocElemNodeDoc extends StructuredNodeDoc {
     const IOC_ELEM_TYPE_NOTE = "note";
     const IOC_ELEM_TYPE_REF = "reference";
     const IOC_ELEM_TYPE_QUOTE = "quote";
+    const IOC_ELEM_TYPE_INCLUDE = "include";
     
     protected $title;
     protected $offset;
     protected $width;
     protected $elemType;
+//    protected $level;
     
-    public function __construct($type, $title, $offset=FALSE, $width=FALSE) {
-        parent::__construct(self::IOC_ELEM_TYPE);
+    public function __construct($type, $title, $offset=FALSE, $width=FALSE, $level=0) {
+        parent::__construct(self::IOC_ELEM_TYPE, $level);
         $this->elemType= $type;
         $this->title = $title;
         $this->offset = $offset;
         $this->width= $width;
+//        $this->level = $level;
     }
     
-    public function setNodeParams($type, $title, $offset=FALSE, $width=FALSE) {
-        $this->elemType= $type;
-        $this->title = $title;
-        $this->offset = $offset;
-        $this->width= $width;
-    }
+//    public function setNodeParams($type, $title, $offset=FALSE, $width=FALSE, $level=0) {
+//        $this->elemType= $type;
+//        $this->title = $title;
+//        $this->offset = $offset;
+//        $this->width= $width;
+//        $this->level = $level;
+//    }
     
+//    public function getLevel(){
+//        return $this->level;
+//    }
+
     public function getEncodeJson() {
         $ret = "{\n\"type\":\"".trim($this->type)."\""
                 .",\n\"elemType\":\"".trim($this->elemType)."\""
@@ -658,6 +666,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     var $table_types = "";
     
     var $tmpData=array();
+    var $actualLevel;
      
     var $storeNode = NULL;
     var $bIocElems = array(array(),  array());
@@ -727,7 +736,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         }else{
             $father = $this->rootNode;
         }
-
+        $this->actualLevel = $level;
         $this->currentNode = new HeaderNodeDoc($text, $level, $father);
     }
 
