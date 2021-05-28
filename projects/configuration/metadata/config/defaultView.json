@@ -16,10 +16,10 @@
     },
     "fields": {
         "responsable": {
-            "type" : "hidden"
+            "type": "hidden"
         },
         "autor": {
-            "type" : "hidden"
+            "type": "hidden"
         },
         "arraytaula":{
             "label": "Taula de substitució",
@@ -31,57 +31,63 @@
                 "data-editable-element": "table"
             },
             "config": {
-              "actions": {
-                "add_default_row": "Afegir regla",
-                "remove_rows": "Eliminar les regles seleccionades"    
-              },
-              "fields": {
-                "key":{
-                  "type": "string"         
-                },        
-                "type": {
-                  "type": "string"
+                "actions": {
+                    "add_default_row": "Afegir regla",
+                    "remove_rows": "Eliminar les regles seleccionades"
                 },
-                "value": {
-                  "type": "string"
-                },
-                "parameters": {
-                  "type": "string"
-                }
-              },
-              "display_fields":["key", "value"],
-              "layout": [
-                {
-                  "defaultCell": {
-                    "width" : "50%"
-                  },
-                  "cells": [
-                    {
-                      "name": "key",
-                      "field": "key",
-                      "editable": false
+                "fields": {
+                    "key":{
+                        "type": "string"
                     },
-
-                    {
-                      "name": "type",
-                      "field": "type",
-                      "editable": false
+                    "type": {
+                        "type": "string"
                     },
-
-                    {
-                      "name": "value",
-                      "field": "value",
-                      "editable": true
+                    "value": {
+                        "type": "string"
                     },
-
-                    {
-                      "name": "parameters",
-                      "field": "parameters",
-                      "editable": false
+                    "parameters": {
+                        "type": "object"
+                    },
+                    "conditions": {
+                        "type": "object"
                     }
-                  ]
-                }
-              ]
+                },
+                "display_fields": ["key", "value"],
+                "layout": [
+                    {
+                        "defaultCell": {
+                            "width": "50%"
+                        },
+                        "cells": [
+                            {
+                                "name": "key",
+                                "field": "key",
+                                "editable": false
+                            },
+                            {
+                                "name": "type",
+                                "field": "type",
+                                "width": "5%",
+                                "editable": false
+                            },
+                            {
+                                "name": "value",
+                                "field": "value",
+                                "editable": true
+                            },
+                            {
+                                "name": "parameters",
+                                "field": "parameters",
+                                "editable": false
+                            },
+                            {
+                                "name": "conditions",
+                                "field": "conditions",
+                                "editable": false
+                            }
+                        ]
+                    }
+                ]
             }
         }
     }

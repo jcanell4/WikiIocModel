@@ -35,7 +35,10 @@
                             "default": "Escriviu aquí el valor"
                         },
                         "parameters": {
-                            "type": "string"
+                            "type": "object"
+                        },
+                        "conditions": {
+                            "type": "object"
                         }
                     }                    
                 },
