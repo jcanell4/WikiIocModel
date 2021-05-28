@@ -248,6 +248,9 @@
                     },
                     "valor": {
                         "type": "string"
+                    },
+                    "parametres": {
+                        "type": "string"
                     }
                 }
             }
