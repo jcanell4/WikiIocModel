@@ -595,7 +595,7 @@
             },
             "tipus": {
               "type": "select",
-              "options": ["dada","dadaActualitzable"]
+              "options": ["dada","dada_actualitzable"]
             },
             "valor": {
               "type": "string"
