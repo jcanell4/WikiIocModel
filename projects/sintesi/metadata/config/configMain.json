@@ -221,7 +221,7 @@
                         "parametres": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "Indiqueu els paràmetres per a dada_actualitzable"
+                            "default": "Indiqueu els paràmetres per els tipus que ho necessitin"
                         }
                     }                    
                 },

@@ -36,9 +36,6 @@
                         },
                         "parameters": {
                             "type": "object"
-                        },
-                        "conditions": {
-                            "type": "object"
                         }
                     }                    
                 },

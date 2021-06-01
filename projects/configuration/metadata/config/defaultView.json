@@ -79,11 +79,6 @@
                                 "name": "parameters",
                                 "field": "parameters",
                                 "editable": false
-                            },
-                            {
-                                "name": "conditions",
-                                "field": "conditions",
-                                "editable": false
                             }
                         ]
                     }

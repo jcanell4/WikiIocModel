@@ -110,7 +110,7 @@
                         "parametres": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "Indiqueu els paràmetres per a dada_actualitzable"
+                            "default": "Indiqueu els paràmetres si el tipus ho necessita"
                         }
                     }                    
                 },
