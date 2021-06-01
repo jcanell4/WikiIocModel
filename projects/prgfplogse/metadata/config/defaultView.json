@@ -523,7 +523,7 @@
             "add_import" : {
               "button_label" : "Importar amb formats: '9 concepte' o també '9.9 concepte' ",
               "data": {
-                "regexColSeparator": "^ *([0-9]?) *([0-9]\\.?[0-9]?[0-9]?\\.?) *(.*?) *?$",
+                "regexColSeparator": "^ *([0-9]?),? *([0-9]\\.?[0-9]?[0-9]?\\.?[0-9]?[0-9]?\\.?) *(.*?) *?$",
                 "regexRowSeparator": "\n"
               }
             }                    
