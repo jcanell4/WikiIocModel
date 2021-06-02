@@ -494,7 +494,7 @@
             "add_import" : {
               "button_label" : "Importar amb format 'RA9 resultat' o també 'RA 9 resultat'",
               "data": {
-                "regexColSeparator": "^(.*?)[ ,\\t]*RA *([0-9])\\.(.*?)[ ,\\t]*(\\d*?)[ ,\\t]*(\\d*?)$",
+                "regexColSeparator": "^(.*?)[ ,\\t]*RA *([0-9])[ \\.](.*?)[ ,\\t]*(\\d*?)[ ,\\t]*(\\d*?)$",
                 "regexRowSeparator": "\n"
               }
             }                    
