@@ -1,0 +1,12 @@
+{
+    "subsetpermissions": {
+        "management": {
+            "groups": ["admin","manager"],
+            "rols": []
+        }
+    },
+    "types": {
+        "main": "p#w",
+        "management": "sh"
+    }
+}

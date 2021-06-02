@@ -1,0 +1,549 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10, 
+        "rows_row": 1
+    },
+    "groups": {
+        "dadesBasiques": {
+            "parent": "",
+            "label": "Dades bàsiques",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable": true,
+                "collapsed": false
+            }
+        },
+        "dates": {
+            "parent": "",
+            "label": "Dates",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable": true,
+                "collapsed": false
+            }
+        },
+        "treball": {
+            "parent": "",
+            "label": "Objectius i Activitats",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable": true,
+                "collapsed": false
+            }
+        },
+        "gestioDocument": {
+            "parent": "",
+            "label": "Informació sobre la gestió del document i el control dels canvis",
+            "n_columns": 12,
+            "frame": true,
+            "config":{
+                "collapsable": true,
+                "collapsed": false
+            }
+        },
+        "gestioDocumentRaonsModif": {
+            "parent": "gestioDocument",
+            "n_columns": 12,
+            "frame": false
+        },
+        "dadesAutor": {
+            "parent": "gestioDocument",
+            "label": "Responsable i autor",
+            "n_columns": 12,
+            "frame": true,
+            "config":{
+                "collapsable": true,
+                "collapsed": false
+            }
+        },
+        "dadesRevisor": {
+            "parent": "gestioDocument",
+            "label": "Revisor del document",
+            "n_columns": 12,
+            "frame": true,
+            "config":{
+                "collapsable": true,
+                "collapsed": false
+            }
+        },
+        "dadesValidador": {
+            "parent": "gestioDocument",
+            "label": "Revisor del document",
+            "n_columns": 12,
+            "frame": true,
+            "config":{
+                "collapsable": true,
+                "collapsed": false
+            }
+        },
+        "gestioDocumentReadOnly": {
+            "parent": "gestioDocument",
+            "label": "Històric del control de canvis",
+            "n_columns": 12,
+            "frame": true,
+            "config":{
+                "collapsable": true,
+                "collapsed": true
+            }
+        }        
+    },
+    "fields": {
+        "departament":{
+            "n_columns": 6,
+            "label": "Departament (departament)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "Indiqueu de quin departament és aquesta programació."
+            }
+        },
+        "cicle": {
+            "label": "Nom del cicle (cicle)",
+            "n_columns": 6,
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "indiqueu el nom del cicle"
+            }
+        },
+        "modulId": {
+            "label": "Número del mòdul (modulId)",
+            "n_columns": 2,
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "indiqueu el número del mòdul"
+            }
+        },
+        "durada": {
+            "label": "Durada del mòdul (durada)",
+            "n_columns": 2,
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "readonly": true,
+                "title": "Aquest és un camp calculat. No l'heu d'introduir"
+            }
+        },
+        "tipusCicle":{
+            "type":"select",
+            "n_columns": 2,
+            "label": "LOE o LOGSE (tipusCicle)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title" : "indiqueu si es tracta d'un cicle LOE o LOGSE."
+            },
+            "config":{
+                "options":[
+                    {"value":"LOE"},
+                    {"value":"LOGSE"}
+                ]
+            }
+        },
+        "resultatsAprenentatgeObjectiusTerminals":{
+            "label": "Resultats d'Aprenentatge (LOE) / Objectius Terminals (LOGSE) (resultatsAprenentatgeObjectiusTerminals)",
+            "n_columns": 12,
+            "type": "editableObject",
+            "group": "treball",
+            "n_rows": 8,
+            "props": {
+                "required": true,
+                "data-editable-element": "table",
+                "title": "Indiqueu els Resultats d'Aprenentatge (LOE) / Objectius Terminals (LOGSE)."
+            },
+            "config": {
+                "actions": {
+                    "add_default_row": "Afegir un RA / OT",
+                    "remove_rows": "Eliminar els RA / OT seleccionats",
+                    "add_default_row_before": "Afegir un RA / OT abans de la fila seleccionada",
+                    "add_import": {
+                        "button_label": "Importar amb format '9. resultat/objectiu'",
+                        "data": {
+                            "regexColSeparator": "^\\s*(\\d{1,2})\\.(.*?)$",
+                            "regexRowSeparator": "\n"
+                        }
+                    }
+                },
+                "fields": {
+                    "ra": {
+                        "type": "number"
+                    },
+                    "descripcio": {
+                        "type": "textarea"
+                    }
+                },
+                "layout": [
+                    {
+                        "defaultCell": {
+                            "width": "10%"
+                        },
+                        "cells": [
+                            {
+                                "name": "Codi RA / OT",
+                                "field": "ra",
+                                "editable": true
+                            },
+                            {
+                                "name": "Descripció del RA / OT",
+                                "field": "descripcio",
+                                "width":"90%",
+                                "editable": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "criterisAvaluacio":{
+            "label": "Criteris d'avaluació (LOE) (criterisAvaluacio)",
+            "n_columns": 12,
+            "type": "editableObject",
+            "group": "treball",
+            "n_rows": 8,
+            "props": {
+                "required": true,
+                "data-editable-element": "table",
+                "title": "Indiqueu els Criteris d'avaluació (LOE)."
+            },
+            "config": {
+                "actions": {
+                    "add_default_row": "Afegir un CA",
+                    "remove_rows": "Eliminar els CA seleccionats",
+                    "add_default_row_before": "Afegir un CA abans de la fila seleccionada",
+                    "add_import": {
+                        "button_label": "Importar amb format '9.9 criteri'",
+                        "data": {
+                            "regexColSeparator": "^\\s*(\\d{1,2})\\.(\\d{1,2})(.*?)$",
+                            "regexRowSeparator": "\n"
+                        }
+                    }
+                },
+                "fields": {
+                    "ra":{
+                        "type": "conditionalselect"
+                    },
+                    "ca":{
+                        "type": "string"
+                    },
+                    "descripcio": {
+                        "type": "textarea"
+                    }
+                },
+                "layout": [
+                    {
+                        "defaultCell": {
+                            "width": "10%"
+                        },
+                        "cells": [
+                            {
+                                "name": "RA",
+                                "field": "ra",
+                                "editable": true,
+                                "config": {
+                                    "fieldsource": "resultatsAprenentatgeObjectiusTerminals",
+                                    "labelFields": ["ra", "descripcio"],
+                                    "labelSeparator": ": ",
+                                    "outputFields": ["ra"],
+                                    "outputSeparator": [","],
+                                    "outputMultiSeparator": [":"],
+                                    "hierarchySeparator": ".",
+                                    "multiple": false,
+                                    "validationRegex": "^\\d+$"
+                                }
+                            },
+                            {
+                                "name": "Codi C.A.",
+                                "field": "ca",
+                                "editable": true
+                            },
+                            {
+                                "name": "Descripció del C.A.",
+                                "field": "descripcio",
+                                "width":"90%",
+                                "editable": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "activitatsFormatives":{
+            "label": "Activitats Formatives (activitatsFormatives)",
+            "n_columns": 12,
+            "n_rows": 5,
+            "type":"textarea",
+            "group": "treball",
+            "props": {
+              "required": true,
+              "data-editable-element": "textarea",
+              "title": "Indiqueu les Activitats Formatives."
+            },
+            "config": {
+                "renderable": true,
+                "mode": "xhtml"
+            }
+        },
+        "cc_raonsModificacio":{
+            "type":"textarea",
+            "label": "Raons de la modificació",
+            "group": "gestioDocumentRaonsModif",
+            "n_columns":12,
+            "props": {
+                "required": true,
+                "title": "Raons per les que s'està fent aquesta modificació."
+            }
+        },
+        "cc_historic":{
+            "group": "gestioDocumentReadOnly",
+            "label": "   ",
+            "n_columns":12,
+            "n_rows":6,
+            "fields": {
+                "data": {
+                    "type": "date"
+                },
+                "autor": {
+                    "type": "string"
+                },
+                "modificacions": {
+                    "type": "string"
+                }
+            }
+        },
+        "responsable": {
+            "type": "amd",
+            "label": "Responsable de la creació (responsable)",
+            "n_columns": 4,
+            "group": "dadesAutor",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "responsable",
+                    "dialogTitle": "Cercar responsable",
+                    "dialogButtonLabel": "Afegir responsable",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "autor": {
+            "type": "amd",
+            "label": "Autor (autor)",
+            "n_columns": 4,
+            "group": "dadesAutor",
+            "props": {
+               "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "autor",
+                    "dialogTitle": "Cercar autor",
+                    "dialogButtonLabel": "Afegir autor",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                          "username": "Nom d'usuari",
+                          "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "cc_dadesAutor#carrec":{
+            "n_columns": 4,
+            "label": "Càrrec de l'autor",
+            "group": "dadesAutor",
+            "props": {
+                "required": true,
+                "title": "Indiqueu de quin departament és aquesta programació."
+            },
+            "type":"select",
+            "config":{
+                "options":[
+                    {"value":"Professor/a"},
+                    {"value":"Cap de departament"},
+                    {"value":"Coordinació qualitat FP"},
+                    {"value":"Direcció acadèmica FP"}
+                ]
+            },
+            "default":"Professor/a"
+        },
+        "revisor": {
+            "type": "amd",
+            "label": "Qui revisa el document (revisor)",
+            "n_columns": 6,
+            "group": "dadesRevisor",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "revisor",
+                    "dialogTitle": "Cercar qui revisa",
+                    "dialogButtonLabel": "Afegir revisor",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "cc_dadesRevisor#carrec":{
+            "n_columns": 4,
+            "label": "Càrrec de qui revisa el document",
+            "group": "dadesRevisor",
+            "props": {
+                "required": true,
+                "title": "Indiqueu de quin departament és aquesta programació."
+            },
+            "type":"select",
+            "config":{
+                "options":[
+                    {"value":"Professor/a"},
+                    {"value":"Cap de departament"},
+                    {"value":"Coordinació qualitat FP"},
+                    {"value":"Direcció acadèmica FP"}
+                ]
+            },
+            "default":"Coordinació qualitat FP"
+        },
+        "validador": {
+            "type": "amd",
+            "label": "Qui aprova i valida el document (validador)",
+            "n_columns": 6,
+            "group": "dadesValidador",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "validador",
+                    "dialogTitle": "Cercar qui aprova/valida",
+                    "dialogButtonLabel": "Afegir validador",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "cc_dadesValidador#carrec":{
+            "n_columns": 4,
+            "label": "Càrrec de qui aprova/valida el document",
+            "group": "dadesValidador",
+            "props": {
+                "required": true,
+                "title": "Indiqueu de quin departament és aquesta programació."
+            },
+            "type":"select",
+            "config":{
+                "options":[
+                    {"value":"Professor/a"},
+                    {"value":"Cap de departament"},
+                    {"value":"Coordinació qualitat FP"},
+                    {"value":"Direcció acadèmica FP"}
+                ]
+            },
+            "default":"Direcció acadèmica FP"
+        },
+        "plantilla": {
+            "type": "hidden"
+        },
+        "cc_dadesAutor#nomGestor":{
+            "type": "hidden"
+        },
+        "cc_dadesAutor#dataDeLaGestio":{
+            "type": "hidden"
+        },
+        "cc_dadesAutor#signatura":{
+            "type": "hidden"
+        },
+        "cc_dadesRevisor#nomGestor":{
+            "type": "hidden"
+        },
+        "cc_dadesRevisor#dataDeLaGestio":{
+            "type": "hidden"
+        },
+        "cc_dadesRevisor#signatura":{
+            "type": "hidden"
+        },
+        "cc_dadesValidador#nomGestor":{
+            "type": "hidden"
+        },
+        "cc_dadesValidador#dataDeLaGestio":{
+            "type": "hidden"
+        },
+        "cc_dadesValidador#signatura":{
+            "type": "hidden"
+        },
+        "documentVersion":{
+            "type": "hidden"
+        }
+    }
+}
