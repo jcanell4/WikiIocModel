@@ -1069,6 +1069,13 @@ hr {
   visibility: hidden;
 }
 
+[id*="percent_row"] .smallCell span {
+  font-size: 12px;
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);    
+}
+
 [id*="title_row"] .smallCell span {
   font-size: 12px;
   line-height: .9;
