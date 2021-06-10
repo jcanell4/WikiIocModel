@@ -1,27 +1,25 @@
 <?php
 /**
- * ToValidateProjectAction: El Revisor marca el projecte com a revisat apte per validar
+ * ToReviseProjectAction: L'Autor marca el projecte apte per revisar
  * @author rafael <rclaver@xtec.cat>
  */
 if (!defined('DOKU_INC')) die();
 
-class ToValidateProjectAction extends ViewProjectAction {
+class ToRevoqueProjectAction extends ViewProjectAction {
 
     public function responseProcess() {
         $model = $this->getModel();
         // Obtenir les dades del projecte per omplir l'històric del control de canvis
         $projectMetaData = $model->getCurrentDataProject(FALSE, FALSE);
-        // El Revisor marca el projecte com a revisat: canvi data i signatura del Revisor
-//        $projectMetaData['cc_dadesRevisor']['dataDeLaGestio'] = date("Y-m-d");
-//        $projectMetaData['cc_dadesRevisor']['signatura'] = "signat";
-        $model->updateSignature($projectMetaData, "cc_dadesRevisor");
-        $model->setDataProject($projectMetaData, "Programació marcada per a ser validada");
+        // L'Autor marca el projecte apte per revisar: canvi data i signatura Autor i afegeix canvi a l'històric
+        $model->updateSignature($projectMetaData, "cc_dadesAutor", FALSE, "pendent");
+        $model->setDataProject($projectMetaData, "Modificació revocada durant la revisió");
         $response = parent::responseProcess();
         $notifyAction = $this->getActionInstance("NotifyAction", null, FALSE);
         $notifyParams=[
             "do" => NotifyAction::DO_ADDMESS,
-            "to" => "{$projectMetaData["validador"]}",
-            "message" => "La programació {$this->params['id']} està a punt per ser validada.",
+            "to" => "{$projectMetaData["responsable"]},{$projectMetaData["autor"]}",
+            "message" => "S'ha revocat la modificació de la programació {$this->params['id']} degut al següent motiu:\n\n{$this->params["motiu"]}",
             "id" => $this->params["id"],
             "type" => NotifyAction::DEFAULT_MESSAGE_TYPE,
             "data-call" => "project&do=workflow&action=view",

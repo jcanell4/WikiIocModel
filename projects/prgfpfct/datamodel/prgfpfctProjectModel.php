@@ -19,7 +19,7 @@ class prgfpfctProjectModel extends UniqueContentFileProjectModel{
 
     public function validateFields($data=NULL){
         //EL responsable no pot ser buit
-        if (!isset($data["responsable"]) || empty($data["responsable"])){
+        if (isset($data["responsable"]) && empty(trim($data["responsable"]))){
             throw new InvalidDataProjectException($this->id, "El camp responsable no pot quedar buit");
         }
     }

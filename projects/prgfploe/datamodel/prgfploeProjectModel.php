@@ -40,7 +40,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
  
     public function validateFields($data=NULL){
         //EL responsable no pot ser buit
-        if(!isset($data["responsable"]) || empty($data["responsable"])){
+        if(isset($data["responsable"]) && empty(trim($data["responsable"]))){
             throw new InvalidDataProjectException(
                     $this->id,
                     "El camp responsable no pot quedar buit"
@@ -684,11 +684,11 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
         $data['cc_raonsModificacio'] = "";        
     }
 
-    public function updateSignature(&$data, $role, $date=FALSE) {        
+    public function updateSignature(&$data, $role, $date=FALSE, $value="signat") {        
         $keyConverter = ["cc_dadesAutor" =>"autor", "cc_dadesRevisor" => "revisor", "cc_dadesValidador" => "validador"];
         $data[$role]['nomGestor'] = $this->getUserName($data[$keyConverter[$role]]);;
         $data[$role]['dataDeLaGestio'] = $date?$date:date("Y-m-d");
-        $data[$role]['signatura'] = "signat";
+        $data[$role]['signatura'] = $value;
     }
     
     public function modifyLastHistoricGestioDocument(&$data, $date=false) {

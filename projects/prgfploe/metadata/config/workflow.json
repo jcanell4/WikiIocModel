@@ -332,6 +332,50 @@
                         "revisor"
                     ]
                 }
+            },
+            "toRevoque": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "revisor"
+                    ]
+                },
+                "button": {
+                    "id": "prgfploeReturnToModifyProjectButton",
+                    "class": "WikiIocButton",
+                    "parms": {
+                        "DOM": {
+                            "id": "prgfploeReturnToModifyProjectButton",
+                            "title": "Revocació de la revisió",
+                            "class": "iocDisplayBlock"
+                        },
+                        "DJO": {
+                           "autoSize": true,
+                           "visible": true,
+                           "iconClass": "'iocToModifyDataProjectIcon'",
+                           "labelText": "'Atenció: Aquest procès revocarà la modificació actual. Indiqueu el motiu i premeu continuar o bé cancel·leu la revocació.'",
+                           "labelButtonAcceptar": "'Continuar'",
+                           "labelButtonCancellar": "'Cancel·lar'",
+                           "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
+                           "standbyId": "'bodyContent'",
+                           "disableOnSend": true
+                        }
+                    },
+                    "scripts": {
+                        "getFunctions": {
+                            "path": "ToRevoqueButton.js"
+                        },
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'"
+                            }
+                        }
+                    }
+                },
+                "changeStateTo": "modifiying"
             },            
             "toValidate": {
                 "permissions": {
