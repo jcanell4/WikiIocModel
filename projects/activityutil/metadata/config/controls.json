@@ -4,7 +4,7 @@
         "parms": {
             "DOM": {
                "id": "activityutilHtmlExport",
-               "title": "activityutilHtmlExport",
+               "title": "Generar fitxers d`exportació per a l`enviament FTP",
                "class": "iocDisplayBlock"
             },
             "DJO": {
