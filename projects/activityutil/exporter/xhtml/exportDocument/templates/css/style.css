@@ -1,0 +1,21 @@
+/* General rules */
+
+.container {
+}
+
+.dades_autoria {
+    margin-top: 20px;
+    text-align: left;
+    font-size: 80%;
+}
+.iocinclude .ioccontent {
+    clear: both !important;
+    font-size: 100%;
+    width: 90%;
+    color: #2c2c2c;
+    background: url("../../img/iocinclude.png") no-repeat scroll 98% 1em #efefef;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    margin: 10px 2px auto;
+}

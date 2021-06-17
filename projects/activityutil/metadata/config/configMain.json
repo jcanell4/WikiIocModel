@@ -1,0 +1,164 @@
+{
+    "metaDataClassesNameSpaces": [
+        {
+            "main": {
+                "MetaDataDAO": "defaultProject",
+                "MetaDataEntity": "defaultProject",
+                "MetaDataRender": "activityutil"
+            }
+        }
+    ],
+    "metaDataComponentTypes": [
+        {
+            "main": {
+                "documents": false,
+                "folders": false
+            }
+        }
+    ],
+    "metaDataProjectConfig": [
+        {
+            "main": {
+                "projectTypeConfigFile": "admconfig:activityutil"
+            }
+        }        
+    ],
+    "metaDataFtpSender": [
+        {
+            "main": {
+                "files": {
+                    "factivity1": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"}
+                },
+                "ftpId": "activity_util"
+            }
+        }
+    ],
+    "metaDataExport": [
+        {
+            "main": {
+                "fields": [
+                    {"field":"documents", "ext":".zip"}
+                ]
+            }
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+            "versions": {
+                "fields": 1
+            },
+            "mainType": {
+                "type": "object",
+                "typeDef": "activityutil"
+            },
+            "typesDefinition": {
+                "entradaExtres": {
+                    "type":"object",
+                    "keys": {
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu la dada extra que necessiteu"
+                        },
+                        "tipus": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        },
+                        "valor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Escriviu el valor de la dada aquí"
+                        },
+                        "parametres": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu els paràmetres per a dada_actualitzable"
+                        }
+                    }                    
+                },
+                "defExtres": {
+                    "type": "objectArray",
+                    "typeDef":"entradaExtres"
+                },                                                
+                "extraDocuments": {
+                    "type":"object",
+                    "keys": {
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu el nom del document"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "default": "Escriu una descripció pel document"
+                        },
+                        "sendftp": {
+                            "type": "boolean",
+                            "mandatory": true,
+                            "comment": "Indica si s'ha d'enviar per FTP"
+                        }
+                    }                    
+                },
+                "extraDoc": {
+                    "type": "objectArray",
+                    "typeDef":"extraDocuments"
+                },                                                
+                "activityutil": {
+                    "type": "object",
+                    "keys": {
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "isRole":true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true
+                        },                                                
+                        "dadesExtres": {
+                            "type": "defExtres",
+                            "mandatory": true
+                        },
+                        "estil": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "main"
+                        },                                                
+                       "entitatResponsable": {
+                            "type": "string"
+                        },
+                        "mostrarAutor": {
+                            "type": "boolean",
+                            "mandatory": true,
+                            "default":true
+                        },
+                        "documents": {
+                            "type": "extraDoc",
+                            "default": [{"nom":"continguts", "descripcio":"", "sendftp":""}]
+                        },
+                        "nom_real": {
+                            "type": "string",
+                            "mandatory": true,
+                            "calculateOnSave": {
+                                "class": "CalculateRealNameFromUsername",
+                                "data": "autor"
+                            }
+                        },
+                        "data_fitxercontinguts": {
+                            "type": "string",
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateMaxPageDateFromNs",
+                                "data": ""
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

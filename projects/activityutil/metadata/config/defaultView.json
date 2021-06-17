@@ -1,0 +1,244 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10,
+        "rows_row": 1
+    },
+    "groups": {
+        "main": {
+            "parent": "",
+            "label": "Dades bàsiques",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":false,
+                "collapsed":false
+            }
+        },
+        "authorship": {
+            "parent": "",
+            "label": "Dades d'autoria",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+        "extres": {
+            "parent": "",
+            "label": "Dades extres",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":true
+            }
+        }
+    },
+    "fields": {
+        "responsable": {
+            "type" : "amd",
+            "label": "Responsable de la creació (responsable)",
+            "n_columns": 6,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {
+                    "and": [
+                        {"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}},
+                        {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}
+                    ]
+                },
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "responsable",
+                    "dialogTitle" : "Cercar responsable",
+                    "dialogButtonLabel" : "Afegir responsable",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "autor": {
+            "type": "amd",
+            "label": "Autor (autor)",
+            "n_columns": 6,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {
+                    "and":[
+                        {"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}},
+                        {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}
+                    ]
+                },
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+              "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "autor",
+                    "dialogTitle" : "Cercar autor",
+                    "dialogButtonLabel" : "Afegir autor",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                  }
+            }
+        },
+        "documents": {
+            "label": "Llista d'activitats",
+            "n_columns": 12,
+            "group": "main",
+            "n_rows": 4,
+            "type": "editableObject",
+            "props": {
+                "data-editable-element": "table"
+            },
+            "config": {
+                "actions": {
+                    "add_default_row": "Afegir una nova activitat",
+                    "remove_rows": "Eliminar una activitat"
+                },
+                "fields": {
+                    "nom": {
+                        "type": "string"
+                    },
+                    "descripcio": {
+                        "type": "string"
+                    },
+                    "sendftp": {
+                        "type": "checkbox"
+                    }
+                },
+                "layout": [
+                    {
+                        "cells": [
+                            {
+                                "name": "Nom del document",
+                                "field": "nom",
+                                "width": "20%",
+                                "editable": true
+                            },
+                            {
+                                "name": "Descripcio del document",
+                                "field": "descripcio",
+                                "width": "70%",
+                                "editable": true
+                            },
+                            {
+                                "name": "Enviament FTP",
+                                "field": "sendftp",
+                                "width": "10%",
+                                "type": "checkbox",
+                                "editable": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "estil":{
+            "type":"select",
+            "n_columns": 2,
+            "label": "Estil",
+            "group": "main",
+            "props": {
+                "required": true,
+                "title" : "indiqueu l'estil a aplicar."
+            },
+            "config":{
+                "options":[
+                    {"description":"estil normal", "value":"main"}
+                ]
+            }
+        },
+        "dadesExtres": {
+            "n_columns": 12,
+            "group": "extres",
+            "n_rows": 4,
+            "type": "editableObject",
+            "props": {
+                "data-editable-element": "table"
+            },
+            "config": {
+                "actions": {
+                    "add_default_row": "Afegir una nova dada",
+                    "remove_rows": "Eliminar les dades seleccionades"
+                },
+                "fields": {
+                    "nom": {
+                        "type": "string"
+                    },
+                    "tipus": {
+                        "type": "select",
+                        "options": ["dada","dada_actualitzable"]
+                    },
+                    "valor": {
+                        "type": "string"
+                    },
+                    "parametres": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "entitatResponsable": {
+            "label" : "Entitat responsable del document final (opcional)",
+            "n_columns": 8,
+            "group": "authorship",
+            "props": {
+                "title": "Indiqueu si cal quim és el departament o entitat responsable del document final. Podeu deixar el valor en blanc."
+            }
+        },
+        "mostrarAutor": {
+            "type" : "checkbox",
+            "label" : "Mostrar l'autor en el document final?",
+            "n_columns": 4,
+            "group": "authorship",
+            "props": {
+                "required": true,
+                "title": "Indiqueu si voleu mostrar el nom de l'autor en el document final"
+            }
+        },
+        "nom_real": {
+            "type" : "hidden"
+        },
+        "data_fitxercontinguts": {
+            "type" : "hidden"
+        }
+    }
+}
