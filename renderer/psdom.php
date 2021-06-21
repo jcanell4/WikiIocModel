@@ -655,6 +655,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     var $actualLevel;
      
     var $storeNode = NULL;
+    var $storeNodeForInclude = NULL;
     var $bIocElems = array(array(),  array());
     var $currentBIocElemsType = self::UNEXISTENT_B_IOC_ELEMS_TYPE;
     var $bIocElemsRefQueue = array();
@@ -1095,6 +1096,13 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     public function restoreCurrent(){
         $this->currentNode = $this->storeNode;
+    }
+    public function storeCurrentForInclude(){
+        $this->storeNodeForInclude = $this->currentNode;
+    }
+
+    public function restoreCurrentForInclude(){
+        $this->currentNode = $this->storeNodeForInclude;
     }
     
     private function _media ($src, $title=null, $align=null, $width=null, $height=null) {
