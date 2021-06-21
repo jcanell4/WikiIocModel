@@ -134,6 +134,9 @@
                     "remove_rows": "Eliminar una activitat"
                 },
                 "fields": {
+                    "id": {
+                        "type": "number"
+                    },
                     "nom": {
                         "type": "string"
                     },
@@ -144,6 +147,7 @@
                         "type": "checkbox"
                     }
                 },
+                "display_fields": ["nom", "descripcio", "sendftp"],
                 "layout": [
                     {
                         "cells": [

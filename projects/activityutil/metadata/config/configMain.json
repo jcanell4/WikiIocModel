@@ -85,6 +85,11 @@
                 "extraDocuments": {
                     "type":"object",
                     "keys": {
+                        "id": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
                         "nom": {
                             "type": "string",
                             "mandatory": true,
