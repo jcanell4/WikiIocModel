@@ -144,13 +144,19 @@
                         "type": "string"
                     },
                     "sendftp": {
-                        "type": "checkbox"
+                        "type": "string"
                     }
                 },
-                "display_fields": ["nom", "descripcio", "sendftp"],
+                "display_fields": ["id", "nom", "descripcio", "sendftp"],
                 "layout": [
                     {
                         "cells": [
+                            {
+                                "name": "id",
+                                "field": "id",
+                                "width": "2%",
+                                "editable": false
+                            },
                             {
                                 "name": "Nom del document",
                                 "field": "nom",
@@ -167,7 +173,6 @@
                                 "name": "Enviament FTP",
                                 "field": "sendftp",
                                 "width": "10%",
-                                "type": "checkbox",
                                 "editable": true
                             }
                         ]

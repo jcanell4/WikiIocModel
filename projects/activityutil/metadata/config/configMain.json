@@ -88,7 +88,7 @@
                         "id": {
                             "type": "number",
                             "mandatory": true,
-                            "default": "{#_INC(1)_#}"
+                            "default": "{#_SEQ(0)_#}"
                         },
                         "nom": {
                             "type": "string",
@@ -100,9 +100,9 @@
                             "default": "Escriu una descripció pel document"
                         },
                         "sendftp": {
-                            "type": "boolean",
+                            "type": "string",
                             "mandatory": true,
-                            "comment": "Indica si s'ha d'enviar per FTP"
+                            "default": "no"
                         }
                     }                    
                 },
@@ -143,7 +143,7 @@
                         },
                         "documents": {
                             "type": "extraDoc",
-                            "default": [{"nom":"continguts", "descripcio":"", "sendftp":""}]
+                            "default": [{"id":0, "nom":"continguts", "descripcio":"descripció del document", "sendftp":"no"}]
                         },
                         "nom_real": {
                             "type": "string",
