@@ -144,7 +144,7 @@
                         "type": "string"
                     },
                     "sendftp": {
-                        "type": "string"
+                        "type": "boolean"
                     }
                 },
                 "display_fields": ["id", "nom", "descripcio", "sendftp"],

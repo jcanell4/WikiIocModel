@@ -100,9 +100,9 @@
                             "default": "Escriu una descripció pel document"
                         },
                         "sendftp": {
-                            "type": "string",
+                            "type": "boolean",
                             "mandatory": true,
-                            "default": "no"
+                            "default": false
                         }
                     }                    
                 },
@@ -143,7 +143,7 @@
                         },
                         "documents": {
                             "type": "extraDoc",
-                            "default": [{"id":0, "nom":"continguts", "descripcio":"descripció del document", "sendftp":"no"}]
+                            "default": [{"id":0, "nom":"continguts", "descripcio":"descripció del document", "sendftp":false}]
                         },
                         "nom_real": {
                             "type": "string",
