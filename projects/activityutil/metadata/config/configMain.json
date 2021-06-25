@@ -85,7 +85,7 @@
                 "entradaDocuments": {
                     "type":"object",
                     "keys": {
-                        "iddoc": {
+                        "id": {
                             "type": "number",
                             "mandatory": true,
                             "default": "{#_SEQ(0)_#}"
@@ -101,7 +101,8 @@
                         },
                         "sendftp": {
                             "type": "boolean",
-                            "mandatory": true
+                            "mandatory": true,
+                            "default": false
                         }
                     }                    
                 },

@@ -134,7 +134,7 @@
                     "remove_rows": "Eliminar una activitat"
                 },
                 "fields": {
-                    "iddoc": {
+                    "id": {
                         "type": "number"
                     },
                     "nom": {
@@ -147,12 +147,13 @@
                         "type": "boolean"
                     }
                 },
+                "display_fields": ["id", "nom", "descripcio", "sendftp"],
                 "layout": [
                     {
                         "cells": [
                             {
                                 "name": "id",
-                                "field": "iddoc",
+                                "field": "id",
                                 "width": "2%",
                                 "editable": false
                             },
