@@ -30,7 +30,8 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
 
         //construimos la lista de ficheros a enviar con sus propiedaddes
         foreach ($documents as $doc) {
-            if ($doc['sendftp'] && !in_array($doc['sendftp'], ["false","no","0"])) {
+            if ($doc['sendftp'] && ((is_bool($doc['sendftp']) && $doc['sendftp']===TRUE) ||
+                                    (is_string($doc['sendftp']) && !in_array($doc['sendftp'], ["false","no","0"])) )) {
                 $filesToSend[] = ['file' => "{$id}_{$doc['nom']}.zip",
                                   'local' => $data_list['local'],
                                   'action' => $data_list['action'],
@@ -78,39 +79,47 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
     public function validateFields($data=NULL){
         if ($data) {
             $nousDocuments = json_decode($data['documents'], true);
-            usort($nousDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
+            if (!empty($nousDocuments)) {
+                usort($nousDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
 
-            $dataProject = $this->getCurrentDataProject();
-            $vellsDocuments = json_decode($dataProject['documents'], true);
-            usort($vellsDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
+                $dataProject = $this->getCurrentDataProject();
+                $vellsDocuments = json_decode($dataProject['documents'], true);
+                usort($vellsDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
 
-            $k = -1; //para el caso en que se hayan eliminado todos los documentos: $nousDocuments = []
-            $id = $this->getId();
-            $path_continguts = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $id);
+                $k = -1; //para el caso en que se hayan eliminado todos los documentos: $nousDocuments = []
+                $id = $this->getId();
+                $path_continguts = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $id);
 
-            foreach ($nousDocuments as $k => $doc) {
-                if ($doc['id'] === $vellsDocuments[$k]['id']) {
-                    //S'ha modificat el nom d'un fitxer
-                    if ($doc['nom'] !== $vellsDocuments[$k]['nom']) {
-                        $this->renamePage($id, $path_continguts, $vellsDocuments[$k]['nom'], $doc['nom']);
+                foreach ($nousDocuments as $k => $doc) {
+                    if ($doc['id'] === $vellsDocuments[$k]['id']) {
+                        //S'ha modificat el nom d'un fitxer
+                        if ($doc['nom'] !== $vellsDocuments[$k]['nom']) {
+                            $this->renamePage($id, $path_continguts, $vellsDocuments[$k]['nom'], $doc['nom']);
+                        }
+                    }elseif ($doc['id'] > $vellsDocuments[$k]['id']) {
+                        $rowid = array_search($doc['id'], array_column($vellsDocuments, 'id'));
+                        // busca el id actual en todo el array de $vellsDocuments
+                        if ($rowid !== false && $doc['nom'] !== $vellsDocuments[$rowid]['nom']) {
+                            $this->renamePage($id, $path_continguts, $vellsDocuments[$rowid]['nom'], $doc['nom']);
+                        }
+                    }else {
+                        //S'ha afegit un nou fitxer, és a dir, una nova fila a la taula
+                        $this->createPageFromTemplate("$id:{$doc['nom']}", NULL, $this->getRawProjectTemplate(), "create page");
                     }
-                }elseif ($doc['id'] > $vellsDocuments[$k]['id']){
-                    $rowid = array_search($doc['id'], array_column($vellsDocuments, 'id'));
-                    // busca el id actual en tot el array de $vellsDocuments
-                    if ($rowid && $doc['nom'] !== $vellsDocuments[$rowid]['nom']) {
-                        $this->renamePage($id, $path_continguts, $vellsDocuments[$rowid]['nom'], $doc['nom']);
-                    }
-                }
-                
-                //S'ha afegit un nou fitxer, és a dir, una nova fila a la taula
-                if (!isset($vellsDocuments[$k]['nom'])) {
-                    $this->createPageFromTemplate("$id:{$doc['nom']}", NULL, $this->getRawProjectTemplate(), "create page");
                 }
             }
-            
-            //En el cas que s'hagin eliminat files de la taula de documents
-            for ($i=$k+1; $i<count($vellsDocuments); $i++) {
-                $this->createPageFromTemplate("$id:{$vellsDocuments[$i]['nom']}", NULL, NULL, "remove page");
+
+            if (!empty($vellsDocuments)) {
+                //En el cas que s'hagin eliminat files de la taula de documents
+                foreach ($vellsDocuments as $doc) {
+                    if (!empty($nousDocuments)) {
+                        $rowid = array_search($doc['id'], array_column($nousDocuments, 'id'));
+                        $rownom = array_search($doc['nom'], array_column($nousDocuments, 'nom'));
+                    }
+                    if ($rowid === false && $rownom === false) {
+                        $this->createPageFromTemplate("$id:{$doc['nom']}", NULL, NULL, "remove page");
+                    }
+                }
             }
         }
         else {
