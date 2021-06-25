@@ -82,10 +82,10 @@
                     "type": "objectArray",
                     "typeDef":"entradaExtres"
                 },                                                
-                "extraDocuments": {
+                "entradaDocuments": {
                     "type":"object",
                     "keys": {
-                        "id": {
+                        "iddoc": {
                             "type": "number",
                             "mandatory": true,
                             "default": "{#_SEQ(0)_#}"
@@ -101,14 +101,13 @@
                         },
                         "sendftp": {
                             "type": "boolean",
-                            "mandatory": true,
-                            "default": false
+                            "mandatory": true
                         }
                     }                    
                 },
-                "extraDoc": {
+                "defDocuments": {
                     "type": "objectArray",
-                    "typeDef":"extraDocuments"
+                    "typeDef":"entradaDocuments"
                 },                                                
                 "activityutil": {
                     "type": "object",
@@ -142,8 +141,7 @@
                             "default":true
                         },
                         "documents": {
-                            "type": "extraDoc",
-                            "default": [{"id":0, "nom":"continguts", "descripcio":"descripció del document", "sendftp":false}]
+                            "type": "defDocuments"
                         },
                         "nom_real": {
                             "type": "string",
