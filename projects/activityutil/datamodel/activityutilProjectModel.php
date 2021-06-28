@@ -61,17 +61,6 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         }
     }
 
-
-    /**
-     * Callback de usort. Retorna el valor de la comparación de 2 elementos. Se comparan los valores de las claves 'id'
-     * @param array $a
-     * @param array $b
-     * @return int : 0 $a==$b; 1 $a < $b; -1 $a < $b
-     */
-    static function cmpForSort($a, $b) {
-        return ($a['id'] === $b['id']) ? 0 : (($a['id'] < $b['id']) ? -1 : 1);
-    }
-
     /**
      * Gestiona la llista de documents definits per l'usuari
      * @param array $data : dades del projecte (camps del formulari actiu)
@@ -86,7 +75,6 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                 $vellsDocuments = json_decode($dataProject['documents'], true);
                 usort($vellsDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
 
-                $k = -1; //para el caso en que se hayan eliminado todos los documentos: $nousDocuments = []
                 $id = $this->getId();
                 $path_continguts = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $id);
 
@@ -125,6 +113,16 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         else {
             throw new Exception("Aquí passa alguna cosa rara");
         }
+    }
+
+    /**
+     * Callback de usort. Retorna el valor de la comparación de 2 elementos. Se comparan los valores de las claves 'id'
+     * @param array $a
+     * @param array $b
+     * @return int : 0 $a==$b; 1 $a < $b; -1 $a < $b
+     */
+    static function cmpForSort($a, $b) {
+        return ($a['id'] === $b['id']) ? 0 : (($a['id'] < $b['id']) ? -1 : 1);
     }
 
     /**
