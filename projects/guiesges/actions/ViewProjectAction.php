@@ -33,6 +33,7 @@ class ViewProjectAction extends BasicViewProjectAction{
                 $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
                 $anyActual = date("Y");
                 $dataActual = new DateTime();
+                $dataActual->setTime(0, 0, 0);
 
                 foreach ($arraytaula as $elem) {
                     if ($elem['key']==="inici_trimestre_1") {
