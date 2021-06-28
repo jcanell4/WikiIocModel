@@ -1,14 +1,14 @@
 <?php
 /**
  * upgrader_1: Transforma los datos del proyecto "manual"
- *             desde la estructura de la versión 0 a la estructura de la versión 1
+ *             desde la estructura de la versión 1 a la estructura de la versión 2
  * @author rafael
  */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
-class upgrader_1 extends CommonUpgrader {
+class upgrader_2 extends CommonUpgrader {
 
     protected $model;
     protected $metaDataSubSet;
@@ -22,13 +22,14 @@ class upgrader_1 extends CommonUpgrader {
 
         switch ($type) {
             case "fields":
-                //Transforma los datos del proyecto "manual" desde la estructura de la versión 0 a la versión 1
+                //Transforma los datos del proyecto "manual" desde la estructura de la versión 1 a la versión 2
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }
-                //Añade el campo 'amagarMenuInici' a la estructura
-                $dataProject = $this->addNewField($dataProject, "amagarMenuInici", "false");
+                //Añade los campos 'id' y 'descripcio' a la estructura de la tabla 'documents'
+                $dataProject = $this->addFieldAutoIncrementInMultiRow($dataProject, 'documents', 'id');
+                $dataProject = $this->addFieldInMultiRow($dataProject, 'documents', 'descripcio', "");
                 $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;
 
