@@ -70,75 +70,75 @@
                 "title": "indiqueu el suntítol del manual"
             }
         },
-      "responsable": {
-        "type" : "amd",
-        "label": "Responsable de la creació (responsable)",
-        "n_columns": 6,
-        "group": "authorship",
-        "props": {
-            "required": true
+        "responsable": {
+            "type" : "amd",
+            "label": "Responsable de la creació (responsable)",
+            "n_columns": 6,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class" : {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "responsable",
+                    "dialogTitle" : "Cercar responsable",
+                    "dialogButtonLabel" : "Afegir responsable",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
         },
-        "config":{
-           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
-          "class" : {
-            "edit": "IocFilteredList",
-            "view": "IocListSelectedItems"
-          },
-          "data": {
-            "ns":"",
-            "buttonLabel": "Cercar",
-            "fieldName": "responsable",
-            "dialogTitle" : "Cercar responsable",
-            "dialogButtonLabel" : "Afegir responsable",
-            "data": "",
-            "dataQuery": {
-              "filter": ""
+        "autor": {
+            "type": "amd",
+            "label": "Autor (autor)",
+            "n_columns": 6,
+            "group": "authorship",
+            "props": {
+                "required": true
             },
-            "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
-            "fields": {
-              "username": "Nom d'usuari",
-              "name": "Nom"
-            },
-            "fieldId": "username",
-            "defaultEntryField": "name"
-          }
-        }        
-      },
-      "autor": {
-        "type": "amd",
-        "label": "Autor (autor)",
-        "n_columns": 6,
-        "group": "authorship",
-        "props": {
-           "required": true
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class" : {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "autor",
+                    "dialogTitle" : "Cercar autor",
+                    "dialogButtonLabel" : "Afegir autor",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
         },
-        "config":{
-           "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
-          "class" : {
-            "edit": "IocFilteredList",
-            "view": "IocListSelectedItems"
-          },
-          "data": {
-            "ns":"",
-            "buttonLabel": "Cercar",
-            "fieldName": "autor",
-            "dialogTitle" : "Cercar autor",
-            "dialogButtonLabel" : "Afegir autor",
-            "data": "",
-            "dataQuery": {
-              "filter": ""
-            },
-            "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
-            "fields": {
-              "username": "Nom d'usuari",
-              "name": "Nom"
-            },
-            "fieldId": "username",
-            "defaultEntryField": "name"
-          }
-        }
-      },
-      "estil":{
+        "estil":{
             "type":"select",
             "n_columns": 4,
             "label": "Estil",
@@ -198,10 +198,16 @@
                     "remove_rows": "Eliminar un document"
                 },
                 "fields": {
+                    "id": {
+                        "type": "number"
+                    },
                     "ordre": {
                         "type": "number"
                     },
                     "nom": {
+                        "type": "string"
+                    },
+                    "descripcio": {
                         "type": "string"
                     }
                 },
@@ -209,15 +215,27 @@
                     {
                         "cells": [
                             {
-                                "name": "Número d'ordre",
+                                "name": "Id",
+                                "field": "id",
+                                "width": "2%",
+                                "editable": false
+                            },
+                            {
+                                "name": "Ordre",
                                 "field": "ordre",
-                                "width": "25%",
+                                "width": "4%",
                                 "editable": true
                             },
                             {
                                 "name": "Nom del document",
                                 "field": "nom",
-                                "width": "75%",
+                                "width": "20%",
+                                "editable": true
+                            },
+                            {
+                                "name": "Descripcio del document",
+                                "field": "descripcio",
+                                "width": "80%",
                                 "editable": true
                             }
                         ]

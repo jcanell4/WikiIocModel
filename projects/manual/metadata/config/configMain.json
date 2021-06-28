@@ -63,24 +63,33 @@
                     "type": "objectArray",
                     "typeDef":"entradaExtres"
                 },                                                
-                "extraDocuments": {
+                "entradaDocuments": {
                     "type":"object",
                     "keys": {
+                        "id": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_SEQ(0)_#}"
+                        },
                         "ordre": {
                             "type": "number",
                             "mandatory": true,
-                            "default": "{#_INC(1)_#}" 
+                            "default": "{#_INC(1)_#}"
                         },
                         "nom": {
                             "type": "string",
                             "mandatory": true,
                             "default": "Indiqueu el nom del document"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "default": "Escriu una descripció pel document"
                         }
                     }                    
                 },
-                "extraDoc": {
+                "defDocuments": {
                     "type": "objectArray",
-                    "typeDef":"extraDocuments"
+                    "typeDef":"entradaDocuments"
                 },                                                
                 "manual": {
                     "type": "object",
@@ -134,8 +143,8 @@
                             "default":false
                         },
                         "documents": {
-                            "type": "extraDoc",
-                            "default": [{"ordre":1, "nom":"continguts"}]
+                            "type": "defDocuments",
+                            "default": [{"id":0, "ordre":1, "nom":"continguts", "descripcio":"descripció del document"}]
                         },
                         "nom_real": {
                             "type": "string",
