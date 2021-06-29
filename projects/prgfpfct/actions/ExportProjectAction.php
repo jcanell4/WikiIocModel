@@ -1,12 +1,12 @@
 <?php
 /**
- * ProjectExportAction
+ * ExportProjectAction
  * @culpable Rafael Claver
  */
 if (!defined('DOKU_INC')) die();
 define('WIKI_IOC_PROJECT', realpath(__DIR__ . "/../") . "/");
 
-class ProjectExportAction extends ProjectAction{
+class ExportProjectAction extends ProjectAction{
     const PATH_RENDERER = WIKI_IOC_PROJECT."exporter/";
     const PATH_CONFIG_FILE = WIKI_IOC_PROJECT."metadata/config/";
     const CONFIG_TYPE_FILENAME = "configMain.json";
@@ -23,10 +23,6 @@ class ProjectExportAction extends ProjectAction{
     protected $factoryRender;
     protected $metaDataSubSet;
 
-    public function __construct($factory=NULL) {
-        parent::__construct();
-        $this->factoryRender = $factory;
-    }
     /**
      * Ejecuta los procesos_render de primer nivel definidos en el primer nivel
      * del archivo de configuración del proyecto
@@ -59,6 +55,7 @@ class ProjectExportAction extends ProjectAction{
 
     public function responseProcess() {
         $ret = array();
+        $this->factoryRender = $this->getModelManager()->getExporterManager();
         $this->factoryRender->init(['mode'            => $this->mode,
                                     'filetype'        => $this->filetype,
                                     'typesDefinition' => $this->typesDefinition,

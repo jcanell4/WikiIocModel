@@ -219,7 +219,7 @@
                 },
                 "changeStateTo": "revising"
             },
-            "pdfExport": {
+            "export": {
                 "permissions": {
                     "groups": [
                         "admin",
@@ -245,7 +245,7 @@
                            "autoSize": true,
                            "visible": false,
                            "iconClass": "'iocExportPdfIcon'",
-                           "urlBase": "'lib/exe/ioc_ajax.php?call=projectExport'",
+                           "urlBase": "'lib/exe/ioc_ajax.php?call=project&do=workflow&action=export'",
                            "standbyId": "'bodyContent'",
                            "disableOnSend": true
                         }
@@ -319,7 +319,7 @@
             "cancel": {
                 "shortcut":  "creating"
             },
-            "pdfExport": {
+            "export": {
                 "shortcut":  "creating",
                 "permissions": {
                     "groups": [
@@ -465,7 +465,7 @@
             "cancel": {
                 "shortcut":  "creating"
             },
-            "pdfExport": {
+            "export": {
                 "shortcut":  "creating",
                 "permissions": {
                     "groups": [
@@ -568,7 +568,7 @@
             "cancel": {
                 "shortcut":  "creating"
             },
-            "pdfExport": {
+            "export": {
                 "shortcut":  "creating",
                 "permissions": {
                     "groups": [
@@ -645,7 +645,7 @@
             "cancel": {
                 "shortcut":  "creating"
             },
-            "pdfExport": {
+            "export": {
                 "shortcut":  "creating"
             },
             "toRevise": {
