@@ -42,7 +42,7 @@ class manualProjectModel extends AbstractProjectModel {
                         if ($doc['nom'] !== $vellsDocuments[$k]['nom']) {
                             $this->renamePage($id, $path_continguts, $vellsDocuments[$k]['nom'], $doc['nom']);
                         }
-                    }elseif ($doc['id'] > $vellsDocuments[$k]['id']) {
+                    }elseif ($doc['id'] > $vellsDocuments[$k]['id'] && $vellsDocuments[$k]) {
                         $rowid = array_search($doc['id'], array_column($vellsDocuments, 'id'));
                         // busca el id actual en todo el array de $vellsDocuments
                         if ($rowid !== false && $doc['nom'] !== $vellsDocuments[$rowid]['nom']) {
