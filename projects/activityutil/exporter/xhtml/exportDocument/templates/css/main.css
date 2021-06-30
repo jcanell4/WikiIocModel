@@ -1849,7 +1849,8 @@ article figure img {
 .iocexample p,
 .iocimportant p,
 .iocreference p,
-.iocnote p {
+.iocnote p,
+.iocinclude p {
  margin-bottom: 0.5em;
 }
 .ioctextl img,
