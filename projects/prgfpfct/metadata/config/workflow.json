@@ -504,7 +504,9 @@
                     ],
                     "rols": [
                         "responsable",
-                        "autor"
+                        "autor",
+                        "revisor",
+                        "validador"
                     ]
                 },
                 "button": {
