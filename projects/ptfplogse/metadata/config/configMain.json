@@ -901,22 +901,22 @@
                         "dataPaf11": {
                             "type": "date",
                             "mandatory": true,
-                            "default": "01/01/2000"
+                            "default": ""
                         },
                         "dataPaf12": {
                             "type": "date",
                             "mandatory": true,
-                            "default": "01/01/2000"
+                            "default": ""
                         },
                         "dataPaf21": {
                             "type": "date",
                             "mandatory": true,
-                            "default": "01/01/2000"
+                            "default": ""
                         },
                         "dataPaf22": {
                             "type": "date",
                             "mandatory": true,
-                            "default": "01/01/2000"
+                            "default": ""
                         },
                         "dataQualificacioPaf1": {
                             "type": "date",
