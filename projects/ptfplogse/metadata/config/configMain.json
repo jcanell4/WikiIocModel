@@ -30,7 +30,7 @@
             "main": "meta.mdpr",
             "versions": {
                 "fields": 11,
-                "templates": {"continguts": 21}
+                "templates": {"continguts": 22}
             },
             "mainType": {
                 "type": "object",

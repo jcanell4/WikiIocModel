@@ -746,6 +746,7 @@
         <p>{#_DATE("{##dataQualificacioPaf1##}")_#}</p>
         <div class="horizontal_separator"></div>
       </div>
+      <WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPaf21##}'')_#}">
       <div class="vertical_separator"></div>
       <div class="paf_2">
         <h3>PAF 2</h3>
@@ -755,6 +756,7 @@
         <p>{#_DATE("{##dataQualificacioPaf2##}")_#}</p>
         <div class="horizontal_separator"></div>
       </div>
+      </WIOCCL:IF>
     </div>
     <p>Per poder tenir en compte la qualificació de l’AC, s’ha d’aconseguir a la PAF una qualificació mínima de <span>{##notaMinimaPAF##},00</span> sense cap arrodoniment (PAF 1 o PAF 2).</p>
     <br/>
