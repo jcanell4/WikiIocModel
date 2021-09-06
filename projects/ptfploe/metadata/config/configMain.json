@@ -953,21 +953,19 @@
                         "dataPaf11": {
                             "type": "date",
                             "mandatory": true,
-                            "default":""
+                            "default":"01/01/2000"
                         },                                                
                         "dataPaf12": {
                             "type": "date",
                             "mandatory": true,
-                            "default":""
+                            "default":"01/01/2000"
                         },                                                
                         "dataPaf21": {
                             "type": "date",
-                            "mandatory": true,
                             "default":""
                         },                                                
                         "dataPaf22": {
                             "type": "date",
-                            "mandatory": true,
                             "default":""
                         },                                                
                         "dataQualificacioPaf1": {
