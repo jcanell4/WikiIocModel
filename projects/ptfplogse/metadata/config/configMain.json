@@ -905,7 +905,6 @@
                         },
                         "dataPaf12": {
                             "type": "date",
-                            "mandatory": true,
                             "default": ""
                         },
                         "dataPaf21": {
@@ -915,7 +914,6 @@
                         },
                         "dataPaf22": {
                             "type": "date",
-                            "mandatory": true,
                             "default": ""
                         },
                         "dataQualificacioPaf1": {

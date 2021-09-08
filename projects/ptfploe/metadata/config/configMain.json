@@ -957,12 +957,12 @@
                         },                                                
                         "dataPaf12": {
                             "type": "date",
-                            "mandatory": true,
-                            "default":"01/01/2000"
+                            "default":""
                         },                                                
                         "dataPaf21": {
                             "type": "date",
-                            "default":""
+                            "mandatory": true,
+                            "default":"01/01/2000"
                         },                                                
                         "dataPaf22": {
                             "type": "date",
