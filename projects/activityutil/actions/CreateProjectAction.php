@@ -5,7 +5,7 @@ class CreateProjectAction extends BasicCreateProjectAction{
 
     public function responseProcess() {
         $ret = parent::responseProcess();
-        $ret[ProjectKeys::KEY_GENERATED] = $this->getModel()->directGenerateProject();  //crea el contenido del proyecto en 'pages/'
+        $ret[ProjectKeys::KEY_GENERATED] = $this->getModel()->directGenerateProject();  //establece el atributo 'generated' en _wikiIocSystem_.mdpr
 
         $mess = ($ret[ProjectKeys::KEY_GENERATED]) ? "project_generated" : "project_not_generated";
         $new_message = self::generateInfo("info", WikiIocLangManager::getLang($mess), $ret[ProjectKeys::KEY_ID]);

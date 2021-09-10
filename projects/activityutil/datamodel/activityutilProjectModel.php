@@ -14,6 +14,10 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
 
     public function generateProject(){}
 
+    public function hasTemplates(){
+        return false;
+    }
+
     public function directGenerateProject() {
         return $this->projectMetaDataQuery->setProjectGenerated();
     }
