@@ -30,18 +30,20 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
 
         //obtenemos la lista de ficheros que incluye la propiedad booleana 'sendftp'
         $dataProject = $this->getCurrentDataProject();
-        $documents = json_decode($dataProject['documents'], true);
 
-        //construimos la lista de ficheros a enviar con sus propiedaddes
-        foreach ($documents as $doc) {
-            if ($doc['sendftp'] && ((is_bool($doc['sendftp']) && $doc['sendftp']===TRUE) ||
-                                    (is_string($doc['sendftp']) && !in_array($doc['sendftp'], ["false","no","0"])) )) {
-                $filesToSend[] = ['file' => "{$id}_{$doc['nom']}.zip",
-                                  'local' => $data_list['local'],
-                                  'action' => $data_list['action'],
-                                  'remoteBase' => $data_list['remoteBase'],
-                                  'remoteDir' => $remoteDir
-                                 ];
+        if ($dataProject['documents']) {
+            $documents = json_decode($dataProject['documents'], true);
+            //construimos la lista de ficheros a enviar con sus propiedaddes
+            foreach ($documents as $doc) {
+                if ($doc['sendftp'] && ((is_bool($doc['sendftp']) && $doc['sendftp']===TRUE) ||
+                                        (is_string($doc['sendftp']) && !in_array($doc['sendftp'], ["false","no","0"])) )) {
+                    $filesToSend[] = ['file' => "{$id}_{$doc['nom']}.zip",
+                                      'local' => $data_list['local'],
+                                      'action' => $data_list['action'],
+                                      'remoteBase' => $data_list['remoteBase'],
+                                      'remoteDir' => $remoteDir
+                                     ];
+                }
             }
         }
         return $filesToSend;
@@ -77,7 +79,8 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
 
                 $dataProject = $this->getCurrentDataProject();
                 $vellsDocuments = json_decode($dataProject['documents'], true);
-                usort($vellsDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
+                if (!empty($vellsDocuments))
+                    usort($vellsDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
 
                 $id = $this->getId();
                 $path_continguts = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $id);
