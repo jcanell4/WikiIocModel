@@ -41,7 +41,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                                       'local' => $data_list['local'],
                                       'action' => $data_list['action'],
                                       'remoteBase' => $data_list['remoteBase'],
-                                      'remoteDir' => $remoteDir
+                                      'remoteDir' => "$remoteDir/"
                                      ];
                 }
             }
