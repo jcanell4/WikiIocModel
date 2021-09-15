@@ -63,7 +63,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
             }
         }
         if ($file) {
-            $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_timestamp", filemtime("$dir/$file"));
+            $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_timestamp", filemtime($file));
         }
     }
 
