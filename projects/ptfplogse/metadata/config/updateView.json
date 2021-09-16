@@ -87,6 +87,9 @@
         "treballEquipEAF": {
             "type": "hidden"
         },
+        "dadesExtres": {
+            "type" : "hidden"
+        },
         "datesJT": {
             "type": "hidden"
         },

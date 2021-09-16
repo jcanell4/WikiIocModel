@@ -87,6 +87,9 @@
         "treballEquipEAF": {
             "type": "hidden"
         },
+        "semestre": {
+            "type" : "hidden"
+        },
         "datesJT": {
             "type": "hidden"
         },
