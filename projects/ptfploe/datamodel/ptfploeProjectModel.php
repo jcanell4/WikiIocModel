@@ -74,6 +74,15 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             $taulaDadesNF = FALSE;
         }
         
+        if($dataPrg){
+            if(isset($originalValues["cicle"]) && !empty($originalValues["cicle"])){
+                $values["cicle"] = $originalValues["cicle"];
+            }
+            if(isset($originalValues["modul"]) && !empty($originalValues["modul"])){
+                $values["modul"] = $originalValues["modul"];
+            }
+        }
+        
         if(!empty($taulaDadesNFFiltrada)){
              for ($i=0; $i<count($taulaDadesUnitats); $i++){
                 if(isset($originalTaulaDadesUnitats[$i]["unitat"])){                  
@@ -192,6 +201,15 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             }
         }else{
             $taulaDadesNF = FALSE;
+        }
+        
+        if($dataPrg){
+            if($values["cicle"] === $dataPrg["cicle"]){
+                $values["cicle"] = "";
+            }
+            if($values["modul"] === $dataPrg["modul"]){
+                $values["modul"] = "";
+            }
         }
         
         if ($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
