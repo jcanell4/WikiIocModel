@@ -5,7 +5,9 @@ class ViewProjectAction extends BasicViewProjectAction{
 
     public function responseProcess() {
         $response = parent::responseProcess();
-        $response['generatedZipFiles'] = $this->getModel()->llistaDeEspaiDeNomsDeDocumentsDelProjecte();
+        $model = $this->getModel();
+        $response['generatedZipFiles'] = $model->llistaDeEspaiDeNomsDeDocumentsDelProjecte();
+        $response[AjaxKeys::KEY_FTPSEND_HTML] = $model->get_ftpsend_metadata();
         return $response;
     }
 

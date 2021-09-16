@@ -68,6 +68,75 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
     }
 
     /**
+     * Comprova si els fitxers 'HTML export' han estat generats per ser enviats via FTP
+     * (només s'utilitza el primer fitxer de la llista)
+     * @return string HTML per a les metadades
+     */
+    public function get_ftpsend_metadata($useSavedTime=TRUE) {
+        $connData = $this->getFtpConfigData();
+        $mdFtpSender = $this->getMetaDataFtpSender();
+        $fileNames = $this->_constructArrayFileNames($this->id, $mdFtpSender['files']);
+
+        $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $this->id) . '/' . $fileNames[0];
+        $html = '';
+        $fileexists = @file_exists($file);
+        if ($fileexists) {
+            $savedtime = $this->projectMetaDataQuery->getProjectSystemStateAttr("ftpsend_timestamp");
+            $filetime = filemtime($file);
+        }
+
+        if ($fileexists && (!$useSavedTime || ($savedtime === $filetime))) {
+            foreach ($mdFtpSender['files'] as $objFile) {
+                $index = (empty($objFile['remoteIndex'])) ? $mdFtpSender['remoteIndex'] : $objFile['remoteIndex'];
+                $type = $objFile['type'];
+                $rDir = (empty($objFile['remoteDir'])) ? (empty($mdFtpSender['remoteDir'])) ? $connData["remoteDir"] : $mdFtpSender['remoteDir'] : $objFile['remoteDir'];
+                $unzip = in_array(1, $objFile['action']);  //es una action del tipo unzip
+                $linkRef = $objFile['linkName'];
+            }
+
+            $base = str_replace(":", "_", $this->id);
+            $rDir = "$base/$rDir";
+            $data = date("d/m/Y H:i:s", $filetime);
+            $class = "mf_$type";
+            foreach ($fileNames as $file) {
+                $_index = (empty($index)) ? $file : $index;
+                $_linkRef = (empty($linkRef)) ? pathinfo($file, PATHINFO_FILENAME) : $linkRef;
+                $_rDir = ($unzip) ? $rDir . pathinfo($file, PATHINFO_FILENAME) . "/" : $rDir;
+                $url = "{$connData['remoteUrl']}${_rDir}${_index}";
+                $html.= '<p><span id="ftpsend" style="word-wrap: break-word;">';
+                $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'.$_linkRef.'</a> ';
+                $html.= '<span style="white-space: nowrap;">'.$data.'</span>';
+                $html.= '</span></p>';
+            }
+        }else{
+            $html.= '<span id="ftpsend">';
+            $html.= '<p class="media mediafile '.$class.'">No hi ha cap fitxer pujat al FTP</p>';
+            $html.= '</span>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Construye la lista de ficheros a partir del array recibido y la consulta a los datos del proyecto
+     * @return array con los nombres de los ficheros
+     */
+    private function _constructArrayFileNames($id, $metaDataFtpSender=NULL) {
+        if ($metaDataFtpSender) {
+            $ret = array();
+            $base = str_replace(":", "_", $id);
+            $dataProject = $this->getCurrentDataProject(FALSE, FALSE);
+            $fileNames = json_decode($dataProject['documents'], true);
+            foreach ($metaDataFtpSender as $f) {
+                foreach ($fileNames as $file) {
+                    $ret[] = "${base}_${file['nom']}.{$f['type']}";
+                }
+            }
+        }
+        return $ret;
+    }
+
+    /**
      * Gestiona la llista de documents definits per l'usuari
      * @param array $data : dades del projecte (camps del formulari actiu)
      */
