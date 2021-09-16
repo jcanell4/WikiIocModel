@@ -65,7 +65,18 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
             $avaluacioInicial_prg = $dataPrg["avaluacioInicial"];
         }else{
             //valors per defecte si n'hi ha.
-        }        
+        }    
+        
+        if($dataPrg){
+            if(isset($originalValues["cicle"]) && !empty($originalValues["cicle"])){
+                $values["cicle"] = $originalValues["cicle"];
+            }
+            if(isset($originalValues["credit"]) && !empty($originalValues["modul"])){
+                $values["credit"] = $originalValues["credit"];
+            }
+        }
+        
+
 
         if(!empty($dadesQualificacio)){
             for ($i=0; $i<count($dadesQualificacio); $i++){
@@ -139,6 +150,21 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
         $taulaDadesUnitats = (is_array($values["taulaDadesUD"])) ? $values["taulaDadesUD"] : json_decode($values["taulaDadesUD"], true);
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
         $taulaJT = (is_array($values["datesJT"])) ? $values["datesJT"] : json_decode($values["datesJT"], true);
+
+        if($values["nsProgramacio"]){
+            $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
+            if(!is_array($dataPrg)){
+                $dataPrg = json_decode($dataPrg, true);
+            }            
+
+            if($values["cicle"] === $dataPrg["cicle"]){
+                $values["cicle"] = "";
+            }
+            if($values["credit"] === $dataPrg["credit"]){
+                $values["credit"] = "";
+            }
+        }
+
 
         if ($taulaJT != NULL) {
             $hiHaRecuperacio = FALSE;
