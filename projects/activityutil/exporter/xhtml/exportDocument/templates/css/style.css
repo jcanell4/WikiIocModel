@@ -28,7 +28,7 @@ div.plugin_include_content p {
     margin-bottom: 0.5em;
 }
 
-.iocfigure, .iocfigure img, .iocfigure .footfigure {
+.iocfigure, .iocfigure img {
 	margin: 1em auto;
 	display: block;
 }
