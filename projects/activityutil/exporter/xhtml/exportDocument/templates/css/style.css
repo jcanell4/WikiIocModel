@@ -1,6 +1,11 @@
 /* General rules */
 
 .container {
+    margin: 20px;
+    font-family: Georgia,"Times New Roman",serif;
+}
+p {
+    margin-bottom: 1em;
 }
 
 .dades_autoria {
@@ -21,4 +26,32 @@
 }
 div.plugin_include_content p {
     margin-bottom: 0.5em;
+}
+
+.iocfigure, .iocfigure img, .iocfigure .footfigure {
+	margin: 1em auto;
+	display: block;
+}
+
+.iocfigure .footfigure {
+	margin: 0 auto;
+	display: block;
+	text-align: center;
+}
+
+.ioctext .ioccontent {
+	padding-left: 50px;
+}
+
+.taula {
+	margin: 0 auto 1.8em;
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+}
+.taula td, .taula th {
+	padding-right: 1em;
+}
+.taula th {
+	border-top: 1px solid;
+	border-bottom: 1px solid;
 }
