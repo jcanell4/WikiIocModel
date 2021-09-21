@@ -28,7 +28,17 @@ class ImportProjectAction extends ViewProjectAction {
             $import_modelManager = AbstractModelManager::Instance($importProjectType);
             $import_authorization = $import_modelManager->getAuthorizationManager('editProject');
             $has_perm_group = IocCommon::array_in_array($this->params['groups'], $import_authorization->getAllowedGroups());
-            $has_perm_rol = in_array(WikiIocInfoManager::getInfo('client'), $importRoles['roleData']);
+            $allowedUsers = array();
+            $allowedRoles = $import_authorization->getAllowedRoles();
+            foreach ($importRoles['roleData'] as $key => $value) {
+                if(in_array($key, $allowedRoles)){
+                    $users = explode(",", $value);
+                    foreach ($users as $v) {
+                        $allowedUsers []= trim($v);
+                    }
+                }
+            }
+            $has_perm_rol = in_array(WikiIocInfoManager::getInfo('client'), $allowedUsers);
 
             if ($has_perm_group || $has_perm_rol) {
                 $dataProject = $model->getCurrentDataProject(false, false);
@@ -36,7 +46,7 @@ class ImportProjectAction extends ViewProjectAction {
                 $import_data = $import_metaDataQuery->getDataProject($this->params['project_import'], $importProjectType, "main");
 
                 // 3. Verificar una importació anterior
-                if (empty($import_data['nsProgramacio'])) {
+                if (empty($import_data['nsProgramacio']) || $import_data['nsProgramacio']!== $this->params["id"]) {
                     // 4. importar dades
                     //camps directes
                     $dataProject['tipusCicle'] = $import_data['tipusCicle'];
@@ -51,9 +61,11 @@ class ImportProjectAction extends ViewProjectAction {
                         $resp['alert'] = "Error en la $summary";
                     }
 
-                    $import_data['nsProgramacio'] = $projectID;
-                    if (! $import_metaDataQuery->setMeta(json_encode($import_data), "main", "Dades importades pel projecte '$projectID'")) {
-                        $resp['info'] = self::generateInfo("error", "Error en l'actualització de les dades a '{$this->params['project_import']}' després de la importació.", $projectID);
+                    if(empty($import_data['nsProgramacio'])){
+                        $import_data['nsProgramacio'] = $projectID;
+                        if (! $import_metaDataQuery->setMeta(json_encode($import_data), "main", "Dades importades pel projecte '$projectID'")) {
+                            $resp['info'] = self::addInfoToInfo(self::generateInfo("error", "Error en l'actualització de les dades a '{$this->params['project_import']}' després de la importació.", $projectID), $resp['info']);
+                        }
                     }
 
                     $response = parent::responseProcess();

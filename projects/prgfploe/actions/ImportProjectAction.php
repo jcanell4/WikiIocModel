@@ -58,7 +58,17 @@ class ImportProjectAction extends ViewProjectAction {
             $import_modelManager = AbstractModelManager::Instance($importProjectType);
             $import_authorization = $import_modelManager->getAuthorizationManager('editProject');
             $has_perm_group = IocCommon::array_in_array($this->params['groups'], $import_authorization->getAllowedGroups());
-            $has_perm_rol = in_array(WikiIocInfoManager::getInfo('client'), $importRoles['roleData']);
+            $allowedUsers = array();
+            $allowedRoles = $import_authorization->getAllowedRoles();
+            foreach ($importRoles['roleData'] as $key => $value) {
+                if(in_array($key, $allowedRoles)){
+                    $users = explode(",", $value);
+                    foreach ($users as $v) {
+                        $allowedUsers []= trim($v);
+                    }
+                }
+            }
+            $has_perm_rol = in_array(WikiIocInfoManager::getInfo('client'), $allowedUsers);
 
             if ($has_perm_group || $has_perm_rol) {
                 $dataProject = $model->getCurrentDataProject();
@@ -66,7 +76,7 @@ class ImportProjectAction extends ViewProjectAction {
                 $import_data = $import_metaDataQuery->getDataProject($this->params['project_import'], $importProjectType, "main");
 
                 // 3. Verificar una importació anterior
-                if (empty($import_data['nsProgramacio'])) {
+                if (empty($import_data['nsProgramacio']) || $import_data['nsProgramacio']!== $this->params["id"]) {
                     
                     // 4. Verificar que les dades a importar son del tipus adequat
                     if (!$import_data["tipusCicle"] || $import_data["tipusCicle"] == "LOE"){
@@ -84,7 +94,7 @@ class ImportProjectAction extends ViewProjectAction {
                             $dataProject['notaMinimaJT']  = $import_data['notaMinimaJT'];
                             $dataProject['notaMinimaPAF'] = $import_data['notaMinimaPAF'];
                             $dataProject['duradaPAF']     = $import_data['duradaPAF'];
-                        
+
                             //Camps amb importació parcial
                             //taulaInstrumentsAvaluacio
                             if (!is_array($import_data["dadesQualificacioUFs"])) $import_data["dadesQualificacioUFs"]= json_decode ($import_data["dadesQualificacioUFs"], TRUE);
@@ -111,7 +121,7 @@ class ImportProjectAction extends ViewProjectAction {
                             $T = ['bloc' => array_search($import_data['tipusBlocModul'], $B),
                                   'horesBloc' => $import_data['durada']];
                             $dataProject['taulaDadesBlocs'][] = $T;
-                            
+
                             //taulaDadesUF
                             if (!is_array($import_data["taulaDadesUF"])) $import_data["taulaDadesUF"]= json_decode ($import_data["taulaDadesUF"], TRUE);
                             if (isset($dataProject["taulaDadesUF"])){
@@ -160,7 +170,7 @@ class ImportProjectAction extends ViewProjectAction {
                                   'horesBloc' => $import_data['durada']];
                             $dataProject['taulaDadesBlocs'][] = $T;
                         }
-                        
+
                         //resultatsAprenentatge
                         if (!is_array($import_data["resultatsAprenentatge"])) $import_data["resultatsAprenentatge"]= json_decode ($import_data["resultatsAprenentatge"], TRUE);
                         if (isset($dataProject["resultatsAprenentatge"])){
@@ -193,11 +203,13 @@ class ImportProjectAction extends ViewProjectAction {
                             $resp['alert'] = "Error en la $summary";
                         }
 
-                        $import_data['nsProgramacio'] = $projectID;
-                        if (! $import_metaDataQuery->setMeta(json_encode($import_data), "main", "Dades importades pel projecte '$projectID'")) {
-                            $resp['info'] = self::generateInfo("error", "Error en l'actualització de les dades a '{$this->params['project_import']}' després de la importació.", $projectID);
+                        if(empty($import_data['nsProgramacio'])){
+                            $import_data['nsProgramacio'] = $projectID;
+                            if (! $import_metaDataQuery->setMeta(json_encode($import_data), "main", "Dades importades pel projecte '$projectID'")) {
+                                $resp['info'] = self::addInfoToInfo(self::generateInfo("error", "Error en l'actualització de les dades a '{$this->params['project_import']}' després de la importació.", $projectID),$resp["info"]);
+                            }
                         }
-                        
+
                         $response = parent::responseProcess();
                         if ($resp["info"]) $response["info"] = $resp["info"];
                         if ($resp["alert"]) $response["alert"] = $resp["alert"];

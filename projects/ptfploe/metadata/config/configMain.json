@@ -502,7 +502,6 @@
                         },
                         "cicle": {
                             "type": "string",
-                            "default": "Indiqueu el cicle",
                             "mandatory": true,
                             "calculateOnRead": {
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -549,7 +548,6 @@
                         },
                         "modul": {
                             "type": "string",
-                            "default": "Indiqueu el nom mòdul",
                             "mandatory": true,
                             "calculateOnRead": {
                                 "class": "CalculateSimpleValueFromExternaField",
