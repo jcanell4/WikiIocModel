@@ -515,7 +515,7 @@
                     "parms": {
                         "DOM": {
                            "id": "prgfploePdfExportButton",
-                           "title": "prgfploe PDF Export",
+                           "title": "PDF Export",
                            "class": "iocDisplayBlock"
                         },
                         "DJO": {
@@ -586,6 +586,41 @@
                     }
                 },
                 "changeStateTo": "modifiying"
+            },
+            "ftp_project": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor",
+                        "validador",
+                        "revisor"
+                    ]
+                },
+                "button": {
+                    "id": "ftpProjectButton",
+                    "toSet": {
+                        "title": "Enviament FTP",
+                        "query": "do=workflow&action=ftp_project"
+                    },
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'",
+                                "page.generated": "true"
+                            }
+                        }
+                    }
+                },
+                "views": {
+                    "groups": {
+                    },
+                    "rols": {
+                    }
+                }
             }
         }
     },

@@ -15,6 +15,16 @@
             }            
         }
     ],
+    "metaDataFtpSender": [
+        {
+            "main": {
+                "files": {
+                    "file": {"local":"mediadir", "type":"pdf", "action":[0]}
+                },
+                "ftpId": "programacions_fp"
+            }
+        }
+    ],
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
