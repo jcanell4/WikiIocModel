@@ -458,7 +458,6 @@
                         },
                         "cicle": {
                             "type": "string",
-                            "default": "Indiqueu el cicle",
                             "mandatory": true,
                             "calculateOnRead": {
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -504,7 +503,6 @@
                         },
                         "credit": {
                             "type": "string",
-                            "default": "Indiqueu el nom crèdit",
                             "mandatory": true,
                             "calculateOnRead": {
                                 "class": "CalculateSimpleValueFromExternaField",
