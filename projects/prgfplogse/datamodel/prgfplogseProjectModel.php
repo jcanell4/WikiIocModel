@@ -48,7 +48,7 @@ class prgfplogseProjectModel extends UniqueContentFileProjectModel{
             ,["typeField"=>"SF","field"=>"credit", "accioNecessaria"=>"hi poseu el nom del crèdit"]
 //            ,["typeField"=>"SF","field"=>"estrategiesMetodologiques", "accioNecessaria"=>"hi poseu les estratègies moetodològiques del crèdit"]
             ,["typeField"=>"TF","field"=>"taulaDadesUD", "accioNecessaria"=>"hi afegiu les unitats formatives del crèdit"]
-            ,["typeField"=>"TF","field"=>"taulaInstrumentsAvaluacio", "accioNecessaria"=>"hi afegiu els instruments d'avalaució del crèdit"]
+            ,["typeField"=>"TF","field"=>"taulaInstrumentsAvaluacio", "accioNecessaria"=>"hi afegiu els instruments d'avaluació del crèdit"]
             ,["typeField"=>"TF","field"=>"objectius", "accioNecessaria"=>"hi afegiu els objectius de cada UD"]
             ,["typeField"=>"TF","field"=>"conceptes", "accioNecessaria"=>"hi afegiu els conceptes associats a cada UD"]
             ,["typeField"=>"TF","field"=>"procediments", "accioNecessaria"=>"hi afegiu els procediments associats a cada UD"]
@@ -142,7 +142,7 @@ class prgfplogseProjectModel extends UniqueContentFileProjectModel{
                     $result["ERROR"][] = [
                         'responseType' => $responseType,
                         'field' => 'taulaInstrumentsAvaluacio',
-                        'message' => sprintf("A la taula dels intsruments d'avalaució (taulaInstrumentsAvaluacio), la ponderació de la PAF pren el valor de %d sobre %d i per tant, supera el llindar del 60%s"
+                        'message' => sprintf("A la taula dels intsruments d'avaluació (taulaInstrumentsAvaluacio), la ponderació de la PAF pren el valor de %d sobre %d i per tant, supera el llindar del 60%s"
                                             ,$item["ponderacio"]
                                             ,$sum
                                             ,"%")
@@ -154,7 +154,7 @@ class prgfplogseProjectModel extends UniqueContentFileProjectModel{
                 $result["WARNING"][] = [
                     'responseType' => $responseType,
                     'field' => 'taulaInstrumentsAvaluacio',
-                    'message' => sprintf("A la taula dels intsruments d'avalaució (taulaInstrumentsAvaluacio), la suma de les ponderacions no és 100, ni coincideix amb el nombre d'hores. Reviseu si es tracta d'un error."
+                    'message' => sprintf("A la taula dels intsruments d'avaluació (taulaInstrumentsAvaluacio), la suma de les ponderacions no és 100, ni coincideix amb el nombre d'hores. Reviseu si es tracta d'un error."
                                         ,$key)
                 ];
             }

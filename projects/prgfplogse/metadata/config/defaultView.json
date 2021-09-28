@@ -288,7 +288,7 @@
         "n_rows": 6,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les dades de núcli cada UF referents a les metodologies específiques aplicades i a l'avalaució inicial."      
+          "title": "Detalleu les dades de núcli cada UF referents a les metodologies específiques aplicades i a l'avaluació inicial."      
         },
         "config": {
           "actions": {
@@ -358,9 +358,9 @@
         },
         "config": {
           "actions": {
-            "add_default_row": "afegir nous instruments d'avalaució",
+            "add_default_row": "afegir nous instruments d'avaluació",
             "remove_rows": "Eliminar les files seleccionades",
-            "add_default_row_before": "Afegir nou instrument d'avalaució abans de la fila seleccionada"
+            "add_default_row_before": "Afegir nou instrument d'avaluació abans de la fila seleccionada"
           },
           "fields": {
             "tipus": {
@@ -393,7 +393,7 @@
               },
               "cells": [
                 {
-                  "name": "Tipus d'instrument d'avalaució",
+                  "name": "Tipus d'instrument d'avaluació",
                   "field": "tipus",
                   "editable": true
                 },

@@ -60,7 +60,7 @@ class prgfpfctProjectModel extends UniqueContentFileProjectModel{
              ["typeField"=>"SF", "field"=>"departament", "accioNecessaria"=>"hi poseu el nom del departament"]
             ,["typeField"=>"SF", "field"=>"cicle", "accioNecessaria"=>"hi poseu el nom del cicle"]
             ,["typeField"=>"SF", "field"=>"modulId", "accioNecessaria"=>"hi poseu el codi del mòdul"]
-            ,["typeField"=>"TF", "field"=>"resultatsAprenentatgeObjectiusTerminals", "accioNecessaria"=>"hi afegiu els resultats d'avalaució o Objectius Terminals"]
+            ,["typeField"=>"TF", "field"=>"resultatsAprenentatgeObjectiusTerminals", "accioNecessaria"=>"hi afegiu els resultats d'avaluació o Objectius Terminals"]
             ,["typeField"=>"SF", "field"=>"activitatsFormatives", "accioNecessaria"=>"hi afegiu les Activitats Formatives"]
             ,["typeField"=>"SF", "field"=>"cc_raonsModificacio", "accioNecessaria"=>"hi assigneu una raó per la modificació actual de la programació"]
             // ALERTA! Aquests camps no es corresponen amb els IDs que s'asignen als camps

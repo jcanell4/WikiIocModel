@@ -304,7 +304,7 @@
         "n_rows": 6,
         "props": {
           "data-editable-element": "table",
-          "title": "Detalleu les dades de cada UF referents a les metodologies específiques aplicades i a l'avalaució inicial."      
+          "title": "Detalleu les dades de cada UF referents a les metodologies específiques aplicades i a l'avaluació inicial."      
         },
         "config": {
           "actions": {
@@ -384,9 +384,9 @@
         },
         "config": {
           "actions": {
-            "add_default_row": "afegir nous instruments d'avalaució per una Unitat Formativa",
+            "add_default_row": "afegir nous instruments d'avaluació per una Unitat Formativa",
             "remove_rows": "Eliminar les files seleccionades",
-            "add_default_row_before": "Afegir nou instrument d'avalaució abans de la fila seleccionada"
+            "add_default_row_before": "Afegir nou instrument d'avaluació abans de la fila seleccionada"
           },
           "fields": {
             "unitat formativa": {
@@ -428,7 +428,7 @@
                 },
 
                 {
-                  "name": "Tipus d'instrument d'avalaució",
+                  "name": "Tipus d'instrument d'avaluació",
                   "field": "tipus",
                   "editable": true
                 },
@@ -516,6 +516,7 @@
               "type":"number"
             }
           },
+          "display_fields": ["uf", "ra", "descripcio", "ponderacio"],
           "layout": [
             {
               "defaultCell": {
@@ -551,7 +552,7 @@
                 {
                   "name": "hores",
                   "field": "hores",
-                  "editable": false
+                  "editable": true
                 }
               ]
             }
@@ -572,14 +573,14 @@
         "config": {
             "actions": {
                 "create_table_from_url": {
-                    "button_label" :"Crear la taula completa a partir dels RA i els insruments d'avalaució",
+                    "button_label" :"Crear la taula completa a partir dels RA i els instruments d'avaluació",
                     "data": {
                         "url": "lib/exe/ioc_ajax.php?call=protected_processor&do=ProjectModelMethodCaller&command=createTableRAPonderation"
                     }
                 },
                 "add_default_row": "Afegir un instrument d'avaluació per un RA",
                 "remove_rows": "Eliminar les files seleccionades",
-                "add_default_row_before": "Afegir instrument d'avalaució per un RA abans de la fila seleccionada"
+                "add_default_row_before": "Afegir instrument d'avaluació per un RA abans de la fila seleccionada"
             },                    
             "fields": {
                 "uf":{
@@ -614,7 +615,7 @@
                         },
 
                         {
-                          "name": "Instrument d'Avalaució",
+                          "name": "Instrument d'Avaluació",
                           "field": "instAvaluacio",
                           "editable": true
                         },
@@ -799,7 +800,7 @@
         }
       },
       "activitatsAprenentatge":{
-        "label": "Activitats d'ensenyament i aprennetatge (activitatsAprenentatge)",
+        "label": "Activitats d'ensenyament i aprenentatge (activitatsAprenentatge)",
         "n_columns": 12,
         "type": "editableObject",
         "group": "UF",
@@ -812,7 +813,7 @@
         "config": {
           "actions": {
             "add_default_row": "Afegir una activitat",
-            "remove_rows": "Eliminar les activiytats seleccionades",
+            "remove_rows": "Eliminar les activitats seleccionades",
             "add_default_row_before": "Afegir una activitat abans de la fila seleccionada"
           },
           "fields": {
@@ -904,7 +905,7 @@
                     "outputSeparator": [","],
                     "outputMultiSeparator": [":"],
                     "hierarchySeparator": ".",
-                    "multiple": false,
+                    "multiple": true,
                     "validationRegex": "^\\d+$"
                   }                                                                
                 },
@@ -938,6 +939,7 @@
                     "fieldsource": "criterisAvaluacio",
                     "filterByKeySource": ["uf","ra"],
                     "filterByKeyOwn": ["unitat formativa","ra"],
+                    "filterCompliantRelation": ["=","is_in(,)"],
                     "labelFields": ["ca", "descripcio"],
                     "labelSeparator": ": ",
                     "outputFields": ["ca"],
@@ -964,7 +966,7 @@
                     "outputSeparator": [", "],
                     "outputMultiSeparator": [":"],
                     "multiple": true,
-                    "validationRegex": "^(EAC|EAF|JT|PAF)\\d$"
+                    "validationRegex": "^(EAC|EAF|JT|PAF).*$"
                   }                
                 }
               ]

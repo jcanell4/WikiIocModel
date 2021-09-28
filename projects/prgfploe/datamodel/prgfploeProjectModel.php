@@ -69,8 +69,8 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
             ,["typeField"=>"SF","field"=>"modul", "accioNecessaria"=>"hi poseu el nom del mòdul"]
 //            ,["typeField"=>"SF","field"=>"estrategiesMetodologiques", "accioNecessaria"=>"hi poseu les estratègies moetodològiques del mòdul"]
             ,["typeField"=>"TF","field"=>"taulaDadesUF", "accioNecessaria"=>"hi afegiu les unitats formatives del mòdul"]
-            ,["typeField"=>"TF","field"=>"taulaInstrumentsAvaluacio", "accioNecessaria"=>"hi afegiu els instruments d'avalaució de cada UF"]
-            ,["typeField"=>"TF","field"=>"resultatsAprenentatge", "accioNecessaria"=>"hi afegiu els resultats d'avalaució de cada UF"]
+            ,["typeField"=>"TF","field"=>"taulaInstrumentsAvaluacio", "accioNecessaria"=>"hi afegiu els instruments d'avaluació de cada UF"]
+            ,["typeField"=>"TF","field"=>"resultatsAprenentatge", "accioNecessaria"=>"hi afegiu els resultats d'avaluació de cada UF"]
             ,["typeField"=>"TF","field"=>"taulaPonderacioRA", "accioNecessaria"=>"hi afegiu la ponderació que cada instrument d'avaluació representa sobre cada RA."]
             ,["typeField"=>"TF","field"=>"criterisAvaluacio", "accioNecessaria"=>"hi afegiu els criteris d'avaluaciḉo associats a cada RA"]
             ,["typeField"=>"TF","field"=>"continguts", "accioNecessaria"=>"hi afegiu els continguts associats a cada UF"]
@@ -195,18 +195,21 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                     $totalNFs[$item["unitat formativa"]][$item["nucli formatiu"]] = 0;
                 }
                 $totalNFs[$item["unitat formativa"]][$item["nucli formatiu"]] += $item["hores"];
-                if(!isset($verificadorRA[$item["unitat formativa"]][$item["ra"]])){
-                    //Error No existeix el RA
-                    $result["ERROR"][] = [
-                        'responseType' => $responseType,
-                        'field' => 'activitatsAprenentatge',
-                        'message' => sprintf("A la taula de les activitats d'aprenentatge (activitatsAprenentatge), hi ha el el RA %d corresponent a la UF %d i al NF %d, però aquest RA no es troba definit a la taula de resultats d'aprenentatge (resutatsAprenentatge)."
-                                            ,$item["ra"]
-                                            ,$item["unitat formativa"]
-                                            ,$item["nucli formatiu"])
-                    ];                    
-                }else{
-                    $verificadorRA[$item["unitat formativa"]][$item["ra"]]=true;
+                $raKeys = explode(",", $item["ra"]);
+                foreach ($raKeys as $raKey) {
+                    if(!isset($verificadorRA[$item["unitat formativa"]][trim($raKey)])){
+                        //Error No existeix el RA
+                        $result["ERROR"][] = [
+                            'responseType' => $responseType,
+                            'field' => 'activitatsAprenentatge',
+                            'message' => sprintf("A la taula de les activitats d'aprenentatge (activitatsAprenentatge), hi ha el el RA %d corresponent a la UF %d i al NF %d, però aquest RA no es troba definit a la taula de resultats d'aprenentatge (resutatsAprenentatge)."
+                                                ,$item["ra"]
+                                                ,$item["unitat formativa"]
+                                                ,$item["nucli formatiu"])
+                        ];                    
+                    }else{
+                        $verificadorRA[$item["unitat formativa"]][trim($raKey)]=true;
+                    }
                 }
                 if(strpos($item["ca"], ",")!==false){
                     $caKeys = explode(",", $item["ca"]);
@@ -215,8 +218,17 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                 }else{
                     $caKeys = explode("\n", $item["ca"]);
                 }
-                foreach ($caKeys as $caKey) {                    
-                    if(!isset($verificadorCA[$item["unitat formativa"]][$item["ra"]][trim($caKey)])){
+                foreach ($caKeys as $caKey) {     
+                    $selectedRa = -1;
+                    $raKeys = explode(",", $item["ra"]);
+                    $pos = 0;
+                    foreach ($raKeys as $raKey){
+                        if(isset($verificadorCA[$item["unitat formativa"]][trim($raKey)][trim($caKey)])){
+                            $selectedRa = $pos;
+                        }
+                        $pos++;
+                    }                    
+                    if($selectedRa==-1){
                         //Error No existeix el CA
                         $result["ERROR"][] = [
                             'responseType' => $responseType,
@@ -228,7 +240,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                                                 ,$item["nucli formatiu"])
                         ];                    
                     }else{
-                        $verificadorCA[$item["unitat formativa"]][$item["ra"]][trim($caKey)]=true;
+                        $verificadorCA[$item["unitat formativa"]][$raKeys[$selectedRa]][trim($caKey)]=true;
                     }
                 }
                 $contKeys = explode(",", $item["continguts"]);
@@ -258,7 +270,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                         $result["ERROR"][] = [
                             'responseType' => $responseType,
                             'field' => 'activitatsAprenentatge',
-                            'message' => sprintf("A la taula de les activitats d'aprenentatge (activitatsAprenentatge), hi ha l'instrument d'avalaució %s corresponent a la UF %d i el NF %d, però aquest instrument no es troba definit a la taula d'instruments d'avalaució (taulaInstrumentsAvaluacio)."
+                            'message' => sprintf("A la taula de les activitats d'aprenentatge (activitatsAprenentatge), hi ha l'instrument d'avaluació %s corresponent a la UF %d i el NF %d, però aquest instrument no es troba definit a la taula d'instruments d'avaluació (taulaInstrumentsAvaluacio)."
                                                 ,$iaKey
                                                 ,$item["unitat formativa"]
                                                 ,$item["nucli formatiu"])
@@ -418,7 +430,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                     $result["ERROR"][] = [
                         'responseType' => $responseType,
                         'field' => 'taulaInstrumentsAvaluacio',
-                        'message' => sprintf("A la taula dels intsruments d'avalaució (taulaInstrumentsAvaluacio), la ponderació de la PAF de la unitat formativa %d pren el valor de %d sobre %d i per tant, supera el llindar del 60%s"
+                        'message' => sprintf("A la taula dels intsruments d'avaluació (taulaInstrumentsAvaluacio), la ponderació de la PAF de la unitat formativa %d pren el valor de %d sobre %d i per tant, supera el llindar del 60%s"
                                             ,$item["unitat formativa"]
                                             ,$item["ponderacio"]
                                             ,$sum[$item["unitat formativa"]]
@@ -432,7 +444,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                     $result["WARNING"][] = [
                         'responseType' => $responseType,
                         'field' => 'taulaInstrumentsAvaluacio',
-                        'message' => sprintf("A la taula dels intsruments d'avalaució (taulaInstrumentsAvaluacio), la suma de les ponderacions de la unitat formativa %d no és 100. Reviseu si es tracta d'un error."
+                        'message' => sprintf("A la taula dels intsruments d'avaluació (taulaInstrumentsAvaluacio), la suma de les ponderacions de la unitat formativa %d no és 100. Reviseu si es tracta d'un error."
                                             ,$key)
                     ];
                 }
@@ -475,7 +487,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                     $result["ERROR"][] = [
                         'responseType' => $responseType,
                         'field' => 'taulaPonderacioRA',
-                        'message' => sprintf("A la taula de registres de les ponderacions dels RA (taulaPonderacioRA), hi ha l'instrument d'avalaució %s corresponent a la UF %d, però aquest instrument no es troba definit a la taula d'instruments d'avalaució (taulaInstrumentsAvaluacio)."
+                        'message' => sprintf("A la taula de registres de les ponderacions dels RA (taulaPonderacioRA), hi ha l'instrument d'avaluació %s corresponent a la UF %d, però aquest instrument no es troba definit a la taula d'instruments d'avaluació (taulaInstrumentsAvaluacio)."
                                             ,$item["instAvaluacio"]
                                             ,$item["unitat formativa"])
                     ];                    
@@ -523,7 +535,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
         }
         if ($resultatsAprenentatge) {
             foreach ($resultatsAprenentatge as $key => $value) {
-                if ($resultatsAprenentatge[$key]["ponderacio"] == "0"){
+                if (!isset($resultatsAprenentatge[$key]["ponderacio"]) || $resultatsAprenentatge[$key]["ponderacio"] == 0){
                      $resultatsAprenentatge[$key]["ponderacio"] = $resultatsAprenentatge[$key]["hores"];
                 }
             }
@@ -545,7 +557,11 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
         }
         $resultatsAprenentatge = $data["resultatsAprenentatge"];
         if ($resultatsAprenentatge && !is_array($resultatsAprenentatge)){
-            $resultatsAprenentatge = json_decode($resultatsAprenentatge, TRUE);
+            $resultatsAprenentatge = json_decode($resultatsAprenentatge, TRUE);            
+        }
+        $originalResultatsAprenentatge = $originalDataKeyValue["resultatsAprenentatge"];
+        if ($originalResultatsAprenentatge && !is_array($originalResultatsAprenentatge)){
+            $originalResultatsAprenentatge = json_decode($originalResultatsAprenentatge, TRUE);            
         }
         $insAvTable = $data["taulaInstrumentsAvaluacio"];
         if ($insAvTable && !is_array($insAvTable)){
@@ -584,17 +600,23 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                 if (!isset($horesRa[$value["unitat formativa"]])){
                     $horesRa[$value["unitat formativa"]] = array();
                 }
-                if (!isset($horesRa[$value["unitat formativa"]][$value["ra"]])){
-                    $horesRa[$value["unitat formativa"]][$value["ra"]] = 0;
+                $ara = explode(",", $value["ra"]);
+                foreach ($ara as $raValue) {
+                    $raValue = trim($raValue);
+                    if (!isset($horesRa[$value["unitat formativa"]][$raValue])){
+                        $horesRa[$value["unitat formativa"]][$raValue] = 0;
+                    }                    
+                    $horesRa[$value["unitat formativa"]][$raValue] += $value["hores"]/ count($ara);
                 }
-                $horesRa[$value["unitat formativa"]][$value["ra"]] += $value["hores"];
             }
         }
 
         if ($resultatsAprenentatge) {
             foreach ($resultatsAprenentatge as $key => $value) {
                 $resultatsAprenentatge[$key]["hores"] = $horesRa[$value["uf"]][$value["ra"]];
-                if ($resultatsAprenentatge[$key]["ponderacio"] == $resultatsAprenentatge[$key]["hores"]){
+                if ($resultatsAprenentatge[$key]["ponderacio"] == $resultatsAprenentatge[$key]["hores"]
+                        || $resultatsAprenentatge[$key]["ponderacio"] == $originalResultatsAprenentatge[$key]["ponderacio"]
+                            && $originalResultatsAprenentatge[$key]["ponderacio"] == $originalResultatsAprenentatge[$key]["hores"]){
                     $resultatsAprenentatge[$key]["ponderacio"] = 0;
                 }
             }

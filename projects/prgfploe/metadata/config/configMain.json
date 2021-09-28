@@ -88,7 +88,7 @@
                         "ca": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "1.{#_INC(1)_#}"
+                            "default": "{#_INC(\"1.1\",\"(\\\\d+\\\\.)(\\\\d+)\",2,[1])_#}"
                         },
                         "descripcio": {
                             "type": "string",
