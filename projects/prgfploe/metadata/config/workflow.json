@@ -173,6 +173,38 @@
                     }
                 }
             },
+            "duplicate": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "duplicateProjectButton",
+                    "toSet": {
+                        "title": "Duplicar projecte",
+                        "query": "do=workflow&action=duplicate_project"
+                    },
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'"
+                            }
+                        }
+                    }
+                },
+                "views": {
+                    "groups": {
+                    },
+                    "rols": {
+                    }
+                }
+            },
             "toRevise": {
                 "permissions": {
                     "groups": [
