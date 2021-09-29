@@ -52,7 +52,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         $originalResultatsAprenentatge = (is_array($originalValues["resultatsAprenentatge"])) ? $originalValues["resultatsAprenentatge"] : json_decode($originalValues["resultatsAprenentatge"], true);
         $dadesQualificacioUFs = (is_array($values["dadesQualificacioUFs"])) ? $values["dadesQualificacioUFs"] : json_decode($values["dadesQualificacioUFs"], true);
         $originalDadesQualificacioUFs = (is_array($originalValues["dadesQualificacioUFs"])) ? $originalValues["dadesQualificacioUFs"] : json_decode($originalValues["dadesQualificacioUFs"], true);
-        $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc"]);
+        $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]);
         if($values["nsProgramacio"]){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
             if(!is_array($dataPrg)){
