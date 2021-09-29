@@ -150,7 +150,7 @@ class prgfplogseProjectModel extends UniqueContentFileProjectModel{
                 }
             }
             
-            if($sum!=100 && $sum != $totalCredit){
+            if(abs($sum-100.0)>2.0E-14 && abs($sum-$totalCredit)>2.0E-14){
                 $result["WARNING"][] = [
                     'responseType' => $responseType,
                     'field' => 'taulaInstrumentsAvaluacio',
