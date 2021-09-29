@@ -32,11 +32,11 @@
             },
             "iocElemType":{
                 "style":{
-                     "padding-left": 5,
-                     "padding-right": 5,
-                     "padding-top": 5,
-                     "padding-bottom": 5,
-                     "margin": {"left":10, "top":0, "right":10, "bottom":0}
+                    "padding-left": 5,
+                    "padding-right": 5,
+                    "padding-top": 5,
+                    "padding-bottom": 5,
+                    "margin": {"left":10, "top":0, "right":10, "bottom":0}
                 },
                 "childrenContainers":{
                     "important": {
@@ -100,8 +100,8 @@
                 "styleTypes":{
                     "pt_taula":{
                         "style":{
-                             "padding-left": 5,
-                             "margin": {"left":15, "right":15}
+                            "padding-left": 5,
+                            "margin": {"left":15, "right":15}
                         }
                     }
                 }
