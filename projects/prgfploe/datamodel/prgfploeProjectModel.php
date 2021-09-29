@@ -440,7 +440,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
             }
             
             foreach ($sum as $key => $value) {
-                if($value!=100){
+                if(abs($value-100.0)>2.0E-14){
                     $result["WARNING"][] = [
                         'responseType' => $responseType,
                         'field' => 'taulaInstrumentsAvaluacio',
@@ -451,7 +451,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
             }
         }
 
-        if(!$horesIgualPonderacioUF && $ponderacioUF!=100){
+        if(!$horesIgualPonderacioUF && abs($ponderacioUF-100.0)>2.0E-14){
             $result["WARNING"][] = [
                 'responseType' => $responseType,
                 'field' => 'taulaDadesUF',
@@ -461,7 +461,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
 
         if(!empty($horesIgualPonderacioRA)){
             foreach ($horesIgualPonderacioRA as $key => $value) {
-                if(!$horesIgualPonderacioRA[$key] && $ponderacioRA[$key]!=100){
+                if(!$horesIgualPonderacioRA[$key] && abs($ponderacioRA[$key]-100.0)>2.0E-14){
                     $result["WARNING"][] = [
                         'responseType' => $responseType,
                         'field' => 'resultatsAprenentatge',
@@ -496,7 +496,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
             if(!empty($ponderacioRA)){
                 foreach ($ponderacioRA as $keyUf => $ponderacioRAUF) {
                     foreach ($ponderacioRAUF as $keyRa => $ponderacio) {
-                        if($ponderacio!=100){
+                        if(abs($ponderacio-100.0)>2.0E-14){
                             $result["WARNING"][] = [
                                 'responseType' => $responseType,
                                 'field' => 'taulaPonderacioRA',
