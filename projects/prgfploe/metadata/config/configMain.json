@@ -637,7 +637,7 @@
                             "isRole":true,
                             "roleProperties":{
                                 "wiki_permission":4,
-                                "shortcut":true,
+                                "shortcut":false,
                                 "order":1
                             }
                         },
