@@ -8,7 +8,7 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
-class upgrader_ejemplo extends CommonUpgrader {
+class upgrader_1 extends CommonUpgrader {
 
     protected $model;
     protected $metaDataSubSet;
@@ -37,8 +37,12 @@ class upgrader_ejemplo extends CommonUpgrader {
                     $filename = $this->model->getProjectDocumentName();
                 $doc = $this->model->getRawProjectDocument($filename);
 
-                if (($ret = !empty($doc))) {
-                    $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
+                $aTokRep = [["avalaució",
+                             "avaluació"]];
+                $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
+
+                if (($ret = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument($filename, $dataChanged, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
                 break;
         }
