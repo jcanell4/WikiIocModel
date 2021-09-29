@@ -126,6 +126,38 @@
                     }
                 }
             },
+            "duplicate": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "duplicateProjectButton",
+                    "toSet": {
+                        "title": "Duplicar w projecte",
+                        "query": "do=workflow&action=duplicate"
+                    },
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'"
+                            }
+                        }
+                    }
+                },
+                "views": {
+                    "groups": {
+                    },
+                    "rols": {
+                    }
+                }
+            },
             "import": {
                 "permissions": {
                     "groups": [
@@ -275,6 +307,9 @@
             "cancel": {
                 "shortcut":  "creating"
             },
+            "duplicate": {
+                "shortcut":  "creating"
+            },
             "toRevoque": {
                 "permissions": {
                     "groups": [
@@ -407,6 +442,9 @@
             "cancel": {
                 "shortcut":  "creating"
             },
+            "duplicate": {
+                "shortcut":  "creating"
+            },
             "validate": {
                 "permissions": {
                     "groups": [
@@ -493,6 +531,9 @@
                 }
             },
             "cancel": {
+                "shortcut":  "creating"
+            },
+            "duplicate": {
                 "shortcut":  "creating"
             },
             "export": {
@@ -636,6 +677,9 @@
                 "shortcut":  "creating"
             },
             "cancel": {
+                "shortcut":  "creating"
+            },
+            "duplicate": {
                 "shortcut":  "creating"
             },
             "toRevise": {
