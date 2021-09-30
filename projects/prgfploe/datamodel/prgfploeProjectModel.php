@@ -164,7 +164,22 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                 }
             }
         }
-        
+
+        $verificadorCAofRA = [];
+        if (!empty($aaTable)){
+            foreach ($aaTable as $item) {
+                $itemsRA = preg_split("/[\s,.]+/", $item['ra']);
+                foreach ($itemsRA as $ra) {
+                    $isCAofRA = preg_match("/{$ra}\.[0-9]/", $item['ca']);
+                    if (!isset($verificadorCAofRA[$item['code']]["UF {$item['unitat formativa']}"]["RA $ra"]))
+                        $verificadorCAofRA[$item['code']]["UF {$item['unitat formativa']}"]["RA $ra"] = $isCAofRA;
+                    else {
+                        $verificadorCAofRA[$item['code']]["UF {$item['unitat formativa']}"]["RA $ra"] &= $isCAofRA;
+                    }
+                }
+            }
+        }
+
         $verificadorCont = [];
         if(!empty($conTable)){
             foreach ($conTable as $item) {
@@ -326,6 +341,24 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                                             ,$ra
                                             ,$uf)
                     ];                    
+                }
+            }
+        }
+
+        foreach ($verificadorCAofRA as $code => $ufs) {
+            foreach ($ufs as $uf => $ras) {
+                foreach ($ras as $ra => $assigned) {
+                    if (!$assigned){
+                        //Error RA sense CA
+                        $result["ERROR"][] = [
+                            'responseType' => $responseType,
+                            'field' => 'activitatsAprenentatge',
+                            'message' => sprintf("En la %s del codi %s no hi ha cap CA associat a la %s.",
+                                                 $uf,
+                                                 $code,
+                                                 $ra)
+                        ];
+                    }
                 }
             }
         }
