@@ -128,6 +128,8 @@ class prgfpfctProjectModel extends UniqueContentFileProjectModel{
     }
 
     public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE) {
+        $data = parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
+
         $resultatsAprenentatge = $data["resultatsAprenentatgeObjectiusTerminals"];
         if ($resultatsAprenentatge && !is_array($resultatsAprenentatge)){
             $resultatsAprenentatge = json_decode($resultatsAprenentatge, TRUE);

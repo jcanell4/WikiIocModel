@@ -580,6 +580,8 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
     }
 
     public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE) {
+        $data = parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
+
         $ufTable = $data["taulaDadesUF"];
         if ($ufTable && !is_array($ufTable)){
             $ufTable = json_decode($ufTable, TRUE);
