@@ -317,6 +317,7 @@
                         "manager"
                      ],
                      "rols": [
+                        "responsable",
                         "revisor"
                     ]
                 },
@@ -333,7 +334,7 @@
                            "autoSize": true,
                            "visible": true,
                            "iconClass": "'iocToModifyDataProjectIcon'",
-                           "labelText": "'Atenció: Aquest procès revocarà la modificació actual. Indiqueu el motiu i premeu continuar o bé cancel·leu la revocació.'",
+                           "labelText": "'Atenció: Aquest procès rebutjarà la modificació actual. Indiqueu el motiu i premeu continuar o bé cancel·leu-lo.'",
                            "labelButtonAcceptar": "'Continuar'",
                            "labelButtonCancellar": "'Cancel·lar'",
                            "urlBase": "'lib/exe/ioc_ajax.php?call=project'",

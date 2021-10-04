@@ -76,7 +76,7 @@
         },
         "dadesValidador": {
             "parent": "gestioDocument",
-            "label": "Revisor del document",
+            "label": "Validador del document",
             "n_columns": 12,
             "frame": true,
             "config":{
