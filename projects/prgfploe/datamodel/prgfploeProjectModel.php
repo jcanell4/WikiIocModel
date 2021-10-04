@@ -392,7 +392,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                     $result["ERROR"][] = [
                         'responseType' => $responseType,
                         'field' => 'taulaDadesNuclisFormatius',
-                        'message' => sprintf("A la taula dels núclis formatius (taulaDadesNuclisFormatius), les hores del nucli formatiu %s de la UF %d no coincideixen amb la suma de les hores de les seves activitats d'aprenentatge (hores NF=%d, però suma hoes AA=%d)."
+                        'message' => sprintf("A la taula dels nuclis formatius (taulaDadesNuclisFormatius), les hores del nucli formatiu %s de la UF %d no coincideixen amb la suma de les hores de les seves activitats d'aprenentatge (hores NF=%d, però suma hoes AA=%d)."
                                             ,$item["nucli formatiu"]
                                             ,$item["unitat formativa"]
                                             ,$item["hores"]
@@ -406,7 +406,7 @@ class prgfploeProjectModel extends UniqueContentFileProjectModel{
                         $result["ERROR"][] = [
                             'responseType' => $responseType,
                             'field' => 'taulaDadesNuclisFormatius',
-                            'message' => sprintf("A la taula dels núclis formatius (taulaDadesNuclisFormatius), el primer nucli formatiu de la UF %d és %d, però hauria de ser 1. La numeració dels nuclis formatius es reinicien en cada UF."
+                            'message' => sprintf("A la taula dels nuclis formatius (taulaDadesNuclisFormatius), el primer nucli formatiu de la UF %d és %d, però hauria de ser 1. La numeració dels nuclis formatius es reinicien en cada UF."
                                                 ,$item["unitat formativa"]
                                                 ,$item["nucli formatiu"])
                         ];

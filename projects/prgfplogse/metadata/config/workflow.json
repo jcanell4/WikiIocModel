@@ -317,6 +317,7 @@
                         "manager"
                      ],
                      "rols": [
+                        "responsable",
                         "revisor"
                     ]
                 },
@@ -326,14 +327,14 @@
                     "parms": {
                         "DOM": {
                             "id": "prgfploeReturnToModifyProjectButton",
-                            "title": "Revocació de la revisió",
+                            "title": "Rebuig de la revisió",
                             "class": "iocDisplayBlock"
                         },
                         "DJO": {
                            "autoSize": true,
                            "visible": true,
                            "iconClass": "'iocToModifyDataProjectIcon'",
-                           "labelText": "'Atenció: Aquest procès revocarà la modificació actual. Indiqueu el motiu i premeu continuar o bé cancel·leu la revocació.'",
+                           "labelText": "'Atenció: Aquest procès rebutjarà la modificació actual. Indiqueu el motiu i premeu continuar o bé cancel·leu-lo.'",
                            "labelButtonAcceptar": "'Continuar'",
                            "labelButtonCancellar": "'Cancel·lar'",
                            "urlBase": "'lib/exe/ioc_ajax.php?call=project'",
