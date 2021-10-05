@@ -705,17 +705,20 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     }
 
     function header($text, $level, $pos) {
-        if($this->currentNode!=NULL){
-            if($this->currentNode->getLevel()<$level){
+        if ($this->actualLevel == NULL && $level > 1) {
+            throw new Exception("Error en el nivell d'encapçalament");
+        }
+        if ($this->currentNode != NULL){
+            if ($this->currentNode->getLevel() < $level){
                 //fill
                 $father = $this->currentNode;
-            }else if($this->currentNode->getLevel()==$level){
+            }else if($this->currentNode->getLevel() == $level){
                 //germans
                 $father = $this->currentNode->getFather();
             }else{
                 //antecesor
                 $father = $this->currentNode->getFather();
-                while($father!=NULL && $father->getLevel()>=$level){
+                while($father != NULL && $father->getLevel() >= $level){
                     $father = $father->getFather();
                 }
             }
