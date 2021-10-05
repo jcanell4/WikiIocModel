@@ -95,7 +95,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
             }
 
             $base = str_replace(":", "_", $this->id);
-            $rDir = "$base/$rDir";
+//            $rDir = "$base/$rDir";
             $data = date("d/m/Y H:i:s", $filetime);
             $class = "mf_$type";
             foreach ($fileNames as $file) {
