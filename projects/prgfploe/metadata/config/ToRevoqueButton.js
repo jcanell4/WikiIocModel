@@ -11,7 +11,7 @@ require([
 ],
 function (registry,dom,domConstruct,BorderContainer,Dialog,ContentPane,Form,Button, Textarea) {
 
-    var toRevoqueButton = registry.byId('prgfploeReturnToModifyProjectButton');
+    var toRevoqueButton = registry.byId('prgfploeToRevoqueProjectButton');
 
     if (toRevoqueButton) {
         toRevoqueButton.onClick = function () {

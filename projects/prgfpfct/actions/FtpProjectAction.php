@@ -1,6 +1,6 @@
 <?php
 /**
- * FtpProjectAction en el projecte 'prgfploe'
+ * FtpProjectAction en el projecte 'prgfpfct'
  */
 if (!defined("DOKU_INC")) die();
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * ToReviseProjectAction: L'Autor marca el projecte apte per revisar
+ * ToRevoqueProjectAction: Es desfà l'acció de Modificació acceptada
  * @author rafael <rclaver@xtec.cat>
  */
 if (!defined('DOKU_INC')) die();
@@ -11,7 +11,7 @@ class ToRevoqueProjectAction extends ViewProjectAction {
         $model = $this->getModel();
         // Obtenir les dades del projecte per omplir l'històric del control de canvis
         $projectMetaData = $model->getCurrentDataProject(FALSE, FALSE);
-        // L'Autor marca el projecte apte per revisar: canvi data i signatura Autor i afegeix canvi a l'històric
+        // Es rebutja la marca apte per revisar: canvi data i signatura Autor i afegeix canvi a l'històric
         $model->updateSignature($projectMetaData, "cc_dadesAutor", FALSE, "pendent");
         $model->setDataProject($projectMetaData, "Modificació rebutjada durant la revisió");
         $response = parent::responseProcess();
