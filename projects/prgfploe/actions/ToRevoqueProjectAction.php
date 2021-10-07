@@ -23,7 +23,7 @@ class ToRevoqueProjectAction extends ViewProjectAction {
             "id" => $this->params["id"],
             "type" => NotifyAction::DEFAULT_MESSAGE_TYPE,
             "data-call" => "project&do=workflow&action=view",
-            "send_mail" => true,
+            "send_email" => true,
         ];
         $responseNotify = $notifyAction->get($notifyParams);
         $this->addInfoToInfo($response["info"], $responseNotify["info"]);
