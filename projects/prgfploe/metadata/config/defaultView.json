@@ -745,7 +745,7 @@
             "add_import" : {
               "button_label" : "Importar amb formats: '9 contingut' o també '9.9 contingut' ",
               "data": {
-                "regexColSeparator": "^ *([0-9]?) *([0-9]\\.?[0-9]?[0-9]?) *(.*?)(f?) *?$",
+                "regexColSeparator": "^ *([0-9]?) *([0-9]\\.?[0-9]?[0-9]?\\.?[0-9]?[0-9]?) *(.*?)(f?) *?$",
                 "regexRowSeparator": "\n"
               }
             }                    

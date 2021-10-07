@@ -222,7 +222,7 @@
                     "add_import": {
                         "button_label": "Importar amb format '9.9 criteri'",
                         "data": {
-                            "regexColSeparator": "^\\s*(\\d{1,2})\\.(\\d{1,2})(.*?)$",
+                            "regexColSeparator": "^\\s*(\\d{0,2}) *(\\d{1,2}\\.\\d{1,2})(.*?)$",
                             "regexRowSeparator": "\n"
                         }
                     }
