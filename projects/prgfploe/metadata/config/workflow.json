@@ -173,7 +173,8 @@
                     "id": "renameProjectButton",
                     "toSet": {
                         "title": "Canvi de nom del projecte",
-                        "query": "do=workflow&action=rename"
+                        "do": "workflow",
+                        "action": "rename"
                     },
                     "scripts": {
                         "updateHandler": {
