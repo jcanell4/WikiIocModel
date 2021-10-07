@@ -158,6 +158,38 @@
                     }
                 }
             },
+            "rename": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "renameProjectButton",
+                    "toSet": {
+                        "title": "Canvi de nom del projecte",
+                        "query": "do=workflow&action=rename"
+                    },
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'"
+                            }
+                        }
+                    }
+                },
+                "views": {
+                    "groups": {
+                    },
+                    "rols": {
+                    }
+                }
+            },
             "import": {
                 "permissions": {
                     "groups": [
@@ -310,6 +342,9 @@
             "duplicate": {
                 "shortcut":  "creating"
             },
+            "rename": {
+                "shortcut":  "creating"
+            },
             "toRevoque": {
                 "permissions": {
                     "groups": [
@@ -322,11 +357,11 @@
                     ]
                 },
                 "button": {
-                    "id": "prgfploeReturnToModifyProjectButton",
+                    "id": "prgfpfctToRevoqueProjectButton",
                     "class": "WikiIocButton",
                     "parms": {
                         "DOM": {
-                            "id": "prgfploeReturnToModifyProjectButton",
+                            "id": "prgfpfctToRevoqueProjectButton",
                             "title": "Revocació de la revisió",
                             "class": "iocDisplayBlock"
                         },
@@ -446,6 +481,9 @@
             "duplicate": {
                 "shortcut":  "creating"
             },
+            "rename": {
+                "shortcut":  "creating"
+            },
             "validate": {
                 "permissions": {
                     "groups": [
@@ -535,6 +573,9 @@
                 "shortcut":  "creating"
             },
             "duplicate": {
+                "shortcut":  "creating"
+            },
+            "rename": {
                 "shortcut":  "creating"
             },
             "export": {
@@ -681,6 +722,9 @@
                 "shortcut":  "creating"
             },
             "duplicate": {
+                "shortcut":  "creating"
+            },
+            "rename": {
                 "shortcut":  "creating"
             },
             "toRevise": {

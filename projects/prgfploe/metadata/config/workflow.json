@@ -172,7 +172,7 @@
                 "button": {
                     "id": "renameProjectButton",
                     "toSet": {
-                        "title": "Duplicar w projecte",
+                        "title": "Canvi de nom del projecte",
                         "query": "do=workflow&action=rename"
                     },
                     "scripts": {
@@ -341,6 +341,9 @@
             "duplicate": {
                 "shortcut":  "creating"
             },
+            "rename": {
+                "shortcut":  "creating"
+            },
             "toRevoque": {
                 "permissions": {
                     "groups": [
@@ -353,11 +356,11 @@
                     ]
                 },
                 "button": {
-                    "id": "prgfploeReturnToModifyProjectButton",
+                    "id": "prgfploeToRevoqueProjectButton",
                     "class": "WikiIocButton",
                     "parms": {
                         "DOM": {
-                            "id": "prgfploeReturnToModifyProjectButton",
+                            "id": "prgfploeToRevoqueProjectButton",
                             "title": "Rebuig de la revisió",
                             "class": "iocDisplayBlock"
                         },
@@ -477,6 +480,9 @@
             "duplicate": {
                 "shortcut":  "creating"
             },
+            "rename": {
+                "shortcut":  "creating"
+            },
             "validate": {
                 "permissions": {
                     "groups": [
@@ -566,6 +572,9 @@
                 "shortcut":  "creating"
             },
             "duplicate": {
+                "shortcut":  "creating"
+            },
+            "rename": {
                 "shortcut":  "creating"
             },
             "export": {
@@ -712,6 +721,9 @@
                 "shortcut":  "creating"
             },
             "duplicate": {
+                "shortcut":  "creating"
+            },
+            "rename": {
                 "shortcut":  "creating"
             },
             "toRevise": {
