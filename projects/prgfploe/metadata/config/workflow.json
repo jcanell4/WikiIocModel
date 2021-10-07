@@ -158,6 +158,38 @@
                     }
                 }
             },
+            "rename": {
+                "permissions": {
+                    "groups": [
+                        "admin",
+                        "manager"
+                     ],
+                     "rols": [
+                        "responsable",
+                        "autor"
+                    ]
+                },
+                "button": {
+                    "id": "renameProjectButton",
+                    "toSet": {
+                        "title": "Duplicar w projecte",
+                        "query": "do=workflow&action=rename"
+                    },
+                    "scripts": {
+                        "updateHandler": {
+                            "conditions": {
+                                "page.action": "'project_view'"
+                            }
+                        }
+                    }
+                },
+                "views": {
+                    "groups": {
+                    },
+                    "rols": {
+                    }
+                }
+            },
             "import": {
                 "permissions": {
                     "groups": [
