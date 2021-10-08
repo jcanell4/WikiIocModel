@@ -30,6 +30,8 @@ $lang['form_compare'] = "Es mostren les dades comparades del projecte i la revis
 $lang['form_compare_rev'] = "Es mostren les dades comparades de les dos revisions seleccionades: ";
 $lang['project_generated'] = "Ha finalitzat amb èxit la generació del projecte";
 $lang['project_not_generated'] = "No s'ha pogut generar el projecte";
+$lang['project_duplicated'] = "S'ha duplicat correctament el projecte";
+$lang['project_renamed'] = "El canvi de nom del projecte s'ha completat";
 
 $lang['auth_CreatePage'] = "No teniu permís per a Crear la pàgina %s";
 $lang['auth_EditPage'] = "No teniu permís per a Editar la pàgina %s";
