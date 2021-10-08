@@ -17,6 +17,10 @@ class sintesiProjectModel extends MoodleUniqueContentFilesProjectModel{
         return $ret['fitxercontinguts'];
     }
 
+    public function renameProject($ns, $new_name, $persons) {
+        ProgramacioProjectModel::renameProject($ns, $new_name, $persons);
+    }
+
 //    public function generateProject() {
 //        $ret = array();
 //        //0. Obtiene los datos del proyecto

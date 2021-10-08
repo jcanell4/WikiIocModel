@@ -5,7 +5,7 @@
  */
 if (!defined("DOKU_INC")) die();
 
-class prgfploeProjectModel extends UniqueContentFileProjectModel{
+class prgfploeProjectModel extends ProgramacioProjectModel {
     
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
