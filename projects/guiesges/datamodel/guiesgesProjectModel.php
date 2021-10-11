@@ -26,6 +26,7 @@ class guiesgesProjectModel extends MultiContentFilesProjectModel {
 
         $this->projectMetaDataQuery->renameDirNames($base_old_dir, $old_name, $base_old_dir, $new_name);
         $this->projectMetaDataQuery->renameRenderGeneratedFiles("$base_old_dir/$old_name", "$base_old_dir/$new_name", ["extension","\.zip","\.pdf"]);
+        $this->projectMetaDataQuery->renameMediaMetaFiles("$base_old_dir/$old_name", "$base_old_dir/$new_name");
         $this->projectMetaDataQuery->changeOldPathInRevisionFiles($base_old_dir, $old_name, $base_old_dir, $new_name);
         $this->projectMetaDataQuery->changeOldPathInContentFiles($base_old_dir, $old_name, $base_old_dir, $new_name);
         $this->projectMetaDataQuery->changeOldPathInACLFile($base_old_dir, $old_name, $base_old_dir, $new_name);
