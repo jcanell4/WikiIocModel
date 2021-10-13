@@ -56,10 +56,14 @@ class upgrader_1 extends CommonUpgrader {
                              "$1 instruments d'avaluació."],
                             ["(\*\* )(Exercicis)( d'avaluació contínua) \(EAC\)",
                              "$1Activitats$3"],
+                            ["(El sistema no permet lliurar cap )(EAC)( passades les)",
+                             "$1activitat d'AC$3"],
+                            ["(Els EAC)( que siguin còpia literal)",
+                             "Les activitats d'AC$2"],
                             ["(  \* En )(els EAC)( s'estableixen els criteris d'avaluació corresponents)",
                              "$1les activitats d'AC$3"],
-                            ["(  \* El professor ) (corregeix )(els EAC)( i emet una qualificació numèrica)",
-                             "$1$2les activitats d'AC$4"]
+                            ["(  \* El professor)( ) (corregeix )(els EAC)( i emet una qualificació numèrica)",
+                             "$1$3les activitats d'AC$5"]
                            ];
                 $dataChanged = $this->updateTemplateByReplace($dataChanged, $aTokRep);
 
