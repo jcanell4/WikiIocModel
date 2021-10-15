@@ -37,7 +37,9 @@ class upgrader_2 extends CommonUpgrader {
                     $filename = $this->model->getProjectDocumentName();
                 $doc = $this->model->getRawProjectDocument($filename);
 
-                $aTokDel = ["<WIOCCL:SET var=\"keyUfPAF\".*?\n"];
+                $aTokDel = ["<WIOCCL:SET var=\"keyUfPAF\".*?\n", 
+                            "<WIOCCL:IF condition=\"\{##sizeActivitatsAprenentatge##\}==\{##posAa##\}\">\*</WIOCCL:IF>"
+                           ];
                 $dataChanged = $this->updateTemplateByDelete($doc, $aTokDel);
 
                 $aTokIns = [['regexp' => "^  \* La qualificació de l'AC es té en compte.*?\n",
@@ -63,7 +65,15 @@ class upgrader_2 extends CommonUpgrader {
                             ["(  \* En )(els EAC)( s'estableixen els criteris d'avaluació corresponents)",
                              "$1les activitats d'AC$3"],
                             ["(  \* El professor)( ) (corregeix )(els EAC)( i emet una qualificació numèrica)",
-                             "$1$3les activitats d'AC$5"]
+                             "$1$3les activitats d'AC$5"],
+                            ["(CA\{##itemCa\[ca\]##\})( \{##itemCa\[descripcio\]##\})",
+                             "$1<WIOCCL:IF condition=\"{##itemCa[contextualitzat]##}==true\">*</WIOCCL:IF>$2"],
+                            ["\{##itemCo\[cont\]##\} \{##itemCo\[descripcio\]##\}",
+                             "$1<WIOCCL:IF condition=\"{##itemCo[contextualitzat]##}==true\">*</WIOCCL:IF>$2"],
+                            ["(se)s(se cap arrodoniment previ)",
+                             "$1n$2"],
+                            ["(No es requ)i(ereixen)",
+                             "$1$2"],
                            ];
                 $dataChanged = $this->updateTemplateByReplace($dataChanged, $aTokRep);
 

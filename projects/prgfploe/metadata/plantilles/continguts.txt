@@ -141,7 +141,7 @@ Els recursos necessaris per cursar aquest mòdul són:
   :type:pt_taula
 ^  Resultats d'aprenentatge  ^  Criteris d'avaluació  ^  Continguts  ^
 <WIOCCL:FOREACH var="itemRa" array="{##resultatsAprenentatge##}" filter="{##itemUf[unitat formativa]##}=={##itemRa[uf]##}">
-| RA{##itemRa[ra]##}. {##itemRa[descripcio]##}  | <WIOCCL:FOREACH var="itemCa" array="{##criterisAvaluacio##}" filter="{##itemUf[unitat formativa]##}=={##itemCa[uf]##}&&{##itemRa[ra]##}=={##itemCa[ra]##}">CA{##itemCa[ca]##} {##itemCa[descripcio]##}\\ </WIOCCL:FOREACH>  | <WIOCCL:IF condition="{##itemRa[ra]##}==1"><WIOCCL:FOREACH var="itemCo" array="{##continguts##}" filter="{##itemUf[unitat formativa]##}=={##itemCo[uf]##}"><WIOCCL:IF condition="{#_STR_CONTAINS(''.'',''{##itemCo[cont]##}'')_#}==true">\_\_\_\_</WIOCCL:IF><WIOCCL:IF condition="{#_STR_CONTAINS(''.'',''{##itemCo[cont]##}'')_#}!=true">**</WIOCCL:IF>{##itemCo[cont]##} {##itemCo[descripcio]##}<WIOCCL:IF condition="{#_STR_CONTAINS(''.'',''{##itemCo[cont]##}'')_#}!=true">**</WIOCCL:IF>\\ </WIOCCL:FOREACH></WIOCCL:IF><WIOCCL:IF condition="{##itemRa[ra]##}\>1">:::</WIOCCL:IF>           |
+| RA{##itemRa[ra]##}. {##itemRa[descripcio]##}  | <WIOCCL:FOREACH var="itemCa" array="{##criterisAvaluacio##}" filter="{##itemUf[unitat formativa]##}=={##itemCa[uf]##}&&{##itemRa[ra]##}=={##itemCa[ra]##}">CA{##itemCa[ca]##}<WIOCCL:IF condition="{##itemCa[contextualitzat]##}==true">*</WIOCCL:IF> {##itemCa[descripcio]##}\\ </WIOCCL:FOREACH>  | <WIOCCL:IF condition="{##itemRa[ra]##}==1"><WIOCCL:FOREACH var="itemCo" array="{##continguts##}" filter="{##itemUf[unitat formativa]##}=={##itemCo[uf]##}"><WIOCCL:IF condition="{#_STR_CONTAINS(''.'',''{##itemCo[cont]##}'')_#}==true">\_\_\_\_</WIOCCL:IF><WIOCCL:IF condition="{#_STR_CONTAINS(''.'',''{##itemCo[cont]##}'')_#}!=true">**</WIOCCL:IF>{##itemCo[cont]##}<WIOCCL:IF condition="{##itemCo[contextualitzat]##}==true">*</WIOCCL:IF> {##itemCo[descripcio]##}<WIOCCL:IF condition="{#_STR_CONTAINS(''.'',''{##itemCo[cont]##}'')_#}!=true">**</WIOCCL:IF>\\ </WIOCCL:FOREACH></WIOCCL:IF><WIOCCL:IF condition="{##itemRa[ra]##}\>1">:::</WIOCCL:IF>           |
 </WIOCCL:FOREACH>
 :::
 ###:
@@ -161,7 +161,7 @@ Els recursos necessaris per cursar aquest mòdul són:
 <WIOCCL:SET var="sizeActivitatsAprenentatge" type="literal" value="{#_SUBS({#_COUNTINARRAY({##activitatsAprenentatge##}, [''unitat formativa'', ''nucli formatiu''], [{##itemUf[unitat formativa]##},{##itemNf[nucli formatiu]##}])_#},1)_#}">
 <WIOCCL:FOREACH var="itemAa" array="{##activitatsAprenentatge##}" counter="posAa" filter="{##itemAa[unitat formativa]##}=={##itemUf[unitat formativa]##}&&{##itemAa[nucli formatiu]##}=={##itemNf[nucli formatiu]##}" counterFromZero="true">
 <WIOCCL:SET var="arrayInstrumentsAvaluacio" type="literal" value="{#_EXPLODE('','', ''{##itemAa[instruments d'avaluació]##}'', ''ALL'', 1)_#}">
-| //**{##itemAa[code]##}-{##itemAa[nom]##}**//   |  {##itemAa[hores]##}&nbsp;h  | {##itemAa[ra]##} | {##itemAa[continguts]##}<WIOCCL:IF condition="{##sizeActivitatsAprenentatge##}=={##posAa##}">*</WIOCCL:IF>  | {##itemAa[ca]##}  | <WIOCCL:FOREACH var="itemInstrumentsAvaluacio" array="{##arrayInstrumentsAvaluacio##}">{##itemInstrumentsAvaluacio##}: {#_ARRAY_GET_VALUE(''descripcio'', {#_SEARCH_ROW([{##itemUf[unitat formativa]##}, ''{##itemInstrumentsAvaluacio##}''], {##taulaInstrumentsAvaluacio##}, [''unitat formativa'', ''id''], [])_#},'' '')_#}\\ </WIOCCL:FOREACH>  |
+| //**{##itemAa[code]##}-{##itemAa[nom]##}**//   |  {##itemAa[hores]##}&nbsp;h  | {##itemAa[ra]##} | {##itemAa[continguts]##}  | {##itemAa[ca]##}  | <WIOCCL:FOREACH var="itemInstrumentsAvaluacio" array="{##arrayInstrumentsAvaluacio##}">{##itemInstrumentsAvaluacio##}: {#_ARRAY_GET_VALUE(''descripcio'', {#_SEARCH_ROW([{##itemUf[unitat formativa]##}, ''{##itemInstrumentsAvaluacio##}''], {##taulaInstrumentsAvaluacio##}, [''unitat formativa'', ''id''], [])_#},'' '')_#}\\ </WIOCCL:FOREACH>  |
 | //descripció://\\ \\ {##itemAa[descripcio]##}                                     ||     :::     |   :::   |    :::   |     :::  <WIOCCL:IF condition="{##sizeActivitatsAprenentatge##}=={##posAa##}">|]</WIOCCL:IF><WIOCCL:IF condition="{##sizeActivitatsAprenentatge##}!={##posAa##}">|
 </WIOCCL:IF>
 </WIOCCL:SET>
@@ -206,7 +206,7 @@ El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’al
   * Té una ponderació  en la qualificació final de la UF.
   * Per poder tenir en compte la qualificació de l’AC, s’ha d’obtenir, per cada instrument d'avaluació, la nota mínima indicada tot seguit:
 <WIOCCL:FOREACH var="itemInsAv" array="{##taulaInstrumentsAvaluacio##}" filter="{##itemInsAv[unitat formativa]##}=={##itemUf[unitat formativa]##} && {##itemInsAv[tipus]##}!=''AC'' && {##itemInsAv[notaMinima]##}\>0">
-    * {##itemInsAv[tipus]##}: qualificació mínima de {##itemInsAv[notaMinima]##},00 sesse cap arrodoniment previ.
+    * {##itemInsAv[tipus]##}: qualificació mínima de {##itemInsAv[notaMinima]##},00 sense cap arrodoniment previ.
 </WIOCCL:FOREACH>
 <WIOCCL:SET var="keyUfPAF" type="literal" value="{#_SEARCH_KEY([{##itemUf[unitat formativa]##}, ''PAF''],{##taulaInstrumentsAvaluacio##}, [''unitat formativa'',''tipus''])_#}">
 <WIOCCL:IF condition="{##keyUfPAF##}!=false">
@@ -221,7 +221,7 @@ El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’al
   * S'han de resoldre individualment.
   * L’alumne ha de fer les activitats proposades de manera original i seguint les indicacions del professor. Les activitats d'AC que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
   * En les activitats d'AC s'estableixen els criteris d'avaluació corresponents.
-  * El professor corregeix les activitats d'AC i emet una qualificació numèrica de l'escala entre el 0 i el 10, amb dos decimals.
+  * El professor  corregeix les activitats d'AC i emet una qualificació numèrica de l'escala entre el 0 i el 10, amb dos decimals.
   * Inclou la publicació de la solució, la valoració general al grup classe i una retroacció individual a cada alumne.
 ###:
 
@@ -387,7 +387,7 @@ La qualificació de la UF s’obté segons la següent ponderació dels RA:
 ###:
 [##TODO:Esmentar si hi ha recursos específics per a aquesta unitat formativa. Per exemple:##]
 
-No es requiereixen espais, equipaments ni recursos específics.
+No es requereixen espais, equipaments ni recursos específics.
 
 :###
 </WIOCCL:FOREACH>
