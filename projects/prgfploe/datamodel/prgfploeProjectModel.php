@@ -446,7 +446,7 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                 $horesIgualPonderacioRA[$item["uf"]] = $horesIgualPonderacioRA[$item["uf"]] && $item["hores"] == $item["ponderacio"];
                 $ponderacioRA[$item["uf"]] += $item["ponderacio"];
                 if (!empty($item['uf'])) {
-                    $raTableUFCA[] = "{$item['uf']}.{$item['ra']}"; //se usa para validar 'resultatsAprenentatge'
+                    $verificacioTaulaPonderacioRA[] = "{$item['uf']}.{$item['ra']}"; //se usa para validar 'resultatsAprenentatge'
                 }
             }
         }
@@ -528,7 +528,7 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                                             ,$item["uf"])
                     ];                    
                 }
-                if (!empty($raTableUFCA) && !in_array("{$item['uf']}.{$item['ra']}", $raTableUFCA)) {
+                if (!empty($verificacioTaulaPonderacioRA) && !in_array("{$item['uf']}.{$item['ra']}", $verificacioTaulaPonderacioRA)) {
                     $result["ERROR"][] = [
                         'responseType' => $responseType,
                         'field' => 'taulaPonderacioRA',
