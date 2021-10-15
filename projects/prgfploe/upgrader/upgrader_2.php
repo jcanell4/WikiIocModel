@@ -38,7 +38,7 @@ class upgrader_2 extends CommonUpgrader {
                 $doc = $this->model->getRawProjectDocument($filename);
 
                 $aTokDel = ["<WIOCCL:SET var=\"keyUfPAF\".*?\n", 
-                            "<WIOCCL:IF condition=\"\{##sizeActivitatsAprenentatge##\}==\{##posAa##\}\">\*</WIOCCL:IF>"
+                            "<WIOCCL:IF condition=\"\{##sizeActivitatsAprenentatge##\}==\{##posAa##\}\">\*<\/WIOCCL:IF>"
                            ];
                 $dataChanged = $this->updateTemplateByDelete($doc, $aTokDel);
 
