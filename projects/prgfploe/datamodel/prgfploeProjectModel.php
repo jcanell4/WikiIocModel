@@ -445,7 +445,10 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                 }
                 $horesIgualPonderacioRA[$item["uf"]] = $horesIgualPonderacioRA[$item["uf"]] && $item["hores"] == $item["ponderacio"];
                 $ponderacioRA[$item["uf"]] += $item["ponderacio"];
-            }            
+                if (!empty($item['uf'])) {
+                    $raTableUFCA[] = "{$item['uf']}.{$item['ra']}"; //se usa para validar 'resultatsAprenentatge'
+                }
+            }
         }
 
         //Comporvació ponderacions
@@ -522,10 +525,19 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                         'field' => 'taulaPonderacioRA',
                         'message' => sprintf("A la taula de registres de les ponderacions dels RA (taulaPonderacioRA), hi ha l'instrument d'avaluació %s corresponent a la UF %d, però aquest instrument no es troba definit a la taula d'instruments d'avaluació (taulaInstrumentsAvaluacio)."
                                             ,$item["instAvaluacio"]
-                                            ,$item["unitat formativa"])
+                                            ,$item["uf"])
                     ];                    
                 }
-            }                        
+                if (!empty($raTableUFCA) && !in_array("{$item['uf']}.{$item['ra']}", $raTableUFCA)) {
+                    $result["ERROR"][] = [
+                        'responseType' => $responseType,
+                        'field' => 'taulaPonderacioRA',
+                        'message' => sprintf("A la taula de registres de les ponderacions dels RA (taulaPonderacioRA), la RA %d no existeix a la UF %d definida a Resultats d'aprenentatge (resultatsAprenentatge)."
+                                            ,$item["ra"]
+                                            ,$item["uf"])
+                    ];
+                }
+            }
             if(!empty($ponderacioRA)){
                 foreach ($ponderacioRA as $keyUf => $ponderacioRAUF) {
                     foreach ($ponderacioRAUF as $keyRa => $ponderacio) {
