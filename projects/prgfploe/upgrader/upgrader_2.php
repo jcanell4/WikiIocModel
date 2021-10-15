@@ -68,7 +68,7 @@ class upgrader_2 extends CommonUpgrader {
                              "$1$3les activitats d'AC$5"],
                             ["(CA\{##itemCa\[ca\]##\})( \{##itemCa\[descripcio\]##\})",
                              "$1<WIOCCL:IF condition=\"{##itemCa[contextualitzat]##}==true\">*</WIOCCL:IF>$2"],
-                            ["\{##itemCo\[cont\]##\} \{##itemCo\[descripcio\]##\}",
+                            ["(\{##itemCo\[cont\]##\})( \{##itemCo\[descripcio\]##\})",
                              "$1<WIOCCL:IF condition=\"{##itemCo[contextualitzat]##}==true\">*</WIOCCL:IF>$2"],
                             ["(se)s(se cap arrodoniment previ)",
                              "$1n$2"],
