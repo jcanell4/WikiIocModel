@@ -37,7 +37,7 @@ class upgrader_2 extends CommonUpgrader {
                     $filename = $this->model->getProjectDocumentName();
                 $doc = $this->model->getRawProjectDocument($filename);
 
-                $aTokDel = ["<WIOCCL:SET var=\"keyUfPAF\".*?\n", 
+                $aTokDel = ["<WIOCCL:SET var=\"keyUfPAF\".*?\n",
                             "<WIOCCL:IF condition=\"\{##sizeActivitatsAprenentatge##\}==\{##posAa##\}\">\*<\/WIOCCL:IF>"
                            ];
                 $dataChanged = $this->updateTemplateByDelete($doc, $aTokDel);
@@ -46,8 +46,11 @@ class upgrader_2 extends CommonUpgrader {
                              'text' => "<WIOCCL:SET var=\"keyUfPAF\" type=\"literal\" value=\"{#_SEARCH_KEY([{##itemUf[unitat formativa]##}, ''PAF''],{##taulaInstrumentsAvaluacio##}, [''unitat formativa'',''tipus''])_#}\">\n"
                                       . "<WIOCCL:IF condition=\"{##keyUfPAF##}!=false\">\n",
                              'pos' => CommonUpgrader::ABANS,
-                             'modif' => "m"],
-                            ['regexp' => "^  \* La qualificació de l'AC es té en compte.*?\n",
+                             'modif' => "m"]
+                           ];
+                $dataChanged = $this->updateTemplateByInsert($dataChanged, $aTokIns);
+
+                $aTokIns = [['regexp' => "^  \* La qualificació de l'AC es té en compte.*?\n",
                              'text' => "</WIOCCL:IF>\n",
                              'pos' => CommonUpgrader::DESPRES,
                              'modif' => "m"]
@@ -64,7 +67,7 @@ class upgrader_2 extends CommonUpgrader {
                              "Les activitats d'AC$2"],
                             ["(  \* En )(els EAC)( s'estableixen els criteris d'avaluació corresponents)",
                              "$1les activitats d'AC$3"],
-                            ["(  \* El professor)( ) (corregeix )(els EAC)( i emet una qualificació numèrica)",
+                            ["(  \* El professor )( )(corregeix )(els EAC)( i emet una qualificació numèrica)",
                              "$1$3les activitats d'AC$5"],
                             ["(CA\{##itemCa\[ca\]##\})( \{##itemCa\[descripcio\]##\})",
                              "$1<WIOCCL:IF condition=\"{##itemCa[contextualitzat]##}==true\">*</WIOCCL:IF>$2"],
