@@ -5,14 +5,9 @@
                 "typeDef":"activityutil",
                 "class": "exportDocument",
                 "fields": "ALL",
-                "extraFields": [
-                    {"name":"documentPartsPdf", "valueType":"arrayDocuments", "value":"documents", "type":"psdom"},
-                    {"name":"documentPartsHtml", "valueType":"arrayDocuments", "value":"documents", "type":"html"}]
+                "extraFields": [{"name":"documentPartsHtml", "valueType":"arrayDocuments", "value":"documents", "type":"html"}]
             },
             "keys": {
-                "documentPartsPdf": {
-                    "render": {"class": "renderFileToPsDom", "styletype":"pt_taula"}
-                },
                 "documentPartsHtml": {
                     "render": {"class": "renderFile", "styletype":"pt_taula"}
                 }
