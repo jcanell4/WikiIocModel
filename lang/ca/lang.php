@@ -50,6 +50,7 @@ $lang['UnknownUser'] = "No s'ha trobat cap usuari amb el identificador: %s";
 $lang['lockedByDialog'] = "El document està bloquejat per %s. Vols obrir-lo en mode de només lectura o demanar el bloqueig";
 $lang['lockedByAlert'] = "El document està bloquejat per altre usuari";
 $lang['lockedByTitle'] = "Document bloquejat";
+$lang['lockedByUpdate'] = "Un procés automàtic d'actualització està en curs.";
 $lang['BtnReadOnly'] = "Només lectura";
 $lang['BtnRequireLock'] = "Demanar el bloqueig";
 $lang['alreadyLocked'] = "Teniu obert aquest document en una altra màquina o en una altre sessió. Per poder-lo editar tanqueu-lo prèviement.";
