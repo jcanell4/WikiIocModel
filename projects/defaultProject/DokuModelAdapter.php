@@ -32,10 +32,6 @@ require_once(DOKU_PLUGIN . 'wikiiocmodel/BasicModelAdapter.php');
 
 require_once(DOKU_PLUGIN . 'acl/admin.php');
 
-// TODO[Xavi] Afegit per mi per extreure la funcionalitat dels locks a una altra classe
-require_once(DOKU_PLUGIN . 'wikiiocmodel/LockManager.php');
-require_once(DOKU_PLUGIN . 'wikiiocmodel/DraftManager.php');
-
 /**
  * Class DokuModelAdapter
  * Adaptador per passar les nostres comandes a la Dokuwiki.
@@ -1239,44 +1235,44 @@ class DokuModelAdapter extends BasicModelAdapter {
         return $sections;
     }
 
-    //És la crida principal de la comanda lock
-    public function lock($pid)
-    {
-        global $lang,
-               $conf;
+//    //És la crida principal de la comanda lock
+//    public function lock($pid)
+//    {
+//        global $lang,
+//               $conf;
+//
+//        $ns = $pid;
+//        $cid = $this->getContainerIdFromPageId($pid);
+//        $lockManager = new LockManager($this);
+//        $locker = $lockManager->lock($pid);
+//
+//        if ($locker === false) {
+//
+//            $info = self::generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
+//            $response = ['id' => $cid, 'ns' => $ns, 'timeout' => $conf['locktime'], 'info' => $info];
+//
+//        } else {
+//
+//            $response = ['id' => $cid, 'ns' => $ns, 'timeout' => -1, 'info' => self::generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
+//        }
+//
+//        return $response;
+//    }
 
-        $ns = $pid;
-        $cid = $this->getContainerIdFromPageId($pid);
-        $lockManager = new LockManager($this);
-        $locker = $lockManager->lock($pid);
-
-        if ($locker === false) {
-
-            $info = self::generateInfo('info', "S'ha refrescat el bloqueig"); // TODO[Xavi] Localitzar el missatge
-            $response = ['id' => $cid, 'ns' => $ns, 'timeout' => $conf['locktime'], 'info' => $info];
-
-        } else {
-
-            $response = ['id' => $cid, 'ns' => $ns, 'timeout' => -1, 'info' => self::generateInfo('error', $lang['lockedby'] . ' ' . $locker)];
-        }
-
-        return $response;
-    }
-
-    public function unlock($pid)
-    {
-        $lockManager = new LockManager($this);
-
-        $ns = $pid;
-        $cid = $this->getContainerIdFromPageId($pid);
-
-        $lockManager->unlock($pid);
-
-        $info = self::generateInfo('success', "S'ha alliberat el bloqueig");
-        $response = ['id' => $cid, 'ns' => $ns, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
-
-        return $response;
-    }
+//    public function unlock($pid)
+//    {
+//        $lockManager = new LockManager($this);
+//
+//        $ns = $pid;
+//        $cid = $this->getContainerIdFromPageId($pid);
+//
+//        $lockManager->unlock($pid);
+//
+//        $info = self::generateInfo('success', "S'ha alliberat el bloqueig");
+//        $response = ['id' => $cid, 'ns' => $ns, 'timeout' => -1, 'info' => $info]; // TODO[Xavi] Localitzar el missatge
+//
+//        return $response;
+//    }
 
     /** SEMBLA SER QUE AQUESTA FUNCIÓ NO S'UTILITZA
      * S'ha de fer servir getRevisionsList en lloc d'aquest
