@@ -10,14 +10,6 @@ require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
 class upgrader_4 extends CommonUpgrader {
 
-    protected $model;
-    protected $metaDataSubSet;
-
-    public function __construct($model) {
-        $this->model = $model;
-        $this->metaDataSubSet = $this->model->getMetaDataSubSet();
-    }
-
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
@@ -25,7 +17,8 @@ class upgrader_4 extends CommonUpgrader {
                 $ret = true;
                 break;
             case "templates":
-                // Actualiza la versión de calidad del proyecto
+                // Actualiza la versión del documento establecido en el sistema de calidad del IOC (Visible en el pie del documento)
+                // Sólo se debe actualizar si el coordinador de claidad lo indica!!!!!!
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject))
                     $dataProject = json_decode($dataProject, TRUE);
