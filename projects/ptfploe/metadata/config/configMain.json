@@ -595,6 +595,9 @@
                                         "values": "$values"
                                     }
                                 }
+                            },
+                            "props" : {
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             }   
                         },
                         "professors": {
@@ -657,6 +660,9 @@
                                         "values": "$values"
                                     }
                                 }
+                            },
+                            "props" : {
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             }
                         },                                                
                         "taulaDadesUnitats": {
@@ -875,7 +881,8 @@
                             "mandatory": true,
                             "props": {
                                 "min":0,
-                                "max":10
+                                "max":10,
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             },
                             "calculateOnRead":{
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -901,7 +908,8 @@
                             "mandatory": true,
                             "props": {
                                 "min": 0,
-                                "max": 10
+                                "max": 10,
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             },
                             "calculateOnRead":{
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -927,7 +935,8 @@
                             "mandatory": true,
                             "props": {
                                 "min": 0,
-                                "max": 10
+                                "max": 10,
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             },
                             "calculateOnRead":{
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -982,7 +991,8 @@
                             "default":4,
                             "props": {
                                 "min":0,
-                                "max":10
+                                "max":10,
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             },
                             "calculateOnRead":{
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -1105,6 +1115,9 @@
                                         "values": "$values"
                                     }
                                 }
+                            },
+                            "props" : {
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             }
                         },                                                
                         "dadesExtres": {

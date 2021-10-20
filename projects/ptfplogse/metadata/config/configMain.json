@@ -552,6 +552,9 @@
                                         "values": "$values"
                                     }
                                 }
+                            },
+                            "props" : {
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             }
                         },
                         "professors": {
@@ -647,6 +650,9 @@
                                         "values": "$values"
                                     }
                                 }
+                            },
+                            "props" : {
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             }
                         },
                         "calendari": {
@@ -820,7 +826,8 @@
                             "mandatory": true,
                             "props": {
                                 "min": 0,
-                                "max": 10
+                                "max": 10,
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             },
                             "default": 0,
                             "calculateOnRead": {
@@ -847,7 +854,8 @@
                             "mandatory": true,
                             "props": {
                                 "min": 0,
-                                "max": 10
+                                "max": 10,
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             },
                             "default": 4,
                             "calculateOnRead": {
@@ -874,7 +882,8 @@
                             "mandatory": true,
                             "props": {
                                 "min": 0,
-                                "max": 10
+                                "max": 10,
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             },
                             "default": 0,
                             "calculateOnRead": {
@@ -930,7 +939,8 @@
                             "default": 4,
                             "props": {
                                 "min": 0,
-                                "max": 10
+                                "max": 10,
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             },
                             "calculateOnRead": {
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -1011,6 +1021,9 @@
                                         "values": "$values"
                                     }
                                 }
+                            },
+                            "props" : {
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
                             }
                         },
                         "dadesExtres": {
