@@ -18,7 +18,7 @@ class upgrader_2 extends CommonUpgrader {
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);
                 }
-                $dataProject['estrategiesMetodologiques'] = preg_replace("/<p>(\s*&(amp;)*lt;p&(amp;)*gt;)*\s*((.*\s*)*?)(\s*&(amp;)*lt;\/p&(amp;)*gt;)*\s*<\/p>/", "$4", $dataProject['estrategiesMetodologiques']);
+                $dataProject['estrategiesMetodologiques'] = preg_replace("/<p>(\s*&(amp;)*lt;p&(amp;)*gt;)*\s*(.*?)(\s*&(amp;)*lt;\/p&(amp;)*gt;)*\s*<\/p>/s", "$4", $dataProject['estrategiesMetodologiques']);
 
                 $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver. Simultànea a l'actualització de 18 a 19 de templates", '{"fields":'.$ver.'}');
                 break;
