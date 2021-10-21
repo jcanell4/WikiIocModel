@@ -14,11 +14,18 @@ class upgrader_2 extends CommonUpgrader {
         switch ($type) {
             case "fields":
                 //Transforma los datos del proyecto desde la estructura de la versión 1 a la versión 2
-                $ret = true;
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+                $dataProject['estrategiesMetodologiques'] = preg_replace("/<p>(\s*&(amp;)*lt;p&(amp;)*gt;)*\s*((.*\s*)*?)(\s*&(amp;)*lt;\/p&(amp;)*gt;)*\s*<\/p>/", "$4", $dataProject['estrategiesMetodologiques']);
+
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver. Simultànea a l'actualització de 18 a 19 de templates", '{"fields":'.$ver.'}');
                 break;
+
             case "templates":
                 // Actualiza la versión del documento establecido en el sistema de calidad del IOC (Visible en el pie del documento)
-                // Sólo se debe actualizar si el coordinador de claidad lo indica!!!!!!
+                // Sólo se debe actualizar si el coordinador de calidad lo indica!!!!!!
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject))
                     $dataProject = json_decode($dataProject, TRUE);
