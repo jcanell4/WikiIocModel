@@ -10,14 +10,6 @@ require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
 class upgrader_ejemplo extends CommonUpgrader {
 
-    protected $model;
-    protected $metaDataSubSet;
-
-    public function __construct($model) {
-        $this->model = $model;
-        $this->metaDataSubSet = $this->model->getMetaDataSubSet();
-    }
-
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
@@ -32,7 +24,7 @@ class upgrader_ejemplo extends CommonUpgrader {
                 $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
 
                 //Transforma el archivo continguts.txt del proyecto desde la versión 0 a la versión 1
-                if ($filename===NULL) 
+                if ($filename===NULL)
                     $filename = $this->model->getProjectDocumentName();
                 $doc = $this->model->getRawProjectDocument($filename);
 

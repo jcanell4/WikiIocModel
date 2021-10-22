@@ -10,14 +10,6 @@ require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
 class upgrader_2 extends CommonUpgrader {
 
-    protected $model;
-    protected $metaDataSubSet;
-
-    public function __construct($model) {
-        $this->model = $model;
-        $this->metaDataSubSet = $this->model->getMetaDataSubSet();
-    }
-
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":

@@ -10,14 +10,6 @@ require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
 class upgrader_14 extends CommonUpgrader {
 
-    protected $model;
-    protected $metaDataSubSet;
-
-    public function __construct($model) {
-        $this->model = $model;
-        $this->metaDataSubSet = $this->model->getMetaDataSubSet();
-    }
-
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
@@ -29,7 +21,7 @@ class upgrader_14 extends CommonUpgrader {
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename)."\n";
-                
+
                 $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 $ret = true;
         }

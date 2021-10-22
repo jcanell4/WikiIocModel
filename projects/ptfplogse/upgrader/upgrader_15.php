@@ -10,20 +10,12 @@ require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
 class upgrader_15 extends CommonUpgrader {
 
-    protected $model;
-    protected $metaDataSubSet;
-
-    public function __construct($model) {
-        $this->model = $model;
-        $this->metaDataSubSet = $this->model->getMetaDataSubSet();
-    }
-
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
                 $ret = TRUE;
                 break;
-            
+
             case "templates":
                 if ($filename===NULL) { //Ojo! Ahora se pasa por parámetro
                     $filename = $this->model->getProjectDocumentName();

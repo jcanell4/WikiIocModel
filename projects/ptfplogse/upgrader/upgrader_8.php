@@ -13,20 +13,12 @@ require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
 class upgrader_8 extends CommonUpgrader {
 
-    protected $model;
-    protected $metaDataSubSet;
-
-    public function __construct($model) {
-        $this->model = $model;
-        $this->metaDataSubSet = $this->model->getMetaDataSubSet();
-    }
-
     public function process($type, $ver, $filename = NULL) {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 $matches=array();
-                preg_match("/([MC]\d{2})? *-? *(.+)/", $dataProject["credit"], $matches); 
+                preg_match("/([MC]\d{2})? *-? *(.+)/", $dataProject["credit"], $matches);
                 if(empty($matches[1])){
                     $dataProject['creditId']="";
                 }else{
@@ -59,7 +51,7 @@ class upgrader_8 extends CommonUpgrader {
                     ]
                 ];
                 $doc = $this->updateTemplateByReplace($doc, $aTokRep);
-                
+
                 if (!empty($doc)) {
                     $this->model->setRawProjectDocument($filename, $doc, "Upgrade templates: version ".($ver-1)." to $ver", $ver);
                 }
