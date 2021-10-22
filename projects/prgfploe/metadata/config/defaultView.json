@@ -587,7 +587,7 @@
                   "type": "number"         
                 },        
                 "ra": {
-                  "type": "number"
+                  "type": "string"
                 },
                 "instAvaluacio":{
                     "type": "string"
