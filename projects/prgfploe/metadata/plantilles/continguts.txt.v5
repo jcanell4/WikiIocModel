@@ -1,10 +1,10 @@
 :###
 ~~USE:WIOCCL~~
 ###:
-:###======   RELACIÓ D’UNITATS FORMATIVES I NUCLIS FORMATIUS ======###:
+:###======   RELACIÓ D'UNITATS FORMATIVES I NUCLIS FORMATIUS ======###:
 
 :###
-Aquest mòdul <WIOCCL:IF condition="{##horesLliureDisposicioModul##}==0">no disposa d’hores de lliure disposició</WIOCCL:IF><WIOCCL:IF condition="{##horesLliureDisposicioModul##}\>0">disposa de {##horesLliureDisposicioModul##} hores de lliure disposició</WIOCCL:IF>.<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>0"> Es divideix en {#_LAST({##taulaDadesBlocs##}, "LAST[bloc]")_#} blocs.</WIOCCL:IF>
+Aquest mòdul <WIOCCL:IF condition="{##horesLliureDisposicioModul##}==0">no disposa d'hores de lliure disposició</WIOCCL:IF><WIOCCL:IF condition="{##horesLliureDisposicioModul##}\>0">disposa de {##horesLliureDisposicioModul##} hores de lliure disposició</WIOCCL:IF>.<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>0"> Es divideix en {#_LAST({##taulaDadesBlocs##}, "LAST[bloc]")_#} blocs.</WIOCCL:IF>
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}==1">
 ::table:T1
@@ -79,7 +79,7 @@ Les estratègies metodològiques del mòdul són les establertes en les concreci
 :###====== AVALUACIÓ I QUALIFICACIÓ DEL MÒDUL ======###:
 
 :###
-Els criteris d'avaluació, instruments d’avaluació i recuperació del mòdul són els establerts en les concrecions curriculars de centre FP LOE (CCC_FP_LOE) i en les concrecions curriculars del departament (CCD).
+Els criteris d'avaluació, instruments d'avaluació i recuperació del mòdul són els establerts en les concrecions curriculars de centre FP LOE (CCC_FP_LOE) i en les concrecions curriculars del departament (CCD).
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}==1">
 Per superar el mòdul professional cal superar tota la unitat formativa, la qual se supera amb una qualificació de {##notaMinimaUfAprovada##},00 punts o superior.
@@ -89,7 +89,7 @@ Per superar el mòdul professional cal superar **independentment** totes les uni
 </WIOCCL:IF>
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>0">
-La superació del bloc s’obté amb la superació de les unitats formatives que el componen. No es poden cursar bloc superiors  si no s'han superat els previs. La qualificació final del bloc s’expressarà com a Superat o Pendent, segons correspongui.
+La superació del bloc s'obté amb la superació de les unitats formatives que el componen. No es poden cursar bloc superiors  si no s'han superat els previs. La qualificació final del bloc s'expressarà com a Superat o Pendent, segons correspongui.
 </WIOCCL:IF>
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}\>1">
@@ -100,7 +100,7 @@ La qualificació final del mòdul professional serà el resultat de la mitjana d
 </WIOCCL:SET>
 </WIOCCL:IF>
 
-La qualificació final del mòdul (QFM) és numèrica de l’1 al 10, sense decimals.
+La qualificació final del mòdul (QFM) és numèrica de l'1 al 10, sense decimals.
 
 En el cas d'unitats formatives exemptes o convalidades, la nota del mòdul es calcularà d'acord amb la normativa vigent.
 ###:
@@ -131,7 +131,7 @@ Els recursos necessaris per cursar aquest mòdul són:
 ~~EXTRA WIDTH~~
 ===== UNITAT FORMATIVA {##itemUf[unitat formativa]##}: {##itemUf[nom]##} =====###:
 
-:###==== Resultats d’aprenentatge (RA), criteris d’avaluació (CA) i continguts ====###:
+:###==== Resultats d'aprenentatge (RA), criteris d'avaluació (CA) i continguts ====###:
 
 :###
 ::table:T03-{##itemUf[unitat formativa]##}
@@ -146,7 +146,7 @@ Els recursos necessaris per cursar aquest mòdul són:
 :::
 ###:
 
-:###==== Activitats d’ensenyament i aprenentatge ====###:
+:###==== Activitats d'ensenyament i aprenentatge ====###:
 
 :###
 <WIOCCL:FOREACH var="itemNf" array="{##taulaDadesNuclisFormatius##}" filter="{##itemUf[unitat formativa]##}=={##itemNf[unitat formativa]##}">
@@ -197,7 +197,7 @@ Es planteja {#_LCFIRST(''{##initialAss##}'')_#}. El seu objectiu és detectar i 
 ###:
 
 :###
-El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’alumne mitjançant l’AC. Està constatat que l’èxit en els estudis a distància està directament relacionat amb el ritme d’estudi continuat al llarg de tot el període acadèmic. Es recomana a tots els alumnes que segueixin l’AC atès que forma part de la qualificació final.
+El model pedagògic de l'IOC es fonamenta en l'avaluació acadèmica de l'alumne mitjançant l'AC. Està constatat que l'èxit en els estudis a distància està directament relacionat amb el ritme d'estudi continuat al llarg de tot el període acadèmic. Es recomana a tots els alumnes que segueixin l'AC atès que forma part de la qualificació final.
 
 <WIOCCL:SET var="keyUfPAF" type="literal" value="{#_SEARCH_KEY([{##itemUf[unitat formativa]##}, ''PAF''],{##taulaInstrumentsAvaluacio##}, [''unitat formativa'',''tipus''])_#}">
 <WIOCCL:SET var="nombreEACs" type="literal" value="{#_COUNTINARRAY({##taulaInstrumentsAvaluacio##}, [''unitat formativa'',''tipus''], [{##itemUf[unitat formativa]##}, ''AC''])_#}">
@@ -205,7 +205,7 @@ El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’al
   * Es realitza a distància
   * Es concreta en {##nombreEACs##} instruments d'AC.
   * Té una ponderació  en la qualificació final de la UF.
-  * Per poder tenir en compte la qualificació de l’AC, s’ha d’obtenir, per cada instrument d'avaluació, la nota mínima indicada tot seguit:
+  * Per poder tenir en compte la qualificació de l'AC, s'ha d'obtenir, per cada instrument d'avaluació, la nota mínima indicada tot seguit:
 <WIOCCL:FOREACH var="itemInsAv" array="{##taulaInstrumentsAvaluacio##}" filter="{##itemInsAv[unitat formativa]##}=={##itemUf[unitat formativa]##} && {##itemInsAv[tipus]##}!=''AC'' && {##itemInsAv[notaMinima]##}\>0">
     * {##itemInsAv[tipus]##}: qualificació mínima de {##itemInsAv[notaMinima]##},00 sense cap arrodoniment previ.
 </WIOCCL:FOREACH>
@@ -219,7 +219,7 @@ El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’al
 ** Activitats d'avaluació contínua:**
   * Han de ser lliurats dins dels terminis fixats, el termini és improrrogable. El sistema no permet lliurar cap activitat d'AC passades les 23.55 hores de la data de lliurament.
   * S'han de resoldre individualment.
-  * L’alumne ha de fer les activitats proposades de manera original i seguint les indicacions del professor. Les activitats d'AC que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
+  * L'alumne ha de fer les activitats proposades de manera original i seguint les indicacions del professor. Les activitats d'AC que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
   * En les activitats d'AC s'estableixen els criteris d'avaluació corresponents.
   * El professor corregeix les activitats d'AC i emet una qualificació numèrica de l'escala entre el 0 i el 10, amb dos decimals.
   * Inclou la publicació de la solució, la valoració general al grup classe i una retroacció individual a cada alumne.
@@ -280,8 +280,8 @@ La convocatòria corresponent a la PAF 1 s'esgota tant si l'alumne s'hi presenta
   * És obligatori.
 </WIOCCL:IF>
   * S'ha de resoldre <WIOCCL:IF condition="true!=={#_ARRAY_GET_VALUE(''treballEnEquip'',{#_ARRAY_GET_VALUE(''{##keyUfEAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">de manera individual</WIOCCL:IF><WIOCCL:IF condition="true==={#_ARRAY_GET_VALUE(''treballEnEquip'',{#_ARRAY_GET_VALUE(''{##keyUfEAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">en grup</WIOCCL:IF>.
-  * L’alumne ha de fer les activitats proposades de manera original i seguint les indicacions del professor. Els EAF que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
-  * S'avalua numèricament del 0 al 10, amb l’expressió d’un decimal.
+  * L'alumne ha de fer les activitats proposades de manera original i seguint les indicacions del professor. Els EAF que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
+  * S'avalua numèricament del 0 al 10, amb l'expressió d'un decimal.
   * Té una ponderació a la qualificació final (QF) (vegeu l'apartat "Qualificació final QF").
 ###:
 
@@ -294,7 +294,7 @@ En ser part de l'avaluació final, l'EAF té dues convocatòries  cada semestre:
 La convocatòria EAF s'exhaureix tant si l'alumne  s'hi presenta com si no (excepte que l'alumne hagi anul·lat la matrícula). La convocatòria EAF  recuperació només s'exhaureix si l'estudiant s'hi presenta.
 
 <WIOCCL:IF condition="true==={#_ARRAY_GET_VALUE(''treballEnEquip'',{#_ARRAY_GET_VALUE(''{##keyUfEAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">
-En EAF establerts dins de la metodologia del treball en equip l'alumne té l'obligació de presentar-se a l’EAF i només opta a presentar-se a l’EAF recuperació  quan:
+En EAF establerts dins de la metodologia del treball en equip l'alumne té l'obligació de presentar-se a l'EAF i només opta a presentar-se a l'EAF recuperació  quan:
   * La recuperació implica a tots els components de l'equip que han de lliurar de nou conjuntament una mateixa tasca.
   * La recuperació individual fa referència al contingut de l'exercici i no a les competències del treball en equip que només es poden superar de nou, treballant novament en grup.
 </WIOCCL:IF>
@@ -314,7 +314,7 @@ En EAF establerts dins de la metodologia del treball en equip l'alumne té l'obl
 ###:
 [##TODO: Indiqueu totes aquelles informacions que calguin. Per exemple:[[EXEMPLE
   * Comprèn diferents activitats pràctiques o procediments tècnics que es realitzen de manera presencial en un institut.
-  * S'avalua numèricament del 0 al 10, amb l’expressió d’un decimal.
+  * S'avalua numèricament del 0 al 10, amb l'expressió d'un decimal.
   * Té una ponderació a la qualificació final (QF) (vegeu l'apartat "Qualificació final QF").
   * S'estableix nota mínima X per tal de poder aplicar el càlcul de la QF.
 
@@ -330,7 +330,7 @@ EXEMPLE]].No elimineu l'exemple ni les indicacions.Escriviu a patir del següent
 ###:
 
 :###
-La Qualificació Final de la Unitat Formativa (QFU{##itemUf[unitat formativa]##}) es calcula a partir de l'aplicació de la fórmula següent sempre que en tots els instruments d’avaluació s’obtingui la nota mínima establerta:
+La Qualificació Final de la Unitat Formativa (QFU{##itemUf[unitat formativa]##}) es calcula a partir de l'aplicació de la fórmula següent sempre que en tots els instruments d'avaluació s'obtingui la nota mínima establerta:
 
 <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaInstrumentsAvaluacio##},''ponderacio'', ''unitat formativa'', {##itemUf[unitat formativa]##})_#}">
 <WIOCCL:SET var="length" type="literal" value="{#_COUNTINARRAY({##taulaInstrumentsAvaluacio##}, [''unitat formativa'',''tipus''], [{##itemUf[unitat formativa]##},[''EAF'',''JT'',''PAF'']])_#}">
@@ -342,7 +342,7 @@ La Qualificació Final de la Unitat Formativa (QFU{##itemUf[unitat formativa]##}
 [##TODO: Si cal matisar la formula, podeu fer-ho aquí.##]
 
 :###
-Les qualificacions de <WIOCCL:IF condition="{##keyUfEAF##}!==false">l’EAF<WIOCCL:IF condition="{##keyUfJT##}!==false">, </WIOCCL:IF></WIOCCL:IF><WIOCCL:IF condition="{##keyUfJT##}!==false">JT</WIOCCL:IF><WIOCCL:IF condition="{##keyUfJT##}!==false || {##keyUfEAF##}!==false "> i </WIOCCL:IF>PAF aprovades s'apliquen tant a la convocatòria PAF 1 com a la PAF 2 del mateix semestre, però no es guarden d'un semestre a l'altre.
+Les qualificacions de <WIOCCL:IF condition="{##keyUfEAF##}!==false">l'EAF<WIOCCL:IF condition="{##keyUfJT##}!==false">, </WIOCCL:IF></WIOCCL:IF><WIOCCL:IF condition="{##keyUfJT##}!==false">JT</WIOCCL:IF><WIOCCL:IF condition="{##keyUfJT##}!==false || {##keyUfEAF##}!==false "> i </WIOCCL:IF>PAF aprovades s'apliquen tant a la convocatòria PAF 1 com a la PAF 2 del mateix semestre, però no es guarden d'un semestre a l'altre.
 
 <WIOCCL:IF condition="{##keyUfJT##}===false && {##keyUfEAF##}===false">
 Quan no s'arribi a la nota mínima de la PAF, el càlcul de la QFU{##itemUf[unitat formativa]##} serà el {#_GET_PERCENT({##sum_ponderacio##},{#_ARRAY_GET_VALUE(''ponderacio'',{#_ARRAY_GET_VALUE(''{##keyUfPAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},0)_#})_#}% de la nota obtinguda a la PAF
@@ -352,14 +352,14 @@ Quan no s'arribi a la nota mínima d'algun dels instruments d'avaluació següen
 <WIOCCL:FOREACH var="item" array="{##taulaInstrumentsAvaluacio##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##} && {##item[tipus]##}!=''AC'' && {##item[notaMinima]##}\>0 && {##item[ponderacio]##}\>0">
   * Si la nota de la {##item[tipus]##} és inferior a {##item[notaMinima]##},00,  el càlcul de la QFU{##itemUf[unitat formativa]##} serà el {#_GET_PERCENT({##sum_ponderacio##},{##item[ponderacio]##})_#}% de la nota obtinguda a la {##item[tipus]##}. Aquesta serà la qualificació que constarà a Secretaria FP.
 </WIOCCL:FOREACH>
-  * Si no s’arriba al mínim en més d'un dels instruments d’avaluació anteriors, s'assignarà a QFU{##itemUf[unitat formativa]##} el valor més faborable a l'alumne. Aquesta serà la qualificació que constarà a Secretaria FP.
+  * Si no s'arriba al mínim en més d'un dels instruments d'avaluació anteriors, s'assignarà a QFU{##itemUf[unitat formativa]##} el valor més faborable a l'alumne. Aquesta serà la qualificació que constarà a Secretaria FP.
 </WIOCCL:IF>
 
 En cas de no superar la UF, el següent semestre s'han de tornar a realitzar totes les activitats (PAF<WIOCCL:IF condition="{##keyUfEAF##}!==false">, EAF</WIOCCL:IF><WIOCCL:IF condition="{##keyUfJT##}!==false">, JT</WIOCCL:IF> i AC).
 ###:
 
 :###
-La qualificació de la UF s’obté segons la següent ponderació dels RA:
+La qualificació de la UF s'obté segons la següent ponderació dels RA:
 
 <WIOCCL:SET var="sum_ponderacio_ra" type="literal" value="{#_ARRAY_GET_SUM({##resultatsAprenentatge##},''ponderacio'', ''uf'', {##itemUf[unitat formativa]##})_#}">
 <WIOCCL:SET var="length" type="literal" value="{#_COUNTINARRAY({##resultatsAprenentatge##}, ''uf'', {##itemUf[unitat formativa]##})_#}">
@@ -370,7 +370,7 @@ La qualificació de la UF s’obté segons la següent ponderació dels RA:
 ::table:T05-{##itemUf[unitat formativa]##}
   :title:Qualificació dels instruments d'avaluació sobre els RA
   :type:pt_taula
-^  Qualificació dels RA  <WIOCCL:FOREACH var="itemInst" array="{##taulaInstrumentsAvaluacio##}" counter="ind" counterFromZero="true" filter="{##itemInst[unitat formativa]##}=={##itemUf[unitat formativa]##} && {##itemInst[ponderacio]##}\>0">^<WIOCCL:IF condition="{##ind##}==0">  Instruments d’avaluació (%)  </WIOCCL:IF></WIOCCL:FOREACH>^
+^  Qualificació dels RA  <WIOCCL:FOREACH var="itemInst" array="{##taulaInstrumentsAvaluacio##}" counter="ind" counterFromZero="true" filter="{##itemInst[unitat formativa]##}=={##itemUf[unitat formativa]##} && {##itemInst[ponderacio]##}\>0">^<WIOCCL:IF condition="{##ind##}==0">  Instruments d'avaluació (%)  </WIOCCL:IF></WIOCCL:FOREACH>^
 ^  :::  <WIOCCL:FOREACH var="itemInst" array="{##taulaInstrumentsAvaluacio##}" counter="ind" counterFromZero="true" filter="{##itemInst[unitat formativa]##}=={##itemUf[unitat formativa]##} && {##itemInst[tipus]##}==''AC'' && {##itemInst[ponderacio]##}\>0">^<WIOCCL:IF condition="{##ind##}==0">  AC  </WIOCCL:IF></WIOCCL:FOREACH><WIOCCL:FOREACH var="itemInst" array="{##taulaInstrumentsAvaluacio##}" filter="{##itemInst[unitat formativa]##}=={##itemUf[unitat formativa]##} && {##itemInst[tipus]##}!=''AC'' && {##itemInst[ponderacio]##}\>0">^  {##itemInst[tipus]##}  </WIOCCL:FOREACH>^
 ^  :::  <WIOCCL:FOREACH var="itemInst" array="{##taulaInstrumentsAvaluacio##}" filter="{##itemInst[unitat formativa]##}=={##itemUf[unitat formativa]##} && {##itemInst[tipus]##}==''AC'' && {##itemInst[ponderacio]##}\>0">^  {##itemInst[id]##}  </WIOCCL:FOREACH><WIOCCL:FOREACH var="itemInst" array="{##taulaInstrumentsAvaluacio##}" filter="{##itemInst[unitat formativa]##}=={##itemUf[unitat formativa]##} && {##itemInst[tipus]##}!=''AC'' && {##itemInst[ponderacio]##}\>0">^  :::  </WIOCCL:FOREACH>^
 <WIOCCL:FOREACH var="itemRa" array="{##resultatsAprenentatge##}" filter="{##itemRa[uf]##}=={##itemUf[unitat formativa]##}">
