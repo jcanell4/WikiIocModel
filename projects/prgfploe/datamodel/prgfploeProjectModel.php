@@ -226,13 +226,7 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                         $verificadorRA[$item["unitat formativa"]][trim($raKey)]=true;
                     }
                 }
-                if(strpos($item["ca"], ",")!==false){
-                    $caKeys = explode(",", $item["ca"]);
-                }elseif(strpos($item["ca"], " ")!==false){
-                    $caKeys = explode(" ", $item["ca"]);
-                }else{
-                    $caKeys = explode("\n", $item["ca"]);
-                }
+                $caKeys = preg_split("/[, \n] ?/", $item["ca"]);
                 foreach ($caKeys as $caKey) {     
                     $selectedRa = -1;
                     $raKeys = explode(",", $item["ra"]);
