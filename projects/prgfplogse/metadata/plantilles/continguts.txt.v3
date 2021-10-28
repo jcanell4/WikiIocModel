@@ -45,7 +45,7 @@ La data prevista d'inici i finalització de cada unitat formativa és l'establer
 :###====== ESTRATÈGIES METODOLÒGIQUES APLICADES AL CRÈDIT ======###:
 
 :###
-Les estratègies metodològiques del crèdit són les establertes en les concrecions curriculars de centre FP LOGSE (CCC_FP_LOGSE) i en les concrecions curriculars del departament (CCD).
+Les estratègies metodològiques del crèdit són les establertes en les concrecions curriculars de centre FP LOGSE (CCC_FP_LOGSE) i en les concrecions curriculars del departament (CCD). 
 
 {##estrategiesMetodologiques##}
 
@@ -62,10 +62,10 @@ Els criteris d'avaluació, instruments d'avaluació i recuperació del crèdit s
 <WIOCCL:SET var="initialAss" type="literal" value="">
 <WIOCCL:IF condition="{##codeInitialAss##}==1">
 <WIOCCL:RESET var="initialAss" type="literal" value="a l'inici del crèdit"></WIOCCL:RESET>
-</WIOCCL:IF>
+</WIOCCL:IF> 
 <WIOCCL:IF condition="{##codeInitialAss##}==2">
 <WIOCCL:RESET var="initialAss" type="literal" value="a l'inici de cada bloc"></WIOCCL:RESET>
-</WIOCCL:IF>
+</WIOCCL:IF> 
 <WIOCCL:IF condition="{##codeInitialAss##}\>0">
 ===== Avaluació inicial =====
 ###:
@@ -75,7 +75,7 @@ Es planteja {##initialAss##}. El seu objectiu és detectar i fer conscients els 
 ###:
 
 :###
-</WIOCCL:IF>
+</WIOCCL:IF> 
 </WIOCCL:SET>
 </WIOCCL:SET>
 ===== Avaluació contínua (AC) =====
@@ -95,7 +95,7 @@ El model pedagògic de l'IOC es fonamenta en l'avaluació acadèmica de l'alumne
 </WIOCCL:FOREACH>
 <WIOCCL:SET var="keyPAF" type="literal" value="{#_SEARCH_KEY([''PAF''],{##taulaInstrumentsAvaluacio##}, [''tipus''])_#}">
 <WIOCCL:IF condition="{##keyPAF##}!=false">
-  * La qualificació de l'AC es té en compte tant a la convocatòria PAF 1 com a la convocatòria  PAF 2 del mateix semestre, però no es guarda d'un semestre a l'altre.
+  * La qualificació de l'AC es té en compte tant a la convocatòria PAF 1 com a la convocatòria  PAF 2 del mateix semestre, però no es guarda d'un semestre a l'altre. 
 </WIOCCL:IF>
 </WIOCCL:SET>
 ###:
@@ -107,7 +107,7 @@ El model pedagògic de l'IOC es fonamenta en l'avaluació acadèmica de l'alumne
   * L'alumne ha de fer les activitats proposades de manera original i seguint les indicacions del professor. Les activitats d'AC que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
   * En activitats d'AC s'estableixen els criteris d'avaluació corresponents.
   * El professor corregeix les activitats d'AC i emet una qualificació numèrica de l'escala entre el 0 i el 10, amb dos decimals.
-  * Inclou la publicació de la solució, la valoració general al grup classe i una retroacció individual a cada alumne.
+  * Inclou la publicació de la solució, la valoració general al grup classe i una retroacció individual a cada alumne. 
 ###:
 
 :###
@@ -129,16 +129,16 @@ L'avaluació final (AF) es concreta en la prova d'avaluació final <WIOCCL:IF co
 <WIOCCL:IF condition="{##keyEAF##}!==false || {##keyJT##}!==false">
 <WIOCCL:IF condition="{##keyPAF##}!==false || {##keyPAFV##}!==false">
 L'avaluació final (AF) es concreta en la prova d'avaluació final <WIOCCL:IF condition="{##keyPAF##}!=false">(PAF)</WIOCCL:IF><WIOCCL:IF condition="{##keyPAFV##}!=false">de validació (PAFV)</WIOCCL:IF><WIOCCL:IF condition="{##keyEAF##}!==false"><WIOCCL:IF condition="{##keyJT##}===false"> i </WIOCCL:IF><WIOCCL:IF condition="{##keyJT##}!==false">, </WIOCCL:IF>els exercicis d'avaluació final (EAF)</WIOCCL:IF><WIOCCL:IF condition="{##keyJT##}!==false"> i les jornades tècniques (JT)</WIOCCL:IF>:
-</WIOCCL:IF>
+</WIOCCL:IF> 
 <WIOCCL:IF condition="{##keyPAF##}===false && {##keyPAFV##}===false">
 L'avaluació final (AF) es concreta en els exercicis d'avaluació final (EAF)<WIOCCL:IF condition="{##keyJT##}!==false"> i les jornades tècniques (JT)</WIOCCL:IF>:
-</WIOCCL:IF>
-</WIOCCL:IF>
+</WIOCCL:IF> 
+</WIOCCL:IF> 
 
 <WIOCCL:IF condition="{##keyPAF##}!=false">
 **PAF:**
-  * És obligatòria per aprovar el crèdit.
-  * Consisteix en diversos exercicis: {#_ARRAY_GET_VALUE(''descripcio'',{#_ARRAY_GET_VALUE(''{##keyPAF##}'',{##taulaInstrumentsAvaluacio##},[])_#}," ")_#}.
+  * És obligatòria per aprovar el crèdit. 
+  * Consisteix en diversos exercicis: {#_ARRAY_GET_VALUE(''descripcio'',{#_ARRAY_GET_VALUE(''{##keyPAF##}'',{##taulaInstrumentsAvaluacio##},[])_#}," ")_#}. 
   * {##duradaPAF##}.
   * S'avalua numèricament del 0 al 10, amb dos decimals.
   * NO inclou retroacció.
@@ -146,12 +146,12 @@ L'avaluació final (AF) es concreta en els exercicis d'avaluació final (EAF)<WI
 ###:
 
 :###
-S'ofereixen dues convocatòries  cada semestre: PAF 1 i PAF 2 . L'alumne pot:
+S'ofereixen dues convocatòries  cada semestre: PAF 1 i PAF 2 . L'alumne pot: 
   * Presentar-se a la PAF 1 i, en cas de no superar-la, presentar-se a la PAF 2 del mateix semestre (2 setmanes després de la PAF 1). En cap cas es pot presentar a la PAF 2 per pujar nota tenint la PAF 1 superada.
-  * Presentar-se directament a la PAF 2.
+  * Presentar-se directament a la PAF 2. 
 
-La convocatòria corresponent a la PAF 1 s'esgota tant si l'alumne s'hi presenta com si no (exceptuant que l'alumne hagi anul·lat la matrícula). La convocatòria corresponent a PAF 2 només s'esgota si l'alumne s'hi presenta.
-</WIOCCL:IF>
+La convocatòria corresponent a la PAF 1 s'esgota tant si l'alumne s'hi presenta com si no (exceptuant que l'alumne hagi anul·lat la matrícula). La convocatòria corresponent a PAF 2 només s'esgota si l'alumne s'hi presenta. 
+</WIOCCL:IF> 
 ###:
 
 :###
@@ -161,15 +161,15 @@ La convocatòria corresponent a la PAF 1 s'esgota tant si l'alumne s'hi presenta
 [##TODO: Descriviu les característiques de prova de validació si n'hi ha.##]
 
 :###
-</WIOCCL:IF>
+</WIOCCL:IF> 
 <WIOCCL:IF condition="{##keyEAF##}!==false">
 **EAF:**
   * Comprèn una sèrie d'activitats d'avaluació  que tenen com a finalitat evidenciar el grau d'assoliment d'aquells resultats d'aprenentatge relacionats amb procediments difícils d'avaluar amb altres elements d'avaluació.
-  * És NO presencial, es realitza a distància.
+  * És NO presencial, es realitza a distància. 
 <WIOCCL:IF condition="true==={#_ARRAY_GET_VALUE(''esObligatori'',{#_ARRAY_GET_VALUE(''{##keyEAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">
   * És obligatori.
-</WIOCCL:IF>
-  * S'ha de resoldre <WIOCCL:IF condition="true!=={#_ARRAY_GET_VALUE(''treballEnEquip'',{#_ARRAY_GET_VALUE(''{##keyEAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">de manera individual</WIOCCL:IF><WIOCCL:IF condition="true==={#_ARRAY_GET_VALUE(''treballEnEquip'',{#_ARRAY_GET_VALUE(''{##keyEAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">en grup</WIOCCL:IF>.
+</WIOCCL:IF> 
+  * S'ha de resoldre <WIOCCL:IF condition="true!=={#_ARRAY_GET_VALUE(''treballEnEquip'',{#_ARRAY_GET_VALUE(''{##keyEAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">de manera individual</WIOCCL:IF><WIOCCL:IF condition="true==={#_ARRAY_GET_VALUE(''treballEnEquip'',{#_ARRAY_GET_VALUE(''{##keyEAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">en grup</WIOCCL:IF>. 
   * L'alumne ha de fer les activitats proposades de manera original i seguint les indicacions del professor. Els EAF que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
   * S'avalua numèricament del 0 al 10, amb l'expressió d'un decimal.
   * Té una ponderació a la qualificació final (QF) (vegeu l'apartat "Qualificació final QF").
@@ -181,7 +181,7 @@ En ser part de l'avaluació final, l'EAF té dues convocatòries  cada semestre:
 <WIOCCL:IF condition="true!=={#_ARRAY_GET_VALUE(''treballEnEquip'',{#_ARRAY_GET_VALUE(''{##keyEAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">
   * Presentar-se directament a l'EAF recuperació.
 </WIOCCL:IF>
-La convocatòria EAF s'exhaureix tant si l'alumne  s'hi presenta com si no (excepte que l'alumne hagi anul·lat la matrícula). La convocatòria EAF  recuperació només s'exhaureix si l'estudiant s'hi presenta.
+La convocatòria EAF s'exhaureix tant si l'alumne  s'hi presenta com si no (excepte que l'alumne hagi anul·lat la matrícula). La convocatòria EAF  recuperació només s'exhaureix si l'estudiant s'hi presenta. 
 
 <WIOCCL:IF condition="true==={#_ARRAY_GET_VALUE(''treballEnEquip'',{#_ARRAY_GET_VALUE(''{##keyEAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">
 En EAF establerts dins de la metodologia del treball en equip l'alumne té l'obligació de presentar-se a l'EAF i només opta a presentar-se a l'EAF recuperació  quan:
@@ -192,30 +192,30 @@ En EAF establerts dins de la metodologia del treball en equip l'alumne té l'obl
 [##TODO:(Si és el cas) determinar com es garanteix la identitat de l'alumne.##]
 
 :###
-</WIOCCL:IF>
+</WIOCCL:IF> 
 <WIOCCL:IF condition="{##keyJT##}!==false">
 **JT**:
 <WIOCCL:IF condition="true==={#_ARRAY_GET_VALUE(''esObligatori'',{#_ARRAY_GET_VALUE(''{##keyJT##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">
-  * És obligatòria.
+  * És obligatòria. 
 </WIOCCL:IF>
 <WIOCCL:IF condition="true==={#_ARRAY_GET_VALUE(''treballEnEquip'',{#_ARRAY_GET_VALUE(''{##keyJT##}'',{##taulaInstrumentsAvaluacio##},[])_#},false)_#}">
   * Les activitats realitzades durant les jornades es realitzaran en grup.
 </WIOCCL:IF>
 ###:
 [##TODO: Indiqueu totes aquelles informacions que calguin. Per exemple:[[EXEMPLE
-  * Comprèn diferents activitats pràctiques o procediments tècnics que es realitzen de manera presencial en un institut.
+  * Comprèn diferents activitats pràctiques o procediments tècnics que es realitzen de manera presencial en un institut. 
   * S'avalua numèricament del 0 al 10, amb l'expressió d'un decimal.
   * Té una ponderació a la qualificació final (QF) (vegeu l'apartat "Qualificació final QF").
   * S'estableix nota mínima X per tal de poder aplicar el càlcul de la QF.
 
-S'ofereixen dues convocatòries cada semestre:JT i recuperació JT.  Només es té accés a la
+S'ofereixen dues convocatòries cada semestre:JT i recuperació JT.  Només es té accés a la 
 recuperació  en els casos següents:
   * Haver suspès la convocatòria JT amb una nota inferior a 4,0.
-  * Haver patit un accident greu, un ingrés hospitalari, la mort d'un familiar fins a 2n grau de parentesc (el mateix dia de la jornada) o l'assistència a un judici.
+  * Haver patit un accident greu, un ingrés hospitalari, la mort d'un familiar fins a 2n grau de parentesc (el mateix dia de la jornada) o l'assistència a un judici. 
 EXEMPLE]].No elimineu l'exemple ni les indicacions.Escriviu a patir del següent paràgraf.##]
 
 :###
-</WIOCCL:IF>
+</WIOCCL:IF> 
 ===== Qualificació final del crèdit =====
 ###:
 
@@ -231,7 +231,7 @@ La Qualificació Final del crèdit (QF) es calcula a partir de l'aplicació de l
 
 La QF del crèdit és numèrica i es qualifica de l'1 al 10, sense decimals. Es consideren aprovades les qualificacions iguals o superiors a 5.
 
-Les qualificacions de <WIOCCL:IF condition="{##keyEAF##}!==false">l'EAF<WIOCCL:IF condition="{##keyJT##}!==false">, </WIOCCL:IF></WIOCCL:IF><WIOCCL:IF condition="{##keyJT##}!==false">de la JT</WIOCCL:IF><WIOCCL:IF condition="{##keyJT##}!==false || {##keyEAF##}!==false "> i </WIOCCL:IF>la PAF aprovades s'apliquen tant a la convocatòria PAF 1 com a la PAF 2 del mateix semestre, però no es guarden d'un semestre a l'altre.
+Les qualificacions de <WIOCCL:IF condition="{##keyEAF##}!==false">l'EAF<WIOCCL:IF condition="{##keyJT##}!==false">, </WIOCCL:IF></WIOCCL:IF><WIOCCL:IF condition="{##keyJT##}!==false">de la JT</WIOCCL:IF><WIOCCL:IF condition="{##keyJT##}!==false || {##keyEAF##}!==false "> i </WIOCCL:IF>la PAF aprovades s'apliquen tant a la convocatòria PAF 1 com a la PAF 2 del mateix semestre, però no es guarden d'un semestre a l'altre. 
 <WIOCCL:IF condition="{##keyJT##}===false && {##keyEAF##}===false">
 Quan no s'arribi a la nota mínima de la PAF, el càlcul de la QFU{##itemUf[unitat formativa]##} serà el {#_GET_PERCENT({##sum_ponderacio##},{#_ARRAY_GET_VALUE(''ponderacio'',{#_ARRAY_GET_VALUE(''{##keyPAF##}'',{##taulaInstrumentsAvaluacio##},[])_#},0)_#})_#}% de la nota obtinguda a la PAF
 </WIOCCL:IF>
@@ -243,7 +243,7 @@ Quan no s'arribi a la nota mínima d'algun dels instruments d'avaluació següen
   * Si no s'arriba al mínim en més d'un dels instruments d'avaluació anteriors, s'assignarà a QF el valor més faborable a l'alumne. Aquesta serà la qualificació que constarà a Secretaria FP.
 </WIOCCL:IF>
 
-En cas de no superar el crèdit, el següent semestre s'han de tornar a realitzar totes les activitats (PAF<WIOCCL:IF condition="{##keyEAF##}!==false">, EAF</WIOCCL:IF><WIOCCL:IF condition="{##keyJT##}!==false">, JT</WIOCCL:IF> i AC).
+En cas de no superar el crèdit, el següent semestre s'han de tornar a realitzar totes les activitats (PAF<WIOCCL:IF condition="{##keyEAF##}!==false">, EAF</WIOCCL:IF><WIOCCL:IF condition="{##keyJT##}!==false">, JT</WIOCCL:IF> i AC). 
 ###:
 
 :###====== RECURSOS ======###:
@@ -343,7 +343,7 @@ Els recursos necessaris per cursar aquest crèdit són:
 ^  Data d'aprovació  ^  Modificat per:  ^  Modificacions  ^
 <WIOCCL:FOREACH var="item" array="{##cc_historic##}">
 |  {#_DATE("{##item[data]##}")_#}  |  {##item[autor]##}  |  {##item[modificacions]##}    |
-</WIOCCL:FOREACH>
+</WIOCCL:FOREACH>  
 :::
 
 ====== GESTIÓ DEL DOCUMENT ======
