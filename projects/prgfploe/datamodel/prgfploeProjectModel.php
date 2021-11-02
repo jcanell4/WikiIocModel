@@ -204,7 +204,7 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
         }
         
         //Comprovat RAs, CAs i continguts + EACs  [TODO]
-        $totalNFs = array()CA;
+        $totalNFs = array();
         if (!empty($aaTable)) {
             foreach ($aaTable as $item){
                 if (!isset($totalNFs[$item["unitat formativa"]])) {
