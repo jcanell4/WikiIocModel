@@ -127,29 +127,31 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
         }
         
         $verificadorEAC = [];
-        if(!empty($iaTable)){
+        if (!empty($iaTable)){
             foreach ($iaTable as $item) {
-                if(!isset($verificadorEAC[$item["unitat formativa"]])){
-                    $verificadorCA[$item["unitat formativa"]] =[];
+                if (!isset($verificadorEAC[$item["unitat formativa"]])) {
+                    $verificadorEAC[$item["unitat formativa"]] = [];
                 }
-                if(!isset($verificadorEAC[$item["unitat formativa"]][$item["id"]])){
-                    $verificadorEAC[$item["unitat formativa"]][$item["id"]]=false;
+                if (!isset($verificadorEAC[$item["unitat formativa"]][$item["id"]])) {
+                    $verificadorEAC[$item["unitat formativa"]][$item["id"]] = false;
                 }
             }
         }
         
         $verificadorCA = [];
-        if(!empty($caTable)){
+        $verificadorLlistaCodiCA = [];
+        if (!empty($caTable)) {
             foreach ($caTable as $item) {
-                if(!isset($verificadorCA[$item["uf"]])){
-                    $verificadorCA[$item["uf"]] =[];
+                if (!isset($verificadorCA[$item["uf"]])) {
+                    $verificadorCA[$item["uf"]] = [];
                 }
-                if(!isset($verificadorCA[$item["uf"]][$item["ra"]])){
+                if (!isset($verificadorCA[$item["uf"]][$item["ra"]])) {
                     $verificadorCA[$item["uf"]][$item["ra"]] = false;
                 }
-                if(!isset($verificadorCA[$item["uf"]][$item["ra"]][$item["ca"]])){
-                    $verificadorCA[$item["uf"]][$item["ra"]][$item["ca"]] =false;
+                if (!isset($verificadorCA[$item["uf"]][$item["ra"]][$item["ca"]])) {
+                    $verificadorCA[$item["uf"]][$item["ra"]][$item["ca"]] = false;
                 }
+                $verificadorLlistaCodiCA[] = "${item["uf"]}-${item["ca"]}";
             }
         }
         
@@ -181,26 +183,28 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
         }
 
         $verificadorCont = [];
-        if(!empty($conTable)){
+        $verificadorLlistaContinguts = [];
+        if (!empty($conTable)) {
             foreach ($conTable as $item) {
-                if(!isset($verificadorCont[$item["uf"]])){
-                    $verificadorCont[$item["uf"]] =[];
+                if (!isset($verificadorCont[$item["uf"]])) {
+                    $verificadorCont[$item["uf"]] = [];
                 }
                 $cKeys = explode(".", $item["cont"]);
-                if(count($cKeys)==1){
+                if (count($cKeys)==1) {
                     $cKeys[] = 0;
                 }
-                if(!isset($verificadorCont[$item["uf"]][$cKeys[0]])){
-                    $verificadorCont[$item["uf"]][$cKeys[0]] =[];
+                if (!isset($verificadorCont[$item["uf"]][$cKeys[0]])) {
+                    $verificadorCont[$item["uf"]][$cKeys[0]] = [];
                 }
-                if(!isset($verificadorCont[$item["uf"]][$cKeys[0]][$cKeys[1]])){
-                    $verificadorCont[$item["uf"]][$cKeys[0]][$cKeys[1]] =false;
+                if (!isset($verificadorCont[$item["uf"]][$cKeys[0]][$cKeys[1]])) {
+                    $verificadorCont[$item["uf"]][$cKeys[0]][$cKeys[1]] = false;
                 }
-            }            
+                $verificadorLlistaContinguts[] = "${item["uf"]}-${item["cont"]}";
+            }
         }
         
         //Comprovat RAs, CAs i continguts + EACs  [TODO]
-        $totalNFs = array();
+        $totalNFs = array()CA;
         if (!empty($aaTable)) {
             foreach ($aaTable as $item){
                 if (!isset($totalNFs[$item["unitat formativa"]])) {
@@ -377,6 +381,36 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
             }
         }
         
+        //Comprova si hi ha duplicacions de codis CA dins d'una mateixa UF
+        if (!empty($verificadorLlistaCodiCA)) {
+            $unic = array_unique($verificadorLlistaCodiCA);
+            $dif = array_diff_key($verificadorLlistaCodiCA, $unic);
+            if (!empty($dif)) {
+                $dif = implode(", ", $dif);
+                $result["ERROR"][] = [
+                    'responseType' => $responseType,
+                    'field' => 'criterisAvaluacio',
+                    'message' => sprintf("A la taula Criteris d'avaluacio (criterisAvaluacio), els codis CA següents estan duplicats 'uf'-'codi CA': %s."
+                                        ,$dif)
+                ];
+            }
+        }
+
+        //Comprova si hi ha duplicacions de 'Codi contingut' dins d'una mateixa UF
+        if (!empty($verificadorLlistaContinguts)) {
+            $unic = array_unique($verificadorLlistaContinguts);
+            $dif = array_diff_key($verificadorLlistaContinguts, $unic);
+            if (!empty($dif)) {
+                $dif = implode(", ", $dif);
+                $result["ERROR"][] = [
+                    'responseType' => $responseType,
+                    'field' => 'continguts',
+                    'message' => sprintf("A la taula Continguts de la UF (continguts), els codi contingut següents estan duplicats 'uf'-'codi contingut': %s."
+                                        ,$dif)
+                ];
+            }
+        }
+
         //Comprovació hores
         $totalUfs = array();
         if (!empty($nfTable)) {
