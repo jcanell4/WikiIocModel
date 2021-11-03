@@ -523,7 +523,7 @@
             "add_import" : {
               "button_label" : "Importar amb formats: '9 concepte' o també '9.9 concepte' ",
               "data": {
-                "regexColSeparator": "^ *([0-9]?),? *([0-9]\\.?[0-9]?[0-9]?\\.?[0-9]?[0-9]?\\.?) *(.*?) *?$",
+                "regexColSeparator": "^ *([0-9]?),? *([0-9]\\.?[0-9]?[0-9]?\\.?[0-9]?[0-9]?)\\.? *(.*?) *?$",
                 "regexRowSeparator": "\n"
               }
             }                    
@@ -585,9 +585,9 @@
             "remove_rows": "Eliminar els procediments seleccionats",
             "add_default_row_before": "Afegir un procediment abans de la fila seleccionada",
             "add_import" : {
-              "button_label" : "Importar amb formats: '9 procediment' o també '9. procediment' ",
+              "button_label" : "Importar amb formats: '9 procediment' o també '9.9 procediment' ",
               "data": {
-                "regexColSeparator": "^ *([0-9](?=[\\s,]))?[\\s,]*([0-9]){0,2}\\.? *(.*?) *?$",
+                "regexColSeparator": "^ *([0-9]?),? *([0-9]\\.?[0-9]?[0-9]?\\.?[0-9]?[0-9]?)\\.? *(.*?) *?$",
                 "regexRowSeparator": "\n(?=[0-9][\\.\\)])"
               }
             }                    
@@ -651,7 +651,7 @@
             "add_import" : {
               "button_label" : "Importar amb formats: '9 actitud' o també '9.9 actitud' ",
               "data": {
-                "regexColSeparator": "^ *([0-9](?=[\\s,]))?[\\s,]*([0-9]){0,2}\\.? *(.*?) *?$",
+                "regexColSeparator": "^ *([0-9]?),? *([0-9]\\.?[0-9]?[0-9]?\\.?[0-9]?[0-9]?)\\.? *(.*?) *?$",
                 "regexRowSeparator": "\n(?=[0-9][\\.\\)])"
               }
             }                    
