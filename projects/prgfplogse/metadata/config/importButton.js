@@ -92,6 +92,8 @@ function (registry,dom,domConstruct,BorderContainer,Dialog,ContentPane,Form,Text
                 }).placeAt(divizquierda);
                 dialogTree.startup();
 
+                dialogTree.setMultipleSelect(true); //inhabilita la selección múltiple de elementos del árbol
+
                 dialog.dialogTree = dialogTree;
 
                 dialogTree.tree.onClick=function(item) {
