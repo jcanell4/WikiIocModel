@@ -33,7 +33,13 @@ class upgrader_7 extends CommonUpgrader {
                 $doc = $this->model->getRawProjectDocument($filename);
 
                 $aTokRep = [['(\{##taulaDadesBlocs##\}\)_#\}.>)(0)',
-                             '${1}1']
+                             '${1}1'],
+                            ['(filter="\\{##itemUf\\[unitat formativa\\]##\\}==\\{##itemCa\\[uf\\]##\\}&&\\{##itemRa\\[ra\\]##\\}==)(\\{.*<WIOCCL:IF condition="\\{##itemRa\\[ra\\]##\\}==)(1">.*<WIOCCL:IF condition="\\{##itemRa\\[ra\\]##\\})\\\\>(1">)',
+                             '${1}=${2}=${3}!==${4}'],
+                            ['(\\{#_SUBS\\(\\{#_COUNTINARRAY\\(\\{##activitatsAprenentatge##\\}, \\[\'\'unitat formativa\'\', \'\'nucli formatiu\'\'\\], \\[\\{##itemUf\\[unitat formativa\\]##\\},\\{##itemNf\\[nucli formatiu\\]##\\}\\])(\\)_#\\},1\\)_#\\})',
+                             '${1},1${2}'],
+                            ['(\\| \\/\\/descripció:\\/\\/\\\\\\\\ \\\\\\\\ \\{##itemAa\\[descripcio\\]##\\}.*\\n<\\/WIOCCL:IF>\\n<\\/WIOCCL:SET>\\n<\\/WIOCCL:FOREACH>\\n<\\/WIOCCL:SET>\\n)(:::)',
+                             '${1}'."\n".'${2}']
                            ];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
