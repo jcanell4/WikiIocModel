@@ -4,7 +4,7 @@
 :###======   RELACIÓ D'UNITATS FORMATIVES I NUCLIS FORMATIUS ======###:
 
 :###
-Aquest mòdul <WIOCCL:IF condition="{##horesLliureDisposicioModul##}==0">no disposa d'hores de lliure disposició</WIOCCL:IF><WIOCCL:IF condition="{##horesLliureDisposicioModul##}\>0">disposa de {##horesLliureDisposicioModul##} hores de lliure disposició</WIOCCL:IF>.<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>0"> Es divideix en {#_LAST({##taulaDadesBlocs##}, "LAST[bloc]")_#} blocs.</WIOCCL:IF>
+Aquest mòdul <WIOCCL:IF condition="{##horesLliureDisposicioModul##}==0">no disposa d'hores de lliure disposició</WIOCCL:IF><WIOCCL:IF condition="{##horesLliureDisposicioModul##}\>0">disposa de {##horesLliureDisposicioModul##} hores de lliure disposició</WIOCCL:IF>.<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>1"> Es divideix en {#_LAST({##taulaDadesBlocs##}, "LAST[bloc]")_#} blocs.</WIOCCL:IF>
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}==1">
 ::table:T1
@@ -88,7 +88,7 @@ Per superar el mòdul professional cal superar tota la unitat formativa, la qual
 Per superar el mòdul professional cal superar **independentment** totes les unitats formatives. Les unitats formatives se superen amb una qualificació de {##notaMinimaUfAprovada##},00 punts o superior.
 </WIOCCL:IF>
 
-<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>0">
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>1">
 La superació del bloc s'obté amb la superació de les unitats formatives que el componen. No es poden cursar bloc superiors  si no s'han superat els previs. La qualificació final del bloc s'expressarà com a Superat o Pendent, segons correspongui.
 </WIOCCL:IF>
 
