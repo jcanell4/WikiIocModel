@@ -459,7 +459,7 @@
             "add_import" : {
               "button_label" : "Importar amb format '9 objectiu' o '9. objectiu' o 'a objectiu' o 'a. objectiu'",
               "data": {
-                "regexColSeparator": "^\\s*([0-9])?,?\\s*([0-9a-zA-Z])\\.? ?(.*?)$",
+                "regexColSeparator": "^[ \\t]*([0-9]{1,2}(?=[ ,\\t]))?[ ,\\t]?[ \\t]*((?:[0-9]{1,2})|[a-zA-Z])(?=[\\. \\t])[ \\.\\t]?[ \\t]*(.*?)$",
                 "regexRowSeparator": "\n"
               }
             }                    
@@ -523,7 +523,7 @@
             "add_import" : {
               "button_label" : "Importar amb formats: '9 concepte' o també '9.9 concepte' ",
               "data": {
-                "regexColSeparator": "^ *([0-9]?),? *([0-9]\\.?[0-9]?[0-9]?\\.?[0-9]?[0-9]?)\\.? *(.*?) *?$",
+                "regexColSeparator": "^ *([0-9](?=[ ,\\t]))?[ ,\\t]?[ \\t]*([0-9]{1,2}(?:\\.[0-9]{1,2})?(?:\\.[0-9]{1,2})?)[\\. ] *(.*?) *?$",
                 "regexRowSeparator": "\n"
               }
             }                    
@@ -587,8 +587,8 @@
             "add_import" : {
               "button_label" : "Importar amb formats: '9 procediment' o també '9.9 procediment' ",
               "data": {
-                "regexColSeparator": "^ *([0-9]?),? *([0-9]\\.?[0-9]?[0-9]?\\.?[0-9]?[0-9]?)\\.? *(.*?) *?$",
-                "regexRowSeparator": "\n(?=[0-9][\\.\\)])"
+                "regexColSeparator": "^ *([0-9](?=[ ,\\t]))?[ ,\\t]?[ \\t]*([0-9]{1,2}(?:\\.[0-9]{1,2})?(?:\\.[0-9]{1,2})?)[\\. ] *(.*?) *?$",
+                "regexRowSeparator": "\n(?=\\s*[0-9]{1,2}[\\.\\)])"
               }
             }                    
           },
@@ -651,8 +651,8 @@
             "add_import" : {
               "button_label" : "Importar amb formats: '9 actitud' o també '9.9 actitud' ",
               "data": {
-                "regexColSeparator": "^ *([0-9]?),? *([0-9]\\.?[0-9]?[0-9]?\\.?[0-9]?[0-9]?)\\.? *(.*?) *?$",
-                "regexRowSeparator": "\n(?=[0-9][\\.\\)])"
+                "regexColSeparator": "^ *([0-9](?=[ ,\\t]))?[ ,\\t]?[ \\t]*([0-9]{1,2}(?:\\.[0-9]{1,2})?(?:\\.[0-9]{1,2})?)[\\. ] *(.*?) *?$",
+                "regexRowSeparator": "\n(?=\\s*[0-9]{1,2}[\\.\\)])"
               }
             }                    
           },

@@ -494,7 +494,7 @@
             "add_import" : {
               "button_label" : "Importar amb format 'RA9 resultat' o també 'RA 9 resultat'",
               "data": {
-                "regexColSeparator": "^(.*?)[ ,\\t]*RA *([0-9])[ \\.](.*?)[ ,\\t]*(\\d*?)[ ,\\t]*(\\d*?)$",
+                "regexColSeparator": "^(.*?)[ ,\\t][ \\t]*RA *([0-9])[ \\.](.*?)[ ,\\t]*(\\d*?)[ ,\\t]*(\\d*?)$",
                 "regexRowSeparator": "\n"
               }
             }                    
@@ -650,7 +650,7 @@
             "add_import" : {
               "button_label" : "Importar amb format 'CA9.9 criteri'",
               "data": {
-                "regexColSeparator": "^\\s*([0-9]?)\\s*([0-9]?)\\s*CA *([0-9]\\.?[0-9]?[0-9]?) *(.*?)(f?) *?$",
+                "regexColSeparator": "^\\s*([0-9](?=[ ,\\t]))?[ ,\\t]?[ \\t]*([0-9](?=[ ,\\t]))?[ ,\\t]?[ \\t]*CA *([0-9]{1,2}(?:\\.[0-9]{1,2})?)[\\. ] *(.*?)((?<=[, ])[tf])? *?$",
                 "regexRowSeparator": "\n"
               }
             }                    
@@ -746,7 +746,7 @@
             "add_import" : {
               "button_label" : "Importar amb formats: '9 contingut' o també '9.9 contingut' ",
               "data": {
-                "regexColSeparator": "^ *([0-9]?) *([0-9]\\.?[0-9]?[0-9]?\\.?[0-9]?[0-9]?) *(.*?)(f?) *?$",
+                "regexColSeparator": "^ *([0-9](?=[ ,\\t]))?[ ,\\t]?[ \\t]*((?:[0-9]{1,2})?(?:\\.[0-9]{1,2})?(?:\\.[0-9]{1,2})?)[\\. ] *(.*?)((?<=[, ])[tf])? *?$",
                 "regexRowSeparator": "\n"
               }
             }                    
