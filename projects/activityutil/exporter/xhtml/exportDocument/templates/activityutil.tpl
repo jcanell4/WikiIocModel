@@ -7,9 +7,9 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
     <!-- Own files -->
-    <link rel="stylesheet" href="css/basic.css">
+    <!--link rel="stylesheet" href="css/basic.css"-->
     <link rel="stylesheet" href="css/{##estil##}.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
     <script src="js/modernizr-1.7.min.js"></script>
     <script type="text/javascript" src="js/Hyphenator.js"></script>
     <script type="text/javascript" src="js/build.js"></script>

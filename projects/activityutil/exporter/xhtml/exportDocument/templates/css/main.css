@@ -1806,16 +1806,19 @@ article figure img {
  padding: 18px;
  margin: 1em auto;
 }
-.iocinclude .ioccontent {
+.iocinclude > .ioccontent, div.plugin_include_content {
     clear: both !important;
     font-size: 100%;
     width: 99%;
     color: #2c2c2c;
-    background: url("img/iocinclude.png") no-repeat scroll 98% 1em #efefef;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     padding: 8px;
     margin: 10px 0px;
+    background-color: #E8E1CF
+}
+div.plugin_include_content p {
+    margin-bottom: 0.5em;
 }
 .iocimportant .ioccontent {
  clear: both !important;
@@ -2466,4 +2469,47 @@ iframe {
 
 .parentnode .tocssection .toc a::before{
     content: counter(section) "." counter(subsection) ". ";
+}
+
+.container {
+    margin: 20px;
+    font-family: Georgia,"Times New Roman",serif;
+    background-color: #F5F1E8
+}
+p {
+    margin-bottom: 1em;
+}
+
+.dades_autoria {
+    margin-top: 20px;
+    text-align: left;
+    font-size: 80%;
+}
+
+.iocfigure, .iocfigure img {
+	margin: 1em auto;
+	display: block;
+}
+
+.iocfigure .footfigure {
+	margin: 0 auto;
+	display: block;
+	text-align: center;
+}
+
+.ioctext .ioccontent {
+	padding-left: 50px;
+}
+
+.taula {
+	margin: 0 auto 1.8em;
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+}
+.taula td, .taula th {
+	padding-right: 1em;
+}
+.taula th {
+	border-top: 1px solid;
+	border-bottom: 1px solid;
 }
