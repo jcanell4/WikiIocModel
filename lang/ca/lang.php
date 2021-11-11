@@ -61,9 +61,9 @@ $lang['structuredDocumentUnlocked'] = "El document ha estat alliberat. Cancel•
 
 $lang['requiring_message'] = "El document %s està bloquejat per l'usuari %s. S'estima que quedarà alliberat a les %s";
 $lang['requiring_dialog_title'] = "ALERTA. Document bloquejat!";
-$lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari %s. S'estima que quedarà alliberat a les %s\n"
-        . "Vols que t'avisem quan es desbloquegi aquest document?\n"
-        . "Això enviarà una notificació a %s indicant que t'interessa editar el document %s i que l'alliberi l'abans possible.\n"
+$lang['requiring_dialog_message'] = "El document %s està bloquejat per l'usuari %s.<br>S'estima que quedarà alliberat a les %s<br>"
+        . "Vols que t'avisem quan es desbloquegi aquest document?<br>"
+        . "Això enviarà una notificació a %s indicant que t'interessa editar el document %s i que l'alliberi l'abans possible.<br>"
         . "Activem la notificació?";
 $lang['require_message'] = "El projecte %s està bloquejat per l'usuari %s.<br>S'estima que quedarà alliberat a les %s";
 $lang['require_dialog_title'] = "ALERTA. Projecte bloquejat!";
