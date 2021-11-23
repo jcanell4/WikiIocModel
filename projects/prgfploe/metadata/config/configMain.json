@@ -31,7 +31,7 @@
 
             "versions": {
                 "fields" : 2,
-                "templates": {"continguts":8}
+                "templates": {"continguts":9}
             },
             "mainType": {
                 "type": "object",
