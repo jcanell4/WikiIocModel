@@ -12,6 +12,7 @@ class FtpProjectAction extends BasicFtpProjectAction {
         $model->set_ftpsend_metadata();
 
         $response = parent::responseProcess();
+        $response['generatedZipFiles'] = $model->llistaDeEspaiDeNomsDeDocumentsDelProjecte();
         $response[AjaxKeys::KEY_FTPSEND_HTML] = $model->get_ftpsend_metadata();
         return $response;
     }
