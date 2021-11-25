@@ -88,19 +88,18 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         if ($fileexists && (!$useSavedTime || ($savedtime === $filetime))) {
             foreach ($mdFtpSender['files'] as $objFile) {
                 $index = (empty($objFile['remoteIndex'])) ? $mdFtpSender['remoteIndex'] : $objFile['remoteIndex'];
-                $type = $objFile['type'];
                 $rDir = (empty($objFile['remoteDir'])) ? (empty($mdFtpSender['remoteDir'])) ? $connData["remoteDir"] : $mdFtpSender['remoteDir'] : $objFile['remoteDir'];
                 $unzip = in_array(1, $objFile['action']);  //es una action del tipo unzip
                 $linkRef = $objFile['linkName'];
             }
 
             $data = date("d/m/Y H:i:s", $filetime);
-            $class = "mf_$type";
             foreach ($fileNames as $file) {
                 $_index = (empty($index)) ? $file : $index;
                 $_linkRef = (empty($linkRef)) ? pathinfo($file, PATHINFO_FILENAME) : $linkRef;
                 $_rDir = ($unzip) ? $rDir . pathinfo($file, PATHINFO_FILENAME) . "/" : $rDir;
                 $url = "{$connData['remoteUrl']}${_rDir}${_index}";
+                $class = "mf_".pathinfo($_index, PATHINFO_EXTENSION);
                 $html.= '<p><span id="ftpsend" style="word-wrap: break-word;">';
                 $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'.$_linkRef.'</a> ';
                 $html.= '<span style="white-space: nowrap;">'.$data.'</span>';
