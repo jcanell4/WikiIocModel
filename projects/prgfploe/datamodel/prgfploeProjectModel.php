@@ -697,10 +697,10 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
             }
         }
 
-        $notaMinimaAC = 10;
-        $notaMinimaPAF = 10;
-        $notaMinimaEAF = 10;
-        $notaMinimaJT = 10;
+        $notaMinimaAC = 11;
+        $notaMinimaPAF = 11;
+        $notaMinimaEAF = 11;
+        $notaMinimaJT = 11;
         if ($insAvTable) {
             foreach ($insAvTable as $item) {
                 if ($item["tipus"] == "AC"){
@@ -725,16 +725,16 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                 }
             }
         }
-        if ($notaMinimaAC == 10){
+        if ($notaMinimaAC == 11){
             $notaMinimaAC = 0;
         }
-        if ($notaMinimaPAF == 10){
-            $notaMinimaPAF = 4;
+        if ($notaMinimaPAF == 11){
+            $notaMinimaPAF = 0;
         }
-        if ($notaMinimaEAF == 10){
-            $notaMinimaEAF = 4;
+        if ($notaMinimaEAF == 11){
+            $notaMinimaEAF = 0;
         }
-        if ($notaMinimaJT == 10){
+        if ($notaMinimaJT == 11){
             $notaMinimaJT = 0;
         }
 

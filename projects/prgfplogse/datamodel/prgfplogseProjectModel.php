@@ -229,10 +229,10 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
             }
         }
 
-        $notaMinimaAC = 10;
-        $notaMinimaPAF = 10;
-        $notaMinimaEAF = 10;
-        $notaMinimaJT = 10;
+        $notaMinimaAC = 11;
+        $notaMinimaPAF = 11;
+        $notaMinimaEAF = 11;
+        $notaMinimaJT = 11;
         if ($insAvTable) {
             foreach ($insAvTable as $item) {
                 if ($item["tipus"] == "AC"){
@@ -261,10 +261,10 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
             $notaMinimaAC = 0;
         }
         if ($notaMinimaPAF == 10){
-            $notaMinimaPAF = 4;
+            $notaMinimaPAF = 0;
         }
         if ($notaMinimaEAF == 10){
-            $notaMinimaEAF = 4;
+            $notaMinimaEAF = 0;
         }
         if ($notaMinimaJT == 10){
             $notaMinimaJT = 0;
