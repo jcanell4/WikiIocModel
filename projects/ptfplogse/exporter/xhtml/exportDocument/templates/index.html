@@ -58,7 +58,7 @@
         <div class="section1_element">
           <div class="section1_icona" id="material_icona"></div>
           <h3>Material didàctic</h3>
-<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##urlMaterialDidactic##}'')_#}&&!{#_STR_CONTAINS(''http://ioc.xtec.cat/materials/FP/Materials/.../web/html/'', ''{##urlMaterialDidactic##}'')_#}">          
+<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##urlMaterialDidactic##}'')_#}&&!{#_STR_CONTAINS(''http://ioc.xtec.cat/materials/FP/Materials/.../web/html/'', ''{##urlMaterialDidactic##}'')_#}">
           <a href="{##urlMaterialDidactic##}">material de l'aula</a>
 </WIOCCL:IF>
         </div>
@@ -631,6 +631,9 @@
       </tr>
 </WIOCCL:FOREACH>
     </table>
+<WIOCCL:IF condition="{##notaMinimaJT##}\>0">
+    <p>Es necessita una nota mínima de {##notaMinimaJT##},00 sense arrodoniment per poder aplicar el càlcul de la QF.</p>
+</WIOCCL:IF>
 </WIOCCL:IF>
 </WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
@@ -679,6 +682,9 @@
 </WIOCCL:REPARSE>
 </WIOCCL:SET>
     </table>
+<WIOCCL:IF condition="{##notaMinimaEAF##}\>0">
+    <p>Es necessita una nota mínima de {##notaMinimaEAF##},00 sense arrodoniment per poder aplicar el càlcul de la QF.</p>
+</WIOCCL:IF>
     <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
     <br/>
     <p>Si suspeneu algun EAF diposeu de la recuperació:</p>
@@ -709,7 +715,7 @@
       <tr>
         <th>U{##item[unitat didàctica]##}</th>
         <th rowspan="{%%rowSpan_{##item[id]##}%%}">{##item[id]##}</th>
-<WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">		
+<WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">
 <WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==true">
         <td rowspan="{%%rowSpan_{##item[id]##}%%}">{#_DATE("{##item[enunciat recuperació]##}")_#}</td>
 </WIOCCL:IF>
