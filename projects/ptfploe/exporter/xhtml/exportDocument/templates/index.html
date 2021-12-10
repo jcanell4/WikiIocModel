@@ -630,6 +630,9 @@
       </tr>
 </WIOCCL:FOREACH>            
     </table>
+<WIOCCL:IF condition="{##notaMinimaJT##}\>0">
+    <p>Es necessita una nota mínima de {##notaMinimaJT##},00 sense arrodoniment per poder aplicar el càlcul de la QF.</p>
+</WIOCCL:IF>
 </WIOCCL:IF>
 </WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
@@ -678,6 +681,9 @@
 </WIOCCL:REPARSE>
 </WIOCCL:SET>
     </table>
+<WIOCCL:IF condition="{##notaMinimaEAF##}\>0">
+    <p>Es necessita una nota mínima de {##notaMinimaEAF##},00 sense arrodoniment per poder aplicar el càlcul de la QF.</p>
+</WIOCCL:IF>
     <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
     <br/>
     <p>Si suspeneu algun EAF diposeu de la recuperació:</p>
