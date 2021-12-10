@@ -18,6 +18,7 @@
     <div class="closebtn" onclick="closeNav()">&times;</div>
     <div class="content_index fade_in" id="myContentIndex">
         @@TOC(ge)@@
+        <a onClick="printDoc();" style="cursor:pointer;">Descarrega't el PDF</a>
     </div>
   </div>
   
@@ -38,6 +39,7 @@
   <section id="intro">
     <div class="container">
       <p><span><WIOCCL:IF condition="{##trimestre##}==1">Tardor</WIOCCL:IF><WIOCCL:IF condition="{##trimestre##}==2">Hivern</WIOCCL:IF><WIOCCL:IF condition="{##trimestre##}==3">Primavera</WIOCCL:IF> {#_YEAR()_#}</span></p>
+      <p onClick="printDoc();" style="cursor:pointer;"><img src="../img/pdf.png" style="vertical-align:text-bottom;"> Descarrega't el PDF</p>
     </div>
   </section>
 
