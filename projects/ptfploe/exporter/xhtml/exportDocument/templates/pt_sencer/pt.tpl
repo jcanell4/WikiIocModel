@@ -38,8 +38,10 @@
       <p><span>Durada del <WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">m&ograve;dul</WIOCCL:IF></span>: {##durada##} hores</p>
       <p><span>Professors</span>: {##professors##}</p>
       <p><span>Coordinador/a</span>: {##coordinador##}</p>
-      <p><span><WIOCCL:IF condition="{##semestre##}==1">Setembre</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">Febrer</WIOCCL:IF> {#_YEAR()_#}</span></p>
-      <p onClick="printDoc();" style="cursor:pointer;"><img src="../img/pdf.png" style="vertical-align:text-bottom;"> Descarrega't el PDF</p>
+      <p><span><WIOCCL:IF condition="{##semestre##}==1">Setembre</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">Febrer</WIOCCL:IF> {#_YEAR()_#}</span></p>      
+    </div>
+    <div class="rflexjust">
+      <a title="Descarrega't el PDF" onClick="printDoc();" style="cursor:pointer;"><img src="../img/pdf.png" style="vertical-align:text-bottom;"></a>        
     </div>
   </section>
 
