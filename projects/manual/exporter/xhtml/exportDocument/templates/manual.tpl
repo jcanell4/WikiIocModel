@@ -18,7 +18,7 @@
     <div class="content_index fade_in" id="myContentIndex">
         @@TOC(documentPartsHtml)@@
         <div class="toc_level_1">
-            <a onClick="printDoc();" style="cursor:pointer;">Còpia en format PDF</a>
+            <a onClick="printDoc();" style="cursor:pointer;">&nbsp;&nbsp;&nbsp;&nbsp;Còpia en format PDF</a>
         </div>
     </div>
   </div>
@@ -50,7 +50,7 @@
       <p>data: {##data_fitxercontinguts##}</p>
     </div>
     <div class="rflexjust">
-      <a title="Còpia en format PDF" onClick="printDoc();" style="cursor:pointer;"><img src="../img/pdf.png" style="vertical-align:text-bottom;"></a>        
+      <a title="Còpia en format PDF" onClick="printDoc();" style="cursor:pointer;"><img src="./img/pdf.png" style="vertical-align:text-bottom;"></a>        
     </div>
 
   </section>
