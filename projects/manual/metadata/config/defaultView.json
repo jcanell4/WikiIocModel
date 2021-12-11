@@ -149,7 +149,8 @@
             },
             "config":{
                 "options":[
-                    {"description":"estil normal", "value":"main"}
+                    {"description":"estil normal", "value":"main"},
+                    {"description":"estil blau", "value":"blue"}
                 ]
             }
         },

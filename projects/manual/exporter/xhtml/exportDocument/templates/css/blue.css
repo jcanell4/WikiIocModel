@@ -230,10 +230,17 @@ section p{
     display: none;
 }
 
+.rflexjust{
+    display: grid;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
 /* Intro */
 
 #intro {
     background-color: #dee2ed;
+    display: flex;
 }
 
 #intro p {
@@ -250,6 +257,7 @@ section p{
 
 #intro .container {
     padding: 15px 0 15px 0;
+    width: 990px;
 }
 
 /* Contingut */
@@ -472,6 +480,7 @@ div.footfigure {
     
     #intro .container {
         padding: 32px 0 32px 0;
+        width: 990px;        
     }
 
     .pt_taula {
