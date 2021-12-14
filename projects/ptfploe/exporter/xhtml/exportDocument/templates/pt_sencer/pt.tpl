@@ -41,7 +41,7 @@
       <p><span><WIOCCL:IF condition="{##semestre##}==1">Setembre</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">Febrer</WIOCCL:IF> {#_YEAR()_#}</span></p>      
     </div>
     <div class="rflexjust">
-      <a title="Descarrega't el PDF" onClick="printDoc();" style="cursor:pointer;"><img src="../img/pdf.png" style="vertical-align:text-bottom;"></a>        
+      <a onClick="printDoc();" style="cursor:pointer;" title="Descarrega't el PDF"><img src="../img/pdf.png"></a>
     </div>
   </section>
 

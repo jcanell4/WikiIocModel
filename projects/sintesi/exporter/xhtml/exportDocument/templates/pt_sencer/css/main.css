@@ -185,10 +185,17 @@ p.llegenda {
     display: none;
 }
 
+.rflexjust{
+    display: grid;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
 /* Intro */
 
 #intro {
     background-color: #fdf0f6;
+    display: flex;
 }
 
 #intro p {
@@ -205,6 +212,7 @@ p.llegenda {
 
 #intro .container {
     padding: 20px 0 20px 0;
+    width: 590px;
 }
 
 /* Contingut */
@@ -400,6 +408,7 @@ p.llegenda {
     
     #intro .container {
         padding: 32px 0 32px 0;
+        width: 590px;
     }
 
     .pt_taula {

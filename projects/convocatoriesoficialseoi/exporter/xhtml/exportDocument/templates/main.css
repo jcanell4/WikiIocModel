@@ -45,6 +45,13 @@ a {
   width: 100%;
   padding-bottom: 28px;
   background-color: #f3a22d;
+  display:flex;
+}
+
+.rflexjust{
+    display: grid;
+    justify-content: flex-end;
+    align-items: flex-end;
 }
 
 .main_header h1 {
@@ -225,7 +232,7 @@ a.complete {
   /* Títol (capçalera secundària) media query */
 
   .secondary_header {
-    padding-top: 83px;
+    padding-top: 40px;
   }
 
   .secondary_header h2 {
@@ -236,7 +243,7 @@ a.complete {
   .focus_stripe {
     display: block;
     position: absolute;
-    top: 89px;
+    top: 46px;
     height: 19px;
     width: 2000px;
     background-color: #f3a22d;

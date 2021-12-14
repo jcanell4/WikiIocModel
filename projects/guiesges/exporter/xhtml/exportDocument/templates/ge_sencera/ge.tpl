@@ -39,7 +39,9 @@
   <section id="intro">
     <div class="container">
       <p><span><WIOCCL:IF condition="{##trimestre##}==1">Tardor</WIOCCL:IF><WIOCCL:IF condition="{##trimestre##}==2">Hivern</WIOCCL:IF><WIOCCL:IF condition="{##trimestre##}==3">Primavera</WIOCCL:IF> {#_YEAR()_#}</span></p>
-      <p onClick="printDoc();" style="cursor:pointer;"><img src="../img/pdf.png" style="vertical-align:text-bottom;"> Descarrega't el PDF</p>
+    </div>
+    <div class="rflexjust">
+      <a onClick="printDoc();" style="cursor:pointer;" title="Descarrega't el PDF"><img src="../img/pdf.png"></a>
     </div>
   </section>
 

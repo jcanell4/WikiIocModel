@@ -35,6 +35,9 @@
     <div class="container">
 
     </div>
+    <div class="rflexjust">
+        <a onClick="printDoc('../c-a2.pdf');" style="cursor:pointer;" title="Descarrega't el PDF"><img src="../img/pdf.png"></a>
+    </div>
   </section>
 
   <br class="salt_impr">
