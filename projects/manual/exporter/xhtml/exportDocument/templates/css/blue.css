@@ -59,7 +59,13 @@ p.llegenda {
 .titletable {
     text-align: center;
     font-weight: 700;
-    font-size: 120%
+    font-size: 120%;
+}
+
+.foottable {
+    font-size: 85%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Sidebar navigation */
@@ -128,13 +134,11 @@ p.llegenda {
 
 .content_index a {
     font-weight: 400;
-    font-size: 16px !important;
     text-decoration: none;
     color: #01172f;
     display: block;
     background-color: #FAFAFA;
     border-top: 1px solid #FAFAFA;
-    padding: 12px 8px 12px 32px !important;
 }
 
 .content_index.fade_in {
@@ -145,23 +149,100 @@ p.llegenda {
     opacity: 0;
 }
 
+/* TOC */
+.content_index .toc_level_1 a {
+    font-size: 16px;
+    padding: 8px 8px 8px 2px;
+}
+
+.content_index .toc_level_2 a {
+    font-size: 14px;
+    padding: 8px 8px 8px 2px;
+}
+
+.content_index .toc_level_3 a {
+    font-size: 13px;
+    padding: 8px 8px 8px 2px;
+}
+
+.content_index .toc_level_4 a {
+    font-size: 13px ;
+    padding: 8px 8px 8px 2px ;
+}
+
+.content_index .toc_level_5 a{
+    font-size: 12px ;
+    padding: 6px 8px 6px 2px;
+}
+
+.content_index .toc_level_6 a {
+    font-size: 12px ;
+    padding: 6px 8px 6px 2px;
+}
+
+.content_index .toc_level_1 span span{
+    padding: 8px 0px 8px 12px;
+}
+
+.content_index .toc_level_2 span span{
+    padding: 8px 0px 8px 22px;
+}
+
+.content_index .toc_level_3 span span{
+    padding: 8px 0px 8px 32px;
+}
+
+.content_index .toc_level_4 span span{
+    padding: 8px 0px 8px 42px;
+}
+
+.content_index .toc_level_5 span span{
+    padding: 6px 0px 6px 52px;
+}
+
+.content_index .toc_level_6 span span{
+    padding: 6px 0px 6px 62px;
+}
+
+.content_index div[class^='toc_level'] > span {
+    display: flex;
+}
+
+
+.button_index.op, .button_index.cl {
+    background-color: transparent;
+    background-position-x: 80%;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: auto;
+    cursor: pointer;
+}
+
+.button_index.cl {
+    background-image: url("../img/tocright.png");
+}
+
+.button_index.op {
+    background-image: url("../img/tocdown.png");
+}
+
 table {
-    display: block;
     margin-left: auto;
     margin-right: auto;
     border-collapse: collapse;
     border-spacing: 0;
 }
 
-table .leftalign {
+table td.leftalign {
     text-align: left;
 }
 
-table .centeralign {
+table td.centeralign {
     text-align: center;
 }
 
-table .rightalign {
+table td.rightalign {
     text-align: right;
 }
 
@@ -343,36 +424,11 @@ div.footfigure {
     text-align: center;
 }
 
-/* TOC */
-.content_index a.toc_level_1 {
-    font-size: 16px;
-    padding-left: 32px;
+
+.hidden {
+    display: none !important;
 }
 
-.content_index a.toc_level_2 {
-    font-size: 14px !important;
-    padding: 8px 8px 8px 42px !important;
-}
-
-.content_index a.toc_level_3 {
-    font-size: 13px !important;
-    padding: 8px 8px 8px 52px !important;
-}
-
-.content_index a.toc_level_4 {
-    font-size: 13px !important;
-    padding: 8px 8px 8px 62px !important;
-}
-
-.content_index a.toc_level_5 {
-    font-size: 12px !important;
-    padding: 6px 8px 6px 72px !important;
-}
-
-.content_index a.toc_level_6 {
-    font-size: 12px !important;
-    padding: 6px 8px 6px 82px !important;
-}
 
 /* Botó imprimir*/
 #printbtn {
