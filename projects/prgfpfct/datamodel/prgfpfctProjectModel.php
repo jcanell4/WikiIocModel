@@ -17,14 +17,22 @@ class prgfpfctProjectModel extends ProgramacioProjectModel {
         return $this->projectMetaDataQuery->setProjectGenerated();
     }
 
-    public function validateFields($data=NULL){
+    public function validateFields($data=NULL, $subset=FALSE){
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::validateFields($data, $subset);
+        }
+
         //EL responsable no pot ser buit
         if (isset($data["responsable"]) && empty(trim($data["responsable"]))){
             throw new InvalidDataProjectException($this->id, "El camp responsable no pot quedar buit");
         }
     }
 
-    public function getErrorFields($data=NULL) {
+    public function getErrorFields($data=NULL, $subset=FALSE){
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::getErrorFields($data, $subset);
+        }
+
         $result  = array();
         
         //Camps obligatoris
@@ -92,7 +100,11 @@ class prgfpfctProjectModel extends ProgramacioProjectModel {
         return $result;
     }
 
-    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE) {
+    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::updateCalculatedFieldsOnRead($data, $subset);
+        }
+        
         $resultatsAprenentatge = $data["resultatsAprenentatgeObjectiusTerminals"];
         if ($resultatsAprenentatge && !is_array($resultatsAprenentatge)){
            $resultatsAprenentatge = json_decode($resultatsAprenentatge, TRUE);
@@ -101,8 +113,12 @@ class prgfpfctProjectModel extends ProgramacioProjectModel {
         return $data;
     }
 
-    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE) {
-        $data = parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
+    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::updateCalculatedFieldsOnSave($data, $subset, $subset);
+        }
+        
+        $data = parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue, $subset);
 
         $resultatsAprenentatge = $data["resultatsAprenentatgeObjectiusTerminals"];
         if ($resultatsAprenentatge && !is_array($resultatsAprenentatge)){

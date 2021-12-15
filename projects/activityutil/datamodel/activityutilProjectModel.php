@@ -137,7 +137,11 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
      * Gestiona la llista de documents definits per l'usuari
      * @param array $data : dades del projecte (camps del formulari actiu)
      */
-    public function validateFields($data=NULL){
+    public function validateFields($data=NULL, $subset=FALSE){
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::validateFields($data, $subset);
+        }
+
         if ($data) {
             $nousDocuments = json_decode($data['documents'], true);
             if (!empty($nousDocuments)) {

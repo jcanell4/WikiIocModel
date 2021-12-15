@@ -23,7 +23,11 @@ class manualProjectModel extends AbstractProjectModel {
      * Gestiona la llista de documents definits per l'usuari
      * @param array $data : dades del projecte (camps del formulari actiu)
      */
-    public function validateFields($data=NULL){
+    public function validateFields($data=NULL, $subset=FALSE){
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::validateFields($data, $subset);
+        }
+
         if ($data) {
             $id = $this->getId();
             $path_continguts = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $id);

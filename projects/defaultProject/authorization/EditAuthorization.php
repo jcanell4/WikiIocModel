@@ -6,11 +6,13 @@
  */
 if (!defined('DOKU_INC')) die();
 
-class EditingAuthorization extends PageCommandAuthorization {
+class EditAuthorization extends PageCommandAuthorization {
 
     public function getPermissionException() {      
-        if ($this->permission->getResourceExist() && $this->permission->getInfoPerm() < AUTH_EDIT) {
+        if ($this->permission->getResourceExist() && ($this->permission->getInfoPerm() < AUTH_READ) ) {
             $exception = 'InsufficientPermissionToWritePageException';
+        }else if($this->permission->getResourceExist() && !$this->canProjectOwnerAllowEditionPage()){
+            $exception = 'PageIsProtectedCantEditException';
         }
         return $exception;
     }

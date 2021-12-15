@@ -18,7 +18,11 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
         return $this->projectMetaDataQuery->setProjectGenerated();
     }
 
-    public function validateFields($data=NULL){
+    public function validateFields($data=NULL, $subset=FALSE){
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::validateFields($data, $subset);
+        }
+
         //EL responsable no pot ser buit
         if(isset($data["responsable"]) && empty(trim($data["responsable"]))){
             throw new InvalidDataProjectException(
@@ -28,7 +32,11 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
         }
     }
 
-    public function getErrorFields($data=NULL) {
+    public function getErrorFields($data=NULL, $subset=FALSE){
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::getErrorFields($data, $subset);
+        }
+
         $result   = array();
         $iaTable  = $data["taulaInstrumentsAvaluacio"]['value']; if (!is_array($iaTable)) $iaTable = json_decode($iaTable, TRUE);
         $naTable  = $data["taulaNuclisActivitat"]['value'];      if (!is_array($naTable)) $naTable = json_decode($naTable, TRUE);

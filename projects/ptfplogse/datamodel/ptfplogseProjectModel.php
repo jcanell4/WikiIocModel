@@ -45,8 +45,12 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE) {
-        $data = parent::updateCalculatedFieldsOnRead($data);
+    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::updateCalculatedFieldsOnRead($data, $subset);
+        }
+        
+        $data = parent::updateCalculatedFieldsOnRead($data, $subset);
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
         $originalValues = $isArray?$originalDataKeyValue:json_decode($originalDataKeyValue, true);
@@ -142,7 +146,10 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE) {
+    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::updateCalculatedFieldsOnSave($data, $subset, $subset);
+        }
 
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);

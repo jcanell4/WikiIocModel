@@ -40,8 +40,12 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
 //        return $ret;
 //    }
 
-    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE) {
-        $data = parent::updateCalculatedFieldsOnRead($data);
+    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::updateCalculatedFieldsOnRead($data, $subset);
+        }
+        
+        $data = parent::updateCalculatedFieldsOnRead($data, $subset);
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
         $originalValues = $isArray?$originalDataKeyValue:json_decode($originalDataKeyValue, true);
@@ -166,7 +170,10 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE) {
+    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::updateCalculatedFieldsOnSave($data, $subset, $subset);
+        }
 
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
@@ -506,8 +513,13 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         return $ret;
     }
     
-    public function validateFields($data = NULL) {
+    public function validateFields($data = NULL, $subset=FALSE){
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::validateFields($data, $subset);
+        }
+
         parent::validateFields($data);
+        //[TODO]
         //comprova si avaluació inicialde pla i progamació coincideixen
         //validar la ponderció de AC+PAF+EAF*...
         //Validar les nomes mínimes

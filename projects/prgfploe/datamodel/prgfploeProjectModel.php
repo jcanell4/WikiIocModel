@@ -38,7 +38,11 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
         return [ResponseHandlerKeys::TYPE => "array", ResponseHandlerKeys::VALUE => $tableRaPonderation];
     }
  
-    public function validateFields($data=NULL){
+    public function validateFields($data=NULL, $subset=FALSE){
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::validateFields($data, $subset);
+        }
+
         //EL responsable no pot ser buit
         if(isset($data["responsable"]) && empty(trim($data["responsable"]))){
             throw new InvalidDataProjectException(
@@ -48,7 +52,11 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
         }
     }
 
-    public function getErrorFields($data=NULL) {
+    public function getErrorFields($data=NULL, $subset=FALSE){
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::getErrorFields($data, $subset);
+        }
+
         $result     = array();
         $iaTable    = $data["taulaInstrumentsAvaluacio"]['value']; if (!is_array($iaTable)) $iaTable = json_decode($iaTable, TRUE);
         $aaTable    = $data["activitatsAprenentatge"]['value'];    if (!is_array($aaTable)) $aaTable = json_decode($aaTable, TRUE);
@@ -589,7 +597,11 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
         return $result;
     }
 
-    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE) {
+    public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::updateCalculatedFieldsOnRead($data, $subset);
+        }
+        
         $ufTable = $data["taulaDadesUF"];
         if ($ufTable && !is_array($ufTable)){
             $ufTable = json_decode($ufTable, TRUE);
