@@ -123,9 +123,46 @@ class prgfpfctProjectModel extends ProgramacioProjectModel {
         $resultatsAprenentatge = $data["resultatsAprenentatgeObjectiusTerminals"];
         if ($resultatsAprenentatge && !is_array($resultatsAprenentatge)){
             $resultatsAprenentatge = json_decode($resultatsAprenentatge, TRUE);
-            $data["resultatsAprenentatgeObjectiusTerminals"] = $resultatsAprenentatge;
         }
 
+        if($data["tipusCicle"]=="LOE"){
+            $resultatsAprenentatge = array(
+                array("ra"=>"1","descripcio"=>"Identifica l'estructura, l'organització i les condicions de treball de l'empresa, centre o servei, relacionant-ho amb les activitats que realitza."),
+                array("ra"=>"2","descripcio"=>"Desenvolupa actituds ètiques i laborals pròpies de l'activitat professional d'acord amb les característiques del lloc de treball i els procediments establerts pel centre de treball."),
+                array("ra"=>"3","descripcio"=>"Realitza les activitats formatives de referència seguint protocols establerts pel centre de treball.")
+            );
+            $criterisAvaluacio = array(
+                array("ra"=>"1","ca"=>"1.1","descripcio"=>"Identifica les característiques generals de l'empresa, centre o servei i l'organigrama i les funcions de cada àrea."),
+                array("ra"=>"1","ca"=>"1.2","descripcio"=>"Identifica els procediments de treball en el desenvolupament de l'activitat."),
+                array("ra"=>"1","ca"=>"1.3","descripcio"=>"Identifica les competències dels llocs de treball en el desenvolupament de l'activitat."),
+                array("ra"=>"1","ca"=>"1.4","descripcio"=>"Identifica les característiques del mercat o entorn, tipus d'usuaris i proveïdors."),
+                array("ra"=>"1","ca"=>"1.5","descripcio"=>"Identifica les activitats de responsabilitat social de l'empresa, centre o servei cap a l'entorn."),
+                array("ra"=>"1","ca"=>"1.6","descripcio"=>"Identifica el flux de serveis o els canals de comercialització més freqüents en aquesta activitat."),
+                array("ra"=>"1","ca"=>"1.7","descripcio"=>"Relaciona avantatges i inconvenients de l'estructura de l'empresa, centre o servei, enfront a altres tipus d'organitzacions relacionades."),
+                array("ra"=>"1","ca"=>"1.8","descripcio"=>"Identifica el conveni col·lectiu o el sistema de relacions laborals al que està acollida l'empresa, centre o servei."),
+                array("ra"=>"1","ca"=>"1.9","descripcio"=>"Identifica els incentius laborals, les activitats d'integració o de formació i les mesures de conciliació en relació amb l'activitat."),
+                array("ra"=>"1","ca"=>"1.10","descripcio"=>"Valora les condicions de treball en el clima laboral de l'empresa, centre o servei."),
+                array("ra"=>"1","ca"=>"1.11","descripcio"=>"Valora la importància de treballar en grup per aconseguir amb eficàcia els objectius establerts en l'activitat i resoldre els problemes que es plantegen."),
+                array("ra"=>"2","ca"=>"2.1","descripcio"=>"Compleix l'horari establert."),
+                array("ra"=>"2","ca"=>"2.2","descripcio"=>"Mostra una presentació personal adequada."),
+                array("ra"=>"2","ca"=>"2.3","descripcio"=>"És responsable en l'execució de les tasques assignades."),
+                array("ra"=>"2","ca"=>"2.4","descripcio"=>"S'adapta als canvis de les tasques assignades."),
+                array("ra"=>"2","ca"=>"2.5","descripcio"=>"Manifesta iniciativa en la resolució de problemes."),
+                array("ra"=>"2","ca"=>"2.6","descripcio"=>"Valora la importància de la seva activitat professional."),
+                array("ra"=>"2","ca"=>"2.7","descripcio"=>"Manté organitzada la seva àrea de treball."),
+                array("ra"=>"2","ca"=>"2.8","descripcio"=>"Té cura dels materials, equips o eines que utilitza en la seva activitat."),
+                array("ra"=>"2","ca"=>"2.9","descripcio"=>"Manté una actitud clara de respecte al medi ambient."),
+                array("ra"=>"2","ca"=>"2.10","descripcio"=>"Estableix una comunicació i relació eficaç amb el personal de l'empresa."),
+                array("ra"=>"2","ca"=>"2.11","descripcio"=>"Es coordina amb els membres del seu equip de treball."),
+                array("ra"=>"3","ca"=>"3.1","descripcio"=>"Executa les tasques segons els procediments establerts."),
+                array("ra"=>"3","ca"=>"3.2","descripcio"=>"Identifica les característiques particulars dels mitjans de producció, equips i eines."),
+                array("ra"=>"3","ca"=>"3.3","descripcio"=>"Aplica les normes de prevenció de riscos laborals en l'activitat professional."),
+                array("ra"=>"3","ca"=>"3.4","descripcio"=>"Utilitza els equips de protecció individual segons els riscos de l'activitat professional i les normes pel centre de treball."),array("ra"=>"3","ca"=>"3.5","descripcio"=>"Aplica les normes internes i externes vinculades a l'activitat."),array("ra"=>"3","ca"=>"3.6","descripcio"=>"Obté la informació i els mitjans necessaris per realitzar l'activitat assignada."),array("ra"=>"3","ca"=>"3.7","descripcio"=>"Interpreta i expressa la informació amb la terminologia o simbologia i els mitjans propis de l'activitat."),array("ra"=>"3","ca"=>"3.8","descripcio"=>"Detecta anomalies o desviacions en l'àmbit de l'activitat assignada, n'identifica les causes i proposa possibles solucions.")
+            );
+            $data["criterisAvaluacio"] = $criterisAvaluacio;
+        }
+        $data["resultatsAprenentatgeObjectiusTerminals"] = $resultatsAprenentatge;
+        
         // Dades de la gestió de la darrera modificació
         $this->dadesActualsGestio($data);
 
