@@ -77,39 +77,48 @@ class exportDocument extends renderHtmlDocument {
         $tmplt = $this->loadTemplateFile($file);
         $document = WiocclParser::getValue($tmplt, [], $data);
 
-        foreach ($this->cfgExport->toc as $tocKey => $tocItem) {
-            $toc = "";
-            $nivel_anterior = 1; //nivel anterior
-            $ntoc = 0;           //número de tocItem actual
-
-            if ($tocItem){
-                foreach ($tocItem as $elem) {
-                    if ($elem['level'] <= $data['nivells']) {
-                        if ($elem['level'] > $nivel_anterior) {
-                            $toc .= "<div class='hidden'>\n";
-                        }
-                        if ($elem['level'] <= $nivel_anterior) {
-                            $toc .= $this->_add_close(($nivel_anterior-$elem['level'])*2+1);
-                        }
-                        $toc .= "<div class='toc_level_{$elem['level']}'>\n";
-                        $toc .= "<span>\n";
-                        if ($tocItem[$ntoc+1]['level'] > $elem['level']) { //si el elemento siguiente es de nivel inferior
-                            $toc .= "<span onclick='switchopcl(this)' class='button_index cl'>&nbsp;&nbsp;&nbsp;&nbsp;</span>\n";
-                        }else {
-                            $toc .= "<span class='button_index'>&nbsp;&nbsp;&nbsp;&nbsp;</span>\n";
-                        }
-                        $toc .= "<a href='{$elem['link']}' onclick='closeNav(); return true'>".htmlentities($elem['title'])."</a>\n";
-                        $toc .= "</span>\n";
-
-                        $nivel_anterior = $elem['level'];
-                        $ntoc++;
-                    }
-                }
-                $toc .= $this->_add_close(($nivel_anterior-1)*2);
-                $toc = substr($toc, 7) . "</div>\n";
-            }
-            $document = str_replace("@@TOC($tocKey)@@", $toc, $document);
+        if($data["estil"] == "boostioc"){
+            $data_footer = "toTitle";
+        }else{
+            $data_footer = "default";
         }
+        
+        $document = str_replace("@@FIGURE_FOOTER_TYPE@@", $data_footer, $document);
+        $document = str_replace("@@TABLE_FOOTER_TYPE@@", "default", $document);
+        
+//        foreach ($this->cfgExport->toc as $tocKey => $tocItem) {
+//            $toc = "";
+//            $nivel_anterior = 1; //nivel anterior
+//            $ntoc = 0;           //número de tocItem actual
+//
+//            if ($tocItem){
+//                foreach ($tocItem as $elem) {
+//                    if ($elem['level'] <= $data['nivells']) {
+//                        if ($elem['level'] > $nivel_anterior) {
+//                            $toc .= "<div class='hidden'>\n";
+//                        }
+//                        if ($elem['level'] <= $nivel_anterior) {
+//                            $toc .= $this->_add_close(($nivel_anterior-$elem['level'])*2+1);
+//                        }
+//                        $toc .= "<div class='toc_level_{$elem['level']}'>\n";
+//                        $toc .= "<span>\n";
+//                        if ($tocItem[$ntoc+1]['level'] > $elem['level']) { //si el elemento siguiente es de nivel inferior
+//                            $toc .= "<span onclick='switchopcl(this)' class='button_index cl'>&nbsp;&nbsp;&nbsp;&nbsp;</span>\n";
+//                        }else {
+//                            $toc .= "<span class='button_index'>&nbsp;&nbsp;&nbsp;&nbsp;</span>\n";
+//                        }
+//                        $toc .= "<a href='{$elem['link']}' onclick='closeNav(); return true'>".htmlentities($elem['title'])."</a>\n";
+//                        $toc .= "</span>\n";
+//
+//                        $nivel_anterior = $elem['level'];
+//                        $ntoc++;
+//                    }
+//                }
+//                $toc .= $this->_add_close(($nivel_anterior-1)*2);
+//                $toc = substr($toc, 7) . "</div>\n";
+//            }
+//            $document = str_replace("@@TOC($tocKey)@@", $toc, $document);
+//        }
         return $document;
     }
 

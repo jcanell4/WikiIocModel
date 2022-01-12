@@ -1,0 +1,574 @@
+
+
+/* Regles per amagar l'HTML que no ens interessa (tot el que no sigui el contingut), únicament per nosaltres, perquè no ens molesti per treballar-hi */
+
+#header, #upbutton, #aside, #sidebar-hide, #toc, #settings, #favorites, #bridge, #help, #favcounter, footer.footer, #back_preview, #preview, #help-tooltips, #navmenu, #HyphenatorToggleBox {
+    display: none;
+}
+
+
+/* Només a efectes d'aquest mateix context: no afegir-ho al build final */
+
+.style-newspaper article, .article {
+    font-family: 'Lato', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #202735;
+    background-color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 720px;
+    line-height: 1.5;
+}
+
+/* Fins aquí */
+
+
+
+
+/* ESTILS BASE */
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Lato', sans-serif;
+    color: #3d4d74;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 34px;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 48px;
+}
+
+h2 {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.15;
+    margin-top: 48px;
+    margin-bottom: 36px;
+}
+
+h3 {
+    font-size: 24px;
+    letter-spacing: -.3px;
+    margin-bottom: 16px;
+    line-height: 1.25;
+    margin-top: 48px;
+    margin-bottom: 24px;
+}
+
+h4 {
+    font-size: 19px;
+    letter-spacing: -0.2px;
+    line-height: 1.3;
+    margin-top: 48px;
+    margin-bottom: 24px;
+}
+
+h5 {
+    font-size: 17px;
+    line-height: 1.4;
+}
+
+h6 {
+    font-size: 16px;
+}
+
+h1>a, 
+h2>a, 
+h3>a, 
+h4>a, 
+h5>a {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+    color: #3d4d74;
+}
+
+a {
+    color: #2A84F9;
+    text-decoration: none;
+    font-weight: 600;
+    transition: .2s ease-in-out;
+}
+a:hover {
+    color: #076DF0;
+    text-decoration: none;
+}
+
+.style-newspaper article img {
+    max-width: 100%;
+}
+
+/* COMPONENTS VISUALS */
+
+/* Text destacat */
+
+.iocimportant {
+    min-width: 200px;
+    max-width: 99%;
+    background-color:#F1F5FE;
+    padding: 24px 36px 30px 36px;
+    border: none; 
+    border-left: 6px solid #387AF1;
+    margin: 36px auto;
+    position: relative;
+    border-radius: 0; 
+}
+
+@media screen and (min-width: 576px) {
+    .iocimportant {
+        max-width: 90%;
+        margin: 48px auto;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .iocimportant {
+        max-width: 75%;
+    }
+} 
+
+
+.iocimportant .ioccontent .ioctitle {
+    font-weight: 700;
+}
+
+
+/* Text complementari, text complementari llarg, nota */
+
+
+.ioctext, 
+.ioctextl,
+.iocnote {
+    min-width: 200px;
+    max-width: 99%;
+    background-color: #eff8fd;
+    padding: 24px 48px 30px 36px;
+    border: none; 
+    border-left: 6px solid #16B9FF;
+    margin: 36px auto;
+    position: relative;
+    border-radius: 0;    
+}
+
+@media screen and (min-width: 576px) {
+    .ioctext,
+    .ioctextl,
+    .iocnote {
+        max-width: 90%;
+        margin: 48px auto;
+    }
+}    
+
+@media screen and (min-width: 768px) {
+    .ioctext,
+    .ioctextl,
+    .iocnote {
+        max-width: 73.5%;
+    }
+} 
+
+.ioctext p:last-of-type,
+.ioctextl p:last-of-type,
+.iocnote p:last-of-type {
+  margin-bottom: 0;
+}
+
+.ioctext:after,
+.ioctextl:after,
+.iocnote:after {
+
+    /* Aquesta adreça és només a efectes de prova */
+    content: url("../../img/ioc-recorda-icona.svg");
+
+    /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
+    content: url([[pix:theme|ioc-recorda-icona]]);
+    */
+
+    position: absolute;
+    top: 6px;
+    right: -3px;
+}
+
+.ioctext .ioccontent .ioctitle,
+.ioctextl .ioccontent .ioctitle,
+.iocnote .ioccontent .ioctitle {
+    font-weight: 700;
+}
+
+/* Exemple */
+
+.iocexample {
+    font-size: 15px;
+    line-height: 22px;
+    color: inherit; 
+    background: #fff; 
+    border-radius: 0; 
+    margin: 36px auto;
+    min-width: 75%; 
+    max-width: 100%; 
+    padding: 18px 24px;
+    position: relative;
+    border: 1px solid #DBE1F0;
+}
+
+@media screen and (min-width: 576px) {
+    .iocexample {
+        padding: 36px 48px;
+    }
+}  
+@media screen and (min-width: 768px) {
+    .iocexample {
+        margin: 48px auto;
+        max-width: 75%;
+    }
+} 
+
+.iocexample .ioccontent .ioctitle {
+    font-weight: 800;
+    font-size: 11px;
+    line-height: 21px;
+    letter-spacing: 0.5px;
+    color: #1679f9;
+    margin: 0px;
+    margin-top: 0;
+    margin-bottom: 36px;
+    text-transform: uppercase;
+    font-family: inherit;
+    border-bottom: 2px solid #1679f9;
+}
+
+.iocexample .ioccontent .ioctitle:after {
+    content: "";
+    /*border-bottom: 2px solid #1679f9;*/
+    width: 18px;
+    display: block;
+    position: absolute;
+    top: 58px;
+    left: 48px;
+}
+
+
+/* Taula */
+
+
+.ioctable .table table.inline tbody tr th {
+    padding: 12px; 
+}
+
+.ioctable .table table.inline tbody tr.row0 {
+    color: #fff;
+    background-color: #2a84f9;
+
+    text-align: center;
+    border: 2px solid #fff;
+    white-space: nowrap;
+}
+
+.ioctable .table table.inline tbody tr td {
+    color: inherit;
+    padding: 12px;
+    border-bottom: 1px dotted #d2dff5;
+    white-space: nowrap;
+  }
+
+.ioctable .titletable {
+    margin: 36px auto 12px auto;
+    font-size: 13px;
+    line-height: 16px;
+    color: #686D79;
+}
+
+.ioctable .table table.inline {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 36px;
+}
+
+
+/* Figura */
+
+.iocfigure {
+    min-width: 200px;
+    max-width: 720px;
+    margin: 48px auto;
+}
+
+.iocfigure figure {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.iocfigure figure figcaption {
+    font-size: 13px;
+    line-height: 16px;
+    color: #686D79;
+    margin-top: 7px;
+    width: inherit !important;
+    max-width: 100% !important;
+    order: 2;
+    margin-top: 18px;
+}
+
+.iocfigure figure img{
+    width:100%;
+}
+
+/* Per JS, agafar el contingut dels elements '.footfigure', eliminar-los del DOM i afegir-los com un append al contingut de l'element '.iocfigure figure figcaption' anterior. Sabem que l'element '.iocfigure figure figcaption' existeix en totes i cada una de les ocurrències de figura, ja que és on automàticament s'assignava el número de figura; així doncs, podem estar segurs que sempre que modem text a l'elementa anterior de '.iocfigure figure figcaption' serà necessàriament el que ens interessa. */
+
+
+/* Bloc de codi */
+
+pre.code {
+    background-color: #f1f5fe;
+    padding: 12px;
+}
+
+/* Imatge complementària */
+
+.iocfigurec {
+    width: 130px;
+    /*margin: 36px auto;*/
+    float: right;
+    /*margin-right: -22%;
+    margin-top: -20px;*/
+}
+
+.iocfigurec ul {
+    list-style: none;
+}
+
+.iocfigurec ul li {
+    line-height: 15px;
+}
+
+
+.iocfigurec ul li:first-child {
+    padding-bottom: 12px;
+}
+
+.iocfigurec ul small {
+    font-size: 13px;
+    color: #686D79;
+    margin-top: 12px;
+}
+
+.iocfigurec img{
+    width:100%;
+}
+
+
+/* Cita*/
+
+.iocquote {
+    font-family: "Lora", serif;
+    font-size: 15px;
+    line-height: 24px;
+    margin: 24px auto;
+    min-width: 200px;
+    max-width: 100%;
+}
+
+@media screen and (min-width: 576px) {
+    .iocquote {
+        margin: 36px auto;
+        max-width: 90%;
+    }
+} 
+@media screen and (min-width: 768px) {
+    .iocquote {
+        margin: 48px auto;
+        max-width: 75%;
+    }
+} 
+
+
+.iocquote .ioccontent {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: space-between;
+    font-style: italic;
+    border-left: 4px solid #387AF1;
+    padding-left: 16px;
+}
+
+.iocquote .ioccontent p {
+    margin: 0;
+}
+
+.iocquote .ioccontent p:before {
+    content:'';
+    position: static;
+    top: 0;
+    margin-right: 0px;
+}
+.iocquote .ioccontent p:after {
+    content:'';
+    position: static;
+    top: 0;
+    margin-left: 0px;
+}
+.iocquote .ioccontent p:first-of-type:before {
+
+    /* Aquesta adreça és només a efectes de prova */
+    content: url("../../img/ioc-cita-obre-icona.svg");
+
+    /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
+    content: url([[pix:theme|ioc-cita-obre-icona]]);
+    */
+
+    position: relative;
+    top: -4px;
+    margin-right: 2px;
+} 
+.iocquote .ioccontent p:last-of-type:not(.refrence)::after {
+    
+    /* Aquesta adreça és només a efectes de prova */
+    content: url("../../img/ioc-cita-tanca-icona.svg");
+
+    /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
+    content: url([[pix:theme|ioc-cita-tanca-icona]]);
+    */
+    
+    position: relative;
+    top: -2px;
+    margin-left: 2px;
+}
+
+.iocquote .ioccontent p:last-of-type {
+    margin-bottom: 0;
+}
+
+/* Cal buscar via JS si dins l'element '.iocquote .ioccontent p:last-of-type' hi ha un element 'em' (es fa servir per la paraula 'Font', així que és la única referència que tenim. Aleshores caldria convertir aquest paràgraf en un element 'div' amb la classe 'reference', que tindrà l'estil següent: */  
+
+.iocquote .ioccontent .reference {
+    font-style: normal !important;
+    padding-top: 18px;
+    text-align: right;
+}
+
+div.solution {
+ color: #000000 !important;
+ background: none repeat scroll 0 0 #EFEFEF;
+ border: 2px solid #CCCCCC;
+ display: none;
+ margin: 0.4em auto;
+ padding: 0.4em 1em;
+ width: 80%;
+}
+
+
+/* Video */
+
+.mediavideo iframe {
+    display: block;
+    margin: 36px auto;
+}
+
+.mediavideo p a {
+    text-align: center;
+    display: inherit;
+    margin-top: -12px;
+}
+
+
+/* Crida */
+
+.iocreference .ioccontent {
+    min-width: 200px;
+    max-width: 99%;
+    background-color: #FEF6ED;
+    padding: 24px 48px 30px 36px;
+    border: none; 
+    border-left: 6px solid #F88923;
+    margin: 36px auto;
+    position: relative;
+    border-radius: 0; 
+}
+
+@media screen and (min-width: 576px) {
+    .iocreference .ioccontent {
+        max-width: 90%;
+        margin: 48px auto;
+    }
+}  
+
+@media screen and (min-width: 768px) {
+    .iocreference .ioccontent {
+        max-width: 75%;
+    }
+} 
+
+.iocreference .ioccontent:after {
+
+    /* Aquesta adreça és només a efectes de prova */
+    content: url("../../img/ioc-atencio-icona.svg");
+
+    /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
+    content: url([[pix:theme|ioc-atencio-icona]]);
+    */
+
+    position: absolute;
+    top: 6px;
+    right: -3px;
+}
+
+
+/* Assentament comptable */
+
+.iocaccounting .titletable {
+    margin: 36px auto 12px auto;
+    font-size: 13px;
+    line-height: 16px;
+    color: #686D79;
+}
+
+.iocaccounting .table table.inline {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 36px;
+}
+
+.iocaccounting  .table table.inline tbody tr th {
+    padding: 12px; 
+}
+
+.iocaccounting .table table.inline tbody tr.row0 {
+    color: #fff;
+    background-color: #2a84f9;
+    text-align: center;
+    border: 2px solid #fff;
+    white-space: nowrap;
+}
+
+.iocaccounting .table table.inline tbody tr td {
+    color: inherit;
+    padding: 12px;
+    border: 1px dotted #d2dff5;
+    white-space: nowrap;
+  }
+
+
+/* Include */  
+
+.iocinclude {
+    padding: 0 36px;
+    min-width: 200px;
+    max-width: 100%;
+    background-color:#fff;
+    margin: 36px auto;
+    border: 1px dashed #979EAE;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+}

@@ -16,8 +16,10 @@
     <title>IOC - Utilitats d'activitats</title>
 </head>
 <body>
-<div class="container">
+<div class="article container">
+<article lang="ca" class="sheet" data-figure-footer-type="@@FIGURE_FOOTER_TYPE@@" data-table-footer-type="@@TABLE_FOOTER_TYPE@@">
     {##documentPartsHtml##}
+</article>
 </div>
 
 <div class="dades_autoria">
@@ -29,6 +31,9 @@
 </WIOCCL:IF>
     <p>data: {##data_fitxercontinguts##}</p>
 </div>
+<script type="text/javascript">
+    
+</script>
 
 </body>
 </html>

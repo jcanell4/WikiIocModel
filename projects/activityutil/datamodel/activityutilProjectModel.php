@@ -56,13 +56,18 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
      */
     public function set_ftpsend_metadata() {
         $dir = WikiGlobalConfig::getConf('mediadir')."/". preg_replace('/:/', '/', $this->getId());
-        foreach (scandir($dir) as $f) {
-            if (is_file("$dir/$f")) {
-                $file = "$dir/$f";
-                break;
-            }
-        }
-        if ($file) {
+        $files = $this->llistaDeEspaiDeNomsDeDocumentsDelProjecte();
+        $file = "$dir/{$files[0]}";
+//        foreach (scandir($dir) as $f) {
+//            if (is_file("$dir/$f")) {
+//                $file = "$dir/$f";
+//                break;
+//            }
+//        }
+//        if ($file) {
+//            $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_timestamp", filemtime($file));
+//        }
+        if (file_exists($file)) {
             $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_timestamp", filemtime($file));
         }
     }
@@ -226,7 +231,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         if (is_array($files)) {
             $files = array_unique($files);
         }
-        $exportFields = $this->getMetaDataExport();
+//        $exportFields = $this->getMetaDataExport();
         return $files;
     }
 

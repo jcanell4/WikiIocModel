@@ -20,6 +20,14 @@ article,aside,figure,footer,header,hgroup,nav,section
  display: block;
 }
 
+.style-newspaper article, .article {
+/*    margin-left: auto;
+    margin-right: auto;
+    max-width: 750px;*/
+    font-family: Georgia,"Times New Roman",serif;
+    background-color: #F5F1E8    
+}
+
 img,object,embed
 {
  max-width: 100%;
@@ -634,7 +642,7 @@ p {
  vertical-align: middle;
 }
 .webnav li:before {
- background: url("../../img/separator.png") no-repeat scroll 0 0 transparent;
+ background: url("img/separator.png") no-repeat scroll 0 0 transparent;
  content: "";
  display: inline-block;
  height: 100%;
@@ -716,7 +724,7 @@ p {
  height: 20px;
  padding-left: 10px;
  padding-right: 2em;
- background: #f5f1e8 url(../../img/search.png) no-repeat 180px 50%;
+ background: #f5f1e8 url(img/search.png) no-repeat 180px 50%;
  -webkit-border-radius: 5px;
  -moz-border-radius: 5px;
  border-radius: 5px;
@@ -775,7 +783,7 @@ p {
  border-bottom: 1px solid #989898;
 }
 #toc .expander span {
- background: url("../../img/more.png") no-repeat scroll 0 0 transparent;
+ background: url("img/more.png") no-repeat scroll 0 0 transparent;
  float: right;
  height: 12px;
  position: relative;
@@ -787,7 +795,7 @@ p {
  cursor: pointer;
 }
 #toc .expander .tocdown {
- background: url("../../img/less.png") no-repeat scroll 0 0 transparent;
+ background: url("img/less.png") no-repeat scroll 0 0 transparent;
 }
 #toc .parentnode hr {
  border-color: #989898;
@@ -978,17 +986,17 @@ p {
 }
 #favorites .favcontent:before {
  content: "";
- background: url("../../img/fav_ok.png") no-repeat scroll 2px 50% transparent;
+ background: url("img/fav_ok.png") no-repeat scroll 2px 50% transparent;
 }
 #favorites .favactivity:before {
  content: "";
- background: url("../../img/activity.png") no-repeat scroll 2px 50% transparent;
+ background: url("img/activity.png") no-repeat scroll 2px 50% transparent;
 }
 #favorites .favexercise:before {
- background: url("../../img/exercise.png") no-repeat scroll 2px 50% transparent;
+ background: url("img/exercise.png") no-repeat scroll 2px 50% transparent;
 }
 #favorites .favlist span:before {
- background: url("../../img/arrow.png") no-repeat scroll 2px 50% transparent;
+ background: url("img/arrow.png") no-repeat scroll 2px 50% transparent;
  content: "";
  display: inline;
  padding-left: 12px;
@@ -1141,7 +1149,7 @@ p {
  width: 85%;
 }
 .style-newspaper {
- background: url("../../img/side_column.png") repeat-y scroll 0 0 #ececec;
+ background: url("img/side_column.png") repeat-y scroll 0 0 #ececec;
  -webkit-background-size: 60px 2px;
  -moz-background-size: 60px 2px;
  background-size: 60px 2px;
@@ -1152,7 +1160,7 @@ p {
  background-color: #fdfdfa;
 }
 .style-novel {
- background: url("../../img/side_column.png") repeat-y scroll 0 0 #ececec;
+ background: url("img/side_column.png") repeat-y scroll 0 0 #ececec;
  -webkit-background-size: 60px 2px;
  -moz-background-size: 60px 2px;
  background-size: 60px 2px;
@@ -1163,7 +1171,7 @@ p {
  background-color: #f4eed9;
 }
 .style-ebook {
- background: url("../../img/side_column.png") repeat-y scroll 0 0 #ececec;
+ background: url("img/side_column.png") repeat-y scroll 0 0 #ececec;
  -webkit-background-size: 60px 2px;
  -moz-background-size: 60px 2px;
  background-size: 60px 2px;
@@ -1174,7 +1182,7 @@ p {
  background-color: #edebe8;
 }
 .style-inverse {
- background: url("../../img/side_column.png") repeat-y scroll 0 0 #ececec;
+ background: url("img/side_column.png") repeat-y scroll 0 0 #ececec;
  -webkit-background-size: 60px 2px;
  -moz-background-size: 60px 2px;
  background-size: 60px 2px;
@@ -1192,7 +1200,7 @@ p {
  background-color: #343a3f;
 }
 .style-athelas {
- background: url("../../img/side_column.png") repeat-y scroll 0 0 #ececec;
+ background: url("img/side_column.png") repeat-y scroll 0 0 #ececec;
  -webkit-background-size: 60px 2px;
  -moz-background-size: 60px 2px;
  background-size: 60px 2px;
@@ -1313,7 +1321,7 @@ div.solution {
  -moz-background-clip: border-box;
  background-clip: border-box;
  background-color: #F5F1E8;
- background-image: url("../../img/family_icon.png");
+ background-image: url("img/family_icon.png");
  background-origin: padding-box;
  background-position: -100px 46px;
  background-repeat: no-repeat;
@@ -1437,7 +1445,7 @@ div.solution {
  margin-bottom: 1em;
 }
 .indexcontent .rootnode > p {
- background: url("../../img/tocright.png") no-repeat scroll right 80% transparent;
+ background: url("img/tocright.png") no-repeat scroll right 80% transparent;
  border-bottom: 1px solid #000000;
  font-size: 14pt;
  font-weight: normal;
@@ -1449,7 +1457,7 @@ div.solution {
  margin-bottom: 1em;
 }
 .indexcontent .parentnode > p {
- background: url("../../img/tocdown.png") no-repeat scroll right 80% transparent;
+ background: url("img/tocdown.png") no-repeat scroll right 80% transparent;
  border-bottom: 1px solid #000000;
  font-size: 14pt;
  font-weight: normal;
@@ -1582,6 +1590,8 @@ div.solution {
 .iocfigure {
  margin: 1em 0;
  font-size: 90%;
+ min-width: 200px;
+ max-width: 720px; 
 }
 .iocfigure img {
  cursor: pointer;
@@ -1601,12 +1611,12 @@ figcaption {
 figcaption .figuretitle {
  font-weight: bold;
 }
-figcaption .figuretitle:after {
+/*figcaption .figuretitle:after {
  content: " "counter(counth1) "." counter(cfigure) ". ";
-}
-.figref span:after {
+}*/
+/*.figref span:after {
  content: " "counter(counth1);
-}
+}*/
 .footfigure {
  margin: -0.7em auto 0;
  text-align: right;
@@ -1625,15 +1635,15 @@ figcaption .figuretitle:after {
  counter-increment: ctable;
  font-weight: bold;
 }
-.ioctable .titletable a > span:after {
+/*.ioctable .titletable a > span:after {
  content: " "counter(counth1) "." counter(ctable) ". ";
-}
+}*/
 .ioctable .borderth {
  border-bottom: 1px solid #000;
 }
-.tabref span:after {
+/*.tabref span:after {
  content: " "counter(counth1);
-}
+}*/
 .foottable {
  margin: -1.5em auto 0;
  text-align: right;
@@ -1673,14 +1683,11 @@ table .rightalign {
  border: 1px solid;
 }
 .iocfigurec {
- -webkit-border-radius: 10px 0 10px 0;
- -moz-border-radius: 10px 0 10px 0;
- border-radius: 10px 0 10px 0;
- background-color: #EFEFEF;
- margin: 0 auto;
- max-width: 50%;
- padding: 10px;
- width: 340px;
+    -webkit-border-radius: 10px 0 10px 0;
+    -moz-border-radius: 10px 0 10px 0;
+    border-radius: 10px 0 10px 0;
+    width: 20%;
+    float: right;
 }
 .iocfigurec ul {
  margin: 0;
@@ -1813,7 +1820,7 @@ article figure img {
     color: #2c2c2c;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
-    padding: 8px;
+    padding: 0px 20px;
     margin: 10px 0px;
     background-color: #E8E1CF
 }
@@ -1869,29 +1876,32 @@ div.plugin_include_content p {
 .ioctext {
  background-color: #EFEFEF;
  position: relative;
- width: 50%;
- margin: 0 auto 2em;
+ width: 300px;
  padding: 10px;
  font-size: 0.85em;
+ margin-right: -400px;
+ margin-top: -50px;
 }
 .ioctext .ioctitle {
  font-weight: bold;
 }
 .iocreference {
  position: relative;
- width: 50%;
- margin: 0 auto 2em;
- background: url("../../img/iocreference.png") no-repeat scroll left 0.2em #efefef;
+ width: 20%;
+ background: url("img/iocreference.png") no-repeat scroll left 0.2em #efefef;
  padding: 12px 10px 12px 55px;
- font-size: 0.85em;
+ font-size: 0.75em;
+ margin-left: 65%;
+ margin-bottom: 10px;
 }
 .iocnote {
  position: relative;
- width: 50%;
- margin: 0 auto 2em;
- background: url("../../img/iocnote.png") no-repeat scroll left 0.2em #efefef;
+ width: 20%;
+ background: url("img/iocnote.png") no-repeat scroll left 0.2em #efefef;
  padding: 12px 10px 12px 55px;
- font-size: 0.85em;
+ font-size: 0.75em;
+ margin-left: 65%;
+ margin-bottom: 10px;
 }
 .style-inverse .ioctextl,
 .style-inverse .ioctext,
@@ -1902,7 +1912,7 @@ div.plugin_include_content p {
  color: #000;
 }
 .star {
- background: url("../../img/favorites.png") no-repeat scroll 0 0 transparent;
+ background: url("img/favorites.png") no-repeat scroll 0 0 transparent;
  display: inline-block;
  vertical-align: middle;
  margin-left: 0.3em;
@@ -1917,7 +1927,7 @@ div.plugin_include_content p {
  vertical-align: middle;
 }
 .starmarked {
- background: url("../../img/fav_ok.png") no-repeat scroll 0 0 transparent;
+ background: url("img/fav_ok.png") no-repeat scroll 0 0 transparent;
  display: inline-block;
  vertical-align: middle;
  margin-left: 0.3em;
@@ -1940,31 +1950,31 @@ div.plugin_include_content p {
  text-align: center;
 }
 .filedoc {
- background: url("../../img/doc.png") no-repeat scroll 5px 50% transparent;
+ background: url("img/doc.png") no-repeat scroll 5px 50% transparent;
 }
 .fileods {
- background: url("../../img/ods.png") no-repeat scroll 5px 50% transparent;
+ background: url("img/ods.png") no-repeat scroll 5px 50% transparent;
 }
 .fileodt {
- background: url("../../img/odt.png") no-repeat scroll 5px 50% transparent;
+ background: url("img/odt.png") no-repeat scroll 5px 50% transparent;
 }
 .fileodp {
- background: url("../../img/odp.png") no-repeat scroll 5px 50% transparent;
+ background: url("img/odp.png") no-repeat scroll 5px 50% transparent;
 }
 .fileppt {
- background: url("../../img/ppt.png") no-repeat scroll 5px 50% transparent;
+ background: url("img/ppt.png") no-repeat scroll 5px 50% transparent;
 }
 .filepdf {
- background: url("../../img/pdf.png") no-repeat scroll 5px 50% transparent;
+ background: url("img/pdf.png") no-repeat scroll 5px 50% transparent;
 }
 .filetgz {
- background: url("../../img/tgz.png") no-repeat scroll 5px 50% transparent;
+ background: url("img/tgz.png") no-repeat scroll 5px 50% transparent;
 }
 .filexls {
- background: url("../../img/xls.png") no-repeat scroll 5px 50% transparent;
+ background: url("img/xls.png") no-repeat scroll 5px 50% transparent;
 }
 .filezip {
- background: url("../../img/zip.png") no-repeat scroll 5px 50% transparent;
+ background: url("img/zip.png") no-repeat scroll 5px 50% transparent;
 }
 .mediaf {
  background-color: #EFEFEF;
@@ -2004,7 +2014,7 @@ div.plugin_include_content p {
  vertical-align: middle;
 }
 .check {
- background: url("../../img/check.png") no-repeat scroll 0 0 transparent;
+ background: url("img/check.png") no-repeat scroll 0 0 transparent;
  display: inline-block;
  vertical-align: middle;
  margin-left: 0.3em;
@@ -2423,7 +2433,7 @@ iframe {
  cursor: -webkit-zoom-out;
 }
 .closepreview {
- background: url("../../img/close.png") no-repeat scroll 0 0 transparent;
+ background: url("img/close.png") no-repeat scroll 0 0 transparent;
  position: absolute;
  margin-top: -16px;
  right: 50%;
@@ -2437,10 +2447,10 @@ iframe {
    width:10px;
 }
 .buttonexpss.cl{
-    background: url("../../img/tocright.png") no-repeat scroll 80% transparent;
+    background: url("img/tocright.png") no-repeat scroll 80% transparent;
 }
 .buttonexpss.op{
-    background: url("../../img/tocdown.png") no-repeat scroll 80% transparent;
+    background: url("img/tocdown.png") no-repeat scroll 80% transparent;
 }
 .indexcontent .tocssection .toc ul {
    display: table-cell;
@@ -2471,11 +2481,11 @@ iframe {
     content: counter(section) "." counter(subsection) ". ";
 }
 
-.container {
+/*.container {
     margin: 20px;
     font-family: Georgia,"Times New Roman",serif;
     background-color: #F5F1E8
-}
+}*/
 p {
     margin-bottom: 1em;
 }

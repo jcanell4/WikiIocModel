@@ -896,7 +896,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         if ($pos !== null) {
             $class .= ' ' . $this->startSectionEdit($pos, 'table');
         }
-        $this->doc .= '<div class="'.$class.'"><table class="taula">' . DOKU_LF;
+        $this->doc .= '<div class="'.$class.'"><table class="taula inline">' . DOKU_LF;
     }
 
     function table_close($pos = null){
@@ -997,6 +997,13 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         $ret .= $link['suf'];
         return $ret;
     }
+    
+    function _isMediaFile($src){
+        $pos = strrpos((string)$src,':');
+        $ret = $pos!==false;
+        return $ret;
+    }
+
 
     /**
      * Renders internal and external media
@@ -1004,10 +1011,18 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
      */
     function _media ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $render = true) {
         $ret = '';
-        array_push($_SESSION['media_files'], $src);
+        //attach url media file
+        if($this->_isMediaFile($src)){
+            array_push($_SESSION['media_files'], $src);
+        }
 
         list($ext, $mime, $dl) = mimetype($src);
         if (substr($mime,0,5) == 'image'){
+            $icon = FALSE;
+            if ($width || $height){
+                $icon = (($width && $width < 49) || ($height && $height < 49));
+            }
+            $imgb = (!$icon && !$this->table);
             // first get the $title
             if (!is_null($title)) {
                 $title  = $this->_xmlEntities($title);
@@ -1029,26 +1044,64 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 }
                 return $title;
             }
+            if ($_SESSION['figure']){
+                $ret .= '<figure>'.DOKU_LF;
+                $figtitle = '<span class="figuretitle">Figura</span>'.$_SESSION['fig_title'];
+                $ret .= '<figcaption>'.$figtitle.'</figcaption>';
+            }elseif($_SESSION['iocelem']){
+                $ret .= '<div class="imgelem">'.DOKU_LF;
+            }elseif($imgb){
+                $ret .= '<div class="iocfigurec">'.DOKU_LF;
+                $ret .= '<ul>'.DOKU_LF;
+                $ret .= '<li>'.DOKU_LF;
+            }            
             //add image tag
             //versión anterior que eliminaba la wikiruta del archivo
             //$ret .= '<img src="img/'.basename(str_replace(':', '/', $src)).'"';
             $ret .= '<img src="img/'.str_replace(':', '/', $src).'"';
-            $ret .= ' class="media'.$align.'"';
-
-            if ($title) {
-                $ret .= ' title="' . $title . '"';
-                $ret .= ' alt="'   . $title .'"';
+            
+            if ($icon || $_SESSION['figure'] || $_SESSION['iocelem'] || $this->table){
+                $ret .= ' class="media'.$align.'"';            
             }else{
-                $ret .= ' alt=""';
+                $ret .= ' class="imgB'.$align.'"';
             }
+            
+              // make left/right alignment for no-CSS view work (feeds)
+            if($align == 'right') $ret .= ' align="right"';
+            if($align == 'left')  $ret .= ' align="left"';
 
-            if ( !is_null($width) )
+            $alt = ($_SESSION['fig_description']) ? $_SESSION['fig_description'] : ($title ? $title : "");
+            if ($title) {
+                if ($imgb && strpos($title, "#")!==false) {
+                    $s = explode("#", $title);
+                    $title = $s[0];
+                    $alt = preg_replace('/\/[+-]?\d+$/', '', $s[1]); //elimina el 'offset'
+                }
+                $ret .= " title=\"$title\"";
+            }
+            $ret .= " alt=\"$alt\"";
+
+            if($this->table && !is_null($width) )
                 $ret .= ' width="'.$this->_xmlEntities($width).'"';
 
-            if ( !is_null($height) )
+            if ($this->table && !is_null($height) )
                 $ret .= ' height="'.$this->_xmlEntities($height).'"';
 
             $ret .= ' />';
+            
+            if ($_SESSION['figure']){
+                $ret .= '</figure>'.DOKU_LF;
+            }elseif($_SESSION['iocelem']){
+                $ret .= '</div>'.DOKU_LF;
+            }elseif($imgb){
+                $ret .= '</li>';
+                if ($title) {
+                    $title = preg_replace('/\/[+-]?\d+$/', '', $title);
+                    $ret .= '<li><small>'.$title.'</small></li>'.DOKU_LF;
+                }
+                $ret .= '</ul>';
+                $ret .= '</div>'.DOKU_LF;
+            }
 
         }elseif ($mime == 'application/x-shockwave-flash'){
             if (!$render) {
@@ -1070,6 +1123,27 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                                      null,
                                      $att,
                                      $this->_xmlEntities($title));
+        }elseif($dl){
+            resolve_mediaid(getNS($src),$src,$exists);
+            if ($exists){
+                $filesize = filesize(mediaFN($src));
+                $filesize = ' ( '.filesize_h($filesize) .' )';
+            }
+            $filename = basename(str_replace(':', '/', $src));
+            // well at least we have a title to display
+            if (!is_null($title) && !empty($title)) {
+                $title  = $this->_xmlEntities($title);
+            }else{
+                $title = $filename;
+            }
+            $src = $path.'img/'.$filename;
+            $ret .= '<div class="mediaf file'.$ext.'">';
+            $ret .= '<div class="mediacontent">';
+            $ret .= '<a href="'.$path.'img/'.basename(str_replace(':', '/', $src)).'">'.$title.'</a>'.
+                    '<span>'.$filesize.'</span>';
+            $ret .= '</div>';
+            $ret .= '</div>';
+            
         }elseif ($title){
             // well at least we have a title to display
             $ret .= $this->_xmlEntities($title);
