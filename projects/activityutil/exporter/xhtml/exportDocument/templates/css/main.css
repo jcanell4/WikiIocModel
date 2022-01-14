@@ -1876,11 +1876,10 @@ div.plugin_include_content p {
 .ioctext {
  background-color: #EFEFEF;
  position: relative;
- width: 300px;
+ width: 40%;
  padding: 10px;
  font-size: 0.85em;
- margin-right: -400px;
- margin-top: -50px;
+ margin-left: 50%;
 }
 .ioctext .ioctitle {
  font-weight: bold;

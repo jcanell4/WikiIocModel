@@ -182,7 +182,7 @@ a:hover {
 .iocnote:after {
 
     /* Aquesta adreça és només a efectes de prova */
-    content: url("../../img/ioc-recorda-icona.svg");
+    content: url("../img/ioc-recorda-icona.svg");
 
     /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
     content: url([[pix:theme|ioc-recorda-icona]]);
@@ -419,7 +419,7 @@ pre.code {
 .iocquote .ioccontent p:first-of-type:before {
 
     /* Aquesta adreça és només a efectes de prova */
-    content: url("../../img/ioc-cita-obre-icona.svg");
+    content: url("../img/ioc-cita-obre-icona.svg");
 
     /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
     content: url([[pix:theme|ioc-cita-obre-icona]]);
@@ -432,7 +432,7 @@ pre.code {
 .iocquote .ioccontent p:last-of-type:not(.refrence)::after {
     
     /* Aquesta adreça és només a efectes de prova */
-    content: url("../../img/ioc-cita-tanca-icona.svg");
+    content: url("../img/ioc-cita-tanca-icona.svg");
 
     /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
     content: url([[pix:theme|ioc-cita-tanca-icona]]);
@@ -510,7 +510,7 @@ div.solution {
 .iocreference .ioccontent:after {
 
     /* Aquesta adreça és només a efectes de prova */
-    content: url("../../img/ioc-atencio-icona.svg");
+    content: url("../img/ioc-atencio-icona.svg");
 
     /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
     content: url([[pix:theme|ioc-atencio-icona]]);
