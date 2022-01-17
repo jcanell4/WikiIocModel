@@ -234,6 +234,16 @@ define (["render"],function(render){
                 $(".tabref > a[href=\"#"+$(this).attr("name")+"\"]").append(" "+(i+1));
             });            
         };
+        
+        let setReferences = function(){
+             $(".iocquote .ioccontent p:last-of-type").each(function(){
+                 let $this = $(this);
+                 if($this.siblings().length>0 && $this.find("em").length){
+                     $this.addClass("reference");
+                     $this.appendTo($this.parent().parent());
+                 }
+             });
+        }; 
 	
 	//Set params into our cookie
 	var setcookie = (function(name, value){
@@ -348,7 +358,8 @@ define (["render"],function(render){
 	//Initialize menu and settings params
 	get_params();
         setNumFigs();
-        setNumTables()
+        setNumTables();
+        setReferences();
 	
 
 	return {"editCheckExercise":editCheckExercise,

@@ -265,14 +265,14 @@ a:hover {
 
     text-align: center;
     border: 2px solid #fff;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 }
 
 .ioctable .table table.inline tbody tr td {
     color: inherit;
     padding: 12px;
     border-bottom: 1px dotted #d2dff5;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
   }
 
 .ioctable .titletable {

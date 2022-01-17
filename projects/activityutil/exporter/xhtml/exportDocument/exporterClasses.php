@@ -84,7 +84,7 @@ class exportDocument extends renderHtmlDocument {
         }
         
         $document = str_replace("@@FIGURE_FOOTER_TYPE@@", $data_footer, $document);
-        $document = str_replace("@@TABLE_FOOTER_TYPE@@", "default", $document);
+        $document = str_replace("@@TABLE_FOOTER_TYPE@@", $data_footer, $document);
         
 //        foreach ($this->cfgExport->toc as $tocKey => $tocItem) {
 //            $toc = "";
