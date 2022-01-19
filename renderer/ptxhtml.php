@@ -28,6 +28,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     var $store = '';
     var $_counter   = array(); // used as global counter, introduced for table classes
     var $_codeblock = 0;       // counts the code and file blocks, used to provide download links
+    var $sectionElement = TRUE;
 
     private $lastsecid = 0; // last section edit id, used by startSectionEdit
     
@@ -38,6 +39,12 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     var $currentBIocElemsType = self::UNEXISTENT_B_IOC_ELEMS_TYPE;
     var $bIocElemsRefQueue = array();
     
+    public function __construct() {
+        if(isset($_SESSION['sectionElement'])){
+            $this->sectionElement=$_SESSION['sectionElement'];
+        }
+    }
+    
     /**
      * Esta función construye el renderer a partir de las parámetros de configuración recibidos
      * @param array $params
@@ -47,8 +54,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     function reset(){
         $this->doc = '';
     }
-
-
+    
     /**
      * Register a new edit section range
      *
@@ -70,7 +76,9 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
      * @author Adrian Lang <lang@cosmocode.de>
      */
     public function finishSectionEdit($end = null) {
-        $this->doc .= "</section>\n";
+        if($this->sectionElement){
+            $this->doc .= "</section>\n";
+        }
         list($id, $start, $type, $title) = array_pop($this->sectionedits);
         if (is_null($end) || $end > $start) {
             $this->doc .= "<!-- EDIT$id " . strtoupper($type) . ' ';
@@ -174,13 +182,21 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         }
 
         // write the header
-        $this->doc .= DOKU_LF.'<section id="'.$hid.'">';
+        if($this->sectionElement){
+            $this->doc .= DOKU_LF.'<section id="'.$hid.'">';
+        }
         $this->doc .= DOKU_LF.'<h'.$level;
         if ($level <= $conf['maxseclevel']) {
             $this->doc .= ' class="' . $this->startSectionEdit($pos, 'section', $text) . '"';
         }
         $this->doc .= '>';            //$this->doc .= ' id="'.$hid.'">';
+        if(!$this->sectionElement){
+            $this->doc .= '<a id="'.$hid.'">';
+        }
         $this->doc .= $this->_xmlEntities($text);
+        if(!$this->sectionElement){
+            $this->doc .= '</a>';
+        }
         $this->doc .= "</h$level>".DOKU_LF;
     }
 
@@ -196,7 +212,8 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     }
 
     function cdata($text) {
-        $this->doc .= $this->_xmlEntities($text);
+        $d = $this->_xmlEntities($text);
+        $this->doc .= $d;
     }
 
     function p_open() {
@@ -1156,7 +1173,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     }
 
     function _xmlEntities($string) {
-        return htmlspecialchars($string,ENT_QUOTES,'UTF-8');
+        return htmlspecialchars($string, ENT_HTML5+ENT_QUOTES,'UTF-8');
     }
 
     /**

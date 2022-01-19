@@ -28,6 +28,14 @@ class exportDocument extends renderHtmlDocument {
         $this->cfgExport->export_html = TRUE;
         parent::initParams();
     }
+    
+    public function process($data, $alias="") {
+        session_start();
+        $_SESSION['sectionElement']=FALSE;
+        $ret = parent::process($data, $alias);
+        session_write_close();
+        return $ret;
+    }
 
     // En este modulo NO se genera archivo PDF
     public function cocinandoLaPlantillaConDatos($data) {
