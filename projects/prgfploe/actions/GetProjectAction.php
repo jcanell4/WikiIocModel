@@ -1,7 +1,7 @@
 <?php
 if (!defined('DOKU_INC')) die();
 
-class ViewProjectAction extends BasicViewProjectAction{
+class GetProjectAction extends BasicGetProjectAction{
 
     public function runAction()
     {
@@ -12,13 +12,6 @@ class ViewProjectAction extends BasicViewProjectAction{
         $ret = parent::runAction();
 
         return $ret;
-    }
-
-
-    public function responseProcess() {
-        $response = parent::responseProcess();
-        $response[AjaxKeys::KEY_FTPSEND_HTML] = $this->getModel()->get_ftpsend_metadata();
-        return $response;
     }
 
 }
