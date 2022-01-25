@@ -6,7 +6,7 @@ class ViewProjectAction extends BasicViewUpdatableProjectAction{
     protected function runAction() {
 
         if (!$this->getModel()->isProjectGenerated()) {
-            $this->getModel()->setViewConfigName("firstView");
+            $this->getModel()->setViewConfigKey(ProjectKeys::KEY_VIEW_FIRSTVIEW);
         }
         $response = parent::runAction();
 
