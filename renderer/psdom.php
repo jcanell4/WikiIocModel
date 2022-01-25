@@ -529,6 +529,7 @@ class TextNodeDoc extends AbstractNodeDoc{
             $cr = " ";
         }
         $text = preg_replace(array("/\t/", "/ *\r\n/", "/ *\n/"), array("    ", $cr, $cr), $this->text);
+        $text = preg_replace('/[\x00-\x1F]/', '', $text);
         $ret = "{\n\"type\":\"".$this->type."\""
                 .",\n\"text\":\"".$text."\"";
         $ret .= "\n}";
