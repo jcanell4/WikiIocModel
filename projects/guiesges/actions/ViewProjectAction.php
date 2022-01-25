@@ -8,7 +8,7 @@ class ViewProjectAction extends BasicViewProjectAction{
         $isProjectGenerated = $projectModel->isProjectGenerated();
 
         if (!$isProjectGenerated) {
-            $projectModel->setViewConfigName("firstView");
+            $projectModel->setViewConfigKey(ProjectKeys::KEY_VIEW_FIRSTVIEW);
         }
         $response = parent::runAction();
 

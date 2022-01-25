@@ -7,7 +7,7 @@ class GetProjectAction extends BasicGetUpdatableProjectAction {
         $model = $this->getModel();
         
         if (! $model->isProjectGenerated()) {
-            $model->setViewConfigName("firstView");
+            $model->setViewConfigKey(ProjectKeys::KEY_VIEW_FIRSTVIEW);
         }
         return parent::runAction();
     }
