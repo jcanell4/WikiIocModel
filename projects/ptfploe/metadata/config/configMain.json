@@ -28,7 +28,7 @@
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
-
+            "viewfiles": {"defaultView": "defaultView", "updateView" :  "updateView"},
             "versions": {
                 "fields": 10,
                 "templates": {"continguts":29}

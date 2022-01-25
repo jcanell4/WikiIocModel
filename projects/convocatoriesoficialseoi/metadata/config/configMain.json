@@ -30,6 +30,7 @@
   "metaDataProjectStructure": [
     {
       "main": "meta.mdpr",
+      "viewfiles": {"defaultView": "defaultView", "updateView" :  "updateView"},
       "versions": {
             "fields": 3,
             "templates": {"convocatoria_a2":3, "convocatoria_b1":3, "convocatoria_b2":3}
