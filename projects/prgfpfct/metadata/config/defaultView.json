@@ -128,9 +128,7 @@
             "n_columns": 2,
             "group": "dadesBasiques",
             "props": {
-                "required": true,
-                "readonly": true,
-                "title": "Aquest és un camp calculat. No l'heu d'introduir"
+                "required": true
             }
         },
         "tipusCicle":{

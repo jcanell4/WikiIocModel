@@ -166,10 +166,7 @@
                         "durada": {
                             "type": "string",
                             "mandatory": true,
-                            "default": 0,
-                            "props": {
-                                "readonly": true
-                            }
+                            "default": 0
                         },
                         "plantilla": {
                             "type": "string",
