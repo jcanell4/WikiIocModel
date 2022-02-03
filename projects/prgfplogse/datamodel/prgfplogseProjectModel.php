@@ -204,7 +204,7 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
         return $result;
     }
 
-    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE) {
+    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=false, $subset=false) {
         $data = parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
 
         $udTable = $data["taulaDadesUD"];

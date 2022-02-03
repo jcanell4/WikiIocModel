@@ -199,7 +199,7 @@ class convocatoriesoficialseoiProjectModel extends MultiContentFilesProjectModel
      * Calcula el valor de los campos calculables
      * @param JSON $data
      */
-    public function updateCalculatedFieldsOnSave($values, $originalDataKeyValue=FALSE) {
+    public function updateCalculatedFieldsOnSave($values, $originalDataKeyValue=false, $subset=false) {
         $values["dataReclamacions"] = $this->sumDate($values["dataResultats"], 3);
         $values["dadesEspecifiquesProvaA2"]["dataProvaNE"] = $this->sumDate($values["dadesEspecifiquesProvaA2"]["dataProva"], 5);
         $values["dadesEspecifiquesProvaB1"]["dataProvaNE"] = $this->sumDate($values["dadesEspecifiquesProvaB1"]["dataProva"], 5);
