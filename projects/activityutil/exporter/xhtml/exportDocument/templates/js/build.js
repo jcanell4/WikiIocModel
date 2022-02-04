@@ -338,6 +338,7 @@ define ('functions',["render"],function(render){
 	var cookiegeneral = 'ioc_settings';//Always same settings for all materials
 	var cookiefavorites = 'ioc_'+cookiesufix+'_bookmarks';
 	var cookiequizzes = 'ioc_'+cookiesufix+'_quizzes';
+        var isBoostIoc = $("link[href='css/boostioc.css']").length;
 
 	
 	var setFontsize = (function (info){
@@ -561,13 +562,15 @@ define ('functions',["render"],function(render){
         
         let setReferences = function(){
              $(".iocquote .ioccontent p:last-of-type").each(function(){
-                 let $this = $(this);
-                 if($this.siblings().length>0 && $this.find("em").length){
-                     $this.addClass("reference");
-                     $this.appendTo($this.parent().parent());
-                 }
+                 if(isBoostIoc){
+                    let $this = $(this);
+                    if($this.siblings().length>0 && $this.find("em").length){
+                        $this.addClass("reference");
+                        $this.appendTo($this.parent().parent());
+                    }
+                }
              });
-        };         
+        }; 
 	
 	//Set params into our cookie
 	var setcookie = (function(name, value){
