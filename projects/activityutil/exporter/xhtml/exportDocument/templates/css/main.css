@@ -269,7 +269,31 @@ mark {
   text-align: center;
  }
 }
+@media screen and (min-width: 968px) {
+    article {
+     min-width: 920px;
+
+    }
+}
+@media screen and (min-width: 768px) {
+    article {
+         min-width: 720px;
+    }
+}
+@media screen and (min-width: 576px) {
+    article {
+        margin: 38px auto 20px;
+        padding: 20px 20px 120px;
+        min-width: 544px;
+    }
+}
 @media screen and (max-device-width: 480px) {
+    article {
+        margin: 38px auto 20px;
+        padding: 20px 20px 120px;
+        width: 50%;
+        min-width: 456px;
+    }
 }
 @media all and (orientation: portrait) {
 }
@@ -1714,7 +1738,7 @@ article {
  margin: 68px auto 40px;
  padding: 30px 30px 170px;
  width: 50%;
- min-width: 300px;
+ min-width: 720px;
  counter-reset: counth1;
  text-align: left;
  -webkit-box-sizing: border-box;
