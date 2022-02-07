@@ -570,6 +570,17 @@ define ('functions',["render"],function(render){
                     }
                 }
              });
+             $(".iocquote .ioccontent p:first-of-type").each(function(){
+                let $this = $(this);           
+                let text = $this.text();
+                $this.text(text.replace(/^\s*[“\"](.*)/s, "$1"));
+             });
+             $(".iocquote .ioccontent p:last-of-type").each(function(){
+                let $this = $(this);           
+                let text = $this.text();
+                $this.text(text.replace(/(.*)[”\"]\s*$/s, "$1"));
+             });
+             
         }; 
 	
 	//Set params into our cookie
@@ -685,7 +696,8 @@ define ('functions',["render"],function(render){
 	//Initialize menu and settings params
 	get_params();
         setNumFigs();
-        setNumTables()
+        setNumTables();
+        setReferences();
 	
 
 	return {"editCheckExercise":editCheckExercise,

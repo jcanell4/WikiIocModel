@@ -121,7 +121,7 @@ a:hover {
 @media screen and (min-width: 576px) {
     .iocimportant {
         max-width: 90%;
-        margin: 48px auto;
+        margin: 48px 6% auto;/*canvi IOC*/
     }
 }
 
@@ -159,7 +159,7 @@ a:hover {
     .ioctextl,
     .iocnote {
         max-width: 90%;
-        margin: 48px auto;
+        margin: 48px 6% auto; /*canvi IOC - original: margin: 48px auto;*/
     }
 }    
 
@@ -167,7 +167,8 @@ a:hover {
     .ioctext,
     .ioctextl,
     .iocnote {
-        max-width: 73.5%;
+         max-width: 55%; /*canvi IOC - original: max-width: 73.5%;*/
+         font-size: 75%; /*canvi IOC */
     }
 } 
 
@@ -182,7 +183,7 @@ a:hover {
 .iocnote:after {
 
     /* Aquesta adreça és només a efectes de prova */
-    content: url("../img/ioc-recorda-icona.svg");
+    content: url("../img/ioc-recorda-icona.svg"); /*canvi IOC - canvi per adaptar-ho al projecte*/
 
     /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
     content: url([[pix:theme|ioc-recorda-icona]]);
@@ -265,14 +266,14 @@ a:hover {
 
     text-align: center;
     border: 2px solid #fff;
-    /*white-space: nowrap;*/
+    /*white-space: nowrap;*//*canvi IOC*/
 }
 
 .ioctable .table table.inline tbody tr td {
     color: inherit;
     padding: 12px;
     border-bottom: 1px dotted #d2dff5;
-    /*white-space: nowrap;*/
+    /*white-space: nowrap;*//*canvi IOC*/
   }
 
 .ioctable .titletable {
@@ -331,7 +332,7 @@ pre.code {
 
 /* Imatge complementària */
 
-.iocfigurec {
+.iocfigurec {   /*canvi IOC*/
     width: 130px;
     /*margin: 36px auto;*/
     float: right;
@@ -372,17 +373,18 @@ pre.code {
     margin: 24px auto;
     min-width: 200px;
     max-width: 100%;
+    border-left: 4px solid #387AF1; /*canvi IOC - nou */
 }
 
 @media screen and (min-width: 576px) {
     .iocquote {
-        margin: 36px auto;
+        margin: 36px 6% auto;
         max-width: 90%;
     }
 } 
 @media screen and (min-width: 768px) {
     .iocquote {
-        margin: 48px auto;
+        margin: 48px 6% auto;
         max-width: 75%;
     }
 } 
@@ -396,8 +398,18 @@ pre.code {
     align-items: stretch;
     align-content: space-between;
     font-style: italic;
-    border-left: 4px solid #387AF1;
+    /*border-left: 4px solid #387AF1;*//*canvi IOC - traspassat a iocquote*/
     padding-left: 16px;
+}
+                   
+.iocquote .reference { /*canvi IOC - padding de la referència*/
+    padding-left: 16px;
+}
+
+.iocquote .reference em{ /*canvi IOC - lletra normal*/
+    padding-left: 16px;
+    font-style: normal;
+
 }
 
 .iocquote .ioccontent p {
@@ -419,7 +431,7 @@ pre.code {
 .iocquote .ioccontent p:first-of-type:before {
 
     /* Aquesta adreça és només a efectes de prova */
-    content: url("../img/ioc-cita-obre-icona.svg");
+    content: url("../img/ioc-cita-obre-icona.svg"); /*canvi IOC - canvi per adaptar-ho al projecte*/
 
     /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
     content: url([[pix:theme|ioc-cita-obre-icona]]);
@@ -432,7 +444,7 @@ pre.code {
 .iocquote .ioccontent p:last-of-type:not(.refrence)::after {
     
     /* Aquesta adreça és només a efectes de prova */
-    content: url("../img/ioc-cita-tanca-icona.svg");
+    content: url("../img/ioc-cita-tanca-icona.svg"); /*canvi IOC - canvi per adaptar-ho al projecte*/
 
     /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
     content: url([[pix:theme|ioc-cita-tanca-icona]]);
@@ -510,7 +522,7 @@ div.solution {
 .iocreference .ioccontent:after {
 
     /* Aquesta adreça és només a efectes de prova */
-    content: url("../img/ioc-atencio-icona.svg");
+    content: url("../img/ioc-atencio-icona.svg"); /*canvi IOC - canvi per adaptar-ho al projecte*/
 
     /* En el build definitiu, aquesta és l'adreça que hi ha d'anar:
     content: url([[pix:theme|ioc-atencio-icona]]);
