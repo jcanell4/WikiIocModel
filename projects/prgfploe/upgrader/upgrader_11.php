@@ -23,7 +23,9 @@ class upgrader_11 extends CommonUpgrader {
                 if (!is_array($dataProject))
                     $dataProject = json_decode($dataProject, TRUE);
                 $dataProject['documentVersion'] = $dataProject['documentVersion']+1;
+                $dataProject = $this->addRowUpgradeDocumentVersion($dataProject);
                 $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
+                if (!$ret) break;
 
                 //Transforma el archivo continguts.txt del proyecto desde la versión $ver a la versión $ver+1
                 if ($filename===NULL)
