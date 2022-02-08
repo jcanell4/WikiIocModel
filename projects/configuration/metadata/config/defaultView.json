@@ -46,10 +46,7 @@
                         "type": "string"
                     },
                     "parameters": {
-                        "type": "object"
-                    },
-                    "conditions": {
-                        "type": "object"
+                        "type": "any"
                     }
                 },
                 "display_fields": ["key", "value"],

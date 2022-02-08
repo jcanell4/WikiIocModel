@@ -182,6 +182,7 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
             case "decimal":
             case "string":
             case "textarea":
+            case "any":
                 $dv = self::$DEFAULT_SINGLE_VALUES[$properties["type"]];
                 $ret = $this->_getSingleValue($values[$field], $properties, $types, $dv);
                 break;
