@@ -31,7 +31,7 @@
             "viewfiles": {"defaultView": "defaultView"},
             "versions": {
                 "fields" : 3,
-                "templates": {"continguts":10}
+                "templates": {"continguts":11}
             },
             "mainType": {
                 "type": "object",
@@ -682,6 +682,9 @@
                         "user":{
                             "type": "string",
                             "mandatory": true
+                        },
+                        "remarks":{
+                            "type": "string"
                         }
                     }                    
                 },
