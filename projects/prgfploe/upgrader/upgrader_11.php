@@ -54,7 +54,6 @@ class upgrader_11 extends CommonUpgrader {
             $currentState = $this->stateProcess($dataProject, "upgrading");
             $this->stateProcess($dataProject, $currentState);
         }
-        $ret = false;
         return $ret;
     }
 
