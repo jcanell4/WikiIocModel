@@ -695,8 +695,12 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "undefined"
+                        },
+                        "stateHistory":{
+                            "type": "objectArray",
+                            "typeDef":"wfStateHistoryEntry"
                         }
-                    }                    
+                    }
                 },
                 "management": {
                     "type": "object",
@@ -705,12 +709,7 @@
                             "type": "object",
                             "typeDef": "workflowType",
                             "mandatory": true
-                        },
-                        "stateHistory":{
-                            "type": "objectArray",
-                            "typeDef":"wfStateHistoryEntry",     
-                            "mandatory": true
-                        }                        
+                        }
                     }
                 }
             }            
