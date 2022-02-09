@@ -30,7 +30,7 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView"},
             "versions": {
-                "fields" : 3,
+                "fields": 4,
                 "templates": {"continguts":11}
             },
             "mainType": {

@@ -13,8 +13,23 @@ class upgrader_4 extends CommonUpgrader {
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
-                //Transforma los datos del proyecto desde la estructura de la versión $ver a la versión $ver+1
-                $ret = true;
+                //Transforma la estructura de datos del archivo management.mdpr
+                $id = $this->model->getId();
+                $projectType = $this->model->getProjectType();
+                $subSet = "management";
+                $metaDataQuery = $this->model->getPersistenceEngine()->createProjectMetaDataQuery($id, $subSet, $projectType);
+                $dataManagement = $metaDataQuery->getDataProject($id);
+                if (empty($dataManagement['stateHistory'])) {
+                    $ret = true;
+                }else {
+                    foreach ($dataManagement['stateHistory'] as $key => $value) {
+                        $dataManagement['stateHistory'][$key]['remarks'] = $value['remarks'];
+                    }
+                    $newDataManagement['workflow'] = $dataManagement['workflow'];
+                    $newDataManagement['workflow']['stateHistory'] = $dataManagement['stateHistory'];
+
+                    $ret = $metaDataQuery->setMeta(json_encode($newDataManagement), $subSet, "canvi d'estructura", NULL);
+                }
                 break;
             case "templates":
                 // Actualiza la versión del documento establecido en el sistema de calidad del IOC (Visible en el pie del documento)
