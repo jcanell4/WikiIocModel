@@ -98,7 +98,7 @@ function (registry,dom,domConstruct,BorderContainer,Dialog,ContentPane,Form,Butt
                                     '&action=toRevoque' +
                                     '&id=' + page.ns +
                                     '&projectType=' + page.projectType +
-                                    '&motiu=' + textarea.value;
+                                    '&motiu_rebuig=' + textarea.value;
                         toRevoqueButton.sendRequest(query);
                         dialog.hide();
                     }
