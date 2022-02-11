@@ -41,7 +41,8 @@
                     "scripts": {
                         "updateHandler": {
                             "conditions": {
-                                "page.action": "'project_view'"
+                                "page.action": "'project_view'",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -94,7 +95,8 @@
                     "scripts": {
                         "updateHandler": {
                             "conditions": {
-                                "page.action": "'project_edit'"
+                                "page.action": "'project_edit'",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -120,7 +122,8 @@
                     "scripts": {
                         "updateHandler": {
                             "conditions": {
-                                "page.action": "'project_edit'"
+                                "page.action": "'project_edit'",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -146,7 +149,8 @@
                     "scripts": {
                         "updateHandler": {
                             "conditions": {
-                                "page.action": "'project_view'"
+                                "page.action": "'project_view'",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -178,7 +182,8 @@
                     "scripts": {
                         "updateHandler": {
                             "conditions": {
-                                "page.action": "'project_view'"
+                                "page.action": "'project_view'",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -231,7 +236,8 @@
                         "updateHandler": {
                             "conditions": {
                                 "page.action": "'project_view' | 'project_edit'",
-                                "page.isRevision": "false"
+                                "page.isRevision": "false",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -276,7 +282,8 @@
                         "updateHandler": {
                             "conditions": {
                                 "page.action": "'project_view'",
-                                "page.isRevision": "false"
+                                "page.isRevision": "false",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -383,7 +390,8 @@
                         },
                         "updateHandler": {
                             "conditions": {
-                                "page.action": "'project_view'"
+                                "page.action": "'project_view'",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -428,7 +436,8 @@
                         "updateHandler": {
                             "conditions": {
                                 "page.action": "'project_view'",
-                                "page.isRevision": "false"
+                                "page.isRevision": "false",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -522,7 +531,8 @@
                         "updateHandler": {
                             "conditions": {
                                 "page.action": "'project_view'",
-                                "page.isRevision": "false"
+                                "page.isRevision": "false",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -618,7 +628,8 @@
                         "updateHandler": {
                             "conditions": {
                                 "page.action": "'project_view'",
-                                "page.isRevision": "false"
+                                "page.isRevision": "false",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -663,7 +674,8 @@
                         "updateHandler": {
                             "conditions": {
                                 "page.action": "'project_view'",
-                                "page.isRevision": "false"
+                                "page.isRevision": "false",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
@@ -693,7 +705,8 @@
                         "updateHandler": {
                             "conditions": {
                                 "page.action": "'project_view'",
-                                "page.generated": "true"
+                                "page.generated": "true",
+                                "page.metaDataSubSet": "undefined"
                             }
                         }
                     }
