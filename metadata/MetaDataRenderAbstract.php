@@ -194,8 +194,10 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
                 $ret = $this->_getObjectValue($field, $values, $properties, $types);
                 break;
             case "objectArray":
+            case "tree":
                 $ret = $this->_getObjectArrayValue($field, $values, $properties, $types);
                 break;
+
             default:
                 if(array_key_exists($properties['type'], $types)){
                     $typeDef = $properties['type'];
