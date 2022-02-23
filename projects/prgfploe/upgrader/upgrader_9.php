@@ -16,16 +16,12 @@ class upgrader_9 extends CommonUpgrader {
                 //Transforma los datos del proyecto desde la estructura de la versión $ver a la versión $ver+1
                 $ret = true;
                 break;
+
             case "templates":
-                // Actualiza la versión del documento establecido en el sistema de calidad del IOC (Visible en el pie del documento)
-                // Sólo se debe actualizar si el coordinador de calidad lo indica!!!!!!
-                /*
-                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject))
-                    $dataProject = json_decode($dataProject, TRUE);
-                $dataProject['documentVersion'] = $dataProject['documentVersion']+1;
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
-                 */
+                // Sólo se debe actualizar la versión del documento si el coordinador de calidad lo indica!!!!!!
+                if (FALSE) {
+                    if (!$this->upgradeDocumentVersion($ver)) return false;
+                }
 
                 //Transforma el archivo continguts.txt del proyecto desde la versión $ver a la versión $ver+1
                 if ($filename===NULL)
