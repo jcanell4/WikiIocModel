@@ -113,7 +113,7 @@ $lang['doc_message'] = 'Missatge referent a: <a href="%s" class="urlextern" titl
 $lang['doc_message_with_rev'] = 'Missatge referent a: <a href="%s" class="urlextern" title="%s" rel="nofollow" %s>%s (%s)</a>[[%s|%s (%s)]].';
 $lang['mail_message'] = "S'ha enviat una notificació a la <a href=\"%s\" class=\"urlextern\" title=\"%s\" rel=\"nofollow\">wiki</a> referent a <strong>%s</strong>, amb el missatge següent: ";
 $lang['message_notification_receivers'] = '<strong>Destinataris</strong>: %s';
-$lang['notifation_send_success'] = 'Notificación enviada amb èxit. Destinataris: %s';
+$lang['notifation_send_success'] = 'Notificació enviada amb èxit. Destinataris: %s';
 $lang['notification_form_title'] = 'Enviar notificacions';
 $lang['notification_form_to'] = 'Destinatari';
 $lang['notification_form_check_add_id'] = 'Afegir enllaç al document %s';
