@@ -11,7 +11,7 @@
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
-            "viewfiles": {"defaultView": "allData"},
+            "viewfiles": {"defaultView": "defaultView"},
             "mainType": {
                 "type": "object",
                 "typeDef": "configuracio"
@@ -36,7 +36,7 @@
                             "default": "Escriviu aquí el valor"
                         },
                         "parameters": {
-                            "type": "tree"
+                            "type": "any"
                         }
                     }                    
                 },
