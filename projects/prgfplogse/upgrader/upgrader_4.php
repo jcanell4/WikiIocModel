@@ -8,7 +8,7 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
-class upgrader_4 extends CommonUpgrader {
+class upgrader_4 extends ProgramacionsCommonUpgrader {
 
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
@@ -31,16 +31,12 @@ class upgrader_4 extends CommonUpgrader {
                     $ret = $metaDataQuery->setMeta(json_encode($newDataManagement), $subSet, "canvi d'estructura", NULL);
                 }
                 break;
+                
             case "templates":
-                // Actualiza la versión del documento establecido en el sistema de calidad del IOC (Visible en el pie del documento)
-                // Sólo se debe actualizar si el coordinador de calidad lo indica!!!!!!
-                /*
-                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject))
-                    $dataProject = json_decode($dataProject, TRUE);
-                $dataProject['documentVersion'] = $dataProject['documentVersion']+1;
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
-                 */
+                // Sólo se debe actualizar la versión del documento si el coordinador de calidad lo indica!!!!!!
+                if (FALSE) {
+                    if (!$this->upgradeDocumentVersion($ver)) return false;
+                }
 
                 //Transforma el archivo continguts.txt del proyecto desde la versión $ver a la versión $ver+1
                 if ($filename===NULL)
