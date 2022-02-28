@@ -183,7 +183,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
         $resultatsAprenentatge = (is_array($values["resultatsAprenentatge"])) ? $values["resultatsAprenentatge"] : json_decode($values["resultatsAprenentatge"], true);
 
-        if($values["nsProgramacio"]){
+        if (!empty($values["nsProgramacio"])){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
             if(!is_array($dataPrg)){
                 $dataPrg = json_decode($dataPrg, true);
