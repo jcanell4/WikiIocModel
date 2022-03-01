@@ -376,7 +376,7 @@
           "fields": {
             "tipus": {
               "type": "select",
-              "options": ["lectura", "autoavaluació", "fòrum", "qüestionari", "exercicis"]                        
+              "options": ["lectura", "vídeo", "autoavaluació", "fòrum", "qüestionari", "exercicis", "activitat", "valoració"]                        
             },
             "eina": {
               "type": "string"
