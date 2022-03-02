@@ -31,7 +31,7 @@
             "viewfiles": {"defaultView": "defaultView", "updateView" :  "updateView", "firstView" :  "firstView"},
             "versions": {
                 "fields": 11,
-                "templates": {"continguts": 24}
+                "templates": {"continguts": 25}
             },
             "mainType": {
                 "type": "object",
