@@ -63,7 +63,7 @@ class upgrader_31 extends CommonUpgrader {
                             ['regexp' => "^\|\s+\{##item\[id\]##\}\s+\|\s+\{##item\[inscripció recuperació\]##\}.*\n<\/WIOCCL:IF>\n<\/WIOCCL:FOREACH>",
                                'text' => "\n</WIOCCL:SET>",
                                'pos' => CommonUpgrader::DESPRES,
-                               'modif' => "m"],
+                               'modif' => "m"]
                            ];
                 $dataChanged = $this->updateTemplateByInsert($doc, $aTokIns);
 
@@ -72,7 +72,7 @@ class upgrader_31 extends CommonUpgrader {
                             ["^(<WIOCCL:FOREACH var=\"item\" array=\"\{##)(datesEAF)(##\}\">)$",
                              "$1sortedDatesEAF$3"],
                             ["^(<WIOCCL:FOREACH var=\"item\" array=\"\{##)(datesJT)(##\}\">)",
-                             "$1sortedDatesJT$3"],
+                             "$1sortedDatesJT$3"]
                            ];
                 $dataChanged = $this->updateTemplateByReplace($dataChanged, $aTokRep);
 
