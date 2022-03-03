@@ -69,31 +69,22 @@
       "individual": {
         "type":"checkbox",
         "label" : "És un treball indivudual",
-        "n_columns": 4,
+        "n_columns": 3,
         "group": "main",
         "props": {
           "required": true,
           "title": "indiqueu si en treball és individual"
         }
       },
-      "moodleCourseId": {
-        "label" : "Identificador del curs a moodle (moodleCourseId)",
-        "n_columns": 6,
-        "group": "actualitzables",
+      "nsProgramacio": {
+        "label" : "Programació importada (nsProgramacio)",
+        "n_columns": 5,
+        "group": "main",
         "props": {
           "required": true,
-          "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
+          "title": "indiqueu la programació importada"
         }
       },
-      "semestre":{
-        "label" : "Semestre (semestre)",
-        "n_columns": 6,
-        "group": "actualitzables",
-        "props": {
-          "required": true,
-          "title": "Aquesta dada s'actualitza automàticament durant el procés d'actualització semestral de dades. Aneu en compta de canviar el valor."
-        }
-      },      
       "cicle": {
         "label" : "Nom del cicle (cicle)",
         "n_columns": 8,
@@ -169,8 +160,9 @@
         }
       },
       "descripcio": {
-        "n_columns": 12,
         "label" : "Aquest bloc/mòdul ... (descripcio)",
+        "n_columns": 12,
+        "group": "main",
         "type": "textarea",
         "n_rows": 6,
         "props": {
@@ -180,12 +172,12 @@
         "config": {
             "renderable": true,
             "mode": "xhtml"
-        },
-        "group": "main"
+        }
       },
       "competencia": {
-        "n_columns": 12,
         "label" : "Competència global (competencia)",
+        "n_columns": 12,
+        "group": "main",
         "type": "textarea",
         "n_rows": 6,
         "props": {
@@ -195,14 +187,13 @@
         "config": {
             "renderable": true,
             "mode": "xhtml"
-        },
-        "group": "main"
+        }
       },
       "resultatsAprenentatge": {
         "label": "Taula dels resultats d'aprenentatge/obtectius terminals (resultatsAprenentatge)",
         "n_columns": 12,
-        "type": "editableObject",
         "group": "main",
+        "type": "editableObject",
         "n_rows": 8,
         "props": {
           "data-editable-element": "table",
@@ -256,6 +247,24 @@
                 {"value":"fase"},
                 {"value":"etapa/etapes"}
             ]
+        }
+      },
+      "moodleCourseId": {
+        "label" : "Identificador del curs a moodle (moodleCourseId)",
+        "n_columns": 6,
+        "group": "actualitzables",
+        "props": {
+          "required": true,
+          "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
+        }
+      },
+      "semestre":{
+        "label" : "Semestre (semestre)",
+        "n_columns": 6,
+        "group": "actualitzables",
+        "props": {
+          "required": true,
+          "title": "Aquesta dada s'actualitza automàticament durant el procés d'actualització semestral de dades. Aneu en compta de canviar el valor."
         }
       },
       "calendari": {

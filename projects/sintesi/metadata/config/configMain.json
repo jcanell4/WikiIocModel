@@ -28,7 +28,7 @@
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
-            "viewfiles": {"defaultView": "defaultView", "updateView" :  "updateView", "firstView" :  "firstView"},
+            "viewfiles": {"defaultView": "defaultView", "updateView": "updateView", "firstView": "firstView"},
             "versions": {
                 "fields": 3,
                 "templates": {"continguts":5}
@@ -232,6 +232,11 @@
                 "pla": {
                     "type": "object",
                     "keys": {
+                        "nsProgramacio": {
+                            "type":"string",
+                            "mandatory": true,
+                            "default": ""
+                        },
                         "tipusCicle":{
                             "type":"string",
                             "mandatory": true,

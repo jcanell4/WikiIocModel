@@ -68,6 +68,15 @@
             ]
         }
       },
+      "nsProgramacio": {
+        "label" : "Programació importada (nsProgramacio)",
+        "n_columns": 7,
+        "group": "main",
+        "props": {
+          "required": true,
+          "title": "indiqueu la programació importada"
+        }
+      },
       "moodleCourseId": {
         "label" : "Identificador del curs a moodle (moodleCourseId)",
         "n_columns": 6,

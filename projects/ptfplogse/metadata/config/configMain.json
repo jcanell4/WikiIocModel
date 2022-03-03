@@ -443,7 +443,7 @@
                     "keys": {
                         "nsProgramacio": {
                             "type":"string",
-                            "viewType":"hidden",
+                            
                             "mandatory": true,
                             "default":""
                         },

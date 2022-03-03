@@ -43,6 +43,11 @@
                 "pla": {
                     "type": "object",
                     "keys": {
+                        "nsProgramacio": {
+                            "type":"string",
+                            "mandatory": true,
+                            "default":""
+                        },
                         "semestre": {
                             "type": "number",
                             "mandatory": true,
