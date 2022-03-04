@@ -21,7 +21,10 @@
     {##documentPartsHtml##}
 </article>
 </div>
-
+ <div id="back_preview" class="hidden"></div>
+ <div id="preview" class="hidden">
+  <div class="prevcontent"></div>
+ </div>
 <div class="dades_autoria">
 <WIOCCL:IF condition="{##mostrarAutor##}==true">
     <p>autor: {##nom_real##}</p>
@@ -29,7 +32,7 @@
 <WIOCCL:IF condition="{#_IS_STR_EMPTY(''{##entitatResponsable##}'')_#}!=true">
     <p>Editat per: {##entitatResponsable##}</p>
 </WIOCCL:IF>
-    <p>data: {##data_fitxercontinguts##}</p>
+    <p>Darrera modificació: {##data_fitxercontinguts##}</p>
 </div>
 <script type="text/javascript">
     

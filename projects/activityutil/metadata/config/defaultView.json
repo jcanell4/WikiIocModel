@@ -191,8 +191,8 @@
             },
             "config":{
                 "options":[
-                    {"description":"estil normal", "value":"main"},
-                    {"description":"estil boostioc", "value":"boostioc"}
+                    {"description":"estil boostioc", "value":"boostioc"},
+                    {"description":"estil normal", "value":"main"}
                 ]
             }
         },
