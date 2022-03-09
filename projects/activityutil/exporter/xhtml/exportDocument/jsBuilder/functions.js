@@ -216,8 +216,8 @@ define (["render"],function(render){
                     }
                     $footerNode.remove();
                 }
-                $(this).parent().find("figcaption > .figuretitle").append(" "+(i+1));
-                $(".figref > a[href=\"#"+$(this).attr("name")+"\"]").append(" "+(i+1));
+                $(this).parent().find("figcaption > .figuretitle").append(" "+(i+1)+" ");
+                $(".figref > a[href=\"#"+$(this).attr("name")+"\"]").append(" "+(i+1)+" ");
             });            
         };
 	
@@ -227,11 +227,11 @@ define (["render"],function(render){
                 if(footerType=="toTitle"){
                     let $footNode = $(this).parent().parent().find(".foottable");
                     if($footNode.text()){
-                        $(this).append(". <span class=\"foottable\">"+$footNode.text()+"<\span>");
+                        $(this).parent().append(". <span class=\"foottable\">"+$footNode.text()+"<\span>");
                     }
                     $footNode.remove();
                 }
-                $(this).append(" "+(i+1));
+                $(this).find("span").first().append(" "+(i+1)+" ");
                 $(".tabref > a[href=\"#"+$(this).attr("name")+"\"]").append(" "+(i+1));
             });            
         };

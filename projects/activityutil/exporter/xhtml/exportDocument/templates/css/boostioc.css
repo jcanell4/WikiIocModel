@@ -117,10 +117,6 @@ a:hover {
 }
 
 @media screen and (min-width: 576px) {
-    .style-newspaper article, .article {
-        max-width: 560px;
-        min-width: 320px;
-    }
     .iocimportant {
         max-width: 90%;
         margin: 48px 6% auto;/*canvi IOC*/
@@ -128,10 +124,6 @@ a:hover {
 }
 
 @media screen and (min-width: 768px) {
-    .style-newspaper article, .article {
-        max-width: 720px;
-        min-width: 576px;
-    }
     .iocimportant {
         max-width: 75%;
     }
@@ -642,3 +634,6 @@ div.solution {
     font-size: 70%;
 }
 
+.hidden{
+    display: none;
+}
