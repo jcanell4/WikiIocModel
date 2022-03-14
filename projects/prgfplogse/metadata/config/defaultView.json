@@ -363,7 +363,7 @@
             "add_default_row_before": "Afegir nou instrument d'avaluació abans de la fila seleccionada"
           },
           "fields": {
-            "unitat didàctica": {
+            "bloc": {
                 "type": "number"
             },
             "tipus": {
@@ -396,8 +396,8 @@
               },
               "cells": [
                 {
-                  "name": "UD",
-                  "field": "unitat didàctica",
+                  "name": "Bloc",
+                  "field": "bloc",
                   "width" : "5%",
                   "editable": true
                 },

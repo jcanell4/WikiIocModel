@@ -994,31 +994,14 @@
                                             }
                                         },
                                         {
-                                            "_type_":"calculatedFromValues",
-                                            "class":"CalculateSearchInArrayObjectAndGetFieldValue",
-                                            "values":"$externalValues",
-                                            "variables":{
-                                                "ufRow":"$rowValue"
-                                            },
-                                            "data":{
-                                                "field":"taulaDadesUD",
-                                                "fieldToSearch":"unitat didàctica",
-                                                "searchValue":{
-                                                    "_type_":"field",
-                                                    "values":"$ufRow",
-                                                    "name":"unitat didàctica"
-                                                },
-                                                "fieldToReturn":"bloc"
-                                            }
+                                            "_type_":"field",
+                                            "name":"bloc",
+                                            "values":"$rowValue",
+                                            "defaultValue":0
                                         }],
                                         "operation":"=="
                                     },
                                     "resultRow":{
-                                        "unitat didàctica":{
-                                            "_type_":"field",
-                                            "name":"unitat didàctica",
-                                            "values":"$rowValue"
-                                        },
                                         "tipus qualificació": {
                                             "_type_":"field",
                                             "name":"tipus",

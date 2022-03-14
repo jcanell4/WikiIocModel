@@ -187,10 +187,10 @@
                 "entradaInstrumentsAvaluacio": {
                     "type": "object",
                     "keys": {
-                        "unitat didàctica": {
+                        "bloc": {
                             "type": "number",
                             "mandatory": true,
-                            "default": "{#_INC(1)_#}"
+                            "default": 0
                         },
                         "tipus": {
                             "type": "string",
