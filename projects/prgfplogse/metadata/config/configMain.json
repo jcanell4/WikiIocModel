@@ -187,6 +187,11 @@
                 "entradaInstrumentsAvaluacio": {
                     "type": "object",
                     "keys": {
+                        "unitat didàctica": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
                         "tipus": {
                             "type": "string",
                             "mandatory": true,

@@ -363,6 +363,9 @@
             "add_default_row_before": "Afegir nou instrument d'avaluació abans de la fila seleccionada"
           },
           "fields": {
+            "unitat didàctica": {
+                "type": "number"
+            },
             "tipus": {
               "type": "select",
               "options": ["AC", "PAF", "PAFV", "EAF", "JT"] 
@@ -392,6 +395,12 @@
                 "width" : "10%"
               },
               "cells": [
+                {
+                  "name": "UD",
+                  "field": "unitat didàctica",
+                  "width" : "5%",
+                  "editable": true
+                },
                 {
                   "name": "Tipus d'instrument d'avaluació",
                   "field": "tipus",
@@ -431,7 +440,8 @@
 
                 {
                   "name": "Ponderació aplicada",
-                  "field": "ponderació",
+                  "field": "ponderacio",
+                  "width" : "5%",
                   "constraints": "{\"places\":2}",
                   "editable": true
                 }

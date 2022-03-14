@@ -607,7 +607,7 @@
                                     "field": "taulaDadesUD",
                                     "filterCondition":{
                                         "_type_":"operation",
-                                       "values":[{
+                                        "values":[{
                                             "_type_":"calculatedFromValues",
                                             "class":"CalculateSearchInArrayAndGetPosition",
                                             "values":{"blocName":["crèdit", "1r. bloc", "2n. bloc", "3r. bloc"]},
@@ -672,7 +672,7 @@
                                     "field": "taulaNuclisActivitat",
                                     "filterCondition":{
                                         "_type_":"operation",
-                                       "values":[{
+                                        "values":[{
                                             "_type_":"calculatedFromValues",
                                             "class":"CalculateSearchInArrayAndGetPosition",
                                             "values":{"blocName":["crèdit", "1r. bloc", "2n. bloc", "3r. bloc"]},
@@ -975,7 +975,50 @@
                                         "defaultValue":""
                                     },
                                     "field": "taulaInstrumentsAvaluacio",
+                                    "filterCondition":{
+                                        "_type_":"operation",
+                                        "values":[{
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayAndGetPosition",
+                                            "values":{"blocName":["crèdit", "1r. bloc", "2n. bloc", "3r. bloc"]},
+                                            "variables":{
+                                                "pla":"$values"
+                                            },
+                                            "data":{
+                                                "field":"blocName",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "name": "tipusBlocCredit",
+                                                    "values":"$pla"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayObjectAndGetFieldValue",
+                                            "values":"$externalValues",
+                                            "variables":{
+                                                "ufRow":"$rowValue"
+                                            },
+                                            "data":{
+                                                "field":"taulaDadesUD",
+                                                "fieldToSearch":"unitat didàctica",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "values":"$ufRow",
+                                                    "name":"unitat didàctica"
+                                                },
+                                                "fieldToReturn":"bloc"
+                                            }
+                                        }],
+                                        "operation":"=="
+                                    },
                                     "resultRow":{
+                                        "unitat didàctica":{
+                                            "_type_":"field",
+                                            "name":"unitat didàctica",
+                                            "values":"$rowValue"
+                                        },
                                         "tipus qualificació": {
                                             "_type_":"field",
                                             "name":"tipus",
@@ -987,7 +1030,7 @@
                                             "name":"id",
                                             "values":"$rowValue"
                                         },
-                                        "ponderació": {                                        
+                                        "ponderació": {
                                            "_type_":"field",
                                             "name":"ponderacio",
                                             "values":"$rowValue"
