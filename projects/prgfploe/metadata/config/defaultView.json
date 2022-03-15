@@ -199,17 +199,17 @@
             "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
           },
           "fields": {
-            "ordreImparticio":{
-              "type": "number"         
-            },        
-            "bloc":{
-              "type": "number"         
-            },        
             "unitat formativa": {
+              "type": "number"
+            },
+            "bloc":{
               "type": "number"
             },
             "nom": {
               "type": "string"
+            },
+            "ordreImparticio":{
+              "type": "number"
             },
             "horesMinimes": {
                 "type": "number"
@@ -233,62 +233,55 @@
           "layout": [
             {
               "defaultCell": {
-                "width" : "10%"
+                "width": "5%"
               },
               "cells": [
-                {
-                  "name": "Ordre d'impartició",
-                  "field": "ordreImparticio",
-                  "editable": true
-                },
-
-                {
-                  "name": "Bloc",
-                  "field": "bloc",
-                  "editable": true
-                },
-
                 {
                   "name": "unitat formativa",
                   "field": "unitat formativa",
                   "editable": true
                 },
-
+                {
+                  "name": "Bloc",
+                  "field": "bloc",
+                  "editable": true
+                },
                 {
                   "name": "nom",
                   "field": "nom",
-                   "width":"40%",
+                  "width":"40%",
                   "editable": true
                 },
-
+                {
+                  "name": "Ordre d'impartició",
+                  "field": "ordreImparticio",
+                  "editable": true
+                },
                 {
                   "name": "hores mínimes",
                   "field": "horesMinimes",
                   "editable": true
                 },
-
                 {
                   "name": "hores lliure disposició",
                   "field": "horesLLiureDisposicio",
                   "editable": true
                 },
-
                 {
                   "name": "hores",
                   "field": "hores",
                   "editable": true
                 },
-
                 {
                   "name": "ponderació",
                   "field": "ponderació",
                   "constraints": "{\"places\":2}",
                   "editable": true
                 },
-                
                 {
                   "name": "Avaluació inicial",
                   "field": "avaluacioInicial",
+                  "width" : "10%",
                   "editable": true
                 }
               ]

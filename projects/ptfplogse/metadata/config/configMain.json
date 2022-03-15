@@ -30,7 +30,7 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView", "updateView" :  "updateView", "firstView" :  "firstView"},
             "versions": {
-                "fields": 11,
+                "fields": 12,
                 "templates": {"continguts": 25}
             },
             "mainType": {
@@ -361,6 +361,11 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "Indiqueu el nom de la unitat didàctica"
+                        },
+                        "ordreImparticio": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
                         },
                         "hores": {
                             "type": "number",
