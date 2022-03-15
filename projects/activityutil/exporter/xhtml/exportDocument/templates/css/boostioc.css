@@ -102,6 +102,10 @@ a:hover {
 
 /* COMPONENTS VISUALS */
 
+span .refId {
+    display:none;
+}
+
 /* Text destacat */
 
 .iocimportant {
