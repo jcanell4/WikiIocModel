@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_5: Transforma el archivo continguts.txt de los proyectos 'prgfplogse'
+ * upgrader_5: Transforma los datos de los campos y el archivo continguts.txt de los proyectos 'prgfplogse'
  *             desde la versión 4 a la versión 5
  * @author rafael <rclaver@xtec.cat>
 */
@@ -13,8 +13,14 @@ class upgrader_5 extends ProgramacionsCommonUpgrader {
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
-                //Transforma los datos del proyecto desde la estructura de la versión $ver a la versión $ver+1
-                $ret = true;
+                //Transforma los datos del proyecto
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject))
+                    $dataProject = json_decode($dataProject, TRUE);
+
+                //Omple a 0 el camp bloc de la taula 'taulaInstrumentsAvaluacio'
+                $this->updateBlocInProgramacions($dataProject);
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;
 
             case "templates":
