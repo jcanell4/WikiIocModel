@@ -35,7 +35,7 @@ class upgrader_12 extends ProgramacionsCommonUpgrader {
                            ];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                $aTokIns = [['regexp' => "^<WIOCCL:FOREACH var=\".*?\".*?array=\"\{##sortedTaulaDadesUF##\}\">",
+                $aTokIns = [['regexp' => "^<WIOCCL:FOREACH var=\".*?\" array=\"\{##sortedTaulaDadesUF##\}\">",
                                'text' => "<WIOCCL:SET var=\"sortedTaulaDadesUF\" type=\"literal\" value=\"{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}\">\n",
                                'pos' => CommonUpgrader::ABANS,
                                'modif' => "m"],
