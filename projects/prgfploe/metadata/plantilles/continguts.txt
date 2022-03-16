@@ -13,11 +13,9 @@ Aquest mòdul <WIOCCL:IF condition="{##horesLliureDisposicioModul##}==0">no disp
   :type:pt_taula
   :footer:(*) S'indiquen les hores mínimes establertes al currículum més les hores de lliure disposició assignades a la unitat formativa
 ^  Núm. UF  ^  TÍTOL UNITAT FORMATIVA  ^  Hores mínimes  ^  Hores lliure disp.  ^  Durada (*)  ^
-<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
-<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUF##}">
+<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">
 |  {##item[unitat formativa]##}  |  {##item[nom]##}  |  {##item[horesMinimes]##}  |  {##item[horesLLiureDisposicio]##}  |  {##item[hores]##}  |
 </WIOCCL:FOREACH>
-</WIOCCL:SET>
 :::
 </WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>1">
@@ -28,8 +26,7 @@ Aquest mòdul <WIOCCL:IF condition="{##horesLliureDisposicioModul##}==0">no disp
   :footer:(*) S'indiquen les hores mínimes establertes al currículum més les hores de lliure disposició assignades a la unitat formativa
 ^  Bloc  ^  Núm. UF  ^  TÍTOL UNITAT FORMATIVA  ^  Hores mínimes  ^  Hores lliure disp.  ^  Durada (*)  ^
 <WIOCCL:SET var="currentBloc" type="literal" value="-1">
-<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
-<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUF##}">
+<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">
 <WIOCCL:IF condition="{##currentBloc##}=={##item[bloc]##}">
 |  :::  |  {##item[unitat formativa]##}  |  {##item[nom]##}  |  {##item[horesMinimes]##}  |  {##item[horesLLiureDisposicio]##}  |  {##item[hores]##}  |
 </WIOCCL:IF>
@@ -38,7 +35,6 @@ Aquest mòdul <WIOCCL:IF condition="{##horesLliureDisposicioModul##}==0">no disp
 |  {##item[bloc]##}  |  {##item[unitat formativa]##}  |  {##item[nom]##}  |  {##item[horesMinimes]##}  |  {##item[horesLLiureDisposicio]##}  |  {##item[hores]##}  |
 </WIOCCL:IF>
 </WIOCCL:FOREACH>
-</WIOCCL:SET>
 </WIOCCL:SET>
 :::
 </WIOCCL:IF>
@@ -54,8 +50,7 @@ La data prevista d'inici i finalització de cada unitat formativa és l'establer
   :widths:1,4,1
   :type:pt_taula
 <WIOCCL:SET var="primer" type="literal" value="1">
-<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
-<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUF##}">
+<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}">
 <WIOCCL:IF condition="{##primer##}==0">
 \\
 </WIOCCL:IF>
@@ -68,7 +63,6 @@ La data prevista d'inici i finalització de cada unitat formativa és l'establer
 |  {##item[nucli formatiu]##}  | {##item[nom]##}  |  {##item[hores]##} h  |
 </WIOCCL:FOREACH>
 </WIOCCL:FOREACH>
-</WIOCCL:SET>
 </WIOCCL:SET>
 :::
 ###:
@@ -131,8 +125,7 @@ Els recursos necessaris per cursar aquest mòdul són:
 :###
 ~~EXTRA WIDTH~~
 ====== DESPLEGAMENT DE LES UNITATS FORMATIVES ======
-<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
-<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUF##}">###:
+<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}">###:
 
 :###
 ~~EXTRA WIDTH~~
@@ -410,7 +403,6 @@ No es requereixen espais, equipaments ni recursos específics.
 
 :###
 </WIOCCL:FOREACH>
-</WIOCCL:SET>
 ###:
 
 :###

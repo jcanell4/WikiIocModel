@@ -12,11 +12,9 @@ Aquest crèdit <WIOCCL:IF condition="{##horesLliureDisposicioCredit##}==0">no di
   :widths:1,6,1
   :type:pt_taula
 ^  Núm. UD  ^  TÍTOL UNITAT DIDÀCTICA  ^  Durada  ^
-<WIOCCL:SET var="sortedTaulaDadesUD" type="literal" value="{#_ARRAY_SORT({##taulaDadesUD##},''ordreImparticio'')_#}">
-<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUD##}">
+<WIOCCL:FOREACH var="item" array="{##taulaDadesUD##}">
 |  {##item[unitat didàctica]##}  |  {##item[nom]##}  |  {##item[hores]##} h |
 </WIOCCL:FOREACH>
-</WIOCCL:SET>
 :::
 </WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesBlocs##})_#}\>1">
@@ -26,8 +24,7 @@ Aquest crèdit <WIOCCL:IF condition="{##horesLliureDisposicioCredit##}==0">no di
   :type:pt_taula
 ^  Bloc  ^  Núm. UD  ^  TÍTOL UNITAT DIDÀCTICA  ^  Durada  ^
 <WIOCCL:SET var="currentBloc" type="literal" value="-1">
-<WIOCCL:SET var="sortedTaulaDadesUD" type="literal" value="{#_ARRAY_SORT({##taulaDadesUD##},''ordreImparticio'')_#}">
-<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUD##}">
+<WIOCCL:FOREACH var="item" array="{##taulaDadesUD##}">
 <WIOCCL:IF condition="{##currentBloc##}=={##item[bloc]##}">
 |  :::  |  {##item[unitat didàctica]##}  |  {##item[nom]##}  |  {##item[hores]##} h |
 </WIOCCL:IF>
@@ -36,7 +33,6 @@ Aquest crèdit <WIOCCL:IF condition="{##horesLliureDisposicioCredit##}==0">no di
 |  {##item[bloc]##}  |  {##item[unitat didàctica]##}  |  {##item[nom]##}  |  {##item[hores]##} h |
 </WIOCCL:IF>
 </WIOCCL:FOREACH>
-</WIOCCL:SET>
 </WIOCCL:SET>
 :::
 </WIOCCL:IF>
@@ -276,8 +272,7 @@ Els recursos necessaris per cursar aquest crèdit són:
 
 :###
 ====== DESPLEGAMENT DE LES UNITATS DIDÀCTIQUES ======
-<WIOCCL:SET var="sortedTaulaDadesUD" type="literal" value="{#_ARRAY_SORT({##taulaDadesUD##},''ordreImparticio'')_#}">
-<WIOCCL:FOREACH var="itemUd" array="{##sortedTaulaDadesUD##}">
+<WIOCCL:FOREACH var="itemUd" array="{##taulaDadesUD##}">
 ###:
 
 :###===== UNITAT DIDÀCTICA {##itemUd[unitat didàctica]##}: {##itemUd[nom]##} ({##itemUd[hores]##}) =====###:
@@ -337,7 +332,6 @@ Els recursos necessaris per cursar aquest crèdit són:
 
 :###
 </WIOCCL:FOREACH>
-</WIOCCL:SET>
 ###:
 [##TODO:Si és el cas, aquí podeu escriure comentaris generals referents a totes les unitats. Aquets comentaris no es repetiran.##]
 
