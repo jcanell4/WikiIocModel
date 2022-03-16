@@ -30,7 +30,7 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView", "updateView" : "updateView", "firstView": "firstView"},
             "versions": {
-                "fields": 10,
+                "fields": 11,
                 "templates": {"continguts":31}
             },
             "mainType": {
@@ -407,6 +407,11 @@
                             "type": "string",
                             "mandatory": true,
                             "default": "Indiqueu el nom de la UF"
+                        },
+                        "ordreImparticio": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
                         },
                         "hores": {
                             "type": "number",

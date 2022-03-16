@@ -132,7 +132,7 @@
                         "estil": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "main"
+                            "default": "boostioc"
                         },                                                
                        "entitatResponsable": {
                             "type": "string"

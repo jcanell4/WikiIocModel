@@ -30,7 +30,7 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView"},
             "versions": {
-                "fields": 4,
+                "fields": 6,
                 "templates": {"continguts":7}
             },
             "mainType": {
@@ -163,20 +163,25 @@
                             "mandatory": true,
                             "default": "{#_INC(1)_#}"
                         },
+                        "bloc": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(0)_#}"
+                        },
                         "nom": {
                             "type": "string",
                             "mandatory": true,
                             "default": "Indiqueu el nom de la UD"
                         },
+                        "ordreImparticio": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
                         "hores": {
                             "type": "number",
                             "mandatory": true,
                             "default": "0"
-                        },
-                        "bloc": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": "{#_COPY(0)_#}"
                         }
                     }
                 },
@@ -187,6 +192,11 @@
                 "entradaInstrumentsAvaluacio": {
                     "type": "object",
                     "keys": {
+                        "bloc": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 0
+                        },
                         "tipus": {
                             "type": "string",
                             "mandatory": true,

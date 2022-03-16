@@ -5,7 +5,8 @@
                 "permissions": {
                     "groups": [
                         "admin",
-                        "manager"
+                        "manager",
+                        "qualitat_fp"
                      ],
                      "rols": [
                         "responsable",
@@ -299,7 +300,8 @@
                  "permissions": {
                     "groups": [
                         "admin",
-                        "manager"
+                        "manager",
+                        "qualitat_fp"
                      ],
                      "rols": [
                         "responsable",
@@ -593,7 +595,7 @@
                     "groups": [
                         "admin",
                         "manager",
-                        "projectmanager"
+                        "qualitat_fp"
                     ],
                     "rols": [
                         "responsable",
@@ -686,7 +688,8 @@
                 "permissions": {
                     "groups": [
                         "admin",
-                        "manager"
+                        "manager",
+                        "qualitat_fp"
                      ],
                      "rols": [
                         "responsable",

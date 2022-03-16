@@ -232,14 +232,17 @@
             "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
           },
           "fields": {
-            "bloc":{
-              "type": "number"         
-            },        
             "unitat didàctica": {
+              "type": "number"
+            },
+            "bloc":{
               "type": "number"
             },
             "nom": {
               "type": "string"
+            },
+            "ordreImparticio":{
+              "type": "number"
             },
             "hores": {
               "type": "number"
@@ -248,28 +251,30 @@
           "layout": [
             {
               "defaultCell": {
-                "width" : "10%"
+                "width": "5%"
               },
               "cells": [
-                {
-                  "name": "Bloc",
-                  "field": "bloc",
-                  "editable": true
-                },
-
                 {
                   "name": "unitat didàctica",
                   "field": "unitat didàctica",
                   "editable": true
                 },
-
+                {
+                  "name": "Bloc",
+                  "field": "bloc",
+                  "editable": true
+                },
                 {
                   "name": "nom",
                   "field": "nom",
-                   "width":"40%",
+                  "width":"40%",
                   "editable": true
                 },
-
+                {
+                  "name": "Ordre d'impartició",
+                  "field": "ordreImparticio",
+                  "editable": true
+                },
                 {
                   "name": "hores",
                   "field": "hores",
@@ -363,6 +368,9 @@
             "add_default_row_before": "Afegir nou instrument d'avaluació abans de la fila seleccionada"
           },
           "fields": {
+            "bloc": {
+                "type": "number"
+            },
             "tipus": {
               "type": "select",
               "options": ["AC", "PAF", "PAFV", "EAF", "JT"] 
@@ -392,6 +400,12 @@
                 "width" : "10%"
               },
               "cells": [
+                {
+                  "name": "Bloc",
+                  "field": "bloc",
+                  "width" : "5%",
+                  "editable": true
+                },
                 {
                   "name": "Tipus d'instrument d'avaluació",
                   "field": "tipus",
@@ -431,7 +445,8 @@
 
                 {
                   "name": "Ponderació aplicada",
-                  "field": "ponderació",
+                  "field": "ponderacio",
+                  "width" : "5%",
                   "constraints": "{\"places\":2}",
                   "editable": true
                 }

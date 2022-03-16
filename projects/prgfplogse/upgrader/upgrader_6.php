@@ -13,8 +13,14 @@ class upgrader_6 extends ProgramacionsCommonUpgrader {
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
-                //Transforma los datos del proyecto desde la estructura de la versión $ver a la versión $ver+1
-                $ret = true;
+                //Transforma los datos del proyecto
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject))
+                    $dataProject = json_decode($dataProject, TRUE);
+
+                //Omple seqüencialment el camp 'ordreImparticio' de la taula 'taulaDadesUD'
+                $this->updateOrdreImparticioInTaulaDadesUX($dataProject, 'taulaDadesUD');
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;
 
             case "templates":

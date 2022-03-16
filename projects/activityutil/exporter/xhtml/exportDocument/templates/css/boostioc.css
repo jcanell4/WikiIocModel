@@ -2,7 +2,7 @@
 
 /* Regles per amagar l'HTML que no ens interessa (tot el que no sigui el contingut), únicament per nosaltres, perquè no ens molesti per treballar-hi */
 
-#header, #upbutton, #aside, #sidebar-hide, #toc, #settings, #favorites, #bridge, #help, #favcounter, footer.footer, #back_preview, #preview, #help-tooltips, #navmenu, #HyphenatorToggleBox {
+#header, #upbutton, #aside, #sidebar-hide, #toc, #settings, #favorites, #bridge, #help, #favcounter, footer.footer, /*#back_preview, #preview,*/ #help-tooltips, #navmenu, #HyphenatorToggleBox {
     display: none;
 }
 
@@ -17,14 +17,12 @@
     background-color: #fff;
     margin-left: auto;
     margin-right: auto;
-    max-width: 720px;
     line-height: 1.5;
+    max-width: 976px;/*canvi IOC*/
+    width: 100%;
 }
 
 /* Fins aquí */
-
-
-
 
 /* ESTILS BASE */
 
@@ -104,6 +102,10 @@ a:hover {
 
 /* COMPONENTS VISUALS */
 
+span .refId {
+    display:none;
+}
+
 /* Text destacat */
 
 .iocimportant {
@@ -122,7 +124,7 @@ a:hover {
     .iocimportant {
         max-width: 90%;
         margin: 48px 6% auto;/*canvi IOC*/
-    }
+    }    
 }
 
 @media screen and (min-width: 768px) {
@@ -583,4 +585,59 @@ div.solution {
     -moz-border-radius: 8px;
     -ms-border-radius: 8px;
     -o-border-radius: 8px;
+}
+
+#back_preview {
+  position: fixed;
+  background-color: #222;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=95)";
+  filter: alpha(opacity=95);
+  opacity: .95;
+  left: 0;
+  top: 0;
+  z-index: 4;
+}
+
+#preview .prevcontent {
+  position: relative;
+  top: 50%;
+  margin: 0 auto;
+    margin-top: 0px;
+}
+
+#preview {
+  position: fixed;
+  background-color: transparent;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  left: 0;
+  top: 0;
+  z-index: 5;
+}
+
+.closepreview {
+  background: url("../img/close.png") no-repeat scroll 0 0 transparent;
+  position: absolute;
+  margin-top: -16px;
+  right: 50%;
+  width: 33px;
+  height: 33px;
+  cursor: pointer;
+}
+
+.dades_autoria {
+    margin: 0 auto;
+    margin-top: 10px;
+    text-align: left;
+    font-size: 70%;
+}
+
+.hidden{
+    display: none;
 }

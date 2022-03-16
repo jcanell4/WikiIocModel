@@ -160,10 +160,20 @@
                             "mandatory": true,
                             "default": "{#_INC(1)_#}"
                         },
+                        "bloc": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(0)_#}"
+                        },
                         "nom": {
                             "type": "string",
                             "mandatory": true,
                             "default": "Indiqueu el nom de la UF"
+                        },
+                        "ordreImparticio": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
                         },
                         "horesMinimes": {
                             "type": "number",
@@ -188,16 +198,6 @@
                         "avaluacioInicial":{
                             "type": "string",
                             "mandatory": true
-                        },
-                        "bloc": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": "{#_COPY(0)_#}"
-                        },
-                        "ordreImparticio": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": "{#_INC(1)_#}"
                         }
                     }
                 },

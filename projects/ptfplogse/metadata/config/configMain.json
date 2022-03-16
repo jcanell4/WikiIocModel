@@ -30,7 +30,7 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView", "updateView" :  "updateView", "firstView" :  "firstView"},
             "versions": {
-                "fields": 11,
+                "fields": 12,
                 "templates": {"continguts": 25}
             },
             "mainType": {
@@ -362,6 +362,11 @@
                             "mandatory": true,
                             "default": "Indiqueu el nom de la unitat didàctica"
                         },
+                        "ordreImparticio": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
                         "hores": {
                             "type": "number",
                             "mandatory": true,
@@ -607,7 +612,7 @@
                                     "field": "taulaDadesUD",
                                     "filterCondition":{
                                         "_type_":"operation",
-                                       "values":[{
+                                        "values":[{
                                             "_type_":"calculatedFromValues",
                                             "class":"CalculateSearchInArrayAndGetPosition",
                                             "values":{"blocName":["crèdit", "1r. bloc", "2n. bloc", "3r. bloc"]},
@@ -672,7 +677,7 @@
                                     "field": "taulaNuclisActivitat",
                                     "filterCondition":{
                                         "_type_":"operation",
-                                       "values":[{
+                                        "values":[{
                                             "_type_":"calculatedFromValues",
                                             "class":"CalculateSearchInArrayAndGetPosition",
                                             "values":{"blocName":["crèdit", "1r. bloc", "2n. bloc", "3r. bloc"]},
@@ -975,6 +980,32 @@
                                         "defaultValue":""
                                     },
                                     "field": "taulaInstrumentsAvaluacio",
+                                    "filterCondition":{
+                                        "_type_":"operation",
+                                        "values":[{
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayAndGetPosition",
+                                            "values":{"blocName":["crèdit", "1r. bloc", "2n. bloc", "3r. bloc"]},
+                                            "variables":{
+                                                "pla":"$values"
+                                            },
+                                            "data":{
+                                                "field":"blocName",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "name": "tipusBlocCredit",
+                                                    "values":"$pla"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "_type_":"field",
+                                            "name":"bloc",
+                                            "values":"$rowValue",
+                                            "defaultValue":0
+                                        }],
+                                        "operation":"=="
+                                    },
                                     "resultRow":{
                                         "tipus qualificació": {
                                             "_type_":"field",
@@ -987,7 +1018,7 @@
                                             "name":"id",
                                             "values":"$rowValue"
                                         },
-                                        "ponderació": {                                        
+                                        "ponderació": {
                                            "_type_":"field",
                                             "name":"ponderacio",
                                             "values":"$rowValue"
