@@ -81,7 +81,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         }
         list($id, $start, $type, $title) = array_pop($this->sectionedits);
         if (is_null($end) || $end > $start) {
-            $this->doc .= "<!-- EDIT$id " . strtoupper($type) . ' ';
+            $this->doc .= "<!-- EDIT$id " . @strtoupper($type) . ' ';
             if (!is_null($title)) {
                 $this->doc .= '"' . str_replace('"', '', $title) . '" ';
             }
