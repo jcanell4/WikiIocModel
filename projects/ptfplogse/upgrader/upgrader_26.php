@@ -1,14 +1,14 @@
 <?php
 /**
- * upgrader_32: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
- *             desde la versión 31 a la versión 32
+ * upgrader_26: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ *             desde la versión 25 a la versión 26
  * @author rafael <rclaver@xtec.cat>
 */
 if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
-class upgrader_32 extends ProgramacionsCommonUpgrader {
+class upgrader_26 extends ProgramacionsCommonUpgrader {
 
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
@@ -29,40 +29,35 @@ class upgrader_32 extends ProgramacionsCommonUpgrader {
                 $doc = $this->model->getRawProjectDocument($filename);
 
                 /* Este modelo no sirve dado que aplica la primera aparición de $2 ("item") a todas las sustituciones
-                 * $aTokRep = [["^(<WIOCCL:FOREACH var=\")(.*?)(\" array=\"\{##)(taulaDadesUF)(##\}\")",
-                 *              "$1$2$3sortedTaulaDadesUF$5"],
+                 * $aTokRep = [["^(<WIOCCL:FOREACH var=\")(.*?)(\" array=\"\{##)(taulaDadesUD)(##\}\")",
+                 *              "$1$2$3sortedTaulaDadesUD$5"],
                  */
-                $aTokRep = [["^(<WIOCCL:FOREACH var=\"item\" array=\"\{##)(taulaDadesUF)(##\}\")",
-                             "$1sortedTaulaDadesUF$3"],
-                            ["^(<WIOCCL:FOREACH var=\"itemUf\" array=\"\{##)(taulaDadesUF)(##\}\")",
-                             "$1sortedTaulaDadesUF$3"]
+                $aTokRep = [["^(<WIOCCL:FOREACH var=\"item\" array=\"\{##)(taulaDadesUD)(##\}\")",
+                             "$1sortedTaulaDadesUD$3"],
+                            ["^(<WIOCCL:FOREACH var=\"itemUD\" array=\"\{##)(taulaDadesUD)(##\}\")",
+                             "$1sortedTaulaDadesUD$3"]
                            ];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 
-                $aTokIns = [['regexp' => "^<WIOCCL:FOREACH var=\"item\" array=\"\{##sortedTaulaDadesUF##\}\".*",
-                               'text' => "<WIOCCL:SET var=\"sortedTaulaDadesUF\" type=\"literal\" value=\"{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}\">\n",
+                $aTokIns = [['regexp' => "^<WIOCCL:FOREACH var=\"item\" array=\"\{##sortedTaulaDadesUD##\}\".*",
+                               'text' => "<WIOCCL:SET var=\"sortedTaulaDadesUD\" type=\"literal\" value=\"{#_ARRAY_SORT({##taulaDadesUD##},''ordreImparticio'')_#}\">\n",
                                'pos' => CommonUpgrader::ABANS,
                                'modif' => "m"],
-                            ['regexp' => "^<WIOCCL:FOREACH var=\"itemUf\" array=\"\{##sortedTaulaDadesUF##\}\".*",
-                               'text' => "<WIOCCL:SET var=\"sortedTaulaDadesUF\" type=\"literal\" value=\"{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}\">\n",
+                            ['regexp' => "^<WIOCCL:FOREACH var=\"itemUD\" array=\"\{##sortedTaulaDadesUD##\}\".*",
+                               'text' => "<WIOCCL:SET var=\"sortedTaulaDadesUD\" type=\"literal\" value=\"{#_ARRAY_SORT({##taulaDadesUD##},''ordreImparticio'')_#}\">\n",
                                'pos' => CommonUpgrader::ABANS,
                                'modif' => "m"],
 
-                            ['regexp' => "\|\s*UF\{##item\[unitat formativa\]##\}.*\{##item\[hores\]##}.*?\|\n<\/WIOCCL:FOREACH>",
+                            ['regexp' => "\|\s*UD\{##item\[unitat didàctica\]##\}.*\{##item\[hores\]##}.*?\|\n<\/WIOCCL:FOREACH>",
                                'text' => "\n</WIOCCL:SET>",
                                'pos' => CommonUpgrader::DESPRES,
                                'modif' => "m"],
 
-                            ['regexp' => "<\/WIOCCL:FOREACH>\n<\/WIOCCL:FOREACH>\n<\/WIOCCL:SET>",
+                            ['regexp' => "\(\{##item\[id\]##\}\)\n<\/WIOCCL:FOREACH>\n<\/WIOCCL:FOREACH>",
                                'text' => "\n</WIOCCL:SET>",
                                'pos' => CommonUpgrader::DESPRES,
                                'modif' => "m"],
                     
-                            ['regexp' => "<\/WIOCCL:SET>\n<\/WIOCCL:SUBSET>\n<\/WIOCCL:FOREACH>\n<\/WIOCCL:SET>",
-                               'text' => "\n</WIOCCL:SET>",
-                               'pos' => CommonUpgrader::DESPRES,
-                               'modif' => "m"],
-
                             ['regexp' => ":::\n\n<\/WIOCCL:FOREACH>\n<\/WIOCCL:SET>",
                                'text' => "\n</WIOCCL:SET>",
                                'pos' => CommonUpgrader::DESPRES,
