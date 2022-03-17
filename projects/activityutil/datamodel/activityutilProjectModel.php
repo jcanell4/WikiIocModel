@@ -26,7 +26,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         // obtenemos del configMain un array con los parámetros de envío para un fichero
         $data_list = current(parent::filesToExportList());
         $id = preg_replace('/:/', '_', $this->getId());
-        $remoteDir = empty($data_list['remoteDir']) ? $id : $data_list['remoteDir'];
+        $remoteDir = empty($data_list['remoteDir']) ? "$id/" : $data_list['remoteDir'];
 
         //obtenemos la lista de ficheros que incluye la propiedad booleana 'sendftp'
         $dataProject = $this->getCurrentDataProject();
@@ -41,7 +41,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                                       'local' => $data_list['local'],
                                       'action' => $data_list['action'],
                                       'remoteBase' => $data_list['remoteBase'],
-                                      'remoteDir' => "$remoteDir/"
+                                      'remoteDir' => "$remoteDir"
                                      ];
                 }
             }
@@ -58,15 +58,6 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         $dir = WikiGlobalConfig::getConf('mediadir')."/". preg_replace('/:/', '/', $this->getId());
         $files = $this->llistaDeEspaiDeNomsDeDocumentsDelProjecte();
         $file = "$dir/{$files[0]}";
-//        foreach (scandir($dir) as $f) {
-//            if (is_file("$dir/$f")) {
-//                $file = "$dir/$f";
-//                break;
-//            }
-//        }
-//        if ($file) {
-//            $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_timestamp", filemtime($file));
-//        }
         if (file_exists($file)) {
             $this->projectMetaDataQuery->setProjectSystemStateAttr("ftpsend_timestamp", filemtime($file));
         }
@@ -131,7 +122,10 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
             $fileNames = json_decode($dataProject['documents'], true);
             foreach ($metaDataFtpSender as $f) {
                 foreach ($fileNames as $file) {
-                    $ret[] = "${base}_${file['nom']}.{$f['type']}";
+                    if ($file['sendftp'] && ((is_bool($file['sendftp']) && $file['sendftp']===TRUE) ||
+                                             (is_string($file['sendftp']) && !in_array($file['sendftp'], ["false","no","0"])) )) {
+                        $ret[] = "${base}_${file['nom']}.{$f['type']}";
+                    }
                 }
             }
         }
