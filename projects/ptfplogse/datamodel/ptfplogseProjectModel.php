@@ -158,7 +158,7 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
         }
 
 
-        if ($taulaJT != NULL) {
+        if (!empty($taulaJT)) {
             $hiHaRecuperacio = FALSE;
             for ($i=0; !$hiHaRecuperacio && $i<count($taulaJT); $i++) {
                 $hiHaRecuperacio = $taulaJT[$i]["hiHaRecuperacio"];
@@ -168,7 +168,7 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
 
         $taulaEAF = IocCommon::toArrayThroughArrayOrJson($values["datesEAF"]);
 
-        if ($taulaEAF != NULL) {
+        if (!empty($taulaEAF)) {
             $hiHaSolucio = FALSE;
             $hiHaEnunciatRecuperacio = FALSE;
             for ($i=0; $i<count($taulaEAF); $i++) {
@@ -181,7 +181,7 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
 
         $taulaAC = IocCommon::toArrayThroughArrayOrJson($values["datesAC"]);
 
-        if ($taulaAC != NULL) {
+        if (!empty($taulaAC)) {
             $hiHaSolucio = FALSE;
             for ($i=0; !$hiHaSolucio && $i<count($taulaAC); $i++) {
                 $hiHaSolucio = $taulaAC[$i]["hiHaSolucio"];
@@ -189,7 +189,7 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
             $values["hiHaSolucioPerAC"] = $hiHaSolucio;
         }
 
-        if ($taulaCalendari != NULL && $taulaDadesUnitats != NULL) {
+        if (!empty($taulaCalendari) && !empty($taulaDadesUnitats)) {
             $hores = array();
             $hores[0] = 0;
             for ($i=0; $i<count($taulaCalendari);$i++) {
