@@ -238,15 +238,15 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
                 for ($i=0; $i<count($taulaDadesUF); $i++){
                     $idUf = intval($taulaDadesUF[$i]["unitat formativa"]);
                     if (isset($horesUF[$idUf])){
-                        $taulaDadesUF[$i]["hores"]=$horesUF[$idUf];
+                        $taulaDadesUF[$i]["hores"] = $horesUF[$idUf];
                     }
-                    if($taulaDadesUF[$i]["ponderació"]==$taulaDadesUF[$i]["hores"]){
-                        $taulaDadesUF[$i]["ponderació"]==0;
+                    if ($taulaDadesUF[$i]["ponderació"]==$taulaDadesUF[$i]["hores"]){
+                        $taulaDadesUF[$i]["ponderació"] = 0;
                     }
                 }
             }
 
-            $values["resultatsAprenentatge"]=$resultatsAprenentatge;
+            $values["resultatsAprenentatge"] = $resultatsAprenentatge;
             $values["durada"] = $horesUF[0];
             $values["taulaDadesUnitats"] = $taulaDadesUnitats;
             $values["taulaDadesUF"] = $taulaDadesUF;
