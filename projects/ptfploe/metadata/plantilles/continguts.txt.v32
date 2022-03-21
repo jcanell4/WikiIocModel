@@ -308,7 +308,7 @@ Es planteja a l'inici de cada UF. El seu objectiu és detectar i fer conscients 
 
 :###
 
-El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’alumne mitjançant l’AC. Està constatat que l’èxit en els estudis a distància està directament relacionat amb el ritme d’estudi continuat al llarg de tot el període acadèmic. Es recomana a tots els alumnes que segueixin l’avaluació contínua atès que forma part de la qualificació final.
+El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’alumne mitjançant l’AC. Està constatat que l’èxit en els estudis a distància està directament relacionat amb el ritme d’estudi continuat al llarg de tot el període acadèmic. Es recomana a tots els alumnes que segueixin l’avaluació contínua atès que forma part de la qualificació final. 
 
 L'AC es fa a distància i es concreta en:
 
@@ -331,8 +331,8 @@ Cal tenir en compte que:
   * L’AC té una ponderació en la **qualificació final** de la UF (vegeu l'apartat <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">"Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">"Qualificació final de cada UF"</WIOCCL:IF>).
   * Els EAC han de ser lliurats dins dels terminis fixats, el termini és **improrrogable**. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data de lliurament (consulteu dates clau a la taula :table:T05:).
   * El seguiment correcte de l’AC compromet l’alumne a fer les activitats proposades de manera individual, original i seguint les indicacions del professor. Els treballs o tasques d'AC que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
-  * En els EAC s'estableixen els criteris d'avaluació corresponents tant de contingut com de forma (per exemple, l'expressió lingüística i ortogràfica).
-  * El professor corregeix els EAC i emet una qualificació numèrica de l'escala entre el 0 i el 10, amb dos decimals.
+  * En els EAC s'estableixen els criteris d'avaluació corresponents tant de contingut com de forma (per exemple, l'expressió lingüística i ortogràfica). 
+  * El professor corregeix els EAC i emet una qualificació numèrica de l'escala entre el 0 i el 10, amb dos decimals. 
   * Per poder tenir en compte la qualificació de l’AC, s’ha d’aconseguir **a la PAF** una qualificació **mínima de {##notaMinimaPAF##},00 sense cap  arrodoniment** (PAF 1 o PAF 2).
   * La qualificació de l'AC es té en compte tant a la PAF 1 com a la PAF 2 del mateix semestre, però no es guarda d'un semestre a l'altre.
 
@@ -347,7 +347,7 @@ L'exercici proposa una activitat relacionada amb continguts procedimentals de la
 
   * És** no presencial**, es realitza a distància al llarg de la unitat formativa (consulteu  dates clau a les taules :table:T06: i :table:T07:).
   * La seva realització és **obligatòria** per aprovar  la unitat formativa.###:
-  * És de caràcter [##TODO: escolliu "individual" o "grupal" segons sigui el cas##].
+  * És de caràcter [##TODO: escolliu "individual" o "grupal" segons sigui el cas##]. 
   * :###Té una ponderació en la **qualificació final** <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">del mòdul (vegeu l'apartat "Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">de la UF (vegeu l'apartat "Qualificació final de cada UF"</WIOCCL:IF>).
 ###:
 
@@ -358,15 +358,15 @@ L'exercici proposa una activitat relacionada amb continguts procedimentals de la
 
 L'EAF ha de ser lliurat dins els terminis fixats; el termini de lliurament és improrrogable. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data prevista per al lliurament (consulteu dates clau a les taules :table:T06: i :table:T07:). Es recomana no esperar al darrer moment per evitar imprevistos.
 
-Els EAF que siguin una còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran automàticament suspesos amb qualificació de 0.
+Els EAF que siguin una còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran automàticament suspesos amb qualificació de 0. 
 
-Com que és part de l'avaluació final, l'EAF té dues convocatòries cada semestre:  EAF i recuperació EAF. L'alumne pot:
+Com que és part de l'avaluació final, l'EAF té dues convocatòries cada semestre:  EAF i recuperació EAF. L'alumne pot: 
 
   * Presentar-se a l'EAF i, en cas de no superar-lo, presentar-se a la recuperació de l'EAF del mateix semestre. En cap cas es pot presentar a la recuperació de l'EAF per pujar nota tenint l'EAF superat.
 ###:
   * Presentar-se directament a la recuperació de l'EAF.[##TODO: Elimineu la frase anterior si ho creieu convenient. No elimineu aqust TODO per disposar d'una referencia per a futurs canvis##]
 :###
-La convocatòria de l'EAF s'exhaureix tant si l'estudiant s'hi presenta com si no (excepte que l'alumne hagi anul·lat la matrícula). La convocatòria de recuperació de l'EAF només s'exhaureix si l'estudiant s'hi presenta.
+La convocatòria de l'EAF s'exhaureix tant si l'estudiant s'hi presenta com si no (excepte que l'alumne hagi anul·lat la matrícula). La convocatòria de recuperació de l'EAF només s'exhaureix si l'estudiant s'hi presenta. 
 
 <WIOCCL:IF condition="{##treballEquipEAF##}==true">
 En el cas dels EAF establerts amb metodologia de treball en equip, l'estudiant té l'obligació de presentar-se a la convocatòria de l'EAF i només opta a presentar-se a l'EAF de recuperació quan:
@@ -388,7 +388,7 @@ Jornada presencial procedimental de la unitat formativa:
 
   * És presencial.
   * És obligatòria per aprovar la unitat formativa.
-  * Es fa al llarg del semestre (consulteu dates clau  a les taules :table:T08: i :table:T09:).
+  * Es fa al llarg del semestre (consulteu dates clau  a les taules :table:T08: i :table:T09:). 
   * Es confirma la identitat de l'alumne que la fa. ###:
   * Té una durada màxima de [##TODO: X dies. Cada dia té una durada màxima de X h. (si ho considereu oportú)##].
   * :###S'avalua numèricament entre el 0 i el 10, amb dos decimals.

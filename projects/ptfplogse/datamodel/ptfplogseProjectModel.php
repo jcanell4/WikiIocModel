@@ -55,6 +55,8 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
         $values = $isArray?$data:json_decode($data, true);
         $originalValues = $isArray?$originalDataKeyValue:json_decode($originalDataKeyValue, true);
 
+        $taulaDadesUnitats = (is_array($values["taulaDadesUD"])) ? $values["taulaDadesUD"] : json_decode($values["taulaDadesUD"], true);
+        $originalTaulaDadesUnitats = (is_array($originalValues["taulaDadesUD"])) ? $originalValues["taulaDadesUD"] : json_decode($originalValues["taulaDadesUD"], true);
         $dadesQualificacio = (is_array($values["dadesQualificacio"])) ? $values["dadesQualificacio"] : json_decode($values["dadesQualificacio"], true);
         $originalDadesQualificacio = (is_array($originalValues["dadesQualificacio"])) ? $originalValues["dadesQualificacio"] : json_decode($originalValues["dadesQualificacio"], true);
         $calendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
@@ -124,6 +126,13 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
                }
             }
             $values["calendari"] = $calendari;
+        }
+        
+        if(!empty($taulaDadesUnitats)){
+            foreach ($taulaDadesUnitats as $key => $value) {
+                $taulaDadesUnitats[$key]["ordreImparticio"] = $originalTaulaDadesUnitats[$key]["ordreImparticio"];
+            }
+            $values["taulaDadesUD"] = $taulaDadesUnitats;
         }
         
         switch ($avaluacioInicial_prg){

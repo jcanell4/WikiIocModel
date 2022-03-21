@@ -50,6 +50,8 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         $values = $isArray?$data:json_decode($data, true);
         $originalValues = $isArray?$originalDataKeyValue:json_decode($originalDataKeyValue, true);
 
+        $ufTable = (is_array($values["taulaDadesUF"])) ? $values["taulaDadesUF"] : json_decode($values["taulaDadesUF"], true);
+        $originalufTable = (is_array($originalValues["taulaDadesUF"])) ? $originalValues["taulaDadesUF"] : json_decode($originalValues["taulaDadesUF"], true);
         $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
         $originalTaulaDadesUnitats = (is_array($originalValues["taulaDadesUnitats"])) ? $originalValues["taulaDadesUnitats"] : json_decode($originalValues["taulaDadesUnitats"], true);
         $resultatsAprenentatge = (is_array($values["resultatsAprenentatge"])) ? $values["resultatsAprenentatge"] : json_decode($values["resultatsAprenentatge"], true);
@@ -133,14 +135,15 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         
         
         
-        $ufTable = $values["taulaDadesUF"];
-        if(!is_array($ufTable)){
-            $ufTable = json_decode($ufTable, TRUE);
-        }
+//        $ufTable = $values["taulaDadesUF"];
+//        if(!is_array($ufTable)){
+//            $ufTable = json_decode($ufTable, TRUE);
+//        }
         foreach ($ufTable as $key => $value) {
             if($ufTable[$key]["ponderació"]=="0"){
                 $ufTable[$key]["ponderació"]=$ufTable[$key]["hores"];
             }
+            $ufTable[$key]["ordreImparticio"] = $originalufTable[$key]["ordreImparticio"];
         }
         
         $nAvaluacioInicial=0;
