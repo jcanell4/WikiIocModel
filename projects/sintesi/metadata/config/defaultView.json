@@ -95,13 +95,12 @@
                 },
                 "data": {
                     "ns": "",
-                    "buttonLabel": "Cercar",
                     "fieldName": "nsProgramacio",
-                    "dialogTitle": "Cercar Programacio",
-                    "dialogButtonLabel": "Afegir Programacio",
+                    "dialogTitle": "Seleccionar Programació",
+                    "dialogMessage": "Selecciona una programació",
+                    "dialogButtonLabel": "Afegir Programació",
                     "searchDataUrl": "lib/exe/ioc_ajaxrest.php/ns_tree_rest/",
-                    "projectType": ["prgfploe", "prgfplogse"],
-                    "fieldId": "ns"
+                    "projectType": ["prgfploe", "prgfplogse"]
                 }
             }
         },

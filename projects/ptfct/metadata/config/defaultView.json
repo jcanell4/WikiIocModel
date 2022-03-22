@@ -1,68 +1,87 @@
 {
-  "definition": {
-    "n_columns": 12,
-    "n_rows": 10,
-    "chars_column": 10,
-    "rows_row": 1
-  },
-  "groups": {
-    "dadesBasiques": {
-      "parent": "",
-      "label":"Dades bàsiques",
-      "n_columns": 12,
-      "n_rows": 1,
-      "frame": true,
-      "config":{
-        "collapsable":true,
-        "collapsed":false
-      }
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10,
+        "rows_row": 1
     },
-    "authorship": {
-      "parent": "",
-      "label": "Autoria",
-      "n_columns": 12,
-      "frame": true,
-      "config":{
-        "collapsable":true,
-        "collapsed":false
-      }
-    }
-  },
-  "fields": {
-    "tipusCicle":{
-      "type":"select",
-      "n_columns": 3,
-      "label": "LOE o LOGSE (tipusCicle)",
-      "group": "dadesBasiques",
-      "props": {
-        "required": true,
-        "title" : "indiqueu si es tracta d'un cicle LOE o LOGSE."
-      },
-      "config":{
-        "options":[
-          {"value":"LOE"},
-          {"value":"LOGSE"}
-        ]
-      }
-    },
-    "moodleCourseId": {
-      "label" : "Identificador del curs a moodle (moodleCourseId)",
-      "n_columns": 3,
-      "group": "dadesBasiques",
-      "props": {
-        "required": true,
-        "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
-      }
-    },      
-      "nsProgramacio": {
-        "label" : "Programació importada (nsProgramacio)",
-        "n_columns": 6,
-        "group": "dadesBasiques",
-        "props": {
-          "required": true,
-          "title": "indiqueu la programació importada"
+    "groups": {
+        "dadesBasiques": {
+            "parent": "",
+            "label":"Dades bàsiques",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+        "authorship": {
+            "parent": "",
+            "label": "Autoria",
+            "n_columns": 12,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
         }
-      },
+    },
+    "fields": {
+        "tipusCicle":{
+            "type":"select",
+            "n_columns": 3,
+            "label": "LOE o LOGSE (tipusCicle)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title" : "indiqueu si es tracta d'un cicle LOE o LOGSE."
+            },
+            "config":{
+                "options":[
+                    {"value":"LOE"},
+                    {"value":"LOGSE"}
+                ]
+            }
+        },
+        "moodleCourseId": {
+            "label" : "Identificador del curs a moodle (moodleCourseId)",
+            "n_columns": 3,
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
+            }
+        },
+        "nsProgramacio": {
+            "type": "amd",
+            "label": "Programació importada (nsProgramacio)",
+            "n_columns": 5,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "indiqueu la programació importada"
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}},
+                                    {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]
+                },
+                "class" : {
+                    "edit": "IocImportTree",
+                    "view": "IocImportSelectedItem"
+                },
+                "data": {
+                    "ns": "",
+                    "fieldName": "nsProgramacio",
+                    "dialogTitle": "Seleccionar Programació",
+                    "dialogMessage": "Selecciona una programació",
+                    "dialogButtonLabel": "Afegir Programació",
+                    "searchDataUrl": "lib/exe/ioc_ajaxrest.php/ns_tree_rest/",
+                    "projectType": ["prgfploe", "prgfplogse"]
+                }
+            }
+        },
     "cicle": {
       "label" : "Nom del cicle (cicle)",
       "n_columns": 9,

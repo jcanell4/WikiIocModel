@@ -50,33 +50,52 @@
         }        
     },
     "fields": {
-      "tipusBlocCredit":{
-        "type":"select",
-        "n_columns": 5,
-        "label": "Bloc o crèdit (tipusBlocCredit)",
-        "group": "main",
-        "props": {
-          "required": true,
-          "title" : "indiqueu si es tracta d'un bloc o d'un crèdit."
+        "tipusBlocCredit":{
+            "type":"select",
+            "n_columns": 5,
+            "label": "Bloc o crèdit (tipusBlocCredit)",
+            "group": "main",
+            "props": {
+                "required": true,
+                "title" : "indiqueu si es tracta d'un bloc o d'un crèdit."
+            },
+            "config":{
+                "options":[
+                    {"value":"crèdit"},
+                    {"value":"1r. bloc"},
+                    {"value":"2n. bloc"},
+                    {"value":"3r. bloc"}
+                ]
+            }
         },
-        "config":{
-            "options":[
-                {"value":"crèdit"},
-                {"value":"1r. bloc"}, 
-                {"value":"2n. bloc"},
-                {"value":"3r. bloc"}
-            ]
-        }
-      },
-      "nsProgramacio": {
-        "label" : "Programació importada (nsProgramacio)",
-        "n_columns": 7,
-        "group": "main",
-        "props": {
-          "required": true,
-          "title": "indiqueu la programació importada"
-        }
-      },
+        "nsProgramacio": {
+            "type": "amd",
+            "label": "Programació importada (nsProgramacio)",
+            "n_columns": 5,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "indiqueu la programació importada"
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}},
+                                    {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]
+                },
+                "class" : {
+                    "edit": "IocImportTree",
+                    "view": "IocImportSelectedItem"
+                },
+                "data": {
+                    "ns": "",
+                    "fieldName": "nsProgramacio",
+                    "dialogTitle": "Seleccionar Programació",
+                    "dialogMessage": "Selecciona una programació",
+                    "dialogButtonLabel": "Afegir Programació",
+                    "searchDataUrl": "lib/exe/ioc_ajaxrest.php/ns_tree_rest/",
+                    "projectType": ["prgfploe", "prgfplogse"]
+                }
+            }
+        },
       "moodleCourseId": {
         "label" : "Identificador del curs a moodle (moodleCourseId)",
         "n_columns": 6,
