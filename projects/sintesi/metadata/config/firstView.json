@@ -77,7 +77,7 @@
       },      
       "cicle": {
         "label" : "Nom del cicle (cicle)",
-        "n_columns": 8,
+        "n_columns": 4,
         "group": "dadesBasiques",
         "props": {
           "required": true,
@@ -93,6 +93,34 @@
           "title": "Indiqueu la durada del cicle en hores"
         }
       },
+        "nsProgramacio": {
+            "type": "amd",
+            "label": "Programació importada (nsProgramacio)",
+            "n_columns": 4,
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "indiqueu la programació importada"
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}},
+                                    {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]
+                },
+                "class" : {
+                    "edit": "IocImportTree",
+                    "view": "IocImportSelectedItem"
+                },
+                "data": {
+                    "ns": "",
+                    "fieldName": "nsProgramacio",
+                    "dialogTitle": "Seleccionar Programació",
+                    "dialogMessage": "Selecciona una programació",
+                    "dialogButtonLabel": "Afegir Programació",
+                    "searchDataUrl": "lib/exe/ioc_ajaxrest.php/ns_tree_rest/",
+                    "projectType": ["prgfploe", "prgfplogse"]
+                }
+            }
+        },
       "modulId": {
         "label" : "Codi del mòdul (modulId)",
         "n_columns": 3,

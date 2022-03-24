@@ -153,6 +153,34 @@
                 }
             }
         },
+        "nsProgramacio": {
+            "type": "amd",
+            "label": "Programació importada (nsProgramacio)",
+            "n_columns": 12,
+            "group": "authorship",
+            "props": {
+                "required": true,
+                "title": "indiqueu la programació importada"
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}},
+                                    {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]
+                },
+                "class" : {
+                    "edit": "IocImportTree",
+                    "view": "IocImportSelectedItem"
+                },
+                "data": {
+                    "ns": "",
+                    "fieldName": "nsProgramacio",
+                    "dialogTitle": "Seleccionar Programació",
+                    "dialogMessage": "Selecciona una programació",
+                    "dialogButtonLabel": "Afegir Programació",
+                    "searchDataUrl": "lib/exe/ioc_ajaxrest.php/ns_tree_rest/",
+                    "projectType": ["prgfploe", "prgfplogse"]
+                }
+            }
+        },
         "fitxercontinguts": {
             "type": "hidden"
         }
