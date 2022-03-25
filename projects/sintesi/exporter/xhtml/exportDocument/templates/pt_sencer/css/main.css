@@ -39,6 +39,14 @@ h4 {
     font-size: 19px;
 }
 
+div.iocfigurec > ul {
+    list-style-type: none;
+}
+
+div.iocfigurec > ul > li {
+    margin-left: -20px;
+}
+
 .container {
     max-width: 94%;
     margin: 0 auto;

@@ -44,6 +44,14 @@ h4 {
     margin: 0 auto;
 }
 
+div.iocfigurec > ul {
+    list-style-type: none;
+}
+
+div.iocfigurec > ul > li {
+    margin-left: -20px;
+}
+
 p.formula {
     text-align: center;
     font-weight: 700;
