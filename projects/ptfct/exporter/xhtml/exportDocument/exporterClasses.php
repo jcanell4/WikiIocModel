@@ -49,10 +49,12 @@ class exportDocument extends renderHtmlDocument {
                 $allPathTemplate = $this->cfgExport->rendererPath . "/$pathTemplate";
                 $this->addFilesToZip($zip, $allPathTemplate, "", "img");
                 $zip->addFile($allPathTemplate."/main.css", "main.css");
-//                $this->addFilesToZip($zip, WIKI_LIB_IOC_MODEL."exporter/xhtml", "pt_sencer/", "css");
                 $this->addDefaultCssFilesToZip($zip, "pt_sencer/");
                 $this->addFilesToZip($zip, $allPathTemplate, "", "pt_sencer", TRUE);
                 $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/pt_sencer/pt.tpl");
+                //cal modificar la ruta dels arxius gràfics
+                $ptSencer = preg_replace("/(<img class=.media. src=.)(img.*?\.gif)/", "$1../$2", $ptSencer);
+                $ptSencer = preg_replace("/(<img.*? src=.)(img\/)(.*?\/)*(.*?)(\.[png|jpg])/", "$1../$2$4$5", $ptSencer);
                 $zip->addFromString('/pt_sencer/pt.html', $ptSencer);
 
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");

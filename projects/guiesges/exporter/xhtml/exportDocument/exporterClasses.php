@@ -59,6 +59,9 @@ class exportDocument extends renderHtmlDocument {
                 $this->addFilesToZip($zip, $allPathTemplate, "", "ge_sencera", TRUE);
                 $this->addDefaultCssFilesToZip($zip, "ge_sencera/");
                 $ptSencer = $this->replaceInTemplate($data, "$pathTemplate/ge_sencera/ge.tpl");
+                //cal modificar la ruta dels arxius gràfics
+                $ptSencer = preg_replace("/(<img class=.media. src=.)(img.*?\.gif)/", "$1../$2", $ptSencer);
+                $ptSencer = preg_replace("/(<img.*? src=.)(img\/)(.*?\/)*(.*?)(\.[png|jpg])/", "$1../$2$4$5", $ptSencer);
                 $zip->addFromString('/ge_sencera/ge.html', $ptSencer);
 
                 $trimestre = ($data["trimestre"]==1?"Tardor ":($data["trimestre"]==2?"Hivern ":"Primavera ")).date("Y");
