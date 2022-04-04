@@ -8,14 +8,8 @@ class ViewProjectAction extends BasicViewUpdatableProjectAction{
     protected function preResponseProcess() {
         parent::preResponseProcess();
 
-        // TODO: Revisar si hi ha alguna manera de fer-ho sense utilitzar la global
-        // A la global tenim USERINFO:
-        //      name: "Admin"
-        //      mail: 2jcanell4@ioc.cat"
-        //      grps [] = ["admin", "user"]
-//        global $USERINFO;
+
         $userInfo = WikiIocInfoManager::getInfo("userinfo");
-//        $user_groups = $USERINFO['grps'];
         $user_groups = $userInfo['grps'];
 
         $model = $this->getModel();
