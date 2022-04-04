@@ -74,7 +74,10 @@
                             {
                                 "name": "parameters",
                                 "field": "parameters",
-                                "editable": true
+                                "editable": true,
+                                "config": {
+                                    "test": true
+                                }
                             }
                         ]
                     }
