@@ -69,7 +69,6 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
      * @return string HTML per a les metadades
      */
     public function get_ftpsend_metadata($useSavedTime=TRUE) {
-        $connData = $this->getFtpConfigData();
         $mdFtpSender = $this->getMetaDataFtpSender();
         $fileNames = $this->_constructArrayFileNames($this->id, $mdFtpSender['files']);
 
@@ -83,6 +82,8 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
 
         if ($fileexists && (!$useSavedTime || ($savedtime === $filetime))) {
             foreach ($mdFtpSender['files'] as $objFile) {
+                $ftpId = (empty($objFile[ProjectKeys::KEY_FTPID])) ? $mdFtpSender[ProjectKeys::KEY_FTPID] : $objFile[ProjectKeys::KEY_FTPID];
+                $connData = $this->getFtpConfigData($ftpId);
                 $index = (empty($objFile['remoteIndex'])) ? $mdFtpSender['remoteIndex'] : $objFile['remoteIndex'];
                 $rDir = (empty($objFile['remoteDir'])) ? (empty($mdFtpSender['remoteDir'])) ? $connData["remoteDir"] : $mdFtpSender['remoteDir'] : $objFile['remoteDir'];
                 $unzip = in_array(1, $objFile['action']);  //es una action del tipo unzip
