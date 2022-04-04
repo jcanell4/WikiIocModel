@@ -1,0 +1,8 @@
+{
+  "views": {
+    "default" : "defaultView",
+    "groups": {
+      "admin": "allData"
+    }
+  }
+}

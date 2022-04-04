@@ -19,4 +19,9 @@ class configurationProjectModel extends AbstractProjectModel{
         //
     }
 
+    public function getMetaDataActionViews() {
+        return $this->projectMetaDataQuery->getMetaDataActionViews();
+    }
+
+
 }
