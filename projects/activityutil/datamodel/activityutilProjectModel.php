@@ -120,11 +120,13 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
             $base = str_replace(":", "_", $id);
             $dataProject = $this->getCurrentDataProject(FALSE, FALSE);
             $fileNames = json_decode($dataProject['documents'], true);
-            foreach ($metaDataFtpSender as $f) {
-                foreach ($fileNames as $file) {
-                    if ($file['sendftp'] && ((is_bool($file['sendftp']) && $file['sendftp']===TRUE) ||
-                                             (is_string($file['sendftp']) && !in_array($file['sendftp'], ["false","no","0"])) )) {
-                        $ret[] = "${base}_${file['nom']}.{$f['type']}";
+            if (!empty($fileNames)) {
+                foreach ($metaDataFtpSender as $f) {
+                    foreach ($fileNames as $file) {
+                        if ($file['sendftp'] && ((is_bool($file['sendftp']) && $file['sendftp']===TRUE) ||
+                                                 (is_string($file['sendftp']) && !in_array($file['sendftp'], ["false","no","0"])) )) {
+                            $ret[] = "${base}_${file['nom']}.{$f['type']}";
+                        }
                     }
                 }
             }

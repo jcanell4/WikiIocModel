@@ -17,29 +17,6 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         return $ret['fitxercontinguts'];
     }
 
-//    public function generateProject() {
-//        $ret = array();
-//        //0. Obtiene los datos del proyecto
-//        $ret = $this->getData();   //obtiene la estructura y el contenido del proyecto
-//
-//        //2. Establece la marca de 'proyecto generado'
-//        $ret[ProjectKeys::KEY_GENERATED] = $this->getProjectMetaDataQuery()->setProjectGenerated();
-//
-//        if ($ret[ProjectKeys::KEY_GENERATED]) {
-//            try {
-//                //3. Otorga, a las Persons, permisos sobre el directorio de proyecto y añade enlace a dreceres
-//                $params = $this->buildParamsToPersons($ret['projectMetaData'], NULL);
-//                $this->modifyACLPageAndShortcutToPerson($params);
-//            }
-//            catch (Exception $e) {
-//                $ret[ProjectKeys::KEY_GENERATED] = FALSE;
-//                $this->getProjectMetaDataQuery()->setProjectSystemStateAttr("generated", FALSE);
-//            }
-//        }
-//
-//        return $ret;
-//    }
-
     public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
         if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
             return parent::updateCalculatedFieldsOnRead($data, $subset);
@@ -47,26 +24,25 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         
         $data = parent::updateCalculatedFieldsOnRead($data, $subset);
         $isArray = is_array($data);
-        $values = $isArray?$data:json_decode($data, true);
-        $originalValues = $isArray?$originalDataKeyValue:json_decode($originalDataKeyValue, true);
+        $values = $isArray ? $data : json_decode($data, true);
+        $originalValues = $isArray ? $originalDataKeyValue : json_decode($originalDataKeyValue, true);
 
-        $ufTable = (is_array($values["taulaDadesUF"])) ? $values["taulaDadesUF"] : json_decode($values["taulaDadesUF"], true);
-        $originalufTable = (is_array($originalValues["taulaDadesUF"])) ? $originalValues["taulaDadesUF"] : json_decode($originalValues["taulaDadesUF"], true);
-        $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
-        $originalTaulaDadesUnitats = (is_array($originalValues["taulaDadesUnitats"])) ? $originalValues["taulaDadesUnitats"] : json_decode($originalValues["taulaDadesUnitats"], true);
-        $resultatsAprenentatge = (is_array($values["resultatsAprenentatge"])) ? $values["resultatsAprenentatge"] : json_decode($values["resultatsAprenentatge"], true);
-        $originalResultatsAprenentatge = (is_array($originalValues["resultatsAprenentatge"])) ? $originalValues["resultatsAprenentatge"] : json_decode($originalValues["resultatsAprenentatge"], true);
-        $dadesQualificacioUFs = (is_array($values["dadesQualificacioUFs"])) ? $values["dadesQualificacioUFs"] : json_decode($values["dadesQualificacioUFs"], true);
-        $originalDadesQualificacioUFs = (is_array($originalValues["dadesQualificacioUFs"])) ? $originalValues["dadesQualificacioUFs"] : json_decode($originalValues["dadesQualificacioUFs"], true);
+        $ufTable = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUF"]);
+        $originalufTable = IocCommon::toArrayThroughArrayOrJson($originalValues["taulaDadesUF"]);
+        $taulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUnitats"]);
+        $originalTaulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($originalValues["taulaDadesUnitats"]);
+        $resultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($values["resultatsAprenentatge"]);
+        $originalResultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($originalValues["resultatsAprenentatge"]);
+        $dadesQualificacioUFs = IocCommon::toArrayThroughArrayOrJson($values["dadesQualificacioUFs"]);
+        $originalDadesQualificacioUFs = IocCommon::toArrayThroughArrayOrJson($originalValues["dadesQualificacioUFs"]);
         $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]);
         if($values["nsProgramacio"]){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
             if(!is_array($dataPrg)){
                 $dataPrg = json_decode($dataPrg, true);
             }
-            $taulaDadesNF = (is_array($dataPrg["taulaDadesNuclisFormatius"])) ? $dataPrg["taulaDadesNuclisFormatius"] : json_decode($dataPrg["taulaDadesNuclisFormatius"], true);
-
-            $taulaDadesUFPrg = (is_array($dataPrg["taulaDadesUF"])) ? $dataPrg["taulaDadesUF"] : json_decode($dataPrg["taulaDadesUF"], true);
+            $taulaDadesNF = IocCommon::toArrayThroughArrayOrJson($dataPrg["taulaDadesNuclisFormatius"]);
+            $taulaDadesUFPrg = IocCommon::toArrayThroughArrayOrJson($dataPrg["taulaDadesUF"]);
             $taulaDadesNFFiltrada = array();
             if (!empty($taulaDadesNF)) {
                 foreach ($taulaDadesNF as $row) {
@@ -133,12 +109,6 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         }
         $values["dadesQualificacioUFs"] = $dadesQualificacioUFs;
         
-        
-        
-//        $ufTable = $values["taulaDadesUF"];
-//        if(!is_array($ufTable)){
-//            $ufTable = json_decode($ufTable, TRUE);
-//        }
         foreach ($ufTable as $key => $value) {
             if($ufTable[$key]["ponderació"]=="0"){
                 $ufTable[$key]["ponderació"]=$ufTable[$key]["hores"];
@@ -181,18 +151,18 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
 
-        $taulaDadesUF = (is_array($values["taulaDadesUF"])) ? $values["taulaDadesUF"] : json_decode($values["taulaDadesUF"], true);
-        $taulaDadesUnitats = (is_array($values["taulaDadesUnitats"])) ? $values["taulaDadesUnitats"] : json_decode($values["taulaDadesUnitats"], true);
-        $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
-        $resultatsAprenentatge = (is_array($values["resultatsAprenentatge"])) ? $values["resultatsAprenentatge"] : json_decode($values["resultatsAprenentatge"], true);
+        $taulaDadesUF = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUF"]);
+        $taulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUnitats"]);
+        $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);
+        $resultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($values["resultatsAprenentatge"]);
 
         if (!empty($values["nsProgramacio"])){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
             if(!is_array($dataPrg)){
                 $dataPrg = json_decode($dataPrg, true);
             }
-            $taulaDadesNF = (is_array($dataPrg["taulaDadesNuclisFormatius"])) ? $dataPrg["taulaDadesNuclisFormatius"] : json_decode($dataPrg["taulaDadesNuclisFormatius"], true);
-            $taulaDadesUFPrg = (is_array($dataPrg["taulaDadesUF"])) ? $dataPrg["taulaDadesUF"] : json_decode($dataPrg["taulaDadesUF"], true);
+            $taulaDadesNF = IocCommon::toArrayThroughArrayOrJson($dataPrg["taulaDadesNuclisFormatius"]);
+            $taulaDadesUFPrg = IocCommon::toArrayThroughArrayOrJson($dataPrg["taulaDadesUF"]);
             $taulaDadesNFFiltrada = array();
             $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]);
             foreach ($taulaDadesNF as $row) {
@@ -201,7 +171,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
                     $taulaDadesNFFiltrada[] = $row;
                 }
             }
-            $resultatsAprenentatgePrg = (is_array($dataPrg["resultatsAprenentatge"])) ? $dataPrg["resultatsAprenentatge"] : json_decode($dataPrg["resultatsAprenentatge"], true);
+            $resultatsAprenentatgePrg = IocCommon::toArrayThroughArrayOrJson($dataPrg["resultatsAprenentatge"]);
             $resultatsAprenentatgeFiltrats = array();
             foreach ($resultatsAprenentatgePrg as $row) {
                 $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["uf"]);
@@ -222,7 +192,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             }
         }
         
-        if ($taulaCalendari!=NULL && $taulaDadesUnitats!=NULL){
+        if (!empty($taulaCalendari) && !empty($taulaDadesUnitats)){
             $hores = array();
             for ($i=0; $i<count($taulaCalendari); $i++){
                 $idU = intval($taulaCalendari[$i]["unitat"]);
@@ -264,27 +234,27 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
                 }
             }
 
-            if ($taulaDadesUF!=NULL){
+            if (!empty($taulaDadesUF)){
                 for ($i=0; $i<count($taulaDadesUF); $i++){
                     $idUf = intval($taulaDadesUF[$i]["unitat formativa"]);
                     if (isset($horesUF[$idUf])){
-                        $taulaDadesUF[$i]["hores"]=$horesUF[$idUf];
+                        $taulaDadesUF[$i]["hores"] = $horesUF[$idUf];
                     }
-                    if($taulaDadesUF[$i]["ponderació"]==$taulaDadesUF[$i]["hores"]){
-                        $taulaDadesUF[$i]["ponderació"]==0;
+                    if ($taulaDadesUF[$i]["ponderació"]==$taulaDadesUF[$i]["hores"]){
+                        $taulaDadesUF[$i]["ponderació"] = 0;
                     }
                 }
             }
 
-            $values["resultatsAprenentatge"]=$resultatsAprenentatge;
+            $values["resultatsAprenentatge"] = $resultatsAprenentatge;
             $values["durada"] = $horesUF[0];
             $values["taulaDadesUnitats"] = $taulaDadesUnitats;
             $values["taulaDadesUF"] = $taulaDadesUF;
         }
 
-        $taulaJT = (is_array($values["datesJT"])) ? $values["datesJT"] : json_decode($values["datesJT"], true);
+        $taulaJT = IocCommon::toArrayThroughArrayOrJson($values["datesJT"]);
 
-        if ($taulaJT!=NULL){
+        if (!empty($taulaJT)){
             $hiHaRecuperacio = FALSE;
             for ($i=0; !$hiHaRecuperacio && $i<count($taulaJT); $i++){
                 $hiHaRecuperacio = $taulaJT[$i]["hiHaRecuperacio"];
@@ -292,9 +262,9 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             $values["hiHaRecuperacioPerJT"] = $hiHaRecuperacio;
         }
 
-        $taulaEAF = (is_array($values["datesEAF"])) ? $values["datesEAF"] : json_decode($values["datesEAF"], true);
+        $taulaEAF = IocCommon::toArrayThroughArrayOrJson($values["datesEAF"]);
 
-        if ($taulaEAF!=NULL){
+        if (!empty($taulaEAF)){
             $hiHaSolucio = FALSE;
             $hiHaEnunciatRecuperacio = FALSE;
             for ($i=0; $i<count($taulaEAF); $i++){
@@ -306,9 +276,9 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             $values["hiHaEnunciatRecuperacioPerEAF"] = $hiHaEnunciatRecuperacio === 0 ? FALSE : TRUE ;
         }
 
-        $taulaAC = (is_array($values["datesAC"])) ? $values["datesAC"] : json_decode($values["datesAC"], true);
+        $taulaAC = IocCommon::toArrayThroughArrayOrJson($values["datesAC"]);
 
-        if ($taulaAC!=NULL){
+        if (!empty($taulaAC)){
             $hiHaSolucio = FALSE;
             for ($i=0; !$hiHaSolucio && $i<count($taulaAC); $i++){
                 $hiHaSolucio = $taulaAC[$i]["hiHaSolucio"];
@@ -321,25 +291,25 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
     }
     
     private function getRowFromField($taula, $field, $value, $fromPosition=0, $defaultFromPossition=false){
-        $trobat=false;
+        $trobat = false;
         $max = count($taula);
-        if($fromPosition<$max){
-            $i=$fromPosition;
-            do{
-                $trobat=$taula[$i][$field]==$value;
-                if($taula[$i][$field]==$value){
+        if ($fromPosition < $max){
+            $i = $fromPosition;
+            do {
+                $trobat = $taula[$i][$field] == $value;
+                if ($taula[$i][$field] == $value){
                     $trobat = true;
                 }else{
                     $i = ($i+1)%$max;
                 }
-            }while ($i!=$fromPosition && !$trobat);
+            }while ($i != $fromPosition && !$trobat);
         }
-        if($defaultFromPossition){
+        if ($defaultFromPossition){
             $default = $taula[$fromPosition];
         }else{
             $default = false;
         }
-        return $trobat?$taula[$i]:$false;
+        return $trobat ? $taula[$i] : $default;
     }
     
     private function getBlocIdFromTaulaUF($taulaUF, $uf){
@@ -445,7 +415,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
                         "title"=>sprintf("%s - enunciat recuperació %s", $data["modulId"], $item['id']),
                         "date"=>$item["enunciat recuparació"]
                     ];
-                    $dataEnunciaRectOld = $item["enunciat recuparació"];
+                    $dataEnunciatRecOld = $item["enunciat recuparació"];
                 }
                 if($item["hiHaSolucio"] && $dataSolucioRecOld!=$item["solució recuperació"]){
                     $ret[] = [
