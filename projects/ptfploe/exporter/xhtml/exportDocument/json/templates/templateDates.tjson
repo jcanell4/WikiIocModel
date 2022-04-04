@@ -1,0 +1,9 @@
+{
+<WIOCCL:FOREACH var="item" array="{##calendari##}"> 
+    "{##modulId##}_UF{#_OBJECT_GET_VALUE(unitat formativa,{#_SEARCH_ROW({##item[unitat]##},{##taulaDadesUnitats##},unitat,0)_#})_#}_U{##item[unitat]##}_L{##item[periode]##}": {
+        "dinici": {"selector":"#dataInici", "type":"text", "value":"{##item[inici]##}"},
+        "dfinal": {"selector":"#dataFinal", "type":"text", "value":"{##item[final]##}"}
+    }
+</WIOCCL:FOREACH>
+}
+
