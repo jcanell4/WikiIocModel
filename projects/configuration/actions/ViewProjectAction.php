@@ -34,7 +34,7 @@ class ViewProjectAction extends BasicViewUpdatableProjectAction{
 
     protected function runAction() {
 
-        if($this->getModel()->getViewConfigKey()===ProjectKeys::KEY_VIEW_DEFAULTVIEW){
+        if($this->getModel()->getViewConfigKey()===ProjectKeys::KEY_VIEW_DEFAULTVIEW && $this->view){
             $this->getModel()->setViewConfigKey($this->view);
         }
         $response = parent::runAction();
