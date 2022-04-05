@@ -20,7 +20,7 @@
             "main": {
                 "files": {
                     "Floe1": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"},
-                    "jsonRep": {"local":"mediadir", "type":"json", "action":[0], "sf_remoteDir": "replacedata/", "ftpId": "replace_data_fp_pt"}
+                    "jsonRep": {"local":"mediadir", "type":"json", "action":[0], "remoteDir": "replacedata/", "ftpId": "replace_data_fp_pt"}
                 },
                 "ftpId": "pla_treball"
             }
