@@ -57,6 +57,10 @@ class exportDocument extends renderHtmlDocument {
                 $ptSencer = preg_replace("/(<img.*? src=.)(img\/)(.*?\/)*(.*?)(\.[png|jpg])/", "$1../$2$4$5", $ptSencer);
                 $zip->addFromString('pt_sencer/pt.html', $ptSencer);
 
+                $jsonDates = $this->replaceInJsonTemplate($data, "$pathTemplate/../json/templates/templateDates.tjson");
+                $jsonFile = WikiGlobalConfig::getConf('mediadir')."/".str_replace(':','/',$this->cfgExport->id)."/$output_filename.json";
+                file_put_contents($jsonFile, $jsonDates);
+
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
                 $cicle = $data["cicle"]==="Indiqueu el cicle"?"":html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
                 $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
@@ -130,7 +134,6 @@ class exportDocument extends renderHtmlDocument {
     }
 
     private function attachMediaFiles(&$zip) {
-        global $conf;
         //Attach media files
         foreach(array_unique($this->cfgExport->media_files) as $f){
             resolve_mediaid(getNS($f), $f, $exists);
