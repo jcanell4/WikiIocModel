@@ -58,8 +58,7 @@ class exportDocument extends renderHtmlDocument {
                 $zip->addFromString('pt_sencer/pt.html', $ptSencer);
 
                 $jsonDates = $this->replaceInJsonTemplate($data, "$pathTemplate/../json/templates/templateDates.tjson");
-                $jsonFile = WikiGlobalConfig::getConf('mediadir')."/".str_replace(':','/',$this->cfgExport->id)."/$output_filename.json";
-                file_put_contents($jsonFile, $jsonDates);
+                ResultsWithFiles::putFileToMedia($jsonDates, $this->cfgExport->id, ".json");
 
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
                 $cicle = $data["cicle"]==="Indiqueu el cicle"?"":html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));

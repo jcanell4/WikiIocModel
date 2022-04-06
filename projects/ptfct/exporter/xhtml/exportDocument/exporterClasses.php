@@ -58,8 +58,7 @@ class exportDocument extends renderHtmlDocument {
                 $zip->addFromString('/pt_sencer/pt.html', $ptSencer);
 
                 $jsonDates = $this->replaceInJsonTemplate($data, "$pathTemplate/../json/templates/templateDates.tjson");
-                $jsonFile = WikiGlobalConfig::getConf('mediadir')."/".str_replace(':','/',$this->cfgExport->id)."/$output_filename.json";
-                file_put_contents($jsonFile, $jsonDates);
+                ResultsWithFiles::putFileToMedia($jsonDates, $this->cfgExport->id, ".json");
 
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
                 $cicle = html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
@@ -118,14 +117,6 @@ class exportDocument extends renderHtmlDocument {
         return $result;
     }
 
-//    private function getParsedDocument($data, $document) {
-//        $ret = array();
-//        $tmplt = $this->loadTemplateFile($document);
-//        $ret["data"] = WiocclParser::getValue($tmplt, [], $data);
-//        $ret["toc"] = $this->cfgExport->toc;
-//        return $ret;
-//    }
-
     private function replaceInTemplate($data, $file) {
         $tmplt = $this->loadTemplateFile($file);
         $document = WiocclParser::getValue($tmplt, [], $data);
@@ -144,7 +135,6 @@ class exportDocument extends renderHtmlDocument {
     }
 
     private function attachMediaFiles(&$zip) {
-        global $conf;
         //Attach media files
         foreach(array_unique($this->cfgExport->media_files) as $f){
             resolve_mediaid(getNS($f), $f, $exists);
@@ -227,10 +217,3 @@ class exportDocument extends renderHtmlDocument {
 //        return $files;
 //    }
 }
-
-//class render_title extends renderField {
-//    public function process($data) {
-//        $ret = parent::process($data);
-//        return $ret;
-//    }
-//}
