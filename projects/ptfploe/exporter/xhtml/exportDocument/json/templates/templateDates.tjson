@@ -1,6 +1,16 @@
+<WIOCCL:SET var="uf_ant" type="literal" value="-">
 <WIOCCL:FOREACH var="item" array="{##calendari##}"> 
-"{##modulId##}_UF{#_OBJECT_GET_VALUE(''unitat formativa'', {#_SEARCH_ROW({##item[unitat]##}, {##taulaDadesUnitats##}, ''unitat'', 0)_#})_#}_U{##item[unitat]##}_L{##item[període]##}": {
-    "dinici": {"selector":"#dataInici", "type":"text", "value":"{##item[inici]##}"},
-    "dfinal": {"selector":"#dataFinal", "type":"text", "value":"{##item[final]##}"}
+<WIOCCL:SET var="uf" type="literal" value="{#_OBJECT_GET_VALUE(''unitat formativa'', {#_SEARCH_ROW({##item[unitat]##}, {##taulaDadesUnitats##}, ''unitat'', 0)_#})_#}">
+<WIOCCL:IF condition="{##uf_ant##}!={##uf##}">
+"{##modulId##}_UF{##uf##}_U{##item[unitat]##}": {
+</WIOCCL:IF>
+<WIOCCL:RESET var="uf_ant" type="literal" value="{##uf##}"></WIOCCL:RESET>
+    "uf{##uf##}_p{##item[període]##}_dical": {"selector":"#uf{##uf##}_p{##item[període]##}dataIniciCal", "type":"text", "value":"{#_DATE(''{##item[inici]##}'')_#}"},
+    "uf{##uf##}_p{##item[període]##}_dfcal": {"selector":"#uf{##uf##}_p{##item[període]##}dataFinalCal", "type":"text", "value":"{#_DATE(''{##item[final]##}'')_#}"}
+<WIOCCL:IF condition="{##uf_ant##}!={##uf##}">
 },
+</WIOCCL:IF>
+</WIOCCL:SET>
 </WIOCCL:FOREACH>
+}
+</WIOCCL:SET>
