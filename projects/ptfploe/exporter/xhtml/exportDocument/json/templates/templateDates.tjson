@@ -1,6 +1,14 @@
-<WIOCCL:FOREACH var="item" array="{##calendari##}"> 
-"{##modulId##}_UF{#_OBJECT_GET_VALUE(''unitat formativa'', {#_SEARCH_ROW({##item[unitat]##}, {##taulaDadesUnitats##}, ''unitat'', 0)_#})_#}_U{##item[unitat]##}_L{##item[període]##}": {
-    "dinici": {"selector":"#dataInici", "type":"text", "value":"{#_DATE(''{##item[inici]##}'')_#}"},
-    "dfinal": {"selector":"#dataFinal", "type":"text", "value":"{#_DATE(''{##item[final]##}'')_#}"}
-},
+{
+<WIOCCL:FOREACH counter="id_unitats" var="item_unitat" array="{##taulaDadesUnitats##}">
+    "{##modulId##}_UF{##item_unitat[unitat formativa]##}_U{##item_unitat[unitat]##}": {
+<WIOCCL:SUBSET subsetvar="filteredCal" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[unitat]##}=={##item_unitat[unitat]##}">
+<WIOCCL:FOREACH counter="id_cal" var="item_cal" array="{##filteredCal##}">
+        "uf{##item_unitat[unitat formativa]##}_u{##item_cal[unitat]##}_p{##item_cal[període]##}_dical": {"selector":"#uf{##item_unitat[unitat formativa]##}u{##item_cal[unitat]##}p{##item_cal[període]##}dataIniciCal", "type":"text", "value":"{#_DATE(''{##item_cal[inici]##}'')_#}"},
+        "uf{##item_unitat[unitat formativa]##}_u{##item_cal[unitat]##}_p{##item_cal[període]##}_dfcal": {"selector":"#uf{##item_unitat[unitat formativa]##}u{##item_cal[unitat]##}p{##item_cal[període]##}dataFinalCal", "type":"text", "value":"{#_DATE(''{##item_cal[final]##}'')_#}"}<WIOCCL:IF condition="{##id_cal##}\<{#_SUBS({#_ARRAY_LENGTH({##filteredCal##})_#},1)_#}">,</WIOCCL:IF>
+
 </WIOCCL:FOREACH>
+</WIOCCL:SUBSET>
+    }<WIOCCL:IF condition="{##id_unitats##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUnitats##})_#},1)_#}">,</WIOCCL:IF>
+
+</WIOCCL:FOREACH>
+}
