@@ -798,7 +798,7 @@
         },
         "treballEquipEAF": {
             "label": "Treball en equip a l'EAF",
-            "n_columns": 2,
+            "n_columns": 6,
             "group": "avaluacio",
             "type": "checkbox",
             "props": {
