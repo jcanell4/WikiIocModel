@@ -57,7 +57,7 @@
           <div class="section1_icona" id="material_icona"></div>
           <h3>Material didàctic</h3>
 <WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##urlMaterialDidactic##}'')_#}&&!{#_STR_CONTAINS(''http://ioc.xtec.cat/materials/FP/Materials/.../web/html/'', ''{##urlMaterialDidactic##}'')_#}">          
-          <a href="{##urlMaterialDidactic##}">material de l'aula</a>
+          <a href="{##urlMaterialDidactic##}">Material de l'aula</a>
 </WIOCCL:IF>
         </div>
         <div class="section1_element">
@@ -538,7 +538,7 @@
 <!-- Secció 6 -->
 <section class="section section6">
   <div class="own_container">
-    <h2>Avaluació contínua</h2>
+    <h2>Avaluació contínua (AC)</h2>
     <p>És recomanable fer <strong>les activitats d’avaluació contínua</strong>, ja que la nota incideix en la qualificació final (<a href="#qualificacio">consulteu l'apartat de qualificació</a>).</p>
     <br/>
     <p>Els lliuraments s'han de realitzar dins dels terminis fixats i són improrrogables.</p>
@@ -610,7 +610,7 @@
 <WIOCCL:IF condition="true=={##hiHaRecuperacioPerJT##}">
     <p>Si suspeneu la JT, podreu fer la recuperació. Les dates importants són:</p>
     <table class="own_table">
-      <caption>recuperacions</caption>
+      <!--caption>recuperacions</caption-->
       <tr>
         <th>Inscripció</th>
         <th>Llista provisional</th>
@@ -629,14 +629,14 @@
 </WIOCCL:FOREACH>            
     </table>
 <WIOCCL:IF condition="{##notaMinimaJT##}\>0">
-    <p>Es necessita una nota mínima de {##notaMinimaJT##},00 sense arrodoniment per poder aplicar el càlcul de la QF.</p>
+    <p>Es necessita una nota mínima de {##notaMinimaJT##},00 sense arrodoniment per poder aplicar el càlcul de la <span title"Qualificació Final">QF</span>.</p>
 </WIOCCL:IF>
 </WIOCCL:IF>
 </WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
     <hr>
     <br/>
-    <h2>Exercicis d'avaluació final</h2>
+    <h2>Exercicis d'avaluació final (EAF)</h2>
 <WIOCCL:SET var="numEafs" type="literal" value="{#_COUNTDISTINCT({##datesEAF##},[''id''])_#}">
     <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> també inclou <span> {##numEafs##} EAF</span> <WIOCCL:IF condition="1=={##numEafs##}">distribuït</WIOCCL:IF><WIOCCL:IF condition="1\>{##numEafs##}">distribuïts</WIOCCL:IF> de la següent manera:</p>
 </WIOCCL:SET>
@@ -680,13 +680,13 @@
 </WIOCCL:SET>
     </table>
 <WIOCCL:IF condition="{##notaMinimaEAF##}\>0">
-    <p>Es necessita una nota mínima de {##notaMinimaEAF##},00 sense arrodoniment per poder aplicar el càlcul de la QF.</p>
+    <p>Es necessita una nota mínima de {##notaMinimaEAF##},00 sense arrodoniment per poder aplicar el càlcul de la <span title"Qualificació Final">QF</span>.</p>
 </WIOCCL:IF>
     <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
     <br/>
     <p>Si suspeneu algun EAF diposeu de la recuperació:</p>
     <table class="own_table">
-      <caption>recuperacions</caption>
+      <!--caption>recuperacions</caption-->
       <tr>
         <th colspan="2"></th>
  <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">
