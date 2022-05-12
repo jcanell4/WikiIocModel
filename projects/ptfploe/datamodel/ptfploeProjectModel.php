@@ -35,6 +35,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         $originalResultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($originalValues["resultatsAprenentatge"]);
         $dadesQualificacioUFs = IocCommon::toArrayThroughArrayOrJson($values["dadesQualificacioUFs"]);
         $originalDadesQualificacioUFs = IocCommon::toArrayThroughArrayOrJson($originalValues["dadesQualificacioUFs"]);
+        $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);
         $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]);
         if($values["nsProgramacio"]){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
@@ -78,7 +79,9 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
              }
         }
         $values["taulaDadesUnitats"] = $taulaDadesUnitats;
-
+        
+        $values["calendari"] = $this->getCalendariFieldFromMix($values, $taulaCalendari);
+        
         for ($i=0; $i<count($resultatsAprenentatge); $i++){
            if(!empty($originalResultatsAprenentatge[$i]["id"])){
                $resultatsAprenentatge[$i]["id"] = $originalResultatsAprenentatge[$i]["id"];
@@ -192,6 +195,9 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             }
         }
         
+        $taulaCalendari = $this->getCalendariFieldFromMix($values, $taulaCalendari);
+        $values["calendari"] = $taulaCalendari;
+        
         if (!empty($taulaCalendari) && !empty($taulaDadesUnitats)){
             $hores = array();
             for ($i=0; $i<count($taulaCalendari); $i++){
@@ -288,6 +294,35 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
 
         $data = $isArray?$values:json_encode($values);
         return parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
+    }
+    
+    private function getCalendariFieldFromMix($values, $taulaCalendari){
+        if(isset($values["moodleCourseId"]) && $values["moodleCourseId"]>0){            
+//            $dataFromMix = $this->getMixDataLessons($values["moodleCourseId"]);
+            if($dataFromMix){
+                $mixLen = count($dataFromMix);
+                if($mixLen>0){
+                    $calLen = count($aux);
+                    $modulId = trim(values["modulId"]);
+                    if(preg_match("/$modulId/i", $dataFromMix[0]->shortname)){ 
+                        $aux = $taulaCalendari;
+                        $taulaCalendari = array();
+                        for($i=0; $i<$mixLen; $i++){                   
+                            $taulaCalendari []= array(
+                                "unitat" => $dataFromMix[$i]->unitid,
+                                 "període" => $dataFromMix[$i]->lessonid,
+                                 "tipus període" => "lliçó",
+                                 "descripció període" => $dataFromMix[$i]->lessontitle,
+                                 "hores" => $dataFromMix[$i]->lessonhours,
+                                 "inici" => ($i<$calLen)?$aux[$i]["inici"]:"",
+                                 "final" => ($i<$calLen)?$aux[$i]["final"]:"",
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        return $taulaCalendari;        
     }
     
     private function getRowFromField($taula, $field, $value, $fromPosition=0, $defaultFromPossition=false){
