@@ -8,7 +8,7 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
-class upgrader_33 extends ProgramacionsCommonUpgrader {
+class upgrader_34 extends ProgramacionsCommonUpgrader {
 
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
@@ -32,9 +32,9 @@ class upgrader_33 extends ProgramacionsCommonUpgrader {
                  * $aTokRep = [["^(<WIOCCL:FOREACH var=\")(.*?)(\" array=\"\{##)(taulaDadesUD)(##\}\")",
                  *              "$1$2$3sortedTaulaDadesUD$5"],
                  */
-                $aTokRep = [["^No haver superat la UF en la primera convocatòria \(PAF 1\)\.",
+                $aTokRep = [["No haver superat la UF en la primera convocatòria \(PAF 1\)\.",
                             "No haver-se presentat a la PAF1, o en cas d'haver-s'hi presentat, no haver superat la UF."],
-                            ["^la PAF 2, l'alumnat que no hagi superat la UF en la primera convocatòria \(PAF 1\)\.",
+                            ["la PAF 2, l'alumnat que no hagi superat la UF en la primera convocatòria \(PAF 1\)\.",
                              "la PAF 2, l'alumnat que no s'hagi presentat a la PAF1, o que havent-s'hi presentat, no hagi superat la UF."]
                            ];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);

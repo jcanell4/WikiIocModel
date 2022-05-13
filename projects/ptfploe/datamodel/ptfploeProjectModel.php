@@ -298,7 +298,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
     
     private function getCalendariFieldFromMix($values, $taulaCalendari){
         if(isset($values["moodleCourseId"]) && $values["moodleCourseId"]>0){            
-//            $dataFromMix = $this->getMixDataLessons($values["moodleCourseId"]);
+            $dataFromMix = $this->getMixDataLessons($values["moodleCourseId"]);
             if($dataFromMix){
                 $mixLen = count($dataFromMix);
                 if($mixLen>0){

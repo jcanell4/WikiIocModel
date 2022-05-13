@@ -8,7 +8,7 @@ if (!defined("DOKU_INC")) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
 require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
-class upgrader_27 extends ProgramacionsCommonUpgrader {
+class upgrader_28 extends ProgramacionsCommonUpgrader {
 
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
@@ -32,9 +32,9 @@ class upgrader_27 extends ProgramacionsCommonUpgrader {
                  * $aTokRep = [["^(<WIOCCL:FOREACH var=\")(.*?)(\" array=\"\{##)(taulaDadesUD)(##\}\")",
                  *              "$1$2$3sortedTaulaDadesUD$5"],
                  */
-                $aTokRep = [["^No haver superat el <WIOCCL:IF condition=\"''crèdit''==\{##tipusBlocCredit##\}\">crèdit<\/WIOCCL:IF><WIOCCL:IF condition=\"''crèdit''!=\{##tipusBlocCredit##\}\">bloc<\/WIOCCL:IF> en la primera convocatòria \(PAF 1\)\.",
+                $aTokRep = [["No haver superat el <WIOCCL:IF condition=\"''crèdit''==\{##tipusBlocCredit##\}\">crèdit<\/WIOCCL:IF><WIOCCL:IF condition=\"''crèdit''!=\{##tipusBlocCredit##\}\">bloc<\/WIOCCL:IF> en la primera convocatòria \(PAF 1\)\.",
                             "No haver-se presntat a la PAF1 o en cas d'haver-s'hi presentat, no haver superat el <WIOCCL:IF condition=\"''crèdit''=={##tipusBlocCredit##}\">crèdit</WIOCCL:IF><WIOCCL:IF condition=\"''crèdit''!={##tipusBlocCredit##}\">bloc</WIOCCL:IF>."],
-                            ["^la PAF 2, l'alumnat que no hagi superat el <WIOCCL:IF condition=\"''crèdit''==\{##tipusBlocCredit##\}\">crèdit<\/WIOCCL:IF><WIOCCL:IF condition=\"''crèdit''!=\{##tipusBlocCredit##\}\">bloc<\/WIOCCL:IF> en la primera convocatòria \(PAF 1\)\.",
+                            ["la PAF 2, l'alumnat que no hagi superat el <WIOCCL:IF condition=\"''crèdit''==\{##tipusBlocCredit##\}\">crèdit<\/WIOCCL:IF><WIOCCL:IF condition=\"''crèdit''!=\{##tipusBlocCredit##\}\">bloc<\/WIOCCL:IF> en la primera convocatòria \(PAF 1\)\.",
                              "la PAF 2, l'alumnat que no s'hagi presentat a la PAF1 o que havent-s'hi presentat, no hagi superat el <WIOCCL:IF condition=\"''crèdit''=={##tipusBlocCredit##}\">crèdit</WIOCCL:IF><WIOCCL:IF condition=\"''crèdit''!={##tipusBlocCredit##}\">bloc</WIOCCL:IF>."]
                            ];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
