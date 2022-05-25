@@ -302,11 +302,11 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             if($dataFromMix){
                 $mixLen = count($dataFromMix);
                 if($mixLen>0){
-                    $calLen = count($aux);
-                    $modulId = trim(values["modulId"]);
+                    $modulId = trim($values["modulId"]);
                     if(preg_match("/$modulId/i", $dataFromMix[0]->shortname)){ 
 //                        error_log("D0.3.- A punt d'actualitzar.");
                         $aux = $taulaCalendari;
+                        $calLen = count($aux);
                         $taulaCalendari = array();
                         for($i=0; $i<$mixLen; $i++){                   
                             $taulaCalendari []= array(
