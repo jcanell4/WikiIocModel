@@ -53,6 +53,17 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
                     }
                 }
             }
+            $resultatsAprenentatgePrg = IocCommon::toArrayThroughArrayOrJson($dataPrg["resultatsAprenentatge"]);
+            $taulaResultatsAprenentatgeFiltrada = array();
+            if (!empty($resultatsAprenentatgePrg)) {
+                foreach ($resultatsAprenentatgePrg as $row) {
+                    $rowBlocId = $this->getBlocIdFromTaulaUF($taulaDadesUFPrg, $row["uf"]);
+                    if($rowBlocId==$blocId){
+                        $taulaResultatsAprenentatgeFiltrada[] = $row;
+                    }
+                }
+            }
+            
         }else{
             $taulaDadesNF = FALSE;
         }
@@ -60,32 +71,43 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         if($dataPrg){
             if(isset($originalValues["cicle"]) && !empty($originalValues["cicle"])){
                 $values["cicle"] = $originalValues["cicle"];
+            }else{
+                $values["cicle"] = $dataPrg["cicle"];
             }
             if(isset($originalValues["modul"]) && !empty($originalValues["modul"])){
                 $values["modul"] = $originalValues["modul"];
+            }else{
+                $values["modul"] = $dataPrg["modul"];
             }
         }
         
         if(!empty($taulaDadesNFFiltrada)){
-             for ($i=0; $i<count($taulaDadesUnitats); $i++){
-                if(isset($originalTaulaDadesUnitats[$i]["unitat"])){                  
-                    $taulaDadesUnitats[$i]["unitat"] = $originalTaulaDadesUnitats[$i]["unitat"];
-                }
-                if(empty($originalTaulaDadesUnitats[$i]["nom"])){
-                    $taulaDadesUnitats[$i]["nom"] = $this->getRowFromField($taulaDadesNFFiltrada, "unitat al pla de treball",  $taulaDadesUnitats[$i]["unitat"], $i, true)["nom"];
+            $originalRow = $this->getRowFromField($originalValues, "unitat",  $taulaDadesNFFiltrada[$i]["unitat al pla de treball"], $i, true);
+            $taulaDadesUnitats = array();
+            for($i=0; $i<count($taulaDadesNFFiltrada); $i++){
+                $taulaDadesUnitats[$i]["unitat formativa"] = $taulaDadesNFFiltrada[$i]["unitat formativa"];
+                $taulaDadesUnitats[$i]["unitat"] = $taulaDadesNFFiltrada[$i]["unitat al pla de treball"];
+                if(empty($originalRow) || empty($originalRow["nom"])){
+                    $taulaDadesUnitats[$i]["nom"] = $taulaDadesNFFiltrada[$i]["nom"];
                 }else{
-                    $taulaDadesUnitats[$i]["nom"] = $originalTaulaDadesUnitats[$i]["nom"];
+                    $taulaDadesUnitats[$i]["nom"] = $originalRow["nom"];
                 }
-             }
+                $taulaDadesUnitats[$i]["hores"] = $taulaDadesNFFiltrada[$i]["hores"];
+            }
         }
         $values["taulaDadesUnitats"] = $taulaDadesUnitats;
         
         $values["calendari"] = $this->getCalendariFieldFromMix($values, $taulaCalendari);
         
-        for ($i=0; $i<count($resultatsAprenentatge); $i++){
-           if(!empty($originalResultatsAprenentatge[$i]["id"])){
-               $resultatsAprenentatge[$i]["id"] = $originalResultatsAprenentatge[$i]["id"];
-           }
+        if(!empty($taulaResultatsAprenentatgeFiltrada)){
+            for ($i=0; $i<count($taulaResultatsAprenentatgeFiltrada); $i++){
+                if(empty($originalResultatsAprenentatge[$i]["id"])){
+                    $resultatsAprenentatge[$i]["id"] = "UF".$taulaResultatsAprenentatgeFiltrada[$i]["uf"].".RA".$taulaResultatsAprenentatgeFiltrada[$i]["ra"];
+                }else{
+                    $resultatsAprenentatge[$i]["id"] = $originalResultatsAprenentatge[$i]["id"];
+                }
+                $resultatsAprenentatge[$i]["descripcio"]= $taulaResultatsAprenentatgeFiltrada[$i]["descripcio"];
+            }            
         }
         $values["resultatsAprenentatge"] = $resultatsAprenentatge;
         
@@ -116,7 +138,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             if($ufTable[$key]["ponderació"]=="0"){
                 $ufTable[$key]["ponderació"]=$ufTable[$key]["hores"];
             }
-            $ufTable[$key]["ordreImparticio"] = $originalufTable[$key]["ordreImparticio"];
+//            $ufTable[$key]["ordreImparticio"] = $originalufTable[$key]["ordreImparticio"];
         }
         
         $nAvaluacioInicial=0;
@@ -296,7 +318,8 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         return parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
     }
     
-    private function getCalendariFieldFromMix($values, $taulaCalendari){
+    private function getCalendariFieldFromMix(&$values, $taulaCalendari){
+        $dataFromMix = false;
         if(isset($values["moodleCourseId"]) && $values["moodleCourseId"]>0){            
             $dataFromMix = $this->getMixDataLessons($values["moodleCourseId"]);
             if($dataFromMix){
@@ -319,10 +342,12 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
                                  "final" => ($i<$calLen)?$aux[$i]["final"]:"",
                             );
                         }
+                        $dataFromMix = true;
                     }
                 }
             }
         }
+        $values["dataFromMix"] =$dataFromMix;
         return $taulaCalendari;        
     }
     

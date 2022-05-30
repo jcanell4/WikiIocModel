@@ -368,9 +368,9 @@
         },
         "config": {
           "actions": {
-            "add_default_row": "Afegir nucli d'activitat",
-            "remove_rows": "Eliminar els nuclis d'activitat seleccionats",
-            "add_default_row_before": "Afegir nucli d'activitat abans de la fila seleccionada"
+            "add_default_row": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}} ,"label":"Afegir nucli d'activitat"},
+            "remove_rows": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}} ,"label":"Eliminar els nuclis d'activitat seleccionats"},
+            "add_default_row_before": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}} ,"label":"Afegir nucli d'activitat abans de la fila seleccionada"}
           },
 
           "fields": {
@@ -402,26 +402,26 @@
                 {
                   "name": "unitat didàctica",
                   "field": "unitat didàctica",
-                  "editable": true
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                 },
 
                 {
                   "name": "nucli activitat",
                   "field": "nucli activitat",
-                  "editable": true
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                 },
 
                 {
                   "name": "nom",
                   "field": "nom",
-                  "width":"55%",
-                  "editable": true
+                   "width":"55%",
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                 },
 
                 {
                   "name": "hores",
                   "field": "hores",
-                  "editable": true
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                 },
                 {
                   "name": "inici",

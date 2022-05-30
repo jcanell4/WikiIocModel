@@ -505,7 +505,10 @@
                                         "values": "$values"
                                     }
                                 }
-                            }
+                            },
+                            "props" : {
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                            } 
                         },
                         "credit": {
                             "type": "string",
@@ -642,13 +645,15 @@
                                         "bloc",
                                         "unitat didàctica",
                                         "nom",
-                                        "hores"
+                                        "hores",
+                                        "ordreImparticio"
                                     ],
                                     "fieldSubset":[
                                         "bloc",
                                         "unitat didàctica",
                                         "nom",
-                                        "hores"
+                                        "hores",
+                                        "ordreImparticio"
                                     ],
                                     "defaultValue":{
                                         "_type_":"field",

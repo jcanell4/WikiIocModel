@@ -371,9 +371,9 @@
           },
           "config": {
             "actions": {
-              "set_multiple_default_rows": "Definir el nombre d'unitats",
-              "remove_rows": "Eliminar les unitats seleccionades",
-              "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
+              "set_multiple_default_rows": {"label":"Definir el nombre d'unitats", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}},
+              "remove_rows": {"label":"Eliminar les unitats seleccionades", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}},
+              "add_default_row_before": {"label":"Afegir unitat abans de la fila seleccionada", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}}
             },
             "fields": {
               "unitat formativa": {
@@ -398,19 +398,19 @@
                   {
                     "name": "unitat formativa",
                     "field": "unitat formativa",
-                    "editable": true
+                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                   },
 
                   {
                     "name": "unitat",
                     "field": "unitat",
-                    "editable": true
+                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                   },
 
                   {
                     "name": "nom",
                     "field": "nom",
-                    "width":"55%",
+                     "width":"55%",
                     "editable": true
                   },
 
@@ -436,9 +436,9 @@
           },
           "config": {
             "actions": {
-              "add_default_row": "Afegir període",
-              "remove_rows": "Eliminar períodes seleccionats",
-              "add_default_row_before": "Afegir període abans de la fila seleccionada"
+              "add_default_row": {"condition":{"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}},"label":"Afegir període"},
+              "remove_rows": {"condition":{"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}},"label":"Eliminar períodes seleccionats"},
+              "add_default_row_before": {"condition":{"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}},"label":"Afegir període abans de la fila seleccionada"}
             },
             "fields": {
               "unitat": {
@@ -473,30 +473,30 @@
                     "name": "unitat",
                     "field": "unitat",
                     "width": "8%",
-                    "editable": true
+                    "editable": {"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}}
                   },
                   {
                     "name": "període",
                     "field": "període",
                     "width": "8%",
-                    "editable": true
+                    "editable": {"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}}
                   },
                   {
                     "name": "tipus període",
                     "field": "tipus període",
-                    "editable": true
+                    "editable": {"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}}
                   },
                   {
                     "name": "descripció període",
                     "field": "descripció període",
                     "width": "46%",
-                    "editable": true
+                    "editable": {"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}}
                   },
                   {
                     "name": "hores",
                     "field": "hores",
                     "width": "8%",
-                    "editable": true
+                    "editable": {"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}}
                   },
                   {
                     "name": "inici",
@@ -932,9 +932,9 @@
           },
           "config": {
             "actions": {
-              "add_default_row": "Afegir una nova dada",
-              "remove_rows": "Eliminar les dades seleccionades",
-              "add_default_row_before": "Afegir dada abans de la fila seleccionada"
+              "add_default_row": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}},"label":"Afegir una nova dada"},
+              "remove_rows": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}},"label":"Eliminar les dades seleccionades"},
+              "add_default_row_before": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}},"label":"Afegir dada abans de la fila seleccionada"}
             },
             "fields": {
               "unitat formativa": {
@@ -953,7 +953,42 @@
               "ponderació": {
                 "type": "decimal"
               }
-            }
+            },
+            "layout": [
+              {
+                "defaultCell": {
+                  "width" : "10%"
+                },
+                "cells": [
+                  {
+                    "name": "unitat formativa",
+                    "field": "unitat formativa",
+                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
+                  },
+                  {
+                    "name": "tipus qualificació",
+                    "field": "tipus qualificació",
+                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
+                  },
+                  {
+                    "name": "descripció qualificació",
+                    "field": "descripció qualificació",
+                    "width": "60%",
+                    "editable": true
+                  },
+                  {
+                    "name": "abreviació qualificació",
+                    "field": "abreviació qualificació",
+                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
+                  },
+                  {
+                    "name": "ponderació",
+                    "field": "ponderació",
+                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
+                  }
+                ]
+              }
+            ]
           }
         },
         "responsable": {

@@ -58,8 +58,8 @@ class exportDocument extends renderHtmlDocument {
                 $ptSencer = preg_replace("/(<img.*? src=.)(img\/)(.*?\/)*(.*?)(\.[png|jpg])/", "$1../$2$4$5", $ptSencer);
                 $zip->addFromString('/pt_sencer/pt.html', $ptSencer);
 
-                $jsonDates = $this->replaceInJsonTemplate($data, "$pathTemplate/../json/templates/templateDates.tjson");
-                ResultsWithFiles::putFileToMedia($jsonDates, $this->cfgExport->id, ".json");
+//                $jsonDates = $this->replaceInJsonTemplate($data, "$pathTemplate/../json/templates/templateDates.tjson");
+//                ResultsWithFiles::putFileToMedia($jsonDates, $this->cfgExport->id, ".json");
 
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
                 $cicle = $data["cicle"]==="Indiqueu el cicle"?"":html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
