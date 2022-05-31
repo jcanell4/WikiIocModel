@@ -151,22 +151,31 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
 
                 $dataProject = $this->getCurrentDataProject();
                 $vellsDocuments = json_decode($dataProject['documents'], true);
-                if (!empty($vellsDocuments))
+                if (!empty($vellsDocuments)) {
+                    foreach ($vellsDocuments as $k => $doc) {
+                        $vellsDocuments[$k]['nom'] = trim($doc['nom']);
+                    }
                     usort($vellsDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
+                }
 
                 $id = $this->getId();
                 $path_continguts = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $id);
 
                 foreach ($nousDocuments as $k => $doc) {
+                    $doc['nom'] = $nousDocuments[$k]['nom'] = trim($doc['nom']);
                     if ($doc['id'] === $vellsDocuments[$k]['id']) {
-                        //S'ha modificat el nom d'un fitxer
                         if ($doc['nom'] !== $vellsDocuments[$k]['nom']) {
+                            //S'ha modificat el nom d'un fitxer
                             $this->renamePage($id, $path_continguts, $vellsDocuments[$k]['nom'], $doc['nom']);
                         }
                     }elseif ($doc['id'] > $vellsDocuments[$k]['id'] && $vellsDocuments[$k]) {
                         $rowid = array_search($doc['id'], array_column($vellsDocuments, 'id'));
-                        // busca el id actual en todo el array de $vellsDocuments
-                        if ($rowid !== false && $doc['nom'] !== $vellsDocuments[$rowid]['nom']) {
+                        $rownom = array_search($doc['nom'], array_column($vellsDocuments, 'nom'));
+                        if ($rowid === false && $rownom === false) {
+                            //S'ha afegit un nou fitxer, és a dir, una nova fila a la taula
+                            $this->createPageFromTemplate("$id:{$doc['nom']}", NULL, $this->getRawProjectTemplate(), "create page");
+                        }elseif ($rowid !== false && $doc['nom'] !== $vellsDocuments[$rowid]['nom']) {
+                            //S'ha modificat el nom d'un fitxer
                             $this->renamePage($id, $path_continguts, $vellsDocuments[$rowid]['nom'], $doc['nom']);
                         }
                     }else {
@@ -188,6 +197,14 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                     }
                 }
             }
+
+            //Actualización de _wikiIocSystem_.mdpr
+            $dataSystem = $this->getSystemData();
+            $dataSystem['versions']['templates'] = [];
+            foreach ($nousDocuments as $doc) {
+                $dataSystem['versions']['templates'][$doc['nom']] = null;
+            }
+            $this->setSystemData($dataSystem);
         }
         else {
             throw new Exception("Aquí passa alguna cosa rara");
