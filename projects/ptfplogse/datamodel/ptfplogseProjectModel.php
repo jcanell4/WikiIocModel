@@ -104,12 +104,12 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
             $values["calendari"] = $calendari;
         }
         
-        if(!empty($taulaDadesUnitats)){
-            foreach ($taulaDadesUnitats as $key => $value) {
-                $taulaDadesUnitats[$key]["ordreImparticio"] = $originalTaulaDadesUnitats[$key]["ordreImparticio"];
-            }
-            $values["taulaDadesUD"] = $taulaDadesUnitats;
-        }
+//        if(!empty($taulaDadesUnitats)){
+//            foreach ($taulaDadesUnitats as $key => $value) {
+//                $taulaDadesUnitats[$key]["ordreImparticio"] = $originalTaulaDadesUnitats[$key]["ordreImparticio"];
+//            }
+//            $values["taulaDadesUD"] = $taulaDadesUnitats;
+//        }
         
         switch ($avaluacioInicial_prg){
             case "NO":

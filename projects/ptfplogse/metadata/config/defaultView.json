@@ -265,7 +265,7 @@
           "actions": {
             "set_multiple_default_rows": "Definir el nombre d'Unitats Didàctiques del crèdit",
             "remove_rows": "Eliminar les Unitats Didàctiques seleccionades",
-            "add_default_row_before": "Afegir unitat Didàctica abans de la fila seleccionada"
+            "add_default_row_before": "Afegir Unitat Didàctica abans de la fila seleccionada"
           },
           "fields": {
             "bloc":{
@@ -338,9 +338,9 @@
         },
         "config": {
           "actions": {
-            "add_default_row": "Afegir nucli d'activitat",
-            "remove_rows": "Eliminar els nuclis d'activitat seleccionats",
-            "add_default_row_before": "Afegir nucli d'activitat abans de la fila seleccionada"
+            "add_default_row": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}} ,"label":"Afegir nucli d'activitat"},
+            "remove_rows": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}} ,"label":"Eliminar els nuclis d'activitat seleccionats"},
+            "add_default_row_before": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}} ,"label":"Afegir nucli d'activitat abans de la fila seleccionada"}
           },
           "fields": {
             "unitat didàctica": {
@@ -372,26 +372,26 @@
                 {
                   "name": "unitat didàctica",
                   "field": "unitat didàctica",
-                  "editable": true
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                 },
 
                 {
                   "name": "nucli activitat",
                   "field": "nucli activitat",
-                  "editable": true
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                 },
 
                 {
                   "name": "nom",
                   "field": "nom",
                    "width":"55%",
-                  "editable": true
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                 },
 
                 {
                   "name": "hores",
                   "field": "hores",
-                  "editable": true
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                 },
                 {
                   "name": "inici",

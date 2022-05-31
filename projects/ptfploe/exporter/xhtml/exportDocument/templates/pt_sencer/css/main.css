@@ -345,7 +345,11 @@ p.llegenda {
     section p{
         text-align: justify;
     }
-
+    
+    .figref span.refType,
+    .tabref span.refType{
+        display: none;
+    }
 
 /* Layout media queries */
 
