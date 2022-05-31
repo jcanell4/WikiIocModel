@@ -145,6 +145,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         }
 
         if ($data) {
+            $modificat = false;
             $nousDocuments = json_decode($data['documents'], true);
             if (!empty($nousDocuments)) {
                 usort($nousDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
@@ -162,10 +163,10 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                 $path_continguts = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $id);
 
                 foreach ($nousDocuments as $k => $doc) {
-                    $doc['nom'] = $nousDocuments[$k]['nom'] = trim($doc['nom']);
                     if ($doc['id'] === $vellsDocuments[$k]['id']) {
                         if ($doc['nom'] !== $vellsDocuments[$k]['nom']) {
                             //S'ha modificat el nom d'un fitxer
+                            $modificat = true;
                             $this->renamePage($id, $path_continguts, $vellsDocuments[$k]['nom'], $doc['nom']);
                         }
                     }elseif ($doc['id'] > $vellsDocuments[$k]['id'] && $vellsDocuments[$k]) {
@@ -173,13 +174,16 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                         $rownom = array_search($doc['nom'], array_column($vellsDocuments, 'nom'));
                         if ($rowid === false && $rownom === false) {
                             //S'ha afegit un nou fitxer, és a dir, una nova fila a la taula
+                            $modificat = true;
                             $this->createPageFromTemplate("$id:{$doc['nom']}", NULL, $this->getRawProjectTemplate(), "create page");
                         }elseif ($rowid !== false && $doc['nom'] !== $vellsDocuments[$rowid]['nom']) {
                             //S'ha modificat el nom d'un fitxer
+                            $modificat = true;
                             $this->renamePage($id, $path_continguts, $vellsDocuments[$rowid]['nom'], $doc['nom']);
                         }
                     }else {
                         //S'ha afegit un nou fitxer, és a dir, una nova fila a la taula
+                        $modificat = true;
                         $this->createPageFromTemplate("$id:{$doc['nom']}", NULL, $this->getRawProjectTemplate(), "create page");
                     }
                 }
@@ -193,18 +197,21 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                         $rownom = array_search($doc['nom'], array_column($nousDocuments, 'nom'));
                     }
                     if ($rowid === false && $rownom === false) {
+                        $modificat = true;
                         $this->createPageFromTemplate("$id:{$doc['nom']}", NULL, NULL, "remove page");
                     }
                 }
             }
 
-            //Actualización de _wikiIocSystem_.mdpr
-            $dataSystem = $this->getSystemData();
-            $dataSystem['versions']['templates'] = [];
-            foreach ($nousDocuments as $doc) {
-                $dataSystem['versions']['templates'][$doc['nom']] = null;
+            if ($modificat) {
+                //Actualización de _wikiIocSystem_.mdpr
+                $dataSystem = $this->getSystemData();
+                $dataSystem['versions']['templates'] = [];
+                foreach ($nousDocuments as $doc) {
+                    $dataSystem['versions']['templates'][$doc['nom']] = null;
+                }
+                $this->setSystemData($dataSystem);
             }
-            $this->setSystemData($dataSystem);
         }
         else {
             throw new Exception("Aquí passa alguna cosa rara");
@@ -219,6 +226,17 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
      */
     static function cmpForSort($a, $b) {
         return ($a['id'] === $b['id']) ? 0 : (($a['id'] < $b['id']) ? -1 : 1);
+    }
+
+    public function tractamentInicialDadesFormulari($data=NULL) {
+        if ($data) {
+            $documents = json_decode($data['documents'], true);
+            foreach ($documents as $k => $doc) {
+                $documents[$k]['nom'] = trim($doc['nom']);
+            }
+            $data['documents'] = json_encode($documents);
+        }
+        return $data;
     }
 
     /**
