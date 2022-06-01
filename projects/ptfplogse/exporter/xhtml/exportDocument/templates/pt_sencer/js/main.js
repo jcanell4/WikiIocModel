@@ -28,7 +28,7 @@ function __plaTreballInit(){
   
   allRefs.forEach(
      function(node){
-        let ref = node.parentNode.parentNode.getAttribute("href")
+        let ref = node.parentNode.getAttribute("href")
         let nodeTab = document.querySelector(ref);
         if(nodeTab && nodeTab.parentNode){
             node.innerText = nodeTab.parentNode.innerText;
