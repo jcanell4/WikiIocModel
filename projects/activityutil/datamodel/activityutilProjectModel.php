@@ -228,17 +228,6 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         return ($a['id'] === $b['id']) ? 0 : (($a['id'] < $b['id']) ? -1 : 1);
     }
 
-//    public function tractamentInicialDadesFormulari($data=NULL) {
-//        if ($data) {
-//            $documents = json_decode($data['documents'], true);
-//            foreach ($documents as $k => $doc) {
-//                $documents[$k]['nom'] = trim($doc['nom']);
-//            }
-//            $data['documents'] = json_encode($documents);
-//        }
-//        return $data;
-//    }
-
     /**
      * Obtiene la lista de ficheros creados, por el autor, en el proyecto
      * @return array de ficheros
