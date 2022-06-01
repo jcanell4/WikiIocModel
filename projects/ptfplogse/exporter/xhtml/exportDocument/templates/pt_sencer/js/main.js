@@ -24,7 +24,7 @@ function printDoc() {
 }
 
 function __plaTreballInit(){
-  let allRefs = document.querySelectorAll("span.tabref > a > span > span.refId");
+  let allRefs = document.querySelectorAll("span.tabref > a > span.refId");
   
   allRefs.forEach(
      function(node){
