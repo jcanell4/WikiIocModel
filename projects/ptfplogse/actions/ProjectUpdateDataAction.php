@@ -26,7 +26,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
         $metaDataConfigProject = $configProjectModel->getCurrentDataProject($metaDataSubSet);
 
         if ($metaDataConfigProject['arraytaula']) {
-            $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
+            $arraytaula = is_string($metaDataConfigProject['arraytaula'])?json_decode($metaDataConfigProject['arraytaula'], TRUE):$metaDataConfigProject['arraytaula'];
             $restoreData = !$projectModel->getProjectSystemSubSetAttr("updatedDate");
             if($restoreData){
                 //La primera vegada aquests camps no s'actualitzen!
@@ -34,6 +34,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
                 $datesAC = $response["datesAC"];
                 $datesEAF = $response["datesEAF"];
                 $datesJT = $response["datesJT"];
+                $dadesExtres = $response["dadesExtres"];
             }
             if(ManagerProjectUpdateProcessor::updateAll($arraytaula, $response)){
                 if($restoreData){
@@ -42,6 +43,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
                     $response["datesAC"] = $datesAC;
                     $response["datesEAF"] = $datesEAF;
                     $response["datesJT"] = $datesJT;
+                    $response["dadesExtres"] = $dadesExtres;
                 }
                 $metaData = [
                     ProjectKeys::KEY_ID_RESOURCE => $this->params[ProjectKeys::KEY_ID],
