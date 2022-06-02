@@ -131,7 +131,8 @@
             "config": {
                 "actions": {
                     "add_default_row": "Afegir una nova activitat",
-                    "remove_rows": "Eliminar una activitat"
+                    "remove_rows": "Eliminar una activitat",
+                    "add_default_row_before": "Afegir una activitat abans de la fila seleccionada"
                 },
                 "fields": {
                     "id": {
