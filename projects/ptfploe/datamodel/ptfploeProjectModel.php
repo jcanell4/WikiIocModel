@@ -222,12 +222,14 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         
         if (!empty($taulaCalendari) && !empty($taulaDadesUnitats)){
             $hores = array();
-            for ($i=0; $i<count($taulaCalendari); $i++){
-                $idU = intval($taulaCalendari[$i]["unitat"]);
-                if (!isset($hores[$idU])){
-                    $hores[$idU]=0;
+            if (empty($values["nsProgramacio"])){
+                for ($i=0; $i<count($taulaCalendari); $i++){
+                    $idU = intval($taulaCalendari[$i]["unitat"]);
+                    if (!isset($hores[$idU])){
+                        $hores[$idU]=0;
+                    }
+                    $hores[$idU]+= $taulaCalendari[$i]["hores"];
                 }
-                $hores[$idU]+= $taulaCalendari[$i]["hores"];
             }
 
             $horesUF = array();
@@ -549,14 +551,37 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
     
     public function validateFields($data = NULL, $subset=FALSE){
         if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
-            return parent::validateFields($data, $subset);
+            parent::validateFields($data, $subset);
+        }else{
+            parent::validateFields($data);
+            $values = is_array($data)?$data:json_decode($data, true);
+            $taulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUnitats"]);
+            $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);        
+            if (!empty($values["nsProgramacio"])){
+                $hores = array();
+                for ($i=0; $i<count($taulaCalendari); $i++){
+                    $idU = intval($taulaCalendari[$i]["unitat"]);
+                    if (!isset($hores[$idU])){
+                        $hores[$idU]=0;
+                    }
+                    $hores[$idU]+= $taulaCalendari[$i]["hores"];
+                }
+                $horesU = array();
+                for ($i=0; $i<count($taulaDadesUnitats); $i++){
+                    $idU = intval($taulaDadesUnitats[$i]["unitat"]);
+                    $idUf = intval($taulaDadesUnitats[$i]["unitat formativa"]);
+                    if (!isset($horesU[$idU])){
+                        $horesU[$idU]=0;
+                    }
+                    $horesU[$idU]+= $taulaDadesUnitats[$i]["hores"]; 
+                }
+                foreach ($hores as $i => $h){
+                    if($hores[$i] !=$horesU[$i]){
+                        throw new InconsistentDataException("Les hores de la unitat $i ({$horesU[$i]} h) no es corrresponen amb les que apareixen al calendari ({$hores[$i]} h)");
+                    }
+                }
+            }
         }
-
-        parent::validateFields($data);
-        //[TODO]
-        //comprova si avaluació inicialde pla i progamació coincideixen
-        //validar la ponderció de AC+PAF+EAF*...
-        //Validar les nomes mínimes
     }
 
     public function getCourseId() {
