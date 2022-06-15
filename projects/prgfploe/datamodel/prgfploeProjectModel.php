@@ -421,8 +421,11 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
 
         //Comprovació hores
         $totalUfs = array();
+        
         if (!empty($nfTable)) {
-            
+            $pk = []; // comprovació de clau primaria única: 'unitat formativa' + 'nucli formatiu'
+            $nf = []; // comprovació de bijecció entre 'nucli formatiu' i 'unitat al pla de treball'
+
             foreach ($nfTable as $item) {
                 if ($item["hores"] != $totalNFs[$item["unitat formativa"]][$item["nucli formatiu"]]) {
                     $result["ERROR"][] = [
@@ -449,6 +452,32 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                     }
                 }
                 $totalUfs[$item["unitat formativa"]] += $item["hores"];
+
+                // comprovació de clau primaria única: 'unitat formativa' + 'nucli formatiu'
+                $pk_tmp = "${item['unitat formativa']}${item['nucli formatiu']}";
+                if (in_array($pk_tmp, $pk)) {
+                    $result["ERROR"][] = [
+                        'responseType' => $responseType,
+                        'field' => 'taulaDadesNuclisFormatius',
+                        'message' => sprintf("A la taula dels nuclis formatius no es pot repetir la mateixa 'unitat formativa' '%d' i el mateix 'nucli formatiu' '%d'."
+                                            ,$item["unitat formativa"]
+                                            ,$item["nucli formatiu"])
+                    ];
+                }else {
+                    $pk[] = $pk_tmp;
+                }
+
+                // la 'unitat al pla de treball' no es pot repetir => comprovació de bijecció entre 'nucli formatiu' i 'unitat al pla de treball'
+                if (in_array($item['unitat al pla de treball'], $nf)) {
+                    $result["ERROR"][] = [
+                        'responseType' => $responseType,
+                        'field' => 'taulaDadesNuclisFormatius',
+                        'message' => sprintf("A la taula dels nuclis formatius una 'unitat al pla de treball' ('%d') només pot aparèixer una vegada."
+                                            ,$item['unitat al pla de treball'])
+                    ];
+                }else {
+                    $nf[] = $item['unitat al pla de treball'];
+                }
             }
         }
 
