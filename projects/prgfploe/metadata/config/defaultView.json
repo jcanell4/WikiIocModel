@@ -1250,7 +1250,7 @@
         "type" : "hidden"            
       },
        "documentVersion":{
-        "type" : "hidden"
+        "type" : "string"
       }
        
     }

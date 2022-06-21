@@ -644,7 +644,12 @@
                         "documentVersion": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 9
+                            "calculateOnRead": {
+                                "class": "CalculateLiteralValue",
+                                "data": {
+                                    "value":"9"
+                                }
+                            }
                         }
                     }
                 }
