@@ -12,7 +12,7 @@
                 "MetaDataDAO": "defaultProject",
                 "MetaDataEntity": "defaultProject",
                 "MetaDataRender": "prgfpfct"
-            }            
+            }
         }
     ],
     "metaDataFtpSender": [
@@ -256,8 +256,21 @@
                         },
                         "documentVersion": {
                             "type": "number",
-                            "default": 1
+                            "calculateOnRead": {
+                                "class": "CalculateFromConfigMainSimpleValue",
+                                "data": {
+                                    "key": "metaDataProjectStructure",
+                                    "subset": "main",
+                                    "path": ["typesDefinition", "programacio", "keys", "documentVersionFix", "value"]
+                                }
+                            }
+                        },
+                        "documentVersionFix": {
+                            "type": "number",
+                            "value": 1
                         }
+
+
                     }
                 }
             }
@@ -295,7 +308,7 @@
                             "type": "string",
                             "mandatory": true
                         }
-                    }                    
+                    }
                 },
                 "workflowType":{
                     "type": "object",
@@ -307,9 +320,9 @@
                         },
                         "stateHistory":{
                             "type": "objectArray",
-                            "typeDef":"wfStateHistoryEntry"                            
+                            "typeDef":"wfStateHistoryEntry"
                         }
-                    }                    
+                    }
                 },
                 "management": {
                     "type": "object",
@@ -318,10 +331,10 @@
                             "type": "object",
                             "typeDef": "workflowType",
                             "mandatory": true
-                        }                        
+                        }
                     }
                 }
-            }            
+            }
         }
     ]
 }

@@ -526,7 +526,12 @@
                         "documentVersion": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 7
+                            "calculateOnRead": {
+                                "class": "CalculateLiteralValue",
+                                "data": {
+                                    "value": "7"
+                                }
+                            }
                         }
                     }
                 }
