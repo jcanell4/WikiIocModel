@@ -647,7 +647,7 @@
                             "calculateOnRead": {
                                 "class": "CalculateLiteralValue",
                                 "data": {
-                                    "value":"9"
+                                    "value":"13"
                                 }
                             }
                         }

@@ -25,6 +25,13 @@
             }
         }
     ],
+    "metaDataConstants": [
+        {
+            "main": {
+                "documentVersion": {"value":7}
+            }
+        }
+    ],
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
@@ -259,17 +266,12 @@
                             "calculateOnRead": {
                                 "class": "CalculateFromConfigMainSimpleValue",
                                 "data": {
-                                    "key": "metaDataProjectStructure",
+                                    "key": "metaDataConstants",
                                     "subset": "main",
-                                    "path": ["typesDefinition", "programacio", "keys", "documentVersionFix", "value"]
+                                    "path": ["documentVersion", "value"]
                                 }
                             }
-                        },
-                        "documentVersionFix": {
-                            "type": "number",
-                            "value": 1
                         }
-
 
                     }
                 }
