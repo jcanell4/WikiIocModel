@@ -793,7 +793,10 @@
                         "avaluacioInicial": {
                             "type": "string",
                             "default": "NO",
-                            "mandatory": true
+                            "mandatory": true,
+                            "props":{
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                            }
                         },
                         "datesAC": {
                             "type": "defDatesAC",

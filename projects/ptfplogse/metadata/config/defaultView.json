@@ -940,9 +940,9 @@
         },
         "config": {
           "actions": {
-            "add_default_row": "Afegir una nova dada",
-            "remove_rows": "Eliminar les dades seleccionades",
-            "add_default_row_before": "Afegir dada abans de la fila seleccionada"
+            "add_default_row": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}} ,"label":"Afegir una nova dada"},
+            "remove_rows": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}} ,"label":"Eliminar les dades seleccionades"},
+            "add_default_row_before": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}} ,"label":"Afegir dada abans de la fila seleccionada"}
           },
           "fields": {
             "tipus qualificació": {
@@ -958,7 +958,37 @@
             "ponderació": {
               "type": "number"
             }
-          }
+          },
+          "layout": [
+            {
+              "defaultCell": {
+                "width" : "25%",
+                "editable": true
+              },
+              "cells": [
+                {
+                  "name": "tipus qualificació",
+                  "field": "tipus qualificació",
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
+                },
+                {
+                  "name": "descripció qualificació",
+                  "field": "descripció qualificació",
+                  "editable":true
+                },
+                {
+                  "name": "abreviació qualificació",
+                  "field": "abreviació qualificació",
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
+                },
+                {
+                  "name": "ponderació",
+                  "field": "ponderació",
+                  "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
+                }
+              ]
+            }
+          ]
         }
       },
       "dadesExtres": {

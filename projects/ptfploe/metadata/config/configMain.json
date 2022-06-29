@@ -660,7 +660,10 @@
                         "avaluacioInicial": {
                             "type": "string",
                             "default":"no",
-                            "mandatory": true
+                            "mandatory": true,
+                            "props":{
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                            }
                         },
                         "calendari": {
                             "type": "defCalendari",
