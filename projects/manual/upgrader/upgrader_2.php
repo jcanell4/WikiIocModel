@@ -16,9 +16,9 @@ class upgrader_2 extends CommonUpgrader {
             case "fields":
                 //Transforma los datos del proyecto "manual" desde la estructura de la versión 1 a la versión 2
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) {
-                    $dataProject = json_decode($dataProject, TRUE);
-                }
+
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
+
                 //Añade los campos 'id' y 'descripcio' a la estructura de la tabla 'documents'
                 $dataProject = $this->addFieldAutoIncrementInMultiRow($dataProject, 'documents', 'id');
                 $dataProject = $this->addFieldInMultiRow($dataProject, 'documents', 'descripcio', "");

@@ -20,14 +20,9 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
 
     protected function __createTableRAPonderation($data){
         $tableRaPonderation =[];
-        $resApren = $data["resultatsAprenentatge"];
-        if(!is_array($resApren)){
-            $resApren = json_decode($resApren, TRUE);
-        }
-        $insAvTable = $data["taulaInstrumentsAvaluacio"];
-        if(!is_array($insAvTable)){
-            $insAvTable = json_decode($insAvTable, TRUE);
-        }
+        $resApren = IocCommon::toArrayThroughArrayOrJson($data["resultatsAprenentatge"]);
+        $insAvTable = IocCommon::toArrayThroughArrayOrJson($data["taulaInstrumentsAvaluacio"]);
+
         foreach ($resApren as $itemResAp) {
             foreach ($insAvTable as $itemInsAv) {
                 if($itemInsAv["unitat formativa"]==$itemResAp["uf"]){
@@ -58,14 +53,14 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
         }
 
         $result     = array();
-        $iaTable    = $data["taulaInstrumentsAvaluacio"]['value']; if (!is_array($iaTable)) $iaTable = json_decode($iaTable, TRUE);
-        $aaTable    = $data["activitatsAprenentatge"]['value'];    if (!is_array($aaTable)) $aaTable = json_decode($aaTable, TRUE);
-        $nfTable    = $data["taulaDadesNuclisFormatius"]['value']; if (!is_array($nfTable)) $nfTable = json_decode($nfTable, TRUE);
-        $ufTable    = $data["taulaDadesUF"]['value'];              if (!is_array($ufTable)) $ufTable = json_decode($ufTable, TRUE);
-        $raTable    = $data["resultatsAprenentatge"]['value'];     if (!is_array($raTable)) $raTable = json_decode($raTable, TRUE);
-        $ponRaTable = $data["taulaPonderacioRA"]['value'];         if (!is_array($ponRaTable)) $ponRaTable = json_decode($ponRaTable, TRUE);
-        $conTable   = $data["continguts"]['value'];                if (!is_array($conTable)) $conTable = json_decode($conTable, TRUE);
-        $caTable    = $data["criterisAvaluacio"]['value'];         if (!is_array($caTable)) $caTable = json_decode($caTable, TRUE);
+        $iaTable    = IocCommon::toArrayThroughArrayOrJson($data["taulaInstrumentsAvaluacio"]['value']);
+        $aaTable    = IocCommon::toArrayThroughArrayOrJson($data["activitatsAprenentatge"]['value']);
+        $nfTable    = IocCommon::toArrayThroughArrayOrJson($data["taulaDadesNuclisFormatius"]['value']);
+        $ufTable    = IocCommon::toArrayThroughArrayOrJson($data["taulaDadesUF"]['value']);
+        $raTable    = IocCommon::toArrayThroughArrayOrJson($data["resultatsAprenentatge"]['value']);
+        $ponRaTable = IocCommon::toArrayThroughArrayOrJson($data["taulaPonderacioRA"]['value']);
+        $conTable   = IocCommon::toArrayThroughArrayOrJson($data["continguts"]['value']);
+        $caTable    = IocCommon::toArrayThroughArrayOrJson($data["criterisAvaluacio"]['value']);
         
         //Camps obligatoris
         $responseType = "SINGLE_MESSAGE";
@@ -632,10 +627,13 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
         }
         
         $ufTable = $data["taulaDadesUF"];
+        // [Xavi] No sé si és segur fer el canvi per IocCommon::toArrayThroughArrayOrJson, ignorant el if
         if ($ufTable && !is_array($ufTable)){
             $ufTable = json_decode($ufTable, TRUE);
         }
+
         $resultatsAprenentatge = $data["resultatsAprenentatge"];
+        // [Xavi] No sé si és segur fer el canvi per IocCommon::toArrayThroughArrayOrJson, ignorant el if
         if ($resultatsAprenentatge && !is_array($resultatsAprenentatge)){
            $resultatsAprenentatge = json_decode($resultatsAprenentatge, TRUE);
         }
@@ -804,15 +802,11 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
     }
 
     public function clearQualityRolesData(&$data){
-        if(!is_array($data['cc_dadesAutor'])){
-            $data['cc_dadesAutor'] = json_decode($data['cc_dadesAutor'], TRUE);
-        }
-        if(!is_array($data['cc_dadesRevisor'])){
-            $data['cc_dadesRevisor'] = json_decode($data['cc_dadesRevisor'], TRUE);
-        }
-        if(!is_array($data['cc_dadesValidador'])){
-            $data['cc_dadesValidador'] = json_decode($data['cc_dadesValidador'], TRUE);
-        }
+
+        $data['cc_dadesAutor'] = IocCommon::toArrayThroughArrayOrJson($data['cc_dadesAutor']);
+        $data['cc_dadesRevisor'] = IocCommon::toArrayThroughArrayOrJson($data['cc_dadesRevisor']);
+        $data['cc_dadesValidador'] = IocCommon::toArrayThroughArrayOrJson($data['cc_dadesValidador']);
+
         $data['cc_dadesAutor']['dataDeLaGestio'] = "";
         $data['cc_dadesAutor']['signatura'] = "pendent";
         $data['cc_dadesRevisor']['dataDeLaGestio'] = "";
@@ -832,22 +826,26 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
     public function modifyLastHistoricGestioDocument(&$data, $date=false) {
         if ($data['cc_historic'] === '"[]"') {
             $data['cc_historic'] = array();
-        }elseif (!is_array($data['cc_historic'])){
-            $data['cc_historic'] = json_decode($data['cc_historic'], true);
+        } else {
+            $data['cc_historic']  = IocCommon::toArrayThroughArrayOrJson($data['cc_historic']);
         }
-        if (is_array($data['cc_historic'])) {
+//        elseif (!is_array($data['cc_historic'])){
+//            $data['cc_historic'] = json_decode($data['cc_historic'], true);
+//        }
+//        if (is_array($data['cc_historic'])) {
             $hist['data'] = $date ? $date : date("Y-m-d");
             $hist['autor'] = $this->getUserName($data['autor']);
             $hist['modificacions'] = $data['cc_raonsModificacio'] ? $data['cc_raonsModificacio'] : "";
             $c = (count($data['cc_historic']) < 1) ? 0 : count($data['cc_historic'])-1;
             $data['cc_historic'][$c] = $hist;
-        }
+//        }
     }
     
     public function addHistoricGestioDocument(&$data) {
-        if (!is_array($data['cc_historic'])){
-            $data['cc_historic'] = json_decode($data['cc_historic'], true);
-        }
+        $data['cc_historic']  = IocCommon::toArrayThroughArrayOrJson($data['cc_historic']);
+//        if (!is_array($data['cc_historic'])){
+//            $data['cc_historic'] = json_decode($data['cc_historic'], true);
+//        }
         $hist['data'] = date("Y-m-d");
         $hist['autor'] = $this->getUserName($data['autor']);
         $hist['modificacions'] = $data['cc_raonsModificacio'] ? $data['cc_raonsModificacio'] : "";

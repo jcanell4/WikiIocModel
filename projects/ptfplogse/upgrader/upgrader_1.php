@@ -15,9 +15,8 @@ class upgrader_1 extends CommonUpgrader {
             case "fields":
                 //Transforma los datos del proyecto "ptfplogse" desde la estructura de la versión 0 a la versión 1
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) {
-                    $dataProject = json_decode($dataProject, TRUE);
-                }
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
+
                 $dataProject['descripcio'] = "tracta de ".$dataProject['descripcio'];
                 //Añade el campo 'hiHaRecuperacio' a la tabla 'datesJT'
                 $dataProject = $this->addFieldInMultiRow($dataProject, "datesJT", "hiHaRecuperacio", TRUE);

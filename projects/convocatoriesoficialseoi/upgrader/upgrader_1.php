@@ -14,9 +14,8 @@ class upgrader_1 extends CommonUpgrader {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) {
-                    $dataProject = json_decode($dataProject, TRUE);
-                }
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
+
                 //A2
                 $dataProject["dadesEspecifiquesProvaA2"]= array();
                 //title

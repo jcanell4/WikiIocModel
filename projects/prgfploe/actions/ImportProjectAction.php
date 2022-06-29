@@ -97,12 +97,18 @@ class ImportProjectAction extends ViewProjectAction {
 
                             //Camps amb importació parcial
                             //taulaInstrumentsAvaluacio
-                            if (!is_array($import_data["dadesQualificacioUFs"])) $import_data["dadesQualificacioUFs"]= json_decode ($import_data["dadesQualificacioUFs"], TRUE);
+                            $import_data["dadesQualificacioUFs"] = IocCommon::toArrayThroughArrayOrJson($import_data["dadesQualificacioUFs"]);
+
+
+//                            if (!is_array($import_data["dadesQualificacioUFs"])) $import_data["dadesQualificacioUFs"]= json_decode ($import_data["dadesQualificacioUFs"], TRUE);
                             if (isset($dataProject["taulaInstrumentsAvaluacio"])){
-                                if (!is_array($dataProject["taulaInstrumentsAvaluacio"])) $dataProject["taulaInstrumentsAvaluacio"]= json_decode ($dataProject["taulaInstrumentsAvaluacio"], TRUE);
+//                                if (!is_array($dataProject["taulaInstrumentsAvaluacio"])) $dataProject["taulaInstrumentsAvaluacio"]= json_decode ($dataProject["taulaInstrumentsAvaluacio"], TRUE);
+                                $import_data["taulaInstrumentsAvaluacio"] = IocCommon::toArrayThroughArrayOrJson($import_data["taulaInstrumentsAvaluacio"]);
                             }else{
                                 $dataProject["taulaInstrumentsAvaluacio"]=array();
                             }
+
+
                             foreach ($import_data["dadesQualificacioUFs"] as $instAvToImport) {
                                 $dataProject["taulaInstrumentsAvaluacio"][]=[
                                      "unitat formativa" => $instAvToImport["unitat formativa"]
@@ -116,19 +122,24 @@ class ImportProjectAction extends ViewProjectAction {
                                 ];
                             }                        
                             //taulaDadesBlocs
-                            if (!is_array($dataProject['taulaDadesBlocs'])) $dataProject['taulaDadesBlocs'] = json_decode($dataProject['taulaDadesBlocs'], TRUE);
+//                            if (!is_array($dataProject['taulaDadesBlocs'])) $dataProject['taulaDadesBlocs'] = json_decode($dataProject['taulaDadesBlocs'], TRUE);
+                            $dataProject['taulaDadesBlocs'] = IocCommon::toArrayThroughArrayOrJson($import_data["taulaDadesBlocs"]);
                             $B = ["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"];
                             $T = ['bloc' => array_search($import_data['tipusBlocModul'], $B),
                                   'horesBloc' => $import_data['durada']];
                             $dataProject['taulaDadesBlocs'][] = $T;
 
                             //taulaDadesUF
-                            if (!is_array($import_data["taulaDadesUF"])) $import_data["taulaDadesUF"]= json_decode ($import_data["taulaDadesUF"], TRUE);
+//                            if (!is_array($import_data["taulaDadesUF"])) $import_data["taulaDadesUF"]= json_decode ($import_data["taulaDadesUF"], TRUE);
+                            $import_data["taulaDadesUF"] = IocCommon::toArrayThroughArrayOrJson($import_data["taulaDadesUF"]);
+
                             if (isset($dataProject["taulaDadesUF"])){
-                                if (!is_array($dataProject["taulaDadesUF"])) $dataProject["taulaDadesUF"]= json_decode ($dataProject["taulaDadesUF"], TRUE);
+                                $dataProject["taulaDadesUF"] = IocCommon::toArrayThroughArrayOrJson($dataProject["taulaDadesUF"]);
+//                                if (!is_array($dataProject["taulaDadesUF"])) $dataProject["taulaDadesUF"]= json_decode ($dataProject["taulaDadesUF"], TRUE);
                             }else{
                                 $dataProject["taulaDadesUF"]=array();
                             }
+
                             if (empty($dataProject["taulaDadesUF"])){
                                 foreach ($import_data['taulaDadesUF'] as $key => $toImport) {
                                     $dataProject['taulaDadesUF'][] = [
@@ -145,9 +156,12 @@ class ImportProjectAction extends ViewProjectAction {
                                 }
                             }
                             //taulaDadesNuclisFormatius
-                            if (!is_array($import_data["taulaDadesUnitats"])) $import_data["taulaDadesUnitats"]= json_decode ($import_data["taulaDadesUnitats"], TRUE);
+                            $import_data["taulaDadesUnitats"] = IocCommon::toArrayThroughArrayOrJson($import_data["taulaDadesUnitats"]);
+
+//                            if (!is_array($import_data["taulaDadesUnitats"])) $import_data["taulaDadesUnitats"]= json_decode ($import_data["taulaDadesUnitats"], TRUE);
                             if (isset($dataProject["taulaDadesNuclisFormatius"])){
-                                if (!is_array($dataProject["taulaDadesNuclisFormatius"])) $dataProject["taulaDadesNuclisFormatius"]= json_decode ($dataProject["taulaDadesNuclisFormatius"], TRUE);
+//                                if (!is_array($dataProject["taulaDadesNuclisFormatius"])) $dataProject["taulaDadesNuclisFormatius"]= json_decode ($dataProject["taulaDadesNuclisFormatius"], TRUE);
+                                $dataProject["taulaDadesNuclisFormatius"] = IocCommon::toArrayThroughArrayOrJson($dataProject["taulaDadesNuclisFormatius"]);
                             }else{
                                 $dataProject["taulaDadesNuclisFormatius"]=array();
                             }
@@ -165,16 +179,21 @@ class ImportProjectAction extends ViewProjectAction {
                                 $dataProject['taulaDadesNuclisFormatius'][] = $U;
                             }
                         }else{
-                            if (!is_array($dataProject['taulaDadesBlocs'])) $dataProject['taulaDadesBlocs'] = json_decode($dataProject['taulaDadesBlocs'], TRUE);
+
+//                            if (!is_array($dataProject['taulaDadesBlocs'])) $dataProject['taulaDadesBlocs'] = json_decode($dataProject['taulaDadesBlocs'], TRUE);
+                            $dataProject['taulaDadesBlocs'] = IocCommon::toArrayThroughArrayOrJson($dataProject['taulaDadesBlocs']);
                             $T = ['bloc' => 0,
                                   'horesBloc' => $import_data['durada']];
                             $dataProject['taulaDadesBlocs'][] = $T;
                         }
 
                         //resultatsAprenentatge
-                        if (!is_array($import_data["resultatsAprenentatge"])) $import_data["resultatsAprenentatge"]= json_decode ($import_data["resultatsAprenentatge"], TRUE);
+//                        if (!is_array($import_data["resultatsAprenentatge"])) $import_data["resultatsAprenentatge"]= json_decode ($import_data["resultatsAprenentatge"], TRUE);
+                        $import_data["resultatsAprenentatge"] = IocCommon::toArrayThroughArrayOrJson($import_data["resultatsAprenentatge"]);
+
                         if (isset($dataProject["resultatsAprenentatge"])){
-                            if (!is_array($dataProject["resultatsAprenentatge"])) $dataProject["resultatsAprenentatge"]= json_decode ($dataProject["resultatsAprenentatge"], TRUE);
+//                            if (!is_array($dataProject["resultatsAprenentatge"])) $dataProject["resultatsAprenentatge"]= json_decode ($dataProject["resultatsAprenentatge"], TRUE);
+                            $dataProject["resultatsAprenentatge"] = IocCommon::toArrayThroughArrayOrJson($dataProject["resultatsAprenentatge"]);
                         }else{
                             $dataProject["resultatsAprenentatge"]=array();
                         }

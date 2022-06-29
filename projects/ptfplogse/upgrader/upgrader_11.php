@@ -18,9 +18,8 @@ class upgrader_11 extends CommonUpgrader {
             case "fields":
                  //Transforma los datos del proyecto "ptfplogse" desde la estructura de la versión 19 a la versión 11
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) {
-                    $dataProject = json_decode($dataProject, TRUE);
-                }
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
+
 
                 $dataProject['duradaPAF'] = "Té una durada d'".$dataProject['duradaPAF'];
 

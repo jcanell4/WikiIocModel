@@ -16,12 +16,12 @@ class upgrader_6 extends CommonUpgrader {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) {
-                    $dataProject = json_decode($dataProject, TRUE);
-                }// cerquem les dades de la paf1 i paf 2 i les qualificacions son de l'any 2019 i canviar-les per la mateixa data però 2020
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
 
+                // cerquem les dades de la paf1 i paf 2 i les qualificacions son de l'any 2019 i canviar-les per la mateixa data però 2020
 
-                $aux = is_string($dataProject['dadesQualificacio'])?json_decode($dataProject['dadesQualificacio'], TRUE):$dataProject['dadesQualificacio'];
+                $aux = IocCommon::toArrayThroughArrayOrJson($dataProject['dadesQualificacio']);
+
                 for($i=0; $i<count($aux); $i++){
                     unset($aux[$i]["unitat didàctica"]);
                 }

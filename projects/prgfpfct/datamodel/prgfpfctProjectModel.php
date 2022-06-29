@@ -106,10 +106,12 @@ class prgfpfctProjectModel extends ProgramacioProjectModel {
         }
         
         $resultatsAprenentatge = $data["resultatsAprenentatgeObjectiusTerminals"];
-        if ($resultatsAprenentatge && !is_array($resultatsAprenentatge)){
-           $resultatsAprenentatge = json_decode($resultatsAprenentatge, TRUE);
-            $data["resultatsAprenentatgeObjectiusTerminals"] = $resultatsAprenentatge;
-        }
+        $data["resultatsAprenentatgeObjectiusTerminals"] = IocCommon::toArrayThroughArrayOrJson($resultatsAprenentatge);
+
+//        if ($resultatsAprenentatge && !is_array($resultatsAprenentatge)){
+//           $resultatsAprenentatge = json_decode($resultatsAprenentatge, TRUE);
+//            $data["resultatsAprenentatgeObjectiusTerminals"] = $resultatsAprenentatge;
+//        }
         return $data;
     }
 
@@ -120,10 +122,12 @@ class prgfpfctProjectModel extends ProgramacioProjectModel {
         
         $data = parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue, $subset);
 
-        $resultatsAprenentatge = $data["resultatsAprenentatgeObjectiusTerminals"];
-        if ($resultatsAprenentatge && !is_array($resultatsAprenentatge)){
-            $resultatsAprenentatge = json_decode($resultatsAprenentatge, TRUE);
-        }
+//        $resultatsAprenentatge = $data["resultatsAprenentatgeObjectiusTerminals"];
+        $resultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($data["resultatsAprenentatgeObjectiusTerminals"]);
+
+//        if ($resultatsAprenentatge && !is_array($resultatsAprenentatge)){
+//            $resultatsAprenentatge = json_decode($resultatsAprenentatge, TRUE);
+//        }
 
         if($data["tipusCicle"]=="LOE"){
             $resultatsAprenentatge = array(
@@ -179,15 +183,20 @@ class prgfpfctProjectModel extends ProgramacioProjectModel {
     }
 
     public function clearQualityRolesData(&$data){
-        if(!is_array($data['cc_dadesAutor'])){
-            $data['cc_dadesAutor'] = json_decode($data['cc_dadesAutor'], TRUE);
-        }
-        if(!is_array($data['cc_dadesRevisor'])){
-            $data['cc_dadesRevisor'] = json_decode($data['cc_dadesRevisor'], TRUE);
-        }
-        if(!is_array($data['cc_dadesValidador'])){
-            $data['cc_dadesValidador'] = json_decode($data['cc_dadesValidador'], TRUE);
-        }
+        $data['cc_dadesAutor'] = IocCommon::toArrayThroughArrayOrJson($data['cc_dadesAutor']);
+        $data['cc_dadesRevisor'] = IocCommon::toArrayThroughArrayOrJson($data['cc_dadesRevisor']);
+        $data['cc_dadesValidador'] = IocCommon::toArrayThroughArrayOrJson($data['cc_dadesValidador']);
+        $data['cc_dadesValidador'] = IocCommon::toArrayThroughArrayOrJson($data['cc_dadesValidador']);
+
+//        if(!is_array($data['cc_dadesAutor'])){
+//            $data['cc_dadesAutor'] = json_decode($data['cc_dadesAutor'], TRUE);
+//        }
+//        if(!is_array($data['cc_dadesRevisor'])){
+//            $data['cc_dadesRevisor'] = json_decode($data['cc_dadesRevisor'], TRUE);
+//        }
+//        if(!is_array($data['cc_dadesValidador'])){
+//            $data['cc_dadesValidador'] = json_decode($data['cc_dadesValidador'], TRUE);
+//        }
         $data['cc_dadesAutor']['dataDeLaGestio'] = "";
         $data['cc_dadesAutor']['signatura'] = "pendent";
         $data['cc_dadesRevisor']['dataDeLaGestio'] = "";
@@ -205,6 +214,8 @@ class prgfpfctProjectModel extends ProgramacioProjectModel {
     }
     
     public function modifyLastHistoricGestioDocument(&$data, $date=false) {
+        // ALERTA[Xavi] No he fet el canvi per IocCommon::toArrayThroughArrayOrJson perquè no tinc clar
+        // si aquest càs funcionaria o no (cometes dobles i dins un array buid)
         if ($data['cc_historic'] === '"[]"') {
             $data['cc_historic'] = array();
         }elseif (!is_array($data['cc_historic'])){
@@ -220,9 +231,8 @@ class prgfpfctProjectModel extends ProgramacioProjectModel {
     }
     
     public function addHistoricGestioDocument(&$data) {
-        if (!is_array($data['cc_historic'])){
-            $data['cc_historic'] = json_decode($data['cc_historic'], true);
-        }
+
+        $data['cc_historic'] = IocCommon::toArrayThroughArrayOrJson($data['cc_historic']);
         $hist['data'] = date("Y-m-d");
         $hist['autor'] = $this->getUserName($data['autor']);
         $hist['modificacions'] = $data['cc_raonsModificacio'] ? $data['cc_raonsModificacio'] : "";

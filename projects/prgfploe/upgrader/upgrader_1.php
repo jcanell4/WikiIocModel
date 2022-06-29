@@ -15,8 +15,7 @@ class upgrader_1 extends ProgramacionsCommonUpgrader{
             case "fields":
                 //Transforma los datos del proyecto desde la estructura de la versión 0 a la versión 1
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject))
-                    $dataProject = json_decode($dataProject, TRUE);
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
                 $dataProject['documentVersion'] = 9;
                 $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;

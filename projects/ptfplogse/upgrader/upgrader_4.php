@@ -15,9 +15,7 @@ class upgrader_4 extends CommonUpgrader {
             case "fields":
 
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) {
-                    $dataProject = json_decode($dataProject, TRUE);
-                }
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
 
                 // cerquem les dades de la paf1 i paf 2 i les qualificacions son de l'any 2019 i canviar-les per la mateixa data però 2020
 

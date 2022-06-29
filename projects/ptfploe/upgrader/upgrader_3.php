@@ -14,9 +14,7 @@ class upgrader_3 extends CommonUpgrader {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) {
-                    $dataProject = json_decode($dataProject, TRUE);
-                }
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
 
                 //Añade el campo 'hiHaEnunciatRecuperacio' a la tabla 'datesEAF'
                 $dataProject = $this->addFieldInMultiRow($dataProject, "datesEAF", "hiHaEnunciatRecuperacio", TRUE);

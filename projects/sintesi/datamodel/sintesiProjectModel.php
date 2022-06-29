@@ -58,17 +58,20 @@ class sintesiProjectModel extends MoodleUniqueContentFilesProjectModel{
         $values = $isArray?$data:json_decode($data, true);
         $originalValues = $isArray?$originalDataKeyValue:json_decode($originalDataKeyValue, true);
 
-        $resultatsAprenentatge = (is_array($values["resultatsAprenentatge"])) ? $values["resultatsAprenentatge"] : json_decode($values["resultatsAprenentatge"], true);
-        $originalResultatsAprenentatge = (is_array($originalValues["resultatsAprenentatge"])) ? $originalValues["resultatsAprenentatge"] : json_decode($originalValues["resultatsAprenentatge"], true);
+//        $resultatsAprenentatge = (is_array($values["resultatsAprenentatge"])) ? $values["resultatsAprenentatge"] : json_decode($values["resultatsAprenentatge"], true);
+//        $originalResultatsAprenentatge = (is_array($originalValues["resultatsAprenentatge"])) ? $originalValues["resultatsAprenentatge"] : json_decode($originalValues["resultatsAprenentatge"], true);
+        $resultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($values["resultatsAprenentatge"]);;
+        $originalResultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($originalValues["resultatsAprenentatge"]);
         $blocId = 0;
         if($values["nsProgramacio"]){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
-            if(!is_array($dataPrg)){
-                $dataPrg = json_decode($dataPrg, true);
-            }
-            $taulaDadesNF = (is_array($dataPrg["taulaDadesNuclisFormatius"])) ? $dataPrg["taulaDadesNuclisFormatius"] : json_decode($dataPrg["taulaDadesNuclisFormatius"], true);
+            $dataPrg = IocCommon::toArrayThroughArrayOrJson($dataPrg);
 
-            $taulaDadesUFPrg = (is_array($dataPrg["taulaDadesUF"])) ? $dataPrg["taulaDadesUF"] : json_decode($dataPrg["taulaDadesUF"], true);
+//            $taulaDadesNF = (is_array($dataPrg["taulaDadesNuclisFormatius"])) ? $dataPrg["taulaDadesNuclisFormatius"] : json_decode($dataPrg["taulaDadesNuclisFormatius"], true);
+            $taulaDadesNF = IocCommon::toArrayThroughArrayOrJson($dataPrg["taulaDadesNuclisFormatius"]);
+
+//            $taulaDadesUFPrg = (is_array($dataPrg["taulaDadesUF"])) ? $dataPrg["taulaDadesUF"] : json_decode($dataPrg["taulaDadesUF"], true);
+            $taulaDadesUFPrg = IocCommon::toArrayThroughArrayOrJson($dataPrg["taulaDadesUF"]);
         }else{
             $taulaDadesNF = FALSE;
         }
@@ -95,7 +98,8 @@ class sintesiProjectModel extends MoodleUniqueContentFilesProjectModel{
             return parent::updateCalculatedFieldsOnSave($data, $subset, $subset);
         }
 
-        $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
+//        $taulaCalendari = (is_array($values["calendari"])) ? $values["calendari"] : json_decode($values["calendari"], true);
+        $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);
 
         if ($taulaCalendari!=NULL){
             $hores = 0;
@@ -111,11 +115,9 @@ class sintesiProjectModel extends MoodleUniqueContentFilesProjectModel{
     public function getCalendarDates() {
         $ret = array();
         $data = $this->getCurrentDataProject();
-        if(is_string($data['calendari'])){
-            $calendari = json_decode($data["calendari"], true);
-        }else{
-            $calendari = $data["calendari"];
-        }
+
+        $calendari = IocCommon::toArrayThroughArrayOrJson(["calendari"]);
+
         foreach ($calendari as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inici %s %d", $data["modulId"], $data["nomPeriode"], $item["període"]),
@@ -126,12 +128,14 @@ class sintesiProjectModel extends MoodleUniqueContentFilesProjectModel{
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
-        $datesAC = json_decode($data["dadesAC"], true);
-        if(is_string($data['dadesAC'])){
-            $datesAC = json_decode($data["dadesAC"], true);
-        }else{
-            $datesAC = $data["dadesAC"];
-        }
+        $datesAC = IocCommon::toArrayThroughArrayOrJson($data["dadesAC"]);
+
+//        $datesAC = json_decode($data["dadesAC"], true);
+//        if(is_string($data['dadesAC'])){
+//            $datesAC = json_decode($data["dadesAC"], true);
+//        }else{
+//            $datesAC = $data["dadesAC"];
+//        }
         foreach ($datesAC as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [

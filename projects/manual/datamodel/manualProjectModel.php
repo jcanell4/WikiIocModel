@@ -32,12 +32,14 @@ class manualProjectModel extends AbstractProjectModel {
             $id = $this->getId();
             $path_continguts = WikiGlobalConfig::getConf('datadir')."/".str_replace(":", "/", $id);
 
-            $nousDocuments = is_array($data['documents']) ? $data['documents'] : json_decode($data['documents'], true);
+            $nousDocuments = IocCommon::toArrayThroughArrayOrJson($data['documents']);
+
             if (!empty($nousDocuments)) {
                 usort($nousDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
 
                 $dataProject = $this->getCurrentDataProject();
-                $vellsDocuments = is_array($dataProject['documents']) ? $dataProject['documents'] : json_decode($dataProject['documents'], true);
+                $vellsDocuments = IocCommon::toArrayThroughArrayOrJson($dataProject['documents']);
+
                 usort($vellsDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
 
                 foreach ($nousDocuments as $k => $doc) {

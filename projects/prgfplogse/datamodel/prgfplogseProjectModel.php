@@ -38,14 +38,22 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
         }
 
         $result   = array();
-        $iaTable  = $data["taulaInstrumentsAvaluacio"]['value']; if (!is_array($iaTable)) $iaTable = json_decode($iaTable, TRUE);
-        $naTable  = $data["taulaNuclisActivitat"]['value'];      if (!is_array($naTable)) $naTable = json_decode($naTable, TRUE);
-        $udTable  = $data["taulaDadesUD"]['value'];              if (!is_array($udTable)) $udTable = json_decode($udTable, TRUE);
-        $obTable  = $data["objectius"]['value'];                 if (!is_array($obTable)) $obTable = json_decode($obTable, TRUE);
-        $conTable = $data["conceptes"]['value'];                 if (!is_array($conTable)) $conTable = json_decode($conTable, TRUE);
-        $proTable = $data["procediments"]['value'];              if (!is_array($proTable)) $proTable = json_decode($proTable, TRUE);
-        $actTable = $data["actituds"]['value'];                  if (!is_array($actTable)) $actTable = json_decode($actTable, TRUE);
-        
+        $iaTable  = IocCommon::toArrayThroughArrayOrJson($data["taulaInstrumentsAvaluacio"]['value']);
+        $naTable  = IocCommon::toArrayThroughArrayOrJson($data["taulaNuclisActivitat"]['value']);
+        $udTable  = IocCommon::toArrayThroughArrayOrJson($data["taulaDadesUD"]['value']);
+        $obTable  = IocCommon::toArrayThroughArrayOrJson($data["objectius"]['value']);
+        $conTable = IocCommon::toArrayThroughArrayOrJson($data["conceptes"]['value']);
+        $proTable = IocCommon::toArrayThroughArrayOrJson($data["procediments"]['value']);
+        $actTable = IocCommon::toArrayThroughArrayOrJson($data["actituds"]['value']);
+
+//        $iaTable  = $data["taulaInstrumentsAvaluacio"]['value']; if (!is_array($iaTable)) $iaTable = json_decode($iaTable, TRUE);
+//        $naTable  = $data["taulaNuclisActivitat"]['value'];      if (!is_array($naTable)) $naTable = json_decode($naTable, TRUE);
+//        $udTable  = $data["taulaDadesUD"]['value'];              if (!is_array($udTable)) $udTable = json_decode($udTable, TRUE);
+//        $obTable  = $data["objectius"]['value'];                 if (!is_array($obTable)) $obTable = json_decode($obTable, TRUE);
+//        $conTable = $data["conceptes"]['value'];                 if (!is_array($conTable)) $conTable = json_decode($conTable, TRUE);
+//        $proTable = $data["procediments"]['value'];              if (!is_array($proTable)) $proTable = json_decode($proTable, TRUE);
+//        $actTable = $data["actituds"]['value'];                  if (!is_array($actTable)) $actTable = json_decode($actTable, TRUE);
+
         //Camps obligatoris
         $responseType = "SINGLE_MESSAGE";
         $message = WikiIocLangManager::getLang("El camp %s és obligatori. Cal que %s.");
@@ -162,8 +170,7 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
                 $result["WARNING"][] = [
                     'responseType' => $responseType,
                     'field' => 'taulaInstrumentsAvaluacio',
-                    'message' => sprintf("A la taula dels intsruments d'avaluació (taulaInstrumentsAvaluacio), la suma de les ponderacions no és 100, ni coincideix amb el nombre d'hores. Reviseu si es tracta d'un error."
-                                        ,$key)
+                    'message' => sprintf("A la taula dels intsruments d'avaluació (taulaInstrumentsAvaluacio), la suma de les ponderacions no és 100, ni coincideix amb el nombre d'hores. Reviseu si es tracta d'un error.",$key)
                 ];
             }
         }
@@ -301,15 +308,10 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
     }
 
     public function clearQualityRolesData(&$data){
-        if(!is_array($data['cc_dadesAutor'])){
-            $data['cc_dadesAutor'] = json_decode($data['cc_dadesAutor'], TRUE);
-        }
-        if(!is_array($data['cc_dadesRevisor'])){
-            $data['cc_dadesRevisor'] = json_decode($data['cc_dadesRevisor'], TRUE);
-        }
-        if(!is_array($data['cc_dadesValidador'])){
-            $data['cc_dadesValidador'] = json_decode($data['cc_dadesValidador'], TRUE);
-        }
+        $data['cc_dadesAutor'] = IocCommon::toArrayThroughArrayOrJson($data['cc_dadesAutor']);
+        $data['cc_dadesRevisor'] = IocCommon::toArrayThroughArrayOrJson($data['cc_dadesRevisor']);
+        $data['cc_dadesValidador'] = IocCommon::toArrayThroughArrayOrJson($data['cc_dadesValidador']);
+
         $data['cc_dadesAutor']['dataDeLaGestio'] = "";
         $data['cc_dadesAutor']['signatura'] = "pendent";
         $data['cc_dadesRevisor']['dataDeLaGestio'] = "";

@@ -15,8 +15,7 @@ class upgrader_6 extends ProgramacionsCommonUpgrader {
             case "fields":
                 //Transforma los datos del proyecto
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject))
-                    $dataProject = json_decode($dataProject, TRUE);
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
 
                 //Omple seqüencialment el camp 'ordreImparticio' de la taula 'taulaDadesUD'
                 $this->updateOrdreImparticioInTaulaDadesUX($dataProject, 'taulaDadesUD');

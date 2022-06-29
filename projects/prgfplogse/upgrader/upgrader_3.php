@@ -15,7 +15,7 @@ class upgrader_3 extends ProgramacionsCommonUpgrader {
             case "fields":
                 //Transforma los datos de los proyectos
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) $dataProject = json_decode($dataProject, TRUE);
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
 
                 //Actualitza els camps notaMinima??? a partir de les dades de la taula 'taulaInstrumentsAvaluacio'
                 $this->updateNotaMinimaInProgramacions($dataProject);

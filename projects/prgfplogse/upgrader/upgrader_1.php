@@ -17,8 +17,7 @@ class upgrader_1 extends ProgramacionsCommonUpgrader {
                 // Actualiza la versión del documento establecido en el sistema de calidad del IOC (Visible en el pie del documento)
                 // Sólo se debe actualizar si el coordinador de claidad lo indica!!!!!!
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject))
-                    $dataProject = json_decode($dataProject, TRUE);
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
                 $dataProject['documentVersion'] = 7;
                 $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;

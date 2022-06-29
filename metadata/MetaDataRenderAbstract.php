@@ -170,7 +170,7 @@ abstract class MetaDataRenderAbstract implements MetaDataRenderInterface {
         return $ret;
     }
 
-    private function _getValue($field, $values, $properties, $types){
+    protected function _getValue($field, $values, $properties, $types){
         if ($values === "") {
             $values = [$field];
         }

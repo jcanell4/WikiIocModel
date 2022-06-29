@@ -18,9 +18,8 @@ class upgrader_9 extends CommonUpgrader {
         switch ($type) {
             case "fields":
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) {
-                    $dataProject = json_decode($dataProject, TRUE);
-                }
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
+
                 //Añade un campo en el primer nivel de la estructura de datos
                 $name = "treballEquipEAF";
                 $value = false;

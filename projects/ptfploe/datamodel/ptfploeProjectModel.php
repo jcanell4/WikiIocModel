@@ -39,6 +39,8 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]);
         if($values["nsProgramacio"]){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
+
+            // TODO[Xavi] No es pot canviar això pel toArrayThroughArrayOrJson?
             if(!is_array($dataPrg)){
                 $dataPrg = json_decode($dataPrg, true);
             }
@@ -395,11 +397,8 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
     public function getCalendarDates() {
         $ret = array();
         $data = $this->getCurrentDataProject();
-        if(is_string($data["calendari"])){
-            $calendari = json_decode($data["calendari"], true);
-        }else{
-            $calendari = $data["calendari"];
-        }
+        $calendari = IocCommon::toArrayThroughArrayOrJson($data["calendari"]);
+
         foreach ($calendari as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inici %s %d U%d", $data["modulId"], $item['tipus període'], $item["període"], $item["unitat"]),
@@ -410,11 +409,9 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         $dataEnunciatOld ="";
         $dataSolucioOld ="";
         $dataQualificacioOld ="";
-        if(is_string($data["datesAC"])){
-            $datesAC = json_decode($data["datesAC"], true);
-        }else{
-            $datesAC = $data["datesAC"];
-        }
+
+        $datesAC = IocCommon::toArrayThroughArrayOrJson($data["datesAC"]);
+
         foreach ($datesAC as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
@@ -445,11 +442,9 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         $dataEnunciatRecOld ="";
         $dataSolucioRecOld ="";
         $dataQualificacioRecOld ="";
-        if(is_string($data["datesEAF"])){
-            $datesEAF = json_decode($data["datesEAF"], true);
-        }else{
-            $datesEAF = $data["datesEAF"];
-        }
+
+        $datesEAF = IocCommon::toArrayThroughArrayOrJson($data["datesEAF"]);
+
         foreach ($datesEAF as $item) {
             if($dataEnunciatOld!=$item["enunciat"]){
                 $ret[] = [
@@ -497,11 +492,8 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             }
         }
 
-        if(is_string($data["datesJT"])){
-            $datesJT = json_decode($data["datesJT"], true);
-        }else{
-            $datesJT = $data["datesJT"];
-        }
+        $datesJT = IocCommon::toArrayThroughArrayOrJson($data["datesJT"]);
+
         foreach ($datesJT as $item) {
             $ret[] = [
                 "title"=>sprintf("%s - inscripció %s", $data["modulId"], $item['id']),
@@ -554,7 +546,8 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             parent::validateFields($data, $subset);
         }else{
             parent::validateFields($data);
-            $values = is_array($data)?$data:json_decode($data, true);
+            $values = IocCommon::toArrayThroughArrayOrJson($data);
+
             $taulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUnitats"]);
             $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);        
             if (!empty($values["nsProgramacio"])){

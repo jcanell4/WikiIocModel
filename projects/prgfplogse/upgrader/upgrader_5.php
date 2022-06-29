@@ -15,8 +15,7 @@ class upgrader_5 extends ProgramacionsCommonUpgrader {
             case "fields":
                 //Transforma los datos del proyecto
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject))
-                    $dataProject = json_decode($dataProject, TRUE);
+                $dataProject = IocCommon::toArrayThroughArrayOrJson($dataProject);
 
                 //Omple a 0 el camp bloc de la taula 'taulaInstrumentsAvaluacio'
                 $this->updateBlocInProgramacions($dataProject);

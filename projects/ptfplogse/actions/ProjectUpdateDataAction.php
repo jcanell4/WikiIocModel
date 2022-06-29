@@ -26,7 +26,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
         $metaDataConfigProject = $configProjectModel->getCurrentDataProject($metaDataSubSet);
 
         if ($metaDataConfigProject['arraytaula']) {
-            $arraytaula = is_string($metaDataConfigProject['arraytaula'])?json_decode($metaDataConfigProject['arraytaula'], TRUE):$metaDataConfigProject['arraytaula'];
+            $arraytaula = IocCommon::toArrayThroughArrayOrJson($metaDataConfigProject['arraytaula']);
             $restoreData = !$projectModel->getProjectSystemSubSetAttr("updatedDate");
             if($restoreData){
                 //La primera vegada aquests camps no s'actualitzen!
