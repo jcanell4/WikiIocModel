@@ -952,7 +952,29 @@
                         },                                                
                         "dadesExtres": {
                             "type": "defExtres",
-                            "mandatory": true
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateDateFormat",
+                                "data": {
+                                    "field": "dadesExtres",
+                                    "conditionColumn": "tipus",
+                                    "conditionValue": "data_actualitzable",
+                                    "formatField": "valor",
+                                    "format": "YYYYMMDD",
+                                    "separator": "-"
+                                }
+                            },
+                            "calculateOnSave": {
+                                "class": "CalculateDateFormat",
+                                "data": {
+                                    "field": "dadesExtres",
+                                    "conditionColumn": "tipus",
+                                    "conditionValue": "data_actualitzable",
+                                    "formatField": "valor",
+                                    "format": "DDMMYYYY",
+                                    "separator": "-"
+                                }
+                            }
                         },                                                
                         "plantilla": {
                             "type": "string",
