@@ -23,6 +23,16 @@
             }
         }        
     ],
+    "metaDataFtpSender": [
+        {
+            "main": {
+                "files": {
+                    "Floe1": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"}
+                },
+                "ftpId": "manuals"
+            }
+        }
+    ],
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
