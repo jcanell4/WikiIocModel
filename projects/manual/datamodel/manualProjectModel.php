@@ -11,7 +11,7 @@ class manualProjectModel extends AbstractProjectModel {
         parent::__construct($persistenceEngine);
         $this->needGenerateAction = false;
     }
-
+    
     public function generateProject(){} //abstract obligatorio
 
     public function directGenerateProject($data) {
@@ -88,5 +88,11 @@ class manualProjectModel extends AbstractProjectModel {
     static function cmpForSort($a, $b) {
         return ($a['id'] === $b['id']) ? 0 : (($a['id'] < $b['id']) ? -1 : 1);
     }
-
+//    
+//    /**
+//     * Obtiene la lista de ficheros, y sus propiedades, (del configMain.json) que hay que enviar por FTP
+//     * @return array
+//     */
+//    public function filesToExportList() {
+//    }
 }

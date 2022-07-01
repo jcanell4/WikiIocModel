@@ -37,5 +37,28 @@
                 }
             }
         }
+    },
+    "ftpSend": {
+        "parms": { 
+            "DOM": {
+               "id": "ftpProjectButton"
+            }
+        },
+        "scripts": {
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager"
+                ],
+                "rols": [
+                   "responsable"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'",
+                    "page.generated":"true",
+                    "page.isRevision": "false"
+                }
+            }
+        }
     }
 }
