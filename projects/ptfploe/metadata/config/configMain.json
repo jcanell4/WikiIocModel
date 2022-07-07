@@ -954,18 +954,18 @@
                             "type": "defExtres",
                             "mandatory": true,
                             "calculateOnRead": {
-                                "class": "CalculateDateFormat",
+                                "class": "CalculateDateFormatFromArrayObject",
                                 "data": {
                                     "field": "dadesExtres",
                                     "conditionColumn": "tipus",
                                     "conditionValue": "data_actualitzable",
                                     "formatField": "valor",
                                     "format": "YYYYMMDD",
-                                    "separator": "-"
+                                    "separator": "-", "default": "[]"
                                 }
                             },
                             "calculateOnSave": {
-                                "class": "CalculateDateFormat",
+                                "class": "CalculateDateFormatFromArrayObject",
                                 "data": {
                                     "field": "dadesExtres",
                                     "conditionColumn": "tipus",
