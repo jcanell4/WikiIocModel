@@ -961,7 +961,8 @@
                                     "conditionValue": "data_actualitzable",
                                     "formatField": "valor",
                                     "format": "YYYYMMDD",
-                                    "separator": "-", "default": "[]"
+                                    "separator": "-", 
+                                    "defaultValue": "[]"
                                 }
                             },
                             "calculateOnSave": {
