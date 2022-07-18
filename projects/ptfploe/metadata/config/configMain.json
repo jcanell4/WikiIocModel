@@ -960,8 +960,8 @@
                                     "conditionColumn": "tipus",
                                     "conditionValue": "data_actualitzable",
                                     "formatField": "valor",
-                                    "format": "YYYYMMDD",
-                                    "separator": "-", 
+                                    "format": "DDMMYYYY",
+                                    "separator": "/", 
                                     "defaultValue": "[]"
                                 }
                             },
@@ -972,8 +972,9 @@
                                     "conditionColumn": "tipus",
                                     "conditionValue": "data_actualitzable",
                                     "formatField": "valor",
-                                    "format": "DDMMYYYY",
-                                    "separator": "-"
+                                    "format": "YYYYMMDD",
+                                    "separator": "/", 
+                                    "defaultValue": "[]"
                                 }
                             }
                         },                                                
