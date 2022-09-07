@@ -126,10 +126,7 @@
                         },
                         "carrec": {
                             "type": "string",
-                            "mandatory": true,
-                            "props": {
-                                "readonly": true
-                            }
+                            "mandatory": true
                         },
                         "dataDeLaGestio": {
                             "type": "date",
