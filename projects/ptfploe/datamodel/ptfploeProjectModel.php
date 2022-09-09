@@ -556,7 +556,21 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             parent::validateFields($data);
             $values = is_array($data)?$data:json_decode($data, true);
             $taulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUnitats"]);
-            $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);        
+            $taulaDadesUF = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUF"]);
+            $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);
+
+            // Comprovació de la correspondència entre "unitat formativa" i "bloc"
+            $verifica = false;
+            foreach (["mòdul","1r. bloc","2n. bloc","3r. bloc"] as $k => $v) {
+                if ($values['tipusBlocModul'] == $v) $bloc = $k;
+            }
+            foreach ($taulaDadesUF as $uf) {
+                $verifica |= ($uf['bloc'] == $bloc);
+            }
+            if (!$verifica) {
+                throw new InconsistentDataException("No hi ha cap unitat formativa que pertanyi al bloc ({$taulaDadesUF['bloc']})[$bloc] definit en aquest pla de treball");
+            }
+            
             if (!empty($values["nsProgramacio"])){
                 $hores = array();
                 for ($i=0; $i<count($taulaCalendari); $i++){
