@@ -562,6 +562,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             // Comprovació de la correspondència entre "unitat formativa" i "bloc"
             $verifica = false;
             $bloc = array_search($values['tipusBlocModul'], ["mòdul","1r. bloc","2n. bloc","3r. bloc"]);
+            if (empty($bloc)) $bloc = 0;
             foreach ($taulaDadesUF as $uf) {
                 $verifica |= ($uf['bloc'] == $bloc);
             }
