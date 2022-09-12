@@ -30,8 +30,8 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView", "updateView": "updateView", "firstView": "firstView"},
             "versions": {
-                "fields": 3,
-                "templates": {"continguts":5}
+                "fields": 4,
+                "templates": {"continguts":6}
             },
             "mainType": {
                 "type": "object",
@@ -156,7 +156,35 @@
                 "defDadesAC": {
                     "type": "objectArray",
                     "typeDef":"entradaDadesAC"
-                },                                                                
+                },
+                "notaMinimaAC": {
+                    "type": "number",
+                    "mandatory": true,
+                    "props": {
+                        "min": 0,
+                        "max": 10,
+                        "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
+                    },
+                    "default": 0,
+                    "calculateOnRead": {
+                        "class": "CalculateSimpleValueFromExternaField",
+                        "data": {
+                            "projectId": {
+                                "_type_": "field",
+                                "name": "nsProgramacio",
+                                "values":"$values",
+                                "defaultValue":""
+                            },
+                            "metaDataSubSet": "main",
+                            "field": "notaMinimaAC",
+                            "defaultValue":{
+                                "_type_":"field",
+                                "name":"notaMinimaAC",
+                                "values": "$values"
+                            }
+                        }
+                    }
+                },
                 "entradaCompetencies": {
                     "type": "object",
                     "keys": {

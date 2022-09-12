@@ -502,6 +502,15 @@
                 ]
             }
         },
+        "notaMinimaAC": {
+            "label": "Nota mínima a l'AC (notaMinimaAC)",
+            "n_columns":6,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "Indiqueu la nota mínima que cal treure a l'AC per tal de poder ponderar la qualificació final"
+            }
+        },
         "dadesCompetencies": {
             "label":"Competències a avaluar en relació al treball en equip  (dadesCompetencies)",
             "n_columns": 12,
