@@ -48,7 +48,7 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
             throw new InvalidDataProjectException(
                     $this->id,
                     "El camp responsable no pot quedar buit"
-            );            
+            );
         }
     }
 
@@ -498,8 +498,46 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                 $horesIgualPonderacioUF = $horesIgualPonderacioUF && $item["hores"] == $item["ponderació"];
                 $ponderacioUF += $item["ponderació"];
             }
+
+            // Comprovació de la correspondència entre "unitat formativa" i "bloc"
+            $error0 = false;
+            $bloc = -1;
+            $blocs = [1=>false, 2=>false];
+            foreach ($ufTable as $uf) {
+                if ($uf['bloc'] === "0") {
+                    $bloc = 0;
+                    $error0 = ($blocs[1] || $blocs[2]);
+                }else {
+                    if ($bloc === 0) {
+                        $error0 = true;
+                        break;
+                    }else {
+                        $blocs[1] = ($uf['bloc'] === "1" || $blocs[1]);
+                        $blocs[2] = ($uf['bloc'] === "2" || $blocs[2]);
+                    }
+                }
+            }
+
+            if ($error0) {
+                $result["ERROR"][] = [
+                    'responseType' => $responseType,
+                    'field' => 'taulaDadesUF',
+                    'message' => "A la taula d'Unitats Formatives(taulaDadesUF), si una pertany al bloc 0 totes han de pertanyer al bloc 0."
+                ];
+            }
+
+            foreach ($blocs as $b) {
+                if (!$b) {
+                    $result["ERROR"][] = [
+                        'responseType' => $responseType,
+                        'field' => 'taulaDadesUF',
+                        'message' => "A la taula d'Unitats Formatives(taulaDadesUF), han d'existir, com a mínim, el bloc 1 i el bloc 2."
+                    ];
+                    break;
+                }
+            }
         }
-        
+
         if(!empty($raTable)){
             $horesIgualPonderacioRA = [];
             $ponderacioRA=[];

@@ -129,11 +129,49 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
                     $result["ERROR"][] = [
                         'responseType' => $responseType,
                         'field' => 'taulaDadesUD',
-                        'message' => sprintf("A la taula d'Unitats Formatives(taulaDadesUD), les hores de la unitat didàctica %s no coincideixen amb la suma de les hores dels seus nuclis d'activitat (hores UD=%d, però suma hoes NA=%d)."
+                        'message' => sprintf("A la taula d'Unitats Didàctiques(taulaDadesUD), les hores de la unitat didàctica %s no coincideixen amb la suma de les hores dels seus nuclis d'activitat (hores UD=%d, però suma hoes NA=%d)."
                                             ,$item["unitat didàctica"]
                                             ,$item["hores"]
                                             ,$totalUDs[$item["unitat didàctica"]])
                     ];
+                }
+            }
+
+            // Comprovació de la correspondència entre "unitat didàctica" i "bloc"
+            $error0 = false;
+            $bloc = -1;
+            $blocs = [1=>false, 2=>false];
+            foreach ($udTable as $ud) {
+                if ($ud['bloc'] === "0") {
+                    $bloc = 0;
+                    $error0 = ($blocs[1] || $blocs[2]);
+                }else {
+                    if ($bloc === 0) {
+                        $error0 = true;
+                        break;
+                    }else {
+                        $blocs[1] = ($ud['bloc'] === "1" || $blocs[1]);
+                        $blocs[2] = ($ud['bloc'] === "2" || $blocs[2]);
+                    }
+                }
+            }
+
+            if ($error0) {
+                $result["ERROR"][] = [
+                    'responseType' => $responseType,
+                    'field' => 'taulaDadesUD',
+                    'message' => "A la taula d'Unitats Didàctiques(taulaDadesUD), si una pertany al bloc 0 totes han de pertanyer al bloc 0."
+                ];
+            }
+
+            foreach ($blocs as $b) {
+                if (!$b) {
+                    $result["ERROR"][] = [
+                        'responseType' => $responseType,
+                        'field' => 'taulaDadesUD',
+                        'message' => "A la taula d'Unitats Didàctiques(taulaDadesUD), han d'existir, com a mínim, el bloc 1 i el bloc 2."
+                    ];
+                    break;
                 }
             }
         }

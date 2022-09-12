@@ -216,6 +216,32 @@ class ptfplogseProjectModel extends MoodleUniqueContentFilesProjectModel {
     }
 
     /**
+     * Validació de les dades que es volen emmagatzemar. En cas de dades no vàlides
+     *  aquest mètode ha de llançar una excepció de tipus InvalidDataProjectException.
+     * @param array|json $data
+     */
+    public function validateFields($data=NULL, $subset=FALSE){
+        if ($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            parent::validateFields($data, $subset);
+        }else{
+            parent::validateFields($data);
+            $values = is_array($data) ? $data : json_decode($data, true);
+
+            // Comprovació de la correspondència entre "unitat didàctica" i "bloc"
+            $taulaDadesUD = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUD"]);
+            $verifica = false;
+            $bloc = array_search($values['tipusBlocCredit'], ["crèdit","1r. bloc","2n. bloc","3r. bloc"]);
+            if (empty($bloc)) $bloc = 0;
+            foreach ($taulaDadesUD as $ud) {
+                $verifica |= ($ud['bloc'] === $bloc);
+            }
+            if (!$verifica) {
+                throw new InconsistentDataException("No hi ha cap unitat didàctica que pertanyi al bloc ({$taulaDadesUD['bloc']})[$bloc] definit en aquest pla de treball");
+            }
+        }
+    }
+
+    /**
      * Llista de les dates a pujar al calendari amb el format següent:
      *  - title
      *  - date (en format yyyy-mm-dd)

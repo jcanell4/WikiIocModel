@@ -564,7 +564,7 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
             $bloc = array_search($values['tipusBlocModul'], ["mòdul","1r. bloc","2n. bloc","3r. bloc"]);
             if (empty($bloc)) $bloc = 0;
             foreach ($taulaDadesUF as $uf) {
-                $verifica |= ($uf['bloc'] == $bloc);
+                $verifica |= ($uf['bloc'] === $bloc);
             }
             if (!$verifica) {
                 throw new InconsistentDataException("No hi ha cap unitat formativa que pertanyi al bloc ({$taulaDadesUF['bloc']})[$bloc] definit en aquest pla de treball");
