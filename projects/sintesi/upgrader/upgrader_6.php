@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_6: Transforma, als proyectes 'sintesi', l'estructura de dades de la v.3 a la v.4
- *             i l'arxiu continguts.tx desde la v.5 a la v.6
+ * upgrader_6: Transforma l'arxiu continguts.txt del proyecte 'sintesi'
+ *             des de la v.5 a la v.6
  * @author rafael <rclaver@xtec.cat>
  */
 if (!defined("DOKU_INC")) die();
@@ -14,13 +14,7 @@ class upgrader_6 extends CommonUpgrader {
         switch ($type) {
             case "fields":
                 //Transforma los datos del proyecto desde la estructura de la versión $ver a la versión $ver+1
-                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) {
-                    $dataProject = json_decode($dataProject, TRUE);
-                }
-                $dataProject['notaMinimaAC'] = 0;
-
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
+                $ret = true;
                 break;
 
             case "templates":

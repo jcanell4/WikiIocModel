@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_4: Transforma el archivo continguts.tx del proyecto 'sintesi'
- *             desde la versión 3 a la versión 4
+ * upgrader_4: Transforma l'estructura de dades i l'arxiu continguts.txt del proyecto 'sintesi'
+ *             des de la versió 3 a la versió 4
  * @author rafael <rclaver@xtec.cat>
  */
 if (!defined("DOKU_INC")) die();
@@ -14,7 +14,13 @@ class upgrader_4 extends CommonUpgrader {
         switch ($type) {
             case "fields":
                 //Transforma los datos del proyecto desde la estructura de la versión $ver a la versión $ver+1
-                $ret = true;
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+                $dataProject['notaMinimaAC'] = 0;
+
+                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 break;
             case "templates":
                 // Sólo se debe actualizar la versión del documento si el coordinador de calidad lo indica!!!!!!
