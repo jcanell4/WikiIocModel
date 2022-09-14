@@ -504,7 +504,7 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
             $bloc = -1;
             $blocs = [1=>false, 2=>false];
             foreach ($ufTable as $uf) {
-                if ($uf['bloc'] === "0") {
+                if ($uf['bloc'] == 0) {
                     $bloc = 0;
                     $error0 = ($blocs[1] || $blocs[2]);
                 }else {
@@ -512,8 +512,8 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                         $error0 = true;
                         break;
                     }else {
-                        $blocs[1] = ($uf['bloc'] === "1" || $blocs[1]);
-                        $blocs[2] = ($uf['bloc'] === "2" || $blocs[2]);
+                        $blocs[1] = ($uf['bloc'] == 1 || $blocs[1]);
+                        $blocs[2] = ($uf['bloc'] == 2 || $blocs[2]);
                     }
                 }
             }

@@ -142,7 +142,7 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
             $bloc = -1;
             $blocs = [1=>false, 2=>false];
             foreach ($udTable as $ud) {
-                if ($ud['bloc'] === "0") {
+                if ($ud['bloc'] == 0) {
                     $bloc = 0;
                     $error0 = ($blocs[1] || $blocs[2]);
                 }else {
@@ -150,8 +150,8 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
                         $error0 = true;
                         break;
                     }else {
-                        $blocs[1] = ($ud['bloc'] === "1" || $blocs[1]);
-                        $blocs[2] = ($ud['bloc'] === "2" || $blocs[2]);
+                        $blocs[1] = ($ud['bloc'] == 1 || $blocs[1]);
+                        $blocs[2] = ($ud['bloc'] == 2 || $blocs[2]);
                     }
                 }
             }
