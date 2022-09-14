@@ -139,10 +139,11 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
 
             // Comprovació de la correspondència entre "unitat didàctica" i "bloc"
             $error0 = false;
+            $error1 = false;
             $bloc = -1;
             $blocs = [1=>false, 2=>false];
             foreach ($udTable as $ud) {
-                if ($ud['bloc'] === "0") {
+                if ($ud['bloc'] == 0) {
                     $bloc = 0;
                     $error0 = ($blocs[1] || $blocs[2]);
                 }else {
@@ -150,8 +151,9 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
                         $error0 = true;
                         break;
                     }else {
-                        $blocs[1] = ($ud['bloc'] === "1" || $blocs[1]);
-                        $blocs[2] = ($ud['bloc'] === "2" || $blocs[2]);
+                        $error1 = true;
+                        $blocs[1] = ($ud['bloc'] == 1 || $blocs[1]);
+                        $blocs[2] = ($ud['bloc'] == 2 || $blocs[2]);
                     }
                 }
             }
@@ -164,14 +166,16 @@ class prgfplogseProjectModel extends ProgramacioProjectModel {
                 ];
             }
 
-            foreach ($blocs as $b) {
-                if (!$b) {
-                    $result["ERROR"][] = [
-                        'responseType' => $responseType,
-                        'field' => 'taulaDadesUD',
-                        'message' => "A la taula d'Unitats Didàctiques(taulaDadesUD), han d'existir, com a mínim, el bloc 1 i el bloc 2."
-                    ];
-                    break;
+            if ($error1) {
+                foreach ($blocs as $b) {
+                    if (!$b) {
+                        $result["ERROR"][] = [
+                            'responseType' => $responseType,
+                            'field' => 'taulaDadesUD',
+                            'message' => "A la taula d'Unitats Didàctiques(taulaDadesUD), han d'existir, com a mínim, el bloc 1 i el bloc 2."
+                        ];
+                        break;
+                    }
                 }
             }
         }

@@ -501,10 +501,11 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
 
             // Comprovació de la correspondència entre "unitat formativa" i "bloc"
             $error0 = false;
+            $error1 = false;
             $bloc = -1;
             $blocs = [1=>false, 2=>false];
             foreach ($ufTable as $uf) {
-                if ($uf['bloc'] === "0") {
+                if ($uf['bloc'] == 0) {
                     $bloc = 0;
                     $error0 = ($blocs[1] || $blocs[2]);
                 }else {
@@ -512,8 +513,9 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                         $error0 = true;
                         break;
                     }else {
-                        $blocs[1] = ($uf['bloc'] === "1" || $blocs[1]);
-                        $blocs[2] = ($uf['bloc'] === "2" || $blocs[2]);
+                        $error1 = true;
+                        $blocs[1] = ($uf['bloc'] == 1 || $blocs[1]);
+                        $blocs[2] = ($uf['bloc'] == 2 || $blocs[2]);
                     }
                 }
             }
@@ -526,14 +528,16 @@ class prgfploeProjectModel extends ProgramacioProjectModel {
                 ];
             }
 
-            foreach ($blocs as $b) {
-                if (!$b) {
-                    $result["ERROR"][] = [
-                        'responseType' => $responseType,
-                        'field' => 'taulaDadesUF',
-                        'message' => "A la taula d'Unitats Formatives(taulaDadesUF), han d'existir, com a mínim, el bloc 1 i el bloc 2."
-                    ];
-                    break;
+            if ($error1) {
+                foreach ($blocs as $b) {
+                    if (!$b) {
+                        $result["ERROR"][] = [
+                            'responseType' => $responseType,
+                            'field' => 'taulaDadesUF',
+                            'message' => "A la taula d'Unitats Formatives(taulaDadesUF), han d'existir, com a mínim, el bloc 1 i el bloc 2."
+                        ];
+                        break;
+                    }
                 }
             }
         }
