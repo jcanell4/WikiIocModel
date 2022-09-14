@@ -112,7 +112,7 @@ El crèdit s'imparteix en dos blocs. Aquest pla de treball correspon al {##tipus
 ^BLOC {##ind##}^^  Durada  ^
 ^  Núm. UD  ^  TÍTOL UNITAT DIDÀCTICA  ^  Durada  ^
 <WIOCCL:SET var="sortedTaulaDadesUD" type="literal" value="{#_ARRAY_SORT({##taulaDadesUD##},''ordreImparticio'')_#}">
-<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUD##}" filter="{##item[bloc]##}=={##ind##}">
+<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUD##}">
 |  UD{##item[unitat didàctica]##}  | {##item[nom]##}  |  {##item[hores]##} h  |
 </WIOCCL:FOREACH>
 </WIOCCL:SET>
