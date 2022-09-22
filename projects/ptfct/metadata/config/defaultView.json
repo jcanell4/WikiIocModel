@@ -58,7 +58,7 @@
             "type": "amd",
             "label": "Programació importada (nsProgramacio)",
             "n_columns": 5,
-            "group": "main",
+            "group": "dadesBasiques",
             "props": {
                 "required": true,
                 "title": "indiqueu la programació importada"

@@ -30,7 +30,7 @@ class ViewProjectAction extends BasicViewProjectAction{
             $metaDataConfigProject = $configProjectModel->getCurrentDataProject($metaDataSubSet);
 
             if ($metaDataConfigProject['arraytaula']) {
-                $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
+                $arraytaula = IocCommon::toArrayThroughArrayOrJson($metaDataConfigProject['arraytaula']);
                 $anyActual = date("Y");
                 $dataActual = new DateTime();
                 $dataActual->setTime(0, 0, 0);
