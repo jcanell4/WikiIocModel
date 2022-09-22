@@ -26,7 +26,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
         $metaDataConfigProject = $configProjectModel->getCurrentDataProject($metaDataSubSet);
 
         if ($metaDataConfigProject['arraytaula']) {
-            $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
+            $arraytaula = IocCommon::toArrayThroughArrayOrJson($metaDataConfigProject['arraytaula']);
             if(ManagerProjectUpdateProcessor::updateAll($arraytaula, $response)){
                 $metaData = [
                     ProjectKeys::KEY_ID_RESOURCE => $this->params[ProjectKeys::KEY_ID],

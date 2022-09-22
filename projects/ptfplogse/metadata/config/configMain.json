@@ -31,7 +31,7 @@
             "viewfiles": {"defaultView": "defaultView", "updateView" :  "updateView", "firstView" :  "firstView"},
             "versions": {
                 "fields": 12,
-                "templates": {"continguts": 29}
+                "templates": {"continguts": 30}
             },
             "mainType": {
                 "type": "object",
@@ -612,35 +612,7 @@
                                         "defaultValue":""
                                     },
                                     "metaDataSubSet": "main",
-                                    "field": "taulaDadesUD",
-                                    "filterCondition":{
-                                        "_type_":"operation",
-                                        "values":[{
-                                            "_type_":"calculatedFromValues",
-                                            "class":"CalculateSearchInArrayAndGetPosition",
-                                            "values":{"blocName":["crèdit", "1r. bloc", "2n. bloc", "3r. bloc"]},
-                                            "variables":{
-                                                "pla":"$values"
-                                            },
-                                            "data":{
-                                                "field":"blocName",
-                                                "searchValue":{
-                                                    "_type_":"field",
-                                                    "name": "tipusBlocCredit",
-                                                    "values":"$pla"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "_type_":"calculatedFromValues",
-                                            "class":"CalculateSimpleValue",
-                                            "values":"$rowValue",
-                                            "data":{
-                                                "field":"bloc"
-                                            }
-                                        }],
-                                        "operation":"=="
-                                    },
+                                    "field": "taulaDadesUD",                                    
                                     "externalFieldSubset":[
                                         "bloc",
                                         "unitat didàctica",
