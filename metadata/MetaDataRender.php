@@ -311,4 +311,20 @@ class MetaDataRender {
     private function getCalculateValue($calcDefProp) {
         return IocCommon::getCalculateFieldFromFunction($calcDefProp, $this->projectId, $this->values);
     }
+
+    /**
+     * Amplía el array de $metaDataValue con las nuevas propiedades contenidas en $paramMetaDataValue
+     * @param array $metaDataValue - datos originales en el servidor
+     * @param array $paramDataValue - datos del formulario cliente
+     * @return type
+     */
+    public function updateMetaDataValue($metaDataValue, $paramDataValue) {
+        $arraymd = $metaDataValue;
+        $arraypi = $paramDataValue;
+        foreach ($arraypi as $keypi => $valuepi) {
+            $arraymd[$keypi] = $valuepi;
+        }
+        return json_encode($arraymd);
+    }
+
 }
