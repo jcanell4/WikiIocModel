@@ -26,7 +26,8 @@ class ProjectUpdateDataAction extends ViewProjectAction {
         $metaDataConfigProject = $configProjectModel->getCurrentDataProject($metaDataSubSet);
 
         if ($metaDataConfigProject['arraytaula']) {
-            $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
+            $arraytaula = IocCommon::toArrayThroughArrayOrJson($metaDataConfigProject['arraytaula']);            
+//            $arraytaula = json_decode($metaDataConfigProject['arraytaula'], TRUE);
             $processArray = array();
 
             foreach ($arraytaula as $elem) {
