@@ -932,12 +932,12 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         $node = new StructuredNodeDoc(StructuredNodeDoc::QUOTE_TYPE);
         $this->currentNode->addContent($node);
         $this->currentNode = $node;
-        $renderer->openForContentB(StructuredNodeDoc::QUOTE_TYPE);
+        $this->openForContentB(StructuredNodeDoc::QUOTE_TYPE);
     }
 
     function quote_close() {
         $this->currentNode = $this->currentNode->getOwner();
-        $renderer->closeForContentB(StructuredNodeDoc::QUOTE_TYPE);
+        $this->closeForContentB(StructuredNodeDoc::QUOTE_TYPE);
     }
 
     function singlequoteopening() {
