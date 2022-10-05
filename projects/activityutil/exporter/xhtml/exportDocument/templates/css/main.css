@@ -95,6 +95,7 @@ select {
 }
 pre {
  white-space: pre;
+ overflow: auto;
 }
 input[type="radio"] {
  vertical-align: text-bottom;
