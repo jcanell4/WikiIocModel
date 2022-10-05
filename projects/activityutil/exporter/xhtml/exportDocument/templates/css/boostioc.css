@@ -324,6 +324,7 @@ span .refId {
 
 /* Bloc de codi */
 pre {
+    white-space: pre;
     overflow: auto;
 }
 
