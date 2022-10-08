@@ -1,5 +1,3 @@
-
-
 /* Regles per amagar l'HTML que no ens interessa (tot el que no sigui el contingut), únicament per nosaltres, perquè no ens molesti per treballar-hi */
 
 #header, #upbutton, #aside, #sidebar-hide, #toc, #settings, #favorites, #bridge, #help, #favcounter, footer.footer, /*#back_preview, #preview,*/ #help-tooltips, #navmenu, #HyphenatorToggleBox {
@@ -324,8 +322,11 @@ span .refId {
 
 /* Per JS, agafar el contingut dels elements '.footfigure', eliminar-los del DOM i afegir-los com un append al contingut de l'element '.iocfigure figure figcaption' anterior. Sabem que l'element '.iocfigure figure figcaption' existeix en totes i cada una de les ocurrències de figura, ja que és on automàticament s'assignava el número de figura; així doncs, podem estar segurs que sempre que modem text a l'elementa anterior de '.iocfigure figure figcaption' serà necessàriament el que ens interessa. */
 
-
 /* Bloc de codi */
+pre {
+    white-space: pre;
+    overflow: auto;
+}
 
 pre.code {
     background-color: #f1f5fe;
