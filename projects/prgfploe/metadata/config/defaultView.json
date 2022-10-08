@@ -568,7 +568,7 @@
                 "create_table_from_url": {
                     "button_label" :"Crear la taula completa a partir dels RA i els instruments d'avaluació",
                     "data": {
-                        "url": "lib/exe/ioc_ajax.php?call= _processor&do=ProjectModelMethodCaller&command=createTableRAPonderation"
+                        "url": "lib/exe/ioc_ajax.php?call=protected_processor&do=ProjectModelMethodCaller&command=createTableRAPonderation"
                     }
                 },
                 "add_default_row": "Afegir un instrument d'avaluació per un RA",
