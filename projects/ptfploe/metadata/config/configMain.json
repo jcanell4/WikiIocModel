@@ -631,7 +631,8 @@
                                     "defaultValue":{
                                         "_type_":"field",
                                         "name":"taulaDadesUF",
-                                        "values": "$values"
+                                        "values": "$values",
+                                        "defaultValue": "[]"
                                     }
                                 }
                             },
@@ -919,7 +920,8 @@
                                     "defaultValue":{
                                         "_type_":"field",
                                         "name":"dadesQualificacioUFs",
-                                        "values": "$values"
+                                        "values": "$values",
+                                        "defaultValue": "[]"
                                     }
                                 }
                             }                            
