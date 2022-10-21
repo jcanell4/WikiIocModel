@@ -14,14 +14,4 @@ class EditProjectAuthorization extends SupervisorProjectAuthorization {
         $this->allowedGroups[] = "fctmanager";
     }
 
-//    public function canRun() {
-//        if (parent::canRun()) {
-//            if (!$this->isUserGroup(["fctmanager","admin"]) && !$this->isResponsable() && !$this->isAuthor()) {
-//                $this->errorAuth['error'] = TRUE;
-//                $this->errorAuth['exception'] = 'InsufficientPermissionToEditProjectException';
-//                $this->errorAuth['extra_param'] = $this->permission->getIdPage();
-//            }
-//        }
-//        return !$this->errorAuth['error'];
-//    }
 }
