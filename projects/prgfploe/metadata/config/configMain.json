@@ -1,19 +1,7 @@
 {
     "metaDataClassesNameSpaces": [
-        {
-            "main": {
-                "MetaDataDAO": "defaultProject",
-                "MetaDataEntity": "defaultProject",
-                "MetaDataRender": "prgfploe"
-            }
-        },
-        {
-            "management":{
-                "MetaDataDAO": "defaultProject",
-                "MetaDataEntity": "defaultProject",
-                "MetaDataRender": "prgfploe"
-            }            
-        }
+        "main",
+        "management"
     ],
     "metaDataFtpSender": [
         {

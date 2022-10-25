@@ -11,7 +11,6 @@ if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . "lib/plugins/");
 if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocmodel/");
 
 require_once(DOKU_LIB_IOC . "wikiiocmodel/ProjectModelExceptions.php");
-//require_once(WIKI_IOC_MODEL . "metadata/MetaDataService.php"); //Deprecated MetadataService
 require_once(WIKI_IOC_MODEL . "BasicModelAdapter.php");
 
 class ptfploeDokuModelManager extends AbstractModelManager{
@@ -26,7 +25,7 @@ class ptfploeDokuModelManager extends AbstractModelManager{
                'Authorization' => array(self::DLI."authorization/", self::DEF."authorization/"),
                'Action'        => array(self::DLI."actions/", self::DEF."actions/extra/"), //se usa cuando los ficheros de esta clase están en un directorio ajeno a este proyecto
                'Model'         => array(self::DLI."datamodel/", self::CFG."datamodel/"),
-               'MetaData'      => array(self::DEF."metadata/", self::MOD."metadata/"),
+               'Render'        => array(self::DLI."metadata/"),
                'Renderer'      => array(self::PRJ."renderer/"),
                'Upgrader'      => array(self::PRJ."upgrader/")
            );

@@ -1,21 +1,7 @@
 {
     "metaDataClassesNameSpaces": [
-        {
-            "defaultSubSet": {
-                "MetaDataDAO": "defaultProject",
-                "MetaDataEntity": "defaultProject",
-                "MetaDataRender": "defaultProject"
-            }
-        },
-        {
-            "SubSet33": {
-                "MetaDataDAO": "pt1",
-                "MetaDataEntity": "pt1",
-                "MetaDataRender": "pt1"
-            }
-        }
-    ]
-    ,
+        "main"
+    ],
     "metaDataMaterialsTemplates": [
         {
             "main": {

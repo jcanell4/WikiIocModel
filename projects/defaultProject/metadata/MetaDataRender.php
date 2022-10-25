@@ -1,22 +1,18 @@
 <?php
 /**
- * Component: Project / MetaData
- * Status: @@Development
- * Purposes:
- * - Default / Class extending basis/MetaDataRender
- * @author Miguel Àngel Lozano Márquez<mlozan54@ioc.cat>
+ * class MetaDataRender: project 'defaultProject'
  */
-
-/**
- * Description of MetaDataRender
- *
- * @author professor
- */
-namespace defaultProject;
 if (!defined("DOKU_INC")) die();
 
-
-class MetaDataRender extends \MetaDataRenderAbstract{
-
-
+class MetaDataRender {
+    public function __construct($subSet=NULL) {
+        if ($subSet) {
+            $class = "{$subSet}MetaDataRender";
+            return new $class();
+        }else {
+            return new BasicMetaDataRender();
+        }
+    }
 }
+
+class mainMetaDataRender extends BasicMetaDataRender {}

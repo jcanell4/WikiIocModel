@@ -1,12 +1,6 @@
 {
   "metaDataClassesNameSpaces": [
-    {
-      "main": {
-        "MetaDataDAO": "defaultProject",
-        "MetaDataEntity": "defaultProject",
-        "MetaDataRender": "convocatoriesoficialseoi"
-      }
-    }
+      "main"
   ],
   "metaDataFtpSender": [
     {
