@@ -7,21 +7,12 @@ el tractament i per altra, sota el nom de "metaDataProjectStructure" trobarem la
 
 metaDataClassesNameSpaces
 -------------------------
-El camp "metaDataClassesNameSpaces" està compost de diversos subconjunts de dades, cada un dels quals defineix quines són les classes que cal usar per tractar les dades 
-del subconjunt especificat. Els subconjunts poden tenir qualsevol nom tot i que per defecte l'actual codificació estableix el nom "main" com a únic subconjunt de dades.
-
-Dins de cada subconjunt es defineix la ubicació de les les classes MetaDataDAO, MetaDataEntity i MetaDataRender, necessàries per gestionar les dades del projecte. El 
-valor de la configuració indica de quin projecte es farà servir la classe. Aixi per exemple, en una configuració com la següent  
+El camp "metaDataClassesNameSpaces" conté la llista de subsets
 
 {
     "metaDataClassesNameSpaces": [
-        {
-            "main": {
-                "MetaDataDAO": "defaultProject",
-                "MetaDataEntity": "defaultProject",
-                "MetaDataRender": "activityutil"
-            }
-        }
+        "main",
+        ...
     ],
     ...
 }
