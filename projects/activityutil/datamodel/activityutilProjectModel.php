@@ -123,11 +123,15 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
             $fileNames = json_decode($dataProject['documents'], true);
             if (!empty($fileNames)) {
                 foreach ($metaDataFtpSender as $f) {
-                    foreach ($fileNames as $file) {
-                        if ($file['sendftp'] && ((is_bool($file['sendftp']) && $file['sendftp']===TRUE) ||
-                                                 (is_string($file['sendftp']) && !in_array($file['sendftp'], ["false","no","0"])) )) {
-                            $ret[] = "${base}_${file['nom']}.{$f['type']}";
+                    if ($f['metadata_list']==1) {   //sólo si es necesario que aparezca en la lista de metadatos
+                        foreach ($fileNames as $file) {
+                            if ($file['sendftp'] && ((is_bool($file['sendftp']) && $file['sendftp']===TRUE) ||
+                                                     (is_string($file['sendftp']) && !in_array($file['sendftp'], ["false","no","0"])) )) {
+                                $ret[] = "${base}_${file['nom']}.{$f['type']}";
+                            }
                         }
+                    }elseif ($f['metadata_list']==2) {
+                        $ret[] = "${base}_pdf.{$f['type']}";
                     }
                 }
             }
@@ -252,7 +256,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         if (is_array($files)) {
             $files = array_unique($files);
         }
-//        $exportFields = $this->getMetaDataExport();
+
         return $files;
     }
 

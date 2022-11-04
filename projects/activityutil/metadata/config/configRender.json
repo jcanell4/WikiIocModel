@@ -5,11 +5,17 @@
                 "typeDef":"activityutil",
                 "class": "exportDocument",
                 "fields": "ALL",
-                "extraFields": [{"name":"documentPartsHtml", "valueType":"arrayDocuments", "value":"documents", "type":"html"}]
+                "extraFields": [
+                    {"name":"documentPartsHtml", "valueType":"arrayDocuments", "value":"documents", "type":"html"},
+                    {"name":"documentPartsPdf", "valueType":"arrayDocuments", "value":"documents", "type":"psdom"}
+                ]
             },
             "keys": {
                 "documentPartsHtml": {
-                    "render": {"class": "renderFile", "styletype":"pt_taula"}
+                    "render": {"class":"renderFile", "styletype":"pt_taula"}
+                },
+                "documentPartsPdf": {
+                    "render": {"class":"renderFileToPsDom", "styletype":"pt_taula"}
                 }
             }
         }

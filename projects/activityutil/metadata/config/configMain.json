@@ -21,9 +21,9 @@
         {
             "main": {
                 "files": {
-                    "f_html": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"},
-                    "f_css": {"local":"mediadir", "type":"css", "action":[1], "remoteDir": "css/"},
-                    "f_pdf": {"local":"mediadir", "type":"pdf", "action":[1], "remoteDir": "pdf/"}
+                    "f_html": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html", "metadata_list":1},
+                    "f_css": {"local":"mediadir", "type":"css", "action":[1], "remoteDir":"css/", "metadata_list":0},
+                    "f_pdf": {"local":"mediadir", "type":"pdf", "action":[1], "remoteDir":"pdf/", "metadata_list":2}
                 },
                 "ftpId": "activity_util",
                 "remoteDir": ""

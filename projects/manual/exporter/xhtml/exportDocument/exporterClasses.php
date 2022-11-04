@@ -29,6 +29,64 @@ class exportDocument extends renderHtmlDocument {
         parent::initParams();
     }
 
+    /**
+     * Renderiza los elementos extra
+     * @param array $item Datos de la propiedad 'extraFields' del configRender.json
+     * @return array
+     */
+    public function processExtraFields($item) {
+        $arrayDeDatosExtra = [];
+        if ($item["valueType"] == "arrayFields") {
+            $typedefKeyField = $this->getTypedefKeyField($item["value"]);
+            $renderKeyField = $this->getRenderKeyField($item["name"]);
+            $render = $this->createRender($typedefKeyField, $renderKeyField);
+            $render->init($item["name"], $renderKeyField['render']['styletype']);
+
+            $arrayDataField = $this->getDataField($item["value"]);
+            if (!is_array($arrayDataField)) {
+                $arrayDataField = json_decode($arrayDataField, true);
+            }
+            foreach ($arrayDataField as $key) {
+                $arrDataField[$key['ordre']] = $key['nom'];
+            }
+            ksort($arrDataField);
+
+            if ($item["type"] == "psdom") {
+                $arrDocument = array();
+                foreach ($arrDataField as $dataField) {
+                    $this->_createSessionStyle($renderKeyField['render']);
+                    $jsonPart = $render->process($dataField, $item["name"]);
+                    $this->_destroySessionStyle();
+                    if (($arrPart = json_decode($jsonPart))) //evita procesar los documentos inexistentes
+                        $arrDocument = array_merge($arrDocument, $arrPart);
+                }
+                $arrayDeDatosExtra[$item["name"]] = json_encode($arrDocument);
+            }
+            else {
+                // Renderiza cada uno de los documentos
+                $htmlDocument = "";
+                foreach ($arrDataField as $dataField) {
+                    $this->_createSessionStyle($renderKeyField['render']);
+                    $htmlDocument .= $render->process($dataField, $item["name"]);
+                    $this->_destroySessionStyle();
+                    $toc[] = $this->cfgExport->toc[$item["name"]];
+                }
+                // Une los TOCs de todos los documentos
+                $aux = array();
+                foreach ($toc as $t) {
+                    if ($t) $aux = array_merge($aux, $t);
+                }
+                $this->cfgExport->toc[$item["name"]] = $aux;
+
+                $arrayDeDatosExtra[$item["name"]] = $htmlDocument;
+            }
+        }
+        else {
+            $arrayDeDatosExtra = parent::processExtraFields($item);
+        }
+        return $arrayDeDatosExtra;
+    }
+
     public function cocinandoLaPlantillaConDatos($data) {
         $result = array();
         $result["tmp_dir"] = $this->cfgExport->tmp_dir;
