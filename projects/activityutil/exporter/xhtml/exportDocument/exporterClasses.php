@@ -9,7 +9,7 @@ if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."w
 
 class exportDocument extends renderHtmlDocument {
 
-    private static $extendedData;
+    private $extendedData;  //conté les dades del projecte més els fitxers html i pdf renderitzats
 
     public function __construct($factory, $typedef, $renderdef, $params=NULL) {
         parent::__construct($factory, $typedef, $renderdef);
@@ -31,13 +31,74 @@ class exportDocument extends renderHtmlDocument {
         parent::initParams();
     }
     
-    public function process($data, $alias="") {
+    public function process($data) {
         session_start();
         $_SESSION['sectionElement'] = FALSE;
-        $ret = parent::process($data, $alias);
+        $ret = parent::process($data);
         session_write_close();
-        $this->cocinaElPdfEntero(self::$extendedData, $ret);
+        $this->cocinaElPdfEntero($ret);
         $this->addCSSfiles($ret);
+        return $ret;
+    }
+
+    public function cocinandoLaPlantillaConDatos($data) {
+        $this->extendedData = $data;
+        $ret = $this->preCocinadoIndividual($data);
+        return $ret;
+    }
+
+    /**
+     * Tractament específic per a la generació de fitxers, individuals, resultat de cocinandoLaPlantillaConDatos
+     * @param array $data : dades ja renderitzades. La renderització del contigut de cada document està individualitzada
+     *                      en $data['arrayDocuments']
+     * @return array
+     */
+    public function preCocinadoIndividual($data) {
+        $id = str_replace(':', '_', $this->cfgExport->id);
+        $toc_backup = $this->cfgExport->toc;
+
+        $latexImg_backup = $this->cfgExport->latex_images;
+        $mediaFiles_backup = $this->cfgExport->media_files;
+        $graphvizImg_backup = $this->cfgExport->graphviz_images;
+        $gifImg_backup = $this->cfgExport->gif_images;
+        $figRef_backup = $this->cfgExport->figure_references;
+        $tabRef_backup = $this->cfgExport->table_references;
+
+        foreach ($data['arrayDocuments'] as $doc => $arrayDocuments) { //para cada documento
+            $this->cfgExport->toc = [];
+            foreach ($arrayDocuments as $name => $value) { //para cada tipo: pdf, html
+                $data[$name] = $value;
+                $this->cfgExport->toc[$name] = $toc_backup[$doc];
+            }
+            $this->cfgExport->output_filename = "{$id}_{$doc}";
+            $this->cfgExport->latex_images = $latexImg_backup[$doc];
+            $this->cfgExport->media_files = $mediaFiles_backup[$doc];
+            $this->cfgExport->graphviz_images = $graphvizImg_backup[$doc];
+            $this->cfgExport->gif_images = $gifImg_backup[$doc];
+            $this->cfgExport->figure_references = $figRef_backup[$doc];
+            $this->cfgExport->table_references = $tabRef_backup[$doc];
+
+            $result[$this->cfgExport->output_filename] = $this->cocinadoIndividual($data);
+        }
+
+        $this->cfgExport->toc = $toc_backup ;
+        $this->cfgExport->latex_images = $latexImg_backup ;
+        $this->cfgExport->media_files = $mediaFiles_backup ;
+        $this->cfgExport->graphviz_images = $graphvizImg_backup ;
+        $this->cfgExport->gif_images = $gifImg_backup ;
+        $this->cfgExport->figure_references = $figRef_backup ;
+        $this->cfgExport->table_references = $tabRef_backup ;
+
+        $ret['tmp_dir'] = $this->cfgExport->tmp_dir;
+        foreach ($result as $value) {
+            if ($value['error']) {
+                $ret['error'][] = $value['error'];
+            }else {
+                $ret['files'][] = $value['file'];
+                $ret['fileNames'][] = $value['fileName'];
+            }
+            $ret['info'][] = $value['info'];
+        }
         return $ret;
     }
 
@@ -106,31 +167,6 @@ class exportDocument extends renderHtmlDocument {
         return $arrayDeDatosExtra;
     }
 
-    //Añade ficheros css, locales y básicos, a la lista de ficheros a copiar al directorio 'media'
-    private function addCSSfiles(&$ret) {
-        //arxius css del projecte
-        $pathTemplate = "{$this->cfgExport->rendererPath}/xhtml/exportDocument/templates/css";
-        $scdir = scandir($pathTemplate);
-        $scdir = array_diff($scdir, [".", ".."]);
-        if (!empty($scdir)) {
-            foreach($scdir as $file){
-                if (is_file("$pathTemplate/$file")) {
-                    $ret['files'][] = "$pathTemplate/$file";
-                    $ret['fileNames'][] = "css/$file";
-                }
-            }
-        }
-
-        //arxius css generals
-        $list = $this->getDefaultCssFiles();
-        if (!empty($list)) {
-            foreach($list as $file){
-                $ret['files'][] = $file;
-                $ret['fileNames'][] = "css/".basename($file);
-            }
-        }
-    }
-
     /**
      * Se crea un zip a partir de la plantilla y los archivos css, img, js, relacionados
      * El nombre del fichero a generar ya está definido en: $this->cfgExport->output_filename
@@ -138,9 +174,8 @@ class exportDocument extends renderHtmlDocument {
      * @param array $data Contiene los campos del formulario y un array con los documentos
      * @return array Lista de rutas de ficheros, de nombres de ficheros y de errores
      */
-    public function cocinandoLaPlantillaConDatos($data) {
+    public function cocinadoIndividual($data) {
         $result = array();
-        self::$extendedData = $data;
         $result["tmp_dir"] = $this->cfgExport->tmp_dir;
         if (!file_exists($this->cfgExport->tmp_dir)) {
             mkdir($this->cfgExport->tmp_dir, 0775, TRUE);
@@ -185,16 +220,9 @@ class exportDocument extends renderHtmlDocument {
     private function replaceInTemplate($data, $file) {
         $tmplt = $this->loadTemplateFile($file);
         $document = WiocclParser::getValue($tmplt, [], $data);
-
-        if($data["estil"] == "boostioc"){
-            $data_footer = "toTitle";
-        }else{
-            $data_footer = "default";
-        }
-        
+        $data_footer = ($data["estil"] == "boostioc") ? "toTitle" : "default";
         $document = str_replace("@@FIGURE_FOOTER_TYPE@@", $data_footer, $document);
         $document = str_replace("@@TABLE_FOOTER_TYPE@@", $data_footer, $document);
-
         return $document;
     }
 
@@ -229,36 +257,38 @@ class exportDocument extends renderHtmlDocument {
         if (session_status() == PHP_SESSION_ACTIVE) session_destroy();
     }
 
-    public function cocinaElPdfEntero($data, &$ret) {
+    public function cocinaElPdfEntero(&$ret) {
         if (!file_exists($this->cfgExport->tmp_dir)) {
             mkdir($this->cfgExport->tmp_dir, 0775, TRUE);
         }
-        $docs = json_decode($data["documents"], true);
-        $titol = html_entity_decode(htmlspecialchars_decode($docs[0]["nom"], ENT_COMPAT|ENT_QUOTES));
-
-        // Nom de l'atribut on s'ha desat el PDF renderitzat
-        $part = "documentPartsPdf";
-        $extres = $this->getRenderDef('render')['extraFields'];
-        if ($extres) {
-            foreach ($extres as $item) {
-                if ($item['type'] == "psdom") $part = $item['name'];
-            }
-        }
+        $docs = json_decode($this->extendedData["documents"], true);
+        $titol = html_entity_decode(htmlspecialchars_decode($docs[0]["descripcio"], ENT_COMPAT|ENT_QUOTES));
+        $nom_real = html_entity_decode(htmlspecialchars_decode($this->extendedData["nom_real"], ENT_COMPAT|ENT_QUOTES));
+        $data_fitxer = html_entity_decode(htmlspecialchars_decode($this->extendedData["data_fitxercontinguts"], ENT_COMPAT|ENT_QUOTES));
+        $entitat_responsable = html_entity_decode(htmlspecialchars_decode($this->extendedData["entitatResponsable"], ENT_COMPAT|ENT_QUOTES));
+        $pdf_part = $this->getNamePdfDocument("documentPartsPdf");
 
         $params = array(
             "id" => $this->cfgExport->id,
+            "path_templates" => $this->cfgExport->rendererPath."/xhtml/exportDocument/templates",  // directori on es troben les plantilles latex usades per crear el pdf
             "tmp_dir" => $this->cfgExport->tmp_dir,    //directori temporal on crear el pdf
-            "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
+            "lang" => strtoupper($this->cfgExport->lang),
             "mode" => isset($this->mode) ? $this->mode : $this->filetype,
-    	    "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
-            "style" => $this->cfgExport->rendererPath."/pdf/exportDocument/styles/main.stypdf",
+    	    "max_img_size" => ($this->extendedData['max_img_size']) ? $this->extendedData['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
+            "style" => $this->cfgExport->rendererPath."/xhtml/exportDocument/pdf/main.stypdf",
             "data" => array(
-                "header" => ["logo"  => $this->cfgExport->rendererPath . "/resources/escutGene.jpg",
+                "header" => ["logo"  => $this->cfgExport->rendererPath."/resources/escutGene.jpg",
                              "wlogo" => 9.9,
                              "hlogo" => 11.1,
-                             "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya"],
-                "peu" => ["titol" => $titol],
-                "contingut" => json_decode($data[$part], TRUE)   //contingut latex ja rendaritzat
+                             "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
+                             "rtext" => $titol
+                            ],
+                "peu" => ['titol' => $titol,
+                          'autor' => $data['mostrarAutor']==="true" || $data['mostrarAutor']===true ? $nom_real : "",
+                          'entitatResponsable' => $entitat_responsable,
+                          'data'  => $data_fitxer
+                         ],
+                "contingut" => json_decode($this->extendedData[$pdf_part], TRUE)   //contingut latex ja rendaritzat
             )
         );
 
@@ -269,6 +299,44 @@ class exportDocument extends renderHtmlDocument {
         $ret["files"][] = "{$this->cfgExport->tmp_dir}/$filenamepdf";
         $ret["fileNames"][] = $filenamepdf;
         $ret["info"][] = "fitxer $filenamepdf creat correctement";
+    }
+
+    //Añade ficheros css, locales y básicos, a la lista de ficheros a copiar al directorio 'media'
+    private function addCSSfiles(&$ret) {
+        //arxius css del projecte
+        $pathTemplate = "{$this->cfgExport->rendererPath}/xhtml/exportDocument/templates/css";
+        $scdir = scandir($pathTemplate);
+        $scdir = array_diff($scdir, [".", ".."]);
+        if (!empty($scdir)) {
+            foreach($scdir as $file){
+                if (is_file("$pathTemplate/$file")) {
+                    $ret['files'][] = "$pathTemplate/$file";
+                    $ret['fileNames'][] = "css/$file";
+                }
+            }
+        }
+
+        //arxius css generals
+        $list = $this->getDefaultCssFiles();
+        if (!empty($list)) {
+            foreach($list as $file){
+                $ret['files'][] = $file;
+                $ret['fileNames'][] = "css/".basename($file);
+            }
+        }
+    }
+
+    // Nom de l'atribut on s'ha de desar el PDF renderitzat
+    private function getNamePdfDocument($nom = "documentPartsPdf") {
+        $extres = $this->getRenderDef('render')['extraFields'];
+        if ($extres) {
+            foreach ($extres as $item) {
+                if ($item['type'] == "psdom") {
+                    $nom = $item['name'];
+                }
+            }
+        }
+        return $nom;
     }
 
 }
