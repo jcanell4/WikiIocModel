@@ -9,7 +9,7 @@ if (!defined('DOKU_INC')) die();
 
 class renderFileToPsDom extends BasicRenderFileToPsDom {
 
-    public function process($arrayDocs, $alias="documentPartsPdf") {
+    public function process($arrayDocs, $alias="") {
         global $plugin_controller;
         $startedHere = $this->preProcessSession();
 

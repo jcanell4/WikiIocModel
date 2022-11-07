@@ -284,7 +284,7 @@ class exportDocument extends renderHtmlDocument {
                              "rtext" => $titol
                             ],
                 "peu" => ['titol' => $titol,
-                          'autor' => $data['mostrarAutor']==="true" || $data['mostrarAutor']===true ? $nom_real : "",
+                          'autor' => $this->extendedData['mostrarAutor']==="true" || $this->extendedData['mostrarAutor']===true ? $nom_real : "",
                           'entitatResponsable' => $entitat_responsable,
                           'data'  => $data_fitxer
                          ],
