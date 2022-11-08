@@ -25,8 +25,7 @@
                     "f_css": {"local":"mediadir", "type":"css", "action":[1], "remoteDir":"css/"},
                     "f_pdf": {"local":"mediadir", "type":"pdf", "action":[1], "remoteDir":"pdf/"}
                 },
-                "ftpId": "activity_util",
-                "remoteDir": ""
+                "ftpId": "activity_util"
             }
         }
     ],
