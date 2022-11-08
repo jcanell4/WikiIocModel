@@ -2,15 +2,15 @@ Detall de l'ús de configMain.json
 =================================
 
 El fitxer configMain.json conté les dades de configuració per poder crear i manipular dades estructurades dels projectes del tipus al qual pertany la configuració. 
-Les dades de configuració contemplen dos camps específics, per una banda, sota el nom de "metaDataClassesNameSpaces" es defineixen quines són les classes que faran 
+Les dades de configuració contemplen dos camps específics, per una banda, sota el nom de "metaDataSubsetsList" es defineixen quines són les classes que faran 
 el tractament i per altra, sota el nom de "metaDataProjectStructure" trobarem la configuració referent a l'estructura de les dades i el seu emmagatzematge.
 
-metaDataClassesNameSpaces
+metaDataSubsetsList
 -------------------------
-El camp "metaDataClassesNameSpaces" conté la llista de subsets
+El camp "metaDataSubsetsList" conté la llista de subsets
 
 {
-    "metaDataClassesNameSpaces": [
+    "metaDataSubsetsList": [
         "main",
         ...
     ],
@@ -172,7 +172,7 @@ valor per defecte és false.
 En el següent exemple es poden veure els diferents elements de configuració descrits:
 
 {
-    "metaDataClassesNameSpaces": [
+    "metaDataSubsetsList": [
         {
             "main": {
                 "MetaDataDAO": "defaultProject",
