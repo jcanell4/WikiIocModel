@@ -4,8 +4,6 @@
  * exportDocument: clase que renderiza grupos de elementos
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
-if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
 class exportDocument extends renderHtmlDocument {
 
@@ -112,7 +110,9 @@ class exportDocument extends renderHtmlDocument {
             $result['error'] = true;
             $result['info'] = $this->cfgExport->aLang['nozipfile'];
         }
-        return $result;
+        $this->setResultFileList($result);
+
+        return $data;
     }
 
     private function replaceInTemplate($data, $file) {
@@ -130,40 +130,6 @@ class exportDocument extends renderHtmlDocument {
             $document = str_replace("@@TOC($tocKey)@@", $toc, $document);
         }
         return $document;
-    }
-
-    private function attachMediaFiles(&$zip) {
-        //Attach media files
-        foreach(array_unique($this->cfgExport->media_files) as $f){
-            resolve_mediaid(getNS($f), $f, $exists);
-            if ($exists) {
-                //eliminamos el primer nivel del ns
-                $arr = explode(":", $f);
-                array_shift($arr);
-                $zip->addFile(mediaFN($f), 'img/'.implode("/", $arr));
-            }
-        }
-        $this->cfgExport->media_files = array();
-
-        //Attach latex files
-        foreach(array_unique($this->cfgExport->latex_images) as $f){
-            if (file_exists($f)) $zip->addFile($f, 'img/'.basename($f));
-        }
-        $this->cfgExport->latex_images = array();
-
-        //Attach graphviz files
-        foreach(array_unique($this->cfgExport->graphviz_images) as $f){
-            if (file_exists($f)) $zip->addFile($f, 'img/'.basename($f));
-        }
-        $this->cfgExport->graphviz_images = array();
-
-        //Attach gif (png, jpg, etc) files
-        foreach(array_unique($this->cfgExport->gif_images) as $m){
-            if (file_exists(mediaFN($m))) $zip->addFile(mediaFN($m), "img/". str_replace(":", "/", $m));
-        }
-        $this->cfgExport->gif_images = array();
-
-        if (session_status() == PHP_SESSION_ACTIVE) session_destroy();
     }
 
 }

@@ -4,8 +4,6 @@
  * exportDocument: clase que renderiza grupos de elementos
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
-if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
 class exportDocument extends renderHtmlDocument {
 
@@ -40,7 +38,7 @@ class exportDocument extends renderHtmlDocument {
         $params = array(
             "id" => $this->cfgExport->id,
             "tmp_dir" => $this->cfgExport->tmp_dir,    //directori temporal on crear el pdf
-            "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
+            "lang" => strtoupper($this->cfgExport->lang),
             "mode" => isset($this->mode) ? $this->mode : $this->filetype,
     	    "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
             "style" => $this->cfgExport->rendererPath."/pdf/exportDocument/styles/main.stypdf",
@@ -57,8 +55,11 @@ class exportDocument extends renderHtmlDocument {
         );
         $pdfRenderer = new PdfRenderer();
         $pdfRenderer->renderDocument($params, "pt.pdf");
+
         $result["tmp_dir"] = $this->cfgExport->tmp_dir."/pt.pdf";
-        return $result;
+        $this->setResultFileList($result);
+
+        return $data;
     }
 
 }

@@ -4,8 +4,6 @@
  * exportDocument: clase que renderiza grupos de elementos
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
-if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
 class exportDocument extends renderHtmlDocument {
 
@@ -161,7 +159,9 @@ class exportDocument extends renderHtmlDocument {
             $result['error'] = true;
             $result['info'] = $this->cfgExport->aLang['nozipfile'];
         }
-        return $result;
+        $this->setResultFileList($result);
+
+        return $data;
     }
 
     private function replaceInTemplate($data, $file) {
@@ -212,7 +212,7 @@ class exportDocument extends renderHtmlDocument {
         return $toc;
     }
 
-    private function attachMediaFiles(&$zip) {
+    protected function attachMediaFiles(&$zip) {
         //Attach media files
         foreach(array_unique($this->cfgExport->media_files) as $f){
             resolve_mediaid(getNS($f), $f, $exists);

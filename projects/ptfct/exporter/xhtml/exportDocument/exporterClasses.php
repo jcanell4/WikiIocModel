@@ -4,8 +4,6 @@
  * exportDocument: clase que renderiza grupos de elementos
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
-if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
 class exportDocument extends renderHtmlDocument {
 
@@ -64,9 +62,6 @@ class exportDocument extends renderHtmlDocument {
                 $cicle = html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
                 $modul = "FCT - formació en el centre de treball";
                 $tipusBlocModul = html_entity_decode(htmlspecialchars_decode($data["tipusBlocModul"], ENT_COMPAT|ENT_QUOTES));
-                //$durada = html_entity_decode(htmlspecialchars_decode($data["durada"], ENT_COMPAT|ENT_QUOTES));
-                //$professors = html_entity_decode(htmlspecialchars_decode($data["professors"], ENT_COMPAT|ENT_QUOTES));
-                //$coordinador = html_entity_decode(htmlspecialchars_decode($data["coordinador"], ENT_COMPAT|ENT_QUOTES));
 
                 $params = array(
                     "id" => $this->cfgExport->id,
@@ -114,7 +109,9 @@ class exportDocument extends renderHtmlDocument {
             $result['error'] = true;
             $result['info'] = $this->cfgExport->aLang['nozipfile'];
         }
-        return $result;
+        $this->setResultFileList($result);
+
+        return $data;
     }
 
     private function replaceInTemplate($data, $file) {
@@ -134,86 +131,4 @@ class exportDocument extends renderHtmlDocument {
         return $document;
     }
 
-    private function attachMediaFiles(&$zip) {
-        //Attach media files
-        foreach(array_unique($this->cfgExport->media_files) as $f){
-            resolve_mediaid(getNS($f), $f, $exists);
-            if ($exists) {
-                //eliminamos el primer nivel del ns
-                $arr = explode(":", $f);
-                array_shift($arr);
-                $zip->addFile(mediaFN($f), 'img/'.implode("/", $arr));
-            }
-        }
-        $this->cfgExport->media_files = array();
-
-        //Attach latex files
-        foreach(array_unique($this->cfgExport->latex_images) as $f){
-            if (file_exists($f)) $zip->addFile($f, 'img/'.basename($f));
-        }
-        $this->cfgExport->latex_images = array();
-
-        //Attach graphviz files
-        foreach(array_unique($this->cfgExport->graphviz_images) as $f){
-            if (file_exists($f)) $zip->addFile($f, 'img/'.basename($f));
-        }
-        $this->cfgExport->graphviz_images = array();
-
-        //Attach gif (png, jpg, etc) files
-        foreach(array_unique($this->cfgExport->gif_images) as $m){
-            if (file_exists(mediaFN($m))) $zip->addFile(mediaFN($m), "img/". str_replace(":", "/", $m));
-        }
-        $this->cfgExport->gif_images = array();
-
-        if (session_status() == PHP_SESSION_ACTIVE) session_destroy();
-    }
-
-//    private function addFilesToZip(&$zip, $base, $d, $dir, $recursive=FALSE) {
-//        $zip->addEmptyDir("$d$dir");
-//        $files = $this->getDirFiles("$base/$dir");
-//        foreach($files as $f){
-//            $zip->addFile($f, "$d$dir/".basename($f));
-//        }
-//        if($recursive){
-//            $dirs = $this->getDirs("$base/$dir");
-//            foreach($dirs as $dd){
-//                $this->addFilesToZip($zip, "$base/$dir", "$d$dir/", basename($dd));
-//            }
-//        }
-//    }
-
-//    /**
-//     * Fill files var with all media files stored on directory var
-//     * @param string $directory
-//     * @param string $files
-//     */
-//    private function getDirs($dir){
-//        $files = array();
-//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-//            $dh = opendir($dir);
-//            while ($file = readdir($dh)) {
-//                if ($file != '.' && $file != '..' && is_dir("$dir/$file")) {
-//                    array_push($files, "$dir/$file");
-//                }
-//            }
-//            closedir($dh);
-//        }
-//        return $files;
-//    }
-
-//    private function getDirFiles($dir){
-//        $files = array();
-//        if (file_exists($dir) && is_dir($dir) && is_readable($dir)) {
-//            $dh = opendir($dir);
-//            while ($file = readdir($dh)) {
-//                if ($file != '.' && $file != '..' && !is_dir("$dir/$file")) {
-//                    if (preg_match('/.*?\.pdf|.*?\.png|.*?\.jpg|.*?\.gif|.*?\.ico|.*?\.css|.*?\.js|.*?\.htm|.*?\.html|.*?\.svg/', $file)){
-//                        array_push($files, "$dir/$file");
-//                    }
-//                }
-//            }
-//            closedir($dh);
-//        }
-//        return $files;
-//    }
 }

@@ -4,12 +4,8 @@
  * exportDocument: clase que renderiza grupos de elementos
  */
 if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC."lib/lib_ioc/");
-if (!defined('WIKI_LIB_IOC_MODEL')) define('WIKI_LIB_IOC_MODEL', DOKU_LIB_IOC."wikiiocmodel/");
 
 class exportDocument extends renderHtmlDocument {
-
-    private $extendedData;  //conté les dades del projecte més els fitxers html i pdf renderitzats
 
     public function __construct($factory, $typedef, $renderdef, $params=NULL) {
         parent::__construct($factory, $typedef, $renderdef);
@@ -34,72 +30,11 @@ class exportDocument extends renderHtmlDocument {
     public function process($data) {
         session_start();
         $_SESSION['sectionElement'] = FALSE;
-        $ret = parent::process($data);
+        $data = parent::process($data);
         session_write_close();
-        $this->cocinaElPdfEntero($ret);
-        $this->addCSSfiles($ret);
-        return $ret;
-    }
-
-    public function cocinandoLaPlantillaConDatos($data) {
-        $this->extendedData = $data;
-        $ret = $this->preCocinadoIndividual($data);
-        return $ret;
-    }
-
-    /**
-     * Tractament específic per a la generació de fitxers, individuals, resultat de cocinandoLaPlantillaConDatos
-     * @param array $data : dades ja renderitzades. La renderització del contigut de cada document està individualitzada
-     *                      en $data['arrayDocuments']
-     * @return array
-     */
-    public function preCocinadoIndividual($data) {
-        $id = str_replace(':', '_', $this->cfgExport->id);
-        $toc_backup = $this->cfgExport->toc;
-
-        $latexImg_backup = $this->cfgExport->latex_images;
-        $mediaFiles_backup = $this->cfgExport->media_files;
-        $graphvizImg_backup = $this->cfgExport->graphviz_images;
-        $gifImg_backup = $this->cfgExport->gif_images;
-        $figRef_backup = $this->cfgExport->figure_references;
-        $tabRef_backup = $this->cfgExport->table_references;
-
-        foreach ($data['arrayDocuments'] as $doc => $arrayDocuments) { //para cada documento
-            $this->cfgExport->toc = [];
-            foreach ($arrayDocuments as $name => $value) { //para cada tipo: pdf, html
-                $data[$name] = $value;
-                $this->cfgExport->toc[$name] = $toc_backup[$doc];
-            }
-            $this->cfgExport->output_filename = "{$id}_{$doc}";
-            $this->cfgExport->latex_images = $latexImg_backup[$doc];
-            $this->cfgExport->media_files = $mediaFiles_backup[$doc];
-            $this->cfgExport->graphviz_images = $graphvizImg_backup[$doc];
-            $this->cfgExport->gif_images = $gifImg_backup[$doc];
-            $this->cfgExport->figure_references = $figRef_backup[$doc];
-            $this->cfgExport->table_references = $tabRef_backup[$doc];
-
-            $result[$this->cfgExport->output_filename] = $this->cocinadoIndividual($data);
-        }
-
-        $this->cfgExport->toc = $toc_backup ;
-        $this->cfgExport->latex_images = $latexImg_backup ;
-        $this->cfgExport->media_files = $mediaFiles_backup ;
-        $this->cfgExport->graphviz_images = $graphvizImg_backup ;
-        $this->cfgExport->gif_images = $gifImg_backup ;
-        $this->cfgExport->figure_references = $figRef_backup ;
-        $this->cfgExport->table_references = $tabRef_backup ;
-
-        $ret['tmp_dir'] = $this->cfgExport->tmp_dir;
-        foreach ($result as $value) {
-            if ($value['error']) {
-                $ret['error'][] = $value['error'];
-            }else {
-                $ret['files'][] = $value['file'];
-                $ret['fileNames'][] = $value['fileName'];
-            }
-            $ret['info'][] = $value['info'];
-        }
-        return $ret;
+        $this->cocinaElPdfEntero($data);
+        $this->addCSSfiles();
+        return $data;
     }
 
     /**
@@ -167,6 +102,68 @@ class exportDocument extends renderHtmlDocument {
         return $arrayDeDatosExtra;
     }
 
+    public function cocinandoLaPlantillaConDatos($data) {
+        $data = $this->preCocinadoIndividual($data);
+        return $data;
+    }
+
+    /**
+     * Tractament específic per a la generació de fitxers, individuals, resultat de cocinandoLaPlantillaConDatos
+     * @param array $data : dades ja renderitzades. La renderització del contigut de cada document està individualitzada
+     *                      en $data['arrayDocuments']
+     * @return array
+     */
+    public function preCocinadoIndividual($data) {
+        $id = str_replace(':', '_', $this->cfgExport->id);
+        $toc_backup = $this->cfgExport->toc;
+
+        $latexImg_backup = $this->cfgExport->latex_images;
+        $mediaFiles_backup = $this->cfgExport->media_files;
+        $graphvizImg_backup = $this->cfgExport->graphviz_images;
+        $gifImg_backup = $this->cfgExport->gif_images;
+        $figRef_backup = $this->cfgExport->figure_references;
+        $tabRef_backup = $this->cfgExport->table_references;
+
+        foreach ($data['arrayDocuments'] as $doc => $arrayDocuments) { //para cada documento
+            $this->cfgExport->toc = [];
+            foreach ($arrayDocuments as $name => $value) { //para cada tipo: pdf, html
+                $data[$name] = $value;
+                $this->cfgExport->toc[$name] = $toc_backup[$doc];
+            }
+            $this->cfgExport->output_filename = "{$id}_{$doc}";
+            $this->cfgExport->latex_images = $latexImg_backup[$doc];
+            $this->cfgExport->media_files = $mediaFiles_backup[$doc];
+            $this->cfgExport->graphviz_images = $graphvizImg_backup[$doc];
+            $this->cfgExport->gif_images = $gifImg_backup[$doc];
+            $this->cfgExport->figure_references = $figRef_backup[$doc];
+            $this->cfgExport->table_references = $tabRef_backup[$doc];
+
+            $result[$this->cfgExport->output_filename] = $this->cocinadoIndividual($data);
+        }
+
+        $this->cfgExport->toc = $toc_backup ;
+        $this->cfgExport->latex_images = $latexImg_backup ;
+        $this->cfgExport->media_files = $mediaFiles_backup ;
+        $this->cfgExport->graphviz_images = $graphvizImg_backup ;
+        $this->cfgExport->gif_images = $gifImg_backup ;
+        $this->cfgExport->figure_references = $figRef_backup ;
+        $this->cfgExport->table_references = $tabRef_backup ;
+
+        $ret['tmp_dir'] = $this->cfgExport->tmp_dir;
+        foreach ($result as $value) {
+            if ($value['error']) {
+                $ret['error'][] = $value['error'];
+            }else {
+                $ret['files'][] = $value['file'];
+                $ret['fileNames'][] = $value['fileName'];
+            }
+            $ret['info'][] = $value['info'];
+        }
+        $this->setResultFileList($ret);
+
+        return $data;
+    }
+
     /**
      * Se crea un zip a partir de la plantilla y los archivos css, img, js, relacionados
      * El nombre del fichero a generar ya está definido en: $this->cfgExport->output_filename
@@ -176,7 +173,6 @@ class exportDocument extends renderHtmlDocument {
      */
     public function cocinadoIndividual($data) {
         $result = array();
-        $result["tmp_dir"] = $this->cfgExport->tmp_dir;
         if (!file_exists($this->cfgExport->tmp_dir)) {
             mkdir($this->cfgExport->tmp_dir, 0775, TRUE);
         }
@@ -226,7 +222,7 @@ class exportDocument extends renderHtmlDocument {
         return $document;
     }
 
-    private function attachMediaFiles(&$zip) {
+    protected function attachMediaFiles(&$zip) {
         //Attach media files
         foreach(array_unique($this->cfgExport->media_files) as $f){
             resolve_mediaid(getNS($f), $f, $exists);
@@ -257,15 +253,15 @@ class exportDocument extends renderHtmlDocument {
         if (session_status() == PHP_SESSION_ACTIVE) session_destroy();
     }
 
-    public function cocinaElPdfEntero(&$ret) {
+    public function cocinaElPdfEntero($data) {
         if (!file_exists($this->cfgExport->tmp_dir)) {
             mkdir($this->cfgExport->tmp_dir, 0775, TRUE);
         }
-        $docs = json_decode($this->extendedData["documents"], true);
+        $docs = json_decode($data["documents"], true);
         $titol = html_entity_decode(htmlspecialchars_decode($docs[0]["descripcio"], ENT_COMPAT|ENT_QUOTES));
-        $nom_real = html_entity_decode(htmlspecialchars_decode($this->extendedData["nom_real"], ENT_COMPAT|ENT_QUOTES));
-        $data_fitxer = html_entity_decode(htmlspecialchars_decode($this->extendedData["data_fitxercontinguts"], ENT_COMPAT|ENT_QUOTES));
-        $entitat_responsable = html_entity_decode(htmlspecialchars_decode($this->extendedData["entitatResponsable"], ENT_COMPAT|ENT_QUOTES));
+        $nom_real = html_entity_decode(htmlspecialchars_decode($data["nom_real"], ENT_COMPAT|ENT_QUOTES));
+        $data_fitxer = html_entity_decode(htmlspecialchars_decode($data["data_fitxercontinguts"], ENT_COMPAT|ENT_QUOTES));
+        $entitat_responsable = html_entity_decode(htmlspecialchars_decode($data["entitatResponsable"], ENT_COMPAT|ENT_QUOTES));
         $pdf_part = $this->getNamePdfDocument("documentPartsPdf");
 
         $params = array(
@@ -274,7 +270,7 @@ class exportDocument extends renderHtmlDocument {
             "tmp_dir" => $this->cfgExport->tmp_dir,    //directori temporal on crear el pdf
             "lang" => strtoupper($this->cfgExport->lang),
             "mode" => isset($this->mode) ? $this->mode : $this->filetype,
-    	    "max_img_size" => ($this->extendedData['max_img_size']) ? $this->extendedData['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
+    	    "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
             "style" => $this->cfgExport->rendererPath."/xhtml/exportDocument/pdf/main.stypdf",
             "data" => array(
                 "header" => ["logo"  => $this->cfgExport->rendererPath."/resources/escutGene.jpg",
@@ -284,11 +280,11 @@ class exportDocument extends renderHtmlDocument {
                              "rtext" => $titol
                             ],
                 "peu" => ['titol' => $titol,
-                          'autor' => $this->extendedData['mostrarAutor']==="true" || $this->extendedData['mostrarAutor']===true ? $nom_real : "",
+                          'autor' => $data['mostrarAutor']==="true" || $data['mostrarAutor']===true ? $nom_real : "",
                           'entitatResponsable' => $entitat_responsable,
                           'data'  => $data_fitxer
                          ],
-                "contingut" => json_decode($this->extendedData[$pdf_part], TRUE)   //contingut latex ja rendaritzat
+                "contingut" => json_decode($data[$pdf_part], TRUE)   //contingut latex ja rendaritzat
             )
         );
 
@@ -296,13 +292,17 @@ class exportDocument extends renderHtmlDocument {
         $pdfRenderer = new PdfRenderer();
         $pdfRenderer->renderDocument($params, $filenamepdf);
         
+        $ret = $this->getResultFileList();
         $ret["files"][] = "{$this->cfgExport->tmp_dir}/$filenamepdf";
         $ret["fileNames"][] = $filenamepdf;
         $ret["info"][] = "fitxer $filenamepdf creat correctement";
+        $this->setResultFileList($ret);
     }
 
     //Añade ficheros css, locales y básicos, a la lista de ficheros a copiar al directorio 'media'
-    private function addCSSfiles(&$ret) {
+    private function addCSSfiles() {
+        $ret = $this->getResultFileList();
+        
         //arxius css del projecte
         $pathTemplate = "{$this->cfgExport->rendererPath}/xhtml/exportDocument/templates/css";
         $scdir = scandir($pathTemplate);
@@ -324,6 +324,7 @@ class exportDocument extends renderHtmlDocument {
                 $ret['fileNames'][] = "css/".basename($file);
             }
         }
+        $this->setResultFileList($ret);
     }
 
     // Nom de l'atribut on s'ha de desar el PDF renderitzat
