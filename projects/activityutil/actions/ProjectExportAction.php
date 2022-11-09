@@ -72,7 +72,9 @@ class ProjectExportAction extends ProjectAction{
                                                      $this->typesRender[$this->mainTypeName],
                                                      array(ProjectKeys::KEY_ID => $this->projectID));
 
-        $render->process($this->dataArray);
+        $data = $this->dataArray;
+        $data['pdf_filename'] = $this->getPdfDocumentName();
+        $render->process($data);
         $result = $render->getResultFileList();
         $result['ns'] = $this->projectNS;
         $ret["id"] = $this->idToRequestId($this->projectID);
@@ -83,6 +85,19 @@ class ProjectExportAction extends ProjectAction{
             $this->removeDir($result["tmp_dir"]);
         }
         return $ret;
+    }
+
+    /**
+     * @return string Nom del fitxer pdf (agrupa tots els fitxers del projecte) definit a configMain:metaDataFtpSender
+     */
+    private function getPdfDocumentName() {
+        $metaDataFtpSender = $this->getModel()->getMetaDataFtpSender();
+        foreach ($metaDataFtpSender['files'] as $file_type) {
+            if ($file_type['type'] == "pdf") {
+                $filename = $file_type['filename'];
+            }
+        }
+        return $filename;
     }
 
     /**

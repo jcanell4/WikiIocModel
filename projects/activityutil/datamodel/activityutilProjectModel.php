@@ -22,13 +22,13 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         return $this->projectMetaDataQuery->setProjectGenerated();
     }
 
-    public function filesToExportList() {
+    public function filesToExportList($full=false) {
         // obtenemos del configMain un array con los parámetros de envío para un fichero
         $data_list = current(parent::filesToExportList());
         $id = preg_replace('/:/', '_', $this->getId());
         $remoteDir = empty($data_list['remoteDir']) ? "$id/" : $data_list['remoteDir'];
 
-        //obtenemos la lista de ficheros que incluye la propiedad booleana 'sendftp'
+        //obtenemos la lista de ficheros incluyendo la propiedad booleana 'sendftp'
         $dataProject = $this->getCurrentDataProject();
 
         if ($dataProject['documents']) {
@@ -131,7 +131,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                             }
                         }
                     }elseif ($f['type']=="pdf") {
-                        $ret[] = "${base}_pdf.{$f['type']}";
+                        $ret[] = $f['filename'];
                     }
                 }
             }

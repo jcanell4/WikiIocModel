@@ -30,8 +30,10 @@ class exportDocument extends renderHtmlDocument {
     public function process($data) {
         session_start();
         $_SESSION['sectionElement'] = FALSE;
+        $pdf_filename = $data['pdf_filename'];
         $data = parent::process($data);
         session_write_close();
+        $data['pdf_filename'] = $pdf_filename;
         $this->cocinaElPdfEntero($data);
         $this->addCSSfiles();
         return $data;
@@ -257,14 +259,13 @@ class exportDocument extends renderHtmlDocument {
             )
         );
 
-        $filenamepdf = "activityutil.pdf";
         $pdfRenderer = new PdfRenderer();
-        $pdfRenderer->renderDocument($params, $filenamepdf);
+        $pdfRenderer->renderDocument($params, $data['pdf_filename']);
         
         $ret = $this->getResultFileList();
-        $ret["files"][] = "{$this->cfgExport->tmp_dir}/$filenamepdf";
-        $ret["fileNames"][] = $filenamepdf;
-        $ret["info"][] = "fitxer $filenamepdf creat correctement";
+        $ret["files"][] = "{$this->cfgExport->tmp_dir}/{$data['pdf_filename']}";
+        $ret["fileNames"][] = $data['pdf_filename'];
+        $ret["info"][] = "fitxer {$data['pdf_filename']} creat correctement";
         $this->setResultFileList($ret);
     }
 
