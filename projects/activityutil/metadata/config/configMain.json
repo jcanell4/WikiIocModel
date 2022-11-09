@@ -22,7 +22,7 @@
             "main": {
                 "files": {
                     "f_html": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"},
-                    "f_css": {"local":"mediadir", "type":"css", "action":[0], "local_subdir":"css/"},
+                    "f_css": {"local":"mediadir", "type":"css", "action":[0], "remoteDir":"css/"},
                     "f_pdf": {"local":"mediadir", "type":"pdf", "action":[0], "filename":"activityutil.pdf"}
                 },
                 "ftpId": "activity_util"

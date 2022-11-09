@@ -58,12 +58,12 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                                           'remoteDir' => ($f['remoteDir']) ? $f['remoteDir'] : $remoteDir
                                          ];
                     }elseif ($f['type']=="css") {
-                        $scan = scandir("$dir/${f['local_subdir']}");
+                        $scan = scandir("$dir/${f['remoteDir']}");
                         if ($scan) $scan = array_diff($scan, [".", ".."]);
                         if (!empty($scan)) {
                             foreach ($scan as $css) {
                                 $filesToSend[] = ['file' => $css,
-                                                  'local' => "${data_list['local']}${f['local_subdir']}",
+                                                  'local' => "${data_list['local']}${f['remoteDir']}",
                                                   'action' => $f['action'],
                                                   'remoteBase' => ($f['remoteBase']) ? $f['remoteBase'] : $data_list['remoteBase'],
                                                   'remoteDir' => ($f['remoteDir']) ? $f['remoteDir'] : $remoteDir
