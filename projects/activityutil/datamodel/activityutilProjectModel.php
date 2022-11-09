@@ -29,20 +29,48 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         $remoteDir = empty($data_list['remoteDir']) ? "$id/" : $data_list['remoteDir'];
 
         //obtenemos la lista de ficheros incluyendo la propiedad booleana 'sendftp'
-        $dataProject = $this->getCurrentDataProject();
+        $dataProject = $this->getCurrentDataProject(false, false);
 
         if ($dataProject['documents']) {
             $documents = json_decode($dataProject['documents'], true);
-            //construimos la lista de ficheros a enviar con sus propiedaddes
+            //construimos la lista de ficheros a enviar con sus propiedades
             foreach ($documents as $doc) {
-                if ($doc['sendftp'] && ((is_bool($doc['sendftp']) && $doc['sendftp']===TRUE) ||
-                                        (is_string($doc['sendftp']) && !in_array($doc['sendftp'], ["false","no","0"])) )) {
-                    $filesToSend[] = ['file' => "{$id}_{$doc['nom']}.zip",
+                if ($this->isDocSendFtp($doc)) {
+                    $filesToSend[] = ['file' => "${id}_${doc['nom']}.zip",
                                       'local' => $data_list['local'],
                                       'action' => $data_list['action'],
                                       'remoteBase' => $data_list['remoteBase'],
-                                      'remoteDir' => "$remoteDir"
+                                      'remoteDir' => $remoteDir
                                      ];
+                }
+            }
+
+            if ($full) {
+                //incluye otros ficheros que deben enviarse por FTP
+                $dir = WikiGlobalConfig::getConf('mediadir')."/". str_replace(':', '/', $this->getId());
+                $mdFtpSender = $this->getMetaDataFtpSender();
+                foreach ($mdFtpSender['files'] as $f) {
+                    if ($f['type']=="pdf") {
+                        $filesToSend[] = ['file' => $f['filename'],
+                                          'local' => $data_list['local'],
+                                          'action' => $f['action'],
+                                          'remoteBase' => ($f['remoteBase']) ? $f['remoteBase'] : $data_list['remoteBase'],
+                                          'remoteDir' => ($f['remoteDir']) ? $f['remoteDir'] : $remoteDir
+                                         ];
+                    }elseif ($f['type']=="css") {
+                        $scan = scandir("$dir/${f['local_subdir']}");
+                        if ($scan) $scan = array_diff($scan, [".", ".."]);
+                        if (!empty($scan)) {
+                            foreach ($scan as $css) {
+                                $filesToSend[] = ['file' => $css,
+                                                  'local' => "${data_list['local']}${f['local_subdir']}",
+                                                  'action' => $f['action'],
+                                                  'remoteBase' => ($f['remoteBase']) ? $f['remoteBase'] : $data_list['remoteBase'],
+                                                  'remoteDir' => ($f['remoteDir']) ? $f['remoteDir'] : $remoteDir
+                                                 ];
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -95,7 +123,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                 $_index = (empty($index)) ? $file : $index;
                 $_linkRef = (empty($linkRef)) ? pathinfo($file, PATHINFO_FILENAME) : $linkRef;
                 $_rDir = ($unzip) ? $rDir . pathinfo($file, PATHINFO_FILENAME) . "/" : $rDir;
-                $url = "{$connData['remoteUrl']}${_rDir}${_index}";
+                $url = "${connData['remoteUrl']}${_rDir}${_index}";
                 $class = "mf_".pathinfo($_index, PATHINFO_EXTENSION);
                 $html.= '<p><span id="ftpsend" style="word-wrap: break-word;">';
                 $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'.$_linkRef.'</a> ';
@@ -119,15 +147,15 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         if ($metaDataFtpSender) {
             $ret = array();
             $base = str_replace(":", "_", $id);
-            $dataProject = $this->getCurrentDataProject(FALSE, FALSE);
+            $dataProject = $this->getCurrentDataProject(false, false);
             $fileNames = json_decode($dataProject['documents'], true);
             if (!empty($fileNames)) {
                 foreach ($metaDataFtpSender as $f) {
-                    if ($f['type']=="zip") {   //sólo si es necesario que aparezca en la lista de metadatos
+                    //sólo si es necesario que aparezca en la lista de metadatos
+                    if ($f['type']=="zip") {
                         foreach ($fileNames as $file) {
-                            if ($file['sendftp'] && ((is_bool($file['sendftp']) && $file['sendftp']===TRUE) ||
-                                                     (is_string($file['sendftp']) && !in_array($file['sendftp'], ["false","no","0"])) )) {
-                                $ret[] = "${base}_${file['nom']}.{$f['type']}";
+                            if ($this->isDocSendFtp($file)) {
+                                $ret[] = "${base}_${file['nom']}.${f['type']}";
                             }
                         }
                     }elseif ($f['type']=="pdf") {
@@ -179,7 +207,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                         if ($rowid === false && $rownom === false) {
                             //S'ha afegit un nou fitxer, és a dir, una nova fila a la taula
                             $modificat = true;
-                            $this->createPageFromTemplate("$id:{$doc['nom']}", NULL, $this->getRawProjectTemplate(), "create page");
+                            $this->createPageFromTemplate("$id:${doc['nom']}", NULL, $this->getRawProjectTemplate(), "create page");
                         }elseif ($rowid !== false && $doc['nom'] !== $vellsDocuments[$rowid]['nom']) {
                             //S'ha modificat el nom d'un fitxer
                             $modificat = true;
@@ -188,7 +216,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                     }else {
                         //S'ha afegit un nou fitxer, és a dir, una nova fila a la taula
                         $modificat = true;
-                        $this->createPageFromTemplate("$id:{$doc['nom']}", NULL, $this->getRawProjectTemplate(), "create page");
+                        $this->createPageFromTemplate("$id:${doc['nom']}", NULL, $this->getRawProjectTemplate(), "create page");
                     }
                 }
             }
@@ -202,7 +230,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                     }
                     if ($rowid === false && $rownom === false) {
                         $modificat = true;
-                        $this->createPageFromTemplate("$id:{$doc['nom']}", NULL, NULL, "remove page");
+                        $this->createPageFromTemplate("$id:${doc['nom']}", NULL, NULL, "remove page");
                     }
                 }
             }
@@ -258,6 +286,12 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         }
 
         return $files;
+    }
+
+    // Indica si el documento està habilitado para ser enviado por FTP
+    private function isDocSendFtp($doc) {
+        return ($doc['sendftp'] && ((is_bool($doc['sendftp']) && $doc['sendftp']===TRUE) ||
+                                    (is_string($doc['sendftp']) && !in_array($doc['sendftp'], ["false","no","0"])) ));
     }
 
 }
