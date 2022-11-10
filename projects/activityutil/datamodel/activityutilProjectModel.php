@@ -100,7 +100,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
         $mdFtpSender = $this->getMetaDataFtpSender();
         $fileNames = $this->_constructArrayFileNames($this->id, $mdFtpSender['files']);
 
-        $file = WikiGlobalConfig::getConf('mediadir').'/'. preg_replace('/:/', '/', $this->id) . '/' . $fileNames[0];
+        $file = WikiGlobalConfig::getConf('mediadir')."/".str_replace(':', '/', $this->id)."/". $fileNames[0];
         $html = '';
         $fileexists = @file_exists($file);
         if ($fileexists) {
@@ -112,18 +112,22 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
             foreach ($mdFtpSender['files'] as $objFile) {
                 $ftpId = (empty($objFile[ProjectKeys::KEY_FTPID])) ? $mdFtpSender[ProjectKeys::KEY_FTPID] : $objFile[ProjectKeys::KEY_FTPID];
                 $connData = $this->getFtpConfigData($ftpId);
-                $index = (empty($objFile['remoteIndex'])) ? $mdFtpSender['remoteIndex'] : $objFile['remoteIndex'];
-                $rDir = (empty($objFile['remoteDir'])) ? (empty($mdFtpSender['remoteDir'])) ? $connData["remoteDir"] : $mdFtpSender['remoteDir'] : $objFile['remoteDir'];
-                $unzip = in_array(1, $objFile['action']);  //es una action del tipo unzip
-                $linkRef = $objFile['linkName'];
-            }
 
+                $index[$objFile['type']] = (empty($objFile['remoteIndex'])) ? $mdFtpSender['remoteIndex'] : $objFile['remoteIndex'];
+                $rDir[$objFile['type']] = (empty($objFile['remoteDir'])) ? (empty($mdFtpSender['remoteDir'])) ? $connData["remoteDir"] : $mdFtpSender['remoteDir'] : $objFile['remoteDir'];
+                $unzip[$objFile['type']] = in_array(1, $objFile['action']);  //es una action del tipo unzip
+                $linkRef[$objFile['type']] = $objFile['linkName'];
+            }
+            $idDir = str_replace(':', '_', $this->id);
             $data = date("d/m/Y H:i:s", $filetime);
+            
             foreach ($fileNames as $file) {
-                $_index = (empty($index)) ? $file : $index;
-                $_linkRef = (empty($linkRef)) ? pathinfo($file, PATHINFO_FILENAME) : $linkRef;
-                $_rDir = ($unzip) ? $rDir . pathinfo($file, PATHINFO_FILENAME) . "/" : $rDir;
-                $url = "${connData['remoteUrl']}${_rDir}${_index}";
+                $_ext = pathinfo($file, PATHINFO_EXTENSION);
+                $_index = (empty($index[$_ext])) ? $file : $index[$_ext];
+                $_linkRef = (empty($linkRef[$_ext])) ? pathinfo($file, PATHINFO_FILENAME) : $linkRef[$_ext];
+                $_rDir = ($unzip[$_ext]) ? $rDir[$_ext].pathinfo($file, PATHINFO_FILENAME)."/" : $rDir[$_ext];
+                $url = "${connData['remoteUrl']}$idDir/${_rDir}${_index}";
+
                 $class = "mf_".pathinfo($_index, PATHINFO_EXTENSION);
                 $html.= '<p><span id="ftpsend" style="word-wrap: break-word;">';
                 $html.= '<a class="media mediafile '.$class.'" href="'.$url.'" target="_blank">'.$_linkRef.'</a> ';
