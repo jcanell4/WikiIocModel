@@ -33,8 +33,8 @@ class exportDocument extends renderHtmlDocument {
         $pdf_filename = $data['pdf_filename'];
         $data = parent::process($data);
         session_write_close();
-        $data['pdf_filename'] = $pdf_filename;
-        $this->cocinaElPdfEntero($data);
+//        $data['pdf_filename'] = $pdf_filename;
+//        $this->cocinaElPdfEntero($data);
         $this->addCSSfiles();
         return $data;
     }
