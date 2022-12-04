@@ -659,7 +659,8 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     var $bIocElems = array(array(),  array());
     var $currentBIocElemsType = self::UNEXISTENT_B_IOC_ELEMS_TYPE;
     var $bIocElemsRefQueue = array();
-    
+
+    public $include = 0;
     /**
      * Esta función construye el renderer a partir de las parámetros de configuración recibidos
      * @param array $params
