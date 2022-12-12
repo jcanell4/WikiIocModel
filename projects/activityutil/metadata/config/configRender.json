@@ -6,8 +6,7 @@
                 "class": "exportDocument",
                 "fields": "ALL",
                 "extraFields": [
-                    {"name":"documentPartsHtml", "valueType":"arrayDocuments", "value":"documents", "type":"html"},
-                    {"name":"documentPartsPdf", "valueType":"arrayDocuments", "value":"documents", "type":"psdom"}
+                    {"name":"documentPartsHtml", "valueType":"arrayDocuments", "value":"documents", "type":"html"}
                 ]
             },
             "keys": {

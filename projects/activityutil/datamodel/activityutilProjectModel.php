@@ -40,7 +40,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                                       'local' => $data_list['local'],
                                       'action' => $data_list['action'],
                                       'remoteBase' => $data_list['remoteBase'],
-                                      'remoteDir' => $remoteDir
+                                      'remoteDir' => "$remoteDir$id/"
                                      ];
                 }
             }
@@ -55,7 +55,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                                           'local' => $data_list['local'],
                                           'action' => $f['action'],
                                           'remoteBase' => ($f['remoteBase']) ? $f['remoteBase'] : $data_list['remoteBase'],
-                                          'remoteDir' => ($f['remoteDir']) ? $f['remoteDir'] : $remoteDir
+                                          'remoteDir' => "$remoteDir$id/"
                                          ];
                     }elseif ($f['type']=="css") {
                         $scan = scandir("$dir/${f['remoteDir']}");
@@ -66,7 +66,7 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                                                   'local' => "${data_list['local']}${f['remoteDir']}",
                                                   'action' => $f['action'],
                                                   'remoteBase' => ($f['remoteBase']) ? $f['remoteBase'] : $data_list['remoteBase'],
-                                                  'remoteDir' => ($f['remoteDir']) ? $f['remoteDir'] : $remoteDir
+                                                  'remoteDir' => $remoteDir . $f['remoteDir']
                                                  ];
                             }
                         }
@@ -125,8 +125,9 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
                 $_ext = pathinfo($file, PATHINFO_EXTENSION);
                 $_index = (empty($index[$_ext])) ? $file : $index[$_ext];
                 $_linkRef = (empty($linkRef[$_ext])) ? pathinfo($file, PATHINFO_FILENAME) : $linkRef[$_ext];
-                $_rDir = ($unzip[$_ext]) ? $rDir[$_ext].pathinfo($file, PATHINFO_FILENAME)."/" : $rDir[$_ext];
-                $url = "${connData['remoteUrl']}$idDir/${_rDir}${_index}";
+                $_rDir = "${rDir[$_ext]}$idDir/";
+                $_rDirZip = ($unzip[$_ext]) ? pathinfo($file, PATHINFO_FILENAME)."/" : "";
+                $url = "${connData['remoteUrl']}${_rDir}${_rDirZip}${_index}";
 
                 $class = "mf_".pathinfo($_index, PATHINFO_EXTENSION);
                 $html.= '<p><span id="ftpsend" style="word-wrap: break-word;">';
