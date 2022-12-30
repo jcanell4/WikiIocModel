@@ -96,10 +96,13 @@ class FigureFrame extends StructuredNodeDoc {
     }
 
     public function getEncodeJson() {
+
+        $sanitizedTitle = trim(str_replace("\"", "\\\"", $this->title));
+        $sanitizedFooter = trim(str_replace("\"", "\\\"", $this->footer));
         $ret = "{\n\"type\":\"".trim($this->type)."\""
                 .",\n\"id\":\"".trim($this->id)."\""
-                .",\n\"title\":\"".trim($this->title)."\""
-                .",\n\"footer\":\"".trim($this->footer)."\""
+                .",\n\"title\":\"". $sanitizedTitle ."\""
+                .",\n\"footer\":\"".$sanitizedFooter."\""
                 .",\n\"hasBorder\":\"".trim($this->hasBorder)."\""
                 .",\n\"content\":".$this->getContentEncodeJson();
         $ret .= "\n}";
@@ -130,10 +133,13 @@ class TableFrame extends StructuredNodeDoc {
     }
 
     public function getEncodeJson() {
+        $sanitizedTitle = trim(str_replace("\"", "\\\"", $this->title));
+        $sanitizedFooter = trim(str_replace("\"", "\\\"", $this->footer));
+
         $ret = "{\n\"type\":\"".trim($this->type)."\""
                 .",\n\"id\":\"".trim($this->id)."\""
-                .",\n\"title\":\"".trim($this->title)."\""
-                .",\n\"footer\":\"".trim($this->footer)."\""
+                .",\n\"title\":\"".$sanitizedTitle."\""
+                .",\n\"footer\":\"".$sanitizedFooter."\""
                 .",\n\"widths\":\"".trim($this->widths)."\""
                 .",\n\"types\":\"".trim($this->types)."\""
                 .",\n\"hasBorder\":\"".trim($this->hasBorder)."\""
@@ -280,7 +286,7 @@ class StructuredNodeDoc extends AbstractNodeDoc{
 
     public function getContentEncodeJson() {
         $sep = "";
-        $ret .= "[\n";
+        $ret = "[\n";
         foreach ($this->content as $child){
             $ret .= $sep.$child->getEncodeJson();
             if (empty($sep)) {
@@ -378,7 +384,7 @@ class LeveledNodeDoc extends StructuredNodeDoc{
 
     public function getChildrenEncodeJson() {
         $sep = "";
-        $ret .= "[\n";
+        $ret = "[\n";
         foreach ($this->children as $child){
             $ret .= $sep.$child->getEncodeJson();
             if (empty($sep)) {
@@ -400,8 +406,10 @@ class HeaderNodeDoc extends LeveledNodeDoc{
     }
 
     public function getEncodeJson() {
+        $sanitizedTitle = trim(str_replace("\"", "\\\"", $this->title));
+
         $ret = "{\n\"type\":\"".$this->type."\""
-                .",\n\"title\":\"".$this->title."\""
+                .",\n\"title\":\"".$sanitizedTitle."\""
                 .",\n\"level\":\"".$this->getLevel()."\""
                 .",\n\"content\":".$this->getContentEncodeJson();
         $ret .= ",\n\"children\":".$this->getChildrenEncodeJson();
@@ -581,10 +589,12 @@ class ImageNodeDoc extends AbstractNodeDoc {
     }
 
     public function getEncodeJson() {
+        $sanitizedTitle = trim(str_replace("\"", "\\\"", $this->title));
+
         $ret = "{\n\"type\":\"".trim($this->type)."\""
                 .",\n\"id\":\"".trim($this->id)."\""
                 .",\n\"src\":\"".trim($this->src)."\""
-                .",\n\"title\":\"".trim($this->title)."\""
+                .",\n\"title\":\"".$sanitizedTitle."\""
                 .",\n\"align\":\"".trim($this->align)."\""
                 .",\n\"width\":\"".trim($this->width)."\""
                 .",\n\"height\":\"".trim($this->height)."\""
@@ -630,9 +640,11 @@ class LatexMathNodeDoc extends AbstractNodeDoc {
     }
 
     public function getEncodeJson() {
+        $sanitizedTitle = trim(str_replace("\"", "\\\"", $this->title));
+
         $ret = "{\n\"type\":\"".$this->type."\""
                 .",\n\"src\":\"".trim($this->src)."\""
-                .",\n\"title\":\"".trim($this->title)."\""
+                .",\n\"title\":\"".$sanitizedTitle."\""
                 .",\n\"class\":\"".$this->class."\"";
         $ret .= "\n}";
         return $ret;
@@ -660,7 +672,6 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     var $currentBIocElemsType = self::UNEXISTENT_B_IOC_ELEMS_TYPE;
     var $bIocElemsRefQueue = array();
 
-    public $include = 0;
     /**
      * Esta función construye el renderer a partir de las parámetros de configuración recibidos
      * @param array $params
