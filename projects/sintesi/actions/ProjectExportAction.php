@@ -74,7 +74,9 @@ class ProjectExportAction extends ProjectAction{
                                            $this->typesRender[$this->mainTypeName],
                                            array(ProjectKeys::KEY_ID => $this->projectID));
 
-        $result = $render->process($this->dataArray);
+//        $result = $render->process($this->dataArray);
+        $render->process($this->dataArray);
+        $result = $render->getResultFileList();
         $result['ns'] = $this->projectNS;
         $ret = ["id" => $this->idToRequestId($this->projectID),
                 "ns" => $this->projectNS];
