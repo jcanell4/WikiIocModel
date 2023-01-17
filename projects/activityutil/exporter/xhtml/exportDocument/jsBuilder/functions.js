@@ -206,11 +206,11 @@ define (["render"],function(render){
 		}
 	});
 
-        let setNumFigs = function(){
-            let footerType = $("article").data("figureFooterType");
+        var setNumFigs = function(){
+            var footerType = $("article").data("figureFooterType");
             $("article .iocfigure > a").each(function(i){
                 if(footerType=="toTitle"){
-                    let $footerNode = $(this).parent().find(".footfigure");
+                    var $footerNode = $(this).parent().find(".footfigure");
                     if($footerNode.text()){
                         $(this).parent().find("figcaption").append(". <span class=\"footfigure\">"+$footerNode.text()+"<\span>");
                     }
@@ -221,11 +221,11 @@ define (["render"],function(render){
             });            
         };
 	
-        let setNumTables = function(){
-            let footerType = $("article").data("tableFooterType");
+        var setNumTables = function(){
+            var footerType = $("article").data("tableFooterType");
             $("article .ioctable .titletable > a, article .iocaccounting .titletable > a").each(function(i){
                 if(footerType=="toTitle"){
-                    let $footNode = $(this).parent().parent().find(".foottable");
+                    var $footNode = $(this).parent().parent().find(".foottable");
                     if($footNode.text()){
                         $(this).parent().append(". <span class=\"foottable\">"+$footNode.text()+"<\span>");
                     }
@@ -236,10 +236,10 @@ define (["render"],function(render){
             });            
         };
         
-        let setReferences = function(){
+        var setReferences = function(){
              $(".iocquote .ioccontent p:last-of-type").each(function(){
                  if(isBoostIoc){
-                    let $this = $(this);
+                    var $this = $(this);
                     if($this.siblings().length>0 && $this.find("em").length){
                         $this.addClass("reference");
                         $this.appendTo($this.parent().parent());
@@ -247,13 +247,13 @@ define (["render"],function(render){
                 }
              });
              $(".iocquote .ioccontent p:first-of-type").each(function(){
-                let $this = $(this);           
-                let text = $this.text();
+                var $this = $(this);           
+                var text = $this.text();
                 $this.text(text.replace(/^\s*[“\"](.*)/s, "$1"));
              });
              $(".iocquote .ioccontent p:last-of-type").each(function(){
-                let $this = $(this);           
-                let text = $this.text();
+                var $this = $(this);           
+                var text = $this.text();
                 $this.text(text.replace(/(.*)[”\"]\s*$/s, "$1"));
              });
              

@@ -48,8 +48,8 @@ define(function() {
 					 	.addClass('zoomout')
 					 .end()
 					 .imagesLoaded(function(){
-                                                let height;
-                                                let width;
+                                                var height;
+                                                var width;
 						var $img = $(this).find('img'); 
 						height = $img.height();
 						width = $img.width();

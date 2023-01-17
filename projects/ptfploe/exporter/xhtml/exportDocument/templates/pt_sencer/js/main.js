@@ -24,12 +24,12 @@ function printDoc() {
 }
 
 function __plaTreballInit(){
-  let allRefs = document.querySelectorAll("span.tabref > a > span.refId");
+  var allRefs = document.querySelectorAll("span.tabref > a > span.refId");
   
   allRefs.forEach(
      function(node){
-        let ref = node.parentNode.getAttribute("href")
-        let nodeTab = document.querySelector(ref);
+        var ref = node.parentNode.getAttribute("href")
+        var nodeTab = document.querySelector(ref);
         if(nodeTab && nodeTab.parentNode){
             node.innerText = nodeTab.parentNode.innerText;
         }
