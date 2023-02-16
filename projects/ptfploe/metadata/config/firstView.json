@@ -316,6 +316,9 @@
               "nom": {
                 "type": "string"
               },
+              "ordreImparticio":{
+                "type": "number"
+              },
               "hores": {
                 "type": "number"
               },
@@ -326,7 +329,7 @@
             "layout": [
               {
                 "defaultCell": {
-                  "width" : "15%"
+                  "width": "5%"
                 },
                 "cells": [
                   {
@@ -334,20 +337,27 @@
                     "field": "unitat formativa",
                     "editable": true
                   },
-
+                  {
+                    "name": "Bloc",
+                    "field": "bloc",
+                    "editable": true
+                  },
                   {
                     "name": "nom",
                     "field": "nom",
-                     "width":"40%",
+                    "width":"40%",
                     "editable": true
                   },
-
+                  {
+                    "name": "Ordre d'impartició",
+                    "field": "ordreImparticio",
+                    "editable": true
+                  },
                   {
                     "name": "hores",
                     "field": "hores",
                     "editable": true
                   },
-
                   {
                     "name": "ponderació",
                     "field": "ponderació",
