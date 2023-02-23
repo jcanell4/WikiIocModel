@@ -6,7 +6,8 @@
                     "groups": [
                         "admin",
                         "manager",
-                        "qualitat_fp"
+                        "qualitat_fp",
+                        "user"
                      ],
                      "rols": [
                         "responsable",
@@ -301,7 +302,8 @@
                     "groups": [
                         "admin",
                         "manager",
-                        "qualitat_fp"
+                        "qualitat_fp",
+                        "user"
                      ],
                      "rols": [
                         "responsable",
@@ -499,7 +501,8 @@
                 "permissions": {
                     "groups": [
                         "admin",
-                        "manager"
+                        "manager",
+                        "qualitat_fp"
                      ],
                      "rols": [
                         "validador"
