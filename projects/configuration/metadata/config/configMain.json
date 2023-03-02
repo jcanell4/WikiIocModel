@@ -5,7 +5,7 @@
     "metaDataProjectStructure": [
         {
             "main": "meta.mdpr",
-            "viewfiles": {"defaultView": "allData"},
+            "viewfiles": {"defaultView": "defaultView", "allData":"allData"},
             "mainType": {
                 "type": "object",
                 "typeDef": "configuracio"
