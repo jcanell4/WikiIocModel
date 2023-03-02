@@ -722,6 +722,11 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
             throw new Exception("Error en el nivell d'encapçalament");
         }
         if ($this->currentNode != NULL){
+            while($this->currentNode->getType()!== HeaderNodeDoc::HEADER_TEXT_TYPE
+                    && $this->currentNode->getType()!== RootNodeDoc::ROOT_TYPE
+                    && $this->currentNode->getType()!== RootContentNode::ROOTCONTENT_TYPE){
+                $this->currentNode = $this->currentNode->getOwner();
+            }
             if ($this->currentNode->getLevel() < $level){
                 //fill
                 $father = $this->currentNode;
