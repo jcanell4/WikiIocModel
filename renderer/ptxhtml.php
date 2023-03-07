@@ -1097,13 +1097,15 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 $ret .= " title=\"$title\"";
             }
             $ret .= " alt=\"$alt\"";
-
-            if($this->table && !is_null($width) )
+            //marjose start
+            //if($this->table && !is_null($width) )
+            if(!is_null($width) )
                 $ret .= ' width="'.$this->_xmlEntities($width).'"';
 
-            if ($this->table && !is_null($height) )
+            //if ($this->table && !is_null($height) )
+            if(!is_null($width) )
                 $ret .= ' height="'.$this->_xmlEntities($height).'"';
-
+            //marjose end
             $ret .= ' />';
             
             if ($_SESSION['figure']){
