@@ -1,7 +1,7 @@
 <?php
 /**
- * upgrader_36: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
- *             desde la versión 35 a la versión 36
+ * upgrader_37: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ *             desde la versión 36 a la versión 37
  * @author rafael <rclaver@xtec.cat>
 */
 if (!defined("DOKU_INC")) die();
