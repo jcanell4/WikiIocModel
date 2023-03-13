@@ -671,6 +671,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     var $bIocElems = array(array(),  array());
     var $currentBIocElemsType = self::UNEXISTENT_B_IOC_ELEMS_TYPE;
     var $bIocElemsRefQueue = array();
+    var $levelDiff=0;
 
     /**
      * Esta función construye el renderer a partir de las parámetros de configuración recibidos
@@ -743,7 +744,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
         }else{
             $father = $this->rootNode;
         }
-        $this->actualLevel = $level;
+        $this->lastlevel = $this->actualLevel = $level;
         $this->currentNode = new HeaderNodeDoc($text, $level, $father);
     }
 
@@ -768,8 +769,12 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     function p_open() {
         $paragraph = new StructuredNodeDoc(StructuredNodeDoc::PARAGRAPH_TYPE);
+        if($this->currentNode==null){
+         $this->errorNull = "p nul"   ;
+        }else{
         $this->currentNode->addContent($paragraph);
         $this->currentNode = $paragraph;
+        }
         $this->openForContentB("p");
     }
 

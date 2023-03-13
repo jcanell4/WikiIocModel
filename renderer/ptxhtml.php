@@ -38,6 +38,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     var $bIocElems = array(array(),  array());
     var $currentBIocElemsType = self::UNEXISTENT_B_IOC_ELEMS_TYPE;
     var $bIocElemsRefQueue = array();
+    var $levelDiff=0;
     
     public function __construct() {
         if(isset($_SESSION['sectionElement'])){
