@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_1: Transforma los datos del proyecto "manual"
+ * upgrader_1: Transforma los datos del proyecto "activityutil"
  *             desde la estructura de la versión 0 a la estructura de la versión 1
  * @author rafael
  */
@@ -14,15 +14,8 @@ class upgrader_1 extends CommonUpgrader {
 
         switch ($type) {
             case "fields":
-                //Transforma los datos del proyecto "manual" desde la estructura de la versión 0 a la versión 1
-                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
-                if (!is_array($dataProject)) {
-                    $dataProject = json_decode($dataProject, TRUE);
-                }
-                //Añade el campo 'amagarMenuInici' a la estructura
-                $dataProject = $this->addNewField($dataProject, "amagarMenuInici", "false");
-                $ret = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
-                break;
+                 $ret = TRUE;
+                 break;
 
             case "templates":
                 $ret = TRUE;

@@ -43,7 +43,7 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView"},
             "versions": {
-                "fields": 1
+                "fields": 2
             },
             "mainType": {
                 "type": "object",
@@ -156,6 +156,12 @@
                                 "class": "CalculateMaxPageDateFromNs",
                                 "data": ""
                             }
+                        },
+                        "file_dependences": {
+                            "type": "array",
+                            "typeDef":"string",
+                            "mandatory": true,
+                            "viewType":"hidden"
                         }
                     }
                 }
