@@ -17,9 +17,9 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
     }
 
     function setViewMode(&$event, $param){
-        switch ($event->data["call"]){
-            case "page":
-            case "cancel":
+        switch ($event->data["call"]){ // conté dades del tipus d'event. Call conté amb quin command s'ha llençat l'esdeveniment. 
+            case "page": //primera vegada que obres
+            case "cancel": //torno a visualitzar tipus vista
                 $this->viewMode = true;
                 break;
         }
@@ -30,7 +30,7 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
 
         $projectOwner =  $plugin_controller->getProjectOwner();
         if($this->viewMode &&  $projectOwner){
-            $fileProjetc = $plugin_controller->getProjectFile($projectOwner);
+            $fileProjetc = $plugin_controller->getProjectFile($projectOwner); //obté ruta física a meta.mpdr
             $event->data->depends["files"] []= $fileProjetc;
         }
     }
