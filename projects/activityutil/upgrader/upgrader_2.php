@@ -10,35 +10,7 @@ require_once DOKU_LIB_IOC . "upgrader/CommonUpgrader.php";
 
 class upgrader_2 extends CommonUpgrader {
     
-  
-    function extraerContenidoDelimitado2($cadena) {
-        // Descartar la parte de texto delimitada por los patrones "[##" y "##]"
-        /*El patrón utilizado es /\[\#\#.*?\#\#\]/s, 
-         * que busca una cadena que comienza con "[##" y termina con "##]" 
-         * y que tiene cualquier cantidad de caracteres entre ellos. 
-         * El modificador /s indica que el patrón también debe coincidir con saltos de línea.
-         * */
-     
-        $patron = '/\[\#\#.*?\#\#\]/s';
-       
-        $cadena = preg_replace($patron, '', $cadena);
-        
-
-        // Extraer el texto delimitado por los patrones "{{section>" y "#"
-        /*El patrón utilizado es /\{\{section\>(.*?)\#\}/s, 
-         * que busca una cadena que comienza con "{{section>" y termina con "#" 
-         * y que tiene cualquier cantidad de caracteres entre ellos. 
-         * El modificador /s indica que el patrón también debe coincidir con saltos de línea. 
-         * 
-         */
-        $patron = '/\{\{section\>(.*?)\#/s';
-        preg_match($patron, $cadena, $matches);
-        if (isset($matches[1])) {
-            return $matches[1];
-        } else {
-            return false;
-        }
-    }
+ 
     
     /*
      * Marjose. Codi alternatiu per extreure nom de document delimitat per patrons
