@@ -4,7 +4,7 @@
     name: 'main',
     paths: {
         requireLib: 'require',
-        "jquery.ioc-tools": "../../../../../../../../../../lib_ioc/wikiiocmodel/templates/jquery.ioc-tools"
+        "jquery.ioc-tools": "../../../../../../../../lib_ioc/wikiiocmodel/templates/jquery.ioc-tools"
     },
     include: ['requireLib', 'jquery.ioc-tools'],
     shim: {
