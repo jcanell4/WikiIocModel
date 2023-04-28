@@ -10,6 +10,19 @@
     <!--link rel="stylesheet" href="css/basic.css"-->
     <link rel="stylesheet" href="css/{##estil##}.css">
     <link rel="stylesheet" href="css/jquery-ui.css">
+    <script type="text/javascript">
+        if('{##estil##}'=='boostioc'){
+            paramsForColumnB={
+                forceIcons:true, 
+                defaultIcon: 'img/more_b.png',
+            };
+        }else{
+            paramsForColumnB={
+                forceIcons:false, 
+                defaultIcon: 'img/more.png',
+            };
+        }
+    </script>
     <script src="js/modernizr-1.7.min.js"></script>
     <script type="text/javascript" src="js/Hyphenator.js"></script>
     <script type="text/javascript" src="js/build.js"></script>
@@ -34,9 +47,5 @@
 </WIOCCL:IF>
     <p>Darrera modificació: {##data_fitxercontinguts##}</p>
 </div>
-<script type="text/javascript">
-    
-</script>
-
 </body>
 </html>

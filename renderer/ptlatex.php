@@ -33,6 +33,7 @@ class renderer_plugin_wikiiocmodel_ptpdf extends Doku_Renderer {
     var $tableheader_end = FALSE;
     var $tmp_dir = 0;           //Value of temp dir
     private $isBorderTypeTable = false;
+    var $levelDiff=0;
     
     /**
      * Esta función construye el renderer a partir de las parámetros de configuración recibidos
@@ -447,6 +448,7 @@ class renderer_plugin_wikiiocmodel_ptpdf extends Doku_Renderer {
         $this->doc .= '\hyphenpenalty=100000'.DOKU_LF;
         $this->doc .= "$token$chapternumber{" . $text . "}". $breakline .DOKU_LF;
         $this->doc .= '\hyphenpenalty=1000'.DOKU_LF;
+        $this->lastlevel = $level;
     }
 
     function hr() {
