@@ -59,6 +59,5 @@ class action_plugin_wikiiocmodel extends WikiIocPluginAction {
             }
         }
         return false;
-    }
-
+    }   
 }

@@ -18,9 +18,10 @@ class action_plugin_wikiiocmodel_projects_activityutil extends WikiIocProjectPlu
         $controller->register_hook('WIOC_PROCESS_RESPONSE_project', "AFTER", $this, "setExtraMeta", array());
         $controller->register_hook('WIOC_PROCESS_RESPONSE_projectUpdate', "AFTER", $this, "setExtraMeta", array());
         $controller->register_hook('WIOC_PROCESS_RESPONSE_projectExport', "AFTER", $this, "setExtraMeta", array());
-        //marjose added
+        //marjose added for update file_dependences
         $controller->register_hook('WIOC_AJAX_COMMAND', "BEFORE", $this, "setViewMode", array());
-        $controller->register_hook('PARSER_CACHE_USE', "BEFORE", $this, "cache_use", array());
+        $controller->register_hook('PARSER_CACHE_USE', "BEFORE", $this, "cache_use", array());       
+        $controller->register_hook('IO_WIKIPAGE_WRITE', "BEFORE", $this, "io_writeWikiPage", array());        
         //end marjose
     }
 
@@ -65,57 +66,31 @@ class action_plugin_wikiiocmodel_projects_activityutil extends WikiIocProjectPlu
         return TRUE;
     }  
     
-    //marjose: actualitzar-la per llegir contingut del mpdr, camps amb els noms dels arxius dels que depen
+    //marjose: actualitzada per llegir contingut del mpdr, camps amb els noms dels arxius dels que depen
     function cache_use(&$event, $param){
         global $plugin_controller;
-
+        //recupera la variable global $plugin_controller i recull el tipus de projecte. 
         $projectOwner =  $plugin_controller->getProjectOwner();
         $projectSourceType =  $plugin_controller->getProjectSourceType();
 
+        //Si ens trobem obrint una pàgina ($this->viewMode i el tipus de projecte actual es correspon amb "activityutil" 
+        //recupera les dades del projecte.
         if($this->viewMode &&  $projectOwner && $projectSourceType=="activityutil"){
-            $datProjetc = $plugin_controller->getProjectDataSourceFromProjectId($projectOwner); //obté ruta física a meta.mpdr
-            $event->data->depends["files"] []= $fileProjetc;
+            $datProject = $plugin_controller->getProjectDataSourceFromProjectId($projectOwner); //obté ruta física a meta.mpdr   
+            // consulta els fitxers associats (camp <FILE_DEPENDENCES>) 
+            // i per cada entrada de l'array, afegeix a les dades de l'esdeveniment la ruta dels fitxers.             
+            $documents = IocCommon::toArrayThroughArrayOrJson($datProject['file_dependences']); //per recuperar els fitxers com un array
+            //per a cada arxiu de l'array $documents
+            foreach ($documents as $oneDocument) {
+                foreach ($oneDocument['relDocs'] as $oneRelDoc) {
+                    //Afegim un fitxer com a dependència de la cache:
+                    $event->data->depends["files"] []= wikiFN($oneRelDoc); //per convertir un identificador WIKI a ruta del fitxer   
+                }
+            }
+            $event->data->depends["files"]= array_unique($event->data->depends["files"]);
         }
     }
     
-    /*
-     * 3.3.1: En el cos de la funció, recupera la variable global $plugin_controller i recull el tipus de projecte. Si ens trobem obrint una pàgina i el tipus de projecte actual es correspon amb "activityutil" recupera les dades del projecte. Pots fer tot això fent:
-                global $plugin_controller;
-                $projectOwner =  $plugin_controller->getProjectOwner();
-                if($this->viewMode &&  $projectOwner && $projectOwner=="activityutil"){
-                       $datProjetc = $plugin_controller->getCurrentProjectDataSource();
-     *                               $plugin_controller->getProjectDataSourceFromProjectId($projectId, $projectSourceType=FALSE, $subset=FALSE) 
-     * /home/professor/Projectes/wikiDev/wikiIOC.com/dokuwiki_30/inc/inc_ioc/ioc_plugincontroller.php
-                            ...
-3.3.2: Si es compleix la condició anterior, consulta els fitxers associats (camp <FILE_DEPENDENCES>) i per cada entrada de l'array, afegeix a les dades de l'esdeveniment la ruta dels fitxers. Cal assegurar-te que el camp <FILE_DEPENDENCES> es recupera com un array i no com un string i cal transformar els identificadors WIKI de cada document en la ruta dels seus fitxers. Per fer això cal:
-                $documents = IocCommon::toArrayThroughArrayOrJson($dataProject["<FILE_DEPENDENCES>"]); per recuperar els fitxers com un array
-               
-     * 
-     * //per a cada arxiu, el passo a document físic
-                $fileName = wikiFN($unDocument); per convertir un identificador WIKI a ruta del fitxer
-              
-     * //afegeixo el fitxer al depents["files"]
-               $event->data->depends["files"] []= $fileName; per afegir un fitxer com a dependència de la cache.
-
-    3.4: Assegura't que existeixi l'atribut viewMode de la classe action_plugin_wikiiocmodel_projects_activityutil. Si no existeix cal crear-lo usant una altra funció callback, però aquest cop associada a l'esdevenoment WIOC_AJAX_COMMAND. Per exemple:
-       
-               $controller->register_hook('WIOC_AJAX_COMMAND', "BEFORE", $this, "setViewMode", array());
-
-
-
-//això ja s'ha fet al setViewMode
-   3.5: La funció callback setViewMode ha de codificar-se així:
-              function setViewMode(&$event, $param){
-                   switch ($event->data["call"]){
-                       case "page":
-                       case "cancel":
-                            $this->viewMode = true;
-                            break;
-                       }
-                 }
-
-        D'aquesta manera mantenim actualitzat l'atribut viewMode i evitem processament inutil!
-     */
     
     function setViewMode(&$event, $param){
         switch ($event->data["call"]){ // conté dades del tipus d'event. Call conté amb quin command s'ha llençat l'esdeveniment. 
@@ -125,4 +100,54 @@ class action_plugin_wikiiocmodel_projects_activityutil extends WikiIocProjectPlu
                 break;
         }
     }
+    
+    
+    
+    //Marjose. Before writing, adds to the dataProject file_dependences
+      function io_writeWikiPage(&$event, $param){
+        global $plugin_controller;
+            
+        if($plugin_controller->getProjectType() == 'activityutil'){
+            //Sobre dataTempo recollim el contingut de la pàgina que volem escriure (el nou)
+            $dataTempo = $event->data[0][1]; 
+
+            //Per recuperar el contingut de l'arxiu guardat:
+            //a partir del plugin_controller accedir al model
+            $projectOwner = $plugin_controller->getProjectOwner();
+            $projectModel = $plugin_controller->getAnotherProjectModel($projectOwner, 'activityutil');
+            //a partir del model (i el id del projecte) obtenim contingut guardat (funcio definida a la classe abstractProjectModel)          
+            $dataPrev = $projectModel->getRawDocument(getID());
+            
+            //Detectar nous documents relacionats
+            preg_match_all('/(^{{section>|^{{page>)(.*?):continguts/m', $dataTempo, $matches);
+            $arxiusDepNew = array_unique($matches[2]);
+            preg_match_all('/(^{{section>|^{{page>)(.*?):continguts/m', $dataPrev, $matches);
+            $arxiusDepPrev = array_unique($matches[2]);
+            if((!empty(array_diff($arxiusDepNew, $arxiusDepPrev)))||(!empty(array_diff($arxiusDepPrev, $arxiusDepNew)))){
+                // Get the actual filename
+                //$pattern = '/[^:]+$/'; // Match the last group of characters after the last ":"
+                preg_match('/[^:]+$/', getID(), $matches);
+                $actualFileName = $matches[0]; 
+                //get dataProject 
+                $dataProject = $projectModel->getDataProject($projectOwner,  'activityutil');
+                if (!is_array($dataProject)) {
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+
+                // Loop through the $fileDependences array and access object properties
+                for ($i=0; $i<count($dataProject['file_dependences']);$i++){ 
+                    $valorNom =  $dataProject['file_dependences'][$i]['nomDoc'];                   
+                    if($valorNom==$actualFileName){
+                        $dataProject['file_dependences'][$i]['relDocs']=$arxiusDepNew;
+                        //Update version for fields
+                        $projectModel->setDataProject(json_encode($dataProject));
+                    }
+                }  
+            }
+        }
+    }
+    //end marjose
+     
+    
+    
 }
