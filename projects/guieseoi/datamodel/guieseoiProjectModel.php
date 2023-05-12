@@ -1,21 +1,23 @@
 <?php
 /**
- * ptfploeProjectModel
+ * guieseoiProjectModel
  * @culpable Rafael Claver
+ * @aprenent Marjose
  */
 if (!defined("DOKU_INC")) die();
 
-class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
+class guieseoiProjectModel extends MoodleContentFilesProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);
         $this->needGenerateAction=false;        
     }
 
+    /* s'eliminara perquè...
     public function getProjectDocumentName() {
         $ret = $this->getCurrentDataProject();
         return $ret['fitxercontinguts'];
-    }
+    }*/
 
     public function updateCalculatedFieldsOnRead($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
         if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
@@ -167,6 +169,15 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
     /**
      * Calcula el valor de los campos calculables
      * @param JSON $data
+     * 
+     * 
+     * marjose: 
+     * $originalDataKeyValue és el que ve del client. Quan usuari modifica, primer passa pel calculateonread o calculateonsave
+     * $originalDataKeyValue és el que ve directament del client sense haver passat pel client. 
+     * el $data és el que em ve del calculatedataread o calculatedataonsave
+     * per mi això pot estar buit perquè no he de fer cap càlcul
+     * 
+     * potser fins i tot carregarme tota la funcio
      */
     public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
         if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){

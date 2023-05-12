@@ -3,7 +3,7 @@ require([
         "dojo/domReady!"
     ], function (registry) {
        
-        var ptfploeHtmlExportButton = registry.byId('ptfploeHtmlExport');
+        var guieseoiHtmlExportButton = registry.byId('guieseoiHtmlExport');
        
         var fOnClick=function(){
             var id = this.dispatcher.getGlobalState().getCurrentId();
@@ -19,9 +19,9 @@ require([
             return ret;
         };
        
-        if (ptfploeHtmlExportButton){
-            ptfploeHtmlExportButton.getQuery=fGetQuery;
-            ptfploeHtmlExportButton.set("hasTimer", true);
-            ptfploeHtmlExportButton.onClick =fOnClick;
+        if (guieseoiHtmlExportButton){
+            guieseoiHtmlExportButton.getQuery=fGetQuery;
+            guieseoiHtmlExportButton.set("hasTimer", true);
+            guieseoiHtmlExportButton.onClick =fOnClick;
         }
 });

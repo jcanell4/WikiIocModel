@@ -44,11 +44,11 @@
         }
 
     },
-    "ptfploeConsolidateData": {
+    "guieseoiConsolidateData": {
         "class": "WikiIocButton",
         "parms": { 
             "DOM": {
-               "id": "ptfploeConsolidateData",
+               "id": "guieseoiConsolidateData",
                "title": "Consolidació de les dades",
                "class": "iocDisplayBlock"
             },
@@ -83,11 +83,11 @@
         }
 
     },
-    "ptfploeUpdateDataProject": {
+    "guieseoiUpdateDataProject": {
         "class": "WikiIocButton",
         "parms": { 
             "DOM": {
-               "id": "ptfploeUpdateDataProject",
+               "id": "guieseoiUpdateDataProject",
                "title": "Actualització del Projecte",
                "class": "iocDisplayBlock"
             },
@@ -124,12 +124,12 @@
         }
 
     },
-    "ptfploeHtmlExport": {
+    "guieseoiHtmlExport": {
         "class": "WikiIocButton",
         "parms": {
             "DOM": {
-               "id": "ptfploeHtmlExport",
-               "title": "ptfploeHtmlExport",
+               "id": "guieseoiHtmlExport",
+               "title": "guieseoiHtmlExport",
                "class": "iocDisplayBlock"
             },
             "DJO": {

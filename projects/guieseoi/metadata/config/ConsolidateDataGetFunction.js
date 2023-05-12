@@ -3,7 +3,7 @@ require([
     "dojo/domReady!"
 ], function (registry) {
 
-    var button = registry.byId('ptfploeConsolidateData');
+    var button = registry.byId('guieseoiConsolidateData');
 
     var fGetQuery=function(){
         var id = this.dispatcher.getGlobalState().getCurrentId();

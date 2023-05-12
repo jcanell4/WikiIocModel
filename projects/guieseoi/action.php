@@ -2,11 +2,12 @@
 /**
  * Define y muestra los botones de un proyecto a partir de un fichero de control y de un template
  * @culpable Rafael Claver
+ * @re-creator marjose
  */
 if (!defined("DOKU_INC")) die();
 require_once (DOKU_INC . "inc/pageutils.php");
 
-class action_plugin_wikiiocmodel_projects_ptfploe extends WikiIocProjectPluginAction {
+class action_plugin_wikiiocmodel_projects_guieseoi extends WikiIocProjectPluginAction {
 
     public function __construct($projectType, $dirProjectType) {
         parent::__construct($projectType, $dirProjectType);

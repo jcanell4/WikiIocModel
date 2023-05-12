@@ -1,9 +1,10 @@
 <?php
 /**
  * DokuModelManager:
- * - proporciona acceso a las Autorizaciones, ModelAdapter y Renderer del proyecto 'ptfploe'
+ * - proporciona acceso a las Autorizaciones, ModelAdapter y Renderer del proyecto 'guieseoi'
  * - define las rutas de las clases y las clases por defecto necesarias para este proyecto
  * @author Rafael Claver
+ * @re-author Marjose
  */
 if (!defined('DOKU_INC')) die();
 if (!defined('DOKU_LIB_IOC')) define('DOKU_LIB_IOC', DOKU_INC . "lib/lib_ioc/");
@@ -13,7 +14,7 @@ if (!defined('WIKI_IOC_MODEL')) define('WIKI_IOC_MODEL', DOKU_PLUGIN . "wikiiocm
 require_once(DOKU_LIB_IOC . "wikiiocmodel/ProjectModelExceptions.php");
 require_once(WIKI_IOC_MODEL . "BasicModelAdapter.php");
 
-class ptfploeDokuModelManager extends AbstractModelManager{
+class guieseoiDokuModelManager extends AbstractModelManager{
 
     const MOD = WIKI_IOC_MODEL;
     const DEF = WIKI_IOC_MODEL . "projects/defaultProject/";
@@ -39,7 +40,7 @@ class ptfploeDokuModelManager extends AbstractModelManager{
     public function getAuthorizationManager($str_command) {
         require_once(self::$defMainClass['Permission']);
         require_once(self::$defMainClass['FactoryAuthorization']);
-        $factory = \ptfploe\FactoryAuthorization::Instance(self::$defDirClass['Authorization'], "\ptfploe");
+        $factory = \guieseoi\FactoryAuthorization::Instance(self::$defDirClass['Authorization'], "\guieseoi");
         return $factory->createAuthorizationManager($str_command);
     }
 

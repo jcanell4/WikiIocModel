@@ -1,9 +1,10 @@
 <?php
 /**
- * FactoryAuthorization: carga las clases de autorización de los comandos del proyecto "ptfploe"
+ * FactoryAuthorization: carga las clases de autorización de los comandos del proyecto "guieseoi"
  * @author Rafael Claver
+ * @re-creator marjose
  */
-namespace ptfploe;
+namespace guieseoi;
 
 if (!defined('DOKU_INC')) die();
 

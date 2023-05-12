@@ -1,7 +1,8 @@
 <?php
 /**
- * FactoryExporter (projecte 'ptfploe')
+ * FactoryExporter (projecte 'guieseoi')
  * @culpable Rafael Claver
+ * @re-creator marjose
  */
 if (!defined('DOKU_INC')) die();
 

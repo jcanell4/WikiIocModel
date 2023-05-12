@@ -18,7 +18,7 @@ El camp "metaDataSubsetsList" conté la llista de subsets
 }
 
 es defineix, pel subconjunt "main",  que la classe MetaDataDao i MetaDataEntity a implementar són les que es troben al projecte "defaultProject", mentre per que la 
-classe MetaDataRender cal instanciar la que es troba al projecte ptfploe. La raó d'aquesta configuració és per poder reutilitzar des d'altres projectes, classes 
+classe MetaDataRender cal instanciar la que es troba al projecte guieseoi. La raó d'aquesta configuració és per poder reutilitzar des d'altres projectes, classes 
 ja implementades en projectes diferents. 
 
 metaDataComponentTypes
@@ -196,7 +196,7 @@ En el següent exemple es poden veure els diferents elements de configuració de
             "main": {
                 "MetaDataDAO": "defaultProject",
                 "MetaDataEntity": "defaultProject",
-                "MetaDataRender": "ptfploe"
+                "MetaDataRender": "guieseoi"
             }
         }
     ],

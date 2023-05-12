@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_1: Transforma la estructura de datos y el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_1: Transforma la estructura de datos y el archivo continguts.txt de los proyectos 'guieseoi'
  *             desde la versión 0 a la versión 1
  * @author rafael
  */
@@ -13,7 +13,7 @@ class upgrader_1 extends CommonUpgrader {
     public function process($type, $ver, $filename=NULL) {
         switch ($type) {
             case "fields":
-                //Transforma los datos del proyecto "ptfploe" desde la estructura de la versión 0 a la versión 1
+                //Transforma los datos del proyecto "guieseoi" desde la estructura de la versión 0 a la versión 1
                 $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
                 if (!is_array($dataProject)) {
                     $dataProject = json_decode($dataProject, TRUE);

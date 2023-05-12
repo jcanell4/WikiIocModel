@@ -3,7 +3,7 @@ require([
     "dojo/domReady!"
 ], function (registry) {
 
-    var ptfploeUpdateDataProjectButton = registry.byId('ptfploeUpdateDataProject');
+    var guieseoiUpdateDataProjectButton = registry.byId('guieseoiUpdateDataProject');
 
     var fGetQuery=function(){
         var id = this.dispatcher.getGlobalState().getCurrentId();
@@ -13,7 +13,7 @@ require([
         return ret;
     };
 
-    if (ptfploeUpdateDataProjectButton){
-        ptfploeUpdateDataProjectButton.getQuery=fGetQuery;
+    if (guieseoiUpdateDataProjectButton){
+        guieseoiUpdateDataProjectButton.getQuery=fGetQuery;
     }
 });

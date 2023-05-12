@@ -1,6 +1,6 @@
 <?php
 /**
- * upgrader_36: Transforma el archivo continguts.txt de los proyectos 'ptfploe'
+ * upgrader_36: Transforma el archivo continguts.txt de los proyectos 'guieseoi'
  *             desde la versión 35 a la versión 36
  * @author rafael <rclaver@xtec.cat>
 */

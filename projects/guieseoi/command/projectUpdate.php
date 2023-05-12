@@ -2,10 +2,11 @@
 /**
  * projectUpdate : command que es dispara pel botó updateDataProject
  * @culpable Rafael Claver
+ * @re-creator marjose
  */
 if (!defined('DOKU_INC')) die();
 
-class command_plugin_wikiiocmodel_projects_ptfploe_projectUpdate extends abstract_project_command_class {
+class command_plugin_wikiiocmodel_projects_guieseoi_projectUpdate extends abstract_project_command_class {
 
     public function __construct() {
         parent::__construct();
