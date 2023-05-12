@@ -101,7 +101,7 @@
                             "mandatory": true,
                             "default": false
                         }
-                    }                    
+                    }
                 },
                 "defDocuments": {
                     "type": "objectArray",
@@ -139,7 +139,11 @@
                             "default":true
                         },
                         "documents": {
-                            "type": "defDocuments"
+                            "type": "defDocuments",
+                            "calculateOnSave": {
+                                "class": "CalculateLowerCaseInObjectArrayValues",
+                                "data": {"table":"documents", "field":"nom"}
+                            }
                         },
                         "nom_real": {
                             "type": "string",
