@@ -1010,7 +1010,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         if (!empty($link['rel']))    $ret .= ' rel="'.$link['rel'].'"';
         if (!empty($link['more']))   $ret .= ' '.$link['more'];
         $ret .= '>';
-        $ret .= $link['name'];
+        $ret .= IocCommon::formatTitleExternalLink("link", "html", $link['name']);
         $ret .= '</a>';
         $ret .= $link['suf'];
         return $ret;
@@ -1090,10 +1090,14 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
 
             $alt = ($_SESSION['fig_description']) ? $_SESSION['fig_description'] : ($title ? $title : "");
             if ($title) {
-                if ($imgb && strpos($title, "#")!==false) {
-                    $s = explode("#", $title);
-                    $title = $s[0];
-                    $alt = preg_replace('/\/[+-]?\d+$/', '', $s[1]); //elimina el 'offset'
+                if ($imgb) {
+                    $titol = IocCommon::formatTitleExternalLink("media", "html", $title);
+                    if (is_array($titol)) {
+                        $title = $titol['title'];
+                        $alt = $titol['alt'];
+                    }else {
+                        $title = $alt = $titol;
+                    }
                 }
                 $ret .= " title=\"$title\"";
             }

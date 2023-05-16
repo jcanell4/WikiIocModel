@@ -234,16 +234,16 @@ class renderer_plugin_wikiiocmodel_ptpdf extends Doku_Renderer {
                     $offset = '';
                     //Extract offset
                     if ($title){
+                        //extreu la descripció
                         preg_match('/(.*?)(\/([^\/]*$))/', $title, $data);
+                        $arrdesc = IocCommon::formatTitleExternalLink("media", "pdf", $title);
+                        $title = $arrdesc['title'];
+                        $footer = ($arrdesc['alt']) ? $arrdesc['alt'] : $title;
                         if (!empty($data)){
                             if(!empty($data[3]) &&  is_numeric($data[3])){
                                 $offset = '['.trim($data[3]).'mm]';
                                 $footer = $data[1];
-                            }else{
-                                $footer = $title;
                             }
-                        }else{
-                            $footer = $title;
                         }
                     }
                     $this->doc .= '\imgB'.$offset.'{';
@@ -1122,17 +1122,18 @@ class renderer_plugin_wikiiocmodel_ptpdf extends Doku_Renderer {
             if ($conf['useheading'] && $id) {
                 $heading = p_get_first_heading($id);
                 if ($heading) {
-                      return $this->_latexEntities($heading);
+                    return $this->_latexEntities($heading);
                 }
             }
             return $this->_latexEntities($default);
-        } else if ( is_string($title) ) {
+        }else if ( is_string($title) ) {
+            $title = IocCommon::formatTitleExternalLink("link", "pdf", $title);
             return $this->_latexEntities($title);
-        } else if ( is_array($title) ) {
+        }else if ( is_array($title) ) {
             $isImage = TRUE;
             if (isset($title['caption'])) {
                 $title['title'] = $title['caption'];
-            } else {
+            }else {
                 $title['title'] = $default;
             }
             return $title;
