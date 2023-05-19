@@ -14,6 +14,8 @@ class EditProjectAuthorization extends SupervisorProjectAuthorization {
     public function __construct() {
         parent::__construct();
         $this->allowedGroups = ["admin"];
+        //[RAFA] Aquesta assignació elimina els altres grups (desconec el motiu)
+        // específicament el grup "manager" assignat per la classe SupervisorProjectAuthorization
     }
 
 }
