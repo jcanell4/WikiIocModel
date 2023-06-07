@@ -10,6 +10,8 @@
     <!--link rel="stylesheet" href="css/basic.css"-->
     <link rel="stylesheet" href="css/{##estil##}.css">
     <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="https://ioc.xtec.cat/materials/FP/Recursos/ActivityUtil/css/{##estil##}.css">
+    <link rel="stylesheet" href="https://ioc.xtec.cat/materials/FP/Recursos/ActivityUtil/css/jquery-ui.css">   
     <script type="text/javascript">
         if('{##estil##}'=='boostioc'){
             paramsForColumnB={
