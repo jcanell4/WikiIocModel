@@ -149,7 +149,11 @@
                         },
                         "documents": {
                             "type": "defDocuments",
-                            "default": [{"id":0, "ordre":1, "nom":"continguts", "descripcio":"descripció del document"}]
+                            "calculateOnSave": {
+                                "class": "CalculateLowerCaseInObjectArrayValues",
+                                "data": {"table":"documents", "field":"nom"}
+                            },
+                            "default": []                            
                         },
                         "nom_real": {
                             "type": "string",
