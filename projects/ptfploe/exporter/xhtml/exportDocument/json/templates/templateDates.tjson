@@ -8,7 +8,24 @@
 
 </WIOCCL:FOREACH>
 </WIOCCL:SUBSET>
-    }<WIOCCL:IF condition="{##id_unitats##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUnitats##})_#},1)_#}">,</WIOCCL:IF>
+    },
 
 </WIOCCL:FOREACH>
+    "MIX_AV":{
+<WIOCCL:FOREACH counter="id_av" var="item_av" array="{##datesAC##}">
+        "{##item_av[id]##}publicacio":{"selector":"#{##item_av[id]##}publicacio", "type":"text", "value":"{#_DATE(''{##item_av[enunciat]##}'',''/'')_#}"},
+        "{##item_av[id]##}lliurament":{"selector":"#{##item_av[id]##}lliurament", "type":"text", "value":"{#_DATE(''{##item_av[lliurament]##}'',''/'')_#}"}<WIOCCL:IF condition="!{#_IS_ARRAY_EMPTY({##datesEAF##})_#}">,</WIOCCL:IF><WIOCCL:IF condition="{#_IS_ARRAY_EMPTY({##datesEAF##})_#}"><WIOCCL:IF condition="{##id_av##}\<{#_SUBS({#_ARRAY_LENGTH({##datesAC##})_#},1)_#}">,</WIOCCL:IF></WIOCCL:IF>
+
+</WIOCCL:FOREACH>
+<WIOCCL:FOREACH counter="id_av" var="item_av" array="{##datesEAF##}">
+<WIOCCL:IF condition="{##item_av[hiHaEnunciatRecuperacio]##}">
+        "{##item_av[id]##}publicacio":{"selector":"#{##item_av[id]##}publicacio", "type":"text", "value":"{#_DATE(''{##item_av[enunciat]##}'',''/'')_#} (rec. {#_DATE(''{##item_av[enunciat recuperació]##}'',''/'')_#})"},
+</WIOCCL:IF>
+<WIOCCL:IF condition="!{##item_av[hiHaEnunciatRecuperacio]##}">
+        "{##item_av[id]##}publicacio":{"selector":"#{##item_av[id]##}publicacio", "type":"text", "value":"{#_DATE(''{##item_av[enunciat]##}'',''/'')_#}"},
+</WIOCCL:IF>
+        "{##item_av[id]##}lliurament":{"selector":"#{##item_av[id]##}lliurament", "type":"text", "value":"{#_DATE(''{##item_av[lliurament]##}'',''/'')_#} (rec. {#_DATE(''{##item_av[lliurament recuperació]##}'',''/'')_#}))"}<WIOCCL:IF condition="{##id_av##}\<{#_SUBS({#_ARRAY_LENGTH({##datesEAF##})_#},1)_#}">,</WIOCCL:IF>
+
+</WIOCCL:FOREACH>
+    }
 }
