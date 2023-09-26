@@ -110,7 +110,13 @@ class exportDocument extends renderHtmlDocument {
 
                 $titol = html_entity_decode(htmlspecialchars_decode($data["titol"], ENT_COMPAT|ENT_QUOTES));
                 $subtitol = html_entity_decode(htmlspecialchars_decode($data["subtitol"], ENT_COMPAT|ENT_QUOTES));
-                $nom_real = html_entity_decode(htmlspecialchars_decode($data["nom_real"], ENT_COMPAT|ENT_QUOTES));
+                if (is_array($data["nom_real"])) {
+                    foreach($data["nom_real"] as $nr) {
+                        $nom_real[] = html_entity_decode(htmlspecialchars_decode($nr, ENT_COMPAT|ENT_QUOTES));
+                    }
+                }else {
+                    $nom_real = html_entity_decode(htmlspecialchars_decode($data["nom_real"], ENT_COMPAT|ENT_QUOTES));
+                }
                 $data_fitxer = html_entity_decode(htmlspecialchars_decode($data["data_fitxercontinguts"], ENT_COMPAT|ENT_QUOTES));
                 $entitat_responsable = html_entity_decode(htmlspecialchars_decode($data["entitatResponsable"], ENT_COMPAT|ENT_QUOTES));
 
@@ -132,18 +138,18 @@ class exportDocument extends renderHtmlDocument {
                                     'subtitol' => $subtitol,
                                     'autor'    => $data['mostrarAutor']==="true" || $data['mostrarAutor']===true ? $nom_real : "",
                                     'entitatResponsable' => $entitat_responsable,
-                                    'data'     => $data_fitxer],                       
+                                    'data'     => $data_fitxer],
                         "contingut" => json_decode($data["documentPartsPdf"], TRUE)   //contingut latex ja rendaritzat
                     )
                 );
                 $filenamepdf = "manual.pdf";    //$filenamepdf = "manual_".end(explode($this->cfgExport->id)).".pdf";
-                $pdfRenderer = new PdfRenderer();                
+                $pdfRenderer = new PdfRenderer();
                 $pdfRenderer->renderDocument($params, $filenamepdf);
                 $zip->addFile($this->cfgExport->tmp_dir."/$filenamepdf", "/$filenamepdf");
 
                 $this->attachMediaFiles($zip);
 
-                $result["zipFile"] = $zipFile;
+                $result["zipFile"] = $data["zipFile"] = $zipFile;
                 $result["zipName"] = "$output_filename.zip";
                 $result["info"] = "fitxer {$result['zipName']} creat correctement";
             }else{
