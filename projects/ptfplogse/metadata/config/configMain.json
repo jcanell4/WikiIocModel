@@ -24,7 +24,7 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView", "updateView" :  "updateView", "firstView" :  "firstView"},
             "versions": {
-                "fields": 12,
+                "fields": 13,
                 "templates": {"continguts": 30}
             },
             "mainType": {
