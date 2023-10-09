@@ -68,35 +68,15 @@ class ProjectExportAction extends ProjectAction{
         $render = $this->factoryRender->createRender($this->typesDefinition[$this->mainTypeName],
                                                      $this->typesRender[$this->mainTypeName],
                                                      array(ProjectKeys::KEY_ID => $this->projectID));
-        //Prova marjose
-        /*
-        $result = $render->process($this->dataArray);
-        $result['ns'] = $this->projectNS;
-        $result['ext'] = ($this->mode === "xhtml") ? ".zip" : ".pdf";
-        $ret["id"] = $this->idToRequestId($this->projectID);
-        $ret["ns"] = $this->projectNS;
-         */
-         
-        //end prova marjose
-        
-        //Prova marjose
-        //        $result = $render->process($this->dataArray);
         $render->process($this->dataArray);
         $result = $render->getResultFileList();
         $result['ns'] = $this->projectNS;
         $result['ext'] = ".{$this->mode}";
         $ret['id'] = $this->idToRequestId($this->projectID);
         $ret['ns'] = $this->projectNS;
-        
-        //end prova marjose
-        
-        
 
         switch ($this->mode) {
             case 'xhtml':
-                $result['zipName'] = $this->idToRequestId($this->projectID) . $result['ext'];
-                $ret["meta"] = ResultsWithFiles::get_html_metadata($result);
-                break;
             case 'pdf':
                 $result['pdfFile'] = $result['tmp_dir'];
                 $result['pdfName'] = $this->idToRequestId($this->projectID) . $result['ext'];
