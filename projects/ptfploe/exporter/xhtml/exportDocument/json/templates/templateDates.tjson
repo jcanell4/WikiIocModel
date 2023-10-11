@@ -24,7 +24,7 @@
 <WIOCCL:IF condition="!{##item_av[hiHaEnunciatRecuperacio]##}">
         "{##item_av[id]##}publicacio":{"selector":"#{##item_av[id]##}publicacio", "type":"text", "value":"{#_DATE(''{##item_av[enunciat]##}'',''/'')_#}"},
 </WIOCCL:IF>
-        "{##item_av[id]##}lliurament":{"selector":"#{##item_av[id]##}lliurament", "type":"text", "value":"{#_DATE(''{##item_av[lliurament]##}'',''/'')_#} (rec. {#_DATE(''{##item_av[lliurament recuperació]##}'',''/'')_#}))"}<WIOCCL:IF condition="{##id_av##}\<{#_SUBS({#_ARRAY_LENGTH({##datesEAF##})_#},1)_#}">,</WIOCCL:IF>
+        "{##item_av[id]##}lliurament":{"selector":"#{##item_av[id]##}lliurament", "type":"text", "value":"{#_DATE(''{##item_av[lliurament]##}'',''/'')_#} (rec. {#_DATE(''{##item_av[lliurament recuperació]##}'',''/'')_#})"}<WIOCCL:IF condition="{##id_av##}\<{#_SUBS({#_ARRAY_LENGTH({##datesEAF##})_#},1)_#}">,</WIOCCL:IF>
 
 </WIOCCL:FOREACH>
     }
