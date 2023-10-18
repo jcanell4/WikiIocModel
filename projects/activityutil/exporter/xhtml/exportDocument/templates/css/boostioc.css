@@ -263,9 +263,8 @@ pre.code {
 }
 .iocfigurec {   
     width: 130px;
-    
     float: right;
-    
+    clear:right;
 }
 .iocfigurec ul {
     list-style: none;
