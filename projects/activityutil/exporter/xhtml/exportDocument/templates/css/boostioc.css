@@ -261,10 +261,15 @@ pre.code {
     background-color: #f1f5fe;
     padding: 12px;
 }
-.iocfigurec {   
+.iocfigurec {
     width: 130px;
     float: right;
-    clear:right;
+    clear: right;
+}
+@media screen and (max-width: 768px) {
+    .iocfigurec {
+        float: none;
+    }
 }
 .iocfigurec ul {
     list-style: none;
