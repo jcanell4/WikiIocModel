@@ -405,6 +405,12 @@ pre.code {
     float: right;
     /*margin-right: -22%;
     margin-top: -20px;*/
+    clear: right;
+}
+@media screen and (max-width: 768px) {
+    .iocfigurec {
+        float: none;
+    }
 }
 
 .iocfigurec ul {
