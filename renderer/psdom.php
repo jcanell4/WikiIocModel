@@ -1010,31 +1010,31 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     //Es un link a un ID de la propia página. Ejemplo: <a href="#id_top">
     function locallink($hash, $name = null){
         $hash = urldecode($hash);
-        $this->currentNode->addContent(new ReferenceNodeDoc($hash, ReferenceNodeDoc::REF_INTERNAL_LINK, $name));
+        $this->currentNode->addContent(new ReferenceNodeDoc($hash, ReferenceNodeDoc::REF_INTERNAL_LINK, IocCommon::formatTitleExternalLink("link", "pdf", $name)));
     }
 
     // $link like 'wiki:syntax', $title could be an array (media)
     function internallink($link, $title = null) {
-        $this->currentNode->addContent(new ReferenceNodeDoc($link, ReferenceNodeDoc::REF_WIKI_LINK, $title));
+        $this->currentNode->addContent(new ReferenceNodeDoc($link, ReferenceNodeDoc::REF_WIKI_LINK, IocCommon::formatTitleExternalLink("link", "pdf", $title)));
     }
 
-    // $link is full URL with scheme, $title could be an array (media)
     function externallink($link, $title = null) {
         $link = urldecode($link);
-        $this->currentNode->addContent(new ReferenceNodeDoc($link, ReferenceNodeDoc::REF_EXTERNAL_LINK, $title));
-        if (is_array($title)) {
-            //is a image
-        }
+        $this->currentNode->addContent(new ReferenceNodeDoc($link, ReferenceNodeDoc::REF_EXTERNAL_LINK, IocCommon::formatTitleExternalLink("link", "pdf", $title)));
+//        if (is_array($title)) {
+//            //is a image
+//        }
     }
 
     //Es una imagen definida como, por ejemplo: {{:common:chip.png?100|mostra de chip en circuit}}
     function internalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
-        $node = new ImageNodeDoc($src, $title, $align, $width, $height, $cache, $linking);
+        $node = new ImageNodeDoc($src, IocCommon::formatTitleExternalLink("media", "pdf", $title), $align, $width, $height, $cache, $linking);
         $this->currentNode->addContent($node);
     }
 
     function externalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
-        list($src, $hash) = explode('#',$src,2);
+//        list($src, $hash) = explode('#',$src,2);
+        //NOT AVAILABLE
 
     }
 

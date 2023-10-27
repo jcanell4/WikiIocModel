@@ -1088,7 +1088,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
             if($align == 'right') $ret .= ' align="right"';
             if($align == 'left')  $ret .= ' align="left"';
 
-            $alt = ($_SESSION['fig_description']) ? $_SESSION['fig_description'] : ($title ? $title : "");
+            $alt = "";
             if ($title) {
                 if ($imgb) {
                     $titol = IocCommon::formatTitleExternalLink("media", "html", $title);
@@ -1101,6 +1101,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 }
                 $ret .= " title=\"$title\"";
             }
+            $alt = ($_SESSION['fig_description']) ? $_SESSION['fig_description'] : $alt;
             $ret .= " alt=\"$alt\"";
             //marjose start
             //if($this->table && !is_null($width) )
