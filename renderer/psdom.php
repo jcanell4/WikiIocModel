@@ -1028,8 +1028,23 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     //Es una imagen definida como, por ejemplo: {{:common:chip.png?100|mostra de chip en circuit}}
     function internalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
-        $node = new ImageNodeDoc($src, IocCommon::formatTitleExternalLink("media", "pdf", $title), $align, $width, $height, $cache, $linking);
-        $this->currentNode->addContent($node);
+                global $conf;
+        list($ext,$mime) = mimetype($src);
+        $type = substr($mime,0,5);
+        if($type === 'image'){
+            $node = new ImageNodeDoc($src, IocCommon::formatTitleExternalLink("media", "pdf", $title), $align, $width, $height, $cache, $linking);
+            $this->currentNode->addContent($node);
+        }elseif($type === 'appli' && !$_SESSION['u0']){
+            if (preg_match('/\.pdf$/', $src)){
+                $src = $this->_xmlEntities(DOKU_URL.'lib/exe/fetch.php?media='.$src);
+                $title = IocCommon::formatTitleExternalLink("file", "pdf", $title);
+                $this->currentNode->addContent(new ReferenceNodeDoc($src, ReferenceNodeDoc::REF_EXTERNAL_LINK, IocCommon::formatTitleExternalLink("file", "pdf", $title)));
+            }
+        }else{
+            if (!$_SESSION['u0']){
+                $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::HTML_TEXT_TYPE, 'FIXME internalmedia ('.$type.'): '.$src));
+            }
+        }
     }
 
     function externalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {

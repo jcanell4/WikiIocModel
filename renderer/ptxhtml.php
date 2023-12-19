@@ -1157,18 +1157,25 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
             $filename = basename(str_replace(':', '/', $src));
             // well at least we have a title to display
             if (!is_null($title) && !empty($title)) {
+                $titleAndNobreak = IocCommon::formatTitleExternalLink("file", "html", $title);
+                $title = $titleAndNobreak["title"];
+                $noBreak = $titleAndNobreak["nobreak"];        
                 $title  = $this->_xmlEntities($title);
+                
             }else{
                 $title = $filename;
             }
             $src = $path.'img/'.$filename;
-            $ret .= '<div class="mediaf file'.$ext.'">';
-            $ret .= '<div class="mediacontent">';
-            $ret .= '<a href="'.$path.'img/'.basename(str_replace(':', '/', $src)).'">'.$title.'</a>'.
-                    '<span>'.$filesize.'</span>';
-            $ret .= '</div>';
-            $ret .= '</div>';
-            
+            if($noBreak){
+                $ret .= '<a class="media mediafile mf_'.$ext.'" href="'.$path.'media/'.basename(str_replace(':', '/', $src)).'">'.$title.'</a>';
+            }else{
+                $ret .= '<div class="mediaf file'.$ext.'">';
+                $ret .= '<div class="mediacontent">';
+                $ret .= '<a href="'.$path.'img/'.basename(str_replace(':', '/', $src)).'">'.$title.'</a>'.
+                        '<span>'.$filesize.'</span>';
+                $ret .= '</div>';
+                $ret .= '</div>';
+            }
         }elseif ($title){
             // well at least we have a title to display
             $ret .= $this->_xmlEntities($title);
