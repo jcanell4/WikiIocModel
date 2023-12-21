@@ -15,7 +15,7 @@
     <script type="text/javascript">
         if('{##estil##}'=='boostioc'){
             paramsForColumnB={
-                forceIcons:true, 
+                forceIcons:false,
                 defaultIcon: 'img/more_b.png',
             };
         }else{
