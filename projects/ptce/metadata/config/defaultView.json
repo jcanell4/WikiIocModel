@@ -918,58 +918,58 @@
             ]
           }
         },
-        "dataPaf11": {
-          "label": "Data de la PAF 1 dissabte (dataPaf11)",
+        "dataPv1": {
+          "label": "Data de la PV dissabte (dataPv1)",
           "n_columns":4,
           "group": "actualitzables",
           "props": {
             "required": true,
-            "title": "Indiqueu la data en que es realitzarà la PAF 1"
+            "title": "Indiqueu la data en que es realitzarà la PV 1"
           }
         },
-        "dataPaf12": {
-          "label": "Data de la PAF 1 diumenge (dataPaf11)",
+        "dataPv2": {
+          "label": "Data de la PV diumenge (dataPv2)",
           "n_columns":4,
           "group": "actualitzables",
           "props": {
             "required": true,
-            "title": "Indiqueu la data en que es realitzarà la PAF 1"
+            "title": "Indiqueu la data en que es realitzarà la PV 2"
           }
         },
-        "dataQualificacioPaf1": {
-          "label": "Data de la qualificació de la PAF 1 (dataQualificacioPaf1)",
+        "dataQualificacioPv": {
+          "label": "Data de la qualificació de la PV (dataQualificacioPv)",
           "n_columns":4,
           "group": "actualitzables",
           "props": {
             "required": true,
-            "title": "Indiqueu la data en que es realitzarà la PAF 1"
+            "title": "Indiqueu la data en que es realitzarà la PV"
           }
         },
-        "dataPaf21": {
-          "label": "Data de la PAF 2 dissabte (dataPaf21)",
+        "dataPaf1": {
+          "label": "Data de la PAF dissabte (dataPaf1)",
           "n_columns":4,
           "group": "actualitzables",
           "props": {
             "required": true,
-            "title": "Indiqueu la data en que es realitzarà la PAF 2"
+            "title": "Indiqueu la data en que es realitzarà la PAF"
           }
         },
-        "dataPaf22": {
-          "label": "Data de la PAF 2 diumenge (dataPaf22)",
+        "dataPaf2": {
+          "label": "Data de la PAF diumenge (dataPaf2)",
           "n_columns":4,
           "group": "actualitzables",
           "props": {
             "required": true,
-            "title": "Indiqueu la data en que es realitzarà la PAF 2"
+            "title": "Indiqueu la data en que es realitzarà la PAF"
           }
         },
-        "dataQualificacioPaf2": {
-          "label": "Data de la qualificació de la PAF 2 (dataQualificacioPaf2)",
+        "dataQualificacioPaf": {
+          "label": "Data de la qualificació de la PAF (dataQualificacioPaf)",
           "n_columns":4,
           "group": "actualitzables",
           "props": {
             "required": true,
-            "title": "Indiqueu la data en que es realitzarà la PAF 2"
+            "title": "Indiqueu la data en que es realitzarà la PAF"
           }
         },
         "duradaPAF": {
@@ -1033,7 +1033,7 @@
           "type": "editableObject",
           "props": {
             "data-editable-element": "table",
-            "title": "Detalleu com pondera L'AC i la PAF per cada UF"
+            "title": "Detalleu com pondera L'AC"
           },
           "config": {
             "actions": {

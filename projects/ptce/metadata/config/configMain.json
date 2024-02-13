@@ -30,7 +30,7 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView", "updateView" : "updateView", "firstView": "firstView"},
             "versions": {
-                "fields": 0,
+                "fields": 1,
                 "templates": {"continguts": 0}
             },
             "mainType": {
@@ -787,30 +787,30 @@
                             },
                             "default": 0
                         },                                                
-                        "dataPaf11": {
+                        "dataPv1": {
                             "type": "date",
                             "mandatory": true,
                             "default":"01/01/2000"
                         },                                                
-                        "dataPaf12": {
+                        "dataPv2": {
                             "type": "date",
                             "default":""
                         },                                                
-                        "dataPaf21": {
+                        "dataPaf1": {
                             "type": "date",
                             "mandatory": true,
                             "default":"01/01/2000"
                         },                                                
-                        "dataPaf22": {
+                        "dataPaf2": {
                             "type": "date",
                             "default":""
                         },                                                
-                        "dataQualificacioPaf1": {
+                        "dataQualificacioPv": {
                             "type": "date",
                             "mandatory": true,
                             "default":"01/01/2000"
                         },                                                
-                        "dataQualificacioPaf2": {
+                        "dataQualificacioPaf": {
                             "type": "date",
                             "mandatory": true,
                             "default":"01/01/2000"

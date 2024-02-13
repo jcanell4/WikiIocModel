@@ -1118,22 +1118,22 @@
         "dadesExtres": {
           "type" : "hidden"
         },
-        "dataPaf11": {
+        "dataPv1": {
           "type" : "hidden"
         },
-        "dataPaf12": {
+        "dataPv2": {
           "type" : "hidden"
         },
-        "dataQualificacioPaf1": {
+        "dataQualificacioPv": {
           "type" : "hidden"
         },
-        "dataPaf21": {
+        "dataPaf1": {
           "type" : "hidden"
         },
-        "dataPaf22": {
+        "dataPaf2": {
           "type" : "hidden"
         },
-        "dataQualificacioPaf2": {
+        "dataQualificacioPaf": {
           "type" : "hidden"
         },
         "hiHaRecuperacioPerJT":{

@@ -746,28 +746,26 @@
 <!-- Secció 7 -->
 <section class="section section7">
   <div class="own_container">
-    <h2>Prova final (PAF)</h2>
-    <div class="panell_pafs" title="La data i hora de la PAF es comunicarà a Tutoria">
+    <h2>Prova final</h2>
+    <div class="panell_proves" title="La data i hora de la prova final es comunicarà a Tutoria">
       <div class="paf_1">
-        <h3>PAF 1</h3>
-        <div class="section7_icona" id="paf-1-icona"></div>
-        <h3>{#_DATE("{##dataPaf11##}")_#}<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPaf12##}'')_#}&&''{##dataPaf12##}''!=''01/01/1970''"><br/>o<br/>{#_DATE("{##dataPaf12##}")_#}</WIOCCL:IF></h3>
+        <h3>PV</h3>
+        <div class="section7_icona" id="pv-icona"></div>
+        <h3>{#_DATE("{##dataPv1##}")_#}<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPv2##}'')_#}&&''{##dataPv2##}''!=''01/01/1970''"><br/>o<br/>{#_DATE("{##dataPv2##}")_#}</WIOCCL:IF></h3>
         <p>Qualificacions:</p>
-        <p>{#_DATE("{##dataQualificacioPaf1##}")_#}</p>
+        <p>{#_DATE("{##dataQualificacioPv##}")_#}</p>
         <div class="horizontal_separator"></div>
       </div>
       <div class="vertical_separator"></div>
       <div class="paf_2">
-        <h3>PAF 2</h3>
-        <div class="section7_icona" id="paf-2-icona"></div>
-        <h3>{#_DATE("{##dataPaf21##}")_#}<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPaf22##}'')_#}&&''{##dataPaf22##}''!=''01/01/1970''"><br/>o<br/>{#_DATE("{##dataPaf22##}")_#}</WIOCCL:IF></h3>
+        <h3>PAF</h3>
+        <div class="section7_icona" id="paf-icona"></div>
+        <h3>{#_DATE("{##dataPaf1##}")_#}<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPaf2##}'')_#}&&''{##dataPaf2##}''!=''01/01/1970''"><br/>o<br/>{#_DATE("{##dataPaf2##}")_#}</WIOCCL:IF></h3>
         <p>Qualificacions:</p>
-        <p>{#_DATE("{##dataQualificacioPaf2##}")_#}</p>
+        <p>{#_DATE("{##dataQualificacioPaf##}")_#}</p>
         <div class="horizontal_separator"></div>
       </div>
     </div>
-    <p>Per poder tenir en compte la qualificació de l’AC, s’ha d’aconseguir a la PAF una qualificació mínima de <span>{##notaMinimaPAF##},00</span> sense cap arrodoniment (PAF 1 o PAF 2).</p>
-    <br/>
     <p>Disposeu de més informació sobre les convocatòries al <a target="_blank" href="pt_sencer/pt.html">pla de treball complet</a>.</p>
   </div>
 </section>

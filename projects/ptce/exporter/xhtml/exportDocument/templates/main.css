@@ -782,7 +782,7 @@ hr {
   padding-bottom: 42px;
 }
 
-.section7 .panell_pafs {
+.section7 .panell_proves {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -807,15 +807,15 @@ hr {
   margin: 0 auto 10px auto;
 }
 
-#paf-1-icona {
-  background-image: url("img/paf-1-icona.svg");
+#pv-icona {
+  background-image: url("img/pv-icona.svg");
 }
 
-#paf-2-icona {
-  background-image: url("img/paf-2-icona.svg");
+#paf-icona {
+  background-image: url("img/paf-icona.svg");
 }
 
-.section7 .panell_pafs p {
+.section7 .panell_proves p {
   font-size: 14px;
 }
 
@@ -1553,12 +1553,12 @@ hr {
     padding-bottom: 62px;
   }
 
-  .section7 .panell_pafs {
+  .section7 .panell_proves {
     width: 570px;
     margin-bottom: 28px;
   }
 
-  .section7 .panell_pafs p {
+  .section7 .panell_proves p {
     font-size: 15px;
   }
 
