@@ -1,0 +1,20 @@
+{
+    "typesDefinition": {
+        "dadesguieseoi": {
+            "render": { 
+                "typeDef":"dadesguieseoi",
+                "class": "exportDocument",
+                "fields": "ALL", 
+                "extraFields": [{"name":"pepitoFitxerContinguts", "valueType":"page", "value":"continguts"}]
+            },
+            "keys": { 
+                "descripcio": {
+                    "render": {"class": "renderRenderizableText"} 
+                },
+                "pepitoFitxerContinguts": {
+                    "render": {"class": "renderFile"}
+                }
+            }
+        }
+    }
+}

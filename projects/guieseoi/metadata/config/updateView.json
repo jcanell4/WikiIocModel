@@ -1,0 +1,165 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10,
+        "rows_row": 1
+    },
+    "groups": {
+        "authorship": {
+            "parent": "",
+            "label": "Autoria",
+            "n_columns": 12,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":true
+            }
+        }
+    },
+    "fields": {
+        "codi_modul": {
+            "type": "hidden"
+        },
+        "modul": {
+            "type": "hidden"
+        },
+        "moodleCourseId": {
+            "type": "hidden"
+        },
+        "isCert": {
+            "type": "hidden"
+        },
+        "durada": {
+            "type": "hidden"
+        },
+        "duradaHores": {
+            "type": "hidden"
+        },
+        "descripcioConversa": {
+            "type": "hidden"
+        },
+        "dadesBlocs": {
+            "type": "hidden"
+        },        
+        "coordinador": {
+            "type": "hidden"
+        },       
+        "colaboradors": {
+            "type": "hidden"
+        },
+        "notaMinima": {
+            "type": "hidden"
+        },
+        "comSerasAvaluatNoCert": {
+            "type": "hidden"
+        },
+        "comSerasAvaluatCert": {
+            "type": "hidden"
+        },
+        "calendari": {
+            "type": "hidden"  
+        }, 
+        "autor": {
+            "type": "amd",
+            "label": "Autor (autor)",
+            "n_columns": 4,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "autor",
+                    "dialogTitle": "Cercar autor",
+                    "dialogButtonLabel": "Afegir autor",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "responsable": {
+            "type": "amd",
+            "label": "Responsable del mòdul (responsable)",
+            "n_columns": 4,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "responsable",
+                    "dialogTitle": "Cercar responsable",
+                    "dialogButtonLabel": "Afegir responsable",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "semestre": {
+            "type": "hidden"
+        },
+        "nivellcurs": {
+            "type": "hidden"
+        },
+        "dataProvaNoCert": {
+            "type": "hidden"
+        },
+        "dataProvaOral_ini": {
+            "type": "hidden"
+        },
+        "dataProvaOral_fi": {
+            "type": "hidden"
+        }, 
+        "dataProvaCert": {
+            "type": "hidden"
+        },        
+        "dataCertA2": {
+            "type": "hidden"
+        },
+        "dataCertB1": {
+            "type": "hidden"
+        },
+        "dataCertB2": {
+            "type": "hidden"
+        },
+        "dataCertC1": {
+            "type": "hidden"
+        },
+        "dataCertC2": {
+            "type": "hidden"
+        }
+    }
+}
