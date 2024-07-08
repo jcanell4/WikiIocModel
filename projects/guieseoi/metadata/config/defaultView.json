@@ -305,7 +305,7 @@
             "n_columns": 3,
             "group": "avaluacioNoCert",
             "props": {
-                "readonly": true
+                "readonly": false
             }
         },
         "provaOralFi": {
@@ -313,7 +313,7 @@
             "n_columns": 3,
             "group": "avaluacioNoCert",
             "props": {
-                "readonly": true
+                "readonly": false
             }
         },        
         "comSerasAvaluatNoCert": {
