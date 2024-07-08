@@ -137,12 +137,6 @@
         "dataProvaNoCert": {
             "type": "hidden"
         },
-        "dataProvaOral_ini": {
-            "type": "hidden"
-        },
-        "dataProvaOral_fi": {
-            "type": "hidden"
-        }, 
         "dataProvaCert": {
             "type": "hidden"
         },        
@@ -159,6 +153,12 @@
             "type": "hidden"
         },
         "dataCertC2": {
+            "type": "hidden"
+        },
+        "provaOralIni": {
+            "type": "hidden"
+        },
+        "provaOralFi": {
             "type": "hidden"
         }
     }

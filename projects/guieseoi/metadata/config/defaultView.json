@@ -17,7 +17,7 @@
                 "collapsed":false
             }
         },
-        "avaluacio": {
+        "avaluacioNoCert": {
             "parent": "",
             "label": "Sobre l'avaluació",
             "n_columns": 12,
@@ -27,7 +27,18 @@
                 "collapsable":true,
                 "collapsed":false
             }
-        },        
+        },    
+        "avaluacioCert": {
+            "parent": "",
+            "label": "Sobre la certificació",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        }, 
         "actualitzables": {
             "parent": "",
             "label": "Dades actualitzables semestralment",
@@ -225,33 +236,6 @@
             ]
           }
         },          
-        "dataProvaNoCert": {
-            "label": "Data prova final(ProvaNoCert)",
-            "n_columns": 4,
-            "group": "actualitzables",
-            "props": {
-                "required": true,
-                "readonly": true
-            }
-        },
-        "dataProvaOral_ini": {
-            "label": "Data inici prova oral(dataProvaOral_ini)",
-            "n_columns": 4,
-            "group": "actualitzables",
-            "props": {
-                "required": true,
-                "readonly": false
-            }
-        },
-        "dataProvaOral_fi": {
-            "label": "Data final prova oral(dataProvaOral_final)",
-            "n_columns": 4,
-            "group": "actualitzables",
-            "props": {
-                "required": true,
-                "readonly": false
-            }
-        },         
         "descripcioConversa": {
             "label": "Descripció del servei de conversa (descripcioConversa)",
             "n_columns": 12,
@@ -265,35 +249,35 @@
         },
         "dataCertA2": {
             "n_columns": 2,
-            "group": "avaluacio",
+            "group": "avaluacioCert",
             "props": {
                 "readonly": true
             }
         },
         "dataCertB1": {
             "n_columns": 2,
-            "group": "avaluacio",
+            "group": "avaluacioCert",
             "props": {
                 "readonly": true
             }
         },
         "dataCertB2": {
             "n_columns": 2,
-            "group": "avaluacio",
+            "group": "avaluacioCert",
             "props": {
                 "readonly": true
             }
         },
         "dataCertC1": {
             "n_columns": 2,
-            "group": "avaluacio",
+            "group": "avaluacioCert",
             "props": {
                 "readonly": true
             }
         },
         "dataCertC2": {
             "n_columns": 2,
-            "group": "avaluacio",
+            "group": "avaluacioCert",
             "props": {
                 "readonly": true
             }
@@ -301,17 +285,42 @@
         "notaMinima": {
             "label": "notaMinima",
             "n_columns":2,
-            "group": "avaluacio",
+            "group": "avaluacioNoCert",
             "props": {
                 "required": true,
                 "title": "Indiqueu la nota mínima que cal treure"
             }
         },
+        "dataProvaNoCert": {
+            "label": "Data prova final(ProvaNoCert)",
+            "n_columns": 3,
+            "group": "avaluacioNoCert",
+            "props": {
+                "required": true,
+                "readonly": true
+            }
+        },
+        "provaOralIni": {
+            "label": "Data inici prova oral(provaOralIni)",
+            "n_columns": 3,
+            "group": "avaluacioNoCert",
+            "props": {
+                "readonly": true
+            }
+        },
+        "provaOralFi": {
+            "label": "Data final prova oral(provaOralFi)",
+            "n_columns": 3,
+            "group": "avaluacioNoCert",
+            "props": {
+                "readonly": true
+            }
+        },        
         "comSerasAvaluatNoCert": {
             "label": "Per cursos no certificats: indiqueu Com seràs avaluat -No Certificat- (comSerasAvaluatNoCert)",
             "n_columns": 12,
             "type": "editableObject",
-            "group": "avaluacio",
+            "group": "avaluacioNoCert",
             "n_rows": 5,
             "props": {
                 "data-editable-element": "table",
