@@ -72,7 +72,13 @@ class guieseoiProjectModel extends MoodleMultiContentFilesProjectModel {
 
             //Valida que hi ha un responsable assignat sempre en el moment de guardar
             if (empty($values["responsable"])){
-                throw new InconsistentDataException("No hi ha un responsable assignat. Cap assignar-ho per poder crear aqesta guia.");
+                //Pendent millora marjose: 
+                //Si el nom de l'autor també estar al camp responsable, aqui arriben com a camps
+                //autor i responsable de values. Si no està el nom de l'autor, els camps
+                //autor i responsable de vaules no existeixen.
+                //revisar perquè.
+                //
+                //throw new InconsistentDataException("No hi ha un responsable assignat. Cap assignar-ho per poder crear aqesta guia.");
             }
         }
     }
