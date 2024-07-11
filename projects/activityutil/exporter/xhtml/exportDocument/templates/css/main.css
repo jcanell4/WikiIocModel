@@ -1907,6 +1907,7 @@ div.plugin_include_content p {
  font-size: 0.75em;
  margin-left: 65%;
  margin-bottom: 10px;
+ cursor: copy;
 }
 .iocnote {
  position: relative;

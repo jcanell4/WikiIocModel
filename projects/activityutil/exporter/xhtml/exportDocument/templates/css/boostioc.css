@@ -452,6 +452,9 @@ div.solution {
     position: relative;
     border-radius: 0; 
 }
+.ioccopytoclipboard {
+    cursor: copy;
+}
 @media screen and (min-width: 576px) {
     .iocreference .ioccontent .ioccopytoclipboard {
         max-width: 90%;
