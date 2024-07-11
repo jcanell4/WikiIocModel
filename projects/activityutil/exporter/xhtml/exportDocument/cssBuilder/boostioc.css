@@ -476,11 +476,11 @@ pre.code {
     padding-left: 16px;
 }
                    
-.iocquote .reference { /*canvi IOC - padding de la referència*/
+.iocquote .reference .copytoclipboard { /*canvi IOC - padding de la referència*/
     padding-left: 16px;
 }
 
-.iocquote .reference em{ /*canvi IOC - lletra normal*/
+.iocquote .reference .copytoclipboard em{ /*canvi IOC - lletra normal*/
     padding-left: 16px;
     font-style: normal;
 
@@ -535,7 +535,7 @@ pre.code {
 
 /* Cal buscar via JS si dins l'element '.iocquote .ioccontent p:last-of-type' hi ha un element 'em' (es fa servir per la paraula 'Font', així que és la única referència que tenim. Aleshores caldria convertir aquest paràgraf en un element 'div' amb la classe 'reference', que tindrà l'estil següent: */  
 
-.iocquote .ioccontent .reference {
+.iocquote .ioccontent .reference .copytoclipboard {
     font-style: normal !important;
     padding-top: 18px;
     text-align: right;
@@ -568,7 +568,7 @@ div.solution {
 
 /* Crida */
 
-.iocreference .ioccontent {
+.iocreference .ioccontent .ioccopytoclipboard {
     min-width: 200px;
     max-width: 99%;
     background-color: #FEF6ED;
@@ -581,19 +581,19 @@ div.solution {
 }
 
 @media screen and (min-width: 576px) {
-    .iocreference .ioccontent {
+    .iocreference .ioccontent .ioccopytoclipboard {
         max-width: 90%;
         margin: 48px auto;
     }
 }  
 
 @media screen and (min-width: 768px) {
-    .iocreference .ioccontent {
+    .iocreference .ioccontent .ioccopytoclipboard {
         max-width: 75%;
     }
 } 
 
-.iocreference .ioccontent:after {
+.iocreference .ioccopytoclipboard .ioccontent:after {
 
     /* Aquesta adreça és només a efectes de prova */
     content: url("../img/ioc-atencio-icona.svg"); /*canvi IOC - canvi per adaptar-ho al projecte*/

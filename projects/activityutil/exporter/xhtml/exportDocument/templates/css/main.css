@@ -1850,6 +1850,7 @@ div.plugin_include_content p {
 }
 .ioctext,
 .iocreference,
+.ioccopytoclipboard,
 .iocnote {
  clear: left;
  overflow: hidden;
@@ -1863,6 +1864,7 @@ div.plugin_include_content p {
 .iocexample p,
 .iocimportant p,
 .iocreference p,
+.ioccopytoclipboard p,
 .iocnote p,
 .iocinclude p {
  margin-bottom: 0.5em;
@@ -1897,6 +1899,15 @@ div.plugin_include_content p {
  margin-left: 65%;
  margin-bottom: 10px;
 }
+.ioccopytoclipboard {
+ position: relative;
+ width: 20%;
+ background: url(img/ioccopytoclipboard.png) no-repeat scroll left 0.2em #efefef;
+ padding: 12px 10px 12px 55px;
+ font-size: 0.75em;
+ margin-left: 65%;
+ margin-bottom: 10px;
+}
 .iocnote {
  position: relative;
  width: 20%;
@@ -1911,6 +1922,7 @@ div.plugin_include_content p {
 .style-inverse .iocimportant,
 .style-inverse .iocnote,
 .style-inverse .iocreference,
+.style-inverse .ioccopytoclipboard,
 .style-inverse .iocfigurec small {
  color: #000;
 }

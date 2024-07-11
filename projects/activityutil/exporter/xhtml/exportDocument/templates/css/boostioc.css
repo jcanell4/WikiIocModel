@@ -374,10 +374,10 @@ pre.code {
     padding-left: 16px;
 }
                    
-.iocquote .reference { 
+.iocquote .reference .copytoclipboard {
     padding-left: 16px;
 }
-.iocquote .reference em{ 
+.iocquote .reference .copytoclipboard em{
     padding-left: 16px;
     font-style: normal;
 }
@@ -418,7 +418,7 @@ pre.code {
     margin-bottom: 0;
 }
   
-.iocquote .ioccontent .reference {
+.iocquote .ioccontent .reference .copytoclipboard {
     font-style: normal !important;
     padding-top: 18px;
     text-align: right;
@@ -441,7 +441,7 @@ div.solution {
     display: inherit;
     margin-top: -12px;
 }
-.iocreference .ioccontent {
+.iocreference .ioccontent .ioccopytoclipboard {
     min-width: 200px;
     max-width: 99%;
     background-color: #FEF6ED;
@@ -453,20 +453,18 @@ div.solution {
     border-radius: 0; 
 }
 @media screen and (min-width: 576px) {
-    .iocreference .ioccontent {
+    .iocreference .ioccontent .ioccopytoclipboard {
         max-width: 90%;
         margin: 48px auto;
     }
 }  
 @media screen and (min-width: 768px) {
-    .iocreference .ioccontent {
+    .iocreference .ioccontent .ioccopytoclipboard {
         max-width: 75%;
     }
 } 
-.iocreference .ioccontent:after {
-    
+.iocreference .ioccopytoclipboard .ioccontent:after {
     content: url(../img/ioc-atencio-icona.svg); 
-    
     position: absolute;
     top: 6px;
     right: -3px;
