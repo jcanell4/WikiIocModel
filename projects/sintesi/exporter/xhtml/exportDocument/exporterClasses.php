@@ -79,8 +79,8 @@ class exportDocument extends renderHtmlDocument {
                                      "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
                                      "rtext" => $cicle."\n".$modulId." ".$modul."-".$tipusBlocModul."\n".$semestre],
                         "titol" => array(
-                            "Formació Professional",
-                            "Pla de Treball",
+                            "Formació professional", /* marjose  "Formació Professional", */
+                            "Pla de treball", /* marjose  "Pla de Treball",  */
                             $cicle,
                             $modulId." ".$modul . (($tipusBlocModul!="mòdul") ? " - $tipusBlocModul" : ""),
                             $semestre,

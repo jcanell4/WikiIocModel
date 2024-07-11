@@ -1128,7 +1128,8 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 $ret .= '</div>'.DOKU_LF;
             }
 
-        }elseif ($mime == 'application/x-shockwave-flash'){
+        }
+        elseif ($mime == 'application/x-shockwave-flash'){
             if (!$render) {
                 // if the flash is not supposed to be rendered
                 // return the title of the flash
@@ -1148,7 +1149,8 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                                      null,
                                      $att,
                                      $this->_xmlEntities($title));
-        }elseif($dl){
+        }
+        elseif($dl){
             resolve_mediaid(getNS($src),$src,$exists);
             if ($exists){
                 $filesize = filesize(mediaFN($src));
@@ -1176,7 +1178,8 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 $ret .= '</div>';
                 $ret .= '</div>';
             }
-        }elseif ($title){
+        }
+        elseif ($title){
             // well at least we have a title to display
             $ret .= $this->_xmlEntities($title);
         }else{
