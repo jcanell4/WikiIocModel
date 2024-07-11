@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="123px" height="70px" viewBox="0 0 123 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>8F778A15-4870-4218-B7E5-C1F2901857E8</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Pla-de-treball-nou-amb-text" transform="translate(-260.000000, -488.000000)">
+            <g id="durada_icona" transform="translate(260.000000, 488.000000)">
+                <path d="M28,0 L95,0 C110.463973,-2.84068575e-15 123,12.536027 123,28 L123,53 C123,54.6568542 121.656854,56 120,56 L3,56 C1.34314575,56 2.02906125e-16,54.6568542 0,53 L0,28 C-1.8937905e-15,12.536027 12.536027,2.84068575e-15 28,0 Z" id="Rectangle-2" fill="#FDF0F6"></path>
+                <g id="rellotge" transform="translate(35.000000, 20.000000)">
+                    <path d="M25,2 C37.6822149,2 48,12.3177851 48,25 C48,37.6822149 37.6822149,48 25,48 C12.3177851,48 2,37.6822149 2,25 C2,12.3177851 12.3177851,2 25,2 Z" id="Fill-1-Copy" fill="#FFFFFF"></path>
+                    <path d="M25,2.082 C37.637,2.082 47.918,12.363 47.918,25 C47.918,37.637 37.637,47.918 25,47.918 C12.363,47.918 2.082,37.637 2.082,25 C2.082,12.363 12.363,2.082 25,2.082 Z M25,0 C11.191,0 0,11.191 0,25 C0,38.805 11.191,50 25,50 C38.805,50 50,38.805 50,25 C50,11.191 38.805,0 25,0 Z" id="Fill-1" fill="#131515"></path>
+                    <polyline id="Stroke-2" stroke="#131515" stroke-width="2" points="37.502 25.0016 25.0016 25.0016 25.0016 6.251"></polyline>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

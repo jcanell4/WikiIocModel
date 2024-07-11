@@ -160,8 +160,20 @@ class ptfploeProjectModel extends MoodleUniqueContentFilesProjectModel {
         }
         $values["avaluacioInicial"]= $avaluacioInicial;
 
+                
+        //MARJOSE
+        //afegir calcul de la nota minima EAF
+        //Si te blocs
+        //busco nota minima bloc 1
+        //busco nota minima bloc 2
+        //si fos array a la pos 0 la nota minima de modul, 1 bloc1, 2 bloc2
+        //$taulaDadesNF = IocCommon::toArrayThroughArrayOrJson($dataPrg["taulaDadesNuclisFormatius"]);
+        //END MARJOSE
+        
         $data = $isArray?$values:json_encode($values);
         return $data;
+        
+
     }
     
     /**
