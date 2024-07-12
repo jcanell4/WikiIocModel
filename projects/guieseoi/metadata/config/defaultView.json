@@ -215,14 +215,14 @@
                     "name": "inici",
                     "field": "inici",
                     "width" : "15%",
-                    "editable": false
+                    "editable": {"class":"ValidateByExactMatch", "data":{"responses":[{"key":"durada", "value":"anual"}]}}
                   },
 
                   {
                     "name": "final",
                     "field": "final",
                     "width" : "15%",
-                    "editable": false
+                    "editable": {"class":"ValidateByExactMatch", "data":{"responses":[{"key":"durada", "value":"anual"}]}}
                   },
 
                   {
