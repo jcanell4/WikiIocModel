@@ -7,7 +7,6 @@
 defined('DOKU_INC') || die();
 defined('DOKU_PLUGIN') || define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 defined('WIKI_IOC_MODEL') || define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
-//define('WIKI_IOC_MODEL', DOKU_PLUGIN."projectsdev/");
 defined('EXPORT_TMP') || define('EXPORT_TMP',DOKU_PLUGIN.'tmp/latex/');
 define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/guieseoi/");
 
@@ -22,7 +21,6 @@ class ProjectExportAction  extends ProjectAction{
     protected $dataArray = array();
     protected $typesRender = array();
     protected $typesDefinition = array();
-    protected $defaultValueForObjectFields = "";
     protected $mode;
     protected $filetype;
     protected $projectType;
@@ -38,14 +36,13 @@ class ProjectExportAction  extends ProjectAction{
      * del archivo de configuración del proyecto
      */
     protected function setParams($params) {
-        $this->mode        = $params[ProjectKeys::KEY_MODE];
-        $this->filetype    = $params[ProjectKeys::KEY_FILE_TYPE];
-        $this->projectType = $params[ProjectKeys::KEY_PROJECT_TYPE];
-        $this->projectID   = $params[ProjectKeys::KEY_ID];
+        $this->mode           = $params[ProjectKeys::KEY_MODE];
+        $this->filetype       = $params[ProjectKeys::KEY_FILE_TYPE];
+        $this->projectType    = $params[ProjectKeys::KEY_PROJECT_TYPE];
+        $this->projectID      = $params[ProjectKeys::KEY_ID];
         $this->metaDataSubSet = $params[ProjectKeys::KEY_METADATA_SUBSET];
-        $this->projectNS   = $params[ProjectKeys::KEY_NS]?$params[ProjectKeys::KEY_NS]:$this->projectID;
-        $this->typesRender = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
-        $this->defaultValueForObjectFields = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "defaultValueForObjectFields");
+        $this->projectNS      = $params[ProjectKeys::KEY_NS] ? $params[ProjectKeys::KEY_NS] : $this->projectID;
+        $this->typesRender    = $this->getProjectConfigFile(self::CONFIG_RENDER_FILENAME, "typesDefinition");
 
         $cfgArray = $this->getProjectConfigFile(self::CONFIG_TYPE_FILENAME, ProjectKeys::KEY_METADATA_PROJECT_STRUCTURE, $this->metaDataSubSet);
         $this->mainTypeName = $cfgArray['mainType']['typeDef'];
@@ -69,20 +66,25 @@ class ProjectExportAction  extends ProjectAction{
         $fRenderer->init(['mode'            => $this->mode,
                           'filetype'        => $this->filetype,
                           'typesDefinition' => $this->typesDefinition,
-                          'typesRender'     => $this->typesRender,
-                          'defaultValueForObjectFields'     => $this->defaultValueForObjectFields ]);
+                          'typesRender'     => $this->typesRender]);
         $render = $fRenderer->createRender($this->typesDefinition[$this->mainTypeName],
                                            $this->typesRender[$this->mainTypeName],
                                            array(ProjectKeys::KEY_ID => $this->projectID));
-//        $result = $render->process($this->dataArray);
+
         $render->process($this->dataArray);
         $result = $render->getResultFileList();
         $result['ns'] = $this->projectNS;
+        $result['ext'] = ".{$this->mode}";
         $ret = ["id" => $this->idToRequestId($this->projectID),
                 "ns" => $this->projectNS];
 
         switch ($this->mode) {
             case 'xhtml':
+                $ret["meta"] = ResultsWithFiles::get_html_metadata($result);
+                break;
+            case 'pdf':
+                $result['pdfFile'] = $result['tmp_dir'];
+                $result['pdfName'] = $this->idToRequestId($this->projectID) . $result['ext'];
                 $ret["meta"] = ResultsWithFiles::get_html_metadata($result);
                 break;
             default:
@@ -106,7 +108,7 @@ class ProjectExportAction  extends ProjectAction{
         //Canviat per poder treballar a projectsdev
         //$config = @file_get_contents(self::PATH_CONFIG_FILE.$filename);
         $config = @file_get_contents(WikiIocPluginController::getProjectTypeDir($this->projectType) . "metadata/config/" . $filename);
-  
+
         if ($config != FALSE) {
             $array = json_decode($config, true);
             if ($metaDataSubSet) {

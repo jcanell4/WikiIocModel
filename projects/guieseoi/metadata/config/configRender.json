@@ -5,14 +5,20 @@
                 "typeDef":"dadesguieseoi",
                 "class": "exportDocument",
                 "fields": "ALL", 
-                "extraFields": [{"name":"pepitoFitxerContinguts", "valueType":"page", "value":"continguts"}]
+                "extraFields": [
+                    {"name":"fitxercontinguts", "valueType":"page", "value":"continguts"},
+                    {"name":"pdfDocument", "valueType":"page", "value":"continguts"}
+                ]
             },
             "keys": { 
                 "descripcio": {
                     "render": {"class": "renderRenderizableText"} 
                 },
-                "pepitoFitxerContinguts": {
+                "fitxercontinguts": {
                     "render": {"class": "renderFile"}
+                },
+                "pdfDocument": {
+                    "render": {"class": "renderFileToPsDom"}
                 }
             }
         }
