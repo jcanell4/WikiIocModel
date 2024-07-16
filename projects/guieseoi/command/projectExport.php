@@ -27,10 +27,7 @@ class command_plugin_wikiiocmodel_projects_guieseoi_projectExport extends abstra
                   );
         $modelManager = $this->getModelManager();
         $action = $modelManager->getActionInstance("ProjectExportAction", $modelManager->getExporterManager());
-//        $content = $action->get($params);
-//        $projectId = str_replace(":", "_", $action->getProjectID());
-//        return array(ProjectKeys::KEY_ID => $projectId, 'meta' => $content);
-        return $action->get($params); //JOSEP: JA RETORNA l'ARRAY
+        return $action->get($params);
     }
 
     protected function getDefaultResponse($response, &$ret) {

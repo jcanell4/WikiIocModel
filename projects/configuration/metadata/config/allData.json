@@ -56,7 +56,7 @@
                 "layout": [
                     {
                         "defaultCell": {
-                            "width": "50%"
+                            "width": "10%"
                         },
                         "cells": [
                             {
@@ -78,6 +78,7 @@
                             {
                                 "name": "parameters",
                                 "field": "parameters",
+                                "width": "50%",
                                 "editable": true,
                                 "config": {
                                     "test": true

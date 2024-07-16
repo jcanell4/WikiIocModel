@@ -49,7 +49,7 @@
   <br class="salt_impr">
 
   <div class="container">
-    {##pepitoFitxerContinguts##}  
+    {##fitxercontinguts##}
     <div id="printbtn" onclick="printDoc()"><span>Descarrega't el PDF</span></div>
   </div>
     
