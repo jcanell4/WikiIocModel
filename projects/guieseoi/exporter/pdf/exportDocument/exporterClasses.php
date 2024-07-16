@@ -30,9 +30,9 @@ class exportDocument extends renderHtmlDocument {
         if (!file_exists($this->cfgExport->tmp_dir)) {
             mkdir($this->cfgExport->tmp_dir, 0775, TRUE);
         }
-
-        $departament = html_entity_decode(htmlspecialchars_decode($data["departament"], ENT_COMPAT|ENT_QUOTES));
-        $cicle = html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
+        $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
+        $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
+        $nivellcurs = html_entity_decode(htmlspecialchars_decode($data["nivellcurs"], ENT_COMPAT|ENT_QUOTES));
 
         $params = array(
             "id" => $this->cfgExport->id,
@@ -48,10 +48,8 @@ class exportDocument extends renderHtmlDocument {
                              "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
                              "rtext" => ""],
                 "titol" => ["titol" => "Programacions cicles formatius",
-                            "departament" => $departament,
-                            "cicle" => $cicle,
-                            "modulId" => $data["modulId"],
-                            "hores" => $data['durada']],
+                            "modul" => $modul." ".$nivellcurs,
+                            "semestre" => $semestre],
                 "peu" => ["logo"  => $this->cfgExport->rendererPath . "/resources/escutIOC.jpg",
                           "titol" => "Programacions FCT",
                           "wlogo" => 10,
@@ -63,7 +61,7 @@ class exportDocument extends renderHtmlDocument {
         );
         $pdfRenderer = new PdfRenderer();
         $pdfRenderer->renderDocument($params, "pt.pdf");
-        
+
         $result["tmp_dir"] = $this->cfgExport->tmp_dir."/pt.pdf";
         $this->setResultFileList($result);
 

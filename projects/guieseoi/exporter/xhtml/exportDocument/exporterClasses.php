@@ -60,10 +60,8 @@ class exportDocument extends renderHtmlDocument {
                 ResultsWithFiles::putFileToMedia($jsonDates, $this->cfgExport->id, ".json");
 
                 $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
-                $cicle = $data["cicle"]==="Indiqueu el cicle"?"":html_entity_decode(htmlspecialchars_decode($data["cicle"], ENT_COMPAT|ENT_QUOTES));
                 $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
-                $modulId = html_entity_decode(htmlspecialchars_decode($data["modulId"], ENT_COMPAT|ENT_QUOTES));
-                $tipusBlocModul = html_entity_decode(htmlspecialchars_decode($data["tipusBlocModul"], ENT_COMPAT|ENT_QUOTES));
+                $nivellcurs = html_entity_decode(htmlspecialchars_decode($data["nivellcurs"], ENT_COMPAT|ENT_QUOTES));
 
                 $params = array(
                     "id" => $this->cfgExport->id,
@@ -78,13 +76,12 @@ class exportDocument extends renderHtmlDocument {
                                      "wlogo" => 9.9,
                                      "hlogo" => 11.1,
                                      "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
-                                     "rtext" => $cicle."\n".$modulId." ".$modul."-".$tipusBlocModul."\n".$semestre],
+                                     "rtext" => $modul."-".$nivellcurs."\n".$semestre],
                         "titol" => array(
                             "Formació Professional",
                             "Pla de Treball",
-                            $cicle,
-                            $modulId." ".$modul . (($tipusBlocModul!="mòdul") ? " - $tipusBlocModul" : ""),
-                            $semestre,
+                            $modul." ".$nivellcurs,
+                            $semestre
                         ),
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
                     )

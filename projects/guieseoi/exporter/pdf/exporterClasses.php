@@ -120,10 +120,8 @@ class PdfRenderer extends BasicPdfRenderer {
 
         $this->iocTcPdf->SetY($y+=60);
         $this->iocTcPdf->SetFont($this->firstPageFont, 'B', 15);
-        $text = "Departament: {$titol['departament']}\n"
-              . "Cicle formatiu: {$titol['cicle']}\n"
-              . "Mòdul {$titol['modulId']}: Formació en centres de treball (FCT)\n"
-              . "Hores totals: {$titol['hores']} h";
+        $text = "Mòdul {$titol['modul']}: Formació en centres de treball (FCT)\n"
+              . "Semestre: ". ($titol["semestre"]==1 ? "Setembre " : "Febrer ").date("Y");
         $this->iocTcPdf->Write(8, $text, '', false, "L");
 
         //peu de pàgina
