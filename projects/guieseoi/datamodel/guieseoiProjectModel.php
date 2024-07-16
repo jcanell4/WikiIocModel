@@ -157,4 +157,63 @@ class guieseoiProjectModel extends MoodleMultiContentFilesProjectModel {
         return $data["moodleCourseId"];
     }
 
+        
+    
+    /* ------------------------------
+     * getProjectTypeConfigFile
+     * Retorna la ruta del fitxer de configuracio
+     * ------------------------------*/
+    public function getProjectTypeConfigFile() {
+        //en funció de --una sèrie de paràmetres-- anual o semestral
+        //Retorna el que apareix entre claus al configMain.json
+        $valorRecollit = $this->projectMetaDataQuery->getListMetaDataComponentTypes(ProjectKeys::KEY_METADATA_PROJECT_CONFIG,ProjectKeys::KEY_MD_PROJECTTYPECONFIGFILE);
+        //$valorRecollit[semestral] conté "admconfig:guieseoi"
+        //$valorRecollit[anual] conté "admconfig:guieseoianual"  
+        $data = $this->getCurrentDataProject();      
+        $sem_o_anu = $data["durada"]; //recollim si és semestral o anual
+        return $valorRecollit[$sem_o_anu];
+
+    }
+
+    
+    /* ------------------------------
+     * updateCalculateFieldsOnWrite
+     * Actualitza les dades en escriure
+     * ------------------------------*/
+    public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
+        
+        if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            return parent::updateCalculatedFieldsOnSave($data, $subset, $subset);
+        }
+
+        $isArray = is_array($data);
+        $values = $isArray?$data:json_decode($data, true);
+        
+        //Si no està consolidat, si és la firsview
+        //
+        //if($this->getViewConfigKey()===ProjectKeys::KEY_VIEW_FIRSTVIEW){
+        //
+        //estava pensat perquè fos només la firstview que s'emplenés l'array. 
+        //Però cal emplenar-ho també un cop es fal'update
+            //Per blocs anuals la el número de blocs ha de ser 11. En altre cas, ha de ser 7.
+            $numBlocs = ($values["durada"] == "anual") ? 11 : 7;
+
+            $taulaDadesBlocs = IocCommon::toArrayThroughArrayOrJson($values["dadesBlocs"]);
+            $novaTaulaDadesBlocs = array();
+            for ($i = 0; $i < $numBlocs; $i++) {
+                $novaTaulaDadesBlocs[$i] = array(
+                    "id" => $i,
+                    "inici" => $taulaDadesBlocs[$i]["inici"],
+                    "final" => $taulaDadesBlocs[$i]["final"],
+                    "nom" => "per definir"
+                );
+            }
+            $values["dadesBlocs"] = json_encode($novaTaulaDadesBlocs);
+        //}
+
+        $data = $isArray?$values:json_encode($values);
+        return parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
+    }
+
+    
 }

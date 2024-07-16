@@ -5,7 +5,8 @@
     "metaDataProjectConfig": [
         {
             "main": {
-                "projectTypeConfigFile": "admconfig:guieseoi"
+                "projectTypeConfigFile":{"semestral": "admconfig:guieseoi",
+                                           "anual": "admconfig:guieseoianual"}
             }
         }        
     ],
@@ -265,17 +266,9 @@
                         },
                         "dadesBlocs": {
                             "type": "defTaulaDadesBlocs",
-                            "default":[
-                                {"id":"0","inici":"","final":"","nom":"Bloc d'iniciació"},
-                                {"id":"1","inici":"","final":"","nom":"Per definir"},
-                                {"id":"2","inici":"","final":"","nom":"Per definir"},   
-                                {"id":"3","inici":"","final":"","nom":"Per definir"},   
-                                {"id":"4","inici":"","final":"","nom":"Per definir"},          
-                                {"id":"5","inici":"","final":"","nom":"Per definir"},          
-                                {"id":"6","inici":"","final":"","nom":"Per definir"}
-                            ],
                             "mandatory": false
-                        },                        
+                        },        
+                        
                         "notaMinima": {
                             "type": "number",
                             "mandatory": true,
