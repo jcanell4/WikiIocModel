@@ -6,6 +6,7 @@
         "image-filenameMap": {
             "note":{"filepath":"iocnote.jpg", "needBaseDir":true},
             "reference":{"filepath":"iocreference.jpg", "needBaseDir":true},
+            "copytoclipboard":{"filepath":"ioccopytoclipboard.jpg", "needBaseDir":true},
             "text":{"filepath":"ioctext.jpg", "needBaseDir":true}
         }
     },
@@ -71,6 +72,14 @@
                         }
                     },
                     "reference":{
+                        "style":{
+                            "margin": {"left":0, "right":0, "top":0, "bottom":0},
+                            "background-color": "#ccc",
+                            "font-size":8,
+                            "position-x":-70
+                        }
+                    },
+                    "copytoclipboard":{
                         "style":{
                             "margin": {"left":0, "right":0, "top":0, "bottom":0},
                             "background-color": "#ccc",

@@ -384,7 +384,7 @@ define ('functions',["render"],function(render){
 	});
 	
 	var setSecContent = (function (show){
-		var elements = new Array("iocfigurec", "iocnote", "ioctext", "iocreference");
+		var elements = new Array("iocfigurec", "iocnote", "ioctext", "iocreference", "ioccopytoclipboard");
 		for (i=0;i<elements.length;i++){
 			if (show == 1){
 				$("article ."+elements[i]).removeClass("hidden");
@@ -1014,7 +1014,7 @@ require(["jquery.min","jquery-ui.min","jquery.imagesloaded","render","functions"
 });
 
 $(document).ready(function () {
-	$(".iocnote, .iocreference, .ioctext, .iocfigurec").toBColumn(paramsForColumnB);
+	$(".iocnote, .iocreference, .ioccopytoclipboard, .ioctext, .iocfigurec").toBColumn(paramsForColumnB);
 });
 
 define("main", function(){});

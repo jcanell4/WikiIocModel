@@ -164,5 +164,46 @@
                 }
             }
         }
+    },
+    "guieseoiPdfExport": {
+        "class": "WikiIocButton",
+        "parms": {
+            "DOM": {
+               "id": "guieseoiPdfExport",
+               "title": "guieseoiPdfExport",
+               "class": "iocDisplayBlock"
+            },
+            "DJO": {
+               "query": "'do=edit'",
+               "autoSize": true,
+               "visible": false,
+               "iconClass": "'iocExportPdfIcon'",
+               "urlBase": "'lib/exe/ioc_ajax.php?call=projectExport'",
+               "standbyId": "'bodyContent'",
+               "disableOnSend": true
+            }
+        },
+
+        "scripts": {
+            "getFunctions": {
+                "path": "PdfExportGetFunction.js"
+            },
+            "updateHandler": {
+                "permissions": [
+                   "isadmin",
+                   "ismanager"
+                ],
+                "rols": [
+                   "responsable",
+                   "autor"
+                ],
+                "conditions": {
+                    "page.action": "'project_view'",
+                    "page.generated":"true",
+                    "page.isRevision": "false",
+                    "page.updateButton": "0"
+                }
+            }
+        }
     }
 }
