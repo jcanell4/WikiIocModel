@@ -1,5 +1,4 @@
 <!doctype html>
-//marjose: cal actualitzar per guieseoi
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -24,9 +23,8 @@
 
 <header class="main_header">
   <div class="container">
-    <h1>Pla de treball</h1>
-    <h2><WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##cicle##}'')_#}&&!{#_STR_CONTAINS(''Indiqueu'', ''{##cicle##}'')_#}">{##cicle##}</WIOCCL:IF></h2>
-    <h2>{##modulId##} {##modul##}<WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">-{##tipusBlocModul##}</WIOCCL:IF></h2>
+    <h1><WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##modul##}'')_#}">{##modul##}</WIOCCL:IF>
+        <WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##nivellcurs##}'')_#}">-{##nivellcurs##}</WIOCCL:IF></h1>
   </div>
 </header>
 
@@ -34,10 +32,10 @@
 
 <section id="intro">
   <div class="container">
-    <p><span>Durada del <WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">m&ograve;dul</WIOCCL:IF></span>: {##durada##} hores</p>
-    <p><span>Professors</span>: {##professors##}</p>
+    <p><span>Durada del mòdul: {##durada##}</p>
+    <p><span>Professors</span>: {##colaboradors##}</p>
     <p><span>Coordinador/a</span>: {##coordinador##}</p>
-    <p><span><WIOCCL:IF condition="{##semestre##}==1">Setembre</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">Febrer</WIOCCL:IF> {#_YEAR()_#}</span></p>      
+    <p><span><WIOCCL:IF condition="{##durada##}==''anual''">any</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==1&&{##durada##}==''semestral''">Setembre</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2&&{##durada##}==''semestral''">Febrer</WIOCCL:IF> {#_YEAR()_#}</span></p>
   </div>
   <div class="rflexjust">
     <a onClick="printDoc();" style="cursor:pointer;" title="Descarrega't el PDF"><img src="../img/pdf.png"></a>

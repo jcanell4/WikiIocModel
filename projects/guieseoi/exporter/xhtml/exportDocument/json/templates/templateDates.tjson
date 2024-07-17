@@ -2,10 +2,9 @@
     "MIX_U{##item_bloc[id]##}": {
 <WIOCCL:SUBSET subsetvar="filteredCal" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[bloc]##}=={##item_bloc[bloc]##}">
 <WIOCCL:FOREACH counter="id_cal" var="item_cal" array="{##filteredCal##}">
-    "u{##item_cal[bloc]##}p{##item_cal[tipusActivitat]##}dataIniciCal": {"selector":"#u{##item_cal[bloc]##}p{##item_cal[període]##}dataIniciCal", "type":"text", "value":"{#_DATE(''{##item_cal[dataLliurament]##}'',''/'')_#}"},
-    "u{##item_cal[bloc]##}p{##item_cal[tipusActivitat]##}dataFinalCal": {"selector":"#u{##item_cal[bloc]##}p{##item_cal[període]##}dataFinalCal", "type":"text", "value":"{#_DATE(''{##item_cal[dataQualificacio]##}'',''/'')_#}"}<WIOCCL:IF condition="{##id_cal##}\<{#_SUBS({#_ARRAY_LENGTH({##filteredCal##})_#},1)_#}">,</WIOCCL:IF>
+    "u{##item_cal[bloc]##}p{##item_cal[tipusActivitat]##}dataIniciCal": {"selector":"#u{##item_cal[bloc]##}dataLliurament", "type":"text", "value":"{#_DATE(''{##item_cal[dataLliurament]##}'',''/'')_#}"},
+    "u{##item_cal[bloc]##}p{##item_cal[tipusActivitat]##}dataFinalCal": {"selector":"#u{##item_cal[bloc]##}dataQualificacio", "type":"text", "value":"{#_DATE(''{##item_cal[dataQualificacio]##}'',''/'')_#}"}<WIOCCL:IF condition="{##id_cal##}\<{#_SUBS({#_ARRAY_LENGTH({##filteredCal##})_#},1)_#}">,</WIOCCL:IF>
 </WIOCCL:FOREACH>
 </WIOCCL:SUBSET>
-    }<WIOCCL:IF condition="{##id_blocs##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUnitats##})_#},1)_#}">,</WIOCCL:IF>
-
+    }<WIOCCL:IF condition="{##id_blocs##}\<{#_SUBS({#_ARRAY_LENGTH({##dadesBlocs##})_#},1)_#}">,</WIOCCL:IF>
 </WIOCCL:FOREACH>

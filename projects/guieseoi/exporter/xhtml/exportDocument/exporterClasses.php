@@ -59,7 +59,7 @@ class exportDocument extends renderHtmlDocument {
                 $jsonDates = $this->replaceInJsonTemplate($data, "$pathTemplate/../json/templates/templateDates.tjson");
                 ResultsWithFiles::putFileToMedia($jsonDates, $this->cfgExport->id, ".json");
 
-                $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
+                $periode = (($data["durada"]=="semestral") ? ($data["semestre"]==1 ? "Setembre " : "Febrer ") : "any ").date("Y");
                 $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
                 $nivellcurs = html_entity_decode(htmlspecialchars_decode($data["nivellcurs"], ENT_COMPAT|ENT_QUOTES));
 
@@ -76,12 +76,10 @@ class exportDocument extends renderHtmlDocument {
                                      "wlogo" => 9.9,
                                      "hlogo" => 11.1,
                                      "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
-                                     "rtext" => $modul."-".$nivellcurs."\n".$semestre],
+                                     "rtext" => "\n".$periode],
                         "titol" => array(
-                            "Formació Professional",
-                            "Pla de Treball",
                             $modul." ".$nivellcurs,
-                            $semestre
+                            $periode
                         ),
                         "contingut" => json_decode($data["pdfDocument"], TRUE)   //contingut latex ja rendaritzat
                     )

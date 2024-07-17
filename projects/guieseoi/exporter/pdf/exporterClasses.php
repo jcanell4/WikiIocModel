@@ -66,6 +66,8 @@ class IocTcPdf extends BasicIocTcPdf {
         $w1 = max(10, strlen($codi), strlen($versio)) * 2;
         $w1 = min(30, $w1);
         $w2 = 22;
+        $codi = "";
+        $versio = "";
         $this->MultiCell($w1, $cell_height, $codi, 1, 'L', 0, 1, "", "", true, 0, false, true, $cell_height, 'M');
         $this->SetX($this->GetX()+$w0);
         $this->MultiCell($w1, $cell_height, $versio, 1, 'L', 0, 0, "", "", true, 0, false, true, $cell_height, 'M');
@@ -73,9 +75,6 @@ class IocTcPdf extends BasicIocTcPdf {
         $this->SetY($y_position);
         $titol_w = $this->getPageWidth()-($w0+$w1+$w2);
         $this->MultiCell($titol_w, $cell_height*2, $titol, 1, 'C', 0, 0, "", "", true, 0, false, true, $cell_height*2, 'M');
-
-        // codi de pàgina actual: $this->getAliasNumPage() = {:pnp:} -> problema: ocupa 7 caracters en el render
-        // codi de total pàgines: $this->getAliasNbPages() = {:ptp:} -> es calcula l'espai ocupat abans d'obtenir el valor real
         $page_number = "pàgina ".$this->getPage()."/".$this->getAliasNbPages();
         $this->MultiCell($w2, $cell_height*2, $page_number, 1, 'R', 0, 1, "", "", true, 0, false, true, $cell_height*2, 'M');
     }
@@ -120,8 +119,7 @@ class PdfRenderer extends BasicPdfRenderer {
 
         $this->iocTcPdf->SetY($y+=60);
         $this->iocTcPdf->SetFont($this->firstPageFont, 'B', 15);
-        $text = "Mòdul {$titol['modul']}: Formació en centres de treball (FCT)\n"
-              . "Semestre: ". ($titol["semestre"]==1 ? "Setembre " : "Febrer ").date("Y");
+        $text = "periode: {$titol['periode']}";
         $this->iocTcPdf->Write(8, $text, '', false, "L");
 
         //peu de pàgina

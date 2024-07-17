@@ -30,7 +30,7 @@ class exportDocument extends renderHtmlDocument {
         if (!file_exists($this->cfgExport->tmp_dir)) {
             mkdir($this->cfgExport->tmp_dir, 0775, TRUE);
         }
-        $semestre = ($data["semestre"]==1?"Setembre ":"Febrer ").date("Y");
+        $periode = (($data["durada"]=="semestral") ? ($data["semestre"]==1 ? "Setembre " : "Febrer ") : "any ").date("Y");
         $modul = html_entity_decode(htmlspecialchars_decode($data["modul"], ENT_COMPAT|ENT_QUOTES));
         $nivellcurs = html_entity_decode(htmlspecialchars_decode($data["nivellcurs"], ENT_COMPAT|ENT_QUOTES));
 
@@ -47,15 +47,14 @@ class exportDocument extends renderHtmlDocument {
                              "hlogo" => 11.1,
                              "ltext" => "Generalitat de Catalunya\nDepartament d'Educació\nInstitut Obert de Catalunya",
                              "rtext" => ""],
-                "titol" => ["titol" => "Programacions cicles formatius",
-                            "modul" => $modul." ".$nivellcurs,
-                            "semestre" => $semestre],
+                "titol" => ["titol" => $modul." ".$nivellcurs,
+                            "periode" => $periode],
                 "peu" => ["logo"  => $this->cfgExport->rendererPath . "/resources/escutIOC.jpg",
-                          "titol" => "Programacions FCT",
+                          "titol" => $modul." ".$nivellcurs,
                           "wlogo" => 10,
                           "hlogo" => 8,
-                          "codi"  => "I33",
-                          "versio" => $data['documentVersion']],
+                          "codi"  => "---",
+                          "versio" => "---"],
                 "contingut" => json_decode($data['pdfDocument'], TRUE)   //contingut latex ja rendaritzat
             )
         );
