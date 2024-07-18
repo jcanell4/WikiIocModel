@@ -177,9 +177,9 @@ class guieseoiProjectModel extends MoodleMultiContentFilesProjectModel {
         //Si no està consolidat, si és la firsview
         //
         //if($this->getViewConfigKey()===ProjectKeys::KEY_VIEW_FIRSTVIEW){
-        //
         //estava pensat perquè fos només la firstview que s'emplenés l'array. 
         //Però cal emplenar-ho també un cop es fal'update
+        if(! $this->isProjectGenerated()) {
             //Per blocs anuals la el número de blocs ha de ser 11. En altre cas, ha de ser 7.
             $numBlocs = ($values["durada"] == "anual") ? 11 : 7;
 
@@ -194,7 +194,7 @@ class guieseoiProjectModel extends MoodleMultiContentFilesProjectModel {
                 );
             }
             $values["dadesBlocs"] = json_encode($novaTaulaDadesBlocs);
-        //}
+        }
 
         $data = $isArray?$values:json_encode($values);
         return parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
