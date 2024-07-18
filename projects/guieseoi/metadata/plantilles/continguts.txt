@@ -34,7 +34,7 @@ Els continguts dels blocs són els següents:
 <WIOCCL:IF condition="false=={##isCert##}"> 
 L'avaluació del curs es fa de manera continuada, a través dels tests i les tasques de producció oral i escrita proposades durant el curs. 
 Per aprovar el curs, és necessari obtenir un resultat final del {##notaMinima##} % o superior.
-
+El càlcul del resultat final es fa atenent a la següent ponderació:
 ::table:T02
   :title:Avaluacio
   :type:pt_taula
@@ -73,7 +73,7 @@ Per superar la prova de certificació cal obtenir un mínim del 65% de la puntua
 ###:
 
 
-:###====== Calendari del curs  ======###:
+:###====== Calendari d'estudi ======###:
 
 :###
 ::table:T03
@@ -86,7 +86,42 @@ Per superar la prova de certificació cal obtenir un mínim del 65% de la puntua
 :::
 ###:
 
+<WIOCCL:IF condition="false=={##isCert##}"> 
 
+
+:###====== Proves finals ======###:
+
+:###======= Prova Oral =======###:
+
+La prova oral serà del {#_DATE("{##provaOralIni##}")_#} al {#_DATE("{##provaOralFi##}")_#}
+
+:###======= Prova escrita =======###:
+
+La prova escrita serà el dia {#_DATE("{##dataProvaNoCert##}")_#}
+
+</WIOCCL:IF>
+
+
+<WIOCCL:IF condition="true=={##isCert##}"> 
+:###====== Prova certificació ======###:
+La prova de certificació serà el dia 
+<WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}">  
+{#_DATE("{##dataCertA2##}")_#}
+</WIOCCL:IF>   
+<WIOCCL:IF condition="{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}">
+{#_DATE("{##dataCertB1##}")_#}
+</WIOCCL:IF>             
+<WIOCCL:IF condition="{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}">
+{#_DATE("{##dataCertB2##}")_#}
+</WIOCCL:IF> 
+<WIOCCL:IF condition="{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}">          
+ {#_DATE("{##dataCertC1##}")_#}
+</WIOCCL:IF>  
+<WIOCCL:IF condition="{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}">          
+{#_DATE("{##dataCertC2##}")_#}
+</WIOCCL:IF>  
+
+</WIOCCL:IF>
 
 
 
