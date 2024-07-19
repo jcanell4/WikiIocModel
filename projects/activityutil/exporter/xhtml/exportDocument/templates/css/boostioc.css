@@ -441,7 +441,7 @@ div.solution {
     display: inherit;
     margin-top: -12px;
 }
-.iocreference .ioccontent .ioccopytoclipboard {
+.iocreference .ioccontent {
     min-width: 200px;
     max-width: 99%;
     background-color: #FEF6ED;
@@ -452,21 +452,18 @@ div.solution {
     position: relative;
     border-radius: 0; 
 }
-.ioccopytoclipboard {
-    cursor: copy;
-}
 @media screen and (min-width: 576px) {
-    .iocreference .ioccontent .ioccopytoclipboard {
+    .iocreference .ioccontent {
         max-width: 90%;
         margin: 48px auto;
     }
 }  
 @media screen and (min-width: 768px) {
-    .iocreference .ioccontent .ioccopytoclipboard {
+    .iocreference .ioccontent {
         max-width: 75%;
     }
 } 
-.iocreference .ioccopytoclipboard .ioccontent:after {
+.iocreference .ioccontent:after {
     content: url(../img/ioc-atencio-icona.svg); 
     position: absolute;
     top: 6px;

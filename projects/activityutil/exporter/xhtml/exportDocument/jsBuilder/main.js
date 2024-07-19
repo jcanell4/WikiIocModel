@@ -7,5 +7,5 @@ require(["jquery.min","jquery-ui.min","jquery.imagesloaded","render","functions"
 });
 
 $(document).ready(function () {
-	$(".iocnote, .iocreference, .ioccopytoclipboard, .ioctext, .iocfigurec").toBColumn(paramsForColumnB);
+	$(".iocnote, .iocreference, .ioctext, .iocfigurec").toBColumn(paramsForColumnB);
 });
