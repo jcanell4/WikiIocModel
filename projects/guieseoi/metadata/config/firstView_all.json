@@ -1,0 +1,433 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10,
+        "rows_row": 1
+    },
+    "groups": {
+        "dadesBasiques": {
+            "parent": "",
+            "label":"Dades bàsiques",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+        "avaluacio": {
+            "parent": "",
+            "label": "Sobre l'avaluació",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+
+        "actualitzables": {
+            "parent": "",
+            "label": "Dades actualitzables",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+        "authorship": {
+            "parent": "",
+            "label": "Autoria",
+            "n_columns": 12,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        }
+    },
+    "fields": {
+        "codi_modul": {
+            "label": "Codi (codi_modul)",
+            "n_columns": 3,
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "indiqueu el codi del mòdul"
+            }
+        },
+        "modul": {
+            "type":"select",
+            "n_columns": 2,
+            "label": "Mòdul (modul)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "indiqueu el nom del mòdul."
+            },
+            "config":{
+                "options":[
+                    {"value":"Alemany"},
+                    {"value":"Anglès"},
+                    {"value":"Català"}
+                ]
+            }
+        },
+        "nivell": {
+            "type":"select",
+            "n_columns": 3,
+            "label": "indiqueu nivell(nivell)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": false,
+                "title": "Indiqueu el nivell: 1A, 1B, 2A, 2B, 3A, 3B, 4A, 4B, 5A, 5B, C1, C2"
+            },
+            "config":{
+                "options":[
+                    {"value":"1A"},
+                    {"value":"1B"},
+                    {"value":"2A"},
+                    {"value":"2B"},
+                    {"value":"3A"},
+                    {"value":"3B"},
+                    {"value":"4A"},
+                    {"value":"4B"},
+                    {"value":"5A"},
+                    {"value":"5B"},
+                    {"value":"C1"},
+                    {"value":"C2"}
+                ]
+            }
+        },
+        "durada": {
+            "type":"select",
+            "n_columns": 2,
+            "label": "Durada (durada)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "Trieu si és semestral o anual"
+            },
+            "config":{
+                "options":[
+                    {"value":"semestral"},
+                    {"value":"anual"}
+                ]
+            }
+        },
+        "moodleCourseId": {
+            "type": "hidden",
+            "label": "Identificador del curs a moodle (moodleCourseId)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquesta guia de l'estudiant. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
+            }
+        },
+        "isCert": {
+            "type":"checkbox",
+            "label": "(isCert)",
+            "n_columns": 5,
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "És Certificat"
+            }
+        },
+        "coordinador": {
+            "n_columns": 10,
+            "label": "Coordinador (coordinador)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "Indiqueu el nom del coordinador"
+            }
+        },
+        
+
+        
+        "descripcio": {
+            "n_columns": 12,
+            "label": "Aquest mòdul ... (descripcio)",
+            "type": "textarea",
+            "n_rows": 6,
+            "props": {
+                "data-editable-element": "textarea",
+                "title": "continua la frase per descriure breument el contingut del mòdul"
+            },
+            "config": {
+                "renderable": true,
+                "mode": "xhtml"
+            },
+            "group": "dadesBasiques"
+        },
+
+        "dadesBlocs": {
+            "type": "hidden"
+        },
+        "notaMinima": {
+            "label": "Nota mínima (notaMinima)",
+            "n_columns":3,
+            "group": "avaluacio",
+            "props": {
+                "required": true,
+                "title": "Indiqueu la nota mínima que cal treure"
+            }
+        },
+
+
+        "comSerasAvaluatNoCert": {
+            "label": "Per cursos no certificats: indiqueu Com seràs avaluat (comSerasAvaluatNoCert)",
+            "n_columns": 12,
+            "type": "editableObject",
+            "group": "avaluacio",
+            "n_rows": 5,
+            "props": {
+                "data-editable-element": "table",
+                "title": "Com seràs avaluat -No Certificat-."
+            },
+            "config": {
+                "actions": {
+                    "add_default_row": "Afegir bloc",
+                    "remove_rows": "Eliminar els elements seleccionades",
+                    "add_default_row_before": "Afegir un element abans de la fila seleccionada"
+                },
+                "fields": {
+                    "nom": {
+                        "type": "string"
+                    },
+                    "ponderacio":{
+                        "type": "decimal"
+                    }
+                },
+                "layout": [
+                    {
+                        "defaultCell": {
+                            "width": "5%"
+                        },
+                        "cells": [
+                            {
+                                "name": "nom",
+                                "field": "nom",
+                                "width":"70%",
+                                "editable": true
+                            },
+                            {
+                                "name": "ponderació %",
+                                "field": "ponderacio",
+                                "width":"30%",
+                                "editable": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        },       
+        
+
+        
+        "comSerasAvaluatCert": {
+            "label": "Per cursos certificats: indiqueu Com seràs avaluat -Certificat- (comSerasAvaluatCert)",
+            "n_columns": 12,
+            "group": "avaluacio",
+            "props": {
+                "title": "Com seràs avaluat -Certificat-"
+            }
+        },
+
+        "calendariNoCert": {
+            "label": "Calendari -No Certificat- (calendariNoCert)",
+            "n_columns": 12,
+            "type": "editableObject",
+            "group": "actualitzables",
+            "n_rows": 17,
+            "props": {
+                "data-editable-element": "table",
+                "title": "Calendari -No Certificat-."
+            },
+            "config": {
+                "actions": {
+                    "add_default_row": "Afegir bloc",
+                    "remove_rows": "Eliminar els elements seleccionades",
+                    "add_default_row_before": "Afegir un element abans de la fila seleccionada"
+                },
+                "fields": {                 
+                    "bloc": {
+                        "type": "number",
+                        "mandatory": true,
+                        "default": "{#_INC(1)_#}"
+                    },
+                    "tipusActivitat": {
+                        "type": "select",
+                        "default":"Selecciona tipus",
+                        "options": ["Assignments", "Practice Tasks","Participació a Forum activities","Progress Test","Oral exam","Final test","Aufgaben","Forumstexte","Test Einheit","Möndliche Prüfung","Endtest","Prova oral","Prova final"]
+                    },
+                    "activitat": {
+                        "type": "string",
+                        "default": "nom de l'activitat",
+                        "mandatory": true
+                    },
+                    "dataLliurament": {
+                        "type": "date",
+                        "default":"{#_TODAY()_#}",
+                        "mandatory": true
+                    },                 
+                    "dataQualificacio": {
+                        "type": "date",
+                        "default":"{#_TODAY()_#}",
+                        "mandatory": true
+                    },
+                    "ponderacioNota": {
+                        "type": "number",
+                        "default": "0",
+                        "mandatory": true
+                    }                                            
+                },
+                "layout": [
+                    {
+                        "defaultCell": {
+                            "width": "5%"
+                        },
+                        "cells": [
+                            {
+                                "name": "bloc",
+                                "field": "bloc",
+                                "width":"5%",
+                                "editable": true
+                            },
+                            {
+                                "name": "tipus Activitat",
+                                "field": "tipusActivitat",
+                                "width":"20%",
+                                "editable": true
+                            },
+                            {
+                                "name": "activitat",
+                                "field": "activitat",
+                                "width":"35%",
+                                "editable": true
+                            },
+                            {
+                                "name": "data Lliurament",
+                                "field": "dataLliurament",
+                                "width":"10%",
+                                "editable": true
+                            },
+                            {
+                                "name": "data Qualificacio",
+                                "field": "dataQualificacio",
+                                "width":"10%",
+                                "editable": true
+                            },                            
+                            {
+                                "name": "ponderacio Nota %",
+                                "field": "ponderacioNota",
+                                "width":"10%",
+                                "editable": true
+                            }
+
+                        ]
+                    }
+                ]
+            }
+        }, 
+        "autor": {
+            "type": "amd",
+            "label": "Autor (autor)",
+            "n_columns": 4,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "autor",
+                    "dialogTitle": "Cercar autor",
+                    "dialogButtonLabel": "Afegir autor",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "responsable": {
+            "type": "amd",
+            "label": "Responsable del mòdul (responsable)",
+            "n_columns": 4,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "responsable",
+                    "dialogTitle": "Cercar responsable",
+                    "dialogButtonLabel": "Afegir responsable",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "semestre": {
+            "type": "hidden"
+        },
+        
+        "dataPaf11": {
+            "type": "hidden"
+        },
+        "dataCertA2": {
+            "type": "hidden"
+        },
+        "dataCertB1": {
+            "type": "hidden"
+        },
+        "dataCertB2": {
+            "type": "hidden"
+        },
+        "dataCertC1": {
+            "type": "hidden"
+        },
+        "dataCertC2": {
+            "type": "hidden"
+        },
+        "dataCert": {
+            "type": "hidden"
+        }
+    }
+}

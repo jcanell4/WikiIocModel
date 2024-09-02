@@ -45,7 +45,7 @@ $lang['auth_UserNotAuthenticated'] = "Usuari no autenticat";
 $lang['auth_CommadNotAllowed'] = "Comanda no permesa per a %s";
 $lang['DraftNotFoundException'] = "No s'ha trobat l'esborrany del document %s";
 $lang['UnexpectedLockCode'] = "Codi de bloqueig '%s' desconegut. No hi ha cap acció associada.";
-$lang['UnknownUser'] = "No s'ha trobat cap usuari amb el identificador: %s";
+$lang['UnknownUser'] = "No s'ha trobat cap usuari amb l'identificador: %s";
 $lang['UnknownPojectType'] = "No s'ha trobat un tipus de projecte anomenat '%s'";
 
 $lang['lockedByDialog'] = "El document està bloquejat per %s. Vols obrir-lo en mode de només lectura o demanar el bloqueig";

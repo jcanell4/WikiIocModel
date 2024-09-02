@@ -185,13 +185,16 @@ class activityutilProjectModel extends MultiContentFilesProjectModel {
             $modificat = false;
             $nousDocuments = json_decode($data['documents'], true);
             if (!empty($nousDocuments)) {
+                foreach ($nousDocuments as $k => $doc) {
+                    $nousDocuments[$k]['nom'] =  str_replace(" ", "_", trim($doc['nom']));
+                }
                 usort($nousDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
 
                 $dataProject = $this->getCurrentDataProject();
                 $vellsDocuments = json_decode($dataProject['documents'], true);
                 if (!empty($vellsDocuments)) {
                     foreach ($vellsDocuments as $k => $doc) {
-                        $vellsDocuments[$k]['nom'] = trim($doc['nom']);
+                        $vellsDocuments[$k]['nom'] = str_replace(" ", "_", trim($doc['nom']));
                     }
                     usort($vellsDocuments, 'self::cmpForSort');  //ordenamos el array por el campo 'id'
                 }

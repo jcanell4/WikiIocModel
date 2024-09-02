@@ -68,12 +68,12 @@ class ProjectExportAction extends ProjectAction{
         $render = $this->factoryRender->createRender($this->typesDefinition[$this->mainTypeName],
                                                      $this->typesRender[$this->mainTypeName],
                                                      array(ProjectKeys::KEY_ID => $this->projectID));
-
-        $result = $render->process($this->dataArray);
+        $render->process($this->dataArray);
+        $result = $render->getResultFileList();
         $result['ns'] = $this->projectNS;
         $result['ext'] = ".{$this->mode}";
-        $ret["id"] = $this->idToRequestId($this->projectID);
-        $ret["ns"] = $this->projectNS;
+        $ret['id'] = $this->idToRequestId($this->projectID);
+        $ret['ns'] = $this->projectNS;
 
         switch ($this->mode) {
             case 'xhtml':

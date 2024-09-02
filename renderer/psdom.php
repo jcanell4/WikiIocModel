@@ -40,14 +40,15 @@ class IocElemNodeDoc extends LeveledNodeDoc {
     const IOC_ELEM_TYPE_COMP_LARGE = "textl";
     const IOC_ELEM_TYPE_NOTE = "note";
     const IOC_ELEM_TYPE_REF = "reference";
+    const IOC_ELEM_TYPE_CLIP = "copytoclipboard";
     const IOC_ELEM_TYPE_QUOTE = "quote";
     const IOC_ELEM_TYPE_INCLUDE = "include";
-    
+
     protected $title;
     protected $offset;
     protected $width;
     protected $elemType;
-    
+
     public function __construct($type, $title, $offset=FALSE, $width=FALSE, $level=0) {
         parent::__construct(self::IOC_ELEM_TYPE, $level);
         $this->elemType= $type;
@@ -55,7 +56,7 @@ class IocElemNodeDoc extends LeveledNodeDoc {
         $this->offset = $offset;
         $this->width= $width;
     }
-    
+
     public function getEncodeJson() {
         $ret = "{\n\"type\":\"".trim($this->type)."\""
                 .",\n\"elemType\":\"".trim($this->elemType)."\""
@@ -663,10 +664,10 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     var $rootNode = NULL;
     var $currentNode = NULL;
     var $table_types = "";
-    
+
     var $tmpData=array();
     var $actualLevel;
-     
+
     var $storeNode = [];
     var $bIocElems = array(array(),  array());
     var $currentBIocElemsType = self::UNEXISTENT_B_IOC_ELEMS_TYPE;
@@ -880,7 +881,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     function listu_close() {
         $this->currentNode = $this->currentNode->getOwner();
-        $this->closeForContentB(StructuredNodeDoc::UNORDERED_LIST_TYPE); 
+        $this->closeForContentB(StructuredNodeDoc::UNORDERED_LIST_TYPE);
     }
 
     function listo_open() {
@@ -892,7 +893,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
 
     function listo_close() {
         $this->currentNode = $this->currentNode->getOwner();
-        $this->closeForContentB(StructuredNodeDoc::ORDERED_LIST_TYPE); 
+        $this->closeForContentB(StructuredNodeDoc::ORDERED_LIST_TYPE);
     }
 
     function listitem_open($level, $node=false) {
@@ -1010,31 +1011,46 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     //Es un link a un ID de la propia página. Ejemplo: <a href="#id_top">
     function locallink($hash, $name = null){
         $hash = urldecode($hash);
-        $this->currentNode->addContent(new ReferenceNodeDoc($hash, ReferenceNodeDoc::REF_INTERNAL_LINK, $name));
+        $this->currentNode->addContent(new ReferenceNodeDoc($hash, ReferenceNodeDoc::REF_INTERNAL_LINK, IocCommon::formatTitleExternalLink("link", "pdf", $name)));
     }
 
     // $link like 'wiki:syntax', $title could be an array (media)
     function internallink($link, $title = null) {
-        $this->currentNode->addContent(new ReferenceNodeDoc($link, ReferenceNodeDoc::REF_WIKI_LINK, $title));
+        $this->currentNode->addContent(new ReferenceNodeDoc($link, ReferenceNodeDoc::REF_WIKI_LINK, IocCommon::formatTitleExternalLink("link", "pdf", $title)));
     }
 
-    // $link is full URL with scheme, $title could be an array (media)
     function externallink($link, $title = null) {
         $link = urldecode($link);
-        $this->currentNode->addContent(new ReferenceNodeDoc($link, ReferenceNodeDoc::REF_EXTERNAL_LINK, $title));
-        if (is_array($title)) {
-            //is a image
-        }
+        $this->currentNode->addContent(new ReferenceNodeDoc($link, ReferenceNodeDoc::REF_EXTERNAL_LINK, IocCommon::formatTitleExternalLink("link", "pdf", $title)));
+//        if (is_array($title)) {
+//            //is a image
+//        }
     }
 
     //Es una imagen definida como, por ejemplo: {{:common:chip.png?100|mostra de chip en circuit}}
     function internalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
-        $node = new ImageNodeDoc($src, $title, $align, $width, $height, $cache, $linking);
-        $this->currentNode->addContent($node);
+                global $conf;
+        list($ext,$mime) = mimetype($src);
+        $type = substr($mime,0,5);
+        if($type === 'image'){
+            $node = new ImageNodeDoc($src, IocCommon::formatTitleExternalLink("media", "pdf", $title), $align, $width, $height, $cache, $linking);
+            $this->currentNode->addContent($node);
+        }elseif($type === 'appli' && !$_SESSION['u0']){
+            if (preg_match('/\.pdf$/', $src)){
+                $src = $this->_xmlEntities(DOKU_URL.'lib/exe/fetch.php?media='.$src);
+                $title = IocCommon::formatTitleExternalLink("file", "pdf", $title);
+                $this->currentNode->addContent(new ReferenceNodeDoc($src, ReferenceNodeDoc::REF_EXTERNAL_LINK, IocCommon::formatTitleExternalLink("file", "pdf", $title)));
+            }
+        }else{
+            if (!$_SESSION['u0']){
+                $this->currentNode->addContent(new TextNodeDoc(TextNodeDoc::HTML_TEXT_TYPE, 'FIXME internalmedia ('.$type.'): '.$src));
+            }
+        }
     }
 
     function externalmedia ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $linking=null) {
-        list($src, $hash) = explode('#',$src,2);
+//        list($src, $hash) = explode('#',$src,2);
+        //NOT AVAILABLE
 
     }
 
@@ -1080,7 +1096,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     function tablecell_close(){
         $this->currentNode = $this->currentNode->getOwner();
     }
-    
+
     function _xmlEntities($string) {
         return htmlspecialchars($string,ENT_QUOTES,'UTF-8');
     }
@@ -1114,7 +1130,7 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     public function setCurrentNode($node){
         return $this->currentNode = $node;
     }
-    
+
     public function storeCurrent(){
         $this->storeNode[] = $this->currentNode;
     }
@@ -1122,26 +1138,26 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
     public function restoreCurrent(){
         $this->currentNode = array_pop($this->storeNode);
     }
-    
+
     private function _media ($src, $title=null, $align=null, $width=null, $height=null) {
 
     }
-    
+
     public function openForContentB($origin){
-        //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text, 
+        //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text,
         //ja que a la versió WEB No hi ha columna B. Per tal de renderitzar correctament la coluna B
         //al render XHTML i PDF, el seu contingut es troba sempre per sobre del paràgraf al que fa referècia.
         //És  necessari baixar-lo un paràgraf en aquest renderer.
         if(!isset($this->tmpData["origin"])){
             if($this->tmpData["renderIocElems"]){
                 $this->tmpData["renderDefaultIocElems"] = TRUE;
-            }        
+            }
             $this->tmpData["origin"] = $origin;
         }
     }
-    
+
     public function closeForContentB($origin){
-        //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text, 
+        //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text,
         //ja que a la versió WEB No hi ha columna B. Per tal de renderitzar correctament la coluna B
         //al render XHTML i PDF, el seu contingut es troba sempre per sobre del paràgraf l que fa referècia.
         //És  necessari baixar-lo un paràgraf en aquest renderer.
@@ -1159,8 +1175,8 @@ class renderer_plugin_wikiiocmodel_psdom extends Doku_Renderer {
                     $this->currentNode->addContent($node);
                 }
                 $this->tmpData["renderIocElems"] = FALSE;
-                $this->tmpData["renderDefaultIocElems"]=FALSE;            
-            }    
+                $this->tmpData["renderDefaultIocElems"]=FALSE;
+            }
             unset($this->tmpData["origin"]);
         }
     }

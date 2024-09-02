@@ -1,0 +1,130 @@
+:###
+~~USE:WIOCCL~~
+###:
+:###====== Què faràs en aquest mòdul? ======###:
+
+:###
+El mòdul {##modul##} és un mòdul {##durada##}.
+Està organitzat en {##numblocs##} blocs incloent un bloc introductori. 
+
+
+El coodinador del mòdul és {##coordinador##}.
+
+Els continguts dels blocs són els següents:
+
+::table:T01
+  :title:Blocs
+  :type:pt_taula
+^  Bloc  ^  Durada  ^  Nom  ^
+<WIOCCL:SET var="sortedTaulaDadesBlocs" type="literal" value="{#_ARRAY_SORT({##dadesBlocs##},''id'')_#}">
+<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesBlocs##}">
+|  {##item[id]##}  | {##item[inici]##} - {##item[final]##}   | {##item[nom]##}  |
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+:::
+
+
+{##descripcioConversa##} .
+
+###:
+
+:###====== Com seras avaluat en aquest mòdul? ======###:
+
+:###
+<WIOCCL:IF condition="false=={##isCert##}"> 
+L'avaluació del curs es fa de manera continuada, a través dels tests i les tasques de producció oral i escrita proposades durant el curs. 
+Per aprovar el curs, és necessari obtenir un resultat final del {##notaMinima##} % o superior.
+El càlcul del resultat final es fa atenent a la següent ponderació:
+::table:T02
+  :title:Avaluacio
+  :type:pt_taula
+^  Activitats d’avaluació ^  Ponderació sobre la nota final  ^
+<WIOCCL:FOREACH var="item" array="{##comSerasAvaluatNoCert##}">
+|  {##item[nom]##}  |  {##item[ponderacio]##}  |
+</WIOCCL:FOREACH>
+:::
+</WIOCCL:IF>
+<WIOCCL:IF condition="true=={##isCert##}"> 
+<WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}"> 
+Per superar aquest mòdul s'ha d'aprovar la prova de 
+<WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}">  
+certificat de Nivell Bàsic. És una prova telemàtica.  
+</WIOCCL:IF>   
+<WIOCCL:IF condition="{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}">
+certificat de Nivell Intermedi B1. És una prova presencial.
+</WIOCCL:IF> 
+<WIOCCL:IF condition="{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}">
+certificat de Nivell Intermedi B2. És una prova presencial. 
+</WIOCCL:IF>
+<WIOCCL:IF condition="{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}">
+certificat de Nivell C1. És una prova presencial. 
+</WIOCCL:IF>
+<WIOCCL:IF condition="{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}">
+certificat de Nivell C2. És una prova presencial. 
+</WIOCCL:IF>
+    
+La prova està constituïda per tasques de comprensió oral, comprensió escrita, expressió i interacció escrita, expressió i interacció oral i ús de la llengua.
+    
+Cadascuna de les cinc parts que componen la prova tindrà una ponderació del 20% sobre el total de la puntuació de la prova.                
+   
+Per superar la prova de certificació cal obtenir un mínim del 65% de la puntuació total i un mínim del 50% de la puntuació de cadascuna de les cinc parts.  
+</WIOCCL:IF>
+</WIOCCL:IF>
+###:
+
+
+:###====== Calendari d'estudi ======###:
+
+:###
+::table:T03
+  :title:Calendari
+  :type:pt_taula
+^  bloc	^  Tipus ^  Activitat ^  Data de lliurament	 ^  Data de qualificació ^
+<WIOCCL:FOREACH var="item" array="{##calendari##}">
+| {##item[bloc]##} | {##item[tipusActivitat]##} | {##item[activitat]##} | {##item[dataLliurament]##} |{##item[dataQualificacio]##} |
+</WIOCCL:FOREACH>
+:::
+###:
+
+<WIOCCL:IF condition="false=={##isCert##}"> 
+
+
+:###====== Proves finals ======###:
+
+:###======= Prova Oral =======###:
+
+La prova oral serà del {#_DATE("{##provaOralIni##}")_#} al {#_DATE("{##provaOralFi##}")_#}
+
+:###======= Prova escrita =======###:
+
+La prova escrita serà el dia {#_DATE("{##dataProvaNoCert##}")_#}
+
+</WIOCCL:IF>
+
+
+<WIOCCL:IF condition="true=={##isCert##}"> 
+:###====== Prova certificació ======###:
+La prova de certificació serà el dia 
+<WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}">  
+{#_DATE("{##dataCertA2##}")_#}
+</WIOCCL:IF>   
+<WIOCCL:IF condition="{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}">
+{#_DATE("{##dataCertB1##}")_#}
+</WIOCCL:IF>             
+<WIOCCL:IF condition="{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}">
+{#_DATE("{##dataCertB2##}")_#}
+</WIOCCL:IF> 
+<WIOCCL:IF condition="{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}">          
+ {#_DATE("{##dataCertC1##}")_#}
+</WIOCCL:IF>  
+<WIOCCL:IF condition="{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}">          
+{#_DATE("{##dataCertC2##}")_#}
+</WIOCCL:IF>  
+
+</WIOCCL:IF>
+
+
+
+
+
+

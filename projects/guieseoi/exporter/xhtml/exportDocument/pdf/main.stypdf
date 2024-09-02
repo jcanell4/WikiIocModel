@@ -1,0 +1,119 @@
+{
+    "PageStyle":{
+        "page-font-name":"helvetica",
+        "page-font-size":12,
+        "image-basedir": "lib/lib_ioc/wikiiocmodel/exporter/xhtml/css/img/",
+        "image-filenameMap": {
+            "note":{"filepath":"iocnote.jpg", "needBaseDir":true},
+            "reference":{"filepath":"iocreference.jpg", "needBaseDir":true},
+            "text":{"filepath":"ioctext.jpg", "needBaseDir":true}
+        }
+    },
+    "ContainerStyle":{
+        "style":{
+            "font-name":"helvetica",
+            "font-size":10
+        },
+        "childrenContainers":{
+            "ht":{
+                "style":{
+                    "font-name":"Times",
+                    "font-size":12
+                }
+            },
+            "ht1":{
+                "style":{
+                    "font-name":"Times",
+                    "font-size":14,
+                    "font-attribute":"B"
+                }
+            },
+            "iocElemType":{
+                "style":{
+                     "padding-left": 5,
+                     "padding-right": 5,
+                     "padding-top": 5,
+                     "padding-bottom": 5,
+                     "margin": {"left":10, "top":0, "right":10, "bottom":0}
+                },
+                "childrenContainers":{
+                    "important": {
+                        "style":{
+                            "background-color": "#ccc"
+                        }       
+                    },
+                    "quote":{
+                        "style":{
+                            "background-color": "#efefef",
+                            "font-attribute":"I"
+                        }
+                    },
+                    "textl":{
+                        "style":{
+                            "background-color": "#efefef",
+                            "border":true,
+                            "font-size":8
+                        }
+                    },
+                    "example":{
+                        "style":{
+                            "background-color": "#efefef",
+                            "font-size":8
+                        }
+                    },
+                    "text":{
+                        "style":{
+                            "margin": {"left":0, "right":0, "top":0, "bottom":0},
+                            "background-color": "#ccc",
+                            "border":true,
+                            "font-size":8,
+                            "position-x":-80
+                        }
+                    },
+                    "reference":{
+                        "style":{
+                            "margin": {"left":0, "right":0, "top":0, "bottom":0},
+                            "background-color": "#ccc",
+                            "font-size":8,
+                            "position-x":-70
+                        }
+                    },
+                    "note":{
+                        "style":{
+                            "margin": {"left":0, "right":2, "top":2, "bottom":0},
+                            "padding-right": 5,
+                            "padding-top": 5,
+                            "padding-left": 5,
+                            "padding-bottom": 5,
+                            "background-color": "#b9b9b9",
+                            "font-size":8,
+                            "position-x":-80
+                        }
+                    }
+                },
+                "styleTypes":{}
+            },
+            "frameTable":{
+                "style":{
+                     "padding-left": 5,
+                     "margin": {"left":15, "right":15}
+                },
+                "styleTypes":{
+                    "pt_taula":{
+                        "style":{
+                             "padding-left": 5,
+                             "margin": {"left":15, "right":15}
+                        }                        
+                    }
+                }
+            },
+            "frameFigure":{
+                "style":{
+                    "align": "C"
+                },
+                "styleTypes":{}
+            }
+        },
+        "styleTypes":{}
+    }
+}

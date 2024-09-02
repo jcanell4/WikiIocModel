@@ -42,7 +42,7 @@
   <section id="intro">
     <div class="container">
 <WIOCCL:IF condition="{##mostrarAutor##}==true">        
-      <p>autor: {##nom_real##}</p>
+      <p>autor(s): <WIOCCL:FOREACH var="item" array="{##nom_real##}">{##item##}; </WIOCCL:FOREACH></p>
 </WIOCCL:IF>      
 <WIOCCL:IF condition="{#_IS_STR_EMPTY(''{##entitatResponsable##}'')_#}!=true">        
       <p>Editat per: {##entitatResponsable##}</p>

@@ -1088,7 +1088,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
             if($align == 'right') $ret .= ' align="right"';
             if($align == 'left')  $ret .= ' align="left"';
 
-            $alt = ($_SESSION['fig_description']) ? $_SESSION['fig_description'] : ($title ? $title : "");
+            $alt = "";
             if ($title) {
                 if ($imgb) {
                     $titol = IocCommon::formatTitleExternalLink("media", "html", $title);
@@ -1101,6 +1101,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 }
                 $ret .= " title=\"$title\"";
             }
+            $alt = ($_SESSION['fig_description']) ? $_SESSION['fig_description'] : $alt;
             $ret .= " alt=\"$alt\"";
             //marjose start
             //if($this->table && !is_null($width) )
@@ -1127,7 +1128,8 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 $ret .= '</div>'.DOKU_LF;
             }
 
-        }elseif ($mime == 'application/x-shockwave-flash'){
+        }
+        elseif ($mime == 'application/x-shockwave-flash'){
             if (!$render) {
                 // if the flash is not supposed to be rendered
                 // return the title of the flash
@@ -1147,7 +1149,8 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                                      null,
                                      $att,
                                      $this->_xmlEntities($title));
-        }elseif($dl){
+        }
+        elseif($dl){
             resolve_mediaid(getNS($src),$src,$exists);
             if ($exists){
                 $filesize = filesize(mediaFN($src));
@@ -1156,19 +1159,27 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
             $filename = basename(str_replace(':', '/', $src));
             // well at least we have a title to display
             if (!is_null($title) && !empty($title)) {
+                $titleAndNobreak = IocCommon::formatTitleExternalLink("file", "html", $title);
+                $title = $titleAndNobreak["title"];
+                $noBreak = $titleAndNobreak["nobreak"];        
                 $title  = $this->_xmlEntities($title);
+                
             }else{
                 $title = $filename;
             }
             $src = $path.'img/'.$filename;
-            $ret .= '<div class="mediaf file'.$ext.'">';
-            $ret .= '<div class="mediacontent">';
-            $ret .= '<a href="'.$path.'img/'.basename(str_replace(':', '/', $src)).'">'.$title.'</a>'.
-                    '<span>'.$filesize.'</span>';
-            $ret .= '</div>';
-            $ret .= '</div>';
-            
-        }elseif ($title){
+            if($noBreak){
+                $ret .= '<a class="media mediafile mf_'.$ext.'" href="'.$path.'media/'.basename(str_replace(':', '/', $src)).'">'.$title.'</a>';
+            }else{
+                $ret .= '<div class="mediaf file'.$ext.'">';
+                $ret .= '<div class="mediacontent">';
+                $ret .= '<a href="'.$path.'img/'.basename(str_replace(':', '/', $src)).'">'.$title.'</a>'.
+                        '<span>'.$filesize.'</span>';
+                $ret .= '</div>';
+                $ret .= '</div>';
+            }
+        }
+        elseif ($title){
             // well at least we have a title to display
             $ret .= $this->_xmlEntities($title);
         }else{

@@ -1,0 +1,26 @@
+{
+    "typesDefinition": {
+        "dadesguieseoi": {
+            "render": { 
+                "typeDef":"dadesguieseoi",
+                "class": "exportDocument",
+                "fields": "ALL", 
+                "extraFields": [
+                    {"name":"fitxercontinguts", "valueType":"page", "value":"continguts"},
+                    {"name":"pdfDocument", "valueType":"page", "value":"continguts"}
+                ]
+            },
+            "keys": { 
+                "descripcio": {
+                    "render": {"class": "renderRenderizableText"} 
+                },
+                "fitxercontinguts": {
+                    "render": {"class": "renderFile"}
+                },
+                "pdfDocument": {
+                    "render": {"class": "renderFileToPsDom"}
+                }
+            }
+        }
+    }
+}

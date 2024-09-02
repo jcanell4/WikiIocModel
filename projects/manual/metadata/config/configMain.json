@@ -68,6 +68,20 @@
                     "type": "objectArray",
                     "typeDef":"entradaExtres"
                 },                                                
+                "llistaNomsReals": {
+                    "type":"object",
+                    "keys": {
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": ""
+                        }
+                    }
+                },
+                "defNomsReals": {
+                    "type": "objectArray",
+                    "typeDef": "llistaNomsReals"
+                },
                 "entradaDocuments": {
                     "type":"object",
                     "keys": {
@@ -149,10 +163,14 @@
                         },
                         "documents": {
                             "type": "defDocuments",
-                            "default": [{"id":0, "ordre":1, "nom":"continguts", "descripcio":"descripció del document"}]
+                            "calculateOnSave": {
+                                "class": "CalculateLowerCaseInObjectArrayValues",
+                                "data": {"table":"documents", "field":"nom"}
+                            },
+                            "default": []                            
                         },
                         "nom_real": {
-                            "type": "string",
+                            "type": "defNomsReals",
                             "mandatory": true,
                             "calculateOnSave": {
                                 "class": "CalculateRealNameFromUsername",
