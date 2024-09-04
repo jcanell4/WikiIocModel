@@ -390,7 +390,7 @@
 
     for(var i = 0; i < dataArray[0].length; i++) {
          var percentWidth = dataArray[0][i]*100/totalHoresUFs + "%";
-         var textCell = dataArray[0][i] + "h"
+         var textCell = dataArray[0][i] + " h"
          createCell(rowDistribHoraria2, percentWidth, textCell);
     }
 
@@ -407,7 +407,7 @@
 
     for(var i = 0; i < dataArray[1].length; i++) {
          var percentWidth = dataArray[1][i]*100/totalHoresUs + "%";
-         var textCell = dataArray[1][i] + "h"
+         var textCell = dataArray[1][i] + " h"
          createCell(rowDistribHoraria3, percentWidth, textCell);
     }
 
@@ -495,7 +495,9 @@
 </WIOCCL:IF>
         <div>
           <h4>{##item[eina]##}</h4>
+<WIOCCL:IF condition="{##item[tipus]##}!=''exercicis''">
           <h3>{##item[opcionalitat]##} <WIOCCL:IF condition="{##item[puntuable]##}==true">(puntua a l'AC)</WIOCCL:IF></h3>
+</WIOCCL:IF>
         </div>
       </div>
 </WIOCCL:FOREACH>
@@ -543,7 +545,7 @@
     <br/>
     <p>Els lliuraments s'han de realitzar dins dels terminis fixats i són improrrogables.</p>
     <br/>
-    <p>L'AC inclou <span>{#_COUNTDISTINCT({##datesAC##},[''id''])_#} lliuraments</span>, distribuïts de la següent manera:</p>
+    <p>L'AC inclou <span>{#_COUNTDISTINCT({##datesAC##},[''id''])_#} lliuraments</span>, distribuïts de la manera següent:</p>
     <table class="own_table">
       <tr>
         <th colspan="2"></th>
@@ -638,7 +640,7 @@
     <br/>
     <h2>Exercicis d'avaluació final (EAF)</h2>
 <WIOCCL:SET var="numEafs" type="literal" value="{#_COUNTDISTINCT({##datesEAF##},[''id''])_#}">
-    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> també inclou <span> {##numEafs##} EAF</span> <WIOCCL:IF condition="1=={##numEafs##}">distribuït</WIOCCL:IF><WIOCCL:IF condition="1\>{##numEafs##}">distribuïts</WIOCCL:IF> de la següent manera:</p>
+    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> també inclou <span> {##numEafs##} EAF</span> <WIOCCL:IF condition="1=={##numEafs##}">distribuït</WIOCCL:IF><WIOCCL:IF condition="1\>{##numEafs##}">distribuïts</WIOCCL:IF> de la manera següent:</p>
 </WIOCCL:SET>
     <table class="own_table">
       <tr>
@@ -734,7 +736,6 @@
 </WIOCCL:REPARSE>
 </WIOCCL:SET>
     </table>
-    <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
 </WIOCCL:IF>
   </div>
 </section>
@@ -765,7 +766,7 @@
         <div class="horizontal_separator"></div>
       </div>
     </div>
-    <p>Per poder tenir en compte la qualificació de l’AC, s’ha d’aconseguir a la PAF una qualificació mínima de <span>{##notaMinimaPAF##},00</span> sense cap arrodoniment (PAF 1 o PAF 2).</p>
+    <p>Per poder tenir en compte la qualificació de l’AC, s’ha d’aconseguir una qualificació mínima de <span>{##notaMinimaPAF##},00</span> a la PAF, sense cap arrodoniment (PAF1 o PAF2).</p>
     <br/>
     <p>Disposeu de més informació sobre les convocatòries al <a target="_blank" href="pt_sencer/pt.html">pla de treball complet</a>.</p>
   </div>
