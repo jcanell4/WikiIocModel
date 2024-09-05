@@ -251,7 +251,7 @@ p.llegenda {
 .pt_taula th {
     color: #ffffff;
     background-color: #BE176B;
-    text-transform: uppercase;
+    text-transform: none; 
     font-size: 11px !important;
     font-weight: 700 !important;
     letter-spacing: .7px;
