@@ -53,21 +53,13 @@ class guieseoiProjectModel extends MoodleMultiContentFilesProjectModel {
     * $data: són les dades que m'arriben. En format key-value.
     * ------------------------------*/
     public function validateFields($data = NULL, $subset=FALSE){
-        parent::validateFields($data, $subset);
-        if ($subset==FALSE || $subset==ProjectKeys::VAL_DEFAULTSUBSET){
+        if ($subset && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
+            parent::validateFields($data, $subset);
+        }else{
             parent::validateFields($data);
-            $values = is_array($data)?$data:json_decode($data, true);//is_array em retorna el valor de les dades en format array
-            //$dadesGuiesEOI = IocCommon::toArrayThroughArrayOrJson($data);//Faria el mateix
-
-            //Valida que hi ha un responsable assignat sempre en el moment de guardar
+            $values = is_array($data) ? $data : json_decode($data, true);
             if (empty($values["responsable"])){
-                //Pendent millora marjose:
-                //Si el nom de l'autor també estar al camp responsable, aqui arriben com a camps
-                //autor i responsable de values. Si no està el nom de l'autor, els camps
-                //autor i responsable de vaules no existeixen.
-                //revisar perquè.
-                //
-                //throw new InconsistentDataException("No hi ha un responsable assignat. Cap assignar-ho per poder crear aqesta guia.");
+                throw new InvalidDataProjectException($this->id, "El camp responsable no pot quedar buit");
             }
         }
     }
@@ -142,8 +134,8 @@ class guieseoiProjectModel extends MoodleMultiContentFilesProjectModel {
         return $data["moodleCourseId"];
     }
 
-        
-    
+
+
     /* ------------------------------
      * getProjectTypeConfigFile
      * Retorna la ruta del fitxer de configuracio
@@ -153,31 +145,31 @@ class guieseoiProjectModel extends MoodleMultiContentFilesProjectModel {
         //Retorna el que apareix entre claus al configMain.json
         $valorRecollit = $this->projectMetaDataQuery->getListMetaDataComponentTypes(ProjectKeys::KEY_METADATA_PROJECT_CONFIG,ProjectKeys::KEY_MD_PROJECTTYPECONFIGFILE);
         //$valorRecollit[semestral] conté "admconfig:guieseoi"
-        //$valorRecollit[anual] conté "admconfig:guieseoianual"  
-        $data = $this->getCurrentDataProject();      
+        //$valorRecollit[anual] conté "admconfig:guieseoianual"
+        $data = $this->getCurrentDataProject();
         $sem_o_anu = $data["durada"]; //recollim si és semestral o anual
         return $valorRecollit[$sem_o_anu];
 
     }
 
-    
+
     /* ------------------------------
      * updateCalculateFieldsOnWrite
      * Actualitza les dades en escriure
      * ------------------------------*/
     public function updateCalculatedFieldsOnSave($data, $originalDataKeyValue=FALSE, $subset=FALSE) {
-        
+
         if($subset!==FALSE && $subset!=ProjectKeys::VAL_DEFAULTSUBSET){
             return parent::updateCalculatedFieldsOnSave($data, $subset, $subset);
         }
 
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
-        
+
         //Si no està consolidat, si és la firsview
         //
         //if($this->getViewConfigKey()===ProjectKeys::KEY_VIEW_FIRSTVIEW){
-        //estava pensat perquè fos només la firstview que s'emplenés l'array. 
+        //estava pensat perquè fos només la firstview que s'emplenés l'array.
         //Però cal emplenar-ho també un cop es fal'update
         if(! $this->isProjectGenerated()) {
             //Per blocs anuals la el número de blocs ha de ser 11. En altre cas, ha de ser 7.
@@ -200,5 +192,5 @@ class guieseoiProjectModel extends MoodleMultiContentFilesProjectModel {
         return parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
     }
 
-    
+
 }
