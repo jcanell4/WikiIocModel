@@ -43,7 +43,8 @@ class upgrader_38 extends ProgramacionsCommonUpgrader {
                             ["La vostra data i hora de la PAF es comunicarà al","La data i l'hora de la PAF es comunicarà des del"],
                             [" UNITAT FORMATIVA \\{"," Unitat formativa {"],
                             ["Només es podrà presentar a la PAF 2, l'alumnat que no s'hagi presentat a la PAF1, o que havent-s'hi presentat, no hagi superat la UF.","Només es poden presentar a la PAF2 els alumnes que no s'hagin presentat a la PAF1 o que, havent-s'hi presentat, no hagin superat la UF."],
-                            ["<WIOCCL:IF .*  \\* Disposar d'una qualificació de la JT superior a \\{##notaMinimaJT##\\}\\..*<\\/WIOCCL:IF>", "Per cada UF, s'ofereixen dues convocatòries cada semestre: convocatòria PAF1 i convocatòria PAF2 (consulteu dates clau a la taula::table:T10:). Només es poden presentar a la PAF2 els alumnes que no s'hagin presentat a la PAF1 o que, havent-s'hi presentat, no hagin superat la UF.","s"]
+                            ["<WIOCCL:IF .*  \\* Disposar d'una qualificació de la JT superior a \\{##notaMinimaJT##\\}\\..*<\\/WIOCCL:IF>", "Per cada UF, s'ofereixen dues convocatòries cada semestre: convocatòria PAF1 i convocatòria PAF2 (consulteu dates clau a la taula::table:T10:). Només es poden presentar a la PAF2 els alumnes que no s'hagin presentat a la PAF1 o que, havent-s'hi presentat, no hagin superat la UF.","s"],
+                            ["veure", "vegeu"]
                            ];
 
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
