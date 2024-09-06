@@ -7,7 +7,7 @@
 
 Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul##} del</WIOCCL:IF> mòdul {##modulId##} {##modul##} {##descripcio##}
 
-Té una assignació de {##durada##} h<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##cicle##}'')_#}&&!{#_STR_CONTAINS(''Indiqueu'', ''{##cicle##}'')_#}"> de les {##duradaCicle##} h del cicle de {##cicle##}</WIOCCL:IF>. El  coodinador del mòdul és {##coordinador##}, el professorat és {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
+Té una assignació de {##durada##} h<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##cicle##}'')_#}&&!{#_STR_CONTAINS(''Indiqueu'', ''{##cicle##}'')_#}"> de les {##duradaCicle##} h del cicle de {##cicle##}</WIOCCL:IF>. La coordinació és a càrrec de {##coordinador##} i la docència de  {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
 
 <WIOCCL:CHOOSE id="itineraris" lExpression="{#_ARRAY_LENGTH({##itinerarisRecomanats##})_#}">
 <WIOCCL:CASE forchoose="itineraris" rExpression="0">Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**</WIOCCL:CASE>
@@ -33,7 +33,7 @@ Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
 
 :###
 
-Es segueix una metodologia  basada en l’aprenentatge significatiu, mitjançant el seguiment de les eines d'aprenentatge que se us proposen al següent apartat per assolir els resultats d’aprenentatge (RA).
+Se segueix una metodologia  basada en l’aprenentatge significatiu, mitjançant el seguiment de les eines d'aprenentatge que se us proposen al següent apartat per assolir els resultats d’aprenentatge (RA).
 
 És recomanable realitzar totes les activitats proposades, tant les que avalua el professor i per tant ponderen a l'avaluació contínua (AC), com les altres. Les activitats i exercicis no avaluats disposen de solució, fet que us permetrà portar el propi control del vostre aprenentatge.
 
@@ -54,7 +54,7 @@ A banda de les PAF, caldrà fer EAF durant el semestre (vegeu l'apartat d'avalua
 ::table:T01
   :title:Eines d'aprenentatge
   :type:pt_taula
-^  tipus	^  eina	 ^  opcionalitat	 ^  puntuable  ^
+^  Tipus	^  Eina	 ^  Opcionalitat	 ^  Puntuable  ^
 <WIOCCL:FOREACH var="item" array="{##einesAprenentatge##}">
 | {#_UCFIRST("{##item[tipus]##}")_#} | {##item[eina]##} | {##item[opcionalitat]##} | <WIOCCL:IF condition="{##item[puntuable]##}==true">Sí</WIOCCL:IF><WIOCCL:IF condition="{##item[puntuable]##}==false">No</WIOCCL:IF> |
 </WIOCCL:FOREACH>
@@ -97,8 +97,8 @@ El mòdul s'imparteix en {#_MAX({##taulaDadesUF##}, ''MAX[bloc]'', ''bloc'')_#} 
   :title:Blocs
   :type:pt_taula
 <WIOCCL:FOR counter="ind" from="1" to="{#_COUNTDISTINCT({##taulaDadesUF##}, [''bloc''])_#}">
-^BLOC {##ind##}^^  Durada  ^
-^  Núm. UF  ^  TÍTOL UNITAT FORMATIVA  ^  Durada  ^
+^BLOC {##ind##}^^^
+^  Núm. UF  ^  Títol unitat formativa  ^  Durada  ^
 <WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
 <WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUF##}" filter="{##item[bloc]##}=={##ind##}">
 |  UF{##item[unitat formativa]##}  | {##item[nom]##}  |  {##item[hores]##} h  |
@@ -117,7 +117,7 @@ Cada unitat formativa es divideix en diferents unitats:
 <WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
 <WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
 ^UF{##itemUf[unitat formativa]##} ^^^^
-^  U  ^  NOM  ^  Durada  ^  Temporalització  ^
+^  U  ^  NOM  ^  Durada  ^  Temporització  ^
 <WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}">
 |  U{##item[unitat]##}  | {##item[nom]##}  |  {##item[hores]##} h  |  <WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##item[unitat]##}=={##itemsub[unitat]##}"> {#_DATE("{#_FIRST({##filtered##}, "FIRST[inici]")_#}", ".")_#}-{#_DATE("{#_LAST({##filtered##}, "LAST[final]")_#}", ".")_#} </WIOCCL:SUBSET>  |
 </WIOCCL:FOREACH>
@@ -126,16 +126,16 @@ Cada unitat formativa es divideix en diferents unitats:
 </WIOCCL:SET>
 :::
 
-Cada unitat es divideix de la següent manera:
+Cada unitat es divideix en els apartats que s'indiquen a continuació:
 
 ::table:T04
   :title:Desplegament de les unitats
   :type:pt_taula
 <WIOCCL:FOREACH var="itemu" array="{##taulaDadesUnitats##}">
-^ U{##itemu[unitat]##}: {##itemu[nom]##} ({##itemu[hores]##}h)    ^^
-^  Període  ^    Temporalització  ^
+^ U{##itemu[unitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h)    ^^
+^  Període  ^    Temporització  ^
 <WIOCCL:FOREACH var="itemc" array="{##calendari##}" filter="{##itemc[unitat]##}=={##itemu[unitat]##}">
-| {##itemc[tipus període]##} {##itemc[període]##}:{##itemc[descripció període]##}   |  {#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[final]##}", ".")_#}  |
+| {##itemc[tipus període]##} {##itemc[període]##}: {##itemc[descripció període]##}   |  {#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[final]##}", ".")_#}  |
 </WIOCCL:FOREACH>
 </WIOCCL:FOREACH>
 :::
@@ -270,7 +270,7 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 ::table:T10
   :title:Dates PAFs
   :type:pt_taula
-  :footer:La vostra data i hora de la PAF es comunicarà al Taulell de Tutoria.
+  :footer:La data i l'hora de la PAF es comunicarà des del Taulell de Tutoria.
 ^  PAF  ^  Data  ^  Publicació qualificació  ^
 |  1  |  {#_DATE("{##dataPaf11##}")_#}<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPaf12##}'')_#}"> o {#_DATE("{##dataPaf12##}")_#}</WIOCCL:IF>  |  {#_DATE("{##dataQualificacioPaf1##}")_#}  |
 |  2  |  {#_DATE("{##dataPaf21##}")_#}<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPaf22##}'')_#}"> o {#_DATE("{##dataPaf22##}")_#}</WIOCCL:IF>  |  {#_DATE("{##dataQualificacioPaf2##}")_#}  |
@@ -316,7 +316,7 @@ L'AC es fa a distància i es concreta en:
 <WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
 <WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
 
-  * UNITAT FORMATIVA {##itemUf[unitat formativa]##}
+  * Unitat formativa {##itemUf[unitat formativa]##}
 <WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}&&''{##item[tipus qualificació]##}''==''AC''">
       * {##item[descripció qualificació]##} ({##item[abreviació qualificació]##})
 </WIOCCL:FOREACH>
@@ -427,19 +427,8 @@ La prova d'avaluació final (PAF):
   * Té una ponderació  a la qualificació final (QF) de la UF (vegeu l'apartat <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">"Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">"Qualificació final de cada UF"</WIOCCL:IF>).
   * S'ha d'obtenir una **nota mínima de {##notaMinimaPAF##},00 sense arrodoniment** per poder aplicar el càlcul de la QF.
 
-<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0&&{##notaMinimaEAF##}\>0||{#_ARRAY_LENGTH({##datesJT##})_#}\>0&&{##notaMinimaJT##}\>0">
-Per cada UF, s'ofereixen dues convocatòries cada semestre: convocatòria PAF 1 i convocatòria PAF 2 (consulteu dates clau a la taula::table:T10:). Només es podrà presentar a la PAF 2 de les utitats formativa matrículades, l'alumnat que compleixi tots els requisits següents:
-<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0&&{##notaMinimaEAF##}\>0">
-  * La UF no té assignada cap EAF o si en té, la qualificació de l'EAF és superior a {##notaMinimaEAF##}.
-</WIOCCL:IF>
-<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0&&{##notaMinimaJT##}\>0">
-  * Disposar d'una qualificació de la JT superior a {##notaMinimaJT##}.
-</WIOCCL:IF>
-  * No haver-se presentat a la PAF1, o en cas d'haver-s'hi presentat, no haver superat la UF.
-</WIOCCL:IF>
-<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}==0&&{#_ARRAY_LENGTH({##datesJT##})_#}==0||{##notaMinimaEAF##}==0&&{##notaMinimaJT##}==0">
-Per cada UF, s'ofereixen dues convocatòries cada semestre: convocatòria PAF 1 i convocatòria PAF 2 (consulteu dates clau a la taula::table:T10:). Només es podrà presentar a la PAF 2, l'alumnat que no s'hagi presentat a la PAF1, o que havent-s'hi presentat, no hagi superat la UF.
-</WIOCCL:IF>
+
+Per cada UF, s'ofereixen dues convocatòries cada semestre: convocatòria PAF1 i convocatòria PAF2 (consulteu dates clau a la taula::table:T10:). Només es poden presentar a la PAF2 els alumnes que no s'hagin presentat a la PAF1 o que, havent-s'hi presentat, no hagin superat la UF.
 
 La convocatòria corresponent a la PAF 1 s'esgota tant si l'estudiant s'hi presenta com si no (exceptuant  que l'estudiant hagi anul·lat la matrícula). La convocatòria corresponent a PAF 2 només s'esgota si l'estudiant s'hi presenta.
 
@@ -573,7 +562,7 @@ En cas de no superar alguna UF el mòdul quedarà pendent. Només es consideren 
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
 <WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
 <WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
-La planificació establerta per a la UF{##itemUf[unitat formativa]##} és la següent (veure :table:T11-{##itemUf[unitat formativa]##}:):
+La planificació establerta per a la UF{##itemUf[unitat formativa]##} és la següent (vegeu :table:T11-{##itemUf[unitat formativa]##}:):
 ::table:T11-{##itemUf[unitat formativa]##}
   :title:Planificació UF{##itemUf[unitat formativa]##}
   :footer: <sup>*</sup> Atenció: podeu mirar la data màxima de lliurament de les activitats qualificables a l'apartat de les dates clau.

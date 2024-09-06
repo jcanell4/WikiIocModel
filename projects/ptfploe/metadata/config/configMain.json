@@ -26,7 +26,7 @@
             "viewfiles": {"defaultView": "defaultView", "updateView" : "updateView", "firstView": "firstView"},
             "versions": {
                 "fields": 12,
-                "templates": {"continguts": 37}
+                "templates": {"continguts": 38}
             },
             "mainType": {
                 "type": "object",
@@ -640,7 +640,7 @@
                         },                                                
                         "einesAprenentatge": {
                             "type": "defEinesAprenentatge",
-                            "default":[{"tipus":"lectura","eina":"Llibre de l'aula","opcionalitat":"lectura obligada","puntuable":"false"},{"tipus":"autoavaluació","eina":"Exercicis d'autoavaluació i activitats","opcionalitat":"opcional però recomanat","puntuable":"false"},{"tipus":"fòrum","eina":"Fòrum de l'aula","opcionalitat":"Participació recomanada","puntuable":"false"},{"tipus":"exercicis","eina":"Exercicis d'avaluació contínua","opcionalitat":"opcional","puntuable":"true"}],
+                            "default":[{"tipus":"lectura","eina":"Llibre de l'aula","opcionalitat":"Lectura obligada","puntuable":"false"},{"tipus":"autoavaluació","eina":"Exercicis d'autoavaluació i activitats","opcionalitat":"Opcional però recomanat","puntuable":"false"},{"tipus":"fòrum","eina":"Fòrum de l'aula","opcionalitat":"Participació recomanada","puntuable":"false"},{"tipus":"exercicis","eina":"Exercicis d'avaluació contínua","opcionalitat":"Opcional","puntuable":"true"}],
                             "mandatory": true
                         },                                                
                         "resultatsAprenentatge": {
