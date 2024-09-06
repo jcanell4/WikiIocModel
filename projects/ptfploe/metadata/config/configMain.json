@@ -490,6 +490,11 @@
                             "mandatory": true,
                             "default":""
                         },
+                        "nouCurr": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
                         "semestre": {
                             "type": "number",
                             "mandatory": true,

@@ -68,10 +68,18 @@
                 ]
             }
         },
+        "nouCurr": {
+            "label": "Nou currículum 2024",
+            "n_columns": 3,
+            "group": "actualitzables",
+            "type": "checkbox",
+            "props": {
+                "title": "Indiqueu si es nou currículum"
+            }
+        },
         "nsProgramacio": {
-            "type": "amd",
             "label": "Programació importada (nsProgramacio)",
-            "n_columns": 5,
+            "n_columns": 3,
             "group": "main",
             "props": {
                 "required": true,
@@ -80,25 +88,12 @@
             "config":{
                 "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}},
                                     {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]
-                },
-                "class" : {
-                    "edit": "IocImportTree",
-                    "view": "IocImportSelectedItem"
-                },
-                "data": {
-                    "ns": "",
-                    "fieldName": "nsProgramacio",
-                    "dialogTitle": "Seleccionar Programació",
-                    "dialogMessage": "Selecciona una programació",
-                    "dialogButtonLabel": "Afegir Programació",
-                    "searchDataUrl": "lib/exe/ioc_ajaxrest.php/ns_tree_rest/",
-                    "projectType": ["prgfploe", "prgfplogse"]
                 }
             }
         },
         "moodleCourseId": {
           "label" : "Identificador del curs a moodle (moodleCourseId)",
-          "n_columns": 6,
+          "n_columns": 3,
           "group": "actualitzables",
           "props": {
             "required": true,
@@ -263,7 +258,7 @@
           },
           "config": {
             "actions": {
-              "set_multiple_default_rows": "Definir el nombre d'Unitats Formatives del mòdul",
+              "add_default_row": "Afegir fila",
               "remove_rows": "Eliminar les Unitats Formatives seleccionades",
               "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
             },
