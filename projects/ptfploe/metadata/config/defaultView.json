@@ -52,7 +52,7 @@
     "fields": {
         "tipusBlocModul":{
             "type":"select",
-            "n_columns": 5,
+            "n_columns": 3,
             "label": "Bloc o mòdul (tipusBlocModul)",
             "group": "main",
             "props": {
@@ -76,10 +76,20 @@
             "props": {
                 "title": "Indiqueu si es nou currículum"
             }
+        },        
+        "pesPAFnouCurr": {
+            "label": "Pes PAF Nou Curr.",
+            "n_columns": 2,
+            "group": "actualitzables",
+            "props": {
+                "min":60,
+                "max":100,
+                "title": "Indiqueu % PAF a QF"
+            }
         },
         "nsProgramacio": {
             "label": "Programació importada (nsProgramacio)",
-            "n_columns": 3,
+            "n_columns": 2,
             "group": "main",
             "props": {
                 "required": true,
@@ -238,7 +248,7 @@
         },
         "semestre": {
           "label": "Semestre (semestre)",
-          "n_columns": 6,
+          "n_columns": 3,
           "group": "actualitzables",
           "props":{
                   "min":1,
