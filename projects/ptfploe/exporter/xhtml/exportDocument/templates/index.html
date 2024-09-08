@@ -373,7 +373,9 @@
             [<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemUf[unitat formativa]##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[hores]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* Num. hores per cada UF */
             [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[hores]##},</WIOCCL:FOREACH>], /* Num. hores per cada U */
             [<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemUf[unitat formativa]##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[unitat formativa]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* ID. de cada UF */
+          <WIOCCL:IF condition="{##nouCurr##}==false">
             [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[unitat]##},</WIOCCL:FOREACH>] /* ID de cada U */
+          </WIOCCL:IF>
         ];
 </WIOCCL:SET>
     /*****************/
@@ -789,8 +791,14 @@
 <WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
                       [
                         {
+                        <WIOCCL:IF condition="{##nouCurr##}==false">
                           title :"UF{##itemUf[unitat formativa]##}",
                           name :"UF{##itemUf[unitat formativa]##}",
+                        </WIOCCL:IF>
+                        <WIOCCL:IF condition="{##nouCurr##}==true">
+                          title :"U{##itemUf[unitat formativa]##}",
+                          name :"U{##itemUf[unitat formativa]##}",
+                        </WIOCCL:IF>
                           percent: 0
                         },
 <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUFs##},''ponderació'', ''unitat formativa'', ''{##itemUf[unitat formativa]##}'')_#}">
@@ -810,15 +818,33 @@
                           name :"FINAL",
                           percent: 0
                         },
-<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUF##},''ponderació'')_#}">
-<WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">
-                       {
-                          title :"UF{##item[unitat formativa]##}",
-                          name :"UF{##item[unitat formativa]##}",
-                          percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}"
-                        },
-</WIOCCL:FOREACH>
-</WIOCCL:SET>
+<WIOCCL:IF condition="{##nouCurr##}==false">
+    <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUF##},''ponderació'')_#}">
+    <WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}">
+                           {
+                              title :"UF{##item[unitat formativa]##}",
+                              name :"UF{##item[unitat formativa]##}",
+                              percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}"
+                            },
+    </WIOCCL:FOREACH>
+    </WIOCCL:SET>
+ </WIOCCL:IF>
+<WIOCCL:IF condition="{##nouCurr##}==true">
+    <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUF##},''ponderació'')_#}">
+
+                           {
+                              title :"AC",
+                              name :"AC",
+                              percent: 100-"{##pesPAFnouCurr##}"
+                           },
+                           {
+                              title :"PAF",
+                              name :"PAF",
+                              percent: "{##pesPAFnouCurr##}"
+                           }
+
+    </WIOCCL:SET>
+</WIOCCL:IF>        
                       ]
                     ];
 </WIOCCL:SET>
