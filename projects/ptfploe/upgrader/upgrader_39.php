@@ -31,14 +31,16 @@ class upgrader_39 extends ProgramacionsCommonUpgrader {
 
                 //upg39
                 /*
-
-                 */
+                substringFromLineToLineAsPattern donats uns continguts.txt.v? crea un patro a partir del que recupera de la linia inicial - segon parametre- a la linia final -tercer parametre- i crea un patro
+                substringFromLineToLine fa el mateix, sense crear el patró
+                 * Aplico les diferències que trobo. I les aplico al txt_v39. Es seleccionen blocs no editables.
+                 *  */
                 $txt_v38 = $this->model->getRawProjectTemplate("continguts", 38);
                 $txt_v39 = $this->model->getRawProjectTemplate("continguts", 39);
                 $l76_l142_v38 =  $this->substringFromLineToLineAsPattern($txt_v38, 76, 142);
                 $l76_l183_v39 = $this->substringFromLineToLine($txt_v39,76, 183);
-                $l310_l338_v38 =  $this->substringFromLineToLineAsPattern($txt_v38, 310, 338);
-                $l351_l387_v39 = $this->substringFromLineToLine($txt_v39, 351, 387);
+                $l310_l338_v38 =  $this->substringFromLineToLineAsPattern($txt_v38, 310, 338);//el que busca
+                $l351_l387_v39 = $this->substringFromLineToLine($txt_v39, 351, 387);//on ho substitueix
                 $l350_l355_v38 =  $this->substringFromLineToLineAsPattern($txt_v38, 350, 355);
                 $l399_l404_v39 = $this->substringFromLineToLine($txt_v39, 399, 404);
                 $l393_l397_v38 =  $this->substringFromLineToLineAsPattern($txt_v38, 393, 397);
@@ -58,7 +60,7 @@ class upgrader_39 extends ProgramacionsCommonUpgrader {
                 $l559_l569_v38 =  $this->substringFromLineToLineAsPattern($txt_v38, 559, 569);
                 $l642_l664_v39 = $this->substringFromLineToLine($txt_v39, 642, 664);
                 $l573_l601_v38 =  $this->substringFromLineToLineAsPattern($txt_v38, 573, 601);
-                $l669_l727_v39 = $this->substringFromLineToLine($txt_v39, 669, 627);
+                $l669_l727_v39 = $this->substringFromLineToLine($txt_v39, 669, 727);
                 $aTokRep = [
                     [$l76_l142_v38, $l76_l183_v39],
                     [$l310_l338_v38, $l351_l387_v39],

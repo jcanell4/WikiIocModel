@@ -501,7 +501,7 @@ La prova d'avaluació final (PAF):
   * S'ha d'obtenir una **nota mínima de {##notaMinimaPAF##},00 sense arrodoniment** per poder aplicar el càlcul de la qualificació final.
 
 S'ofereixen dues convocatòries cada semestre: convocatòria PAF1 i convocatòria PAF2 (consulteu dates clau a la taula::table:T10:). Només es podrà presentar a la PAF2, l'alumnat que no s'hagi presentat a la PAF1, o que havent-s'hi presentat, no hagi superat la UF.
-AQUII
+
 </WIOCCL:IF>
 
 
@@ -725,6 +725,8 @@ La planificació establerta per a la U{##itemUf[unitat formativa]##} és la seg�
 </WIOCCL:SET>
 </WIOCCL:IF>
 ###:
+
+
 
 
 
