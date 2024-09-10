@@ -425,7 +425,12 @@
 
     for(var i = 0; i < dataArray[0].length; i++) {
          var percentWidth = dataArray[0][i]*100/totalHoresUFs + "%";
+         <WIOCCL:IF condition="{##nouCurr##}==false">
          var textCell = "UF" + dataArray[2][i];//(i+1);
+         </WIOCCL:IF>
+         <WIOCCL:IF condition="{##nouCurr##}==true">
+         var textCell = "U" + dataArray[2][i];//(i+1);
+         </WIOCCL:IF>
          createCell(rowDistribHoraria1, percentWidth, textCell);
     }
 
