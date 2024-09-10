@@ -68,7 +68,7 @@ class upgrader_38 extends ProgramacionsCommonUpgrader {
                      [" UNITAT FORMATIVA \\{"," Unitat formativa {"],
                      ["PAF 1","PAF1"],
                      ["PAF 2","PAF2"],
-                     ["Només es podrà presentar a la PAF 2, l'alumnat que no s'hagi presentat a la PAF1, o que havent-s'hi presentat, no hagi superat la UF.","Només es poden presentar a la PAF2 els alumnes que no s'hagin presentat a la PAF1 o que, havent-s'hi presentat, no hagin superat la UF."]
+                     /*["Només es podrà presentar a la PAF 2, l'alumnat que no s'hagi presentat a la PAF1, o que havent-s'hi presentat, no hagi superat la UF.","Només es poden presentar a la PAF2 els alumnes que no s'hagin presentat a la PAF1 o que, havent-s'hi presentat, no hagin superat la UF."]*/
                      ];
 
                 
