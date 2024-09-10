@@ -14,6 +14,14 @@ class upgrader_13 extends CommonUpgrader {
     public function process($type, $ver, $filename = NULL) {
         switch ($type) {
             case "fields":
+                $dataProject = $this->model->getCurrentDataProject($this->metaDataSubSet);
+                if (!is_array($dataProject)){
+                    $dataProject = json_decode($dataProject, TRUE);
+                }
+                if(!isset($dataProject["nouCurr"])){
+                    $dataProject["nouCurr"]=false;
+                }
+                $status = $this->model->setDataProject(json_encode($dataProject), "Upgrade fields: version ".($ver-1)." to $ver", '{"fields":'.$ver.'}');
                 $status = TRUE;
                 break;
 
