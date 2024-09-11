@@ -667,16 +667,15 @@ Les qualificacions de RA dels mòduls que tenen associats RA d'estada a l'empres
 
 
 :###
-<WIOCCL:IF condition="{##nouCurr##}==false">
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
 <WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
 <WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
-La planificació establerta per a la UF{##itemUf[unitat formativa]##} és la següent (vegeu :table:T11-{##itemUf[unitat formativa]##}:):
+La planificació establerta per a la U<WIOCCL:IF condition="{##nouCurr##}==false">F</WIOCCL:IF>{##itemUf[unitat formativa]##} és la següent (vegeu :table:T11-{##itemUf[unitat formativa]##}:):
 ::table:T11-{##itemUf[unitat formativa]##}
-  :title:Planificació UF{##itemUf[unitat formativa]##}
+  :title:Planificació U<WIOCCL:IF condition="{##nouCurr##}==false">F</WIOCCL:IF>{##itemUf[unitat formativa]##}
   :footer: <sup>*</sup> Atenció: podeu mirar la data màxima de lliurament de les activitats qualificables a l'apartat de les dates clau.
   :type:pt_taula, pt_planif
-[^ UF{##itemUf[unitat formativa]##} ^  <WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[nom]")_#} ({#_FIRST({##filtered##}, "FIRST[hores]")_#} h)</WIOCCL:SUBSET>  ^
+[^ U<WIOCCL:IF condition="{##nouCurr##}==false">F</WIOCCL:IF>{##itemUf[unitat formativa]##} ^  <WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[nom]")_#} ({#_FIRST({##filtered##}, "FIRST[hores]")_#} h)</WIOCCL:SUBSET>  ^
 <WIOCCL:FOREACH  var="itemu" array="{##taulaDadesUnitats##}" filter="{##itemu[unitat formativa]##}=={##itemUf[unitat formativa]##}">
 ^  **Unitat {##itemu[unitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h)**  ^^
 <WIOCCL:FOREACH  var="item_per" array="{##calendari##}" filter="{##item_per[unitat]##}=={##itemu[unitat]##}">
@@ -695,38 +694,8 @@ La planificació establerta per a la UF{##itemUf[unitat formativa]##} és la seg
 </WIOCCL:FOREACH>
 </WIOCCL:SET>
 </WIOCCL:SET>
-</WIOCCL:IF>
-<WIOCCL:IF condition="{##nouCurr##}==true">
-<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
-<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
-<WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
-La planificació establerta per a la U{##itemUf[unitat formativa]##} és la següent (veure :table:T11-{##itemUf[unitat formativa]##}:):
-::table:T11-{##itemUf[unitat formativa]##}
-  :title:Planificació U{##itemUf[unitat formativa]##}
-  :footer: <sup>*</sup> Atenció: podeu mirar la data màxima de lliurament de les activitats qualificables a l'apartat de les dates clau.
-  :type:pt_taula, pt_planif
-<WIOCCL:FOREACH  var="itemu" array="{##taulaDadesUnitats##}" filter="{##itemu[unitat formativa]##}=={##itemUf[unitat formativa]##}">
-^  **Unitat {##itemu[unitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h)**  ^^
-<WIOCCL:FOREACH  var="item_per" array="{##calendari##}" filter="{##item_per[unitat]##}=={##itemu[unitat]##}">
-^**{#_UCFIRST(''{##item_per[tipus període]##}'')_#} {##item_per[període]##}: {##item_per[descripció període]##} ({##item_per[hores]##} h).     Activitats d'aprenentatge**  ^^
-| <WIOCCL:FOREACH  var="item_act" array="{##activitatsAprenentatge##}" filter="{##item_act[unitat]##}=={##item_per[unitat]##}&&{##item_act[període]##}=={##item_per[període]##}">- {##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||
-</WIOCCL:FOREACH>
-</WIOCCL:FOREACH>
-<WIOCCL:SUBSET  subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}&&{##itemsub[tipus qualificació]##}!=''PAF''">
-<WIOCCL:FOREACH  var="itemAval" array="{##filtered##}" counter="idItemAval">
-^ <WIOCCL:IF condition="{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[abreviació qualificació]##}: {##itemAval[descripció qualificació]##}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filtered##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
 
-</WIOCCL:FOREACH>
-</WIOCCL:SUBSET>
-:::
-
-</WIOCCL:FOREACH>
-</WIOCCL:SET>
-</WIOCCL:SET>
-</WIOCCL:IF>
 ###:
-
-
 
 
 
