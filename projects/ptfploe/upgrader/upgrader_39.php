@@ -59,8 +59,8 @@ class upgrader_39 extends ProgramacionsCommonUpgrader {
                 $l639_l639_v39 = $this->substringFromLineToLine($txt_v39, 639, 639);
                 $l559_l569_v38 =  $this->substringFromLineToLineAsPattern($txt_v38, 559, 569);
                 $l642_l664_v39 = $this->substringFromLineToLine($txt_v39, 642, 664);
-                $l573_l601_v38 =  $this->substringFromLineToLineAsPattern($txt_v38, 573, 601);
-                $l669_l727_v39 = $this->substringFromLineToLine($txt_v39, 669, 727);
+                $l577_l582_v38 =  $this->substringFromLineToLineAsPattern($txt_v38, 577, 582);
+                $l673_l678_v39 = $this->substringFromLineToLine($txt_v39, 673, 678); //727
                 $aTokRep = [
                     [$l76_l142_v38, $l76_l183_v39],
                     [$l310_l338_v38, $l351_l387_v39],
@@ -73,7 +73,7 @@ class upgrader_39 extends ProgramacionsCommonUpgrader {
                     [$l547_l553_v38, $l619_l636_v39],
                     [$l556_l556_v38, $l639_l639_v39],
                     [$l559_l569_v38, $l642_l664_v39],
-                    [$l573_l601_v38, $l669_l727_v39]
+                    [$l577_l582_v38, $l673_l678_v39]
                 ];
 
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
