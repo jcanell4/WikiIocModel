@@ -115,11 +115,11 @@
         },
         "coordinador": {
             "n_columns": 5,
-            "label": "Coordinador (coordinador)",
+            "label": "Coordinació (coordinador)",
             "group": "dadesBasiques",
             "props": {
                 "required": true,
-                "title": "Indiqueu el nom del coordinador"
+                "title": "Indiqueu coordinador/a"
             }
         },   
         "colaboradors": {

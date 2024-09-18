@@ -27,7 +27,7 @@
             "viewfiles": {"defaultView": "defaultView", "updateView": "updateView", "firstView": "firstView"},
             "versions": {
                 "fields": 0,
-                "templates": {"continguts": 0} 
+                "templates": {"continguts": 1} 
             },
             "mainType": {
                 "type": "object",
@@ -206,7 +206,7 @@
                         },
                         "coordinador": {
                             "type": "string",
-                            "default": "nom del coordinador",
+                            "default": "coordinació",
                             "mandatory": true
                         },                        
                         "colaboradors": {
@@ -287,7 +287,7 @@
                         },
                         "comSerasAvaluatCert": {
                             "type": "string",
-                            "default": "La prova està constituïda per tasques de comprensió oral, comprensió escrita, expressió i interacció escrita, expressió i interacció oral i ús de la llengua.",
+                            "default": "La prova està constituïda per tasques de comprensió oral, comprensió escrita, expressió i interacció escrita, expressió i interacció oral i mediació.",
                             "mandatory": false
                         },
                         "calendari": {
