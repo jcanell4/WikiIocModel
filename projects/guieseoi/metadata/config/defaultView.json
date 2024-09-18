@@ -139,12 +139,12 @@
             "type": "hidden"
         },
         "coordinador": {
-            "label": "Coordinador (coordinador)",
+            "label": "Coordinació",
             "n_columns": 3,
             "group": "main",
             "props": {
                 "required": true,
-                "title": "Indiqueu el nom del coordinador"
+                "title": "Indiqueu coordinador/a"
             }
         },
         "colaboradors": {
@@ -389,7 +389,7 @@
                                 
                     "tipusActivitat": {
                         "type": "select",
-                        "options": ["Assignments","Practice Tasks","Participació a Forum activities","Progress Test","Oral exam","Final test","Aufgaben","Forumstexte","Test Einheit","Möndliche Prüfung","Endtest","Prova oral","Prova final"]
+                        "options": ["Assignments","Practice Tasks","Participació a Forum activities","Progress Test","Oral exam","Final test","Aufgaben","Forumstexte","Test Einheit","Mündliche Prüfung","Endtest","Prova oral","Prova final"]
                     },
                     "activitat": {
                         "type": "string",

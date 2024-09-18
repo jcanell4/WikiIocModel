@@ -8,7 +8,7 @@ El mòdul {##modul##} és un mòdul {##durada##}.
 Està organitzat en {##numblocs##} blocs incloent un bloc introductori. 
 
 
-El coodinador del mòdul és {##coordinador##}.
+La coordinació és a càrrec de {##coordinador##}.
 
 Els continguts dels blocs són els següents:
 
@@ -28,7 +28,7 @@ Els continguts dels blocs són els següents:
 
 ###:
 
-:###====== Com seras avaluat en aquest mòdul? ======###:
+:###====== Com seràs avaluat en aquest mòdul? ======###:
 
 :###
 <WIOCCL:IF condition="false=={##isCert##}"> 
@@ -63,7 +63,7 @@ certificat de Nivell C1. És una prova presencial.
 certificat de Nivell C2. És una prova presencial. 
 </WIOCCL:IF>
     
-La prova està constituïda per tasques de comprensió oral, comprensió escrita, expressió i interacció escrita, expressió i interacció oral i ús de la llengua.
+La prova està constituïda per tasques de comprensió oral, comprensió escrita, expressió i interacció escrita, expressió i interacció oral i mediació.
     
 Cadascuna de les cinc parts que componen la prova tindrà una ponderació del 20% sobre el total de la puntuació de la prova.                
    
@@ -89,7 +89,7 @@ Per superar la prova de certificació cal obtenir un mínim del 65% de la puntua
 <WIOCCL:IF condition="false=={##isCert##}"> 
 
 
-:###====== Proves finals ======###:
+:###====== Proves ======###:
 
 :###======= Prova Oral =======###:
 
