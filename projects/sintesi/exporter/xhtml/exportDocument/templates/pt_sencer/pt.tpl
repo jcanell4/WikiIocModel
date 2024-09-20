@@ -1,6 +1,6 @@
 <WIOCCL:SET var="tipusModCred" type="map" value="{##tipusCicle##}" map="{''LOE'':''mòdul'',''LOGSE'':''crèdit''}">
 <!doctype html>
-<html lang="en">
+<html lang="ca">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
