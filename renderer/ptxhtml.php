@@ -17,7 +17,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     const UNEXISTENT_B_IOC_ELEMS_TYPE = -1;
     const REFERRED_B_IOC_ELEMS_TYPE = 0;
     const UNREFERRED_B_IOC_ELEMS_TYPE = 1;
-    
+
     var $doc = '';        // will contain the whole document
     var $toc = array();   // will contain the Table of Contents
     var $sectionedits = array(); // A stack of section edit data
@@ -31,7 +31,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     var $sectionElement = TRUE;
 
     private $lastsecid = 0; // last section edit id, used by startSectionEdit
-    
+
     var $tmpData=array();
 
     var $storeForElems = NULL;
@@ -39,13 +39,13 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     var $currentBIocElemsType = self::UNEXISTENT_B_IOC_ELEMS_TYPE;
     var $bIocElemsRefQueue = array();
     var $levelDiff=0;
-    
+
     public function __construct() {
         if(isset($_SESSION['sectionElement'])){
             $this->sectionElement=$_SESSION['sectionElement'];
         }
     }
-    
+
     /**
      * Esta función construye el renderer a partir de las parámetros de configuración recibidos
      * @param array $params
@@ -55,7 +55,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
     function reset(){
         $this->doc = '';
     }
-    
+
     /**
      * Register a new edit section range
      *
@@ -336,7 +336,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         // output the footnote reference and link
         $this->doc .= '<sup><a href="#fn__'.$fnid.'" id="fnt__'.$fnid.'" class="fn_top">'.$fnid.')</a></sup>';
     }
-    
+
     function listu_open() {
         $this->doc .= '<ul>'.DOKU_LF;
         $this->openForContentB("ul");
@@ -790,7 +790,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         resolve_mediaid(getNS($ID), $src, $exists);
 
         $render = ($linking == 'linkonly') ? false : true;
-        $link = $this->_getMediaLinkConf($src, $title, $align, $width, $height, $cache, $render);
+        $link = $this->_getMediaLinkConf($src, $ID, $title, $align, $width, $height, $cache, $render);
 
         $this->doc .= $link['name'];
     }
@@ -799,7 +799,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         list($src,$hash) = explode('#',$src,2);
         $noLink = false;
         $render = ($linking == 'linkonly') ? false : true;
-        $link = $this->_getMediaLinkConf($src, $title, $align, $width, $height, $cache, $render);
+        $link = $this->_getMediaLinkConf($src, "", $title, $align, $width, $height, $cache, $render);
 
         $link['url']    = ml($src,array('cache'=>$cache));
 
@@ -1015,7 +1015,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         $ret .= $link['suf'];
         return $ret;
     }
-    
+
     function _isMediaFile($src){
         $pos = strrpos((string)$src,':');
         $ret = $pos!==false;
@@ -1027,7 +1027,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
      * Renders internal and external media
      * @author Andreas Gohr <andi@splitbrain.org>
      */
-    function _media ($src, $title=null, $align=null, $width=null, $height=null, $cache=null, $render = true) {
+    function _media ($src, $parent_id="", $title=null, $align=null, $width=null, $height=null, $cache=null, $render = true) {
         $ret = '';
         //attach url media file
         if($this->_isMediaFile($src)){
@@ -1072,18 +1072,18 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 $ret .= '<div class="iocfigurec">'.DOKU_LF;
                 $ret .= '<ul>'.DOKU_LF;
                 $ret .= '<li>'.DOKU_LF;
-            }            
+            }
             //add image tag
             //versión anterior que eliminaba la wikiruta del archivo
             //$ret .= '<img src="img/'.basename(str_replace(':', '/', $src)).'"';
             $ret .= '<img src="img/'.str_replace(':', '/', $src).'"';
-            
+
             if ($icon || $_SESSION['figure'] || $_SESSION['iocelem'] || $this->table){
-                $ret .= ' class="media'.$align.'"';            
+                $ret .= ' class="media'.$align.'"';
             }else{
                 $ret .= ' class="imgB'.$align.'"';
             }
-            
+
               // make left/right alignment for no-CSS view work (feeds)
             if($align == 'right') $ret .= ' align="right"';
             if($align == 'left')  $ret .= ' align="left"';
@@ -1113,7 +1113,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 $ret .= ' height="'.$this->_xmlEntities($height).'"';
             //marjose end
             $ret .= ' />';
-            
+
             if ($_SESSION['figure']){
                 $ret .= '</figure>'.DOKU_LF;
             }elseif($_SESSION['iocelem']){
@@ -1157,23 +1157,24 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                 $filesize = ' ( '.filesize_h($filesize) .' )';
             }
             $filename = basename(str_replace(':', '/', $src));
+            $path = (!$parent_id || (getNS($src) != getNS($parent_id))) ? dirname(str_replace(':', '/', $src))."/" : "";
             // well at least we have a title to display
             if (!is_null($title) && !empty($title)) {
                 $titleAndNobreak = IocCommon::formatTitleExternalLink("file", "html", $title);
                 $title = $titleAndNobreak["title"];
-                $noBreak = $titleAndNobreak["nobreak"];        
+                $noBreak = $titleAndNobreak["nobreak"];
                 $title  = $this->_xmlEntities($title);
-                
+
             }else{
                 $title = $filename;
             }
-            $src = $path.'img/'.$filename;
+            $src = "$path$filename";
             if($noBreak){
-                $ret .= '<a class="media mediafile mf_'.$ext.'" href="'.$path.'media/'.basename(str_replace(':', '/', $src)).'">'.$title.'</a>';
+                $ret .= '<a class="media mediafile mf_'.$ext.'" href="media/'.$src.'">'.$title.'</a>';
             }else{
                 $ret .= '<div class="mediaf file'.$ext.'">';
                 $ret .= '<div class="mediacontent">';
-                $ret .= '<a href="'.$path.'img/'.basename(str_replace(':', '/', $src)).'">'.$title.'</a>'.
+                $ret .= '<a href="img/'.$src.'">'.$title.'</a>'.
                         '<span>'.$filesize.'</span>';
                 $ret .= '</div>';
                 $ret .= '</div>';
@@ -1264,7 +1265,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
      * @param string $src,$title,$align,$width,$height,$cache,$render
      * @return array
      */
-    function _getMediaLinkConf($src, $title, $align, $width, $height, $cache, $render) {
+    function _getMediaLinkConf($src, $parent_id, $title, $align, $width, $height, $cache, $render) {
         global $conf;
 
         $link = array();
@@ -1275,26 +1276,26 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         $link['more']   = '';
         $link['target'] = $conf['target']['media'];
         $link['title']  = $this->_xmlEntities($src);
-        $link['name']   = $this->_media($src, $title, $align, $width, $height, $cache, $render);
+        $link['name']   = $this->_media($src, $parent_id, $title, $align, $width, $height, $cache, $render);
 
         return $link;
     }
-    
+
     public function openForContentB($origin){
-        //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text, 
+        //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text,
         //ja que a la versió WEB No hi ha columna B. Per tal de renderitzar correctament la coluna B
         //al render XHTML i PDF, el seu contingut es troba sempre per sobre del paràgraf al que fa referècia.
         //És  necessari baixar-lo un paràgraf en aquest renderer.
         if(!isset($this->tmpData["origin"])){
             if($this->tmpData["renderIocElems"]){
                 $this->tmpData["renderDefaultIocElems"] = TRUE;
-            }        
+            }
             $this->tmpData["origin"] = $origin;
         }
     }
-    
+
     public function closeForContentB($origin){
-        //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text, 
+        //Permet la insercció dels iocElemns de la columna B en el següent contenidor de text,
         //ja que a la versió WEB No hi ha columna B. Per tal de renderitzar correctament la coluna B
         //al render XHTML i PDF, el seu contingut es troba sempre per sobre del paràgraf l que fa referècia.
         //És  necessari baixar-lo un paràgraf en aquest renderer.
@@ -1312,8 +1313,8 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
                     $this->doc.=$text;
                 }
                 $this->tmpData["renderIocElems"] = FALSE;
-                $this->tmpData["renderDefaultIocElems"]=FALSE;            
-            }    
+                $this->tmpData["renderDefaultIocElems"]=FALSE;
+            }
             unset($this->tmpData["origin"]);
         }
     }
@@ -1322,7 +1323,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         $this->storeForElems = $this->doc;
         if($clean)
             $this->doc = "";
-        
+
     }
 
     public function restoreCurrent($clean=FALSE){
