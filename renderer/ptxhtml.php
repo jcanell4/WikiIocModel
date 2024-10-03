@@ -1251,6 +1251,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         }
 
         return $this->_media($img['src'],
+                              $ID,
                               $img['title'],
                               $img['align'],
                               $img['width'],
