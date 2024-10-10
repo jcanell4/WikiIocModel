@@ -370,8 +370,11 @@
 (function(){
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''m&ograve;dul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">    
     var dataArray = [
+        
             [<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemUf[unitat formativa]##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[hores]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* Num. hores per cada UF */
+        
             [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[hores]##},</WIOCCL:FOREACH>], /* Num. hores per cada U */
+         
             [<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}"><WIOCCL:SUBSET subsetvar="filtered" array="{##taulaDadesUF##}" arrayitem="itemsub" filter="{##itemUf[unitat formativa]##}=={##itemsub[unitat formativa]##}">{#_FIRST({##filtered##}, "FIRST[unitat formativa]")_#},</WIOCCL:SUBSET></WIOCCL:FOREACH>], /* ID. de cada UF */
           <WIOCCL:IF condition="{##nouCurr##}==false">
             [<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">{##item[unitat]##},</WIOCCL:FOREACH>] /* ID de cada U */
@@ -397,7 +400,7 @@
     }
 
 
-
+<WIOCCL:IF condition="{##nouCurr##}==false">
     /* Creem fila total hores per U */
 
     var totalHoresUs = 0;
@@ -412,7 +415,7 @@
          var textCell = dataArray[1][i] + " h"
          createCell(rowDistribHoraria3, percentWidth, textCell);
     }
-
+ </WIOCCL:IF>
 
     /* Creem fila títols UFs*/
 
@@ -502,9 +505,9 @@
 </WIOCCL:IF>
         <div>
           <h4>{##item[eina]##}</h4>
-<WIOCCL:IF condition="{##item[tipus]##}!=''exercicis''">
-          <h3>{##item[opcionalitat]##} <WIOCCL:IF condition="{##item[puntuable]##}==true">(puntua a l'AC)</WIOCCL:IF></h3>
-</WIOCCL:IF>
+
+          <h3>{##item[opcionalitat]##} </h3>
+
         </div>
       </div>
 </WIOCCL:FOREACH>
