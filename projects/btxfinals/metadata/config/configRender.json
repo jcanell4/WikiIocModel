@@ -1,0 +1,23 @@
+{
+    "typesDefinition": {
+        "btxfinals": {
+            "render": {
+                "typeDef":"btxfinals",
+                "class": "exportDocument",
+                "fields": "ALL",
+                "extraFields": [
+                    {"name":"fitxercontinguts", "valueType":"page", "value":"continguts"},
+                    {"name":"pdfDocument", "valueType":"page", "value":"continguts"}
+                ]
+            },
+            "keys": {
+                "fitxercontinguts": {
+                    "render": {"class": "renderFile"}
+                },
+                "pdfDocument": {
+                    "render": {"class": "renderFileToPsDom"}
+                }
+            }
+        }
+    }
+}

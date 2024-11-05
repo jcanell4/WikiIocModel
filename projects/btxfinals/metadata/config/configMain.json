@@ -1,0 +1,168 @@
+{
+    "metaDataSubsetsList": [
+        "main"
+    ],
+    "metaDataComponentTypes": [
+        {
+            "main": {
+                "documents": false,
+                "folders": false
+            }
+        }
+    ],
+    "metaDataProjectConfig": [
+        {
+            "main": {
+                "projectTypeConfigFile": "admconfig:btxfinals"
+            }
+        }        
+    ],
+    "metaDataFtpSender": [
+        {
+            "main": {
+                "files": {
+                    "fbatx": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"},
+                    "jsonRep": {"local":"mediadir", "type":"json", "action":[0], "remoteDir": "replacedata/", "ftpId": "replace_data_fp_pt"}
+                },
+                "ftpId": "pla_treball"
+            }
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+            "viewfiles": {"defaultView": "defaultView"},
+            "versions": {
+                "fields": 0
+            },
+            "mainType": {
+                "type": "object",
+                "typeDef": "btxfinals"
+            },
+            "typesDefinition": {
+                "entradaCentres": {
+                    "type":"object",
+                    "keys": {
+                        "població": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "indiqueu la població del centre"
+                        },
+                        "centre": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "indiqueu el nom del centre"
+                        },
+                        "adreça": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "indiqueu l'adreça del centre"
+                        },
+                        "hora_data1": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "00:00"
+                        },
+                        "hora_data2": {
+                            "type": "string",
+                            "default": "00:00"
+                        },
+                        "hora_data3": {
+                            "type": "string",
+                            "default": "00:00"
+                        }
+                    }                    
+                },
+                "defCentres": {
+                    "type": "objectArray",
+                    "typeDef":"entradaCentres"
+                },                                                
+                "llistaNomsReals": {
+                    "type":"object",
+                    "keys": {
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": ""
+                        }
+                    }
+                },
+                "defNomsReals": {
+                    "type": "objectArray",
+                    "typeDef": "llistaNomsReals"
+                },
+                "btxfinals": {
+                    "type": "object",
+                    "keys": {
+                        "titol": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Convocatòria ordinària"
+                        },
+                        "subtitol": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Horaris i centres d'exàmens presencials"
+                        },
+                        "quadrimestre": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 1
+                        },
+                        "estil": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "main"
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "isRole":true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true
+                        },                                                
+                        "dadesCentres": {
+                            "type": "defCentres",
+                            "mandatory": true
+                        },
+                        "data1": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"01/01/2000"
+                        },
+                        "activaData2": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },                                                
+                        "data2": {
+                            "type": "date",
+                            "default":"01/01/2000"
+                        },
+                        "activaData3": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },                                                
+                        "data3": {
+                            "type": "date",
+                            "default":"01/01/2000"
+                        },
+                        "nom_real": {
+                            "type": "defNomsReals",
+                            "mandatory": true,
+                            "calculateOnSave": {
+                                "class": "CalculateRealNameFromUsername",
+                                "data": "autor"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

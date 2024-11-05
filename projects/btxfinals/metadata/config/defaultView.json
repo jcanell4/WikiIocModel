@@ -1,0 +1,238 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10,
+        "rows_row": 1
+    },
+    "groups": {
+        "main": {
+            "parent": "",
+            "label": "Dades bàsiques",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":false,
+                "collapsed":false
+            }
+        },
+        "centres": {
+            "parent": "",
+            "label": "Dades centres",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },
+        "authorship": {
+            "parent": "",
+            "label": "Dades d'autoria",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":true
+            }
+        }
+    },
+    "fields": {
+        "titol":{
+            "n_columns": 6,
+            "label": "Títol de les Proves finals de Batxillerat",
+            "group": "main",
+            "props": {
+                "required": true,
+                "title" : "indiqueu el títol de les Proves finals de Batxillerat."
+            }
+        },
+        "subtitol": {
+            "label" : "Subtítol del Proves finals de Batxillerat",
+            "n_columns": 6,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "indiqueu el subtítol del Proves finals de Batxillerat"
+            }
+        },
+        "quadrimestre":{
+            "label" : "quadrimestre",
+            "n_columns": 4,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "Indiqueu el quadrimestre corresponent"
+            }
+        },
+        "estil":{
+            "type":"select",
+            "n_columns": 4,
+            "label": "Estil",
+            "group": "main",
+            "props": {
+                "required": true,
+                "title" : "indiqueu l'estil a aplicar."
+            },
+            "config":{
+                "options":[
+                    {"description":"estil normal", "value":"main"},
+                    {"description":"estil blau", "value":"blue"}
+                ]
+            }
+        },
+        "data1":{
+            "label" : "data1",
+            "n_columns": 3,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "Indiqueu la primera data"
+            }
+        },
+        "activaData2": {
+            "label": "Activa Data2",
+            "n_columns": 3,
+            "group": "main",
+            "type": "checkbox",
+            "props": {
+                "title": "Activa data2"
+            }
+        },
+        "data2":{
+            "label" : "data2",
+            "n_columns": 3,
+            "group": "main",
+            "props": {
+                "title": "Indiqueu la segona data"
+            }
+        },
+        "activaData3": {
+            "label": "Activa Data3",
+            "n_columns": 3,
+            "group": "main",
+            "type": "checkbox",
+            "props": {
+                "title": "Activa data3"
+            }
+        },
+        "data3":{
+            "label" : "data3",
+            "n_columns": 3,
+            "group": "main",
+            "props": {
+                "title": "Indiqueu la tercera data"
+            }
+        },
+
+        "dadesCentres": {
+            "n_columns": 12,
+            "group": "centres",
+            "n_rows": 4,
+            "type": "editableObject",
+            "props": {
+                "data-editable-element": "table"
+            },
+            "config": {
+                "actions": {
+                    "add_default_row": "Afegir un nou centre",
+                    "remove_rows": "Eliminar els centres seleccionats"
+                },
+                "fields": {
+                    "població": {
+                        "type": "string"
+                    },
+                    "centre": {
+                        "type": "string"
+                    },
+                    "adreça": {
+                        "type": "string"
+                    },
+                    "hora_data1": {
+                        "type": "string"
+                    },
+                    "hora_data2": {
+                        "type": "string"
+                    },
+                    "hora_data3": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "responsable": {
+            "type" : "amd",
+            "label": "Responsable de la creació (responsable)",
+            "n_columns": 6,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class" : {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "responsable",
+                    "dialogTitle" : "Cercar responsable",
+                    "dialogButtonLabel" : "Afegir responsable",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "autor": {
+            "type": "amd",
+            "label": "Autor (autor)",
+            "n_columns": 6,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class" : {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "autor",
+                    "dialogTitle" : "Cercar autor",
+                    "dialogButtonLabel" : "Afegir autor",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "nom_real": {
+            "type" : "hidden"
+        }
+    }
+}
