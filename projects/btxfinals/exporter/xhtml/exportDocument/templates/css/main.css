@@ -276,7 +276,7 @@ section p{
 
 /* Header*/
 .main_header {
-    background-color: #be176b;
+    background-color: #6e6ca2; //#be176b;
     padding-bottom: 10px;
 }
  
@@ -362,7 +362,7 @@ section p{
 
 .pt_taula th {
     color: #ffffff;
-    background-color: #BE176B;
+    background-color: #6e6ca2; //#be176b;
     text-transform: uppercase;
     font-size: 11px !important;
     font-weight: 700 !important;
@@ -392,7 +392,7 @@ section p{
 }
 
 .pt_taula th.nivell1 {
-    background-color: #BE176B;
+    background-color: #6e6ca2; //#be176b;
 }
 
 .pt_taula th.nivell2 {
@@ -440,7 +440,7 @@ div.footfigure {
     box-sizing: border-box;
     border-radius: 3px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
-    background-color: #be176b;
+    background-color: #6e6ca2; //#be176b;
     width: 200px;
     margin: 32px auto 46px auto;
     cursor: pointer;
