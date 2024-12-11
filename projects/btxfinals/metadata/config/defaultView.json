@@ -42,12 +42,20 @@
     },
     "fields": {
         "titol":{
-            "n_columns": 6,
+            "type":"select",
+            "n_columns": 4,
             "label": "Títol de les Proves finals de Batxillerat",
             "group": "main",
             "props": {
                 "required": true,
                 "title" : "indiqueu el títol de les Proves finals de Batxillerat."
+            },
+             "config":{
+                "options":[
+                    {"description":"ordinària", "value":"ordinària"},
+                    {"description":"recuperació", "value":"recuperació"},
+                    {"description":"extraordinària", "value":"extraordinària"}
+                ]
             }
         },
         "subtitol": {
@@ -61,32 +69,43 @@
         },
         "quadrimestre":{
             "label" : "quadrimestre",
-            "n_columns": 4,
+            "n_columns": 2,
             "group": "main",
             "props": {
                 "required": true,
                 "title": "Indiqueu el quadrimestre corresponent"
             }
         },
-        "estil":{
-            "type":"select",
-            "n_columns": 4,
-            "label": "Estil",
+        "curs": {
+            "label" : "Curs",
+            "n_columns": 2,
             "group": "main",
             "props": {
                 "required": true,
-                "title" : "indiqueu l'estil a aplicar."
-            },
-            "config":{
-                "options":[
-                    {"description":"estil normal", "value":"main"},
-                    {"description":"estil blau", "value":"blue"}
-                ]
+                "title": "indiqueu el curs"
+            }
+        },
+        "dadesProves":{
+            "label" : "dadesProves",
+            "n_columns": 6,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "Dades de les proves"
+            }
+        },
+        "labelData1":{
+            "label" : "Desc. data1",
+            "n_columns": 6,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "descripció de la primera data"
             }
         },
         "data1":{
             "label" : "data1",
-            "n_columns": 3,
+            "n_columns": 6,
             "group": "main",
             "props": {
                 "required": true,
@@ -94,34 +113,52 @@
             }
         },
         "activaData2": {
-            "label": "Activa Data2",
-            "n_columns": 3,
+            "label": "Activa data2",
+            "n_columns": 4,
             "group": "main",
             "type": "checkbox",
             "props": {
                 "title": "Activa data2"
             }
         },
+        "labelData2":{
+            "label" : "Desc. data2",
+            "n_columns": 4,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "descripció de la segona data"
+            }
+        },
         "data2":{
             "label" : "data2",
-            "n_columns": 3,
+            "n_columns": 4,
             "group": "main",
             "props": {
                 "title": "Indiqueu la segona data"
             }
         },
         "activaData3": {
-            "label": "Activa Data3",
-            "n_columns": 3,
+            "label": "Activa data3",
+            "n_columns": 4,
             "group": "main",
             "type": "checkbox",
             "props": {
                 "title": "Activa data3"
             }
         },
+        "labelData3":{
+            "label" : "Desc. data3",
+            "n_columns": 4,
+            "group": "main",
+            "props": {
+                "required": true,
+                "title": "descripció de la tercera data"
+            }
+        },
         "data3":{
             "label" : "data3",
-            "n_columns": 3,
+            "n_columns": 4,
             "group": "main",
             "props": {
                 "title": "Indiqueu la tercera data"
@@ -232,6 +269,9 @@
             }
         },
         "nom_real": {
+            "type" : "hidden"
+        },
+        "estil": {
             "type" : "hidden"
         }
     }

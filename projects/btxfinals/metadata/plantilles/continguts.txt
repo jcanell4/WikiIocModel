@@ -1,6 +1,12 @@
 :###
 ~~USE:WIOCCL~~
-====== Horaris i centres d'exàmens presencials ======
+====== BATXILLERAT ======
+**Convocatòria {##titol##} ** 
+
+**Quatrimestre {##quadrimestre##} ({##curs##}) **
+
+**{##subtitol##}**
+
 
 
 ###:
@@ -9,12 +15,12 @@
 
 **Dia i hora d'examen:** Al quadre següent trobareu el dia i hora d'examen de cada institut.
 
-**Matèries:** Els exàmens presencials són per les matèries comunes de 2n curs.
+**Matèries:** {##dadesProves##}
 
 ::table:T01
   :title:Centres on es fan els exàmens
   :type:pt_taula
-^  Població  ^  Centre  ^  Adreça  ^{#_DATE("{##data1##}")_#}<WIOCCL:IF condition="{##activaData2##}==true">^{#_DATE("{##data2##}")_#} </WIOCCL:IF><WIOCCL:IF condition="{##activaData3##}==true">^{#_DATE("{##data3##}")_#} </WIOCCL:IF>^ 
+^  Població  ^  Centre  ^  Adreça  ^{#_DATE("{##data1##}")_#}//{##labelData1##}<WIOCCL:IF condition="{##activaData2##}==true">^{#_DATE("{##data2##}")_#}{##labelData2##}</WIOCCL:IF><WIOCCL:IF condition="{##activaData3##}==true">^{#_DATE("{##data3##}")_#}{##labelData3##}</WIOCCL:IF>^ 
 <WIOCCL:FOREACH var="item" array="{##dadesCentres##}">
 | {##item[població]##} | {##item[centre]##}  | {##item[adreça]##} | {##item[hora_data1]##}  <WIOCCL:IF condition="{##activaData2##}==true">| {##item[hora_data2]##}  </WIOCCL:IF><WIOCCL:IF condition="{##activaData3##}==true">| {##item[hora_data3]##} </WIOCCL:IF>|
 </WIOCCL:FOREACH>
