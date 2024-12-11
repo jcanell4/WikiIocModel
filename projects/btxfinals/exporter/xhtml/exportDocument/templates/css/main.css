@@ -228,7 +228,7 @@ p.llegenda {
 }
 
 table {
-    margin-left: auto;
+    margin-left: 0; //auto;
     margin-right: auto;
     border-collapse: collapse;
     border-spacing: 0;
@@ -272,12 +272,115 @@ table .inline td {
 
 section p{
     text-align: justify;
+    font-size: 16px;
 }
+/* Section 5 */
+
+.section5 {
+  margin: 34px 0 56px 0;
+}
+
+.section5 .own_table {
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn’t shrink table content */
+
+}
+
+.section5 .container {
+    max-width: 92%; /* Container will occupy full width of screen on larger displays */
+}
+
+.section5 h2 {
+  font-size: 19px;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 42px;
+}
+
+.section5 .own_table th {
+  height: 40px;
+  width: 145px;
+  background-color: #6e6ca2; //#be176b;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: bold;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.section5 .own_table td {
+  height: 40px;
+  width: 145px;
+  background-color: #d1cde8; //#f9c9e1;
+  font-size: 13px;
+  color: #3c3a57; //#6e6ca2; //#be176b;
+  text-align: center;
+}
+
+.section5 .own_table th[rowspan] {
+  width: 65px;
+  font-size: 12px;
+}
+
+/* Specify the expanding width for "Adreça" column */
+.section5 .own_table th:nth-child(3), 
+.section5 .own_table td:nth-child(3) {
+    width: auto; /* Allows "Adreça" column to take up remaining space */
+    max-width: 100%; /* Ensures it can grow to fit */
+    text-align: left; /* Aligns the content to the left */
+}
+
+/* Top white row for the logo */
+.top_row {
+    background-color: white;
+    padding: 10px 20px; /* Adjust spacing */
+    display: flex;
+    justify-content: flex-end; /* Aligns the logo to the right */
+    align-items: center;
+    border-bottom: 1px solid #ddd; /* Optional: Add a separator */
+}
+
+
+/* Logo size adjustments */
+.ioc-logo {
+    width: 120px; /* Default size for small screens */
+    height: auto;
+}
+
+/*
+.ioc-logo {
+    position: absolute;
+    top: 20px; 
+    right: 20px; 
+    width: 100px; 
+    height: auto; 
+}*/
+
+/* Purple header */
+.purple_header {
+    background-color: #6e6ca2; /* Purple background */
+    color: white;
+    text-align: left;
+    padding: 20px;
+    line-height: 1.2; /* Tight line spacing */
+    padding-top: 10px; /* Reduce padding at the top */
+    padding-bottom: 20px; /* Keep enough padding for spacing below */
+}
+
+.purple_header h1 {
+    margin-top: 0; /* Remove unnecessary margin */
+    margin-bottom: 10px; /* Optional: Add a small space below the title */
+}
+.purple_header h2 {
+    margin: 5px 0; /* Consistent spacing between titles */
+}
+
 
 /* Header*/
 .main_header {
-    background-color: #be176b;
-    padding-bottom: 10px;
+    background-color: #6e6ca2; //#be176b;
+    padding: 0 0px 10px 0px;
+    position: relative; /* Ensures the logo positions itself relative to the header */
 }
  
 .main_header h1 {
@@ -287,14 +390,18 @@ section p{
     margin: 0;
     padding-top: 40px;
     color: #ffffff;
+    margin-bottom: 5px; /* Reduce space below the first line */
 }
 
 .main_header h2 {
-    font-size: 17px;
+    font-size: 16px;
     font-weight: bold;
     font-style: normal;
     margin: 0;
-    padding-top: 30px;
+    margin-top: 0px; /* Reduce space above the second line */
+    margin-bottom: 2px; /* Reduce space below the second line */
+    line-height: 1.2; /* Adjust line spacing */
+    padding-top:  10px; /*30px;*/
     color: #ffffff;
 }
 
@@ -303,8 +410,13 @@ section p{
     font-weight: bold;
     font-style: normal;
     margin: 0;
-    padding-top: 8px;
+    margin-top: 2px; /* Ensure spacing is consistent */
+    padding-top: 0px;
     color: #ffffff;
+}
+
+.main_header .container {
+    line-height: 1.2; /* Consistent spacing for all text */
 }
 
 .separador_impr {
@@ -345,15 +457,17 @@ section p{
 /* Contingut */
 
 .container:not(:first-child) h1 {
-    margin-top: 43px;
+    margin-top: 0px;
     margin-bottom: 19px;
-    font-size: 22px;
+    font-size: 24px;
 }
 
 .container:not(:first-child) h2 {
     opacity: .7;
 }
-
+.container h2:first-of-type {
+    opacity: 1; /* Ensure full opacity for the first h2 in every .container */
+}
 .pt_taula {
     width: 100%;
     margin: 18px auto 38px auto;
@@ -362,7 +476,7 @@ section p{
 
 .pt_taula th {
     color: #ffffff;
-    background-color: #BE176B;
+    background-color: #6e6ca2; //#be176b;
     text-transform: uppercase;
     font-size: 11px !important;
     font-weight: 700 !important;
@@ -392,7 +506,7 @@ section p{
 }
 
 .pt_taula th.nivell1 {
-    background-color: #BE176B;
+    background-color: #6e6ca2; //#be176b;
 }
 
 .pt_taula th.nivell2 {
@@ -440,7 +554,7 @@ div.footfigure {
     box-sizing: border-box;
     border-radius: 3px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
-    background-color: #be176b;
+    background-color: #6e6ca2; //#be176b;
     width: 200px;
     margin: 32px auto 46px auto;
     cursor: pointer;
@@ -468,8 +582,10 @@ div.footfigure {
 @media (min-width: 576px) { 
 
     .container {
-        max-width: 520px;
+        /* max-width: 520px; */
+        width: 100%;
         margin: 0 auto;
+        padding: 0 10px; /* Adds space on both sides of the container */
     }
 
     p, a, li {
@@ -519,7 +635,7 @@ div.footfigure {
     
     .main_header h2 {
         font-size: 24px;
-        padding-top: 40px;
+        padding-top: 10px;
     }
     
     .main_header h2:last-of-type {
@@ -572,34 +688,52 @@ div.footfigure {
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) { 
-
     p, a, li {
         font-size: 18px;
     }
 
     .container:not(:first-child) h1 {
-        margin-top: 56px;
-        margin-bottom: 26px;
-        font-size: 30px;
+        margin-top: 0px;
+        margin-bottom: 2px;
+        font-size: 38px;
+
+    }
+    .container{
+        padding: 0 10px; /* Adds space on both sides of the container */
+        max-width: 100%; /* Ensures full width minus padding */
+        margin: 0 auto;
+        margin-left: 40px; /* Match the header alignment AQUI */
     }
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) { 
     .container {
-        max-width: 610px;
+        max-width: 90%; /* Ensures full width minus padding */
         margin: 0 auto;
+        margin-left: 60px; /* Match the header alignment AQUI */
+        padding: 0 10px; /* Adds space on both sides of the container */
     }
 
 }
 
-/* Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) { 
-    .container {
-        max-width: 1000px;
-        margin: 0 auto;
-    }
 
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .main_header .container,
+    .section5 .container {
+        max-width: 90%; /* Adjust to fit your design */
+        margin: 0 auto; /* Center the content */
+        margin-left: 100px; /* Match the header alignment AQUI */
+        padding: 0 20px; /* Ensure consistent spacing */
+    }
+}
+
+@media (min-width: 1500px) {
+    .main_header .container,
+    .section5 .container {
+        max-width: 80%; /* Narrower content for readability */
+    }
 }
 
 @page {
@@ -684,7 +818,7 @@ div.footfigure {
         font-weight: bold;
         font-style: normal;
         margin: 0;
-        padding-top: 30px;
+        padding-top: 10px;
         color: #ffffff;
     }
     

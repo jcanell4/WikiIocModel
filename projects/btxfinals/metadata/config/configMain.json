@@ -97,7 +97,7 @@
                         "titol": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "Convocatòria ordinària"
+                            "default": "ordinària"
                         },
                         "subtitol": {
                             "type": "string",
@@ -108,6 +108,16 @@
                             "type": "number",
                             "mandatory": true,
                             "default": 1
+                        },
+                        "curs": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "2024-2025"
+                        },
+                        "dadesProves": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Els exàmens presencials són de les matèries comunes de 2n curs."
                         },
                         "estil": {
                             "type": "string",
@@ -129,6 +139,12 @@
                             "type": "defCentres",
                             "mandatory": true
                         },
+                        "labelData1": {
+                            "type": "string",
+                            "struc_chars": "30",
+                            "mandatory": true,
+                            "default":""
+                        },
                         "data1": {
                             "type": "date",
                             "mandatory": true,
@@ -138,10 +154,22 @@
                             "type": "boolean",
                             "mandatory": false,
                             "default":false
+                        },
+                        "labelData2": {
+                            "type": "string",
+                            "struc_chars": "30",
+                            "mandatory": true,
+                            "default":""
                         },                                                
                         "data2": {
                             "type": "date",
                             "default":"01/01/2000"
+                        },
+                        "labelData3": {
+                            "type": "string",
+                            "struc_chars": "30",
+                            "mandatory": true,
+                            "default":""
                         },
                         "activaData3": {
                             "type": "boolean",
