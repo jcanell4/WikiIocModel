@@ -1,0 +1,326 @@
+{
+    "metaDataSubsetsList": [
+        "main"
+    ],
+    "metaDataProjectConfig": [
+        {
+            "main": {
+                "projectTypeConfigFile": "admconfig:guieseoianual"
+            }
+        }        
+    ],
+    "metaDataFtpSender": [
+        {
+            "main": {
+                "files": {
+                    "Feoi1": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"},
+                    "jsonRep": {"local":"mediadir", "type":"json", "action":[0], "remoteDir": "replacedata/", "ftpId": "replace_data_fp_pt"}
+                },
+                "ftpId": "guies_eoianual"
+            }
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+            "viewfiles": {"defaultView": "defaultView", "updateView": "updateView", "firstView": "firstView"},
+            "versions": {
+                "fields": 0,
+                "templates": {"continguts": 0} 
+            },
+            "mainType": {
+                "type": "object",
+                "typeDef": "dadesguieseoianual"
+            },
+            "typesDefinition": {
+                "entradaAvaluacioNoCert": {
+                    "type":"object",
+                    "keys": {
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Tipus de tasca"
+                        },
+                        "ponderacio": {
+                            "type": "decimal",
+                            "constraints": "{\"places\":2}",
+                            "mandatory": true
+                        }
+                    }                    
+                },
+                "defAvaluacioNoCert": {
+                    "type": "objectArray",
+                    "typeDef":"entradaAvaluacioNoCert"
+                },                
+                "entradaCalendariNoCert": {
+                    "type": "object",
+                    "keys": {
+                        "bloc": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "tipusActivitat": {
+                            "type": "string",
+                            "default": "tipus d'activitat",
+                            "mandatory": true
+                        },
+                        "activitat": {
+                            "type": "string",
+                            "default": "nom de l'activitat",
+                            "mandatory": true
+                        },
+                        "dataLliurament": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },                 
+                        "dataQualificacio": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "ponderacioNota": {
+                            "type": "number",
+                            "default": "0",
+                            "mandatory": true
+                        }
+                        
+                    }
+                },
+                "defCalendariNoCert": {
+                    "type": "objectArray",
+                    "typeDef":"entradaCalendariNoCert"
+                },                                                
+                "entradaDadesBlocs": {
+                    "type": "object",
+                    "keys": {
+                        "id": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "inici": {
+                            "type": "date",
+                            "mandatory": true
+                        },
+                        "final": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "nom del bloc"
+                        }
+
+                    }
+                },
+                "defTaulaDadesBlocs": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDadesBlocs"
+                },                                                
+                "dadesguieseoianual": {
+                    "type": "object",
+                    "keys": {
+                        "semestre": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default":1
+                        },
+                        "codi_modul": {
+                            "type": "string",
+                            "default": "ANG_1B1",
+                            "mandatory": true
+                        },
+                        "modul": {
+                            "type": "string",
+                            "default": "Anglès",
+                            "mandatory": true
+                        },
+                        "isCert":{
+                            "type":"boolean",
+                            "mandatory": true,
+                            "default": false
+                        },
+                        "durada":{
+                            "type":"string",
+                            "mandatory": true,
+                            "default":"semestral"
+                        },
+                        "dedicacio": {
+                            "type": "number",
+                            "default": 70,
+                            "mandatory": true,
+                            "calculateOnSave": {
+                                "class": "CalculateConditionalValue",
+                                "data":{ 
+                                    "condition":{
+                                        "_type_":"operation",
+                                         "values":[
+                                            {
+                                                "_type_":"field",
+                                                "name":"durada",
+                                                "values":"$values"
+                                            },
+                                            "semestral"
+                                        ],
+                                        "operation":"=="
+                                    },
+                                    "valueIfTrue":70,
+                                    "valueIfFalse":140      
+                                }       
+                            },
+                            "props": {
+                                "readonly": true          
+                            }                    
+                        }, 
+                        "numblocs": {
+                            "type": "number",
+                            "default": 6,
+                            "viewType":"hidden",
+                            "mandatory": true,
+                            "calculateOnSave": {
+                                "class": "CalculateConditionalValue",
+                                "data":{ 
+                                    "condition":{
+                                        "_type_":"operation",
+                                         "values":[
+                                            {
+                                                "_type_":"field",
+                                                "name":"durada",
+                                                "values":"$values"
+                                            },
+                                            "semestral"
+                                        ],
+                                        "operation":"=="
+                                    },
+                                    "valueIfTrue":6,
+                                    "valueIfFalse":10      
+                                }       
+                            },
+                            "props": {
+                                "readonly": true          
+                            }                    
+                        },                         
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "coordinador": {
+                            "type": "string",
+                            "default": "nom del coordinador",
+                            "mandatory": true
+                        },
+                        "moodleCourseId": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 0
+                        },
+                        "dataPaf11": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"01/01/2000"
+                        },   
+                        "dataCertA2": {
+                            "type": "date",
+                            "mandatory": false,
+                            "default":"01/01/2000"
+                        },
+                        "dataCertB1": {
+                            "type": "date",
+                            "mandatory": false,
+                            "default":"01/01/2000"
+                        },
+                        "dataCertB2": {
+                            "type": "date",
+                            "mandatory": false,
+                            "default":"01/01/2000"
+                        },
+                        "dataCertC1": {
+                            "type": "date",
+                            "mandatory": false,
+                            "default":"01/01/2000"
+                        },
+                        "dataCertC2": {
+                            "type": "date",
+                            "mandatory": false,
+                            "default":"01/01/2000"
+                        },
+                        "dataCert": {
+                            "type": "date",
+                            "mandatory": false,
+                            "default":"01/01/2000"
+                        },
+                        "dadesBlocs": {
+                            "type": "defTaulaDadesBlocs",
+                            "default":[
+                                {"id":"Bloc 0","inici":"01/01/2000","final":"","nom":"nom del bloc"},
+                                {"id":"Bloc 1","inici":"01/01/2000","final":"","nom":"nom del bloc"},
+                                {"id":"Bloc 2","inici":"01/01/2000","final":"","nom":"nom del bloc"},
+                                {"id":"Bloc 3","inici":"01/01/2000","final":"","nom":"nom del bloc"},
+                                {"id":"Bloc 4","inici":"01/01/2000","final":"","nom":"nom del bloc"},
+                                {"id":"Bloc 5","inici":"01/01/2000","final":"","nom":"nom del bloc"},
+                                {"id":"Bloc 6","inici":"01/01/2000","final":"","nom":"nom del bloc"}
+                            ],
+                            "mandatory": false
+                        },
+                        "notaMinima": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 65
+                        },
+                        "comSerasAvaluatNoCert": {
+                            "type": "defAvaluacioNoCert",
+                            "default":[
+                                {"nom":"Tests dels blocs","ponderacio":"20"},
+                                {"nom":"Lliuraments","ponderacio":"20"},   
+                                {"nom":"Aportacions al fòrum","ponderacio":"20"},   
+                                {"nom":"Portfoli","ponderacio":"10"},          
+                                {"nom":"Prova final de mòdul","ponderacio":"10"}
+                            ],
+                            "mandatory": false
+                        },
+                        "comSerasAvaluatCert": {
+                            "type": "string",
+                            "default": "Per mòduls amb certificació, l'avaluació es concreta en aquesta prova de certificació. És una prova que ...",
+                            "mandatory": false
+                        },
+                        "calendariNoCert": {
+                            "type": "defCalendariNoCert",
+                            "default":[
+                                {"bloc":"1","tipusActivitat":"lectura","activitat":"Nom de l'activitata","dataLliurament":"","dataQualificacio":"","ponderacioNota":"10"}
+                            ],
+                            "mandatory": true
+                
+                        },
+                        "nivell": {
+                            "type": "string",
+                            "mandatory": false,
+                            "default":"Indiqueu A2, B1, B2, C1 O C2"
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "isRole":true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true
+                        },
+                        "dataFromMix":{
+                            "type":"boolean",
+                            "viewType":"hidden",
+                            "mandatory": false,
+                            "default":false
+                        }
+                    }
+                }
+            } 
+        }
+    ]
+}
+

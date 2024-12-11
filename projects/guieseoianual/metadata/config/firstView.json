@@ -1,0 +1,257 @@
+{
+    "definition": {
+        "n_columns": 12,
+        "n_rows": 10,
+        "chars_column": 10,
+        "rows_row": 1
+    },
+    "groups": {
+        "authorship": {
+            "parent": "",
+            "label": "Autoria",
+            "n_columns": 12,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        },        
+        "dadesBasiques": {
+            "parent": "",
+            "label":"Dades bàsiques",
+            "n_columns": 12,
+            "n_rows": 1,
+            "frame": true,
+            "config":{
+                "collapsable":true,
+                "collapsed":false
+            }
+        }
+    },
+    "fields": {
+        "codi_modul": {
+            "label": "Codi (codi_modul)",
+            "n_columns": 3,
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "indiqueu el codi del mòdul"
+            }
+        },
+        "modul": {
+            "type":"select",
+            "n_columns": 2,
+            "label": "Mòdul (modul)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "indiqueu el nom del mòdul."
+            },
+            "config":{
+                "options":[
+                    {"value":"Alemany"},
+                    {"value":"Anglès"},
+                    {"value":"Català"}
+                ]
+            }
+        },
+        "moodleCourseId": {
+            "type": "hidden"
+        },
+        "durada": {
+            "type":"select",
+            "n_columns": 2,
+            "label": "Durada (durada)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "Trieu si és semestral o anual"
+            },
+            "config":{
+                "options":[
+                    {"value":"semestral"},
+                    {"value":"anual"}
+                ]
+            }
+        },        
+        "nivellcurs": {
+            "type":"select",
+            "n_columns": 2,
+            "label": "Nivell (nivellcurs)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "Trieu el nivell"
+            },
+            "config":{
+                "options":[
+                    {"value":"A1.1 (1A)"},
+                    {"value":"A1.2 (1B)"},
+                    {"value":"A2.1 (2A)"},
+                    {"value":"A2.2 (2B)"},
+                    {"value":"B1.1 (3A)"},
+                    {"value":"B1.2 (3B)"},
+                    {"value":"B2.1a (4A)"},
+                    {"value":"B2.1b (4B)"},
+                    {"value":"B2.2a (5A)"},
+                    {"value":"B2.2b (5B)"},
+                    {"value":"C1"},
+                    {"value":"C2"}
+                ]
+            }
+        },
+        "duradaHores": {
+            "type": "hidden"
+        },
+        "isCert": {
+            "type":"checkbox",
+            "label": "(isCert)",
+            "n_columns": 3,
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "És Certificat"
+            }
+        },
+        "coordinador": {
+            "n_columns": 5,
+            "label": "Coordinació (coordinador)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "Indiqueu coordinador/a"
+            }
+        },   
+        "colaboradors": {
+            "n_columns": 5,
+            "label": "Colaboradors (colaboradors)",
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "Si n'hi ha, indiqueu el nom dels col·laboradors."
+            }
+        },        
+        "descripcioConversa": {
+            "type": "hidden"
+        },
+        "dadesBlocs": {
+            "type": "hidden"
+        },        
+        "notaMinima": {
+            "label": "Nota mínima (notaMinima)",
+            "n_columns":2,
+            "group": "dadesBasiques",
+            "props": {
+                "required": true,
+                "title": "Indiqueu la nota mínima que cal treure"
+            }
+        },
+        "comSerasAvaluatNoCert": {
+            "type": "hidden"
+        },         
+        "comSerasAvaluatCert": {
+            "type": "hidden"
+        },
+        "calendari": {
+            "type": "hidden"
+        }, 
+        "autor": {
+            "type": "amd",
+            "label": "Autor (autor)",
+            "n_columns": 4,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "autor",
+                    "dialogTitle": "Cercar autor",
+                    "dialogButtonLabel": "Afegir autor",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "responsable": {
+            "type": "amd",
+            "label": "Responsable del mòdul (responsable)",
+            "n_columns": 4,
+            "group": "authorship",
+            "props": {
+                "required": true
+            },
+            "config":{
+                "readonly": {"and":[{"class":"ValidationByRoles", "data":{"roles":["responsable"], "deniedResponse":true}}, {"class":"ValidationByGroups", "data":{"groups":["admin"], "deniedResponse":true}}]},
+                "class": {
+                    "edit": "IocFilteredList",
+                    "view": "IocListSelectedItems"
+                },
+                "data": {
+                    "ns":"",
+                    "buttonLabel": "Cercar",
+                    "fieldName": "responsable",
+                    "dialogTitle": "Cercar responsable",
+                    "dialogButtonLabel": "Afegir responsable",
+                    "data": "",
+                    "dataQuery": {
+                        "filter": ""
+                    },
+                    "searchDataUrl": "lib/exe/ioc_ajax.php?call=user_list",
+                    "fields": {
+                        "username": "Nom d'usuari",
+                        "name": "Nom"
+                    },
+                    "fieldId": "username",
+                    "defaultEntryField": "name"
+                }
+            }
+        },
+        "semestre": {
+            "type": "hidden"
+        },        
+        "dataProvaNoCert": {
+            "type": "hidden"
+        },       
+        "dataProvaCert": {
+            "type": "hidden"
+        },        
+        "dataCertA2": {
+            "type": "hidden"
+        },
+        "dataCertB1": {
+            "type": "hidden"
+        },
+        "dataCertB2": {
+            "type": "hidden"
+        },
+        "dataCertC1": {
+            "type": "hidden"
+        },
+        "dataCertC2": {
+            "type": "hidden"
+        },
+        "provaOralIni": {
+            "type": "hidden"
+        },
+        "provaOralFi": {
+            "type": "hidden"
+        }
+    }
+}
