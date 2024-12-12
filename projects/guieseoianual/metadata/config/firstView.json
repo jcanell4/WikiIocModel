@@ -59,19 +59,12 @@
             "type": "hidden"
         },
         "durada": {
-            "type":"select",
             "n_columns": 2,
             "label": "Durada (durada)",
             "group": "dadesBasiques",
             "props": {
                 "required": true,
-                "title": "Trieu si és semestral o anual"
-            },
-            "config":{
-                "options":[
-                    {"value":"semestral"},
-                    {"value":"anual"}
-                ]
+                "title": "Indica durada anual"
             }
         },        
         "nivellcurs": {
@@ -223,9 +216,6 @@
                 }
             }
         },
-        "semestre": {
-            "type": "hidden"
-        },        
         "dataProvaNoCert": {
             "type": "hidden"
         },       

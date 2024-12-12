@@ -1,12 +1,11 @@
 <?php
-if (!defined('DOKU_INC')) die();
+defined('DOKU_INC') || die();
 
 class ProjectUpdateDataAction extends ViewProjectAction {
     //marjose: 
-    //s'executa quan s'actualitza cada semestre. 
+    //s'executa quan s'actualitza 
     //actualitzat amb els camps corresponents: calendari
     
-
     protected function runAction() {
         $projectType = $this->params[ProjectKeys::KEY_PROJECT_TYPE];
         $metaDataSubSet = ($this->params[ProjectKeys::KEY_METADATA_SUBSET]) ? $this->params[ProjectKeys::KEY_METADATA_SUBSET] : ProjectKeys::VAL_DEFAULTSUBSET;

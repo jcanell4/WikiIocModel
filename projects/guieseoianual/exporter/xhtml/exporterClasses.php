@@ -4,11 +4,8 @@
  *                  correspondientes a los tipos de datos del proyecto
  * @culpable Rafael Claver
  */
-if (!defined('DOKU_INC')) die();
+defined('DOKU_INC') || die();
 
-/**
- * class IocTcPdf
- */
 class IocTcPdf extends BasicIocTcPdf {
     public function __construct(TcPdfStyle &$stile) {
         parent::__construct($stile);

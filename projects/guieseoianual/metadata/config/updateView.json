@@ -128,9 +128,6 @@
                 }
             }
         },
-        "semestre": {
-            "type": "hidden"
-        },
         "nivellcurs": {
             "type": "hidden"
         },

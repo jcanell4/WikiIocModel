@@ -1,5 +1,5 @@
 <?php
-if (!defined('DOKU_INC')) die();
+defined('DOKU_INC') || die();
 
 class CancelProjectAction extends ViewProjectAction {
 

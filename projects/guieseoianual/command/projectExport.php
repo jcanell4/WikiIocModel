@@ -2,13 +2,13 @@
 /**
  * projectExport : command que es dispara pels botons que generen HTML i PDF
  * @culpable Rafael Claver
- * @re-creator marjose
  */
-if (!defined('DOKU_INC')) die();
-if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
+defined('DOKU_INC') || die();
+defined('DOKU_PLUGIN') || define('DOKU_PLUGIN', DOKU_INC . 'lib/plugins/');
 require_once(DOKU_PLUGIN . 'iocexportl/action.php');
 
 class command_plugin_wikiiocmodel_projects_guieseoianual_projectExport extends abstract_project_command_class {
+//class command_plugin_projectsdev_projects_guieseoianual_projectExport extends abstract_project_command_class {
 
     public function __construct() {
         parent::__construct();

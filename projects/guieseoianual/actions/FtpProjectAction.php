@@ -2,7 +2,7 @@
 /**
  * Description of FtpProjectAction al projecte 'guieseoianual'
  */
-if (!defined("DOKU_INC")) die();
+defined('DOKU_INC') || die();
 
 class FtpProjectAction extends BasicFtpProjectAction{
 

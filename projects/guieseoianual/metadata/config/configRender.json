@@ -1,18 +1,18 @@
 {
     "typesDefinition": {
         "dadesguieseoianual": {
-            "render": { 
+            "render": {
                 "typeDef":"dadesguieseoianual",
                 "class": "exportDocument",
-                "fields": "ALL", 
+                "fields": "ALL",
                 "extraFields": [
                     {"name":"fitxercontinguts", "valueType":"page", "value":"continguts"},
                     {"name":"pdfDocument", "valueType":"page", "value":"continguts"}
                 ]
             },
-            "keys": { 
+            "keys": {
                 "descripcio": {
-                    "render": {"class": "renderRenderizableText"} 
+                    "render": {"class": "renderRenderizableText"}
                 },
                 "fitxercontinguts": {
                     "render": {"class": "renderFile"}

@@ -5,10 +5,9 @@
     "metaDataProjectConfig": [
         {
             "main": {
-                "projectTypeConfigFile":{"semestral": "admconfig:guieseoi",
-                                           "anual": "admconfig:guieseoianual"}
+                "projectTypeConfigFile":{"anual": "admconfig:guieseoianual"}
             }
-        }        
+        }
     ],
     "metaDataFtpSender": [
         {
@@ -17,7 +16,7 @@
                     "Feoi1": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"},
                     "jsonRep": {"local":"mediadir", "type":"json", "action":[0], "remoteDir": "replacedata/", "ftpId": "replace_data_fp_pt"}
                 },
-                "ftpId": "guies_eoianual"
+                "ftpId": "guies_eoianu"
             }
         }
     ],
@@ -27,7 +26,7 @@
             "viewfiles": {"defaultView": "defaultView", "updateView": "updateView", "firstView": "firstView"},
             "versions": {
                 "fields": 0,
-                "templates": {"continguts": 2} 
+                "templates": {"continguts": 0}
             },
             "mainType": {
                 "type": "object",
@@ -47,12 +46,12 @@
                             "constraints": "{\"places\":2}",
                             "mandatory": true
                         }
-                    }                    
+                    }
                 },
                 "defAvaluacioNoCert": {
                     "type": "objectArray",
                     "typeDef":"entradaAvaluacioNoCert"
-                },                
+                },
                 "entradaCalendari": {
                     "type": "object",
                     "keys": {
@@ -74,7 +73,7 @@
                             "type": "date",
                             "default":"{#_TODAY()_#}",
                             "mandatory": true
-                        },                 
+                        },
                         "dataQualificacio": {
                             "type": "date",
                             "default":"{#_TODAY()_#}",
@@ -110,15 +109,10 @@
                 "defTaulaDadesBlocs": {
                     "type": "objectArray",
                     "typeDef":"entradaDadesBlocs"
-                },  
+                },
                 "dadesguieseoianual": {
                     "type": "object",
                     "keys": {
-                        "semestre": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default":1
-                        },
                         "codi_modul": {
                             "type": "string",
                             "default": "ANG_1B1",
@@ -142,7 +136,7 @@
                         "durada":{
                             "type":"string",
                             "mandatory": true,
-                            "default":"semestral"
+                            "default":"anual"
                         },
                         "duradaHores": {
                             "type": "number",
@@ -150,7 +144,7 @@
                             "mandatory": true,
                             "calculateOnSave": {
                                 "class": "CalculateConditionalValue",
-                                "data":{ 
+                                "data":{
                                     "condition":{
                                         "_type_":"operation",
                                          "values":[
@@ -164,13 +158,13 @@
                                         "operation":"=="
                                     },
                                     "valueIfTrue":70,
-                                    "valueIfFalse":140      
-                                }       
+                                    "valueIfFalse":140
+                                }
                             },
                             "props": {
-                                "readonly": true          
-                            }                    
-                        }, 
+                                "readonly": true
+                            }
+                        },
                         "numblocs": {
                             "type": "number",
                             "default": 7,
@@ -178,7 +172,7 @@
                             "mandatory": true,
                             "calculateOnSave": {
                                 "class": "CalculateConditionalValue",
-                                "data":{ 
+                                "data":{
                                     "condition":{
                                         "_type_":"operation",
                                          "values":[
@@ -192,13 +186,13 @@
                                         "operation":"=="
                                     },
                                     "valueIfTrue":7,
-                                    "valueIfFalse":11      
-                                }       
+                                    "valueIfFalse":11
+                                }
                             },
                             "props": {
-                                "readonly": true          
-                            }                    
-                        },                         
+                                "readonly": true
+                            }
+                        },
                         "descripcioConversa": {
                             "type": "string",
                             "default": "Durant el curs podreu participar en activitats de conversa.",
@@ -208,7 +202,7 @@
                             "type": "string",
                             "default": "coordinació",
                             "mandatory": true
-                        },                        
+                        },
                         "colaboradors": {
                             "type": "string",
                             "default": "nom del col·laborador o col·laboradors",
@@ -223,7 +217,7 @@
                             "type": "date",
                             "mandatory": true,
                             "default":"01/01/2000"
-                        },   
+                        },
                         "dataProvaCert": {
                             "type": "date",
                             "mandatory": false,
@@ -267,8 +261,8 @@
                         "dadesBlocs": {
                             "type": "defTaulaDadesBlocs",
                             "mandatory": false
-                        },        
-                        
+                        },
+
                         "notaMinima": {
                             "type": "number",
                             "mandatory": true,
@@ -278,9 +272,9 @@
                             "type": "defAvaluacioNoCert",
                             "default":[
                                 {"nom":"Tests dels blocs","ponderacio":"20"},
-                                {"nom":"Lliuraments","ponderacio":"20"},   
-                                {"nom":"Aportacions al fòrum","ponderacio":"15"},   
-                                {"nom":"Prova oral","ponderacio":"15"},          
+                                {"nom":"Lliuraments","ponderacio":"20"},
+                                {"nom":"Aportacions al fòrum","ponderacio":"15"},
+                                {"nom":"Prova oral","ponderacio":"15"},
                                 {"nom":"Prova final de mòdul","ponderacio":"30"}
                             ],
                             "mandatory": false
@@ -316,8 +310,7 @@
                         }
                     }
                 }
-            } 
+            }
         }
     ]
 }
-

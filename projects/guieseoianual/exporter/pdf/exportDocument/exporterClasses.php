@@ -1,6 +1,6 @@
 <?php
 /**
- * projecte: prgfpfct
+ * projecte: guieseoianual
  * exportDocument: clase que renderiza grupos de elementos
  */
 if (!defined('DOKU_INC')) die();

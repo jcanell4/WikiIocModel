@@ -1,9 +1,9 @@
 <?php
 /**
- * projecte: guieseoianual ***
+ * projecte: guieseoianual
  * exportDocument: clase que renderiza grupos de elementos
  */
-if (!defined('DOKU_INC')) die();
+defined('DOKU_INC') || die();
 
 class exportDocument extends renderHtmlDocument {
 
@@ -65,8 +65,8 @@ class exportDocument extends renderHtmlDocument {
                 $params = array(
                     "id" => $this->cfgExport->id,
                     "path_templates" => $this->cfgExport->rendererPath . "/pdf/exportDocument/templates",  // directori on es troben les plantilles latex usades per crear el pdf
-                    "tmp_dir" => $this->cfgExport->tmp_dir,    //directori temporal on crear el pdf
-                    "lang" => strtoupper($this->cfgExport->lang),  // idioma usat (CA, EN, ES, ...)
+                    "tmp_dir" => $this->cfgExport->tmp_dir,          //directori temporal on crear el pdf
+                    "lang" => strtoupper($this->cfgExport->lang),    // idioma usat (CA, EN, ES, ...)
                     "mode" => isset($this->mode) ? $this->mode : $this->filetype,
 		    "max_img_size" => ($data['max_img_size']) ? $data['max_img_size'] : WikiGlobalConfig::getConf('max_img_size', 'wikiiocmodel'),
                     "style" => $this->cfgExport->rendererPath."/xhtml/exportDocument/pdf/main.stypdf",

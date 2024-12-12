@@ -4,7 +4,7 @@
  * @culpable Rafael Claver
  * @aprenent Marjose
  */
-if (!defined("DOKU_INC")) die();
+defined('DOKU_INC') || die();
 
 class guieseoianualProjectModel extends MoodleMultiContentFilesProjectModel {
     public function __construct($persistenceEngine)  {
@@ -141,15 +141,11 @@ class guieseoianualProjectModel extends MoodleMultiContentFilesProjectModel {
      * Retorna la ruta del fitxer de configuracio
      * ------------------------------*/
     public function getProjectTypeConfigFile() {
-        //en funció de --una sèrie de paràmetres-- anual o semestral
         //Retorna el que apareix entre claus al configMain.json
         $valorRecollit = $this->projectMetaDataQuery->getListMetaDataComponentTypes(ProjectKeys::KEY_METADATA_PROJECT_CONFIG,ProjectKeys::KEY_MD_PROJECTTYPECONFIGFILE);
-        //$valorRecollit[semestral] conté "admconfig:guieseoi"
         //$valorRecollit[anual] conté "admconfig:guieseoianual"
         $data = $this->getCurrentDataProject();
-        $sem_o_anu = $data["durada"]; //recollim si és semestral o anual
-        return $valorRecollit[$sem_o_anu];
-
+        return $valorRecollit[$data["durada"]];
     }
 
 
@@ -191,6 +187,5 @@ class guieseoianualProjectModel extends MoodleMultiContentFilesProjectModel {
         $data = $isArray?$values:json_encode($values);
         return parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
     }
-
 
 }

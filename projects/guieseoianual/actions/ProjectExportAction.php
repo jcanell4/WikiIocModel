@@ -7,6 +7,7 @@
 defined('DOKU_INC') || die();
 defined('DOKU_PLUGIN') || define('DOKU_PLUGIN', DOKU_INC."lib/plugins/");
 defined('WIKI_IOC_MODEL') || define('WIKI_IOC_MODEL', DOKU_PLUGIN."wikiiocmodel/");
+//define('WIKI_IOC_MODEL', DOKU_PLUGIN . "projectsdev/");
 defined('EXPORT_TMP') || define('EXPORT_TMP',DOKU_PLUGIN.'tmp/latex/');
 define('WIKI_IOC_PROJECT', WIKI_IOC_MODEL . "projects/guieseoianual/");
 

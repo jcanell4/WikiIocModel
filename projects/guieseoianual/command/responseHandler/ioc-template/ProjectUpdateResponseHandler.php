@@ -3,7 +3,7 @@
  * ProjectUpdateResponseHandler: Construye los datos para la respuesta de la parte servidora para el comando 'update'
  * @culpable Rafael Claver
  */
-if (!defined("DOKU_INC")) die();
+defined('DOKU_INC') || die();
 require_once(DOKU_TPL_INCDIR."cmd_response_handler/ProjectResponseHandler.php");
 
 class ProjectUpdateResponseHandler extends ProjectResponseHandler {

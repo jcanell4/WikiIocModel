@@ -2,11 +2,10 @@
 /**
  * FactoryAuthorization: carga las clases de autorización de los comandos del proyecto "guieseoianual"
  * @author Rafael Claver
- * @re-creator marjose
  */
 namespace guieseoianual;
 
-if (!defined('DOKU_INC')) die();
+defined('DOKU_INC') || die();
 
 class FactoryAuthorization extends \ProjectFactoryAuthorization {
 

@@ -1,6 +1,6 @@
 {
     "generateProject": {
-        "parms": { 
+        "parms": {
             "DOM": {
                "id": "generateProjectButton"
             }
@@ -17,7 +17,7 @@
 
     },
     "ftpSend": {
-        "parms": { 
+        "parms": {
             "DOM": {
                "id": "ftpProjectButton"
             }
@@ -46,7 +46,7 @@
     },
     "guieseoianualConsolidateData": {
         "class": "WikiIocButton",
-        "parms": { 
+        "parms": {
             "DOM": {
                "id": "guieseoianualConsolidateData",
                "title": "Consolidació de les dades",
@@ -85,7 +85,7 @@
     },
     "guieseoianualUpdateDataProject": {
         "class": "WikiIocButton",
-        "parms": { 
+        "parms": {
             "DOM": {
                "id": "guieseoianualUpdateDataProject",
                "title": "Actualització del Projecte",
@@ -142,7 +142,7 @@
                "disableOnSend": true
             }
         },
-       
+
         "scripts": {
             "getFunctions": {
                 "path": "HtmlExportGetFunction.js"

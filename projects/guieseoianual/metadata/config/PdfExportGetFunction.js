@@ -47,5 +47,3 @@ require([
         guieseoianualPdfExportButton.onClick =fOnClick;
     }
 });
-
-
