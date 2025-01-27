@@ -104,7 +104,7 @@
                             "mandatory": true,
                             "default": "Horaris i centres d'exàmens presencials"
                         },
-                        "quadrimestre": {
+                        "semestre": {
                             "type": "number",
                             "mandatory": true,
                             "default": 1
