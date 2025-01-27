@@ -124,9 +124,6 @@
                 "title": "Si n'hi ha, indiqueu el nom dels col·laboradors."
             }
         },        
-        "descripcioConversa": {
-            "type": "hidden"
-        },
         "dadesBlocs": {
             "type": "hidden"
         },        
@@ -148,6 +145,9 @@
         "calendari": {
             "type": "hidden"
         }, 
+        "descripcioConversa": {
+            "type": "hidden"
+        },
         "autor": {
             "type": "amd",
             "label": "Autor (autor)",

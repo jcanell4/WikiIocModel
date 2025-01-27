@@ -3,7 +3,7 @@
 ====== BATXILLERAT ======
 **Convocatòria {##titol##} ** 
 
-**Quatrimestre {##quadrimestre##} ({##curs##}) **
+**Semestre {##semestre##} ({##curs##}) **
 
 **{##subtitol##}**
 

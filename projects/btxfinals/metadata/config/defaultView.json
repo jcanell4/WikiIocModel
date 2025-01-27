@@ -67,13 +67,13 @@
                 "title": "indiqueu el subtítol del Proves finals de Batxillerat"
             }
         },
-        "quadrimestre":{
-            "label" : "quadrimestre",
+        "semestre":{
+            "label" : "semestre",
             "n_columns": 2,
             "group": "main",
             "props": {
                 "required": true,
-                "title": "Indiqueu el quadrimestre corresponent"
+                "title": "Indiqueu el semestre corresponent"
             }
         },
         "curs": {

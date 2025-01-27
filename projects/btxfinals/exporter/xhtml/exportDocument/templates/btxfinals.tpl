@@ -23,7 +23,7 @@
     <div class="container  purple_header">     
       <h1>BATXILLERAT</h1>
       <h2>Convocatòria {##titol##}</h2>
-      <h2>Quatrimestre {##quadrimestre##} ({##curs##})</h2>
+      <h2>Semestre {##semestre##} ({##curs##})</h2>
       <h2>{##subtitol##}</h2>
     </div>
   </header>
