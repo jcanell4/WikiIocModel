@@ -172,12 +172,12 @@ hr {
 
 #durada_icona {
   height: 55px;
-  background-image: url("img/durada-icona.svg");
+  background-image: url("img/durada-icona_eoi.svg");
 }
 
 #professor_icona {
   height: 54px;
-  background-image: url("img/professor-icona.svg");
+  background-image: url("img/professor-icona_eoi.svg");
 }
 
 #material_icona {
@@ -730,12 +730,31 @@ hr {
 
 .section51 {
   margin: 34px 0 56px 0;
+  text-align: left;
+}
+
+.section51 p, .section51 ul {
+  text-align: left;
+}
+
+.section51 p {
+  margin-bottom: 20px; /* Adjust this value for more or less space */
+}
+
+.section51 ul {
+  list-style-position: inside; /* Ensures bullets are inside the margin */
+  padding-left: 20px; /* Adjust indentation of the entire list */
+  margin-left: 0; /* Reset any extra margin */
+  margin-bottom: 20px; /* Adjust this value for more or less space */
+}
+
+.section51 ul li {
+  padding-left: 10px; /* Add additional indentation to the text if needed */
 }
 
 .section51 h2 {
   font-size: 19px;
   font-weight: bold;
-  text-align: center;
   padding-bottom: 42px;
 }
 
@@ -859,11 +878,11 @@ hr {
 }
 
 #pv-icona {
-  background-image: url("img/pv-icona.svg");
+  background-image: url("img/pv-icona_eoi.svg");
 }
 
 #paf-icona {
-  background-image: url("img/paf-icona.svg");
+  background-image: url("img/paf-icona_eoi.svg");
 }
 
 .section7 .panell_proves p {

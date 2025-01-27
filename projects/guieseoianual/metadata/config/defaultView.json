@@ -236,14 +236,7 @@
             ]
           }
         },          
-        "descripcioConversa": {
-            "label": "Descripció del servei de conversa (descripcioConversa)",
-            "n_columns": 12,
-            "group": "actualitzables",
-            "props": {
-                "title": "Descripció del servei de conversa"
-            }
-        },
+
         "dataProvaCert": {
             "type": "hidden"
         },
@@ -385,11 +378,10 @@
                         "type": "number",
                         "mandatory": true,
                         "default": "{#_INC(1)_#}"
-                    },
-                                
+                    },                               
                     "tipusActivitat": {
                         "type": "select",
-                        "options": ["Assignments","Practice Tasks","Participació a Forum activities","Progress Test","Oral exam","Final test","Aufgaben","Forumstexte","Test Einheit","Mündliche Prüfung","Endtest","Prova oral","Prova final"]
+                        "options": ["Expressió oral","Expressió escrita","Mediació oral","Mediació escrita"]
                     },
                     "activitat": {
                         "type": "string",
@@ -448,6 +440,14 @@
                 ]
             }
         }, 
+        "descripcioConversa": {
+            "label": "Descripció del servei de conversa (descripcioConversa)",
+            "n_columns": 12,
+            "group": "actualitzables",
+            "props": {
+                "title": "Descripció del servei de conversa"
+            }
+        },
         "autor": {
             "type": "amd",
             "label": "Autor (autor)",

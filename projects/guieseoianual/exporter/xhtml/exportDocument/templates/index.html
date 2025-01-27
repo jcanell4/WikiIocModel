@@ -30,7 +30,7 @@
 
   <div class="own_container">
     <div class="focus_stripe"></div>
-    <h2>Com estudiar aquest mòdul</h2>
+    <h2>Informació general del curs</h2>
   </div>
 </header>
 <!-- /Títol -->
@@ -79,7 +79,7 @@
 <section class="section section5">
   <div class="own_container">
 
-      <h2>Què faràs en aquest mòdul</h2>
+      <h2>Continguts</h2>
         <p>El curs s'estructura en els següents blocs:</p>
         <br/>
         <table class="own_table">
@@ -100,104 +100,21 @@
             </WIOCCL:FOREACH>
 
         </table>
-         <br/><p>{##descripcioConversa##}</p>
+
   </div>
 </section>
-
-
-<!-- Secció 51 -->
-<section class="section section51">
-  <div class="own_container">
-    <h2>Com seràs avaluat</h2>
-
-    <WIOCCL:IF condition="false=={##isCert##}">
-    <p>L'avaluació del curs es fa de manera continuada, a través dels tests i les tasques de producció oral i escrita proposades durant el curs. </p>
-    <p>Per aprovar el curs, és necessari obtenir un resultat final del {##notaMinima##} % o superior.</p>
-    <br/>
-    <p>El càlcul del resultat final es fa atenent a la següent ponderació:</p>
-    <br/>
-        <table class="own_table_csa">
-          <tr>
-            <th>NOM</th>
-            <th>PONDERACIÓ</th>
-          </tr>
-            <WIOCCL:FOREACH var="itemAvalNoCert" array="{##comSerasAvaluatNoCert##}">
-            <tr>
-              <th>{##itemAvalNoCert[nom]##}</th>
-              <td>{##itemAvalNoCert[ponderacio]##} %</td>
-            </tr>
-            </WIOCCL:FOREACH>
-            <tr>
-              <th>Total</th>
-              <th>100 %</th>
-            </tr>
-        </table>
-
-
-        <script> <!-- to calculate the value of the last column -->
-        function calculateTotal() {
-            const table = document.querySelector('.own_table_csa');
-            let total = 0;
-
-            // Iterate over all rows except the header and the total row
-            for (let i = 1; i < table.rows.length - 1; i++) {
-                // Get the value from the second cell (index 1) and add to total
-                total += parseFloat(table.rows[i].cells[1].textContent);
-            }
-
-            // Set the total in the last cell
-            document.getElementById('total').textContent = total + ' %';
-        }
-
-        // Call the function to calculate and display the total
-        calculateTotal();
-
-            </script>
-    <br/>
-    </WIOCCL:IF>
-
-<WIOCCL:IF condition="true=={##isCert##}">
-    <WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}">
-        <p>Per superar aquest mòdul s'ha d'aprovar la prova de
-        <WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}">
-        certificat de Nivell Bàsic. És una prova telemàtica. </p>
-        </WIOCCL:IF>
-        <WIOCCL:IF condition="{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}">
-        certificat de Nivell Intermedi B1. És una prova presencial.</p>
-        </WIOCCL:IF>
-        <WIOCCL:IF condition="{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}">
-        certificat de Nivell Intermedi B2. És una prova presencial. </p>
-        </WIOCCL:IF>
-        <WIOCCL:IF condition="{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}">
-        certificat de Nivell C1. És una prova presencial. </p>
-        </WIOCCL:IF>
-        <WIOCCL:IF condition="{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}">
-        certificat de Nivell C2. És una prova presencial. </p>
-        </WIOCCL:IF>
-    <br/>
-    <p>La prova està constituïda per tasques de comprensió oral, comprensió escrita, expressió i interacció escrita, expressió i interacció oral i mediació.</p>
-    <br/>
-    <p>Cadascuna de les cinc parts que componen la prova tindrà una ponderació del 20% sobre el total de la puntuació de la prova.</p>
-    <br/>
-    <p>Per superar la prova de certificació cal obtenir un mínim del 65% de la puntuació total i un mínim del 50% de la puntuació de cadascuna de les cinc parts.</p>
-    </WIOCCL:IF>
-</WIOCCL:IF>
-
-
-
-
-    </div>
-</section>
-<!-- /Secció 51 -->
-
-<hr>
 
 <!-- Secció 5 -->
 <section class="section section5">
   <div class="own_container">
     <h2>Calendari d’estudi</h2>
 
+    <p>Al llarg del curs es proposen una sèrie d’activitats i proves de caràcter
+        formatiu que rebran una retroacció per part del professorat. 
+        Aquestes activitats integren diferents competències i serveixen 
+        per comprovar l’evolució de l’aprenentatge i el grau de consecució dels objectius. </p>
 
+    <br>
     <table class="own_table">
       <tr>
         <th>Bloc</th>
@@ -219,11 +136,37 @@
       </WIOCCL:FOREACH>
 
     </table>
-
+<br>
+<br/><p>{##descripcioConversa##}</p>
 
   </div>
 </section>
 <!-- /Secció 5 -->
+<!-- Secció 51 -->
+<section class="section section51">
+  <div class="own_container">
+    <h2>Informació sobre la prova de certificació</h2>
+    <p>
+        Per superar aquest curs s’ha d’aprovar la prova de Certificat Nivell C1. Aquesta prova és presencial i consta de les següents parts: 
+    </p>
+    <ul>
+        <li>comprensió escrita</li>
+        <li>comprensió oral</li>
+        <li>expressió i interacció escrita</li>
+        <li>expressió i interacció oral </li>
+        <li>mediació en comptes d’ús de la llengua.</li>
+    </ul>
+    <p>
+       Cadascuna de les cinc parts que conformen la prova tindrà una ponderació del 20% sobre el total de la puntuació final. Per superar la prova cal obtenir un mínim del 65% de la puntuació total i un mínim del 50% de cadascuna de les parts. 
+    </p>
+
+    </div>
+</section>
+<!-- /Secció 51 -->
+
+<hr>
+
+
 <!-- Secció 7 Cert-->
 
 <WIOCCL:IF condition="false=={##isCert##}">
@@ -261,33 +204,28 @@
 <WIOCCL:IF condition="true=={##isCert##}">
 <section class="section section7">
   <div class="own_container">
-    <h2>Prova certificació</h2>
+    <h2>Prova de certificació</h2>
     <div class="panell_proves">
-        <div class="cert">
-        <div class="section7_icona" id="pv-icona"></div>
-            <br/>
-            <WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}">
-            <h3>{#_DATE("{##dataCertA2##}")_#}</h3>
-            </WIOCCL:IF>
-            <WIOCCL:IF condition="{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}">
-            <h3>{#_DATE("{##dataCertB1##}")_#}</h3>
-            </WIOCCL:IF>
-            <WIOCCL:IF condition="{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}">
-            <h3>{#_DATE("{##dataCertB2##}")_#}</h3>
-            </WIOCCL:IF>
-            <WIOCCL:IF condition="{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}">
-             <h3>{#_DATE("{##dataCertC1##}")_#}</h3>
-            </WIOCCL:IF>
-            <WIOCCL:IF condition="{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}">
-             <h3>{#_DATE("{##dataCertC2##}")_#}</h3>
-            </WIOCCL:IF>
-	<div class="horizontal_separator"></div>
+        <div>
+            <h3>Prova Oral</h3>
+            <div class="section7_icona" id="pv-icona"></div>
+            <div class="provaOral">
+             <h3>del {#_DATE("{##provaOralIni##}")_#} al {#_DATE("{##provaOralFi##}")_#}</h3></div>
+            <div class="horizontal_separator"></div>
+        </div>
+        <div class="vertical_separator"></div>
+        <div>
+        <h3>Prova escrita</h3>        
+        <div class="section7_icona" id="paf-icona"></div>
+        <h3>{#_DATE("{##dataProvaNoCert##}")_#}</h3>
+        <div class="horizontal_separator"></div>
         </div>
       </div>
     </div>
 
   </div>
 </section>
+
 </WIOCCL:IF>
 
 <!-- /Secció 7 -->

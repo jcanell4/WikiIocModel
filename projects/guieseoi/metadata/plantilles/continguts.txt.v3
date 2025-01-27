@@ -18,7 +18,7 @@ Els continguts dels blocs són els següents:
 ^  Bloc  ^  Durada  ^  Nom  ^
 <WIOCCL:SET var="sortedTaulaDadesBlocs" type="literal" value="{#_ARRAY_SORT({##dadesBlocs##},''id'')_#}">
 <WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesBlocs##}">
-|  {##item[id]##}  | {##item[inici]##} - {##item[final]##}   | {##item[nom]##}  |
+|  {##item[id]##}  | {#_DATE("{##item[inici]##}")_#} - {#_DATE("{##item[final]##}")_#}   | {##item[nom]##}  |
 </WIOCCL:FOREACH>
 </WIOCCL:SET>
 :::
@@ -66,7 +66,7 @@ Per superar la prova de certificació cal obtenir un mínim del 65% de la puntua
   :type:pt_taula
 ^  bloc	^  Tipus ^  Activitat ^  Data de lliurament	 ^  Data de qualificació ^
 <WIOCCL:FOREACH var="item" array="{##calendari##}">
-| {##item[bloc]##} | {##item[tipusActivitat]##} | {##item[activitat]##} | {##item[dataLliurament]##} |{##item[dataQualificacio]##} |
+| {##item[bloc]##} | {##item[tipusActivitat]##} | {##item[activitat]##} | {#_DATE("{##item[dataLliurament]##}")_#} |{#_DATE("{##item[dataQualificacio]##}")_#} |
 </WIOCCL:FOREACH>
 :::
 ###:

@@ -1,7 +1,7 @@
 :###
 ~~USE:WIOCCL~~
 ###:
-:###====== Què faràs en aquest mòdul? ======###:
+:###====== Continguts ======###:
 
 :###
 El mòdul {##modul##} és un mòdul {##durada##}.
@@ -28,54 +28,11 @@ Els continguts dels blocs són els següents:
 
 ###:
 
-:###====== Com seras avaluat en aquest mòdul? ======###:
-
-:###
-<WIOCCL:IF condition="false=={##isCert##}"> 
-L'avaluació del curs es fa de manera continuada, a través dels tests i les tasques de producció oral i escrita proposades durant el curs. 
-Per aprovar el curs, és necessari obtenir un resultat final del {##notaMinima##} % o superior.
-El càlcul del resultat final es fa atenent a la següent ponderació:
-::table:T02
-  :title:Avaluacio
-  :type:pt_taula
-^  Activitats d’avaluació ^  Ponderació sobre la nota final  ^
-<WIOCCL:FOREACH var="item" array="{##comSerasAvaluatNoCert##}">
-|  {##item[nom]##}  |  {##item[ponderacio]##}  |
-</WIOCCL:FOREACH>
-:::
-</WIOCCL:IF>
-<WIOCCL:IF condition="true=={##isCert##}"> 
-<WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}"> 
-Per superar aquest mòdul s'ha d'aprovar la prova de 
-<WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}">  
-certificat de Nivell Bàsic. És una prova telemàtica.  
-</WIOCCL:IF>   
-<WIOCCL:IF condition="{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}">
-certificat de Nivell Intermedi B1. És una prova presencial.
-</WIOCCL:IF> 
-<WIOCCL:IF condition="{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}">
-certificat de Nivell Intermedi B2. És una prova presencial. 
-</WIOCCL:IF>
-<WIOCCL:IF condition="{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}">
-certificat de Nivell C1. És una prova presencial. 
-</WIOCCL:IF>
-<WIOCCL:IF condition="{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}">
-certificat de Nivell C2. És una prova presencial. 
-</WIOCCL:IF>
-    
-La prova està constituïda per tasques de comprensió oral, comprensió escrita, expressió i interacció escrita, expressió i interacció oral i ús de la llengua.
-    
-Cadascuna de les cinc parts que componen la prova tindrà una ponderació del 20% sobre el total de la puntuació de la prova.                
-   
-Per superar la prova de certificació cal obtenir un mínim del 65% de la puntuació total i un mínim del 50% de la puntuació de cadascuna de les cinc parts.  
-</WIOCCL:IF>
-</WIOCCL:IF>
-###:
-
 
 :###====== Calendari d'estudi ======###:
 
 :###
+Al llarg del curs es proposen una sèrie d’activitats i proves de caràcter formatiu que rebran una retroacció per part del professorat. Aquestes activitats integren diferents competències i serveixen per comprovar l’evolució de l’aprenentatge i el grau de consecució dels objectius. 
 ::table:T03
   :title:Calendari
   :type:pt_taula
@@ -84,9 +41,32 @@ Per superar la prova de certificació cal obtenir un mínim del 65% de la puntua
 | {##item[bloc]##} | {##item[tipusActivitat]##} | {##item[activitat]##} | {##item[dataLliurament]##} |{##item[dataQualificacio]##} |
 </WIOCCL:FOREACH>
 :::
+Durant el curs podreu participar en sessions sincròniques que el professorat anunciarà amb antelació. 
 ###:
 
-<WIOCCL:IF condition="false=={##isCert##}"> 
+:###====== Informació sobre la prova de certificació ======###:
+
+:###
+
+Per superar aquest curs s’ha d’aprovar la prova de Certificat Nivell C1. Aquesta prova és presencial i consta de les següents parts: 
+
+- comprensió escrita
+
+- comprensió oral
+
+- expressió i interacció escrita
+
+- expressió i interacció oral 
+
+- mediació en comptes d’ús de la llengua.
+
+Cadascuna de les cinc parts que conformen la prova tindrà una ponderació del 20% sobre el total de la puntuació final. Per superar la prova cal obtenir un mínim del 65% de la puntuació total i un mínim del 50% de cadascuna de les parts. 
+
+
+###:
+
+
+
 
 
 :###====== Proves finals ======###:
@@ -99,7 +79,7 @@ La prova oral serà del {#_DATE("{##provaOralIni##}")_#} al {#_DATE("{##provaOra
 
 La prova escrita serà el dia {#_DATE("{##dataProvaNoCert##}")_#}
 
-</WIOCCL:IF>
+
 
 
 <WIOCCL:IF condition="true=={##isCert##}"> 

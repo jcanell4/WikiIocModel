@@ -8,7 +8,7 @@ El mòdul {##modul##} és un mòdul {##durada##}.
 Està organitzat en {##numblocs##} blocs incloent un bloc introductori. 
 
 
-El coodinador del mòdul és {##coordinador##}.
+La coordinació és a càrrec de {##coordinador##}.
 
 Els continguts dels blocs són els següents:
 
@@ -18,7 +18,7 @@ Els continguts dels blocs són els següents:
 ^  Bloc  ^  Durada  ^  Nom  ^
 <WIOCCL:SET var="sortedTaulaDadesBlocs" type="literal" value="{#_ARRAY_SORT({##dadesBlocs##},''id'')_#}">
 <WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesBlocs##}">
-|  {##item[id]##}  | {##item[inici]##} - {##item[final]##}   | {##item[nom]##}  |
+|  {##item[id]##}  | {#_DATE("{##item[inici]##}")_#} - {#_DATE("{##item[final]##}")_#}   | {##item[nom]##}  |
 </WIOCCL:FOREACH>
 </WIOCCL:SET>
 :::
@@ -28,7 +28,7 @@ Els continguts dels blocs són els següents:
 
 ###:
 
-:###====== Com seras avaluat en aquest mòdul? ======###:
+:###====== Com seràs avaluat en aquest mòdul? ======###:
 
 :###
 <WIOCCL:IF condition="false=={##isCert##}"> 
@@ -46,24 +46,9 @@ El càlcul del resultat final es fa atenent a la següent ponderació:
 </WIOCCL:IF>
 <WIOCCL:IF condition="true=={##isCert##}"> 
 <WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}||{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}"> 
-Per superar aquest mòdul s'ha d'aprovar la prova de 
-<WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}">  
-certificat de Nivell Bàsic. És una prova telemàtica.  
-</WIOCCL:IF>   
-<WIOCCL:IF condition="{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}">
-certificat de Nivell Intermedi B1. És una prova presencial.
-</WIOCCL:IF> 
-<WIOCCL:IF condition="{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}">
-certificat de Nivell Intermedi B2. És una prova presencial. 
-</WIOCCL:IF>
-<WIOCCL:IF condition="{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}">
-certificat de Nivell C1. És una prova presencial. 
-</WIOCCL:IF>
-<WIOCCL:IF condition="{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}">
-certificat de Nivell C2. És una prova presencial. 
-</WIOCCL:IF>
-    
-La prova està constituïda per tasques de comprensió oral, comprensió escrita, expressió i interacció escrita, expressió i interacció oral i ús de la llengua.
+Per superar aquest mòdul s'ha d'aprovar la prova de <WIOCCL:IF condition="{#_STR_CONTAINS(''2B'', ''{##nivellcurs##}'')_#}">certificat de Nivell Bàsic. És una prova telemàtica.  </WIOCCL:IF><WIOCCL:IF condition="{#_STR_CONTAINS(''3B'', ''{##nivellcurs##}'')_#}">certificat de Nivell Intermedi B1. És una prova presencial.</WIOCCL:IF><WIOCCL:IF condition="{#_STR_CONTAINS(''5B'', ''{##nivellcurs##}'')_#}">certificat de Nivell Intermedi B2. És una prova presencial.</WIOCCL:IF><WIOCCL:IF condition="{#_STR_CONTAINS(''C1'', ''{##nivellcurs##}'')_#}">certificat de Nivell C1. És una prova presencial.</WIOCCL:IF><WIOCCL:IF condition="{#_STR_CONTAINS(''C2'', ''{##nivellcurs##}'')_#}">certificat de Nivell C2. És una prova presencial.</WIOCCL:IF>
+
+La prova està constituïda per tasques de comprensió oral, comprensió escrita, expressió i interacció escrita, expressió i interacció oral i mediació.
     
 Cadascuna de les cinc parts que componen la prova tindrà una ponderació del 20% sobre el total de la puntuació de la prova.                
    
@@ -81,7 +66,7 @@ Per superar la prova de certificació cal obtenir un mínim del 65% de la puntua
   :type:pt_taula
 ^  bloc	^  Tipus ^  Activitat ^  Data de lliurament	 ^  Data de qualificació ^
 <WIOCCL:FOREACH var="item" array="{##calendari##}">
-| {##item[bloc]##} | {##item[tipusActivitat]##} | {##item[activitat]##} | {##item[dataLliurament]##} |{##item[dataQualificacio]##} |
+| {##item[bloc]##} | {##item[tipusActivitat]##} | {##item[activitat]##} | {#_DATE("{##item[dataLliurament]##}")_#} |{#_DATE("{##item[dataQualificacio]##}")_#} |
 </WIOCCL:FOREACH>
 :::
 ###:
@@ -89,7 +74,7 @@ Per superar la prova de certificació cal obtenir un mínim del 65% de la puntua
 <WIOCCL:IF condition="false=={##isCert##}"> 
 
 
-:###====== Proves finals ======###:
+:###====== Proves ======###:
 
 :###======= Prova Oral =======###:
 
