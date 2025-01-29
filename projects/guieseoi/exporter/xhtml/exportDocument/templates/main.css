@@ -15,7 +15,7 @@ h1, h2, h3, h4, h5, h6, p, li, ul {
 }
 
 h2 {
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 h3 {
@@ -27,10 +27,15 @@ h3 {
 }
 
 a {
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 
   font-weight: bold;
   line-height: 1.4;
+}
+
+.ioc_logo {
+  padding-left: 5px;
+  padding-top: 5px;
 }
 
 .own_container {
@@ -44,7 +49,7 @@ a {
 .main_header {
   width: 100%;
   padding-bottom: 28px;
-  background-color: #be176b;
+  background-color: #c47200; /*#c47200;*/
   display:flex;
 }
 
@@ -76,7 +81,7 @@ a {
 .secondary_header h2 {
   font-size: 19px;
   font-weight: bold;
-  color: #be176b;
+  color: #c47200;/*#be176b;*/
   text-align: left;
 }
 
@@ -94,7 +99,7 @@ a {
 
 hr {
   width: 56px;
-  border: .5px solid #be176b;
+  border: .5px solid #c47200; /*#c47200;*/
   -webkit-transition: width .4s;
   transition: width .4s;
 }
@@ -277,7 +282,7 @@ hr {
 
 
 .section3 h3 span {
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 
@@ -300,7 +305,7 @@ hr {
 .section3 .requadre_itinerari .rectangle {
   width: 73px;
   height: 44px;
-  background-color: #f9c9e1;
+  background-color: #FCE5C8;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   padding: 2px;
@@ -323,7 +328,7 @@ hr {
 }
 
 .section3 .requadre_itinerari .rectangle_destacat {
-  background-color: #be176b;
+  background-color: #c47200; /*#c47200;*/
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -370,7 +375,7 @@ hr {
   justify-content: center;
   width: 73px;
   height: 44px;
-  background-color: #f9c9e1;
+  background-color: #FCE5C8;
 
 }
 
@@ -386,7 +391,7 @@ hr {
   justify-content: center;
   width: 148px;
   height: 44px;
-  background-color: #be176b;
+  background-color: #c47200; /*#c47200;*/
 
 }
 
@@ -417,23 +422,23 @@ hr {
 .section3 .requadre_distribucio .rectangle_simple:nth-of-type(5) {
   border-bottom-left-radius: 3px;
   font-size: 17px;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 .section3 .requadre_distribucio .rectangle_simple:nth-of-type(6) {
   font-size: 17px;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 .section3 .requadre_distribucio .rectangle_simple:nth-of-type(7) {
   font-size: 17px;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 .section3 .requadre_distribucio .rectangle_simple:nth-of-type(8) {
   border-bottom-right-radius: 3px;
   font-size: 17px;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 .section3 .requadre_distribucio .rectangle_simple:nth-of-type(9) {
@@ -503,7 +508,7 @@ hr {
 }
 
 #rowDistribHoraria2 .cellDistribHoraria {
-  background-color: #BE176B;
+  background-color: #c47200;
   color: #ffffff;
   font-size: 19px;
 }
@@ -517,8 +522,8 @@ hr {
 }
 
 #rowDistribHoraria3 .cellDistribHoraria {
-  background-color: #F9C9E1;
-  color: #BE176B;
+  background-color: #FCE5C8;
+  color: #c47200;
   font-size: 19px;
 }
 
@@ -701,7 +706,7 @@ hr {
 .section5 .own_table th {
   height: 40px;
   width: 145px;
-  background-color: #be176b;
+  background-color: #c47200; /*#c47200;*/
   color: #ffffff;
   font-size: 10.5px;
   font-weight: bold;
@@ -712,9 +717,9 @@ hr {
 .section5 .own_table td {
   height: 40px;
   width: 145px;
-  background-color: #f9c9e1;
+  background-color: #FCE5C8;
   font-size: 13px;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 .section5 .own_table th[rowspan] {
@@ -725,19 +730,38 @@ hr {
 
 .section51 {
   margin: 34px 0 56px 0;
+  text-align: left;
+}
+
+.section51 p, .section51 ul {
+  text-align: left;
+}
+
+.section51 p {
+  margin-bottom: 20px; /* Adjust this value for more or less space */
+}
+
+.section51 ul {
+  list-style-position: inside; /* Ensures bullets are inside the margin */
+  padding-left: 20px; /* Adjust indentation of the entire list */
+  margin-left: 0; /* Reset any extra margin */
+  margin-bottom: 20px; /* Adjust this value for more or less space */
+}
+
+.section51 ul li {
+  padding-left: 10px; /* Add additional indentation to the text if needed */
 }
 
 .section51 h2 {
   font-size: 19px;
   font-weight: bold;
-  text-align: center;
   padding-bottom: 42px;
 }
 
 .section51 .own_table_csa th {
   height: 40px;
   width: 145px;
-  background-color: #be176b;
+  background-color: #c47200; /*#c47200;*/
   color: #ffffff;
   font-size: 10.5px;
   font-weight: bold;
@@ -748,9 +772,9 @@ hr {
 .section51 .own_table_csa td {
   height: 40px;
   width: 145px;
-  background-color: #f9c9e1;
+  background-color: #FCE5C8;
   font-size: 13px;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 .section51 .own_table_csa {
     margin: 0 auto; /* Establece los márgenes izquierdo y derecho a 'auto', lo que centra horizontalmente la tabla */
@@ -781,7 +805,7 @@ hr {
 .section6 .own_table th {
   height: 40px;
   width: 145px;
-  background-color: #be176b;
+  background-color: #c47200; /*#c47200;*/
   color: #ffffff;
   font-size: 10.5px;
   font-weight: bold;
@@ -791,9 +815,9 @@ hr {
 
 .section6 .own_table td {
   height: 40px;
-  background-color: #f9c9e1;
+  background-color: #FCE5C8;
   font-size: 12px;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 .section6 .own_table th:first-of-type {
@@ -804,7 +828,7 @@ hr {
 
 .section6 p span {
   font-weight: 700;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 /* Section 7 */
@@ -868,19 +892,19 @@ hr {
 .section7 h3 {
   font-size: 16px;
   text-align: center;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
   margin-bottom: 27px;
 }
 
 .section7 .vertical_separator {
-  border-left: 1px solid #E8ADCB;
+  border-left: 1px solid #F7C8A6;
   height: 92px;
   width: 1px;
   margin-top: 35px;
 }
 
 .section7 .horizontal_separator {
-  border-bottom: 1px solid #E8ADCB;
+  border-bottom: 1px solid #F7C8A6;
   height: 1px;
   width: 48px;
   margin-top: 27px;
@@ -891,7 +915,7 @@ hr {
 
 .section7 p span {
   font-weight: 700;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 /* Section 8 */
@@ -942,7 +966,7 @@ hr {
 #final p {
   font-weight: bold;
   letter-spacing: 0.9px;
-  color: #be176b;
+  color: #c47200; /*#c47200;*/
 }
 
 .section8 .percentatges_chart {
@@ -981,8 +1005,8 @@ hr {
   height: 40px;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  background-color: #f9c9e1;
-  color: #be176b;
+  background-color: #FCE5C8;
+  color: #c47200; /*#c47200;*/
   margin-right: 2px;
   font-size: 12.5px;
 }
@@ -1001,8 +1025,8 @@ hr {
   height: 40px;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
-  background-color: #f9c9e1;
-  color: #be176b;
+  background-color: #FCE5C8;
+  color: #c47200; /*#c47200;*/
   font-size: 15px;
   margin-right: 2px;
   font-size: 12.5px;
@@ -1079,8 +1103,8 @@ hr {
 }
 
 [id*="title_row"] .cellQualificacio {
-  background-color: #F9C9E1;
-  color: #BE176B;
+  background-color: #FCE5C8;
+  color: #c47200;
   font-size: 15px;
   border: 1px solid #ffffff;
 }
@@ -1107,7 +1131,7 @@ hr {
 }
 
 [id*="title_row"]:last-child .cellQualificacio:first-child {
-  color: #BE176B;
+  color: #c47200;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: .8px;
@@ -1164,7 +1188,7 @@ hr {
   .main_header h1 {
     padding-top: 102px;
     padding-bottom: 64px;
-    font-size: 23px;
+    font-size: 34px;
     font-weight: bold;
     letter-spacing: .5px;
     color: #ffffff;
@@ -1187,7 +1211,7 @@ hr {
     top: 46px;
     height: 19px;
     width: 2000px;
-    background-color: #be176b;
+    background-color:#c47200; /*#c47200;*/
     margin-left: -2020px;
   }
 
@@ -1551,7 +1575,7 @@ hr {
 
   .section5 .own_table td {
     font-size: 15px;
-    color: #be176b;
+    color: #c47200; /*#c47200;*/
   }
 
   .section5 .own_table th[rowspan] {
@@ -1581,7 +1605,7 @@ hr {
 
   .section6 .own_table td {
     font-size: 15px;
-    color: #be176b;
+    color: #c47200; /*#c47200;*/
   }
 
   .section6 .own_table th:first-of-type {

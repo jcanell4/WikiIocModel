@@ -255,14 +255,14 @@
                             "default":"01/01/2000"
                         },
                         "provaOralIni": {
-                            "type": "date",
-                            "mandatory": false,
-                            "default":"01/01/2000"
+                            "type": "string",
+                            "default": "per determinar",
+                            "mandatory": false
                         },
                         "provaOralFi": {
-                            "type": "date",
-                            "mandatory": false,
-                            "default":"01/01/2000"
+                            "type": "string",
+                            "default": "Per determinar",
+                            "mandatory": false
                         },
                         "dadesBlocs": {
                             "type": "defTaulaDadesBlocs",

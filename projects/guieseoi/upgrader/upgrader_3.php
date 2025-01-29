@@ -26,15 +26,18 @@ class upgrader_3 extends CommonUpgrader {
                     $filename = $this->model->getProjectDocumentName();
                 }
                 $doc = $this->model->getRawProjectDocument($filename);
-                
-                
+
                 $txt_v2 = $this->model->getRawProjectTemplate("continguts", 2);
                 $txt_v3 = $this->model->getRawProjectTemplate("continguts", 3);
-                $l20_l22_v2 =  $this->substringFromLineToLineAsPattern($txt_v2, 20, 22);
-                $l68_l70_v3 = $this->substringFromLineToLine($txt_v3,68, 70);
+                
+                $l20_l22_v2 = $this->substringFromLineToLineAsPattern($txt_v2, 20, 22);
+                $l20_l22_v3 = $this->substringFromLineToLine($txt_v3,20, 22);
+                $l68_l81_v2 = $this->substringFromLineToLineAsPattern($txt_v2, 68, 81);
+                $l68_l91_v3 = $this->substringFromLineToLine($txt_v3,68, 91);
    
                 $aTokRep = [
-                    [$l20_l22_v2, $l68_l70_v3]
+                    [$l20_l22_v2, $l20_l22_v3],
+                    [$l68_l81_v2, $l68_l91_v3]
                 ];
                 $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
 

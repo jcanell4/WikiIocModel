@@ -241,7 +241,15 @@
         <h3>Prova Oral</h3>
         <div class="section7_icona" id="pv-icona"></div> 
          <div class="provaOral">
-             <h3>del {#_DATE("{##provaOralIni##}")_#} al {#_DATE("{##provaOralFi##}")_#}</h3></div>
+        
+        <WIOCCL:IF condition="{##provaOralIni##}==''per determinar''||{##provaOralFi##} ==''per determinar''">
+            <h3>La prova oral està per determinar</h3></div>
+        </WIOCCL:IF>
+        <WIOCCL:IF condition="{##provaOralIni##}!=''per determinar''&&{##provaOralFi##} !=''per determinar''">
+            <h3>del {##provaOralIni##} al {##provaOralFi##}</h3></div>
+        </WIOCCL:IF>
+
+        
 	<div class="horizontal_separator"></div>
         </div>
         <div class="vertical_separator"></div>

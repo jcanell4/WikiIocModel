@@ -78,7 +78,17 @@ Per superar la prova de certificació cal obtenir un mínim del 65% de la puntua
 
 :###======= Prova Oral =======###:
 
-La prova oral serà del {#_DATE("{##provaOralIni##}")_#} al {#_DATE("{##provaOralFi##}")_#}
+<WIOCCL:IF condition="{##provaOralIni##}==''per determinar''">
+La prova oral està per determinar.
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##provaOralIni##}!=''per determinar''">
+<WIOCCL:IF condition="{##provaOralFi##} ==''per determinar''">
+La prova oral està per determinar.
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##provaOralFi##} !=''per determinar''">
+La prova oral serà del {##provaOralIni##} al {##provaOralFi##}
+</WIOCCL:IF>
+</WIOCCL:IF>
 
 :###======= Prova escrita =======###:
 
