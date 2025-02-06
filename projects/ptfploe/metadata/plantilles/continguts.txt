@@ -309,7 +309,7 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 :###
 
 ::table:T10
-  :title:Dates PAFs
+  :title:Dates PAF
   :type:pt_taula
   :footer:La data i l'hora de la PAF es comunicarà des del Taulell de Tutoria.
 ^  PAF  ^  Data  ^  Publicació qualificació  ^
@@ -472,7 +472,7 @@ S'ofereixen dues convocatòries cada semestre: JT i recuperació JT. Només es t
 
 :###
 <WIOCCL:IF condition="{##nouCurr##}==false">
-Al final de cada semestre, l’estudiant s’ha de presentar a una prova d’avaluació final (PAF) **obligatòria** per aprovar cada UF (consulteu dates clau a la taula::table:T10:).
+Al final de cada semestre, l’estudiant s’ha de presentar a una prova d’avaluació final (PAF) **obligatòria** per aprovar cada UF (consulteu dates clau a la taula :table:T10:).
 
 La prova d'avaluació final (PAF):
 
@@ -484,12 +484,12 @@ La prova d'avaluació final (PAF):
   * S'ha d'obtenir una **nota mínima de {##notaMinimaPAF##},00 sense arrodoniment** per poder aplicar el càlcul de la QF.
 
 
-Per cada UF, s'ofereixen dues convocatòries cada semestre: convocatòria PAF1 i convocatòria PAF2 (consulteu dates clau a la taula::table:T10:). Només es poden presentar a la PAF2 els alumnes que no s'hagin presentat a la PAF1 o que, havent-s'hi presentat, no hagin superat la UF.
+Per cada UF, s'ofereixen dues convocatòries cada semestre: convocatòria PAF1 i convocatòria PAF2 (consulteu dates clau a la taula :table:T10:). Només es poden presentar a la PAF2 els alumnes que no s'hagin presentat a la PAF1 o que, havent-s'hi presentat, no hagin superat la UF.
 
 </WIOCCL:IF>
 
 <WIOCCL:IF condition="{##nouCurr##}==true">
-Al final de cada semestre, l’estudiant s’ha de presentar a una prova d’avaluació final (PAF) **obligatòria** per aprovar (consulteu dates clau a la taula::table:T10:).
+Al final de cada semestre, l’estudiant s’ha de presentar a una prova d’avaluació final (PAF) **obligatòria** per aprovar (consulteu dates clau a la taula :table:T10:).
 
 La prova d'avaluació final (PAF):
 
@@ -500,18 +500,20 @@ La prova d'avaluació final (PAF):
   * Té una ponderació  a la qualificació final (QF) (vegeu l'apartat "Qualificació final").
   * S'ha d'obtenir una **nota mínima de {##notaMinimaPAF##},00 sense arrodoniment** per poder aplicar el càlcul de la qualificació final.
 
-S'ofereixen dues convocatòries cada semestre: convocatòria PAF1 i convocatòria PAF2 (consulteu dates clau a la taula::table:T10:). Només es podrà presentar a la PAF2, l'alumnat que no s'hagi presentat a la PAF1, o que havent-s'hi presentat, no hagi superat la UF.
+S'ofereixen dues convocatòries cada semestre: convocatòria PAF1 i convocatòria PAF2 (consulteu dates clau a la taula :table:T10:). Només es podrà presentar a la PAF2, l'alumnat que no s'hagi presentat a la PAF1, o que havent-s'hi presentat, no hagi superat el mòdul.
 
 </WIOCCL:IF>
 
 
 La convocatòria corresponent a la PAF1 s'esgota tant si l'estudiant s'hi presenta com si no (exceptuant  que l'estudiant hagi anul·lat la matrícula). La convocatòria corresponent a PAF2 només s'esgota si l'estudiant s'hi presenta.
 
+
 ###:
 
-:###====== Qualificació final ======###:
+:###<WIOCCL:IF condition="{##nouCurr##}==false">====== Qualificació final ======###:
 
 :###
+
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}==1">
 La qualificació final del {##tipusBlocModul##} (QF) es calcula a partir de l'aplicació de la fórmula següent:
 
@@ -523,33 +525,26 @@ La qualificació final del {##tipusBlocModul##} (QF) es calcula a partir de l'ap
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}\>1">
 ###:
 
-:###<WIOCCL:IF condition="{##nouCurr##}==false">===== Qualificació final de cada UF =====</WIOCCL:IF><WIOCCL:IF condition="{##nouCurr##}==true">:###===== Qualificació final dels RA (QFRA) =====</WIOCCL:IF>###:
+:###===== Qualificació final de cada UF =====###:
 
 :###
-<WIOCCL:IF condition="{##nouCurr##}==false">
 La qualificació final de les unitats formatives (QUF) es calcula a partir de l'aplicació de les fórmules següents:
-</WIOCCL:IF>
-<WIOCCL:IF condition="{##nouCurr##}==true">
-La qualificació final dels RA es calcula a partir de les qualificacions de l'AC i les qualificacions de la PAF, d'acord amb la fórmula següent:
-</WIOCCL:IF>
+
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
 <WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
 <WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
 <WIOCCL:SUBSET subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}">
 <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##filtered##},''ponderació'')_#}">
-<WIOCCL:IF condition="{##nouCurr##}==false">
+
   ***QUF{##itemUf[unitat formativa]##} = <WIOCCL:FOREACH var="item" array="{##filtered##}" counter="indFiltered">{##item[abreviació qualificació]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##indFiltered##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}">+ </WIOCCL:IF></WIOCCL:FOREACH>**
-</WIOCCL:IF>
-<WIOCCL:IF condition="{##nouCurr##}==true">
-  ***QU{##itemUf[unitat formativa]##} = <WIOCCL:FOREACH var="item" array="{##filtered##}" counter="indFiltered">{##item[abreviació qualificació]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##indFiltered##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}">+ </WIOCCL:IF></WIOCCL:FOREACH>**
-</WIOCCL:IF>
+
 </WIOCCL:SET>
 </WIOCCL:SUBSET>
 </WIOCCL:FOREACH>
 </WIOCCL:SET>
 </WIOCCL:SET>
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##nouCurr##}==false">
+
 
 La qualificació final és numèrica de l'1 al 10, sense decimals. Només es consideren aprovades les qualificacions iguals o superiors a 5,00.
 
@@ -623,23 +618,16 @@ Les qualificacions de la PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##}
 En cas de no superar la UF, el següent semestre s'han de tornar a fer totes les activitats (AC, PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i JT</WIOCCL:IF>). No es guardarà cap nota parcial de la UF per el següent semestre.
 
 </WIOCCL:IF>
-<WIOCCL:IF condition="{##nouCurr##}==true">
-
-La prova final, PAF, suposa un {##pesPAFnouCurr##}% de la nota.
-Per sumar l'AC s’ha d’obtenir una qualificació mínima de 4,00 a la PAF sense haver fet cap mena d'arrodoniment previ.
-
-En cas de no superar el {##tipusBlocModul##} el següent semestre s'han de tornar a fer totes les activitats (AC, PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i JT</WIOCCL:IF>). No es guardarà cap nota parcial per el següent semestre.
-</WIOCCL:IF>
 
 
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}\>1">
+<WIOCCL:IF condition="{##nouCurr##}==false">
 ###:
 
-:###===== Qualificació final del mòdul <WIOCCL:IF condition="{##nouCurr##}==true">professional (QFMP) </WIOCCL:IF>=====###:
+:###===== Qualificació final del mòdul professional (QFMP) =====###:
 
 :###
-<WIOCCL:IF condition="{##nouCurr##}==false">
 La superació del mòdul s’obté amb la superació de les UF que el componen. La qualificació final del mòdul (QFM) serà el resultat de la mitjana de les qualificacions de les diferents UF d'acord amb la següent ponderació:
 
 <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUF##},''ponderació'')_#}">
@@ -649,15 +637,29 @@ La superació del mòdul s’obté amb la superació de les UF que el componen. 
 En cas de no superar alguna UF el mòdul quedarà pendent. Només es consideren aprovades les qualificacions iguals o superiors a 5,00. <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">La qualificació final del bloc s’expressarà com a Superat o Pendent.</WIOCCL:IF>
 </WIOCCL:IF>
 <WIOCCL:IF condition="{##nouCurr##}==true">
+###:
 
-La qualificació final del mòdul professional (QFMP) es calcula a partir de les qualificacions del RA. Cal haver superat tots els RA per poder calcular la QFMP
+:###====== Qualificació final del mòdul professional (QF) ======###:
 
-La qualificació final del modul és numèrica de l'1 al 10, sense decimals. La qualificació mínima per superar el mòdul és 5,00.
+:###
+La qualificació final del mòdul professional (QF) es calcula a partir de les qualificacions ponderades dels RA a l’avaluació contínua (AC) i a la prova d'avaluació final (PAF). Cal haver superat tots els RA per poder calcular la QF.
 
-Si no se superen tots els RA del mòdul que estan associats a les hores de formació en el centre educatiu, cal repetir el mòdul sencer i tots els seus RA en un altre semestre.
+La ponderació dels RA, tant a l'AC com a la PAF, és la següent:
+###:
+[##TODO: Concreteu el pes de cada RA.##]
+AC/PAF: x% RA1 + x% RA2 + x% RA3 + ... + x% RAn
 
-Les qualificacions de RA dels mòduls que tenen associats RA d'estada a l'empresa es guarden fins que es puguin avaluar els RA d'estada a l'empresa, sempre que s'hagin superat tots els RA associats a la formació en el centre educatiu.
+:###La ponderació de l'AC i la PAF a la qualificació final és la següent: ###:
 
+QF = 40% AC + 60% PAF
+
+:###La prova final, PAF, suposa un 60% de la qualificació final i s'ha d’obtenir una qualificació mínima de 4,00 a la PAF, sense haver fet cap mena d’arrodoniment previ, per poder sumar l'AC a la qualificació de la PAF.
+
+La qualificació final del mòdul professional és numèrica de l’1 al 10, sense decimals. La qualificació mínima per superar el mòdul és 5,00.
+
+Si no se superen tots els RA associats a les hores de formació del mòdul o del bloc en el centre educatiu, cal repetir el mòdul sencer en un altre semestre. No es guardarà cap qualificació parcial per a un altre semestre.
+
+Les qualificacions dels RA dels mòduls que també tenen associats RA d’estada a l’empresa es guarden fins que es puguin avaluar aquests últims RA.
 </WIOCCL:IF>
 
 </WIOCCL:IF>

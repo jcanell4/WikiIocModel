@@ -290,51 +290,92 @@ section p{
     max-width: 92%; /* Container will occupy full width of screen on larger displays */
 }
 
+
 .section5 h2 {
   font-size: 19px;
   font-weight: bold;
   text-align: center;
   padding-bottom: 42px;
 }
-
-.section5 .own_table th {
-  height: 40px;
-  width: 145px;
-  background-color: #6e6ca2; //#be176b;
-  color: #ffffff;
-  font-size: 10.5px;
-  font-weight: bold;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
+/* General styling for the table */
+/* General styling for the table */
+.styled-table{
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+    font-family: Arial, sans-serif;
 }
 
-.section5 .own_table td {
-  height: 40px;
-  width: 145px;
-  background-color: #d1cde8; //#f9c9e1;
-  font-size: 13px;
-  color: #3c3a57; //#6e6ca2; //#be176b;
-  text-align: center;
+.styled-table th, .styled-table td {
+    border: 1px solid #dddddd;
+    padding: 15px;
+    text-align: left;
 }
 
-.section5 .own_table th[rowspan] {
-  width: 65px;
-  font-size: 12px;
+/* Updated colors to match the reference page */
+.styled-table th {
+    background-color: #6e6ca2;
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    font-size: 16px;
 }
 
-.section5 .own_table th:nth-child(2), 
-.section5 .own_table td:nth-child(2) {
-  width: 15%; /* Allows this column to have enough space but not too much */
-  text-align: left;
+.styled-table td {
+    background-color: #F7F9FC;
+    color: #333;
 }
 
-/* Specify the expanding width for "Adreça" column */
-.section5 .own_table th:nth-child(3), 
-.section5 .own_table td:nth-child(3) {
-    width: auto; /* Allows "Adreça" column to take up remaining space */
-    max-width: 100%; /* Ensures it can grow to fit */
-    padding-left: 16px; /* Adds left padding for better readability */
-    text-align: left; /* Aligns the content to the left */
+.styled-table tr:nth-child(even) td {
+    background-color: #E1E0F2; // #DCE4F0;
+}
+
+.styled-table th:first-child,
+.styled-table td:first-child {
+    width: 15%; /* Adjust as needed */
+    min-width: 120px; /* Prevents it from becoming too small */
+    text-align: left;
+}
+/* Ensure the last three columns have the same width */
+.styled-table th:nth-last-child(-n+3),
+.styled-table td:nth-last-child(-n+3) {
+    width: 10%; /* Adjust percentage based on your layout needs */
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+
+    .styled-table th, .styled-table td {
+        padding: 8px;
+        max-width: none; /* Removes restriction */
+        width: auto; /* Ensures flexibility */
+    }
+    /* Adjust columns to be more flexible on smaller screens */
+    .styled-table th:nth-last-child(-n+3),
+    .styled-table td:nth-last-child(-n+3) {
+        max-width: none; /* Adjust percentage based on your layout needs */
+        width: auto; /* Ensures flexibility */
+    }
+}
+
+@media (max-width: 480px) {
+
+    .styled-table th, .styled-table td {
+        padding: 8px;
+        max-width: none; /* Removes restriction */
+        width: auto; /* Ensures flexibility */
+    }
+    /* Adjust columns to be more flexible on smaller screens */
+    .styled-table th:first-child,
+    .styled-table td:first-child,
+    .styled-table th:nth-last-child(-n+3),
+    .styled-table td:nth-last-child(-n+3) {
+        max-width: none; /* Removes restriction */
+        width: auto; /* Ensures flexibility */
+    }
 }
 
 /* Top white row for the logo */
