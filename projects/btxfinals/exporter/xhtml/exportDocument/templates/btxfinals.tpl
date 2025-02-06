@@ -37,7 +37,7 @@
       <p><b>Matèries:</b>  {##dadesProves##}</p>
     
 
-    <table class="own_table">
+    <table class="styled-table">
       <tr>
         <th>Població</th>
         <th>Centre</th>
