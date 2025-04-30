@@ -935,7 +935,7 @@ class renderer_plugin_wikiiocmodel_ptxhtml extends Doku_Renderer {
         $this->doc .= DOKU_LF . DOKU_TAB . '</tr>' . DOKU_LF;
     }
 
-    function tableheader_open($colspan = 1, $align = null, $rowspan = 1){
+    function tableheader_open($colspan = 1, $align = null, $rowspan = 1){       
         $class = 'class="col' . $this->_counter['cell_counter']++;
         if ( !is_null($align) ) {
             $class .= ' '.$align.'align';
