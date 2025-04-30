@@ -1,0 +1,663 @@
+:###
+~~USE:WIOCCL~~
+###:
+:###====== Presentació ======###:
+
+:###
+
+Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul##} del</WIOCCL:IF> mòdul {##modulId##} {##modul##} {##descripcio##}
+
+Té una assignació de {##durada##} h<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##cicle##}'')_#}&&!{#_STR_CONTAINS(''Indiqueu'', ''{##cicle##}'')_#}"> de les {##duradaCicle##} h del cicle de {##cicle##}</WIOCCL:IF>. La coordinació és a càrrec de {##coordinador##} i la docència de  {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
+
+<WIOCCL:CHOOSE id="itineraris" lExpression="{#_ARRAY_LENGTH({##itinerarisRecomanats##})_#}">
+<WIOCCL:CASE forchoose="itineraris" rExpression="0">Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**</WIOCCL:CASE>
+<WIOCCL:CASE forchoose="itineraris" rExpression="1">
+<WIOCCL:SET var="itinerari" type="literal" value="{##itinerarisRecomanats[0]##}">
+Es recomana cursar-lo el semestre <WIOCCL:IF condition="{##semestre##}==1">{##itinerari[itinerariRecomanatS1]##}</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">{##itinerari[itinerariRecomanatS2]##}</WIOCCL:IF> de l'itinerari formatiu i suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
+</WIOCCL:SET>
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="itineraris">
+Es recomana cursar-lo:
+<WIOCCL:FOREACH var="item" array="{##itinerarisRecomanats##}">
+  * Semestre <WIOCCL:IF condition="{##semestre##}==1">{##item[itinerariRecomanatS1]##}</WIOCCL:IF><WIOCCL:IF condition="{##semestre##}==2">{##item[itinerariRecomanatS2]##}</WIOCCL:IF> del cicle {##item[mòdul]##}.
+</WIOCCL:FOREACH>
+
+Suposa una **dedicació setmanal mínima de {##dedicacio##} h.**
+</WIOCCL:DEFAULTCASE>
+</WIOCCL:CHOOSE>
+
+{##requerimentsMatricula##}
+###:
+
+:###====== Metodologia ======###:
+
+:###
+
+Se segueix una metodologia  basada en l’aprenentatge significatiu, mitjançant el seguiment de les eines d'aprenentatge que se us proposen al següent apartat per assolir els resultats d’aprenentatge (RA).
+
+És recomanable realitzar totes les activitats proposades, tant les que avalua el professor i per tant ponderen a l'avaluació contínua (AC), com les altres. Les activitats i exercicis no avaluats disposen de solució, fet que us permetrà portar el propi control del vostre aprenentatge.
+
+**El professorat resoldrà els possibles dubtes i orientarà en el ritme d'estudi i participació que s'ha de portar a terme per assolir els continguts.**
+
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
+Aquest <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">{##tipusBlocModul##}</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> disposa també de jornades tècniques (JT) per ajudar-vos a consolidar parts pràctiques específiques.
+</WIOCCL:IF>
+
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
+A banda de les PAF, caldrà fer EAF durant el semestre (vegeu l'apartat d'avaluació).
+</WIOCCL:IF>
+###:
+
+:###===== Eines d'aprenentatge  =====###:
+
+:###
+::table:T01
+  :title:Eines d'aprenentatge
+  :type:pt_taula
+^  Tipus	^  Eina	 ^  Opcionalitat	 ^  Puntuable  ^
+<WIOCCL:FOREACH var="item" array="{##einesAprenentatge##}">
+| {#_UCFIRST("{##item[tipus]##}")_#} | {##item[eina]##} | {##item[opcionalitat]##} | <WIOCCL:IF condition="{##item[puntuable]##}==true">Sí</WIOCCL:IF><WIOCCL:IF condition="{##item[puntuable]##}==false">No</WIOCCL:IF> |
+</WIOCCL:FOREACH>
+:::
+###:
+
+:###===== Desplegament dels RA =====###:
+
+:###
+En aquest <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> es descriuen els següents resultats d'aprenentatge:
+
+<WIOCCL:FOREACH var="item" array="{##resultatsAprenentatge##}">
+  ***{##item[id]##}:** {##item[descripcio]##}
+</WIOCCL:FOREACH>
+###:
+
+:###====== Temporització de continguts ======###:
+
+:###
+
+<WIOCCL:IF condition="{##nouCurr##}==false">
+
+<WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">
+
+Aquest mòdul està distribuït en les següents unitats:
+
+::table:T02
+  :title:Unitats
+  :type:pt_taula
+^  Núm. UF  ^  Títol unitat  ^  Durada  ^
+<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
+<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUF##}">
+|  UF{##item[unitat formativa]##}  | {##item[nom]##}  |  {##item[hores]##} h  |
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+:::
+</WIOCCL:IF>
+<WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">
+El mòdul s'imparteix en {#_MAX({##taulaDadesUF##}, ''MAX[bloc]'', ''bloc'')_#} blocs. Aquest pla de treball correspon al {##tipusBlocModul##} del  mòdul. Cada bloc està distribuït en les següents unitats:
+
+::table:T02
+  :title:Blocs
+  :type:pt_taula
+<WIOCCL:FOR counter="ind" from="1" to="{#_COUNTDISTINCT({##taulaDadesUF##}, [''bloc''])_#}">
+^BLOC {##ind##}^^^
+^  Núm. UF  ^  Títol unitat  ^  Durada  ^
+<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
+<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUF##}" filter="{##item[bloc]##}=={##ind##}">
+|  UF{##item[unitat formativa]##}  | {##item[nom]##}  |  {##item[hores]##} h  |
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+</WIOCCL:FOR>
+:::
+</WIOCCL:IF>
+
+
+
+
+</WIOCCL:IF>
+
+<WIOCCL:IF condition="{##nouCurr##}==true">
+<WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">
+
+Aquest mòdul està distribuït en les següents unitats:
+
+
+
+</WIOCCL:IF>
+
+
+</WIOCCL:IF>
+
+Cada unitat es divideix en els apartats que s'indiquen a continuació:
+
+::table:T04
+  :title:Desplegament de les unitats
+  :type:pt_taula
+<WIOCCL:FOREACH var="itemu" array="{##taulaDadesUnitats##}">
+^ U{##itemu[unitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h)    ^^
+^  Període  ^    Temporització  ^
+<WIOCCL:FOREACH var="itemc" array="{##calendari##}" filter="{##itemc[unitat]##}=={##itemu[unitat]##}">
+| {##itemc[tipus període]##} {##itemc[període]##}: {##itemc[descripció període]##}    |  {#_DATE("{##itemc[inici]##}", ".")_#}-{#_DATE("{##itemc[final]##}", ".")_#}  |
+</WIOCCL:FOREACH>
+</WIOCCL:FOREACH>
+:::
+
+###:
+
+:###====== Dates clau ======###:
+
+:###
+
+Les dates clau del semestre, que també podeu consultar al calendari de l'aula, són les següents.
+
+###:
+
+:###===== Dates de l'AC =====###:
+
+:###
+
+::table:T05
+  :title:Dates clau AC
+  :type:pt_taula
+^  Id  ^  Unitat  ^  Publicació de l'enunciat  ^  Lliurament  <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">^  Publicació de la solució  </WIOCCL:IF>^  Qualificació  ^
+<WIOCCL:SET var="previousEAC" type="literal" value="">
+<WIOCCL:SET var="sortedDatesAC" type="literal" value="{#_ARRAY_SORT({##datesAC##},''lliurament'')_#}">
+<WIOCCL:FOREACH var="itemAC" array="{##sortedDatesAC##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAC##}" rExpression="{##itemAC[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+| ::: |  U{##itemAC[unitat]##}  | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">| ::: </WIOCCL:IF>| ::: |
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
+|  {##itemAC[id]##}  |  U{##itemAC[unitat]##}  |  {#_DATE("{##itemAC[enunciat]##}")_#}  |  {#_DATE("{##itemAC[lliurament]##}")_#}  <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">|  <WIOCCL:IF condition="{##itemAC[hiHaSolucio]##}==true">{#_DATE("{##itemAC[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##itemAC[hiHaSolucio]##}==false">--</WIOCCL:IF>  </WIOCCL:IF>|  {#_DATE("{##itemAC[qualificació]##}")_#}  |
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAC" type="literal" value="{##itemAC[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+</WIOCCL:SET>
+:::
+
+###:
+
+:###
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
+===== Dates dels EAF i les recuperacions =====###:
+
+:###
+
+::table:T06
+  :title:Dates clau EAF
+  :type:pt_taula
+^  Id  ^  Unitat  ^  Publicació de l'enunciat  ^  Lliurament  <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">^  Publicació de la solució  </WIOCCL:IF>^  Qualificació  ^
+<WIOCCL:SET var="previousEAF" type="literal" value="">
+<WIOCCL:SET var="sortedDatesEAF" type="literal" value="{#_ARRAY_SORT({##datesEAF##},''lliurament'')_#}">
+<WIOCCL:FOREACH var="item" array="{##sortedDatesEAF##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+| ::: |  U{##item[unitat]##}  | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| ::: </WIOCCL:IF>| ::: |
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
+|  {##item[id]##}  |  U{##item[unitat]##}  |  {#_DATE("{##item[enunciat]##}")_#}  |  {#_DATE("{##item[lliurament]##}")_#}  <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">|  <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF>  </WIOCCL:IF>|  {#_DATE("{##item[qualificació]##}")_#}  |
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+</WIOCCL:SET>
+:::
+
+::table:T07
+  :title:Dates clau recuperació EAF
+  :type:pt_taula
+^  Id  ^  Unitat  <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">^  Publicació de l'enunciat  </WIOCCL:IF>^  Lliurament  <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">^  Publicació de la solució  </WIOCCL:IF>^  Qualificació  ^
+<WIOCCL:SET var="previousEAF" type="literal" value="">
+<WIOCCL:SET var="sortedDatesEAF" type="literal" value="{#_ARRAY_SORT({##datesEAF##},''lliurament recuperació'')_#}">
+<WIOCCL:FOREACH var="item" array="{##sortedDatesEAF##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAF##}" rExpression="{##item[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+| ::: |  U{##item[unitat]##}  | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">| ::: </WIOCCL:IF>| ::: |
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
+|  {##item[id]##}  |  U{##item[unitat]##}  <WIOCCL:IF condition="{##hiHaEnunciatRecuperacioPerEAF##}==true">|  <WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==true">{#_DATE("{##item[enunciat recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaEnunciatRecuperacio]##}==false">--</WIOCCL:IF>  </WIOCCL:IF>|  {#_DATE("{##item[lliurament recuperació]##}")_#}  <WIOCCL:IF condition="{##hiHaSolucioPerEAF##}==true">|  <WIOCCL:IF condition="{##item[hiHaSolucio]##}==true">{#_DATE("{##item[solució recuperació]##}")_#}</WIOCCL:IF><WIOCCL:IF condition="{##item[hiHaSolucio]##}==false">--</WIOCCL:IF>  </WIOCCL:IF>|  {#_DATE("{##item[qualificació recuperació]##}")_#}  |
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAF" type="literal" value="{##item[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+</WIOCCL:SET>
+:::
+</WIOCCL:IF>
+
+
+###:
+
+:###
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
+===== Dates de les JT i les recuperacions =====###:
+
+:###
+
+::table:T08
+  :title:Dates clau JT
+  :type:pt_taula
+^  Id  ^  Inscripció  ^  Publicació llista provisional  ^  Publicació llista definitiva  ^  Data de la jornada tècnica (JT)  ^  Qualificació  ^
+<WIOCCL:SET var="sortedDatesJT" type="literal" value="{#_ARRAY_SORT({##datesJT##},''llista provisional'')_#}">
+<WIOCCL:FOREACH var="item" array="{##sortedDatesJT##}">
+|  {##item[id]##}  |  {#_DATE("{##item[inscripció]##}")_#}  |  {#_DATE("{##item[llista provisional]##}")_#}  |  {#_DATE("{##item[llista definitiva]##}")_#}  |  {#_DATE("{##item[data JT]##}")_#}  |  {#_DATE("{##item[qualificació]##}")_#}  |
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+:::
+
+<WIOCCL:IF condition="{##hiHaRecuperacioPerJT##}==true">
+::table:T09
+  :title:Dates clau recuperació JT
+  :type:pt_taula
+^  Id  ^  Inscripció  ^  Publicació llista provisional  ^  Publicació llista definitiva  ^  Data de la jornada tècnica (JT)  ^  Qualificació  ^
+<WIOCCL:SET var="sortedDatesJT" type="literal" value="{#_ARRAY_SORT({##datesJT##},''llista provisional recuperació'')_#}">
+<WIOCCL:FOREACH var="item" array="{##sortedDatesJT##}"><WIOCCL:IF condition="{##item[hiHaRecuperacio]##}==true">
+|  {##item[id]##}  |  {#_DATE("{##item[inscripció recuperació]##}")_#}  |  {#_DATE("{##item[llista provisional recuperació]##}")_#}  |  {#_DATE("{##item[llista definitiva recuperació]##}")_#}  |  {#_DATE("{##item[data JT recuperació]##}")_#}  |  {#_DATE("{##item[qualificació recuperació]##}")_#}  |
+</WIOCCL:IF>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+:::
+</WIOCCL:IF>
+</WIOCCL:IF>
+
+###:
+
+:###===== Dates de les PAF =====###:
+
+:###
+
+::table:T10
+  :title:Dates PAF
+  :type:pt_taula
+  :footer:La data i l'hora de la PAF es comunicarà des del Taulell de Tutoria.
+^  PAF  ^  Data  ^  Publicació qualificació  ^
+|  1  |  {#_DATE("{##dataPaf11##}")_#}<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPaf12##}'')_#}"> o {#_DATE("{##dataPaf12##}")_#}</WIOCCL:IF>  |  {#_DATE("{##dataQualificacioPaf1##}")_#}  |
+|  2  |  {#_DATE("{##dataPaf21##}")_#}<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPaf22##}'')_#}"> o {#_DATE("{##dataPaf22##}")_#}</WIOCCL:IF>  |  {#_DATE("{##dataQualificacioPaf2##}")_#}  |
+:::
+
+
+###:
+
+:###====== Avaluació ======###:
+
+:###
+
+<WIOCCL:IF condition="{##avaluacioInicial##}==''INICI''">
+###:
+
+:###===== Avaluació inicial =====###:
+
+:###
+
+Es planteja a l'inici del semestre. El seu objectiu és detectar i fer conscients els estudiants dels seus coneixements previs. Permet al professor adaptar l'ajuda pedagògica al grup i, si escau, de manera personalitzada a l'estudiant que ho precisi
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##avaluacioInicial##}==''PER_UF''">
+###:
+
+:###===== Avaluació inicial =====###:
+
+:###
+
+Es planteja a l'inici de cada UF. El seu objectiu és detectar i fer conscients els estudiants dels seus coneixements previs. Permet al professor adaptar l'ajuda pedagògica al grup i, si escau, de manera personalitzada a l'estudiant que ho precisi
+</WIOCCL:IF>
+
+###:
+
+:###===== Avaluació contínua (AC) =====###:
+
+:###
+
+El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’estudiant mitjançant l’AC. Està constatat que l’èxit en els estudis a distància està directament relacionat amb el ritme d’estudi continuat al llarg de tot el període acadèmic. Es recomana a tots els estudiants que segueixin l’avaluació contínua atès que forma part de la qualificació final. 
+
+L'AC es fa a distància i es concreta en:
+
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
+<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
+<WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
+<WIOCCL:IF condition="{##nouCurr##}==false">
+  * Unitat formativa {##itemUf[unitat formativa]##}
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##nouCurr##}==true">
+  * Unitat {##itemUf[unitat formativa]##}
+</WIOCCL:IF>
+<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}&&''{##item[tipus qualificació]##}''==''AC''">
+      * {##item[descripció qualificació]##} ({##item[abreviació qualificació]##})
+</WIOCCL:FOREACH>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+</WIOCCL:SET>
+
+Les activitats de l'avaluació contínua inclouen la publicació d'una solució, la valoració general al grup classe i una retroacció individual a cada estudiant.
+
+Cal tenir en compte que:
+<WIOCCL:IF condition="{##nouCurr##}==false">
+  * L’AC té una ponderació en la **qualificació final** de la UF (vegeu l'apartat <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">"Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">"Qualificació final de cada UF"</WIOCCL:IF>).
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##nouCurr##}==true">
+  * L’AC té una ponderació en la **qualificació final** .
+</WIOCCL:IF>
+  * Els EAC han de ser lliurats dins dels terminis fixats, el termini és **improrrogable**. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data de lliurament (consulteu dates clau a la taula :table:T05:).
+  * El seguiment correcte de l’AC compromet l’estudiant a fer les activitats proposades de manera individual, original i seguint les indicacions del professor. Els treballs o tasques d'AC que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
+  * En els EAC s'estableixen els criteris d'avaluació corresponents tant de contingut com de forma (per exemple, l'expressió lingüística i ortogràfica). 
+  * El professor corregeix els EAC i emet una qualificació numèrica de l'escala entre el 0 i el 10, amb dos decimals. 
+  * Per poder tenir en compte la qualificació de l’AC, s’ha d’aconseguir **a la PAF** una qualificació **mínima de {##notaMinimaPAF##},00 sense cap  arrodoniment** (PAF1 o PAF2).
+  * La qualificació de l'AC es té en compte tant a la PAF1 com a la PAF2 del mateix semestre, però no es guarda d'un semestre a l'altre.
+
+###:
+
+:###
+===== Eines d'avaluació final =====
+
+En aquest apartat s'expliquen les eines d'avaluació final usades en aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">bloc</WIOCCL:IF><WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF>.
+
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
+==== Exercici d'avaluació final (EAF) ====###:
+
+:###
+L'exercici proposa una activitat relacionada amb continguts procedimentals de la unitat formativa:
+
+  * És** no presencial**, es realitza a distància al llarg de la unitat formativa (consulteu  dates clau a les taules :table:T06: i :table:T07:).
+  * La seva realització és **obligatòria** per aprovar  la unitat formativa.
+  * És de caràcter <WIOCCL:IF condition="{##treballEquipEAF##}==true">grupal</WIOCCL:IF><WIOCCL:IF condition="{##treballEquipEAF##}!=true">individual</WIOCCL:IF>.
+<WIOCCL:IF condition="{##nouCurr##}==false">   * Té una ponderació en la **qualificació final** <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">del mòdul (vegeu l'apartat "Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">de la UF (vegeu l'apartat "Qualificació final de cada UF"</WIOCCL:IF>).</WIOCCL:IF><WIOCCL:IF condition="{##nouCurr##}==true">  * Té una ponderació en la **qualificació final**.</WIOCCL:IF>###:
+
+[##TODO: Definiu i determineu les característiques del treball en equip, si és el cas.##]
+
+[##TODO: Determineu els mecanismes que garanteixin  la identitat de l'estudiant que realitza l'EAF, adaptats a la proposta d'exercici, si és el cas (vídeos...) .##]
+:###
+
+L'EAF ha de ser lliurat dins els terminis fixats; el termini de lliurament és improrrogable. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data prevista per al lliurament (consulteu dates clau a les taules :table:T06: i :table:T07:). Es recomana no esperar al darrer moment per evitar imprevistos.
+
+Els EAF que siguin una còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran automàticament suspesos amb qualificació de 0. 
+
+Com que és part de l'avaluació final, l'EAF té dues convocatòries cada semestre: EAF i recuperació EAF. Només podrà presentar-se a la darrera convocatòria (recuperació EAF), l'alumnat <WIOCCL:IF condition="{##treballEquipEAF##}!=true">que no s'hagi presentat a la primera (EAF) o que havent-s'hi presentat</WIOCCL:IF><WIOCCL:IF condition="{##treballEquipEAF##}==true">que havent-se presentat a la primera (EAF)</WIOCCL:IF>, hagi tret una qualificació inferior a {##notaMinimaEAF##}.
+
+La convocatòria de l'EAF s'exhaureix tant si l'estudiant s'hi presenta com si no (excepte que l'estudiant hagi anul·lat la matrícula). La convocatòria de recuperació de l'EAF només s'exhaureix si l'estudiant s'hi presenta. 
+
+<WIOCCL:IF condition="{##treballEquipEAF##}==true">
+En el cas dels EAF establerts amb metodologia de treball en equip, l'estudiant té l'obligació de presentar-se a la convocatòria de l'EAF i només opta a presentar-se a l'EAF de recuperació quan:
+
+  * La recuperació implica tots els membres de l'equip, que han de lliurar de nou i conjuntament una mateixa tasca.
+  * La recuperació individual fa referència al contingut de l'exercici i no a la recuperació de les competències de la capacitat clau de treball en equip, que només es poden superar treballant novament en grup.
+</WIOCCL:IF>
+</WIOCCL:IF>
+
+###:
+
+:###
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
+==== Jornada tècnica (JT) ====###:
+
+:###
+
+Jornada presencial procedimental de la unitat formativa:
+
+  * És presencial.
+  * És obligatòria per aprovar la unitat formativa.
+  * Es fa al llarg del semestre (consulteu dates clau  a les taules :table:T08: i :table:T09:). 
+  * Es confirma la identitat de l'estudiant que la fa. ###:
+  * Té una durada màxima de [##TODO: X dies. Cada dia té una durada màxima de X h. (si ho considereu oportú)##].
+  * :###S'avalua numèricament entre el 0 i el 10, amb dos decimals.
+<WIOCCL:IF condition="{##nouCurr##}==false">
+  * Té una ponderació en la **qualificació final** <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">del mòdul (vegeu l'apartat "Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">de la UF (vegeu l'apartat "Qualificació final de cada UF"</WIOCCL:IF>).
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##nouCurr##}==true">
+  * Té una ponderació en la **qualificació final**.
+</WIOCCL:IF>
+  * Es necessita una nota mínima de {##notaMinimaJT##},00 sense arrodoniment per poder aplicar el càlcul de la QF.
+
+Per assistir a la JT és imprescindible:
+
+  * Apuntar-se a l'espai indicat pel professor dins dels terminis establerts.
+###:
+[##TODO: Afegiu altres punts amb les consideracions que considereu oprotunes##]
+
+:###
+<WIOCCL:IF condition="{##hiHaRecuperacioPerJT##}==true">
+S'ofereixen dues convocatòries cada semestre: JT i recuperació JT. Només es té accés a la convocatòria de recuperació JT si l'estudiant:
+
+  - Ha suspès la primera convocatòria.
+  - Ha patit un accident greu, un ingrés hospitalari, la mort d'un familiar fins a 2n grau (el mateix dia de la jornada) o ha  d'assistir a un judici (el mateix dia de la jornada)  que impossibiliti l'assistència  a la convocatòria JT.
+###:
+
+[##TODO: Indiqueu aquí els justificants que han de presentar, allò que considereu oportú. Per exemple: En el supòsit 2 s'ha d'aportar obligatòriament la documentació acreditativa (justificants o altres documents oficials degudament segellats i signats. Si no s'aporten els originals, han de ser fotocòpies compulsades). Aquesta documentació s'ha de lliurar a l'IOC a l'atenció del departament XXXX. La data límit per lliurar la documentació és: XX/XX/XXXX. En qualsevol dels casos, l'equip docent és qui resol si l'estudiant té dret a assistir a la recuperació JT. No hi haurà possibilitat d'elecció de centre, ni d'horari, només s'oferirà una opció que sortirà publicada en el tauler de l'aula##].
+:###
+</WIOCCL:IF>
+</WIOCCL:IF>
+###:
+
+:###==== Prova d'avaluació final (PAF) ====###:
+
+:###
+<WIOCCL:IF condition="{##nouCurr##}==false">
+Al final de cada semestre, l’estudiant s’ha de presentar a una prova d’avaluació final (PAF) **obligatòria** per aprovar cada UF (consulteu dates clau a la taula :table:T10:).
+
+La prova d'avaluació final (PAF):
+
+  * {##duradaPAF##}
+  * Consistirà en diversos exercicis: test, frases V/F, preguntes obertes, resolució d'un cas pràctic, etc.
+  * S'avalua numèricament del 0 al 10, amb dos decimals.
+  * NO inclou retroacció.
+  * Té una ponderació  a la qualificació final (QF) de la UF (vegeu l'apartat <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">"Qualificació final QF"</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">"Qualificació final de cada UF"</WIOCCL:IF>).
+  * S'ha d'obtenir una **nota mínima de {##notaMinimaPAF##},00 sense arrodoniment** per poder aplicar el càlcul de la QF.
+
+
+Per cada UF, s'ofereixen dues convocatòries cada semestre: convocatòria PAF1 i convocatòria PAF2 (consulteu dates clau a la taula :table:T10:). Només es poden presentar a la PAF2 els alumnes que no s'hagin presentat a la PAF1 o que, havent-s'hi presentat, no hagin superat la UF.
+
+</WIOCCL:IF>
+
+<WIOCCL:IF condition="{##nouCurr##}==true">
+Al final de cada semestre, l’estudiant s’ha de presentar a una prova d’avaluació final (PAF) **obligatòria** per aprovar (consulteu dates clau a la taula :table:T10:).
+
+La prova d'avaluació final (PAF):
+
+  * {##duradaPAF##}
+  * Consistirà en diversos exercicis: test, frases V/F, preguntes obertes, resolució d'un cas pràctic, etc.
+  * S'avalua numèricament del 0 al 10, amb dos decimals.
+  * NO inclou retroacció.
+  * Té una ponderació  a la qualificació final (QF) (vegeu l'apartat "Qualificació final").
+  * S'ha d'obtenir una **nota mínima de {##notaMinimaPAF##},00 sense arrodoniment** per poder aplicar el càlcul de la qualificació final.
+
+S'ofereixen dues convocatòries cada semestre: convocatòria PAF1 i convocatòria PAF2 (consulteu dates clau a la taula :table:T10:). Només es podrà presentar a la PAF2, l'alumnat que no s'hagi presentat a la PAF1, o que havent-s'hi presentat, no hagi superat el mòdul.
+
+</WIOCCL:IF>
+
+
+La convocatòria corresponent a la PAF1 s'esgota tant si l'estudiant s'hi presenta com si no (exceptuant  que l'estudiant hagi anul·lat la matrícula). La convocatòria corresponent a PAF2 només s'esgota si l'estudiant s'hi presenta.
+
+
+###:
+
+:###<WIOCCL:IF condition="{##nouCurr##}==false">====== Qualificació final ======###:
+
+:###
+
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}==1">
+La qualificació final del {##tipusBlocModul##} (QF) es calcula a partir de l'aplicació de la fórmula següent:
+
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUFs##},''ponderació'')_#}">
+**QF = <WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" counter="indx">{##item[abreviació qualificació]##} * {#_GET_PERCENT({##sum_ponderacio##},{##item[ponderació]##})_#}% <WIOCCL:IF condition="{##indx##}\<{#_SUBS({#_ARRAY_LENGTH({##dadesQualificacioUFs##})_#},1)_#}">+</WIOCCL:IF></WIOCCL:FOREACH>**
+</WIOCCL:SET>
+</WIOCCL:IF>
+
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}\>1">
+###:
+
+:###===== Qualificació final de cada UF =====###:
+
+:###
+La qualificació final de les unitats formatives (QUF) es calcula a partir de l'aplicació de les fórmules següents:
+
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
+<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
+<WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
+<WIOCCL:SUBSET subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}">
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##filtered##},''ponderació'')_#}">
+
+  ***QUF{##itemUf[unitat formativa]##} = <WIOCCL:FOREACH var="item" array="{##filtered##}" counter="indFiltered">{##item[abreviació qualificació]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##indFiltered##}\<{#_SUBS({#_ARRAY_LENGTH({##filtered##})_#},1)_#}">+ </WIOCCL:IF></WIOCCL:FOREACH>**
+
+</WIOCCL:SET>
+</WIOCCL:SUBSET>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+</WIOCCL:SET>
+</WIOCCL:IF>
+
+
+La qualificació final és numèrica de l'1 al 10, sense decimals. Només es consideren aprovades les qualificacions iguals o superiors a 5,00.
+
+Per sumar l'AC s’ha d’obtenir una qualificació mínima de {##notaMinimaPAF##},00 a la PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>{##notaMinimaEAF##},00 a l'EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i {##notaMinimaJT##},00 a la JT</WIOCCL:IF> sense haver fet cap tipus arrodoniment previ.
+
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}==1">
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUFs##},''ponderació'')_#}">
+<WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''EAF'',''JT''])_#}==0">
+**Si la qualificació de la PAF és inferior a {##notaMinimaPAF##},00, el càlcul de la QF serà el <WIOCCL:SUBSET subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_GET_PERCENT({##sum_ponderacio##},{#_FIRST({##filtered##}, ''FIRST[ponderació]'')_#})_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF.**
+</WIOCCL:IF>
+<WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''EAF'',''JT''])_#}\>0">
+Si la qualificació d'algun dels instruments d'avaluació obigatoris (PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i JT</WIOCCL:IF>) és inferior a la nota mínima indicada, el càlcul de la QF es farà tal com s'indica a la taula següent:
+::table:T10-1
+  :title:Càlcul QF per qualificacions inferiors a la nota mínima
+  :type:pt_taula
+^  Element d'avaluació obligatori ^ Nota mínima  ^  Càlcul aplicat per la QF ^
+<WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''PAF''])_#}\>0">
+|  PAF  |  {##notaMinimaPAF##},00  | <WIOCCL:SUBSET subsetvar="filteredPAF" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_GET_PERCENT({##sum_ponderacio##},{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#})_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF  |
+</WIOCCL:IF>
+<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[tipus qualificació]##}==''EAF''||{##item[tipus qualificació]##}==''JT''">
+|  {##item[abreviació qualificació]##}  |  <WIOCCL:IF condition="{##item[tipus qualificació]##}==''EAF''">{##notaMinimaEAF##},00</WIOCCL:IF><WIOCCL:IF condition="{##item[tipus qualificació]##}==''JT''">{##notaMinimaJT##},00</WIOCCL:IF>  | {#_GET_PERCENT({##sum_ponderacio##},{##item[ponderació]##})_#}% de la nota obtinguda a l'{##item[abreviació qualificació]##} |
+</WIOCCL:FOREACH>
+:::
+</WIOCCL:IF>
+</WIOCCL:SET>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}\>1">
+<WIOCCL:SET var="numEafOJt" type="literal" value="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''EAF'',''JT''])_#}">
+<WIOCCL:IF condition="{##numEafOJt##}\>0">
+Si la qualificació d'algun dels instruments d'avaluació obigatoris (PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i JT</WIOCCL:IF>) és inferior a la nota mínima indicada, el càlcul de la QUF es farà tal com s'indica a les taules següents:
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##numEafOJt##}==0">
+Si la qualificació de la PAF és inferior a {##notaMinimaPAF##},00, el càlcul de cada QUF serà:
+</WIOCCL:IF>
+
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
+<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
+<WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
+<WIOCCL:SUBSET subsetvar="filteredDadesQualificacioUFs" array="{##dadesQualificacioUFs##}" arrayitem="itemsubDadesQualificacioUFs" filter="{##itemsubDadesQualificacioUFs[unitat formativa]##}=={##itemUf[unitat formativa]##}">
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##filteredDadesQualificacioUFs##},''ponderació'')_#}">
+<WIOCCL:SUBSET subsetvar="filteredPAF" array="{##filteredDadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">
+<WIOCCL:IF condition="{##numEafOJt##}==0">
+  ***QUF{##itemUf[unitat formativa]##} = {#_GET_PERCENT({##sum_ponderacio##},{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#})_#}% de la nota de la UF{##itemUf[unitat formativa]##} obtinguda a la PAF**.
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##numEafOJt##}\>0">
+::table:T10-1.{##itemUf[unitat formativa]##}
+  :title:Càlcul QUF{##itemUf[unitat formativa]##} per qualificacions inferiors a la nota mínima
+  :type:pt_taula
+^  Element d'avaluació obligatori ^ Nota mínima  ^  Càlcul aplicat per la QUF{##itemUf[unitat formativa]##}  ^
+<WIOCCL:IF condition="{#_COUNTINARRAY({##filteredDadesQualificacioUFs##},''tipus qualificació'', [''PAF''])_#}\>0">
+|  PAF  |  {##notaMinimaPAF##},00  | <WIOCCL:SUBSET subsetvar="filteredPAF" array="{##filteredDadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">{#_GET_PERCENT({##sum_ponderacio##},{#_FIRST({##filteredPAF##}, ''FIRST[ponderació]'')_#})_#}</WIOCCL:SUBSET>% de la nota obtinguda a la PAF  |
+</WIOCCL:IF>
+<WIOCCL:FOREACH var="item" array="{##filteredDadesQualificacioUFs##}" filter="{##item[tipus qualificació]##}==''EAF''||{##item[tipus qualificació]##}==''JT''">
+|  {##item[abreviació qualificació]##}  |  <WIOCCL:IF condition="{##item[tipus qualificació]##}==''EAF''">{##notaMinimaEAF##},00</WIOCCL:IF><WIOCCL:IF condition="{##item[tipus qualificació]##}==''JT''">{##notaMinimaJT##},00</WIOCCL:IF>  | {#_GET_PERCENT({##sum_ponderacio##},{##item[ponderació]##})_#}% de la nota obtinguda a l'{##item[abreviació qualificació]##} |
+</WIOCCL:FOREACH>
+:::
+</WIOCCL:IF>
+</WIOCCL:SUBSET>
+</WIOCCL:SET>
+</WIOCCL:SUBSET>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+</WIOCCL:SET>
+</WIOCCL:SET>
+</WIOCCL:IF>
+
+<WIOCCL:IF condition="{#_COUNTINARRAY({##dadesQualificacioUFs##},''tipus qualificació'', [''EAF'',''JT''])_#}\>0">
+Les qualificacions de la PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>l'EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i la JT</WIOCCL:IF> aprovades, s'apliquen tant en la convocatòria de la PAF1 com en la de la PAF2
+</WIOCCL:IF>
+
+En cas de no superar la UF, el següent semestre s'han de tornar a fer totes les activitats (AC, PAF<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0"><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0"> i </WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">, </WIOCCL:IF>EAF</WIOCCL:IF><WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0"> i JT</WIOCCL:IF>). No es guardarà cap nota parcial de la UF per el següent semestre.
+
+</WIOCCL:IF>
+
+
+
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##taulaDadesUF##})_#}\>1">
+<WIOCCL:IF condition="{##nouCurr##}==false">
+###:
+
+:###===== Qualificació final del mòdul professional (QFMP) =====###:
+
+:###
+La superació del mòdul s’obté amb la superació de les UF que el componen. La qualificació final del mòdul (QFM) serà el resultat de la mitjana de les qualificacions de les diferents UF d'acord amb la següent ponderació:
+
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUF##},''ponderació'')_#}">
+**QFM= <WIOCCL:FOREACH var="item" array="{##taulaDadesUF##}" counter="ind">QUF{##item[unitat formativa]##} * {#_GET_PERCENT({##sum_ponderacio##},{##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUF##})_#},1)_#}">+</WIOCCL:IF></WIOCCL:FOREACH> **
+</WIOCCL:SET>
+
+En cas de no superar alguna UF el mòdul quedarà pendent. Només es consideren aprovades les qualificacions iguals o superiors a 5,00. <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">La qualificació final del bloc s’expressarà com a Superat o Pendent.</WIOCCL:IF>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##nouCurr##}==true">
+###:
+
+:###====== Qualificació final del mòdul professional (QF) ======###:
+
+:###
+La qualificació final del mòdul professional (QF) es calcula a partir de les qualificacions ponderades dels RA a l’avaluació contínua (AC) i a la prova d'avaluació final (PAF). Cal haver superat tots els RA per poder calcular la QF.
+
+La ponderació dels RA, tant a l'AC com a la PAF, és la següent:
+###:
+[##TODO: Concreteu el pes de cada RA.##]
+AC/PAF: x% RA1 + x% RA2 + x% RA3 + ... + x% RAn
+
+:###La ponderació de l'AC i la PAF a la qualificació final és la següent: ###:
+
+QF = 40% AC + 60% PAF
+
+:###La prova final, PAF, suposa un 60% de la qualificació final i s'ha d’obtenir una qualificació mínima de 4,00 a la PAF, sense haver fet cap mena d’arrodoniment previ, per poder sumar l'AC a la qualificació de la PAF.
+
+La qualificació final del mòdul professional és numèrica de l’1 al 10, sense decimals. La qualificació mínima per superar el mòdul és 5,00.
+
+Si no se superen tots els RA associats a les hores de formació del mòdul o del bloc en el centre educatiu, cal repetir el mòdul sencer en un altre semestre. No es guardarà cap qualificació parcial per a un altre semestre.
+
+Les qualificacions dels RA dels mòduls que també tenen associats RA d’estada a l’empresa es guarden fins que es puguin avaluar aquests últims RA.
+</WIOCCL:IF>
+
+</WIOCCL:IF>
+###:
+
+:###====== Planificació ======###:
+
+
+:###
+<WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
+<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
+<WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
+La planificació establerta per a la Unitat {##itemUf[unitat formativa]##} és la següent:
+::table:T11-{##itemUf[unitat formativa]##}
+  :title:Planificació U {##itemUf[unitat formativa]##}
+  :footer: <sup>*</sup> Atenció: podeu mirar la data màxima de lliurament de les activitats qualificables a l'apartat de les dates clau.
+  :type:pt_taula, pt_planif
+[^<WIOCCL:FOREACH  var="itemu" array="{##taulaDadesUnitats##}" filter="{##itemu[unitat formativa]##}=={##itemUf[unitat formativa]##}">
+**Unitat {##itemu[unitat]##}: {##itemu[nom]##} ({##itemu[hores]##} h)**  ^^
+<WIOCCL:FOREACH  var="item_per" array="{##calendari##}" filter="{##item_per[unitat]##}=={##itemu[unitat]##}">
+^**{#_UCFIRST(''{##item_per[tipus període]##}'')_#} {##item_per[període]##}: {##item_per[descripció període]##} ({##item_per[hores]##} h).     Activitats d'aprenentatge**  ^^
+| <WIOCCL:FOREACH  var="item_act" array="{##activitatsAprenentatge##}" filter="{##item_act[unitat]##}=={##item_per[unitat]##}&&{##item_act[període]##}=={##item_per[període]##}">- {##item_act[descripció]##} \\ </WIOCCL:FOREACH>     ||
+</WIOCCL:FOREACH>
+</WIOCCL:FOREACH>
+<WIOCCL:SUBSET  subsetvar="filtered" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[unitat formativa]##}=={##itemUf[unitat formativa]##}&&{##itemsub[tipus qualificació]##}!=''PAF''">
+<WIOCCL:FOREACH  var="itemAval" array="{##filtered##}" counter="idItemAval">
+^ <WIOCCL:IF condition="{##idItemAval##}==0">**Activitats qualificables<sup>*</sup>:**</WIOCCL:IF><WIOCCL:IF condition="{##idItemAval##}\>0">:::</WIOCCL:IF> | **{##itemAval[abreviació qualificació]##}: {##itemAval[descripció qualificació]##}** |<WIOCCL:IF condition="{#_ARRAY_LENGTH({##filtered##})_#}=={#_SUMA({##idItemAval##},1)_#}">]</WIOCCL:IF>
+
+</WIOCCL:FOREACH>
+</WIOCCL:SUBSET>
+:::
+
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+</WIOCCL:SET>
+
+###:
+
+
+
+

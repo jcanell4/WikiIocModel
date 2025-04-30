@@ -1,0 +1,28 @@
+defaultview.json
+
+props: els valors inclosos a la propietat props s'afegeixen com a props de la etiqueta html, com per exemple "readonly", "disabled", "required" o "title". La seva intencionalitat es que s'apliqui directament al bloc html i singuin propietats acceptades per html. També es farà servir per afegir propietats propies html que seràn utilitzades per l'aplicació, per exemple: "data-editable-element".
+
+
+config: valors de configuració especials que no s'han de mostrar al codi html, per exemple:
+* collapsable: booleà, indica si el bloc es collapsable o no (només aplicable a blocs)
+* collapsed: booleà (per defecte es pren el valor fals), indica si un bloc collapsable es trova collapsat (replegat) o no (desplegat)
+* readonly: pot tractar'se d'un booleà o un objecte. En el primer cas indica si es de només lectura, en el segon accepta dos propietats:
+	* class: classe php que es farà servir per validar si ha de ser de nomès lectura o no.
+	* data: dades requerides per la classe per realitzar la validació, per exemple amb la classe "ValidationByRoles" si es pasa com a data "['admin']" es comprovarà si l'usuari forma part del grup "admin".
+
+* actions: llistat d'accions amb el nom corresponent que mostrarà el botó (això només es aplicable als components que afegeixin aquests botons).
+* fields: diccionari amb la configuració dels camps
+	"clau": clau es el nom de la clau, que serà diferent per cada camp i podrà contenir diverses propietats:
+		* type: tipus de cel·la, per defecte es fa servir un input normal d'una sola línia. Altre stipus que es poden utilitzar:
+		    * string (tipus per defecte)
+			* textarea (multilínia)
+			* bool (check box)
+			* select (desplegable)
+			* date (data)
+			* number (numeric)
+		* options: configuració de les opcions per les cel·les de tipus select, el contingut serà un array amb els valors.
+		* input_on_new_row: booleà. TODO: determinar on es fa servir!
+* layout: configuració propia dels components Grid de dojo, si es troba aquest layout es farà servir en lloc de construir el layout al component.
+
+
+    a decimal:              "constraints": "{"\pattern\": \"0.00\"}", =   "constraints": "{\"places\":2}",
