@@ -330,7 +330,7 @@ section p{
 }
 
 .styled-table tr:nth-child(even) td {
-    background-color: #E1E0F2; // #DCE4F0;
+    background-color: #E1E0F2; /* #DCE4F0; */
 }
 
 .styled-table th:first-child,
