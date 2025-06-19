@@ -1,11 +1,11 @@
 <?php
 /**
- * ptfploeNouProjectModel
+ * ptfploe24ProjectModel
  * @culpable Rafael Claver
  */
 if (!defined("DOKU_INC")) die();
 
-class ptfploeNouProjectModel extends MoodleUniqueContentFilesProjectModel {
+class ptfploe24ProjectModel extends MoodleUniqueContentFilesProjectModel {
 
     public function __construct($persistenceEngine)  {
         parent::__construct($persistenceEngine);

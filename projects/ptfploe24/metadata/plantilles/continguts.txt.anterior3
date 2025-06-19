@@ -39,7 +39,13 @@ Per assolir els resultats d’aprenentatge (RA) se segueix una metodologia  basa
 
 **El professorat resoldrà els possibles dubtes i orientarà en el ritme d'estudi i participació que s'ha de portar a terme per assolir els objectius.**
 
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
+Aquest <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">{##tipusBlocModul##}</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> disposa també de jornades tècniques (JT) per ajudar-vos a consolidar parts pràctiques específiques.
+</WIOCCL:IF>
 
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
+A banda de les PAF, caldrà fer EAF durant el semestre (vegeu l'apartat d'avaluació).
+</WIOCCL:IF>
 ###:
 
 :###===== Eines d'aprenentatge  =====###:
@@ -91,7 +97,7 @@ En aquest <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">mòdul</WIOCCL
 
 
 :###====== Avaluació ======###:
-L'avaluació del mòdul es porta a terme mitjançant les activitats d'avaluació contínua i les eines d'avaluació que es detallen a continuació.
+
 :###
 
 <WIOCCL:IF condition="{##avaluacioInicial##}==''INICI''">
@@ -111,7 +117,7 @@ Es planteja a l'inici del semestre. El seu objectiu és detectar i fer conscient
 
 :###
 
-El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’estudiant mitjançant l’avaluació contínua (AC). Està constatat que l’èxit en els estudis a distància està directament relacionat amb el ritme d’estudi continuat al llarg de tot el període acadèmic. Es recomana a tots els estudiants que segueixin l’avaluació contínua, atès que forma part de la qualificació final. 
+El model pedagògic de l'IOC es fonamenta en l’avaluació acadèmica de l’estudiant mitjançant l’avaluació contínua (AC). Està constatat que l’èxit en els estudis a distància està directament relacionat amb el ritme d’estudi continuat al llarg de tot el període acadèmic. Es recomana a tots els estudiants que segueixin l’avaluació contínua atès que forma part de la qualificació final. 
 
 L'AC es fa a distància i es concreta en:
 
@@ -130,9 +136,9 @@ Les activitats de l'avaluació contínua inclouen la publicació d'una solució,
 
 Cal tenir en compte que:
   * La qualificació de l’AC forma part de la **qualificació final** .
-  * Els exercicis d'avaluació contínua (EAC) s'han de lliurar dins dels terminis fixats, el termini és **improrrogable**. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data de lliurament (consulteu les dates clau a la taula :table:T05:).
+  * Els exercicis d'avaluació contínua (EAC) han de ser lliurats dins dels terminis fixats, el termini és **improrrogable**. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data de lliurament (consulteu les dates clau a la taula :table:T05:).
   * El seguiment correcte de l’AC compromet l’estudiant a fer les activitats proposades de manera individual, original i seguint les indicacions del professor. Els treballs o tasques d'AC que siguin còpia (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
-  * Els criteris d'avaluació dels EAC fan referència tant al contingut com a la forma (per exemple, l'expressió lingüística i la correcció ortogràfica). 
+  * Els criteris d'avaluació dels EACs fan referència tant al contingut com a la forma (per exemple, l'expressió lingüística i la correcció ortogràfica). 
   * El professor corregeix els EAC i emet una qualificació numèrica entre el 0 i el 10, amb dos decimals. 
   * Per poder tenir en compte la qualificació de l’AC en el càlcul de la qualificació final, s’ha d’aconseguir una qualificació **mínima de {##notaMinimaPAF##},00 sense cap  arrodoniment** a la PAF.
   * La qualificació de l'AC es té en compte tant a la PAF1 com a la PAF2 del mateix semestre, però no es guarda d'un semestre a l'altre.
@@ -142,40 +148,37 @@ Cal tenir en compte que:
 :###
 ===== Eines d'avaluació final =====
 
-En aquest apartat es detallen les eines d'avaluació que s'utilitzen en aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">bloc</WIOCCL:IF><WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF>.
-
-<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
-Aquest <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">{##tipusBlocModul##}</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> inclou jornades tècniques (JT) per ajudar-vos a consolidar parts pràctiques específiques.
-</WIOCCL:IF>
+En aquest apartat s'expliquen les eines d'avaluació final qie s'utilitzen en aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">bloc</WIOCCL:IF><WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF>.
 
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
-A banda de les proves d'avaluació final (PAF), caldrà fer exercicis d'avaluació final (EAF) durant el semestre (vegeu l'apartat d'avaluació).
-</WIOCCL:IF>
-
-<WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
-==== Exercicis d'avaluació final (EAF) ====###:
+==== Exercici d'avaluació final (EAF) ====###:
 
 :###
-Els exercicis d'avaluació final tenen les característiques següents:
+L'exercici proposa una activitat relacionada amb continguts procedimentals de la unitat:
 
-  * Són** no presencials**, es fan a distància al llarg de la unitat (consulteu  dates clau a les taules :table:T06: i :table:T07:).
-  * Són **obligatoris** per aprovar.
-  * Poden ser individuals o grupals
-  * Tenen una ponderació en la **qualificació final**.###:
+  * És** no presencial**, es realitza a distància al llarg de la unitat (consulteu  dates clau a les taules :table:T06: i :table:T07:).
+  * La seva realització és **obligatòria** per aprovar.
+  * És de caràcter <WIOCCL:IF condition="{##treballEquipEAF##}==true">grupal</WIOCCL:IF><WIOCCL:IF condition="{##treballEquipEAF##}!=true">individual</WIOCCL:IF>.
+  * Té una ponderació en la **qualificació final**.###:
 
 [##TODO: Definiu i determineu les característiques del treball en equip, si és el cas.##]
 
 [##TODO: Determineu els mecanismes que garanteixin  la identitat de l'estudiant que realitza l'EAF, adaptats a la proposta d'exercici, si és el cas (vídeos...) .##]
 :###
 
-Els EAF s'han de lliurar dins els terminis fixats; el termini de lliurament és improrrogable. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data prevista per al lliurament (consulteu dates clau a les taules :table:T06: i :table:T07:).
+L'EAF ha de ser lliurat dins els terminis fixats; el termini de lliurament és improrrogable. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data prevista per al lliurament (consulteu dates clau a les taules :table:T06: i :table:T07:). Es recomana no esperar al darrer moment per evitar imprevistos.
 
-Els EAF que siguin una còpia (total o parcial) d'altres treballs, exercicis o fonts es consideraran automàticament suspesos amb una qualificació de 0. 
+Els EAF que siguin una còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran automàticament suspesos amb qualificació de 0. 
+
+Com que és part de l'avaluació final, l'EAF té dues convocatòries cada semestre: EAF i recuperació EAF. Només podrà presentar-se a la darrera convocatòria (recuperació EAF), l'alumnat <WIOCCL:IF condition="{##treballEquipEAF##}!=true">que no s'hagi presentat a la primera (EAF) o que havent-s'hi presentat</WIOCCL:IF><WIOCCL:IF condition="{##treballEquipEAF##}==true">que havent-se presentat a la primera (EAF)</WIOCCL:IF>, hagi tret una qualificació inferior a {##notaMinimaEAF##}.
 
 La convocatòria de l'EAF s'exhaureix tant si l'estudiant s'hi presenta com si no (excepte que l'estudiant hagi anul·lat la matrícula). La convocatòria de recuperació de l'EAF només s'exhaureix si l'estudiant s'hi presenta. 
 
 <WIOCCL:IF condition="{##treballEquipEAF##}==true">
-En el cas dels EAF establerts amb metodologia de treball en equip, la recuperació pot ser individual o en equip, depenent de les competències a avaluar.
+En el cas dels EAF establerts amb metodologia de treball en equip, l'estudiant té l'obligació de presentar-se a la convocatòria de l'EAF i només opta a presentar-se a l'EAF de recuperació quan:
+
+  * La recuperació implica tots els membres de l'equip, que han de lliurar de nou i conjuntament una mateixa tasca.
+  * La recuperació individual fa referència al contingut de l'exercici i no a la recuperació de les competències de la capacitat clau de treball en equip, que només es poden superar treballant novament en grup.
 </WIOCCL:IF>
 </WIOCCL:IF>
 
@@ -186,25 +189,33 @@ En el cas dels EAF establerts amb metodologia de treball en equip, la recuperaci
 ==== Jornada tècnica (JT) ====###:
 
 :###
-Les jornades tècniques tenen l'objectiu de consolidar els coneixements pràctics i tenen les característiques següents: 
 
-  * Són presencials.
-  * Són obligatòries per aprovar.
-  * Es fan al llarg del semestre (consulteu dates clau  a les taules :table:T08: i :table:T09:). 
-  * S'avaluen numèricament del 0 al 10, amb dos decimals. Per poder tenir en compte la qualificació de la JT en el càlcul de la qualificació final, s’ha d’aconseguir una qualificació **mínima de {##notaMinimaPAF##},00 sense cap  arrodoniment** a la PAF.
+Jornada presencial procedimental de la unitat:
 
-La qualificació de les JT forma part de la qualificació final. 
+  * És presencial.
+  * És obligatòria per aprovar la unitat.
+  * Es fa al llarg del semestre (consulteu dates clau  a les taules :table:T08: i :table:T09:). 
+  * Es confirma la identitat de l'estudiant que la fa. ###:
+  * Té una durada màxima de [##TODO: X dies. Cada dia té una durada màxima de X h. (si ho considereu oportú)##].
+  * :###S'avalua numèricament entre el 0 i el 10, amb dos decimals.
+  * Té una ponderació en la **qualificació final**.
+  * Es necessita una nota mínima de {##notaMinimaJT##},00 sense arrodoniment per poder aplicar el càlcul de la QF.
 
-Per poder assistir a la JT és imprescindible apuntar-se a l'espai indicat pel professor dins dels terminis establerts.
+Per assistir a la JT és imprescindible:
+
+  * Apuntar-se a l'espai indicat pel professor dins dels terminis establerts.
 ###:
 [##TODO: Afegiu altres punts amb les consideracions que considereu oprotunes##]
 
 :###
 <WIOCCL:IF condition="{##hiHaRecuperacioPerJT##}==true">
-Com que són part de l'avaluació final, els EAF tenen dues convocatòries cada semestre: EAF i recuperació EAF. Només poden presentar-se a la segona convocatòria (recuperació EAF), els alumnes <WIOCCL:IF condition="{##treballEquipEAF##}!=true">que no s'hagin presentat a la primera (EAF) o que havent-s'hi presentat</WIOCCL:IF><WIOCCL:IF condition="{##treballEquipEAF##}==true">que havent-se presentat a la primera (EAF)</WIOCCL:IF>, hagin obtingut una qualificació inferior a {##notaMinimaEAF##}.
+S'ofereixen dues convocatòries cada semestre: JT i recuperació JT. Només es té accés a la convocatòria de recuperació JT si l'estudiant:
+
+  - Ha suspès la primera convocatòria.
+  - Ha patit un accident greu, un ingrés hospitalari, la mort d'un familiar fins a 2n grau (el mateix dia de la jornada) o ha  d'assistir a un judici (el mateix dia de la jornada)  que impossibiliti l'assistència  a la convocatòria JT.
 ###:
 
-[##TODO: Indiqueu aquí els justificants que han de presentar, allò que considereu oportú. Per exemple: En el supòsit 2 s'ha d'aportar obligatòriament la documentació acreditativa (justificants o altres documents oficials degudament segellats i signats. Si no s'aporten els originals, han de ser fotocòpies compulsades). Aquesta documentació s'ha de lliurar a l'IOC a l'atenció del departament XXXX. La data límit per lliurar la documentació és: XX/XX/XXXX. En qualsevol dels casos, l'equip docent és qui resol si l'estudiant té dret a assistir a la recuperació JT. No hi haurà possibilitat d'elecció de centre, ni d'horari, només s'oferirà una opció que sortirà publicada en el tauler de l'aula##]
+[##TODO: Indiqueu aquí els justificants que han de presentar, allò que considereu oportú. Per exemple: En el supòsit 2 s'ha d'aportar obligatòriament la documentació acreditativa (justificants o altres documents oficials degudament segellats i signats. Si no s'aporten els originals, han de ser fotocòpies compulsades). Aquesta documentació s'ha de lliurar a l'IOC a l'atenció del departament XXXX. La data límit per lliurar la documentació és: XX/XX/XXXX. En qualsevol dels casos, l'equip docent és qui resol si l'estudiant té dret a assistir a la recuperació JT. No hi haurà possibilitat d'elecció de centre, ni d'horari, només s'oferirà una opció que sortirà publicada en el tauler de l'aula##].
 :###
 </WIOCCL:IF>
 </WIOCCL:IF>
@@ -251,7 +262,7 @@ La qualificació final del {##tipusBlocModul##} (QF) es calcula a partir de l'ap
 :###===== Qualificació de les unitats =====###:
 
 :###
-La qualificació de cada unitat es calcula a partir de l'aplicació de les fórmules següents:
+La qualificació de cada Unitat es calcula a partir de l'aplicació de les fórmules següents:
 
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
 <WIOCCL:SET var="sortedTaulaDadesUn" type="literal" value="{#_ARRAY_SORT({##taulaDadesUn##},''ordreImparticio'')_#}">
@@ -277,18 +288,18 @@ La qualificació de cada unitat es calcula a partir de l'aplicació de les fórm
 ###:
 
 :###===== Qualificació final del mòdul professional (QF) =====###:
-La qualificació final del mòdul professional  (QF) es calcula a partir de les qualificacions ponderades dels resultats d'aprenentatge (RA) a l’avaluació contínua (AC)
+La qualificació final del mòdul professional (QF) es calcula a partir de les qualificacions ponderades dels RA a l’avaluació contínua (AC)
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
-, exercicis d'avaluació final (EAF) i jornades tècniques (JT) </WIOCCL:IF>
+, EAF i JT </WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0">
-, i exercicis d'avaluació final (EAF) </WIOCCL:IF></WIOCCL:IF>
+, i EAF </WIOCCL:IF></WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}==0">
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
-, i jornades tècniques (JT) </WIOCCL:IF></WIOCCL:IF>
+, i JT </WIOCCL:IF></WIOCCL:IF>
  i a la prova d'avaluació final (PAF). Cal haver superat tots els RA per poder calcular la QF.
 
-La ponderació de les qualificacions dels RA per al càlcul de la qualificació final és la següent:
+La ponderació de les qualificacions sl càlcul de la qualificació final és la següent:
 :###
 
 <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##resultatsAprenentatge##},''ponderaRA'')_#}">
@@ -297,22 +308,18 @@ La ponderació de les qualificacions dels RA per al càlcul de la qualificació 
 
 ###:
 
-:###Així, el càlcul de la qualificació, d'acord amb els RA que inclou cada unitat, és el següent:
+:###Això fa que el càlcul de la qualificació en funció de les unitats sigui el següent:
+FINAL = U1 * 20% + U2 * 20% + U3 * 60% 
 
-<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUn##},''ponderació'')_#}">
- **QF = <WIOCCL:FOREACH var="item" array="{##taulaDadesUn##}" counter="ind">U{##item[unitat]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUn##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH>**                            
-</WIOCCL:SET>
-
-
-:###S'ha d’obtenir una qualificació mínima de {##notaMinimaPAF##},00 a la PAF, sense haver fet cap mena d’arrodoniment previ, per poder sumar les qualificacions de l'AC
+:###S'ha d’obtenir una qualificació mínima de {##notaMinimaPAF##},00 a la PAF, sense haver fet cap mena d’arrodoniment previ, per poder sumar l'AC
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
-, els EAF i les JT </WIOCCL:IF>
+, EAF i JT </WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0">
-, i els EAF </WIOCCL:IF></WIOCCL:IF>
+, i EAF </WIOCCL:IF></WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}==0">
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
-, i les JT </WIOCCL:IF></WIOCCL:IF>
+, i JT </WIOCCL:IF></WIOCCL:IF>
  a la qualificació de la PAF.
 
 La qualificació final del mòdul professional és numèrica de l’1 al 10, sense decimals. La qualificació mínima per superar el mòdul és 5,00.
@@ -450,7 +457,7 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 
 :###
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
-===== Dates dels EAF i de les recuperacions =====###:
+===== Dates dels EAF i les recuperacions =====###:
 
 :###
 
@@ -502,7 +509,7 @@ Les dates clau del semestre, que també podeu consultar al calendari de l'aula, 
 
 :###
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
-===== Dates de les JT i de les recuperacions =====###:
+===== Dates de les JT i les recuperacions =====###:
 
 :###
 

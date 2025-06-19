@@ -44,12 +44,13 @@
                         "descripcio": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "descripcio del resultat"
+                            "default": "Descripcio del RA"
                         },
                         "ponderaRA": {
                             "type": "decimal",
                             "constraints": "{\"places\":2}",
-                            "mandatory": true
+                            "mandatory": true,
+                            "default": "0"
                         }
                     }                    
                 },
@@ -81,7 +82,8 @@
                         "ponderació": {
                             "type": "decimal",
                             "constraints": "{\"places\":2}",
-                            "mandatory": true
+                            "mandatory": true,
+                            "default": "0"
                         }
                     }                    
                 },
@@ -315,6 +317,7 @@
                         },
                         "tipus període": {
                             "type": "string",
+                            "default": "Lliçó",
                             "mandatory": true
                         },
                         "descripció període": {
@@ -421,7 +424,8 @@
                         "ponderació": {
                             "type": "decimal",
                             "mandatory": true,
-                            "constraints": "{\"places\":2}"
+                            "constraints": "{\"places\":2}",
+                            "default": "0"
                         }
                     }
                 },
@@ -650,7 +654,7 @@
                         },                                                
                         "resultatsAprenentatge": {
                             "type": "defResultatsAprenentage",
-                            "default":[{"id":"01","descripcio":"Descripció del RA","ponderaRA":"0"}],   
+                            "default":[{"id":"RA1","descripcio":"Descripció del RA","ponderaRA":"0"}],   
                             "mandatory": true
                         },                                                
                         "activitatsAprenentatge": {

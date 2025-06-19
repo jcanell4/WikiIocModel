@@ -256,27 +256,27 @@
                   "title" : "Indiqueu quin és el semestre actual"
           }
         },
-        "taulaDadesUF": {
-          "label": "Unitats Formatives (taulaDadesUF)",
+        "taulaDadesUn": {
+          "label": "Unitats (taulaDadesUn)",
           "n_columns": 12,
           "type": "editableObject",
           "group": "main",
           "n_rows": 5,
           "props": {
             "data-editable-element": "table",
-            "title": "Detalleu les dades de cada UF. No cal que ompliu les hores de les UFs detallades en aquest bloc o mòdul, es calculen automàticament."
+            "title": "Detalleu les dades de cada Un. No cal que ompliu les hores de les Unitats detallades en aquest bloc o mòdul, es calculen automàticament."
           },
           "config": {
             "actions": {
               "add_default_row": "Afegir fila",
-              "remove_rows": "Eliminar les Unitats Formatives seleccionades",
+              "remove_rows": "Eliminar les Unitats seleccionades",
               "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
             },
             "fields": {
               "bloc":{
                 "type": "number"
               },
-              "unitat formativa": {
+              "unitat": {
                 "type": "number"
               },
               "nom": {
@@ -299,8 +299,8 @@
                 },
                 "cells": [
                   {
-                    "name": "unitat formativa",
-                    "field": "unitat formativa",
+                    "name": "unitat",
+                    "field": "unitat",
                     "editable": true
                   },
                   {
@@ -335,15 +335,15 @@
             ]
           }
         },
-        "taulaDadesUnitats": {
-          "label": "Unitats (taulaDadesUnitats)",
+        "taulaUnitatRAs": {
+          "label": "Unitats (taulaUnitatRAs)",
           "n_columns": 12,
           "type": "editableObject",
           "group": "main",
           "n_rows": 8,
           "props": {
             "data-editable-element": "table",
-            "title": "Detalleu les dades referents a cada unitat. No heu d'omplir les hores de les unitat, es calculen automàticament"
+            "title": "Detalleu les dades referents als RA de cada unitat."
           },
           "config": {
             "actions": {
@@ -352,17 +352,11 @@
               "add_default_row_before": {"label":"Afegir unitat abans de la fila seleccionada", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}}
             },
             "fields": {
-              "unitat formativa": {
-                "type": "number"
-              },
               "unitat": {
                 "type": "number"
               },
-              "nom": {
+              "RA": {
                 "type": "string"
-              },
-              "hores": {
-                "type": "number"
               }
             },
             "layout": [
@@ -372,34 +366,22 @@
                 },
                 "cells": [
                   {
-                    "name": "unitat formativa",
-                    "field": "unitat formativa",
-                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
-                  },
-
-                  {
                     "name": "unitat",
                     "field": "unitat",
                     "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                   },
 
                   {
-                    "name": "nom",
-                    "field": "nom",
+                    "name": "RA",
+                    "field": "RA",
                      "width":"55%",
                     "editable": true
-                  },
-
-                  {
-                    "name": "hores",
-                    "field": "hores",
-                    "editable": false
                   }
                 ]
               }
             ]
           }
-        },
+        }, 
         "einesAprenentatge": {
           "label": "Taula de les eines d'estudi (einesAprenentatge)",
           "n_columns": 12,
@@ -455,6 +437,9 @@
               },
               "descripcio": {
                 "type": "string"
+              },
+              "ponderaRA": {
+                "type": "decimal"
               }
             },
             "layout": [
@@ -474,6 +459,12 @@
                     "name": "descripció",
                     "field": "descripcio",
                     "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
+                  },
+                  {
+                    "name": "ponderaRA",
+                    "field": "ponderaRA",
+                    "constraints": "{\"places\":2}",
+                    "editable": true
                   }
                 ]
               }
@@ -983,7 +974,7 @@
           "group": "actualitzables",
           "props": {
             "required": true,
-            "title": "Text per informar de la durada de la PAF i/o de les Unitats Formatives"
+            "title": "Text per informar de la durada de la PAF i/o de les Unitats"
           }
         },
         "avaluacioInicial":{
@@ -993,13 +984,13 @@
           "group": "main",
           "props": {
             "required": true,
-            "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada UF"
+            "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada Unitat"
           },
            "config":{
               "options":[
                   {"description":"No es fa","value":"NO"},
                   {"description":"A l'inci","value":"INICI"},
-                  {"description":"Per cada UF","value":"PER_UF"}
+                  {"description":"Per cada Unitat","value":"PER_Un"}
               ]
            }
         },
@@ -1030,15 +1021,15 @@
             "title": "Indiqueu la nota mínima que cal treure a la JT per tal de poder ponderar la qualificació final"
           }
         },
-        "dadesQualificacioUFs": {
-          "label": "Qualificació de les UF (dadesQualificacioUFs)",
+        "dadesQualificacioUns": {
+          "label": "Qualificació de les Unitat (dadesQualificacioUns)",
           "n_columns": 12,
           "group": "main",
           "n_rows": 10,
           "type": "editableObject",
           "props": {
             "data-editable-element": "table",
-            "title": "Detalleu com pondera L'AC i la PAF per cada UF"
+            "title": "Detalleu com pondera L'AC i la PAF per cada Unitat"
           },
           "config": {
             "actions": {
@@ -1047,7 +1038,7 @@
               "add_default_row_before": {"condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}},"label":"Afegir dada abans de la fila seleccionada"}
             },
             "fields": {
-              "unitat formativa": {
+              "unitat": {
                 "type": "number"
               },
               "tipus qualificació": {
@@ -1071,8 +1062,8 @@
                 },
                 "cells": [
                   {
-                    "name": "unitat formativa",
-                    "field": "unitat formativa",
+                    "name": "unitat",
+                    "field": "unitat",
                     "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                   },
                   {

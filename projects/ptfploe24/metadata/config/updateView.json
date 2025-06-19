@@ -63,13 +63,13 @@
         "taulaDadesUn": {
             "type": "hidden"
         },
+        "resultatsAprenentatge": {
+            "type": "hidden"
+        },        
         "taulaUnitatRAs":  {
             "type": "hidden"
         },
         "einesAprenentatge": {
-            "type": "hidden"
-        },
-        "resultatsAprenentatge": {
             "type": "hidden"
         },
         "activitatsAprenentatge": {
