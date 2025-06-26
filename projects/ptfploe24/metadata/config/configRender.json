@@ -1,0 +1,23 @@
+{
+    "typesDefinition": {
+        "pla": {
+            "render": {
+                "typeDef":"pla",
+                "class": "exportDocument",
+                "fields": "ALL",
+                "extraFields": [{"name":"pdfDocument", "valueType":"field", "value":"fitxercontinguts"}]
+            },
+            "keys": {
+                "descripcio": {
+                    "render": {"class": "renderRenderizableText"}
+                },
+                "fitxercontinguts": {
+                    "render": {"class": "renderFile"}
+                },
+                "pdfDocument": {
+                    "render": {"class": "renderFileToPsDom"}
+                }
+            }
+        }
+    }
+}
