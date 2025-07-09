@@ -170,7 +170,7 @@ button {
  -ms-interpolation-mode: bicubic;
 }
 .ie6 html {
- filter: expression(document.execCommand ( "BackgroundImageCache", false, true) );
+ filter: expression(document.execCommand( "BackgroundImageCache", false, true) );
 }
 .clearfix:before,
 .clearfix:after {
