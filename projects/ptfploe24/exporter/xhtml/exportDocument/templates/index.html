@@ -518,7 +518,7 @@
 <section class="section section6">
   <div class="own_container">
     <h2>Avaluació contínua (AC)</h2>
-    <p>És recomanable fer <strong>les activitats d’avaluació contínua</strong>, ja que la qualificació obtinguda es té en compte per al càlcul de la qualificació final (<a href="#qualificacio">consulteu l'apartat de qualificació</a>).</p>
+    <p><strong>Les activitats d’avaluació contínua</strong> serveixen per posar en pràctica i per consolidar els coneixements adquirits i puntuen per al càlcul de la qualificació final (<a href="#qualificacio">consulteu l'apartat de qualificació</a>).</p>
     <br/>
     <p>Els lliuraments s'han de realitzar dins dels terminis fixats que són improrrogables.</p>
     <br/>
@@ -567,7 +567,7 @@
     <hr>
     <br/>
     <h2>Jornades tècniques</h2>
-    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> requereix l'assistència a les jornades tècniques (JT). A continuació se'n detallen les dates importants:</p>
+    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> requereix l'assistència a les jornades tècniques previstes (JT). A continuació se'n detallen les dates clau:</p>
     <table class="own_table">
       <tr>
         <th>Inscripció</th>
@@ -586,8 +586,11 @@
       </tr>
 </WIOCCL:FOREACH>            
     </table>
+<WIOCCL:IF condition="{##notaMinimaJT##}\>0">
+    <p>Cal obtenir una nota mínima de {##notaMinimaEAF##},00 sense arrodoniment a la JT per poder aplicar el càlcul de la <span title"Qualificació Final">QF</span>.</p>
+</WIOCCL:IF>
 <WIOCCL:IF condition="true=={##hiHaRecuperacioPerJT##}">
-    <p>Si suspeneu la JT, podreu fer la recuperació. Les dates importants són:</p>
+    <p>En cas de suspendre la JT, us podeu presentar a una recuperació. Les dates clau són les següents:</p>
     <table class="own_table">
       <!--caption>recuperacions</caption-->
       <tr>
@@ -607,9 +610,7 @@
       </tr>
 </WIOCCL:FOREACH>            
     </table>
-<WIOCCL:IF condition="{##notaMinimaJT##}\>0">
-    <p>Es necessita una nota mínima de {##notaMinimaJT##},00 sense arrodoniment per poder aplicar el càlcul de la <span title"Qualificació Final">QF</span>.</p>
-</WIOCCL:IF>
+
 </WIOCCL:IF>
 </WIOCCL:IF>
 <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
@@ -617,7 +618,7 @@
     <br/>
     <h2>Exercicis d'avaluació final (EAF)</h2>
 <WIOCCL:SET var="numEafs" type="literal" value="{#_COUNTDISTINCT({##datesEAF##},[''id''])_#}">
-    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> també inclou <span> {##numEafs##} EAF</span> <WIOCCL:IF condition="1=={##numEafs##}">distribuït</WIOCCL:IF><WIOCCL:IF condition="1\>{##numEafs##}">distribuïts</WIOCCL:IF> de la manera següent:</p>
+    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> també inclou <span> {##numEafs##} </span> <WIOCCL:IF condition="1=={##numEafs##}">exercici d'avaluació final (EAF).</WIOCCL:IF><WIOCCL:IF condition="1\>{##numEafs##}">exercicis d'avaluació final (EAF). </WIOCCL:IF> Les dates clau són les següents:</p>
 </WIOCCL:SET>
     <table class="own_table">
       <tr>
@@ -659,11 +660,11 @@
 </WIOCCL:SET>
     </table>
 <WIOCCL:IF condition="{##notaMinimaEAF##}\>0">
-    <p>Es necessita una nota mínima de {##notaMinimaEAF##},00 sense arrodoniment per poder aplicar el càlcul de la <span title"Qualificació Final">QF</span>.</p>
+    <p>Cal obtenir una nota mínima de {##notaMinimaEAF##},00 sense arrodoniment a l'EAF per poder aplicar el càlcul de la <span title"Qualificació Final">QF</span>.</p>
 </WIOCCL:IF>
     <p>És obligatori fer els EAF durant el semestre i lliurar-los abans de la data límit indicada a la taula.</p>
     <br/>
-    <p>Si suspeneu algun EAF diposeu de la recuperació:</p>
+    <p>En cas de suspendre algun EAF, us podeu presentar a la recuperació. Les dates clau són les següents:</p>
     <table class="own_table">
       <!--caption>recuperacions</caption-->
       <tr>
@@ -726,7 +727,7 @@
     <h2>Prova final (PAF)</h2>
     <div class="panell_pafs" title="La data i hora de la PAF es comunicarà a Tutoria">
       <div class="paf_1">
-        <h3>PAF 1</h3>
+        <h3>PAF1</h3>
         <div class="section7_icona" id="paf-1-icona"></div>
         <h3>{#_DATE("{##dataPaf11##}")_#}<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPaf12##}'')_#}&&''{##dataPaf12##}''!=''01/01/1970''"><br/>o<br/>{#_DATE("{##dataPaf12##}")_#}</WIOCCL:IF></h3>
         <p>Qualificacions:</p>
@@ -735,7 +736,7 @@
       </div>
       <div class="vertical_separator"></div>
       <div class="paf_2">
-        <h3>PAF 2</h3>
+        <h3>PAF2</h3>
         <div class="section7_icona" id="paf-2-icona"></div>
         <h3>{#_DATE("{##dataPaf21##}")_#}<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##dataPaf22##}'')_#}&&''{##dataPaf22##}''!=''01/01/1970''"><br/>o<br/>{#_DATE("{##dataPaf22##}")_#}</WIOCCL:IF></h3>
         <p>Qualificacions:</p>
