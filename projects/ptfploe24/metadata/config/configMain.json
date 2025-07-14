@@ -25,8 +25,8 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView", "updateView" : "updateView", "firstView": "firstView"},
             "versions": {
-                "fields": 13,
-                "templates": {"continguts": 40}
+                "fields": 0,
+                "templates": {"continguts": 0}
             },
             "mainType": {
                 "type": "object",
@@ -622,10 +622,72 @@
                                         "defaultValue":""
                                     },
                                     "metaDataSubSet": "main",
-                                    "field": "taulaDadesUn",
-                                    "externalFieldSubset":[
+                                    "field": "taulaDadesUF",
+                                    "filterCondition":{
+                                        "_type_":"operation",
+                                       "values":[{
+                                            "_type_":"calculatedFromValues",
+                                            "class":"CalculateSearchInArrayObjectAndGetFieldValue",
+                                            "values":"$externalValues",
+                                            "variables":{
+                                                "ufRow":"$rowValue"
+                                            },
+                                            "data":{
+                                                "field":"taulaDadesUF",
+                                                "fieldToSearch":"unitat formativa",
+                                                "searchValue":{
+                                                    "_type_":"field",
+                                                    "values":"$ufRow",
+                                                    "name":"unitat formativa"
+                                                },
+                                                "fieldToReturn":"unitat"
+                                            }
+                                        }],
+                                        "operation":"=="
+                                    },
+                                    "resultRow":{
+                                        "bloc":{
+                                            "_type_":"field",
+                                            "name":"bloc",
+                                            "values":"$rowValue"
+                                        },
+                                        "unitat":{
+                                            "_type_":"field",
+                                            "name":"unitat formativa",
+                                            "values":"$rowValue"
+                                        },
+                                        "nom": {
+                                            "_type_":"field",
+                                            "name":"nom",
+                                            "values":"$rowValue"
+                                        },
+                                        "ordreImparticio": {
+                                            "_type_":"field",
+                                            "name":"ordreImparticio",
+                                            "values":"$rowValue"
+                                        },
+                                        "hores": {
+                                            "_type_":"field",
+                                            "name":"hores",
+                                            "values":"$rowValue"
+                                        },
+                                        "ponderació": {                                        
+                                           "_type_":"field",
+                                            "name":"ponderació",
+                                            "values":"$rowValue"
+                                        }
+                                    },
+                                    "fieldSubset":[
                                         "bloc",
                                         "unitat",
+                                        "nom",
+                                        "ordreImparticio",
+                                        "hores",
+                                        "ponderació"
+                                    ],
+                                    "externalFieldSubset":[
+                                        "bloc",
+                                        "unitat formativa",
                                         "nom",
                                         "ordreImparticio",
                                         "hores",
@@ -887,14 +949,14 @@
                                                 "ufRow":"$rowValue"
                                             },
                                             "data":{
-                                                "field":"taulaDadesUn",
-                                                "fieldToSearch":"unitat",
+                                                "field":"taulaDadesUF",
+                                                "fieldToSearch":"unitat formativa",
                                                 "searchValue":{
                                                     "_type_":"field",
                                                     "values":"$ufRow",
-                                                    "name":"unitat"
+                                                    "name":"unitat formativa"
                                                 },
-                                                "fieldToReturn":"bloc"
+                                                "fieldToReturn":"unitat"
                                             }
                                         }],
                                         "operation":"=="
@@ -902,7 +964,7 @@
                                     "resultRow":{
                                         "unitat":{
                                             "_type_":"field",
-                                            "name":"unitat",
+                                            "name":"unitat formativa",
                                             "values":"$rowValue"
                                         },
                                         "tipus qualificació": {

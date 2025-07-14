@@ -27,7 +27,7 @@ class ptfploe24ProjectModel extends MoodleUniqueContentFilesProjectModel {
         $data = parent::updateCalculatedFieldsOnRead($data, $subset);
         $isArray = is_array($data);
         $values = $isArray ? $data : json_decode($data, true);
-        $originalValues = $isArray ? $originalDataKeyValue : json_decode($originalDataKeyValue, true);
+        $originalValues = is_array($originalDataKeyValue) ? $originalDataKeyValue : json_decode($originalDataKeyValue, true);
 
         $unTable = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUn"]);
         $originalufTable = IocCommon::toArrayThroughArrayOrJson($originalValues["taulaDadesUn"]);
@@ -180,8 +180,6 @@ class ptfploe24ProjectModel extends MoodleUniqueContentFilesProjectModel {
         
         $data = $isArray?$values:json_encode($values);
         return $data;
-        
-
     }
     
     /**
@@ -207,7 +205,7 @@ class ptfploe24ProjectModel extends MoodleUniqueContentFilesProjectModel {
                 $dataPrg = json_decode($dataPrg, true);
             }
             $taulaDadesNF = IocCommon::toArrayThroughArrayOrJson($dataPrg["taulaDadesNuclisFormatius"]);
-            $taulaDadesUnPrg = IocCommon::toArrayThroughArrayOrJson($dataPrg["taulaDadesUn"]);
+            $taulaDadesUnPrg = IocCommon::toArrayThroughArrayOrJson($dataPrg["taulaDadesUF"]);
             $taulaDadesNFFiltrada = array();
             $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]);
             foreach ($taulaDadesNF as $row) {
