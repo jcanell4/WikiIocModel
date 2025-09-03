@@ -1,0 +1,233 @@
+:###
+~~USE:WIOCCL~~
+<WIOCCL:SET var="tipusModCred" type="map" value="{##tipusCicle##}" map="{''LOE'':''mòdul'',''LOGSE'':''crèdit''}">
+<WIOCCL:SET var="tipusOtRa" type="map" value="{##tipusCicle##}" map="{''LOE'':''resultats d'aprenentatge (RA)'',''LOGSE'':''objectius terminals (OT)''}">
+<WIOCCL:SET var="delTipusTreball" type="map" value="{##tipusTreball##}" map="{''PROJ'':''del projecte'',''TREB'':''del treball'',''MEM'':''de la memòria''}">
+<WIOCCL:SET var="elTipusTreball" type="map" value="{##tipusTreball##}" map="{''PROJ'':''el projecte'',''TREB'':''el treball'',''MEM'':''la memòria''}">
+<WIOCCL:SET var="literalTipusTreball" type="map" value="{##tipusTreball##}" map="{''PROJ'':''projecte'',''TREB'':''treball'',''MEM'':''memòria''}">
+<WIOCCL:CONDSET condition="{#_STR_CONTAINS(''/'', ''{##nomPeriode##}'')_#}" var="nomPeriodeSing" type="literal" value="{#_ARRAY_GET_VALUE(0,{#_EXPLODE(''/'',''{##nomPeriode##}'')_#})_#}">
+<WIOCCL:CONDSET condition="{#_STR_CONTAINS(''/'', ''{##nomPeriode##}'')_#}" var="nomPeriodePlur" type="literal" value="{#_ARRAY_GET_VALUE(1,{#_EXPLODE(''/'',''{##nomPeriode##}'')_#})_#}">
+<WIOCCL:CONDSET condition="!{#_STR_CONTAINS(''/'', ''{##nomPeriode##}'')_#}" var="nomPeriodeSing" type="literal" value="{##nomPeriode##}">
+<WIOCCL:CONDSET condition="!{#_STR_CONTAINS(''/'', ''{##nomPeriode##}'')_#}" var="nomPeriodePlur" type="literal" value="{##nomPeriode##}s">
+###:
+
+:###
+====== Presentació ======
+###:
+:###
+Aquest és el {##tipusModCred##} {##modulId##} {##modul##}.
+
+{##descripcio##}
+
+Ha de permetre culminar la integració dels continguts impartits al llarg del curs, globalitzant i interrelacionant,i si escau completant, aquells continguts susceptibles de mostrar, al final del curs d'especialització, el grau d'assoliment dels objectius generals del curs.
+
+<WIOCCL:IF condition="!{##individual##}">
+Per tant es demana un treball eminentment pràctic **treballant en petit grup de forma col·laborativa o cooperativa**.
+</WIOCCL:IF>
+
+Té una assignació de {##durada##} h (un semestre) distribuïdes en {#_ARRAY_LENGTH({##calendari##})_#} {##nomPeriodePlur##}, de les {##duradaCicle##} h que té el curs d'especialització de {##cicle##}. El coordinador és {##coordinador##}; el professorat és {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
+
+Suposa una **dedicació setmanal mínima aproximada de {##dedicacio##} h**. Es cursa el **darrer semestre** de l'itinerari formatiu perquè és necessari tenir superats o convalidats (o cursar en el semestre en què es fa la matrícula) tots els {##tipusModCred##}s del curs.
+
+
+====== METODOLOGIA ======
+###:
+
+
+:###
+<WIOCCL:IF condition="!{##individual##}">
+La metodologia utilitzada és el **Treball en equip de forma col·laborativa o cooperativa**.
+</WIOCCL:IF>
+
+<WIOCCL:IF condition="{##individual##}">
+En els ensenyaments d'FP el focus d'aprenentatge està fixat en l'assoliment de la competència general, les competències professionals, les capacitats clau i els objectius generals assignats a cada títol.
+</WIOCCL:IF>
+
+El currículum del **Curs d'especialitzció {##cicle##}** descriu la competència general amb els següents termes: //{##competencia##}//.
+
+<WIOCCL:IF condition="!{##individual##}">
+Per treballar aquest {##tipusModCred##} la **capacitat de treball en equip** és clau. L'entenem com la disposició i habilitat per cooperar i col·laborar en la realització de les tasques dins d’un equip, per tal d’assolir un objectiu comú. Per tant, la metodologia seguida és l'aprenentatge significatiu a partir de:
+  * el treball en equip en la resolució d’un cas pràctic.
+  * la connexió continuada a l'aula.
+  * la participació activa i continuada en els fòrums de grup.
+  * les competències de la capacitat clau de treball en equip demostrades al llarg del mòdul.
+  * la planificació, organització i execució de la feina tenint en compte les competències de cada membre.
+
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##individual##}">
+La metodologia seguida en aquest mòdul és l'aprenentatge significatiu a partir de lliurament de la proposta de projecte feta en el TEA1.
+</WIOCCL:IF>
+###:
+
+:###
+Per a l'elaboració {##delTipusTreball##} és necessari consultar informacions i documentació, però heu de recordar que els treballs han de ser d’elaboració pròpia i originals.
+
+En la redacció i en el cas que s’inclogui informació literal d'alguna institució, llibre, o treball,... és imprescindible citar-ne la font. Qualsevol còpia literal sense citar-ne la font es considerarà còpia o plagi i com a tal no es podrà obtenir una qualificació positiva.
+
+
+###:
+
+:###<WIOCCL:IF condition="{##tipusCicle##}==''LOE''">
+===== Desplegament dels RA =====
+</WIOCCL:IF>###:
+
+:###
+En aquest {##tipusModCred##} es descriuen els següents {##tipusOtRa##}:
+
+<WIOCCL:FOREACH var="item" array="{##resultatsAprenentatge##}">
+  ***{##item[id]##}:** {##item[descripció]##}
+</WIOCCL:FOREACH>
+###:
+
+:###
+====== TEMPORITZACIÓ ======
+###:
+
+:###
+Per poder treballar adequadament és imprescindible tenir assolits la resta de {##tipusModCred##} del curs d'especialització.
+
+S'estructura en **{##nomPeriodePlur##}** que es descriuen a la taula ::table:Calendari:. A l’ aula trobareu el material del {##tipusModCred##}.
+
+::table:Calendari
+  :title:Calendari
+  :type:pt_taula
+<WIOCCL:FOREACH var="item" array="{##calendari##}">
+^  {##nomPeriodeSing##}  ^  Descripció  ^  Durada  ^ Temporització  ^
+|   {##item[període]##}   |  {##item[descripció període]##}  |  {##item[hores]##} h  |  {#_DATE("{##item[inici]##}","/")_#}-{#_DATE("{##item[final]##}", "/")_#}  |
+^      :::      ^   Tasques   ^^^
+<WIOCCL:FOREACH var="itemTasques" array="{##tasquesPerPeriode##}" filter="{##itemTasques[període]##}=={##item[període]##}">
+|      :::      |   {##itemTasques[id]##}.- {##itemTasques[descripció]##}   |||
+</WIOCCL:FOREACH>
+</WIOCCL:FOREACH>
+:::
+###:
+
+:###
+====== DATES CLAU ======
+###:
+
+:###
+Les dates clau del semestre, que també podeu consultar al calendari de l'aula, són les següents:
+
+::table:TDC
+  :title:Taula de dades clau
+  :type:pt_taula
+^ {##nomPeriodeSing##} ^   TEA   ^   Publicació TEA   ^  Lliurament TEA  ^  Publicació qualificació  ^
+<WIOCCL:SET var="sortedDadesAC" type="literal" value="{#_ARRAY_SORT({##dadesAC##},''lliurament'')_#}">
+<WIOCCL:FOREACH var="item" array="{##sortedDadesAC##}">
+|   {##item[període]##}    |  {##item[id]##} {##item[parts]##}  |       {#_DATE("{##item[enunciat]##}")_#}       |  {#_DATE("{##item[lliurament]##}")_#}  |         {#_DATE("{##item[qualificació]##}")_#}          |
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+:::
+###:
+
+:###
+====== AVALUACIÓ ======
+###:
+
+:###
+<WIOCCL:IF condition="!{##individual##}">
+{#_UCFIRST("{##elTipusTreball##}")_#} que és fil conductor del {##tipusModCred##} es realitza en grup. Es duu a terme mitjançant la realització a distància de lliuraments avaluables.
+</WIOCCL:IF>
+
+Aquest {##tipusModCred##} **no té Prova d'avaluació final (PAF)**.
+
+<WIOCCL:IF condition="!{##individual##}">
+Per superar el {##tipusModCred##} és imprescindible realitzar la tasca encomanada de manera individual i/o en grup, usant els mitjans tecnològics proposats i els espais i recursos de l'aula i/o els externs que permetin l’obtenció d’evidències per a l’avaluació de la tasca i de les competències individuals i/o de grup. Les possibilitats d'ús d'eines i recursos externs al campus, que s'hagin de tenir en compte per a l'avaluació, s'hauran de fer segons les propostes i indicacions del professor o la seva autorització prèvia.
+</WIOCCL:IF>
+###:
+
+
+:###
+<WIOCCL:IF condition="!{##individual##}">
+Seran causa d'exclusió i en conseqüència de suspens del {##tipusModCred##}, les següents:
+  * La còpia o plagi.
+  * La no participació de manera individual en les tasques del grup comporta automàticament l'exclusió del mòdul.
+  * L'ús inadequat de la intel·ligència artificial.
+:###
+</WIOCCL:IF>
+###:
+
+:###
+<WIOCCL:IF condition="!{##individual##}">
+Tot i que es tracta d'<WIOCCL:IF condition="{##tipusTreball##}!=''MEM''">un</WIOCCL:IF><WIOCCL:IF condition="{##tipusTreball##}==''MEM''">una</WIOCCL:IF> {##literalTipusTreball##} <WIOCCL:IF condition="{##tipusTreball##}==''MEM''">elaborada</WIOCCL:IF><WIOCCL:IF condition="{##tipusTreball##}!=''MEM''">elaborat</WIOCCL:IF> en equip, la qualificació obtinguda per cada membre del grup de treball pot ser diferent, en base a les evidències aportades.
+###:
+
+
+:###
+</WIOCCL:IF>
+###:
+
+:###
+<WIOCCL:IF condition="!{##individual##}">
+**Lliuraments:**
+
+En el cas d'aquest {##tipusModCred##}, són obligatoris tots els lliuraments i cal tenir en compte:
+
+  *Tenen una ponderació en la qualificació final (vegeu l'apartat "Qualificació final QF").
+  *Han de ser lliurats a l’espai de lliurament dins dels terminis fixats, el termini de lliurament és improrrogable. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data de lliurament (consulteu dates clau)
+  *El seguiment correcte  compromet l’alumne a realitzar les activitats proposades en grup a partir de les aportacions individuals significatives, de manera original i seguint les indicacions del professor. Si no es respecten aquestes condicions, s’obtindrà una qualificació negativa. Els treballs o tasques  que siguin còpia literal (total o parcial) d'altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
+  *S'estableixen els criteris d'avaluació corresponents, relacionats amb els {##tipusOtRa##} que donen resposta als continguts que es desenvolupen en cada unitat. També s'estableixen criteris d'avaluació que fan referència a l'expressió lingüística i ortogràfica.
+  *El professor els corregeix i emet una qualificació numèrica de l'escala entre el 0 i el 10, amb dos decimals. S'estableix una nota mínima de {##notaMinimaAC##} per tal de poder aplicar el càlcul de la QF.
+</WIOCCL:IF>
+###:
+
+:###
+====== QUALIFICACIÓ FINAL (QF) ======
+###:
+
+:###
+La qualificació final del {##tipusModCred##} (QF) es calcula a partir de l'aplicació de la fórmula següent:
+
+**QF = <WIOCCL:FOREACH var="item" array="{##dadesAC##}" counter="indx">Q{##item[id]##} * {##item[ponderació]##}% <WIOCCL:IF condition="{##indx##}\<{#_SUBS({#_ARRAY_LENGTH({##dadesAC##})_#},1)_#}">+</WIOCCL:IF></WIOCCL:FOREACH>**
+
+QF:qualificació final
+QEACn:qualificació TEAn= % treball+% competències treball en equip
+
+Per aprovar el {##tipusModCred##} cal haver presentat i tenir aprovades  totes les parts dels lliuraments del {##tipusModCred##}, així com tenir una avaluació positiva en la resta d’elements d’avaluació (consulteu apartat avaluació).
+
+La qualificació final és numèrica de l'1 al 10, sense decimals. Només es consideren aprovades les qualificacions iguals o superiors a 5,00. ###:
+:###
+
+En cas de no superar el {##tipusModCred##}, el següent semestre s'han de tornar a realitzar totes les activitats . No es guardarà cap nota parcial entre semtestres.
+
+**Convocatòria extraordinària**
+
+<WIOCCL:IF condition="!{##individual##}">
+Els grups de treball d'aquest que no superin el {##tipusModCred##}, **com a grup**, hauran de realitzar els treballs que l'equip docent els encarregui. S'avaluarà en el termini de la PAF2 i en cas de no superar-la, exhaurides les dues convocatòries, s'hauran de tornar a matricular i tornar a cursar el {##tipusModCred##} el següent semestre, realitzant totes les activitats. No es guardarà cap nota parcial  pel següent semestre.
+
+Quan un alumne a títol individual, no hagi superat el {##tipusModCred##}, quedarà automàticament suspès i s'haurà de tornar a matricular i cursar el {##tipusModCred##} íntegrament.
+
+
+
+</WIOCCL:IF>
+###:
+:###
+<WIOCCL:IF condition="{#_ARRAY_LENGTH({##dadesCompetencies##})_#}\>0">
+Les competències de la capacitat clau de treball en equip avaluades es concreten en:
+
+::table:TC
+  :title:Taula de competències avaluades
+  :type:pt_taula
+  :widths:1,1,5
+[^  Competències  ^  Punts  ^  Evidències  ^
+<WIOCCL:FOREACH var="item" array="{##dadesCompetencies##}">
+|   {##item[competencia]##}    |  {##item[punts]##}  |
+<WIOCCL:FOREACH var="itemEvidencies" array="{##dadesEvidenciesCompetencies##}" filter="{##item[id]##}=={##itemEvidencies[idCompetencia]##}">
+
+  * {##itemEvidencies[descripció]##}
+</WIOCCL:FOREACH>
+       |
+</WIOCCL:FOREACH>]
+:::
+</WIOCCL:IF>
+</WIOCCL:CONDSET>
+</WIOCCL:CONDSET>
+</WIOCCL:CONDSET>
+</WIOCCL:CONDSET>
+</WIOCCL:SET>
+</WIOCCL:SET>
+</WIOCCL:SET>
+</WIOCCL:SET>
+</WIOCCL:SET>
+###:
