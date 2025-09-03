@@ -1,0 +1,223 @@
+:###
+~~USE:WIOCCL~~
+###:
+:###====== Presentació ======###:
+
+:###
+
+Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul##} del</WIOCCL:IF> mòdul {##modulId##} {##modul##} permet interrelacionar els aprenentatges assolits en els diferents mòduls del cicle formatiu i així completar l’adquisició de les competències professionals, personals i socials incloses en el perfil professional del títol. {##descripcio##} 
+
+Té una assignació de {##durada##} h<WIOCCL:IF condition="!{#_IS_STR_EMPTY(''{##cicle##}'')_#}&&!{#_STR_CONTAINS(''Indiqueu'', ''{##cicle##}'')_#}"> de les {##duradaCicle##} h del cicle de {##cicle##}</WIOCCL:IF>, distribuïdes en 2 semestre. 
+
+La coordinació és a càrrec de {##coordinador##} i la docència de  {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
+
+Suposa una **dedicació mínima de {##dedicacio##} h setmanals.** Es cursa el penúltim semestre de l'itinerari formatiu. {##requerimentsMatricula##}
+###:
+
+:###====== Metodologia ======###:
+
+:###
+
+Per assolir els resultats d’aprenentatge (RA) se segueix una metodologia  globalitzadora i activa basada en reptes. El treball és prioritàriament col·laboratiu, en grup petit, però també es proposen activitats individuals.
+
+Per treballar aquest mòdul la capacitat de treball en equip és clau. L’entenem com la disposició i habilitat per cooperar i col·laborar en la realització de les tasques dins d’un equip, per tal d’assolir un objectiu comú. La metodologia seguida és l’aprenentatge significatiu a partir de reptes o casos pràctics.
+
+Per a l’elaboració del projecte és necessari consultar informació i documentació diversa, però els treballs han de ser originals, d’elaboració pròpia. En cas que s’inclogui informació literal d’alguna institució, llibre, treball, etc. és imprescindible citar-ne la font. Qualsevol còpia literal sense citar-ne la font es considerarà còpia o plagi.
+
+Per seguir el mòdul adequadament caldrà posar en joc els coneixements adquirits a la resta de mòduls del cicle formatiu. Això vol dir que serà necessari repassar els continguts de tots els mòduls del cicle.
+
+###:
+
+
+
+:###===== Resultats d'aprenentatge (RA) =====###:
+
+:###
+En aquest <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> es descriuen els resultats d'aprenentatge següents:
+
+::table:T03
+  :title:Unitats i RA
+  :type:pt_taula
+^ Unitat ^ RA ^
+<WIOCCL:SET var="sortedTaulaDadesUnitatsF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUn##},''ordreImparticio'')_#}">
+<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUnitatsF##}">
+<WIOCCL:FOREACH  var="itemU" array="{##taulaUnitatRAs##}" filter="{##item[unitat]##}=={##itemU[unitat]##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousUnitat##}" rExpression="{##itemU[unitat]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+<WIOCCL:FOREACH  var="itemR" array="{##resultatsAprenentatge##}" filter="{##itemR[id]##}=={##itemU[RA]##}">
+| ::: | {##itemU[RA]##} : {##itemR[descripcio]##}|
+</WIOCCL:FOREACH>
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
+<WIOCCL:FOREACH  var="itemR" array="{##resultatsAprenentatge##}" filter="{##itemR[id]##}=={##itemU[RA]##}">
+|  U{##itemU[unitat]##}  | {##itemU[RA]##} : {##itemR[descripcio]##}|
+</WIOCCL:FOREACH>
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousUnitat" type="literal" value="{##itemU[unitat]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
+</WIOCCL:FOREACH>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+:::
+
+
+###:
+
+
+
+:###====== Avaluació ======###:
+:###
+
+Aquest mòdul no té Prova d’avaluació final (PAF).
+
+Per superar el mòdul cal portar a terme les tasques encomanades de manera individual o en grup, segons s'indiqui, i usant els mitjans tecnològics proposats i els espais i recursos de l’aula i/o els externs que permetin l’obtenció d’evidències per a l’avaluació de la tasca i de les competències individuals i de grup. L’ús d’eines i recursos externs al Campus, que s’hagin de tenir en compte per a l’avaluació, ha de seguir les indicacions del professor o comptar amb la seva autorització prèvia.
+
+Tant la còpia o plagi com la no participació de manera individual en les tasques del grup impedeixen la superació de l'activitat afectada.
+
+En les activitats en equip, les qualificacions dels membres del grup de treball poden ser diferents, en base a les evidències aportades.
+
+**Lliuraments:**
+
+Per poder superar el mòdul, cal portar a terme totes les activitats proposades. Així doncs, **tots els lliuraments són obligatoris** i cal tenir en compte que:
+
+  * Els lliuraments s'han de fer en els espais previstos a l'aula i dins dels terminis fixats. Els terminis de lliurament són improrrogables. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data de lliurament (consulteu dates clau).
+  * El seguiment correcte del mòdul compromet l’alumne a fer les activitats en grup que es proposin a partir d'aportacions individuals significatives, de manera original i seguint les indicacions del professor.
+  * Els treballs o tasques que siguin còpia literal (total o parcial) d’altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
+  * Són d'aplicació els criteris d’avaluació que estableix el currículum del cicle per als resultats d’aprenentatge (RA) previstos, d'acord amb els continguts que es desenvolupen en cada unitat.
+  * S’estableixen també criteris d’avaluació relacionats amb l'expressió, tant oral com escrita, i amb la correcció lingüística.
+  * Un cop corregida cada activitat, s'emet una qualificació numèrica de l’escala entre el 0 i el 10, amb dos decimals.
+
+###:
+
+
+:###====== Qualificació final ======###:
+
+
+:###===== Convocatòria ordinària =====###:
+
+:###
+La qualificació final del mòdul es calcula a partir de l'aplicació de la fórmula següent, **sempre que s'hagin fet, presentat i superat totes les activitats**:
+
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUn##},''ponderació'')_#}">
+ **QF = <WIOCCL:FOREACH var="item" array="{##taulaDadesUn##}" counter="ind">repte{##item[unitat]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUn##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH>**                            
+</WIOCCL:SET>
+
+La qualificació final és numèrica de l’1 al 10, sense decimals. Es consideren aprovades les qualificacions iguals o superiors a 5.
+
+Si l'alumne no ha superat alguna de les activitats previstes, no tindrà l'opció de superar el mòdul a la convocatòria ordinària.
+###:
+
+:###===== Convocatòria extraordinària =====###:
+Si no s'ha superat algun dels reptes a la convocatòria ordinària, els alumnes podran tornar a presentar les activitats no superades, al final de cada semestre. Depenent dels casos, l'equip docent indicarà si cal presentar la mateixa activitat o proposarà activitats alternatives.
+
+La qualificació dels reptes a la convocatòria extraordinària només podrà ser **superat** o **no superat**. Per al càlcul de la qualificació del mòdul, la qualificació dels mòduls superats serà un 5.
+
+Les competències relatives a la capacitat clau de treball en equip s'han d'haver demostrat mentre es cursa el mòdul i no es podran recuperar amb cap altra activitat alternativa.
+
+La qualificació final del mòdul (QF) es calcularà igualment aplicant la fórmula següent, sempre que s'hagin fet i presentat totes les activitats del mòdul i **s'hagin superat un mínim del 85% de les hores del mòdul**:
+:###
+
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUn##},''ponderació'')_#}">
+ **QF = <WIOCCL:FOREACH var="item" array="{##taulaDadesUn##}" counter="ind">repte{##item[unitat]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUn##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH>**                            
+</WIOCCL:SET>
+
+###:
+
+:###
+
+Si l'alumne no ha presentat alguna de les activitats previstes, no tindrà l'opció de superar el mòdul.
+
+En cas de no superar el mòdul, caldrà fer una nova matrícula anual i repetir totes les activitats. No es mantindrà cap nota parcial d'un curs anterior.
+
+###:
+
+:###
+
+
+
+###:
+:###====== Temporització dels continguts ======###:
+
+:###
+
+
+
+<WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">
+
+Aquest mòdul està distribuït en les unitats següents:
+
+::table:T02
+  :title:Unitats
+  :type:pt_taula
+^  Núm. U  ^  Títol unitat  ^  Durada  ^    Temporització  ^
+<WIOCCL:SET var="sortedTaulaDadesUn" type="literal" value="{#_ARRAY_SORT({##taulaDadesUn##},''ordreImparticio'')_#}">
+<WIOCCL:FOREACH var="item" array="{##sortedTaulaDadesUn##}">
+<WIOCCL:FOREACH  var="itemC" array="{##calendari##}" filter="{##item[unitat]##}=={##itemC[unitat]##}">
+|  U{##item[unitat]##}  | {##item[nom]##}  |  {##item[hores]##} h  |  {#_DATE("{##itemC[inici]##}", ".")_#}-{#_DATE("{##itemC[final]##}", ".")_#}  |
+</WIOCCL:FOREACH>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+:::
+</WIOCCL:IF>
+
+
+
+
+###:
+
+:###====== Dates clau ======###:
+
+:###
+
+Les dates clau dels 2 semestres, que també podeu consultar al calendari de l'aula, són les següents:
+
+###:
+
+:###
+
+::table:T05
+  :title:Dates clau
+  :type:pt_taula
+^  Id  ^  Unitat  ^  Publicació de l'enunciat  ^  Lliurament  ^  Qualificació  ^
+<WIOCCL:SET var="previousEAC" type="literal" value="">
+<WIOCCL:SET var="sortedDatesAC" type="literal" value="{#_ARRAY_SORT({##datesAC##},''lliurament'')_#}">
+<WIOCCL:FOREACH var="itemAC" array="{##sortedDatesAC##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAC##}" rExpression="{##itemAC[id]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+| ::: |  U{##itemAC[unitat]##}  | ::: | ::: <WIOCCL:IF condition="{##hiHaSolucioPerAC##}==true">| ::: </WIOCCL:IF>| ::: |
+</WIOCCL:CASE>
+<WIOCCL:DEFAULTCASE forchoose="selector">
+|  {##itemAC[id]##}  |  U{##itemAC[unitat]##}  |  {#_DATE("{##itemAC[enunciat]##}")_#}  |  {#_DATE("{##itemAC[lliurament]##}")_#}  |  {#_DATE("{##itemAC[qualificació]##}")_#}  |
+</WIOCCL:DEFAULTCASE>
+<WIOCCL:RESET var="previousEAC" type="literal" value="{##itemAC[id]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+</WIOCCL:SET>
+:::
+
+###:
+
+:###
+
+===== Dates de les recuperacions =====###:
+
+:###
+
+::table:T06
+  :title:Dates de les recuperacions
+  :type:pt_taula
+^  Recuperacions  ^  Inici ^ Final ^  Qualificació  ^
+| Semestre 1 |  {#_DATE("{##dataRecuSem1Inici##}")_#} | {#_DATE("{##dataRecuSem1Fi##}")_#} | {#_DATE("{##dataRecuQualificacioSem1##}")_#} |
+| Semestre 2 |  {#_DATE("{##dataRecuSem2Inici##}")_#} | {#_DATE("{##dataRecuSem2Fi##}")_#} | {#_DATE("{##dataRecuQualificacioSem2##}")_#} |
+:::
+
+
+###:
+[##TODO: AQUI HA DE SER DINÀMIC. CAL DEFINIR AQUESTS CAMPS EN INTERFACE DE PROFESSOR.##]
+
+
+
+
+
+

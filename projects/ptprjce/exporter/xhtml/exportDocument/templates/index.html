@@ -1,0 +1,396 @@
+<!doctype html>
+<WIOCCL:SET var="tipusModCred" type="map" value="{##tipusCicle##}" map="{''LOE'':''mòdul'',''LOGSE'':''crèdit''}">
+<WIOCCL:SET var="elTipusTreball" type="map" value="{##tipusTreball##}" map="{''PROJ'':''el projecte'',''TREB'':''el treball'',''MEM'':''la memòria''}">
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="expires" content="0">
+  <title>Pla de treball</title>
+  <meta name="description" content="Pla de treball">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<!-- Capçalera -->
+<header class="main_header">
+    <div class="own_container">
+        <h1>{##modulId##} {##modul##}</h1>
+    </div>
+    <div class="rflexjust">
+        <a href="pt_sencer/pt.html" target="_blank"><img src="img/programacio.png" title="Consulteu aquí la programació completa"/></a>
+    </div>
+</header>
+<!-- /Capçalera -->
+
+<!-- Títol -->
+<header class="secondary_header">
+
+  <div class="own_container">
+    <div class="focus_stripe"></div>
+    <h2>Com estudiar aquest {##tipusModCred##}</h2>
+  </div>
+</header>
+<!-- /Títol -->
+
+
+<!-- Secció 1 -->
+<section class="section section1">
+  <div class="own_container">
+    <div class="section1_container">
+      <div class="section1_content_row1">
+        <div class="section1_element">
+          <div class="section1_icona" id="durada_icona"></div>
+          <h3>Durada</h3>
+          <p>{##durada##} hores</p>       
+        </div>
+        <div class="section1_element">
+          <div class="section1_icona" id="professor_icona"></div>
+          <h3>Professor</h3>
+          <p>{#_STR_REPLACE([",", ", ", " , "],"<br/>","{##professors##}")_#}</p>
+        </div>
+        <div class="section1_element">
+          <div class="section1_icona" id="dedicacio_icona"></div>
+          <h3>Dedicació setmanal</h3>
+          <p>{##dedicacio##} hores</p>
+        </div>
+      </div>
+<WIOCCL:IF condition="{##requerimentsMatricula##}!=''''">  
+      <div class="section1_content_row3">
+          <div class="franja_color">
+            <div class="section1_icona" id="requisits_icona"></div>
+          </div>
+          <h3>Requeriments i incompatibilitats de la matrícula</h3>
+          <p>Per cursar-lo és necessari tenir superats o convalidats (o cursar en el semestre en què es fa la matrícula) tots els mòduls del curs d'especialització.</p>
+      </div>      
+</WIOCCL:IF>
+    </div>
+  </div>
+</section>
+<!-- /Secció 1 -->
+
+<!-- Secció 2 -->
+<section class="section section2">
+  <hr>
+  <div class="own_container">
+    <p>Aquest {##tipusModCred##}  {##modulId##} {##modul##} {##descripcio##}. Ha de permetre culminar la integració dels continguts impartits al llarg del cicle, globalitzant i interrelacionant,i si escau completant, aquells continguts susceptibles de mostrar, al final del cicle formatiu, el grau d'assoliment dels objectius generals del cicle.</p> 
+    <p>Per tant es demana un treball eminentment pràctic <WIOCCL:IF condition="{##individual##}==false"><strong>treballant en petit grup de forma col·laborativa o cooperativa</strong></WIOCCL:IF>.</p> 
+  </div>
+</section>
+<!-- /Secció 2 -->
+
+<!--hr-->
+
+<!-- Secció 3 -->
+<!--section class="section section3">
+  <div class="own_container">
+    <h2>Distribució horària del <WIOCCL:IF condition="''cr&egrave;dit''=={##tipusBlocCredit##}">crèdit</WIOCCL:IF><WIOCCL:IF condition="''cr&egrave;dit''!={##tipusBlocCredit##}">bloc</WIOCCL:IF></h2>
+    <div class="containerDistribHoraria">
+        <div class="rowDistribHoraria" id="rowDistribHoraria1"></div>
+        <div class="rowDistribHoraria" id="rowDistribHoraria2"></div>
+        <div class="rowDistribHoraria" id="rowDistribHoraria3"></div>
+        <div class="rowDistribHoraria" id="rowDistribHoraria4"></div>
+    </div>
+    <script type="text/javascript">
+/**** DADES ****/
+
+/* Es poden modificar les dades, afegint qualsevol sèries de valors de la llargada que calgui.*/
+(function(){
+    var dataArray = [
+            ["{##durada##}"], /* Num. hores del mòdul */
+            [<WIOCCL:FOREACH var="item" array="{##calendari##}">{##item[hores]##},</WIOCCL:FOREACH>], /* Num. hores per cada període */
+            ["TOTAL"], /* Nom mòdul */
+            [<WIOCCL:FOREACH var="item" array="{##calendari##}">{##item[període]##},</WIOCCL:FOREACH>] /* ID de cada període */
+        ];
+    /*****************/
+
+
+    /* Creem fila total hores per UD */
+
+    var totalHoresUDs = 0;
+    for(var i = 0; i < dataArray[0].length; i++) {
+          totalHoresUDs += dataArray[0][i];
+    }
+
+    var rowDistribHoraria2 = document.getElementById("rowDistribHoraria2");
+
+    for(var i = 0; i < dataArray[0].length; i++) {
+         var percentWidth = dataArray[0][i]*100/totalHoresUDs + "%";
+         var textCell = dataArray[0][i] + "h"
+         createCell(rowDistribHoraria2, percentWidth, textCell);
+    }
+
+
+
+    /* Creem fila total hores per U */
+
+    var totalHoresUs = 0;
+    for(var i = 0; i < dataArray[1].length; i++) {
+          totalHoresUs += dataArray[1][i];
+    }
+
+    var rowDistribHoraria3 = document.getElementById("rowDistribHoraria3");
+
+    for(var i = 0; i < dataArray[1].length; i++) {
+         var percentWidth = dataArray[1][i]*100/totalHoresUs + "%";
+         var textCell = dataArray[1][i] + "h"
+         createCell(rowDistribHoraria3, percentWidth, textCell);
+    }
+
+
+    /* Creem fila títols UDs*/
+
+    var totalHoresUDs = 0;
+    for(var i = 0; i <= dataArray[0].length-1; i++) {
+          totalHoresUDs += dataArray[0][i];
+    }
+
+    var rowDistribHoraria1 = document.getElementById("rowDistribHoraria1");
+
+    for(var i = 0; i < dataArray[0].length; i++) {
+         var percentWidth = dataArray[0][i]*100/totalHoresUDs + "%";
+         var textCell = dataArray[2][i];//(i+1);
+         createCell(rowDistribHoraria1, percentWidth, textCell);
+    }
+
+
+    /* Creem fila títols Us*/
+
+    var totalHoresUs = 0;
+    for(var i = 0; i <= dataArray[1].length-1; i++) {
+          totalHoresUs += dataArray[1][i];
+    }
+
+    var rowDistribHoraria4 = document.getElementById("rowDistribHoraria4");
+
+    for(var i = 0; i <= dataArray[1].length-1; i++) {
+         var percentWidth = dataArray[1][i]*100/totalHoresUs + "%";
+         var textCell = "{#_STR_SUBTR(''{##nomPeriode##}'',0,3)_#}. " + dataArray[3][i]//(i+1);
+         createCell(rowDistribHoraria4, percentWidth, textCell);
+    }
+
+
+    /* Funció per crear celles */
+
+    function createCell(parent, width, text) {
+        var newCell =  document.createElement("div");
+        var newContent = document.createTextNode(text);
+        newCell.setAttribute("class", "cellDistribHoraria");
+        newCell.appendChild(newContent);
+        newCell.style.width = width;
+        parent.appendChild(newCell);
+    }
+})();
+
+    </script>
+  </div>
+</section-->
+<!-- /Secció 3 -->
+
+<hr>
+
+<!-- Secció 4 -->
+<section class="section section4">
+  <div class="own_container">
+    <div class="requadre_eines">
+<WIOCCL:FOREACH var="item" array="{##einesAprenentatge##}" counter="ind">
+<WIOCCL:IF condition="{##ind##}==0">
+      <div class="puzzle puzzle_dalt" id="puzzle{#_SUMA({##ind##},1)_#}">
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##ind##}\>0&&{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##einesAprenentatge##})_#},1)_#}">
+      <div class="puzzle puzzle_mig" id="puzzle{#_SUMA({##ind##},1)_#}">
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##ind##}=={#_SUBS({#_ARRAY_LENGTH({##einesAprenentatge##})_#},1)_#}">
+      <div class="puzzle puzzle_baix" id="puzzle{#_SUMA({##ind##},1)_#}">
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[tipus]##}==''lectura''">
+        <div class="section4_icona" id="llibre_icona"></div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[tipus]##}==''autoavaluació''">
+        <div class="section4_icona" id="exercicis_icona"></div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[tipus]##}==''fòrum''">
+        <div class="section4_icona" id="forum_icona"></div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[tipus]##}==''qüestionari''">
+        <div class="section4_icona" id="questionari_icona"></div>
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##item[tipus]##}==''exercicis''">
+        <div class="section4_icona" id="avaluacio_icona"></div>
+</WIOCCL:IF>
+        <div>
+          <h4>{##item[eina]##}</h4>
+          <h3>{##item[opcionalitat]##} <WIOCCL:IF condition="{##item[puntuable]##}==true">(puntua a l'AC)</WIOCCL:IF></h3>
+        </div>
+      </div>
+</WIOCCL:FOREACH>
+    </div>
+  </div>
+</section>
+<!-- /Secció 4 -->
+
+<hr>
+
+<!-- Secció 5 -->
+<section class="section section5">
+  <div class="own_container">
+    <h2>Calendari d’estudi</h2>
+    <table class="own_table">
+      <tr>
+        <th></th>
+        <th>Inici</th>
+        <th>Final</th>
+      </tr>
+<WIOCCL:FOREACH  var="itemCal" array="{##calendari##}" counter="cont">
+      <tr>
+        <td>{#_UPPERCASE("{##nomPeriode##}", 1)_#} {##itemCal[període]##}</td>
+        <td>{#_DATE("{##itemCal[inici]##}")_#}</td>
+        <td>{#_DATE("{##itemCal[final]##}")_#}</td>
+      </tr>
+</WIOCCL:FOREACH>
+    </table>
+  </div>
+</section>
+<!-- /Secció 5 -->
+
+<!-- Secció 6 -->
+<section class="section section6">
+  <div class="own_container">
+    <h2>Avaluació contínua</h2>
+    <p>{#_UCFIRST("{##elTipusTreball##}")_#} que és fil conductor del {##tipusModCred##} es realitza en grup. Es duu a terme mitjançant la realització a distància d'Exercicis d'avaluació continuada (TEA).</p>
+    <br/>
+    <p>Aquest {##tipusModCred##} <strong>no té Prova d'avaluació final (PAF) presencial</strong>.<p>
+    <br/>
+    <p>Per superar el {##tipusModCred##} és imprescindible realitzar la tasca encomanada de manera individual i/o en grup, usant els mitjans tecnològics proposats i els espais i recursos de l'aula i/o els externs que permetin l’obtenció d’evidències per a l’avaluació de la tasca i de les competències individuals i/o de grup. Les possibilitats d'ús d'eines i recursos externs al campus, que s'hagin de tenir en compte per a l'avaluació, s'hauran de fer segons les propostes i indicacions del professor o la seva autorització prèvia.</p>
+    <p>L'AC inclou <span>{#_COUNTDISTINCT({##dadesAC##},[''id''])_#} lliuraments</span>, distribuïts de la següent manera:</p>
+    <table class="own_table">
+      <tr>
+        <th></th>
+        <th>Publicació</th>
+        <th>Lliurament</th>
+        <th>Qualificació</th>
+      </tr>
+<WIOCCL:FOREACH var="itemAC" array="{##dadesAC##}">
+      <tr>
+        <th>{##itemAC[id]##}</th>
+        <td>{#_DATE("{##itemAC[enunciat]##}")_#}</td>
+        <td>{#_DATE("{##itemAC[lliurament]##}")_#}</td>
+        <td>{#_DATE("{##itemAC[qualificació]##}")_#}</td>
+      </tr>
+</WIOCCL:FOREACH>
+    </table>
+    <p>Compte! El sistema no permet fer lliuraments passades les <span>23.55 h</span> de la data prevista.</p>
+    <br/>
+  </div>
+</section>
+<!-- /Secció 6 -->
+
+<hr>
+
+<!-- Secció 8 -->
+<section class="section section8">
+  <div class="own_container">
+    <h2 id="qualificacio">Qualificació</h2>
+     <div class="containerQualificacio" id="contenidorQualificacio">
+
+    </div>
+    <script type="text/javascript">
+(function(){
+    var dataArray1 = [
+                      [
+                        {
+                          title :"FINAL",
+                          name :"FINAL",
+                          percent: 0
+                        }
+<WIOCCL:FOREACH var="item" array="{##dadesAC##}">
+                       ,{
+                          title :"{#_UCFIRST(''{##nomPeriode##}'')_#} {##item[període]##}",
+                          name :"{##item[id]##}",
+                          percent: {##item[ponderació]##}
+                        }
+</WIOCCL:FOREACH>
+                      ]
+                    ];
+
+
+    /*****************/
+
+    var numberOfRows = 0;
+    var numberOfCells = [];
+
+    for(var i = 0; i <= dataArray1.length - 1; i++) {
+        createPercentRow(i);
+        createTitleRow(i);
+        numberOfRows += 2;
+        numberOfCells += dataArray1[i].length;
+        }
+
+    for(var i = 0; i <= numberOfRows - 1; i++) {
+        for(var j = 0; j <= numberOfCells[i] - 1; j++) {
+          /* Creem cel·les de percentatge */
+          var newPercentCell =  document.createElement("div");
+          var newPercentContentCell =  document.createElement("span");
+          var percentCellContent = document.createTextNode(dataArray1[i][j].percent + "%");
+          document.createTextNode(dataArray1[i][j].percent + "%");
+          newPercentCell.setAttribute("class", "cellQualificacio");
+          newPercentContentCell.appendChild(percentCellContent);
+          newPercentCell.appendChild(newPercentContentCell);
+          newPercentCell.style.width = dataArray1[i][j].percent + "%";
+          document.getElementById("percent_row" + i).appendChild(newPercentCell);
+          /* Creem cel·les de títol */
+          var newTitleCell =  document.createElement("div");
+          var newTitleContentCell =  document.createElement("span");
+          var titleCellContent = document.createTextNode(dataArray1[i][j].name);
+          newTitleCell.setAttribute("class", "cellQualificacio");
+          newTitleCell.setAttribute("title", dataArray1[i][j].title);
+          newTitleContentCell.appendChild(titleCellContent);
+          newTitleCell.appendChild(newTitleContentCell);
+          newTitleCell.style.width = dataArray1[i][j].percent + "%";
+          document.getElementById("title_row" + i).appendChild(newTitleCell);
+        }
+    }
+
+    var allCells = document.querySelectorAll(".cellQualificacio");
+
+    for(var k = 0; k <= allCells.length - 1; k++) {
+
+      if (parseInt(allCells[k].style.width) > 0 && parseInt(allCells[k].style.width) < 25) {
+            allCells[k].classList.add("smallCell");
+            var textHolder = allCells[k].innerHTML;
+          }
+    }
+
+    /* Funcions per crear files */
+
+    function createPercentRow(index) {
+        var newPercentRow =  document.createElement("div");
+        newPercentRow.setAttribute("class", "rowQualificacio");
+        newPercentRow.setAttribute("id", "percent_row" + index);
+        document.getElementById("contenidorQualificacio").appendChild(newPercentRow);
+    }
+
+    function createTitleRow(index) {
+        var newTitleRow =  document.createElement("div");
+        newTitleRow.setAttribute("class", "rowQualificacio");
+        newTitleRow.setAttribute("id", "title_row" + index);
+        document.getElementById("contenidorQualificacio").appendChild(newTitleRow);
+    }
+})();
+    </script>
+    <a target="_blank" href="pt_sencer/pt.html">Consulteu aquí la programació completa</a>
+  </div>
+</section>
+<!-- /Secció 8 -->
+
+
+
+
+
+</body>
+</html>
+</WIOCCL:SET>
+</WIOCCL:SET>

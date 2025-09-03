@@ -1,0 +1,477 @@
+{
+    "metaDataSubsetsList": [
+        "main"
+    ],
+    "metaDataProjectConfig": [
+        {
+            "main": {
+                "projectTypeConfigFile": "admconfig:ptfploe"
+            }
+        }        
+    ],
+    "metaDataFtpSender": [
+        {
+            "main": {
+                "files": {
+                    "Floe1": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"},
+                    "jsonRep": {"local":"mediadir", "type":"json", "action":[0], "remoteDir": "replacedata/", "ftpId": "replace_data_fp_pt"}
+                },
+                "ftpId": "pla_treball"
+            }
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+            "viewfiles": {"defaultView": "defaultView", "updateView" : "updateView", "firstView": "firstView"},
+            "versions": {
+                "fields": 13,
+                "templates": {"continguts": 40}
+            },
+            "mainType": {
+                "type": "object",
+                "typeDef": "pla"
+            },
+            "typesDefinition": {
+                "entradaResultatsAprenentage": {
+                    "type":"object",
+                    "keys": {
+                        "id": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "RA{#_INC(1)_#}"
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Descripcio del RA"
+                        },
+                        "ponderaRA": {
+                            "type": "decimal",
+                            "constraints": "{\"places\":2}",
+                            "mandatory": true,
+                            "default": "0"
+                        }
+                    }                    
+                },
+                "defResultatsAprenentage": {
+                    "type": "objectArray",
+                    "typeDef":"entradaResultatsAprenentage"
+                },
+                "entradaExtres": {
+                    "type":"object",
+                    "keys": {
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu la dada extra que necessiteu"
+                        },
+                        "tipus": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        },
+                        "valor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Escriviu el valor de la dada aquí"
+                        },
+                        "parametres": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu els paràmetres si el tipus ho necessita"
+                        }
+                    }                    
+                },
+                "defExtres": {
+                    "type": "objectArray",
+                    "typeDef":"entradaExtres"
+                },                
+                "entradaDatesAC": {
+                    "type": "object",
+                    "keys": {
+                        "id": {
+                            "type": "string",
+                            "default": "Repte{#_INC(1)_#}",
+                            "mandatory": true
+                        },
+                        "unitat": {
+                            "type": "number",
+                            "default": "{#_INC(1)_#}",
+                            "mandatory": true
+                        },
+                        "enunciat": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "lliurament": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "qualificació": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        }
+                    }
+                },
+                "defDatesAC": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDatesAC"
+                },                                                                                               
+                                                
+                "entradaCalendari": {
+                    "type": "object",
+                    "keys": {
+                        "unitat": {
+                            "type": "number",
+                            "default": "{#_INC(1)_#}",
+                            "mandatory": true
+                        },
+                        "inici": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "final": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        }
+                    }
+                },
+                "defCalendari": {
+                    "type": "objectArray",
+                    "typeDef":"entradaCalendari"
+                },                                                
+                "entradaDadesUn": {
+                    "type": "object",
+                    "keys": {
+                        "unitat": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu el nom de la Unitat"
+                        },
+                        "ordreImparticio": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        },
+                        "ponderació": {
+                            "type": "decimal",
+                            "mandatory": true,
+                            "constraints": "{\"places\":2}",
+                            "default": "0"
+                        }
+                    }
+                },
+                "defTaulaDadesUn": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDadesUn"
+                }, 
+                "entradaUnitatRAs": {
+                    "type": "object",
+                    "keys": {
+                        "unitat": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "RA": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "RA{#_INC(1)_#}"
+                        }
+                    }
+                },
+                "defTaulaUnitatRAs": {
+                    "type": "objectArray",
+                    "typeDef":"entradaUnitatRAs"
+                },                                                
+                                                
+                "pla": {
+                    "type": "object",
+                    "keys": {
+                        "nsProgramacio": {
+                            "type":"string",
+                            
+                            "mandatory": true,
+                            "default":""
+                        },
+                        "nouCurr": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
+                        "semestre": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default":1
+                        },
+                        "tipusBlocModul":{
+                            "type":"string",
+                            "mandatory": true,
+                            "default":"mòdul"
+                        },
+                        "cicle": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "modulId": {
+                            "type": "string",
+                            "default": "MXX",
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "modulId",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"modulId",
+                                        "values": "$values"
+                                    }
+                                }
+                            },
+                            "props" : {
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                            } 
+                        },
+                        "modul": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "durada": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": 0,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "duradaCicle": {
+                            "type": "number",
+                            "default": 2000,
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field": "duradaCicle",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"duradaCicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            },
+                            "props" : {
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                            }   
+                        },
+                        "professors": {
+                            "type": "string",
+                            "default": "Indiqueu el nom dels professors",
+                            "mandatory": true
+                        },
+                        "coordinador": {
+                            "type": "string",
+                            "default": "Indiqueu el nom del coordinador",
+                            "mandatory": true
+                        },
+                        "urlMaterialDidactic": {
+                            "type": "string",
+                            "default": "http://ioc.xtec.cat/materials/FP/Materials/.../web/html/",
+                            "mandatory": true
+                        },
+                        "dedicacio": {
+                            "type": "string",
+                            "default": 0,
+                            "mandatory": true
+                        },
+                        "requerimentsMatricula": {
+                            "type": "string",
+                            "default": "Per cursar-lo cal matricular-se de tots els mòduls del cicle, encara no superats, entre el 1r i el 2n semestre del mateix curs.",
+                            "mandatory": true
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "default": "",
+                            "mandatory": true
+                        },
+                        "taulaDadesUn": {
+                            "type": "defTaulaDadesUn",
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateArrayObjectFromExternalField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "taulaDadesUn",
+                                    "externalFieldSubset":[
+                                        "unitat",
+                                        "nom",
+                                        "ordreImparticio",
+                                        "hores",
+                                        "ponderació"
+                                    ],
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"taulaDadesUn",
+                                        "values": "$values",
+                                        "defaultValue": "[]"
+                                    }
+                                }
+                            },
+                            "props" : {
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                            }
+                        },                                                
+                        "taulaUnitatRAs": {
+                            "type": "defTaulaUnitatRAs",
+                            "mandatory": true
+                        },                                                                                               
+                        "resultatsAprenentatge": {
+                            "type": "defResultatsAprenentage",
+                            "default":[{"id":"RA1","descripcio":"Descripció del RA","ponderaRA":"0"}],   
+                            "mandatory": true
+                        },                                                
+                                              
+                        "calendari": {
+                            "type": "defCalendari",
+                            "mandatory": true
+                        },
+                        "datesAC": {
+                            "type": "defDatesAC",
+                            "mandatory": true
+                        },                                                                                         
+                        "dataRecuSem1Inici": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"{#_TODAY()_#}"
+                        },                                                
+                        "dataRecuSem2Inici": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"{#_TODAY()_#}"
+                        },                                                
+                        "dataRecuSem1Fi": {
+                            "type": "date",
+                            "mandatory": true,
+                                "default":"{#_TODAY()_#}"
+                        },                                                
+                        "dataRecuSem2Fi": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"{#_TODAY()_#}"
+                        },                                                
+                        "dataRecuQualificacioSem1": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"{#_TODAY()_#}"
+                        },    
+                        "dataRecuQualificacioSem2": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"{#_TODAY()_#}"
+                        },                                                                                                                                                                    
+                        "dadesExtres": {
+                            "type": "defExtres",
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateDateFormatFromArrayObject",
+                                "data": {
+                                    "field": "dadesExtres",
+                                    "conditionColumn": "tipus",
+                                    "conditionValue": "data_actualitzable",
+                                    "formatField": "valor",
+                                    "format": "DDMMYYYY",
+                                    "separator": "/", 
+                                    "defaultValue": "[]"
+                                }
+                            },
+                            "calculateOnSave": {
+                                "class": "CalculateDateFormatFromArrayObject",
+                                "data": {
+                                    "field": "dadesExtres",
+                                    "conditionColumn": "tipus",
+                                    "conditionValue": "data_actualitzable",
+                                    "formatField": "valor",
+                                    "format": "YYYYMMDD",
+                                    "separator": "/", 
+                                    "defaultValue": "[]"
+                                }
+                            }
+                        },                                                
+                        "plantilla": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "plantilles:docum_ioc:pla_treball_fp:loe:continguts"
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "isRole":true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true
+                        },
+                        "supervisor": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true
+                        },
+                        "fitxercontinguts": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "continguts"
+                        },
+                        "moodleCourseId": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 0
+                        },
+                        "dataFromMix":{
+                            "type":"boolean",
+                            "viewType":"hidden",
+                            "mandatory": false,
+                            "default":false
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

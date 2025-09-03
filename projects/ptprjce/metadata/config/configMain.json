@@ -1,0 +1,428 @@
+{
+    "metaDataSubsetsList": [
+        "main"
+    ],
+    "metaDataProjectConfig": [
+        {
+            "main": {
+                "projectTypeConfigFile": "admconfig:ptfploe"
+            }
+        }        
+    ],
+    "metaDataFtpSender": [
+        {
+            "main": {
+                "files": {
+                    "fsint1": {"local":"mediadir", "type":"zip", "action":[1], "remoteIndex":"index.html"}
+                },
+                "ftpId": "pla_treball"
+            }
+        }
+    ],
+    "metaDataProjectStructure": [
+        {
+            "main": "meta.mdpr",
+            "viewfiles": {"defaultView": "defaultView", "updateView": "updateView", "firstView": "firstView"},
+            "versions": {
+                "fields": 4,
+                "templates": {"continguts":6}
+            },
+            "mainType": {
+                "type": "object",
+                "typeDef": "pla"
+            },
+            "typesDefinition": {
+                "entradaCalendari": {
+                    "type": "object",
+                    "keys": {
+                        "període": {
+                            "type": "number",
+                            "default": "{#_INC(1)_#}",
+                            "mandatory": true
+                        },
+                        "descripció període": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "hores": {
+                            "type": "number",
+                            "mandatory": true
+                        },
+                        "inici": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "final": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        }
+                    }
+                },
+                "defCalendari": {
+                    "type": "objectArray",
+                    "typeDef":"entradaCalendari"
+                },                                                
+                "entradaResultatsAprenentage": {
+                    "type":"object",
+                    "keys": {
+                        "id": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_IFFIELDISEQUAL(\"tipusCicle\", \"LOE\", \"RA\", \"OT\")_#}{#_INC(1)_#}"
+                        },
+                        "descripció": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "descripció de l'RA"
+                        }
+                    }                    
+                },
+                "defResultatsAprenentage": {
+                    "type": "objectArray",
+                    "typeDef":"entradaResultatsAprenentage"
+                },
+                "entradaTasquesPerPeriode": {
+                    "type":"object",
+                    "keys": {
+                        "període": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "id": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "{#_INC(1)_#}"
+                        },
+                        "descripció": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        }
+                    }                    
+                },
+                "defTasquesPerPeriode": {
+                    "type": "objectArray",
+                    "typeDef":"entradaTasquesPerPeriode"
+                },
+                "entradaDadesAC": {
+                    "type": "object",
+                    "keys": {
+                        "id": {
+                            "type": "string",
+                            "default": "EAC{#_INC(1)_#}",
+                            "mandatory": true
+                        },
+                        "parts": {
+                            "type": "string",
+                            "default": "",
+                            "mandatory": true
+                        },
+                        "període": {
+                            "type": "number",
+                            "default": "{#_INC(1)_#}",
+                            "mandatory": true
+                        },
+                        "enunciat": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "lliurament": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "qualificació": {
+                            "type": "date",
+                            "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "ponderació": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "0"
+                        }
+                    }
+                },
+                "defDadesAC": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDadesAC"
+                },
+                "notaMinimaAC": {
+                    "type": "number",
+                    "mandatory": true,
+                    "props": {
+                        "min": 0,
+                        "max": 10,
+                        "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
+                    },
+                    "default": 0,
+                    "calculateOnRead": {
+                        "class": "CalculateSimpleValueFromExternaField",
+                        "data": {
+                            "projectId": {
+                                "_type_": "field",
+                                "name": "nsProgramacio",
+                                "values":"$values",
+                                "defaultValue":""
+                            },
+                            "metaDataSubSet": "main",
+                            "field": "notaMinimaAC",
+                            "defaultValue":{
+                                "_type_":"field",
+                                "name":"notaMinimaAC",
+                                "values": "$values"
+                            }
+                        }
+                    }
+                },
+                "entradaCompetencies": {
+                    "type": "object",
+                    "keys": {
+                        "id": {
+                            "type": "number",
+                            "default": "{#_INC(1)_#}",
+                            "mandatory": true
+                        },
+                        "competencia": {
+                            "type": "string",
+                            "default": "",
+                            "mandatory": true
+                        },
+                        "punts": {
+                            "type": "number",
+                            "default": "0",
+                            "mandatory": true
+                        }
+                    }
+                },
+                "defCompetencies": {
+                    "type": "objectArray",
+                    "typeDef":"entradaCompetencies"
+                },                                                
+                "entradaEvidenciesCompetencies": {
+                    "type": "object",
+                    "keys": {
+                        "idCompetencia": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": "{#_COPY(1)_#}"
+                        },
+                        "descripció": {
+                            "type": "string",
+                            "default": "Descriu l'evidència",
+                            "mandatory": true
+                        }
+                    }
+                },
+                "defEvidenciesCompetencies": {
+                    "type": "objectArray",
+                    "typeDef":"entradaEvidenciesCompetencies"
+                },                                                
+                "entradaExtres": {
+                    "type":"object",
+                    "keys": {
+                        "nom": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu la dada extra que necessiteu"
+                        },
+                        "tipus": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "dada"
+                        },
+                        "valor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Escriviu el valor de la dada aquí"
+                        },
+                        "parametres": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": "Indiqueu els paràmetres per els tipus que ho necessitin"
+                        }
+                    }                    
+                },
+                "defExtres": {
+                    "type": "objectArray",
+                    "typeDef":"entradaExtres"
+                },                
+                "pla": {
+                    "type": "object",
+                    "keys": {
+                        "nsProgramacio": {
+                            "type":"string",
+                            "mandatory": true,
+                            "default": ""
+                        },
+                        "tipusCicle":{
+                            "type":"string",
+                            "mandatory": true,
+                            "default":"LOE"
+                        },
+                        "individual":{
+                            "type":"boolean",
+                            "mandatory": true,
+                            "default": false
+                        },
+                        "descripcio": {
+                            "type": "string",
+                            "mandatory": true
+                        },
+                        "durada": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": 0,
+                            "props" : {
+                                "readonly" : true
+                            }
+                        },
+                        "calendari": {
+                            "type": "defCalendari",
+                            "mandatory": true
+                        },
+                        "duradaCicle": {
+                            "type": "string",
+                            "default": 2000,
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "field": "duradaCicle",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"duradaCicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            }   
+                        },
+                        "cicle": {
+                            "type": "string",
+                            "default": "Indiqueu el cicle",
+                            "mandatory": true,
+                            "calculateOnRead": {
+                                "class": "CalculateSimpleValueFromExternaField",
+                                "data": {
+                                    "projectId": {
+                                        "_type_": "field",
+                                        "name": "nsProgramacio",
+                                        "values":"$values",
+                                        "defaultValue":""
+                                    },
+                                    "metaDataSubSet": "main",
+                                    "field": "cicle",
+                                    "defaultValue":{
+                                        "_type_":"field",
+                                        "name":"cicle",
+                                        "values": "$values"
+                                    }
+                                }
+                            }
+                        },
+                        "coordinador": {
+                            "type": "string",
+                            "default": "Indiqueu el nom del coordinador",
+                            "mandatory": true
+                        },
+                        "professors": {
+                            "type": "string",
+                            "default": "Indiqueu el nom dels professors",
+                            "mandatory": true
+                        },
+                        "dedicacio": {
+                            "type": "string",
+                            "default": 0,
+                            "mandatory": true
+                        },
+                        "competencia": {
+                            "type": "string",
+                            "default": "Descriu la competència ...",
+                            "mandatory": true
+                        },
+                        "tipusTreball": {
+                            "type": "string",
+                            "default": "PROJ",
+                            "mandatory": true
+                        },
+                        "resultatsAprenentatge": {
+                            "type": "defResultatsAprenentage",
+                            "mandatory": true
+                        },                                                
+                        "nomPeriode": {
+                            "type": "string",
+                            "default": "període",
+                            "mandatory": true
+                        },
+                        "tasquesPerPeriode": {
+                            "type": "defTasquesPerPeriode",
+                            "mandatory": true
+                        },
+                        "dadesAC": {
+                            "type": "defDadesAC",
+                            "mandatory": true
+                        },
+                        "dadesCompetencies": {
+                            "type": "defCompetencies",
+                            "mandatory": true
+                        },
+                        "dadesEvidenciesCompetencies": {
+                            "type": "defEvidenciesCompetencies",
+                            "mandatory": true
+                        },
+                        "dadesExtres": {
+                            "type": "defExtres"
+                        },
+                        "modulId": {
+                            "type": "string",
+                            "default": "MXX",
+                            "mandatory": true
+                        },
+                        "modul": {
+                            "type": "string",
+                            "default": "Indiqueu el nom mòdul",
+                            "mandatory": true
+                        },
+                        "autor": {
+                            "type": "string",
+                            "mandatory": true,
+                            "isRole":true
+                        },
+                        "responsable": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true
+                        },
+                        "supervisor": {
+                            "type": "string",
+                            "struc_chars": "40",
+                            "mandatory": true,
+                            "isRole":true
+                        },
+                        "semestre": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default":1
+                        },
+                        "moodleCourseId": {
+                            "type": "number",
+                            "mandatory": true,
+                            "default": 0
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
