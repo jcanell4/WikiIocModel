@@ -1,5 +1,5 @@
 {
-<WIOCCL:FOREACH counter="id_unitats" var="item_unitat" array="{##taulaDadesUnitats##}">
+<WIOCCL:FOREACH counter="id_unitats" var="item_unitat" array="{##taulaDadesUn##}">
     "MIX_U{##item_unitat[unitat]##}": {
 <WIOCCL:SUBSET subsetvar="filteredCal" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[unitat]##}=={##item_unitat[unitat]##}">
 <WIOCCL:FOREACH counter="id_cal" var="item_cal" array="{##filteredCal##}">
