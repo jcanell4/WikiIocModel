@@ -618,7 +618,10 @@
     <br/>
     <h2>Exercicis d'avaluació final (EAF)</h2>
 <WIOCCL:SET var="numEafs" type="literal" value="{#_COUNTDISTINCT({##datesEAF##},[''id''])_#}">
-    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> també inclou <span> {##numEafs##} </span> <WIOCCL:IF condition="1=={##numEafs##}">exercici d'avaluació final (EAF).</WIOCCL:IF><WIOCCL:IF condition="1\>{##numEafs##}">exercicis d'avaluació final (EAF). </WIOCCL:IF> Les dates clau són les següents:</p>
+    <p>Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">bloc</WIOCCL:IF> també inclou <span> {##numEafs##} </span>
+<WIOCCL:IF condition="1=={##numEafs##}">exercici d'avaluació final (EAF).</WIOCCL:IF>
+<WIOCCL:IF condition="1!={##numEafs##}">exercicis d'avaluació final (EAF).</WIOCCL:IF> 
+Les dates clau són les següents:</p>
 </WIOCCL:SET>
     <table class="own_table">
       <tr>
