@@ -7,7 +7,7 @@
             "main": {
                 "projectTypeConfigFile": "admconfig:ptfploe"
             }
-        }        
+        }
     ],
     "metaDataFtpSender": [
         {
@@ -25,8 +25,8 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView", "updateView" : "updateView", "firstView": "firstView"},
             "versions": {
-                "fields": 0,
-                "templates": {"continguts": 0}
+                "fields": 13,
+                "templates": {"continguts": 40}
             },
             "mainType": {
                 "type": "object",
@@ -52,7 +52,7 @@
                             "mandatory": true,
                             "default": "0"
                         }
-                    }                    
+                    }
                 },
                 "defResultatsAprenentage": {
                     "type": "objectArray",
@@ -85,7 +85,7 @@
                             "mandatory": true,
                             "default": "0"
                         }
-                    }                    
+                    }
                 },
                 "defQualificacioUns": {
                     "type": "objectArray",
@@ -114,12 +114,12 @@
                             "mandatory": true,
                             "default": "Indiqueu els paràmetres si el tipus ho necessita"
                         }
-                    }                    
+                    }
                 },
                 "defExtres": {
                     "type": "objectArray",
                     "typeDef":"entradaExtres"
-                },                
+                },
                 "entradaDatesAC": {
                     "type": "object",
                     "keys": {
@@ -163,7 +163,7 @@
                 "defDatesAC": {
                     "type": "objectArray",
                     "typeDef":"entradaDatesAC"
-                },                                                
+                },
                 "entradaDatesEAF": {
                     "type": "object",
                     "keys": {
@@ -232,7 +232,7 @@
                 "defDatesEAF": {
                     "type": "objectArray",
                     "typeDef":"entradaDatesEAF"
-                },                                                
+                },
                 "entradaDatesJT": {
                     "type": "object",
                     "keys": {
@@ -301,7 +301,7 @@
                 "defDatesJT": {
                     "type": "objectArray",
                     "typeDef":"entradaDatesJT"
-                },                                                
+                },
                 "entradaCalendari": {
                     "type": "object",
                     "keys": {
@@ -343,7 +343,7 @@
                 "defCalendari": {
                     "type": "objectArray",
                     "typeDef":"entradaCalendari"
-                },                                                
+                },
                 "entradaEinesAprenentatge": {
                     "type": "object",
                     "keys": {
@@ -432,7 +432,7 @@
                 "defTaulaDadesUn": {
                     "type": "objectArray",
                     "typeDef":"entradaDadesUn"
-                }, 
+                },
                 "entradaUnitatRAs": {
                     "type": "object",
                     "keys": {
@@ -451,7 +451,7 @@
                 "defTaulaUnitatRAs": {
                     "type": "objectArray",
                     "typeDef":"entradaUnitatRAs"
-                },                                                
+                },
                 "entradaActivitatsAprenentatge": {
                     "type": "object",
                     "keys": {
@@ -479,13 +479,13 @@
                 "defActivitatsAprenentatge": {
                     "type": "objectArray",
                     "typeDef":"entradaActivitatsAprenentatge"
-                },                                                
+                },
                 "pla": {
                     "type": "object",
                     "keys": {
                         "nsProgramacio": {
                             "type":"string",
-                            
+
                             "mandatory": true,
                             "default":""
                         },
@@ -536,8 +536,8 @@
                                 }
                             },
                             "props" : {
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
-                            } 
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
+                            }
                         },
                         "modul": {
                             "type": "string",
@@ -573,8 +573,8 @@
                                 }
                             },
                             "props" : {
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
-                            }   
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
+                            }
                         },
                         "professors": {
                             "type": "string",
@@ -671,7 +671,7 @@
                                             "name":"hores",
                                             "values":"$rowValue"
                                         },
-                                        "ponderació": {                                        
+                                        "ponderació": {
                                            "_type_":"field",
                                             "name":"ponderació",
                                             "values":"$rowValue"
@@ -702,34 +702,34 @@
                                 }
                             },
                             "props" : {
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
                             }
-                        },                                                
+                        },
                         "taulaUnitatRAs": {
                             "type": "defTaulaUnitatRAs",
                             "mandatory": true
-                        },                                                
+                        },
                         "einesAprenentatge": {
                             "type": "defEinesAprenentatge",
-                            "default":[{"tipus":"lectura","eina":"Llibre de l'aula","opcionalitat":"Lectura obligada","puntuable":"false"},{"tipus":"vídeo","eina":"Vídeo","opcionalitat":"Visualització recomanada","puntuable":"false"},{"tipus":"autoavaluació","eina":"Exercicis d'autoavaluació i activitats","opcionalitat":"Necessaris per al repàs i la pràctica dels continguts","puntuable":"false"},{"tipus":"fòrum","eina":"Fòrum de l'aula","opcionalitat":"Participació recomanada per a la resolució de dubtes","puntuable":"false"},{"tipus":"exercicis","eina":"Exercicis d'avaluació contínua (EAC)","opcionalitat":"Puntuen per a l'avaluació contínua i la qualificació final","puntuable":"true"},{"tipus":"qüestionari","eina":"Qüestionaris d'avaluació contínua","opcionalitat":"Puntuen per a l'avaluació contínua i la qualificació final","puntuable":"true"}], 
+                            "default":[{"tipus":"lectura","eina":"Llibre de l'aula","opcionalitat":"Lectura obligada","puntuable":"false"},{"tipus":"vídeo","eina":"Vídeo","opcionalitat":"Visualització recomanada","puntuable":"false"},{"tipus":"autoavaluació","eina":"Exercicis d'autoavaluació i activitats","opcionalitat":"Necessaris per al repàs i la pràctica dels continguts","puntuable":"false"},{"tipus":"fòrum","eina":"Fòrum de l'aula","opcionalitat":"Participació recomanada per a la resolució de dubtes","puntuable":"false"},{"tipus":"exercicis","eina":"Exercicis d'avaluació contínua (EAC)","opcionalitat":"Puntuen per a l'avaluació contínua i la qualificació final","puntuable":"true"},{"tipus":"qüestionari","eina":"Qüestionaris d'avaluació contínua","opcionalitat":"Puntuen per a l'avaluació contínua i la qualificació final","puntuable":"true"}],
                             "mandatory": true
-                        },                                                
+                        },
                         "resultatsAprenentatge": {
                             "type": "defResultatsAprenentage",
-                            "default":[{"id":"RA1","descripcio":"Descripció del RA","ponderaRA":"0"}],   
+                            "default":[{"id":"RA1","descripcio":"Descripció del RA","ponderaRA":"0"}],
                             "mandatory": true
-                        },                                                
+                        },
                         "activitatsAprenentatge": {
                             "type": "defActivitatsAprenentatge",
                             "default":[{"unitat":"1","període":"1","eina":"lectura","descripció":"Lectura de l'apartat 1"},{"unitat":"1","període":"1","eina":"autoavalució","descripció":"fer les activitats i exercicis d'autoavaluació"}],
                             "mandatory": true
-                        },                                                
+                        },
                         "avaluacioInicial": {
                             "type": "string",
                             "default":"no",
                             "mandatory": true,
                             "props":{
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
                             }
                         },
                         "calendari": {
@@ -772,14 +772,14 @@
                         "datesJT": {
                             "type": "defDatesJT",
                             "mandatory": false
-                        },                                                
+                        },
                         "notaMinimaAC": {
                             "type": "number",
                             "mandatory": true,
                             "props": {
                                 "min":0,
                                 "max":10,
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
                             },
                             "calculateOnRead":{
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -806,7 +806,7 @@
                             "props": {
                                 "min": 0,
                                 "max": 10,
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
                             },
                             "calculateOnRead":{
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -833,7 +833,7 @@
                             "props": {
                                 "min": 0,
                                 "max": 10,
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
                             },
                             "calculateOnRead":{
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -853,35 +853,35 @@
                                 }
                             },
                             "default": 0
-                        },                                                
+                        },
                         "dataPaf11": {
                             "type": "date",
                             "mandatory": true,
                             "default":"01/01/2000"
-                        },                                                
+                        },
                         "dataPaf12": {
                             "type": "date",
                             "default":""
-                        },                                                
+                        },
                         "dataPaf21": {
                             "type": "date",
                             "mandatory": true,
                             "default":"01/01/2000"
-                        },                                                
+                        },
                         "dataPaf22": {
                             "type": "date",
                             "default":""
-                        },                                                
+                        },
                         "dataQualificacioPaf1": {
                             "type": "date",
                             "mandatory": true,
                             "default":"01/01/2000"
-                        },                                                
+                        },
                         "dataQualificacioPaf2": {
                             "type": "date",
                             "mandatory": true,
                             "default":"01/01/2000"
-                        },                                                
+                        },
                         "notaMinimaPAF": {
                             "type": "number",
                             "mandatory": true,
@@ -889,7 +889,7 @@
                             "props": {
                                 "min":0,
                                 "max":10,
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
                             },
                             "calculateOnRead":{
                                 "class": "CalculateSimpleValueFromExternaField",
@@ -909,7 +909,7 @@
                                 }
                             },
                             "default": 4
-                        },                                                
+                        },
                         "dadesQualificacioUns": {
                             "type": "defQualificacioUns",
                             "mandatory": true,
@@ -977,7 +977,7 @@
                                             "name":"id",
                                             "values":"$rowValue"
                                         },
-                                        "ponderació": {                                        
+                                        "ponderació": {
                                            "_type_":"field",
                                             "name":"ponderacio",
                                             "values":"$rowValue"
@@ -990,8 +990,8 @@
                                         "defaultValue": "[]"
                                     }
                                 }
-                            }                            
-                        },                                                
+                            }
+                        },
                         "duradaPAF": {
                             "type": "string",
                             "mandatory": true,
@@ -1015,9 +1015,9 @@
                                 }
                             },
                             "props" : {
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}
                             }
-                        },                                                
+                        },
                         "dadesExtres": {
                             "type": "defExtres",
                             "mandatory": true,
@@ -1029,7 +1029,7 @@
                                     "conditionValue": "data_actualitzable",
                                     "formatField": "valor",
                                     "format": "DDMMYYYY",
-                                    "separator": "/", 
+                                    "separator": "/",
                                     "defaultValue": "[]"
                                 }
                             },
@@ -1041,11 +1041,11 @@
                                     "conditionValue": "data_actualitzable",
                                     "formatField": "valor",
                                     "format": "YYYYMMDD",
-                                    "separator": "/", 
+                                    "separator": "/",
                                     "defaultValue": "[]"
                                 }
                             }
-                        },                                                
+                        },
                         "plantilla": {
                             "type": "string",
                             "mandatory": true,
