@@ -133,7 +133,7 @@
           "group": "main",
           "props": {
             "required": true,
-            "readonly": false,
+            "readonly": true,
             "title": "Aquest és un camp calculat. No l'heu d'introduir"
           }
         },

@@ -548,7 +548,7 @@
                             "mandatory": true,
                             "default": 0,
                             "props" : {
-                                "readonly" : true
+                                "readonly": true
                             }
                         },
                         "duradaCicle": {
