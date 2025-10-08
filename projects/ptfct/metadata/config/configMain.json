@@ -98,25 +98,7 @@
                             "mandatory": true,
                             "default": 0,
                             "props": {
-                                "readonly": true
-                            },
-                            "calculateOnRead": {
-                                "class": "CalculateSimpleValueFromExternaField",
-                                "data": {
-                                    "projectId": {
-                                        "_type_": "field",
-                                        "name": "nsProgramacio",
-                                        "values": "$values",
-                                        "defaultValue": ""
-                                    },
-                                    "metaDataSubSet": "main",
-                                    "field": "durada",
-                                    "defaultValue":{
-                                        "_type_": "field",
-                                        "name": "durada",
-                                        "values": "$values"
-                                    }
-                                }
+                                "readonly": false
                             }
                         },
                         "any": {
