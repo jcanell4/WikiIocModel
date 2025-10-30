@@ -542,6 +542,7 @@ class renderer_plugin_wikiiocmodel_ptpdf extends Doku_Renderer {
      */
     function table_open($maxcols = NULL, $numrows = NULL){
         global $conf;
+        global $latex_version;
 
         $this->table = TRUE;
         $this->tableheader = TRUE;
@@ -555,14 +556,19 @@ class renderer_plugin_wikiiocmodel_ptpdf extends Doku_Renderer {
         $csetup = '';
         $col_width = '-1,';
         $tablecaption = '\tablecaption';
+        /*pegat per adaptar la versió TeX Live 2020 a TeX Live 2022
+        if ($latex_version >= "2.6-1.40.24") {
+            $table_type = 'longtable'; 
+        }else {
+            $table_type = 'longtabu';
+        }
+        */
         $table_type = 'longtabu';
         if ($_SESSION['table_large']){
             $large = ' to 170mm';
             $csetup = '\tablelargecaption';
-
         }elseif($_SESSION['table_small']){
-            $this->doc .= '\addtocounter{table}{-1}\caption{'.$_SESSION['table_title'].
-            			  '\label{'.$_SESSION['table_id'].'}}'.DOKU_LF;
+            $this->doc .= '\addtocounter{table}{-1}\caption{'.$_SESSION['table_title'].'\label{'.$_SESSION['table_id'].'}}'.DOKU_LF;
             $large = ' spread 0pt';
             $tablecaption = '\tablesmallcaption{'.$maxcols.'}';
             $col_width = '';
@@ -594,6 +600,13 @@ class renderer_plugin_wikiiocmodel_ptpdf extends Doku_Renderer {
             } elseif(!empty ($border) && $i===0) {
                 $this->doc .= $border;
             }
+            /* pegat per adaptar la versió TeX Live 2020 a TeX Live 2022
+            if ($latex_version >= "2.6-1.40.24") {
+                $this->doc .= 'p{'.$col_width.'\textwidth} '.$border;
+            }else {
+                $this->doc .= 'X['.$col_width.'l] '.$border;
+            }
+            */
             $this->doc .= 'X['.$col_width.'l] '.$border;
         }
         $this->doc .= '}';
@@ -615,6 +628,7 @@ class renderer_plugin_wikiiocmodel_ptpdf extends Doku_Renderer {
     }
 
     function table_close(){
+        global $latex_version;
         $this->table = FALSE;
         if (!$_SESSION['accounting']){
             $this->doc .= '\noalign{\vspace{1mm}}'.DOKU_LF;
@@ -631,6 +645,13 @@ class renderer_plugin_wikiiocmodel_ptpdf extends Doku_Renderer {
         if ($_SESSION['table_small']){
             $this->doc .= '\end{tabu}'.DOKU_LF;
         }else{
+            /* pegat per adaptar la versió TeX Live 2020 a TeX Live 2022
+            if ($latex_version >= "2.6-1.40.24") {
+               $this->doc .= '\end{longtable}'.DOKU_LF;
+            else {
+               $this->doc .= '\end{longtabu}'.DOKU_LF;
+            }
+            */
             $this->doc .= '\end{longtabu}'.DOKU_LF;
         }
         if (!$_SESSION['iocelem']){
