@@ -392,7 +392,7 @@
               "unitat": {
                 "type": "number"
               },
-              "RA": {
+             "RA": {
                 "type": "string"
               }
             },
@@ -407,7 +407,6 @@
                     "field": "unitat",
                     "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                   },
-
                   {
                     "name": "RA",
                     "field": "RA",

@@ -85,6 +85,31 @@ En aquest <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">mòdul</WIOCCL
 </WIOCCL:SET>
 :::
 
+::table:T04
+  :title:Unitats i RA
+  :type:pt_taula
+^ RA ^ Unitat ^
+<WIOCCL:FOREACH  var="itemRA" array="{##taulaUnitatRAs##}">
+<WIOCCL:FOREACH var="item" array="{##taulaDadesUn##} filter="{##item[unitat]##}=={##itemRA[unitat]##}">
+<WIOCCL:CHOOSE id="selector" lExpression="{##previousRA##}" rExpression="{##itemRA[RA]##}">
+<WIOCCL:CASE forchoose="selector" relation="==">
+<WIOCCL:FOREACH  var="itemR" array="{##resultatsAprenentatge##}" filter="{##itemR[id]##}=={##itemRA[RA]##}">
+| ::: | {##itemRA[unitat]##}|
+</WIOCCL:FOREACH>
+</WIOCCL:CASE>
+
+<WIOCCL:DEFAULTCASE forchoose="selector">
+<WIOCCL:FOREACH  var="itemR" array="{##resultatsAprenentatge##}" filter="{##itemR[id]##}=={##itemRA[RA]##}">
+|  {##itemRA[RA]##} : {##itemR[descripcio]##}  | {##itemRA[unitat]##}|
+</WIOCCL:FOREACH>
+</WIOCCL:DEFAULTCASE>
+
+<WIOCCL:RESET var="previousRA" type="literal" value="{##itemRA[RA]##}"></WIOCCL:RESET>
+</WIOCCL:CHOOSE>
+</WIOCCL:FOREACH>
+</WIOCCL:FOREACH>
+:::
+
 
 ###:
 

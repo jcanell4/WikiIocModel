@@ -110,7 +110,7 @@ Si l'alumne no ha superat alguna de les activitats previstes, no tindrà l'opci�
 :###===== Convocatòria extraordinària =====###:
 Si no s'ha superat algun dels reptes a la convocatòria ordinària, els alumnes podran tornar a presentar les activitats no superades, al final de cada semestre. Depenent dels casos, l'equip docent indicarà si cal presentar la mateixa activitat o proposarà activitats alternatives.
 
-La qualificació dels reptes a la convocatòria extraordinària només podrà ser **superat** o **no superat**. Per al càlcul de la qualificació del mòdul, la qualificació dels mòduls superats serà un 5.
+La qualificació dels reptes a la convocatòria extraordinària només podrà ser **superat** o **no superat**. Per al càlcul de la qualificació del mòdul, la qualificació dels reptes superats serà un 5.
 
 Les competències relatives a la capacitat clau de treball en equip s'han d'haver demostrat mentre es cursa el mòdul i no es podran recuperar amb cap altra activitat alternativa.
 

@@ -37,7 +37,7 @@ Per assolir els resultats d’aprenentatge (RA) se segueix una metodologia  basa
 
 És recomanable realitzar totes les activitats proposades, tant les que avalua el professor i per tant ponderen a l'avaluació contínua (AC), com les altres. Les activitats i exercicis no avaluats disposen de solució, fet que us permetrà portar el control del vostre aprenentatge.
 
-El professorat resoldrà els possibles dubtes i orientarà en el ritme d'estudi i participació que s'ha de portar a terme per assolir els objectius.
+**El professorat resoldrà els possibles dubtes i orientarà en el ritme d'estudi i participació que s'ha de portar a terme per assolir els objectius.**
 
 
 ###:
@@ -209,17 +209,15 @@ Per poder assistir a la JT és imprescindible apuntar-se a l'espai indicat pel p
 
 :###
 <WIOCCL:IF condition="{##hiHaRecuperacioPerJT##}==true">
-Com que són part de l'avaluació final, les JT tenen dues convocatòries cada semestre: JT i recuperació JT. Només poden presentar-se a la segona convocatòria (recuperació JT) els alumnes que s'hagin presentat a la primera i hagin suspès o aquells que no s'hi hagin presentat per algun d'aquests motius: 
-  * Accident greu
-  * Ingrés hospitalari
-  * Mort d’un familiar fins a 2n grau (el mateix dia de la jornada)
-  * Assistència a un judici, el mateix dia de la jornada, en un horari que impossibiliti l’assistència a la JT.
+Com que són part de l'avaluació final, les JT tenen dues convocatòries cada semestre: JT i recuperació JT. Només poden presentar-se a la segona convocatòria (recuperació JT), els alumnes que no s'hagin presentat a la primera (JT) o que havent-s'hi  presentat, no l'hagin superat.
 ###:
 
 [##TODO: Indiqueu aquí els justificants que han de presentar, allò que considereu oportú. Per exemple: En el supòsit 2 s'ha d'aportar obligatòriament la documentació acreditativa (justificants o altres documents oficials degudament segellats i signats. Si no s'aporten els originals, han de ser fotocòpies compulsades). Aquesta documentació s'ha de lliurar a l'IOC a l'atenció del departament XXXX. La data límit per lliurar la documentació és: XX/XX/XXXX. En qualsevol dels casos, l'equip docent és qui resol si l'estudiant té dret a assistir a la recuperació JT. No hi haurà possibilitat d'elecció de centre, ni d'horari, només s'oferirà una opció que sortirà publicada en el tauler de l'aula##]
 :###
 </WIOCCL:IF>
-La primera convocatòria de la JT s'exhaureix tant si l'estudiant s'hi presenta com si no (excepte que l'estudiant hagi anul·lat la matrícula). La convocatòria de recuperació de la JT només s'exhaureix si l'estudiant s'hi presenta. 
+La convocatòria de la JT s'exhaureix tant si l'estudiant s'hi presenta com si no (excepte que l'estudiant hagi anul·lat la matrícula). La convocatòria de recuperació de la JT només s'exhaureix si l'estudiant s'hi presenta. 
+
+També podran presentar-se a la convocatòria de recuperació els alumnes que, el mateix dia de la JT hagin patit un accident greu, un ingrés hospitalari, la mort d’un familiar fins a 2n grau (el mateix dia de la jornada) o ha d’assistir a un judici (el mateix dia de la jornada) que impossibiliti l’assistència a la convocatòria JT.
 </WIOCCL:IF>
 ###:
 

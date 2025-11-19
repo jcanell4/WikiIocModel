@@ -408,7 +408,6 @@
                     "field": "unitat",
                     "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                   },
-
                   {
                     "name": "RA",
                     "field": "RA",

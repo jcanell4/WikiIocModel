@@ -319,7 +319,7 @@
                         },
                         "descripcio": {
                             "type": "string",
-                            "default": "",
+                            "default": " permet interrelacionar els aprenentatges assolits en els diferents mòduls del cicle formatiu i així completar l’adquisició de les competències professionals, personals i socials incloses en el perfil professional del títol.",
                             "mandatory": true
                         },
                         "taulaDadesUn": {
@@ -357,7 +357,7 @@
                         },                                                
                         "taulaUnitatRAs": {
                             "type": "defTaulaUnitatRAs",
-                            "mandatory": true
+                            "mandatory": false
                         },                                                                                               
                         "resultatsAprenentatge": {
                             "type": "defResultatsAprenentage",

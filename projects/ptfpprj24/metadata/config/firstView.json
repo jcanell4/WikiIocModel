@@ -147,13 +147,7 @@
           }
         },
         "urlMaterialDidactic": {
-          "label" : "Adreça del material didàctic (urlMaterialDidactic)",
-          "n_columns": 8,
-          "group": "dadesBasiques",
-          "props": {
-            "required": true,
-            "title": "indiqueu la URL per accedir als materials didàctics"
-          }
+            "type": "hidden"
         },
         "dedicacio": {
           "type":"number",
@@ -166,19 +160,7 @@
           }
         },
         "descripcio": {
-          "n_columns": 12,
-          "label" : "Aquest mòdul ... (descripcio)",
-          "type": "textarea",
-          "n_rows": 6,
-          "props": {
-            "data-editable-element": "textarea",
-            "title": "continua la frase a fí de descriure breument el contingut del mòdul"
-          },
-          "config": {
-              "renderable": true,
-              "mode": "xhtml"
-          },
-          "group": "dadesBasiques"
+            "type": "hidden"
         },
         "requerimentsMatricula": {
           "n_columns": 12,
@@ -290,53 +272,9 @@
             ]
           }
         },
-        "taulaUnitatRAs": {
-          "label": "Unitats (taulaUnitatRAs)",
-          "n_columns": 12,
-          "type": "editableObject",
-          "group": "dadesBasiques",
-          "n_rows": 8,
-          "props": {
-            "data-editable-element": "table",
-            "title": "Detalleu les dades referents als RA de cada unitat."
-          },
-          "config": {
-            "actions": {
-              "set_multiple_default_rows": {"label":"Definir el nombre d'unitats", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}},
-              "remove_rows": {"label":"Eliminar les unitats seleccionades", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}},
-              "add_default_row_before": {"label":"Afegir unitat abans de la fila seleccionada", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}}
-            },
-            "fields": {
-              "unitat": {
-                "type": "number"
-              },
-              "RA": {
-                "type": "string"
-              }
-            },
-            "layout": [
-              {
-                "defaultCell": {
-                  "width" : "15%"
-                },
-                "cells": [
-                  {
-                    "name": "unitat",
-                    "field": "unitat",
-                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
-                  },
-
-                  {
-                    "name": "RA",
-                    "field": "RA",
-                     "width":"55%",
-                    "editable": true
-                  }
-                ]
-              }
-            ]
-          }
-        }, 
+        "taulaUnitatRAs":  {
+            "type": "hidden"
+        },
         "calendari": {
           "label": "Temporització (calendari)",
           "n_columns": 12,
