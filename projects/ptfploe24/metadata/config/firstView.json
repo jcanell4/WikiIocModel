@@ -114,7 +114,7 @@
           }
         },
         "modulId": {
-          "label" : "Codi del mòdul (modulId)",
+          "label" : "Codi (modulId)",
           "n_columns": 2,
           "group": "dadesBasiques",
           "props": {
@@ -141,9 +141,27 @@
             "title": "Aquest és un camp calculat. No l'heu d'introduir"
           }
         },
+        "horesEE": {
+            "label" : "Hores en Empresa(horesEE)",
+            "n_columns": 5,
+            "group": "dadesBasiques",
+            "props": {
+              "required": false,
+              "title": "Durada de l'estada en Empresa en hores"
+            }
+        },        
+        "estadaEmpresa": {
+            "label": "Estada l'Empresa",
+            "n_columns": 5,
+            "group": "dadesBasiques",
+            "type": "checkbox",
+            "props": {
+                "title": "Hi ha estada a l'empresa"
+            }
+        },        
         "coordinador": {
           "label" : "Coordinador (coordinador)",
-          "n_columns": 6,
+          "n_columns": 5,
           "group": "dadesBasiques",
           "props": {
             "required": true,
@@ -152,7 +170,7 @@
         },
         "professors": {
           "label" : "Professors (professors)",
-          "n_columns": 6,
+          "n_columns": 5,
           "group": "dadesBasiques",
           "props": {
             "required": true,

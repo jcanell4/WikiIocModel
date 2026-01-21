@@ -110,7 +110,7 @@
           }
         },
         "modulId": {
-          "label" : "Codi del mòdul (modulId)",
+          "label" : "Codi (modulId)",
           "n_columns": 2,
           "group": "main",
           "props": {
@@ -137,9 +137,27 @@
             "title": "Aquest és un camp calculat. No l'heu d'introduir"
           }
         },
+        "estadaEmpresa": {
+            "label": "Estada l'Empresa",
+            "n_columns": 5,
+            "group": "main",
+            "type": "checkbox",
+            "props": {
+                "title": "Hi ha estada a l'empresa"
+            }
+        },
+        "horesEE": {
+            "label" : "Hores en Empresa(horesEE)",
+            "n_columns": 5,
+            "group": "main",
+            "props": {
+              "required": false,
+              "title": "Durada de l'estada en Empresa en hores"
+            }
+        },         
         "coordinador": {
           "label" : "Coordinador (coordinador)",
-          "n_columns": 6,
+          "n_columns": 5,
           "group": "main",
           "props": {
             "required": true,
@@ -148,7 +166,7 @@
         },
         "professors": {
           "label" : "Professors (professors)",
-          "n_columns": 6,
+          "n_columns": 5,
           "group": "main",
           "props": {
             "required": true,
@@ -226,7 +244,7 @@
               }
             }
           }
-        },
+        },      
         "semestre": {
           "label": "Semestre (semestre)",
           "n_columns": 3,

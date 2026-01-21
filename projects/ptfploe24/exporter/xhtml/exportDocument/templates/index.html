@@ -767,24 +767,149 @@ Les dates clau són les següents:</p>
 (function(){
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''m&ograve;dul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
     var dataArray1 = [
-<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUn##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
-                      [
+                       [
                         {
-                          title :"U{##itemUf[unitat]##}",
-                          name :"U{##itemUf[unitat]##}",
+                          title :"FINAL",
+                          name :"FINAL",
                           percent: 0
                         },
-<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUns##},''ponderació'', ''unitat'', ''{##itemUf[unitat]##}'')_#}">
-<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUns##}" filter="{##item[unitat]##}=={##itemUf[unitat]##}">
-                       { 
-                          title :"{##item[descripció qualificació]##}",
-                          name :"{##item[abreviació qualificació]##}",
-                          percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}"
+                    <WIOCCL:SUBSET subsetvar="subtaulaAC" array="{##dadesQualificacioUns##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''AC''">
+                    <WIOCCL:SET var="sum_ponderacio1" type="literal" value="{#_ARRAY_GET_SUM({##subtaulaAC##},''ponderació'')_#}">
+
+                    <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}\>0">
+                    <WIOCCL:SUBSET subsetvar="subtaulaEAF" array="{##dadesQualificacioUns##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''EAF''">
+                    <WIOCCL:SET var="sum_ponderacio2" type="literal" value="{#_ARRAY_GET_SUM({##subtaulaEAF##},''ponderació'')_#}">
+
+
+                    <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
+                    <WIOCCL:SUBSET subsetvar="subtaulaJT" array="{##dadesQualificacioUns##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''JT''">
+                    <WIOCCL:SET var="sum_ponderacio3" type="literal" value="{#_ARRAY_GET_SUM({##subtaulaJT##},''ponderació'')_#}">
+
+                    <WIOCCL:SUBSET subsetvar="subtaulaPAF" array="{##dadesQualificacioUns##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">
+                    <WIOCCL:SET var="sum_ponderacio4" type="literal" value="{#_ARRAY_GET_SUM({##subtaulaPAF##},''ponderació'')_#}">
+                    <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUns##},''ponderació'')_#}">
+
+                            { 
+                               title :"AC",
+                               name :"AC",
+                               percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio1##})_#}"
+                            },
+                            { 
+                               title :"EAF",
+                               name :"EAF",
+                               percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio2##})_#}"
+                            },
+                            { 
+                               title :"JT",
+                               name :"JT",
+                               percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio3##})_#}"
+                            },
+                            { 
+                               title :"PAF",
+                               name :"PAF",
+                               percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio4##})_#}"
+                            },
+                    </WIOCCL:SET>
+                    </WIOCCL:SET>
+                    </WIOCCL:SUBSET>
+
+                    </WIOCCL:SET>
+                    </WIOCCL:SUBSET>
+                    </WIOCCL:IF>
+
+                    <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0">
+
+                    <WIOCCL:SUBSET subsetvar="subtaulaPAF" array="{##dadesQualificacioUns##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">
+                    <WIOCCL:SET var="sum_ponderacio4" type="literal" value="{#_ARRAY_GET_SUM({##subtaulaPAF##},''ponderació'')_#}">
+                    <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUns##},''ponderació'')_#}">
+
+                            { 
+                               title :"AC",
+                               name :"AC",
+                               percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio1##})_#}"
+                            },
+                            { 
+                               title :"EAF",
+                               name :"EAF",
+                               percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio2##})_#}"
+                            },
+                            { 
+                               title :"PAF",
+                               name :"PAF",
+                               percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio4##})_#}"
+                            },
+                    </WIOCCL:SET>
+                    </WIOCCL:SET>
+                    </WIOCCL:SUBSET>
+
+                    </WIOCCL:IF>
+
+                    </WIOCCL:SET>
+                    </WIOCCL:SUBSET>
+                    </WIOCCL:IF>
+
+                    <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesEAF##})_#}==0">
+
+                    <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}\>0">
+                    <WIOCCL:SUBSET subsetvar="subtaulaJT" array="{##dadesQualificacioUns##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''JT''">
+                    <WIOCCL:SET var="sum_ponderacio3" type="literal" value="{#_ARRAY_GET_SUM({##subtaulaJT##},''ponderació'')_#}">
+
+
+                    <WIOCCL:SUBSET subsetvar="subtaulaPAF" array="{##dadesQualificacioUns##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">
+                    <WIOCCL:SET var="sum_ponderacio4" type="literal" value="{#_ARRAY_GET_SUM({##subtaulaPAF##},''ponderació'')_#}">
+                    <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUns##},''ponderació'')_#}">
+
+                        { 
+                           title :"AC",
+                           name :"AC",
+                           percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio1##})_#}"
                         },
-</WIOCCL:FOREACH>
-</WIOCCL:SET>
+                        { 
+                           title :"JT",
+                           name :"JT",
+                           percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio3##})_#}"
+                        },
+                        { 
+                           title :"PAF",
+                           name :"PAF",
+                           percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio4##})_#}"
+                        },
+        
+                </WIOCCL:SET>
+                </WIOCCL:SET>
+                </WIOCCL:SUBSET>
+
+                </WIOCCL:SET>
+                </WIOCCL:SUBSET>
+                </WIOCCL:IF>
+
+                <WIOCCL:IF condition="{#_ARRAY_LENGTH({##datesJT##})_#}==0">
+
+                <WIOCCL:SUBSET subsetvar="subtaulaPAF" array="{##dadesQualificacioUns##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''PAF''">
+                <WIOCCL:SET var="sum_ponderacio4" type="literal" value="{#_ARRAY_GET_SUM({##subtaulaPAF##},''ponderació'')_#}">
+                <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUns##},''ponderació'')_#}">
+
+                        { 
+                           title :"AC",
+                           name :"AC",
+                           percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio1##})_#}"
+                        },
+                        { 
+                           title :"PAF",
+                           name :"PAF",
+                           percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##sum_ponderacio4##})_#}"
+                        },
+                </WIOCCL:SET>
+                </WIOCCL:SET>
+                </WIOCCL:SUBSET>
+
+                </WIOCCL:IF>
+
+                </WIOCCL:IF>
+
+                </WIOCCL:SET>
+                </WIOCCL:SUBSET>  
                       ],
-</WIOCCL:FOREACH>
                       [
                         {
                           title :"FINAL",
@@ -850,7 +975,7 @@ Les dates clau són les següents:</p>
 
     for(var k = 0; k <= allCells.length - 1; k++) {
 
-      if (parseInt(allCells[k].style.width) > 0 && parseInt(allCells[k].style.width) < 25) {
+      if(true){//if (parseInt(allCells[k].style.width) > 0 && parseInt(allCells[k].style.width) < 25) {
             allCells[k].classList.add("smallCell");
             var textHolder = allCells[k].innerHTML;
           }

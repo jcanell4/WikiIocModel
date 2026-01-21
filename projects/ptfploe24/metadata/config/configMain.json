@@ -609,6 +609,16 @@
                             "default":[{"mòdul":"--","itinerariRecomanatS1":"1","itinerariRecomanatS2":"1"}],
                             "mandatory": true
                         },
+                        "horesEE": {
+                            "type": "string",
+                            "mandatory": true,
+                            "default": 0
+                        },                        
+                        "estadaEmpresa": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
                         "taulaDadesUn": {
                             "type": "defTaulaDadesUn",
                             "mandatory": true,
@@ -847,7 +857,7 @@
                                 }
                             },
                             "default": 4
-                        },                                                
+                        },                               
                         "dadesQualificacioUns": {
                             "type": "defQualificacioUns",
                             "mandatory": true,
