@@ -117,6 +117,9 @@
         "avaluacioInicial":{
             "type": "hidden"
         },
+        "notaMinimaPV": {
+            "type": "hidden"
+        },
         "notaMinimaPAF": {
             "type": "hidden"
         },

@@ -559,7 +559,7 @@
         "avaluacioInicial":{
           "label": "Avaluació inicial (avaluacioInicial)",
           "type":"select",
-          "n_columns":6,
+          "n_columns":10,
           "group": "avaluacio",
           "props": {
             "required": true,
@@ -580,6 +580,15 @@
           "props": {
             "required": true,
             "title": "Indiqueu la durada màxima de la PAF"
+          }
+        },
+        "notaMinimaPV": {
+          "label": "Nota mínima a la PV (notaMinimaPV)",
+          "n_columns":4,
+          "group": "avaluacio",
+          "props": {
+            "required": true,
+            "title": "Indiqueu la nota mínima que cal treure a la PV per tal de poder ponderar l'AC"
           }
         },
         "notaMinimaPAF": {
