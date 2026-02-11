@@ -115,15 +115,18 @@ Cal tenir en compte que:
   * Els EAC inclouen, si escau, la publicació d’una solució, una valoració general del grup-classe i una retroacció individual.
 
 
-La qualificació de l’avaluació contínua (AC) és la mitjana de les qualificacions dels {#_ARRAY_LENGTH({##dadesQualificacioUFs##})_#} EAC d’acord amb la ponderació següent:
+La qualificació de l’avaluació contínua (AC) és la mitjana de les qualificacions dels EAC d’acord amb la ponderació següent:
 ###:
 :###
 
-AC = <WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="''{##item[tipus qualificació]##}''==''AC''" counter="ind">
-{##item[abreviació qualificació]##} * {##item[ponderació]##}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##dadesQualificacioUFs##})_#},1)_#}">+</WIOCCL:IF> 
-</WIOCCL:FOREACH>
+<WIOCCL:SUBSET subsetvar="subtaulaAC" array="{##dadesQualificacioUFs##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''AC''">
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##subtaulaAC##},''ponderació'')_#}">
+ **AC = <WIOCCL:FOREACH var="item" array="{##subtaulaAC##}" counter="ind">{##item[abreviació qualificació]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##subtaulaAC##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH>**                            
+</WIOCCL:SET>
+</WIOCCL:SUBSET>
 
-La AC és numèrica de l’1 al 10, amb dos decimals. Només es considera superada l'AC si la qualificació és igual o superior a 5,00 (sense cap arrodoniment).
+
+La qualificació de l'AC és numèrica de l’1 al 10, amb dos decimals. Només es considera superada l'AC si la qualificació és igual o superior a 5,00 (sense cap arrodoniment).
 ###:
 
 
@@ -173,7 +176,7 @@ Si els alumnes superen l'AC i obtenen, com a mínim un {##notaMinimaPV##} a la P
 
   * QF = AC
 
-Si els els alumnes no superen l'AC o obtenen menys d'un {##notaMinimaPV##} a la PV, s'han de presentar a la prova d'avaluació final (PAF).
+Si els alumnes no superen l'AC o obtenen menys d'un {##notaMinimaPV##} a la PV, s'han de presentar a la prova d'avaluació final (PAF).
 
 Si superen la PAF, la qualificació final del mòdul és el resultat de la fórmula següent:
 
@@ -208,14 +211,10 @@ Aquest mòdul està distribuït en les unitats següents:
   :title:Unitats
   :type:pt_taula
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''mòdul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
-<WIOCCL:SET var="sortedTaulaDadesUF" type="literal" value="{#_ARRAY_SORT({##taulaDadesUF##},''ordreImparticio'')_#}">
-<WIOCCL:FOREACH var="itemUf" array="{##sortedTaulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
 ^  U  ^  Nom  ^  Durada  ^  Temporització  ^
-<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}">
+<WIOCCL:FOREACH var="item" array="{##taulaDadesUnitats##}">
 |  U{##item[unitat]##}  | {##item[nom]##}  |  {##item[hores]##} h  |  <WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##item[unitat]##}=={##itemsub[unitat]##}"> {#_DATE("{#_FIRST({##filtered##}, "FIRST[inici]")_#}", ".")_#}-{#_DATE("{#_LAST({##filtered##}, "LAST[final]")_#}", ".")_#} </WIOCCL:SUBSET>  |
 </WIOCCL:FOREACH>
-</WIOCCL:FOREACH>
-</WIOCCL:SET>
 </WIOCCL:SET>
 :::
 

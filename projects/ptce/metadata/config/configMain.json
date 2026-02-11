@@ -432,11 +432,6 @@
                 "entradaDadesUnitats": {
                     "type": "object",
                     "keys": {
-                        "unitat formativa": {
-                            "type": "number",
-                            "mandatory": true,
-                            "default": "{#_INC(1)_#}"
-                        },
                         "unitat": {
                             "type": "number",
                             "mandatory": true,
@@ -645,7 +640,7 @@
                         },                                                
                         "einesAprenentatge": {
                             "type": "defEinesAprenentatge",
-                            "default":[{"tipus":"lectura","eina":"Llibre de l'aula","opcionalitat":"Lectura obligada","puntuable":"false"},{"tipus":"autoavaluació","eina":"Exercicis d'autoavaluació i activitats","opcionalitat":"Necessaris per al repàs i la pràctica dels continguts","puntuable":"false"},{"tipus":"fòrum","eina":"Fòrum de l'aula","opcionalitat":"Participació recomanada","puntuable":"false"},{"tipus":"exercicis","eina":"Exercicis d'avaluació contínua","opcionalitat":"Recomanable","puntuable":"true"}],
+                            "default":[{"tipus":"lectura","eina":"Llibre de l'aula","opcionalitat":"Lectura obligada","puntuable":"false"},{"tipus":"autoavaluació","eina":"Exercicis d'autoavaluació i activitats","opcionalitat":"Necessaris per al repàs i la pràctica dels continguts","puntuable":"false"},{"tipus":"fòrum","eina":"Fòrum de l'aula","opcionalitat":"Participació recomanada","puntuable":"false"},{"tipus":"exercicis","eina":"Exercicis d'avaluació contínua","opcionalitat":"Obligatori","puntuable":"true"}],
                             "mandatory": true
                         },                                                
                         "resultatsAprenentatge": {
@@ -855,85 +850,7 @@
                         },                                                
                         "dadesQualificacioUFs": {
                             "type": "defQualificacioUFs",
-                            "mandatory": true,
-                            "calculateOnRead": {
-                                "class": "CalculateArrayObjectFromExternalField",
-                                "data": {
-                                    "projectId": {
-                                        "_type_": "field",
-                                        "name": "nsProgramacio",
-                                        "values":"$values",
-                                        "defaultValue":""
-                                    },
-                                    "field": "taulaInstrumentsAvaluacio",
-                                    "filterCondition":{
-                                        "_type_":"operation",
-                                       "values":[{
-                                            "_type_":"calculatedFromValues",
-                                            "class":"CalculateSearchInArrayAndGetPosition",
-                                            "values":{"blocName":["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]},
-                                            "variables":{
-                                                "pla":"$values"
-                                            },
-                                            "data":{
-                                                "field":"blocName",
-                                                "searchValue":{
-                                                    "_type_":"field",
-                                                    "name": "tipusBlocModul",
-                                                    "values":"$pla"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "_type_":"calculatedFromValues",
-                                            "class":"CalculateSearchInArrayObjectAndGetFieldValue",
-                                            "values":"$externalValues",
-                                            "variables":{
-                                                "ufRow":"$rowValue"
-                                            },
-                                            "data":{
-                                                "field":"taulaDadesUF",
-                                                "fieldToSearch":"unitat formativa",
-                                                "searchValue":{
-                                                    "_type_":"field",
-                                                    "values":"$ufRow",
-                                                    "name":"unitat formativa"
-                                                },
-                                                "fieldToReturn":"bloc"
-                                            }
-                                        }],
-                                        "operation":"=="
-                                    },
-                                    "resultRow":{
-                                        "unitat formativa":{
-                                            "_type_":"field",
-                                            "name":"unitat formativa",
-                                            "values":"$rowValue"
-                                        },
-                                        "tipus qualificació": {
-                                            "_type_":"field",
-                                            "name":"tipus",
-                                            "values":"$rowValue"
-                                        },
-                                        "abreviació qualificació": {
-                                            "_type_":"field",
-                                            "name":"id",
-                                            "values":"$rowValue"
-                                        },
-                                        "ponderació": {                                        
-                                           "_type_":"field",
-                                            "name":"ponderacio",
-                                            "values":"$rowValue"
-                                        }
-                                    },
-                                    "defaultValue":{
-                                        "_type_":"field",
-                                        "name":"dadesQualificacioUFs",
-                                        "values": "$values",
-                                        "defaultValue": "[]"
-                                    }
-                                }
-                            }                            
+                            "mandatory": true                          
                         },                                                
                         "duradaPAF": {
                             "type": "string",
