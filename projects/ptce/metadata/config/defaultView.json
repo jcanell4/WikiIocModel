@@ -909,13 +909,13 @@
           "group": "main",
           "props": {
             "required": true,
-            "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada UF"
+            "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada Unitat"
           },
            "config":{
               "options":[
                   {"description":"No es fa","value":"NO"},
                   {"description":"A l'inci","value":"INICI"},
-                  {"description":"Per cada UF","value":"PER_UF"}
+                  {"description":"Per cada Unitat","value":"PER_UF"}
               ]
            }
         },

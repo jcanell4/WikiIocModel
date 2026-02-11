@@ -327,12 +327,6 @@
                 },
                 "cells": [
                   {
-                    "name": "unitat formativa",
-                    "field": "unitat formativa",
-                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
-                  },
-
-                  {
                     "name": "unitat",
                     "field": "unitat",
                     "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
@@ -484,13 +478,13 @@
           "group": "avaluacio",
           "props": {
             "required": true,
-            "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada UF"
+            "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada Unitat"
           },
            "config":{
               "options":[
                   {"description":"No es fa","value":"NO"},
                   {"description":"A l'inci","value":"INICI"},
-                  {"description":"Per cada UF","value":"PER_UF"}
+                  {"description":"Per cada Unitat","value":"PER_UF"}
               ]
            }
         },
@@ -861,14 +855,14 @@
           }
         },
         "dadesQualificacioUFs": {
-          "label": "Qualificació de les UF (dadesQualificacioUFs)",
+          "label": "Qualificació de les Unitats (dadesQualificacioUns)",
           "n_columns": 12,
           "group": "avaluacio",
           "n_rows": 10,
           "type": "editableObject",
           "props": {
             "data-editable-element": "table",
-            "title": "Detalleu com pondera L'AC i la PAF per cada UF"
+            "title": "Detalleu com pondera L'AC i la PAF per cada Unitat"
           },
           "config": {
             "actions": {
@@ -901,7 +895,7 @@
                 },
                 "cells": [
                   {
-                    "name": "unitat formativa",
+                    "name": "unitat",
                     "field": "unitat formativa",
                     "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                   },
