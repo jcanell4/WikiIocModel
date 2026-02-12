@@ -305,9 +305,9 @@
           },
           "config": {
             "actions": {
-              "set_multiple_default_rows": {"label":"Definir el nombre d'unitats", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}},
-              "remove_rows": {"label":"Eliminar les unitats seleccionades", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}},
-              "add_default_row_before": {"label":"Afegir unitat abans de la fila seleccionada", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}}
+              "set_multiple_default_rows": "Definir el nombre d'unitats", 
+              "remove_rows": "Eliminar les unitats seleccionades", 
+              "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
             },
             "fields": {
               "unitat": {
@@ -318,6 +318,9 @@
               },
               "hores": {
                 "type": "number"
+              },
+              "ponderació": {
+                "type": "decimal"
               }
             },
             "layout": [

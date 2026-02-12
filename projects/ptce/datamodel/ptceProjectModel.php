@@ -27,8 +27,8 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
         $values = $isArray ? $data : json_decode($data, true);
         $originalValues = $isArray ? $originalDataKeyValue : json_decode($originalDataKeyValue, true);
 
-        $ufTable = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUF"]);
-        $originalufTable = IocCommon::toArrayThroughArrayOrJson($originalValues["taulaDadesUF"]);
+        //$ufTable = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUF"]);
+        //$originalufTable = IocCommon::toArrayThroughArrayOrJson($originalValues["taulaDadesUF"]);
         $taulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUnitats"]);
         $originalTaulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($originalValues["taulaDadesUnitats"]);
         $resultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($values["resultatsAprenentatge"]);
@@ -102,7 +102,7 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
         if(!empty($taulaResultatsAprenentatgeFiltrada)){
             for ($i=0; $i<count($taulaResultatsAprenentatgeFiltrada); $i++){
                 if(empty($originalResultatsAprenentatge[$i]["id"])){
-                    $resultatsAprenentatge[$i]["id"] = "UF".$taulaResultatsAprenentatgeFiltrada[$i]["uf"].".RA".$taulaResultatsAprenentatgeFiltrada[$i]["ra"];
+                    $resultatsAprenentatge[$i]["id"] = "U".$taulaResultatsAprenentatgeFiltrada[$i]["uf"].".RA".$taulaResultatsAprenentatgeFiltrada[$i]["ra"];
                 }else{
                     $resultatsAprenentatge[$i]["id"] = $originalResultatsAprenentatge[$i]["id"];
                 }
@@ -134,12 +134,12 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
         }
         $values["dadesQualificacioUFs"] = $dadesQualificacioUFs;
         
-        foreach ($ufTable as $key => $value) {
-            if($ufTable[$key]["ponderació"]=="0"){
-                $ufTable[$key]["ponderació"]=$ufTable[$key]["hores"];
-            }
+ //       foreach ($ufTable as $key => $value) {
+ //           if($ufTable[$key]["ponderació"]=="0"){
+ //               $ufTable[$key]["ponderació"]=$ufTable[$key]["hores"];
+ //           }
 //            $ufTable[$key]["ordreImparticio"] = $originalufTable[$key]["ordreImparticio"];
-        }
+//        }
         
         $nAvaluacioInicial=0;
         if($taulaDadesUFPrg){
@@ -150,7 +150,8 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
             }            
         }
         
-        $values["taulaDadesUF"]=$ufTable;
+        //$values["taulaDadesUF"]=$ufTable;
+        $values["taulaDadesUF"]=$taulaDadesUnitats; //New because taulaDadesUF is to be disappear
         if($nAvaluacioInicial==0){
             $avaluacioInicial = "NO";
         }elseif($nAvaluacioInicial==1){
@@ -176,7 +177,7 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
         $isArray = is_array($data);
         $values = $isArray?$data:json_decode($data, true);
 
-        $taulaDadesUF = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUF"]);
+        //$taulaDadesUF = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUF"]);
         $taulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUnitats"]);
         $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);
         $resultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($values["resultatsAprenentatge"]);
@@ -232,19 +233,22 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
                 }
             }
 
-            $horesUF = array();
-            $horesUF[0] = 0;
+            $horesTot = array(); //Changed horesUf to horesTot
+            $horesTot[0] = 0;
             for ($i=0; $i<count($taulaDadesUnitats); $i++){
                 $idU = intval($taulaDadesUnitats[$i]["unitat"]);
                 if (isset($hores[$idU])){
                     $taulaDadesUnitats[$i]["hores"]=$hores[$idU];
                 }
-                $idUf = intval($taulaDadesUnitats[$i]["unitat formativa"]);
-                if (!isset($horesUF[$idUf])){
-                    $horesUF[$idUf]=0;
+                //$idUf = intval($taulaDadesUnitats[$i]["unitat formativa"]);
+                //if (!isset($horesUF[$idUf])){
+                //    $horesUF[$idUf]=0;
+                //}
+                if (!isset($horesTot[$idU])){
+                    $horesTot[$idU]=0;
                 }
-                $horesUF[0]+= $taulaDadesUnitats[$i]["hores"];
-                $horesUF[$idUf]+= $taulaDadesUnitats[$i]["hores"]; 
+                $horesTot[0]+= $taulaDadesUnitats[$i]["hores"];
+                $horesTot[$idU] = $taulaDadesUnitats[$i]["hores"]; 
                 if(!empty($taulaDadesNFFiltrada)){
                     if($taulaDadesUnitats[$i]["nom"]==$this->getRowFromField($taulaDadesNFFiltrada, "unitat al pla de treball",  $taulaDadesUnitats[$i]["unitat"], $i, true)["nom"]){
                         $taulaDadesUnitats[$i]["nom"] = "";
@@ -255,15 +259,16 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
             if($resultatsAprenentatge){
                 for ($i=0; $i<count($resultatsAprenentatge); $i++){
                     if(!empty($resultatsAprenentatgeFiltrats)){
-                        if($resultatsAprenentatge[$i]["id"]=="UF".$resultatsAprenentatgeFiltrats[$i]["uf"].".RA".$resultatsAprenentatgeFiltrats[$i]["ra"]){
+                        if($resultatsAprenentatge[$i]["id"]=="U".$resultatsAprenentatgeFiltrats[$i]["uf"].".RA".$resultatsAprenentatgeFiltrats[$i]["ra"]){
                             $resultatsAprenentatge[$i]["id"] = "";                            
-                        }elseif($resultatsAprenentatge[$i]["id"]=="RA".$resultatsAprenentatgeFiltrats[$i]["ra"].".UF".$resultatsAprenentatgeFiltrats[$i]["uf"]){
+                        }elseif($resultatsAprenentatge[$i]["id"]=="RA".$resultatsAprenentatgeFiltrats[$i]["ra"].".U".$resultatsAprenentatgeFiltrats[$i]["uf"]){
                             $resultatsAprenentatge[$i]["id"] = "";
                         }
                     }
                 }
             }
 
+            /* Commented because taulaDadesUF is to be disappear
             if (!empty($taulaDadesUF)){
                 for ($i=0; $i<count($taulaDadesUF); $i++){
                     $idUf = intval($taulaDadesUF[$i]["unitat formativa"]);
@@ -274,12 +279,13 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
                         $taulaDadesUF[$i]["ponderació"] = 0;
                     }
                 }
-            }
+            }*/
 
             $values["resultatsAprenentatge"] = $resultatsAprenentatge;
-            $values["durada"] = $horesUF[0];
+            $values["durada"] = $horesTot[0];
             $values["taulaDadesUnitats"] = $taulaDadesUnitats;
-            $values["taulaDadesUF"] = $taulaDadesUF;
+            //$values["taulaDadesUF"] = $taulaDadesUF; 
+            $values["taulaDadesUF"] = $taulaDadesUnitats; //New because taulaDadesUF is to be disappear
         }
 
         $taulaJT = IocCommon::toArrayThroughArrayOrJson($values["datesJT"]);
@@ -556,10 +562,11 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
             parent::validateFields($data);
             $values = is_array($data)?$data:json_decode($data, true);
             $taulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUnitats"]);
-            $taulaDadesUF = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUF"]);
+            //$taulaDadesUF = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUF"]);
             $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);
 
             // Comprovació de la correspondència entre "unitat formativa" i "bloc"
+            /* Eliminat de moment perquè no hi ha blocs a cursos d'especialització
             $verifica = false;
             $bloc = array_search($values['tipusBlocModul'], ["mòdul","1r. bloc","2n. bloc","3r. bloc"]);
             if (empty($bloc)) $bloc = 0;
@@ -569,7 +576,7 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
             if (!$verifica && !empty($taulaDadesUF)) {
                 throw new InconsistentDataException("No hi ha cap unitat formativa que pertanyi al bloc ({$taulaDadesUF['bloc']})[$bloc] definit en aquest pla de treball");
             }
-            
+            */
             if (!empty($values["nsProgramacio"])){
                 $hores = array();
                 for ($i=0; $i<count($taulaCalendari); $i++){
@@ -582,7 +589,7 @@ class ptceProjectModel extends MoodleUniqueContentFilesProjectModel {
                 $horesU = array();
                 for ($i=0; $i<count($taulaDadesUnitats); $i++){
                     $idU = intval($taulaDadesUnitats[$i]["unitat"]);
-                    $idUf = intval($taulaDadesUnitats[$i]["unitat formativa"]);
+                    //$idUf = intval($taulaDadesUnitats[$i]["unitat formativa"]);
                     if (!isset($horesU[$idU])){
                         $horesU[$idU]=0;
                     }

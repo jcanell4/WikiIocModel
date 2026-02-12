@@ -279,6 +279,9 @@
               },
               "hores": {
                 "type": "number"
+              },
+              "ponderació": {
+                "type": "decimal"
               }
             },
             "layout": [
@@ -287,12 +290,6 @@
                   "width" : "15%"
                 },
                 "cells": [
-                  {
-                    "name": "unitat formativa",
-                    "field": "unitat formativa",
-                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
-                  },
-
                   {
                     "name": "unitat",
                     "field": "unitat",
