@@ -290,84 +290,8 @@
             }
           }
         },
-        "taulaDadesUF": {
-          "label": "Unitats Formatives (taulaDadesUF)",
-          "n_columns": 12,
-          "type": "editableObject",
-          "group": "dadesBasiques",
-          "n_rows": 5,
-          "props": {
-            "data-editable-element": "table",
-            "title": "Detalleu les dades de cada UF. No cal que ompliu les hores de les UFs detallades en aquest bloc o mòdul, es calculen automàticament."
-          },
-          "config": {
-            "actions": {
-              "set_multiple_default_rows": "Definir el nombre d'Unitats Formatives del mòdul",
-              "remove_rows": "Eliminar les Unitats Formatives seleccionades",
-              "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
-            },
-            "fields": {
-              "bloc":{
-                "type": "number"
-              },
-              "unitat formativa": {
-                "type": "number"
-              },
-              "nom": {
-                "type": "string"
-              },
-              "ordreImparticio":{
-                "type": "number"
-              },
-              "hores": {
-                "type": "number"
-              },
-              "ponderació": {
-                "type": "decimal"
-              }
-            },
-            "layout": [
-              {
-                "defaultCell": {
-                  "width": "5%"
-                },
-                "cells": [
-                  {
-                    "name": "unitat formativa",
-                    "field": "unitat formativa",
-                    "editable": true
-                  },
-                  {
-                    "name": "Bloc",
-                    "field": "bloc",
-                    "editable": true
-                  },
-                  {
-                    "name": "nom",
-                    "field": "nom",
-                    "width":"40%",
-                    "editable": true
-                  },
-                  {
-                    "name": "Ordre d'impartició",
-                    "field": "ordreImparticio",
-                    "editable": true
-                  },
-                  {
-                    "name": "hores",
-                    "field": "hores",
-                    "editable": true
-                  },
-                  {
-                    "name": "ponderació",
-                    "field": "ponderació",
-                    "constraints": "{\"places\":2}",
-                    "editable": true
-                  }
-                ]
-              }
-            ]
-          }
+        "taulaDadesUF":{
+                "type": "hidden"
         },
         "taulaDadesUnitats": {
           "label": "Unitats (taulaDadesUnitats)",
@@ -381,14 +305,11 @@
           },
           "config": {
             "actions": {
-              "set_multiple_default_rows": {"label":"Definir el nombre d'unitats", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}},
-              "remove_rows": {"label":"Eliminar les unitats seleccionades", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}},
-              "add_default_row_before": {"label":"Afegir unitat abans de la fila seleccionada", "condition":{"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}}
+              "set_multiple_default_rows": "Definir el nombre d'unitats", 
+              "remove_rows": "Eliminar les unitats seleccionades", 
+              "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
             },
             "fields": {
-              "unitat formativa": {
-                "type": "number"
-              },
               "unitat": {
                 "type": "number"
               },
@@ -397,6 +318,9 @@
               },
               "hores": {
                 "type": "number"
+              },
+              "ponderació": {
+                "type": "decimal"
               }
             },
             "layout": [
@@ -405,12 +329,6 @@
                   "width" : "15%"
                 },
                 "cells": [
-                  {
-                    "name": "unitat formativa",
-                    "field": "unitat formativa",
-                    "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
-                  },
-
                   {
                     "name": "unitat",
                     "field": "unitat",
@@ -563,13 +481,13 @@
           "group": "avaluacio",
           "props": {
             "required": true,
-            "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada UF"
+            "title": "Indiqueu si no feu avaluació inicial, si la feu a l'inici del mòdul o si en feu una per cada Unitat"
           },
            "config":{
               "options":[
                   {"description":"No es fa","value":"NO"},
                   {"description":"A l'inci","value":"INICI"},
-                  {"description":"Per cada UF","value":"PER_UF"}
+                  {"description":"Per cada Unitat","value":"PER_UF"}
               ]
            }
         },
@@ -940,14 +858,14 @@
           }
         },
         "dadesQualificacioUFs": {
-          "label": "Qualificació de les UF (dadesQualificacioUFs)",
+          "label": "Qualificació de les Unitats (dadesQualificacioUns)",
           "n_columns": 12,
           "group": "avaluacio",
           "n_rows": 10,
           "type": "editableObject",
           "props": {
             "data-editable-element": "table",
-            "title": "Detalleu com pondera L'AC i la PAF per cada UF"
+            "title": "Detalleu com pondera L'AC i la PAF per cada Unitat"
           },
           "config": {
             "actions": {
@@ -980,7 +898,7 @@
                 },
                 "cells": [
                   {
-                    "name": "unitat formativa",
+                    "name": "unitat",
                     "field": "unitat formativa",
                     "editable": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"], "deniedResponse":true}}
                   },

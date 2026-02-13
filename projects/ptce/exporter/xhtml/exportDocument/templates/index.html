@@ -744,15 +744,14 @@
 (function(){
 <WIOCCL:SET var="nbloc" type="map" value="{##tipusBlocModul##}" map="{''m&ograve;dul'':0,''1r. bloc'':1,''2n. bloc'':2,''3r. bloc'':3}">
     var dataArray1 = [
-<WIOCCL:FOREACH var="itemUf" array="{##taulaDadesUF##}" filter="{##itemUf[bloc]##}=={##nbloc##}">
                       [
                         {
                           title :"FINAL",
                           name :"FINAL",
                           percent: 0
                         },
-<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUFs##},''ponderació'', ''unitat formativa'', ''{##itemUf[unitat formativa]##}'')_#}">
-<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}" filter="{##item[unitat formativa]##}=={##itemUf[unitat formativa]##}">
+<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##dadesQualificacioUFs##},''ponderació'')_#}">
+<WIOCCL:FOREACH var="item" array="{##dadesQualificacioUFs##}">
                        { 
                           title :"{##item[descripció qualificació]##}",
                           name :"{##item[abreviació qualificació]##}",
@@ -761,7 +760,6 @@
 </WIOCCL:FOREACH>
 </WIOCCL:SET>
                       ],
-</WIOCCL:FOREACH>
 
                     ];
 </WIOCCL:SET>
