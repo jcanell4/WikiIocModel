@@ -26,7 +26,7 @@
             "viewfiles": {"defaultView": "defaultView", "updateView" : "updateView", "firstView": "firstView"},
             "versions": {
                 "fields": 13,
-                "templates": {"continguts": 42}
+                "templates": {"continguts": 43}
             },
             "mainType": {
                 "type": "object",
@@ -195,7 +195,7 @@
                         "solució": {
                             "type": "date",
                             "default":"{#_TODAY()_#}",
-                            "mandatory": true
+                            "mandatory": false
                         },
                         "qualificació": {
                             "type": "date",
@@ -220,7 +220,7 @@
                         "solució recuperació": {
                             "type": "date",
                             "default":"{#_TODAY()_#}",
-                            "mandatory": true
+                            "mandatory": false
                         },
                         "qualificació recuperació": {
                             "type": "date",
