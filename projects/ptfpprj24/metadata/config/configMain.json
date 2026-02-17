@@ -90,11 +90,6 @@
                 "entradaDatesAC": {
                     "type": "object",
                     "keys": {
-                        "id": {
-                            "type": "string",
-                            "default": "Repte{#_INC(1)_#}",
-                            "mandatory": true
-                        },
                         "unitat": {
                             "type": "number",
                             "default": "{#_INC(1)_#}",

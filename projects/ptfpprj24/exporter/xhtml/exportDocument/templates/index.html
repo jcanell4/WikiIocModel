@@ -75,7 +75,7 @@
 <section class="section section2">
   <hr>
   <div class="own_container">
-    Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">{##tipusBlocModul##} del mòdul</WIOCCL:IF> {##modulId##} {##modul##} permet interrelacionar els aprenentatges assolits en els diferents mòduls del cicle formatiu i així completar l’adquisició de les competències professionals, personals i socials incloses en el perfil professional del títol. {##descripcio##}
+    Aquest <WIOCCL:IF condition="''m&ograve;dul''=={##tipusBlocModul##}">mòdul</WIOCCL:IF><WIOCCL:IF condition="''m&ograve;dul''!={##tipusBlocModul##}">{##tipusBlocModul##} del mòdul</WIOCCL:IF> {##modulId##} {##modul##} {##descripcio##}
   </div>
 </section>
 <!-- /Secció 2 -->
@@ -83,43 +83,7 @@
 <hr>
 
 
-<!-- Secció 5 -->
-<section class="section section5">
-  <div class="own_container">
-    <h2>Calendari d’estudi</h2>
-    
-    <table class="own_table">
-      <tr>
-        <th colspan="2"></th>
-        <th>Inici</th>
-        <th>Final</th>
-      </tr>
 
-<WIOCCL:FOREACH  var="itemU" array="{##taulaDadesUn##}">
-<WIOCCL:SUBSET subsetvar="filtered" array="{##calendari##}" arrayitem="itemsub" filter="{##itemsub[unitat]##}=={##itemU[unitat]##}">     
-<WIOCCL:FOREACH  var="itemP" array="{##filtered##}" counter="cont">
-
-      <tr>
-<WIOCCL:IF condition="{##cont##}==0">
-        <th rowspan="{#_ARRAY_LENGTH({##filtered##})_#}">U{##itemU[unitat]##}</th>
-</WIOCCL:IF>
-        <td>{##itemU[nom]##}</td>
-        <td>{#_DATE("{##itemP[inici]##}")_#}</td>
-        <td>{#_DATE("{##itemP[final]##}")_#}</td>
-      </tr>
-
-</WIOCCL:FOREACH>
-</WIOCCL:SUBSET>
-</WIOCCL:FOREACH>
-
-    </table>
-
-
-
-  </div>
-</section>
-<!-- /Secció 5 -->
-<hr>
 <!-- Secció 6 -->
 <section class="section section6">
   <div class="own_container">
@@ -130,39 +94,24 @@
     <br/>
     <p>Per superar el mòdul cal portar a terme les tasques encomanades de manera individual o en grup, segons s'indiqui, i usant els mitjans tecnològics proposats i els espais i recursos de l’aula i/o els externs que permetin l’obtenció d’evidències per a l’avaluació de la tasca i de les competències individuals i de grup. L’ús d’eines i recursos externs al Campus, que s’hagin de tenir en compte per a l’avaluació, ha de seguir les indicacions del professor o comptar amb la seva autorització prèvia.</p>
     <br/>
-    <p>El projecte inclou <span>{#_COUNTDISTINCT({##datesAC##},[''id''])_#} lliuraments</span>, distribuïts de la manera següent:</p>
+    <p>El projecte inclou <span>{#_COUNTDISTINCT({##datesAC##},[''unitat''])_#} lliuraments</span>, distribuïts de la manera següent:</p>
     <table class="own_table">
       <tr>
-        <th colspan="2"></th>
-        <th>Publicació</th>
-        <th>Lliurament</th>
+        <th></th>
+        <th>Inici</th>
+        <th>Final</th>
         <th>Qualificació</th>
       </tr>
-<WIOCCL:SET var="previousEAC" type="literal" value="">
-<WIOCCL:REPARSE>
+
 <WIOCCL:FOREACH var="itemAC" array="{##datesAC##}">
-<WIOCCL:CHOOSE id="selector" lExpression="{##previousEAC##}" rExpression="{##itemAC[id]##}">
-<WIOCCL:CASE forchoose="selector" relation="==">
-<WIOCCL:RESET var="rowSpan_{##itemAC[id]##}" value="{#_SUMA({##rowSpan_{##itemAC[id]##}##},1)_#}"></WIOCCL:RESET>
       <tr>
-        <th>U{##itemAC[unitat]##}</th>
+        <th>{##itemAC[unitat]##}</th>
+        <td>{#_DATE("{##itemAC[enunciat]##}")_#}</td>
+        <td>{#_DATE("{##itemAC[lliurament]##}")_#}</td>
+        <td>{#_DATE("{##itemAC[qualificació]##}")_#}</td>
       </tr>
-</WIOCCL:CASE>
-<WIOCCL:DEFAULTCASE forchoose="selector">
-      <tr>
-        <th>U{##itemAC[unitat]##}</th>
-        <th rowspan="{%%rowSpan_{##itemAC[id]##}%%}">{##itemAC[id]##}</th>
-        <td rowspan="{%%rowSpan_{##itemAC[id]##}%%}">{#_DATE("{##itemAC[enunciat]##}")_#}</td>
-        <td rowspan="{%%rowSpan_{##itemAC[id]##}%%}">{#_DATE("{##itemAC[lliurament]##}")_#}</td>
-        <td rowspan="{%%rowSpan_{##itemAC[id]##}%%}">{#_DATE("{##itemAC[qualificació]##}")_#}</td>
-      </tr>
-<WIOCCL:RESET var="rowSpan_{##itemAC[id]##}" value="1"></WIOCCL:RESET>
-</WIOCCL:DEFAULTCASE>
-<WIOCCL:RESET var="previousEAC" type="literal" value="{##itemAC[id]##}"></WIOCCL:RESET>
-</WIOCCL:CHOOSE>
 </WIOCCL:FOREACH>
-</WIOCCL:REPARSE>
-</WIOCCL:SET>
+
     </table>
     <p>Compte! El sistema no permet fer lliuraments passades les <span>23.55 h</span> de la data prevista.</p>
   </div>
@@ -171,6 +120,39 @@
 
 <hr>
 
+<!-- Secció 6b -->
+<section class="section section6b">
+  <div class="own_container">
+    <h2>Recuperacions</h2>
+    <p>Si no s'ha superat alguns dels reptes, els alumnes es poden presentar a la recuperació de les activitats no superades, al final de cada semestre. La competència de treball en equip no té opció de recuperació i, si no s'ha superat, cal fer una nova matrícula anual.</p>
+    <br/>
+    <table class="own_table">
+      <tr>
+        <th></th>
+        <th>Inici</th>
+        <th>Lliurament</th>
+        <th>Qualificació</th>
+      </tr>
+      <tr>
+        <th>Semestre 1</th>
+        <td>{#_DATE("{##dataRecuSem1Inici##}")_#}</td>
+        <td>{#_DATE("{##dataRecuSem1Fi##}")_#}</td>
+        <td>{#_DATE("{##dataRecuQualificacioSem1##}")_#}</td>
+      </tr>
+      <tr>
+        <th>Semestre 2</th>
+        <td>{#_DATE("{##dataRecuSem2Inici##}")_#}</td>
+        <td>{#_DATE("{##dataRecuSem2Fi##}")_#}</td>
+        <td>{#_DATE("{##dataRecuQualificacioSem2##}")_#}</td>
+      </tr>
+    </table>
+    <p>La qualificació de cada etapa a la recuperació només podrà ser <strong>superat</strong> o <strong>no superat</strong>. Per al càlcul de la qualificació del mòdul, la qualificació de cada etapa superat serà un 5</p>
+  </div>
+</section>
+
+<!-- /Secció 6v -->
+
+<hr>
 <!-- Secció 8 -->
 <section class="section section8">
   <div class="own_container">
@@ -192,8 +174,8 @@
     <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUn##},''ponderació'')_#}">
     <WIOCCL:FOREACH var="item" array="{##taulaDadesUn##}">
                            {
-                              title :"Repte{##item[unitat]##}",
-                              name :"repte{##item[unitat]##}",
+                              title :"Lliur.{##item[unitat]##}",
+                              name :"lliur.{##item[unitat]##}",
                               percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}"
                             },
     </WIOCCL:FOREACH>

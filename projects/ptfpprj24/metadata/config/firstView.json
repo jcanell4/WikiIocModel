@@ -63,13 +63,7 @@
           }
         },
         "duradaCicle": {
-          "label" : "Durada del Cicle(duradaCicle)",
-          "n_columns": 4,
-          "group": "dadesBasiques",
-          "props": {
-            "required": true,
-            "title": "Indiqueu la durada del cicle en hores"
-          }
+            "type": "hidden"
         },
         "nsProgramacio": {
             "type": "amd",
@@ -202,20 +196,20 @@
           }
         },
         "taulaDadesUn": {
-          "label": "Unitats (taulaDadesUn)",
+          "label": "LLiuraments (taulaDadesUn)",
           "n_columns": 12,
           "type": "editableObject",
           "group": "dadesBasiques",
           "n_rows": 5,
           "props": {
             "data-editable-element": "table",
-            "title": "Detalleu les dades de cada Unitat. No cal que ompliu les hores de les Unitats detallades en aquest mòdul, es calculen automàticament."
+            "title": "Detalleu les dades de cada lliurament."
           },
           "config": {
             "actions": {
-              "set_multiple_default_rows": "Definir el nombre d'Unitats del mòdul",
-              "remove_rows": "Eliminar les Unitats seleccionades",
-              "add_default_row_before": "Afegir unitat abans de la fila seleccionada"
+              "set_multiple_default_rows": "Definir el nombre de lliuraments del mòdul",
+              "remove_rows": "Eliminar els lliuraments seleccionats",
+              "add_default_row_before": "Afegir lliurament abans de la fila seleccionada"
             },
             "fields": {
               "unitat": {
@@ -241,7 +235,7 @@
                 },
                 "cells": [
                   {
-                    "name": "unitat",
+                    "name": "id",
                     "field": "unitat",
                     "editable": true
                   },
@@ -275,60 +269,9 @@
         "taulaUnitatRAs":  {
             "type": "hidden"
         },
-        "calendari": {
-          "label": "Temporització (calendari)",
-          "n_columns": 12,
-          "type": "editableObject",
-          "group": "dadesBasiques",
-          "n_rows": 9,
-          "props": {
-            "data-editable-element": "table",
-            "title": "Temporització de les unitats"
-          },
-          "config": {
-            "actions": {
-              "add_default_row": {"condition":{"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}},"label":"Afegir unitat"},
-              "remove_rows": {"condition":{"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}},"label":"Eliminar unitats seleccionades"},
-              "add_default_row_before": {"condition":{"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}},"label":"Afegir unitat abans de la fila seleccionada"}
-            },
-            "fields": {
-              "unitat": {
-                "type": "number"
-              },
-              "inici": {
-                "type": "date"
-              },
-              "final": {
-                "type": "date"
-              }
-            },
-            "layout": [
-              {
-                "defaultCell": {
-                  "width" : "10%"
-                },
-                "cells": [
-                  {
-                    "name": "unitat",
-                    "field": "unitat",
-                    "width": "8%",
-                    "editable": {"class":"ValidateByExactMatch", "data":{"responses":[{"key":"dataFromMix", "value":true}], "deniedResponse":true}}
-                  },
-                  {
-                    "name": "inici",
-                    "field": "inici",
-                    "editable": true
-                  },
-                  {
-                    "name": "final",
-                    "field": "final",
-                    "editable": true
-                  }
-                ]
-              }
-            ]
-          }
-        },
+        "calendari":  {
+            "type": "hidden"
+        }, 
 
         "datesAC": {
           "label":"Dates lliuraments (datesLl)",
@@ -347,9 +290,6 @@
               "add_default_row_before": "Afegir lliurament abans de la fila seleccionada"
             },
             "fields": {
-              "id": {
-                "type": "string"
-              },
               "unitat": {
                 "type": "number"
               },
@@ -371,11 +311,6 @@
                 },
                 "cells": [
                   {
-                    "name": "id",
-                    "field": "id",
-                    "width": "5%"
-                  },
-                  {
                     "name": "unitat",
                     "field": "unitat",
                     "width": "5%"
@@ -387,14 +322,6 @@
                   {
                     "name": "lliurament",
                     "field": "lliurament"
-                  },
-                  {
-                    "name": "solució?",
-                    "field": "hiHaSolucio"
-                  },
-                  {
-                    "name": "solució",
-                    "field": "solució"
                   },
                   {
                     "name": "qualificació",

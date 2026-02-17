@@ -754,23 +754,69 @@ hr {
 .section6 .own_table td {
   height: 40px;
   background-color: #f9c9e1;
-  font-size: 12px;
+  font-size: 15px;
   color: #be176b;
 }
 
 .section6 .own_table th:first-of-type {
-  width: 65px;
+  width: 45px;
   font-size: 12px;
   padding: 0 5px;
 }
+
 
 .section6 p span {
   font-weight: 700;
   color: #be176b;
 }
 
-/* Section 7 */
+/* Section 6b */
+.section6b {
+  margin: 34px 0 56px 0;
+}
 
+.section6b h2 {
+  font-size: 19px;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 42px;
+}
+
+.section6b .own_table {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.section6b .own_table th {
+  height: 40px;
+  width: 145px;
+  background-color: #be176b;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: bold;
+  letter-spacing: 0.6px;
+}
+
+.section6b .own_table td {
+  height: 40px;
+  background-color: #f9c9e1;
+  font-size: 15px;
+  color: #be176b;
+}
+
+.section6b .own_table th:first-of-type {
+  width: 65px;
+  font-size: 12px;
+  padding: 0 5px;
+}
+
+
+.section6b p span {
+  font-weight: 700;
+  color: #be176b;
+}
+
+/* Section 7 */
 .section7 {
   margin: 38px 0 56px 0;
 }

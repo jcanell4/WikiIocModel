@@ -37,7 +37,10 @@ class ptfpprj24ProjectModel extends MoodleUniqueContentFilesProjectModel {
         $originalResultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($originalValues["resultatsAprenentatge"]);
         $dadesQualificacioUns = IocCommon::toArrayThroughArrayOrJson($values["dadesQualificacioUns"]);
         $originalDadesQualificacioUns = IocCommon::toArrayThroughArrayOrJson($originalValues["dadesQualificacioUns"]);
-        $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);
+
+        $datesAC = IocCommon::toArrayThroughArrayOrJson($values["datesAC"]); //datesAC substitueix taula calendari
+        //$taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);
+
         $blocId = array_search($values["tipusBlocModul"], ["mòdul", "1r. bloc", "2n. bloc", "3r. bloc"]);
         if($values["nsProgramacio"]){
             $dataPrg = $this->getRawDataProjectFromOtherId($values["nsProgramacio"]);
@@ -102,7 +105,7 @@ class ptfpprj24ProjectModel extends MoodleUniqueContentFilesProjectModel {
         }
         $values["taulaDadesUn"] = $taulaDadesUn;
         
-        $values["calendari"] = $this->getCalendariFieldFromMix($values, $taulaCalendari);
+        $values["calendari"] = $this->getCalendariFieldFromMix($values, $datesAC);
         
         //Marjose: AQUI: REVISAR SI CAL AJUSTAR TAULARESULTATSAPRENENTATGE AFEGINT CAMP PONDERACIO
         //$taulaResultatsAprenentatgeFiltrada només tindrà contingut si ve de la programació. Per ara, res.
@@ -198,7 +201,8 @@ class ptfpprj24ProjectModel extends MoodleUniqueContentFilesProjectModel {
 
         $taulaDadesUn = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUn"]);
         //$taulaDadesUnitats = IocCommon::toArrayThroughArrayOrJson($values["taulaDadesUnitats"]);
-        $taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);
+        $datesAC = IocCommon::toArrayThroughArrayOrJson($values["datesAC"]); //datesAC substitueix taula calendari
+        //$taulaCalendari = IocCommon::toArrayThroughArrayOrJson($values["calendari"]);
         $resultatsAprenentatge = IocCommon::toArrayThroughArrayOrJson($values["resultatsAprenentatge"]);
 
         if (!empty($values["nsProgramacio"])){
@@ -237,10 +241,10 @@ class ptfpprj24ProjectModel extends MoodleUniqueContentFilesProjectModel {
             }
         }
         
-        $taulaCalendari = $this->getCalendariFieldFromMix($values, $taulaCalendari);
-        $values["calendari"] = $taulaCalendari;
+        $datesAC = $this->getCalendariFieldFromMix($values, $datesAC); //AQUI: cal revisar aquesta funció
+        $values["calendari"] = $datesAC;
         
-        if (!empty($taulaCalendari) && !empty($taulaDadesUn)){           
+        if (!empty($datesAC) && !empty($taulaDadesUn)){           
             $horesUn = array();
             $horesUn[0] = 0;
 
@@ -281,6 +285,7 @@ class ptfpprj24ProjectModel extends MoodleUniqueContentFilesProjectModel {
             $values["taulaDadesUn"] = $taulaDadesUn;
         }
 
+        /* Ja no guardem si hi ha solució als projectes.
         $taulaAC = IocCommon::toArrayThroughArrayOrJson($values["datesAC"]);
 
         if (!empty($taulaAC)){
@@ -292,10 +297,11 @@ class ptfpprj24ProjectModel extends MoodleUniqueContentFilesProjectModel {
         }
 
         $data = $isArray?$values:json_encode($values);
+         * */
         return parent::updateCalculatedFieldsOnSave($data, $originalDataKeyValue);
     }
     
-    private function getCalendariFieldFromMix(&$values, $taulaCalendari){
+    private function getCalendariFieldFromMix(&$values, $taulaAC){
         $dataFromMix = false;
         if(isset($values["moodleCourseId"]) && $values["moodleCourseId"]>0){            
             $dataFromMix = $this->getMixDataLessons($values["moodleCourseId"]);
@@ -305,18 +311,18 @@ class ptfpprj24ProjectModel extends MoodleUniqueContentFilesProjectModel {
                     $modulId = trim($values["modulId"]);
                     if(preg_match("/$modulId/i", $dataFromMix[0]->shortname)){ 
 //                        error_log("D0.3.- A punt d'actualitzar.");
-                        $aux = $taulaCalendari;
+                        $aux = $taulaAC;
                         $calLen = count($aux);
-                        $taulaCalendari = array();
+                        $taulaAC = array();
                         for($i=0; $i<$mixLen; $i++){                   
-                            $taulaCalendari []= array(
+                            $taulaAC []= array(
                                 "unitat" => $dataFromMix[$i]->unitid,
                                  "període" => $dataFromMix[$i]->lessonid,
                                  "tipus període" => "lliçó",
                                  "descripció període" => $dataFromMix[$i]->lessontitle,
                                  "hores" => $dataFromMix[$i]->lessonhours,
-                                 "inici" => ($i<$calLen)?$aux[$i]["inici"]:"",
-                                 "final" => ($i<$calLen)?$aux[$i]["final"]:"",
+                                 "inici" => ($i<$calLen)?$aux[$i]["enunciat"]:"",
+                                 "final" => ($i<$calLen)?$aux[$i]["qualificacio"]:"",
                             );
                         }
                         $dataFromMix = true;
@@ -325,7 +331,7 @@ class ptfpprj24ProjectModel extends MoodleUniqueContentFilesProjectModel {
             }
         }
         $values["dataFromMix"] =$dataFromMix;
-        return $taulaCalendari;        
+        return $taulaAC;        
     }
     
     private function getRowFromField($taula, $field, $value, $fromPosition=0, $defaultFromPossition=false){
