@@ -920,30 +920,7 @@
                         "notaMinimaPAF": {
                             "type": "number",
                             "mandatory": true,
-                            "default": 4,
-                            "props": {
-                                "min": 0,
-                                "max": 10,
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
-                            },
-                            "calculateOnRead": {
-                                "class": "CalculateSimpleValueFromExternaField",
-                                "data": {
-                                    "projectId": {
-                                        "_type_": "field",
-                                        "name": "nsProgramacio",
-                                        "values":"$values",
-                                        "defaultValue":""
-                                    },
-                                    "metaDataSubSet": "main",
-                                    "field": "notaMinimaPAF",
-                                    "defaultValue":{
-                                        "_type_":"field",
-                                        "name":"notaMinimaPAF",
-                                        "values": "$values"
-                                    }
-                                }
-                            }
+                            "default": 5
                         },
                         "dadesQualificacio": {
                             "type": "defQualificacio",
