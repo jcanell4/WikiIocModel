@@ -309,7 +309,7 @@
                         },
                         "requerimentsMatricula": {
                             "type": "string",
-                            "default": "Per cursar-lo cal matricular-se de tots els mòduls del cicle, encara no superats, entre el 1r i el 2n semestre del mateix curs.",
+                            "default": "",
                             "mandatory": true
                         },
                         "descripcio": {
