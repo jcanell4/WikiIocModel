@@ -1011,7 +1011,7 @@
                                 }
                             },
                             "props" : {
-                                "readonly": {"class":"ValidateIfExistFieldAndHasValue", "data":{"responses":["nsProgramacio"]}}          
+                                "readonly": false         
                             }
                         },
                         "dadesExtres": {

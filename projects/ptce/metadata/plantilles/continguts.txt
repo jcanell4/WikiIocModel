@@ -172,18 +172,18 @@ Només es pot presentar a la PAF l’alumnat que no ha superat l’AC o la PV. L
 :###
 La qualificació final del mòdul (QF) es calcula a partir de les qualificacions de l'avaluació contínua (AC), la prova de validació (PV) i, si és el cas, la prova d'avaluació final (PAF).
 
-Si els alumnes superen l'AC i obtenen, com a mínim un {##notaMinimaPV##} a la PV, la qualificació final del mòdul és la de l'AC:
+Si els alumnes superen la PV, la qualificació final del mòdul és la qualificació de l'AC:
 
   * QF = AC
 
-Si els alumnes no superen l'AC o obtenen menys d'un {##notaMinimaPV##} a la PV, s'han de presentar a la prova d'avaluació final (PAF).
+Si els alumnes no superen la PV, s'han de presentar a la prova d'avaluació final (PAF).
 
-Si superen la PAF, la qualificació final del mòdul és el resultat de la fórmula següent:
+Si els alumnes superen la PAF, la qualificació final del mòdul és el resultat de la fórmula següent:
 
   * QF = AC * 20% + PAF * 80%                            
  
 
-Si no superen la PAF, la qualificació final del mòdul és igual a la qualificació de la PAF:
+Si els alumnes no superen la PAF, la qualificació final del mòdul és igual a la qualificació de la PAF:
 
   * QF = PAF
 

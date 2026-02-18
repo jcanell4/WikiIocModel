@@ -152,7 +152,7 @@
                         "nom": {
                             "type": "string",
                             "mandatory": true,
-                            "default": "Indiqueu el nom de la Unitat"
+                            "default": "Indiqueu el nom del lliurament"
                         },
                         "ordreImparticio": {
                             "type": "number",
