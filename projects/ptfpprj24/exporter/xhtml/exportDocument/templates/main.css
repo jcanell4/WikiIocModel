@@ -785,6 +785,8 @@ hr {
 .section6b .own_table {
   margin-top: 32px;
   margin-bottom: 32px;
+  margin-left: auto;  /* Taula recuperacions centrada */
+  margin-right: auto; /* Taula recuperacions centrada */
 }
 
 .section6b .own_table th {
@@ -804,11 +806,6 @@ hr {
   color: #be176b;
 }
 
-.section6b .own_table th:first-of-type {
-  width: 65px;
-  font-size: 12px;
-  padding: 0 5px;
-}
 
 
 .section6b p span {

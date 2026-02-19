@@ -123,6 +123,7 @@
 <hr>
 
 <!-- Secció 6b -->
+<WIOCCL:IF condition="{##anual##}==true">
 <section class="section section6b">
   <div class="own_container">
     <h2>Recuperacions</h2>
@@ -151,8 +152,31 @@
     <p>La qualificació de cada etapa a la recuperació només podrà ser <strong>superat</strong> o <strong>no superat</strong>. Per al càlcul de la qualificació del mòdul, la qualificació de cada etapa superat serà un 5</p>
   </div>
 </section>
-
-<!-- /Secció 6v -->
+</WIOCCL:IF>
+<!-- Secció 6b -->
+<WIOCCL:IF condition="{##anual##}==false">
+<section class="section section6b">
+  <div class="own_container">
+    <h2>Recuperacions</h2>
+    <p>Si no s'ha superat alguns dels reptes, els alumnes es poden presentar a la recuperació de les activitats no superades, al final del semestre. </p>
+    <br/>
+    <table class="own_table">
+      <tr>
+        <th>Inici</th>
+        <th>Lliurament</th>
+        <th>Qualificació</th>
+      </tr>
+      <tr>
+        <td>{#_DATE("{##dataRecuSem1Inici##}")_#}</td>
+        <td>{#_DATE("{##dataRecuSem1Fi##}")_#}</td>
+        <td>{#_DATE("{##dataRecuQualificacioSem1##}")_#}</td>
+      </tr>
+    </table>
+    <p>La qualificació de cada repte a la recuperació només podrà ser <strong>superat</strong> o <strong>no superat</strong>. Per al càlcul de la qualificació del mòdul, la qualificació de cada repte superat serà un 5</p>
+  </div>
+</section>
+</WIOCCL:IF>
+<!-- /Secció 6b -->
 
 <hr>
 <!-- Secció 8 -->
