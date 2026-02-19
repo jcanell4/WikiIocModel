@@ -74,6 +74,9 @@
         "datesAC": {
             "type": "hidden"
         },
+        "anual": {
+            "type": "hidden"
+        },
         "semestre": {
             "type" : "hidden"
         },

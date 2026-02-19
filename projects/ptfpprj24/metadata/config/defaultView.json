@@ -53,7 +53,15 @@
         "tipusBlocModul":{
           "type" : "hidden"
         },
-
+        "anual": {
+            "label": "Projecte anual",
+            "n_columns": 3,
+            "group": "main",
+            "type": "checkbox",
+            "props": {
+                "title": "Indiqueu si es anual"
+            }
+        },
         "moodleCourseId": {
           "label" : "Identificador del curs a moodle (moodleCourseId)",
           "n_columns": 3,

@@ -7,9 +7,9 @@
 
 Aquest <WIOCCL:IF condition="''mòdul''!={##tipusBlocModul##}">{##tipusBlocModul##} del</WIOCCL:IF> mòdul {##modulId##} {##modul##} permet interrelacionar els aprenentatges assolits en els diferents mòduls del cicle formatiu i així completar l’adquisició de les competències professionals, personals i socials incloses en el perfil professional del títol.  
 
-Té una assignació de {##durada##} h, distribuïdes en {#_COUNTDISTINCT({##taulaDadesUn##}, [''unitat''])_#} lliuraments.
+Té una assignació de {##durada##} h, distribuïdes en {#_COUNTDISTINCT({##taulaDadesUn##}, [''unitat''])_#} <WIOCCL:IF condition="{##anual##}==true">lliurament</WIOCCL:IF><WIOCCL:IF condition="{##anual##}==false">repte</WIOCCL:IF>s.
 
-La coordinació és a càrrec de {##coordinador##} i la docència de  {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
+La coordinació és a càrrec de {##coordinador##} i la docència és a càrrec de  {#_STR_REPLACE([", "," , ",","]," i ","{##professors##}",-1)_#}.
 
 
 
@@ -20,9 +20,9 @@ Suposa una **dedicació mínima de {##dedicacio##} h setmanals.** Es cursa al fi
 
 :###
 
-Per assolir els resultats d’aprenentatge (RA) se segueix una metodologia  globalitzadora i activa basada en lliuraments. El treball és prioritàriament col·laboratiu, en grup petit, però també es proposen activitats individuals.
+Per assolir els resultats d’aprenentatge (RA) se segueix una metodologia  globalitzadora i activa basada en <WIOCCL:IF condition="{##anual##}==true">lliurament</WIOCCL:IF><WIOCCL:IF condition="{##anual##}==false">repte</WIOCCL:IF>s. <WIOCCL:IF condition="{##anual##}==true">El treball és prioritàriament col·laboratiu, en grup petit, però també es proposen activitats individuals.</WIOCCL:IF>
 
-Per treballar aquest mòdul la capacitat de treball en equip és clau. L’entenem com la disposició i habilitat per cooperar i col·laborar en la realització de les tasques dins d’un equip, per tal d’assolir un objectiu comú. La metodologia seguida és l’aprenentatge significatiu a partir del cas pràctic que conforma el projecte.
+<WIOCCL:IF condition="{##anual##}==true">Per treballar aquest mòdul la capacitat de treball en equip és clau. L’entenem com la disposició i habilitat per cooperar i col·laborar en la realització de les tasques dins d’un equip, per tal d’assolir un objectiu comú. La metodologia seguida és l’aprenentatge significatiu a partir del cas pràctic que conforma el projecte.</WIOCCL:IF>
 
 Per a l’elaboració del projecte és necessari consultar informació i documentació diversa, però els treballs han de ser originals, d’elaboració pròpia. En cas que s’inclogui informació literal d’alguna institució, llibre, treball, etc. és imprescindible citar-ne la font. Qualsevol còpia literal sense citar-ne la font es considerarà còpia o plagi.
 
@@ -56,20 +56,25 @@ En aquest <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">mòdul</WIOCCL
 
 Aquest mòdul no té Prova d’avaluació final (PAF).
 
-Per superar el mòdul cal portar a terme les tasques encomanades de manera individual o en grup, segons s'indiqui, i usant els mitjans tecnològics proposats i els espais i recursos de l’aula i/o els externs que permetin l’obtenció d’evidències per a l’avaluació de la tasca i de les competències individuals i de grup. L’ús d’eines i recursos externs al Campus, que s’hagin de tenir en compte per a l’avaluació, ha de seguir les indicacions del professor o comptar amb la seva autorització prèvia.
+<WIOCCL:IF condition="{##anual##}==true">Per superar el mòdul cal portar a terme les tasques encomanades de manera individual o en grup, segons s'indiqui, i usant els mitjans tecnològics proposats i els espais i recursos de l’aula i/o els externs que permetin l’obtenció d’evidències per a l’avaluació de la tasca i de les competències individuals i de grup. L’ús d’eines i recursos externs al Campus, que s’hagin de tenir en compte per a l’avaluació, ha de seguir les indicacions del professor o comptar amb la seva autorització prèvia.</WIOCCL:IF>
+<WIOCCL:IF condition="{##anual##}==false">Per superar el mòdul cal portar a terme les tasques encomanades de manera individual usant els mitjans tecnològics proposats i els espais i recursos de l’aula i/o els externs que permetin l’obtenció d’evidències per a l’avaluació de la tasca i de les competències individuals. L’ús d’eines i recursos externs al Campus, que s’hagin de tenir en compte per a l’avaluació, ha de seguir les indicacions o comptar amb autorització prèvia.</WIOCCL:IF>
 
-Tant la còpia o plagi com la no participació de manera individual en les tasques del grup impedeixen la superació de l'activitat afectada.
 
-En les activitats en equip, les qualificacions dels membres del grup de treball són individuals i poden ser diferents, d'acord amb les evidències aportades.
+<WIOCCL:IF condition="{##anual##}==true">Tant la còpia o plagi com la no participació de manera individual en les tasques del grup impedeixen la superació de l'activitat afectada.</WIOCCL:IF>
+<WIOCCL:IF condition="{##anual##}==false">La còpia o plagi impedeixen la superació de l'activitat afectada.</WIOCCL:IF>
 
-**Lliuraments:**
+<WIOCCL:IF condition="{##anual##}==true">En les activitats en equip, les qualificacions dels membres del grup de treball són individuals i poden ser diferents, d'acord amb les evidències aportades.</WIOCCL:IF>
 
-Per poder superar el mòdul, cal portar a terme totes les activitats proposades. Així doncs, **tots els lliuraments són obligatoris** i cal tenir en compte que:
+<WIOCCL:IF condition="{##anual##}==true">**Lliuraments:**</WIOCCL:IF>
+<WIOCCL:IF condition="{##anual##}==false">**Reptes:**</WIOCCL:IF>
 
-  * Els lliuraments s'han de fer en els espais previstos a l'aula i dins dels terminis fixats. Els terminis de lliurament són improrrogables. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data de lliurament (consulteu dates clau).
-  * El seguiment correcte del mòdul compromet l’alumne a fer les activitats en grup que es proposin a partir d'aportacions individuals significatives, de manera original i seguint les indicacions del professor.
+
+Per poder superar el mòdul, cal portar a terme totes les activitats proposades. Així doncs, **tots els <WIOCCL:IF condition="{##anual##}==true">lliurament</WIOCCL:IF><WIOCCL:IF condition="{##anual##}==false">repte</WIOCCL:IF>s són obligatoris** i cal tenir en compte que:
+
+  * Els <WIOCCL:IF condition="{##anual##}==true">lliurament</WIOCCL:IF><WIOCCL:IF condition="{##anual##}==false">repte</WIOCCL:IF>s s'han de fer en els espais previstos a l'aula i dins dels terminis fixats. Els terminis de lliurament són improrrogables. El sistema no permet lliurar cap exercici passades les 23.55 hores de la data de lliurament (consulteu dates clau).
+  * El seguiment correcte del mòdul compromet l’alumne a fer les activitats<WIOCCL:IF condition="{##anual##}==true"> en grup</WIOCCL:IF> que es proposin a partir d'aportacions individuals significatives, de manera original i seguint les indicacions<WIOCCL:IF condition="{##anual##}==true"> del professor</WIOCCL:IF>.
   * Els treballs o tasques que siguin còpia literal (total o parcial) d’altres treballs, exercicis o fonts es consideraran suspesos amb una qualificació de 0.
-  * Són d'aplicació els criteris d’avaluació que estableix el currículum del cicle per als resultats d’aprenentatge (RA) previstos, d'acord amb els continguts que es desenvolupen en cada lliurament.
+  * Són d'aplicació els criteris d’avaluació que estableix el currículum del cicle per als resultats d’aprenentatge (RA) previstos, d'acord amb els continguts que es desenvolupen en cada <WIOCCL:IF condition="{##anual##}==true">lliurament</WIOCCL:IF><WIOCCL:IF condition="{##anual##}==false">repte</WIOCCL:IF>.
   * S’estableixen també criteris d’avaluació relacionats amb l'expressió, tant oral com escrita, i amb la correcció lingüística.
   * Un cop corregida cada activitat, s'emet una qualificació numèrica de l’escala entre el 0 i el 10, amb dos decimals.
 
@@ -85,7 +90,7 @@ Per poder superar el mòdul, cal portar a terme totes les activitats proposades.
 La qualificació final del mòdul es calcula a partir de l'aplicació de la fórmula següent, **sempre que s'hagin fet, presentat i superat totes les activitats**:
 
 <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUn##},''ponderació'')_#}">
- **QF = <WIOCCL:FOREACH var="item" array="{##taulaDadesUn##}" counter="ind">lliurament {##item[unitat]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUn##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH>**                            
+ **QF = <WIOCCL:FOREACH var="item" array="{##taulaDadesUn##}" counter="ind"><WIOCCL:IF condition="{##anual##}==true">lliurament</WIOCCL:IF><WIOCCL:IF condition="{##anual##}==false">repte</WIOCCL:IF> {##item[unitat]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUn##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH>**                            
 </WIOCCL:SET>
 
 La qualificació final és numèrica de l’1 al 10, sense decimals. Es consideren aprovades les qualificacions iguals o superiors a 5.
@@ -94,17 +99,17 @@ Si l'alumne no ha superat alguna de les activitats previstes, no tindrà l'opci�
 ###:
 
 :###===== Convocatòria extraordinària =====###:
-Si no s'ha superat algun dels lliuraments a la convocatòria ordinària, els alumnes podran tornar a presentar individualment les activitats no superades, al final de cada semestre. Depenent dels casos, l'equip docent indicarà si cal presentar la mateixa activitat o proposarà activitats alternatives.
+Si no s'ha superat algun dels <WIOCCL:IF condition="{##anual##}==true">lliurament</WIOCCL:IF><WIOCCL:IF condition="{##anual##}==false">repte</WIOCCL:IF>s a la convocatòria ordinària, els alumnes podran tornar a presentar individualment les activitats no superades, al final de cada semestre. Depenent dels casos, l'equip docent indicarà si cal presentar la mateixa activitat o proposarà activitats alternatives.
 
-La competència de treball en equip s’ha d’haver demostrat mentre es cursa el mòdul i només es pot recuperar treballant de nou en equip. Si no s’evidencia aquesta competència, no es pot recuperar amb cap altra activitat alternativa i cal fer una nova matrícula.
+<WIOCCL:IF condition="{##anual##}==true">La competència de treball en equip s’ha d’haver demostrat mentre es cursa el mòdul i només es pot recuperar treballant de nou en equip. Si no s’evidencia aquesta competència, no es pot recuperar amb cap altra activitat alternativa i cal fer una nova matrícula.
 
-Les competències relatives a la capacitat clau de treball en equip s'han d'haver demostrat mentre es cursa el mòdul i no es podran recuperar amb cap altra activitat alternativa.
+Les competències relatives a la capacitat clau de treball en equip s'han d'haver demostrat mentre es cursa el mòdul i no es podran recuperar amb cap altra activitat alternativa.</WIOCCL:IF>
 
-La qualificació final del mòdul (QF) es calcularà igualment aplicant la fórmula següent, sempre que s'hagin fet i presentat totes les activitats del mòdul i **s'hagin superat un mínim del 85% de les hores del mòdul**:
+La qualificació final del mòdul (QF) es calcularà igualment aplicant la fórmula següent, sempre que s'hagin fet i presentat totes les activitats del mòdul i **s'hagin superat <WIOCCL:IF condition="{##anual##}==true">un mínim del 85% de les hores del mòdul</WIOCCL:IF>**:
 :###
 
 <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUn##},''ponderació'')_#}">
- **QF = <WIOCCL:FOREACH var="item" array="{##taulaDadesUn##}" counter="ind">lliurament {##item[unitat]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUn##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH>**                            
+ **QF = <WIOCCL:FOREACH var="item" array="{##taulaDadesUn##}" counter="ind"><WIOCCL:IF condition="{##anual##}==true">lliurament</WIOCCL:IF><WIOCCL:IF condition="{##anual##}==false">repte</WIOCCL:IF> {##item[unitat]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##taulaDadesUn##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH>**                            
 </WIOCCL:SET>
 
 ###:
@@ -113,7 +118,7 @@ La qualificació final del mòdul (QF) es calcularà igualment aplicant la fórm
 
 Si l'alumne no ha presentat alguna de les activitats previstes, no tindrà l'opció de superar el mòdul.
 
-En cas de no superar el mòdul, caldrà fer una nova matrícula anual i repetir totes les activitats. No es mantindrà cap nota parcial d'un curs anterior.
+En cas de no superar el mòdul, caldrà fer una nova matrícula<WIOCCL:IF condition="{##anual##}==true"> anual</WIOCCL:IF> i repetir totes les activitats. No es mantindrà cap nota parcial<WIOCCL:IF condition="{##anual##}==true"> d'un curs anterior</WIOCCL:IF>.
 
 ###:
 
@@ -130,7 +135,7 @@ En cas de no superar el mòdul, caldrà fer una nova matrícula anual i repetir 
 
 <WIOCCL:IF condition="''mòdul''=={##tipusBlocModul##}">
 
-Aquest mòdul està distribuït en els lliuraments que es descriuen a continuació:
+Aquest mòdul està distribuït en els <WIOCCL:IF condition="{##anual##}==true">lliurament</WIOCCL:IF><WIOCCL:IF condition="{##anual##}==false">repte</WIOCCL:IF>s que es descriuen a continuació:
 
 ::table:T02
   :title:Temporització
@@ -164,11 +169,13 @@ Les dates clau, que també podeu consultar al calendari de l'aula, són les seg�
 ::table:T05
   :title:Dates clau
   :type:pt_taula
-^  Num  ^  Inici  ^  Lliurament  ^  Qualificació  ^
+^  <WIOCCL:IF condition="{##anual##}==true">Num</WIOCCL:IF>  ^  Inici  ^  Lliurament  ^  Qualificació  ^
 <WIOCCL:SET var="previousEAC" type="literal" value="">
 <WIOCCL:SET var="sortedDatesAC" type="literal" value="{#_ARRAY_SORT({##datesAC##},''lliurament'')_#}">
 <WIOCCL:FOREACH var="itemAC" array="{##sortedDatesAC##}">
-|  {##itemAC[unitat]##}  |  {#_DATE("{##itemAC[enunciat]##}")_#}  |  {#_DATE("{##itemAC[lliurament]##}")_#}  |  {#_DATE("{##itemAC[qualificació]##}")_#}  |
+<WIOCCL:IF condition="{##anual##}==true">|  {##itemAC[unitat]##}  |  {#_DATE("{##itemAC[enunciat]##}")_#}  |  {#_DATE("{##itemAC[lliurament]##}")_#}  |  {#_DATE("{##itemAC[qualificació]##}")_#}  |</WIOCCL:IF>
+<WIOCCL:IF condition="{##anual##}==false">|  repte {##itemAC[unitat]##}  |  {#_DATE("{##itemAC[enunciat]##}")_#}  |  {#_DATE("{##itemAC[lliurament]##}")_#}  |  {#_DATE("{##itemAC[qualificació]##}")_#}  |</WIOCCL:IF>
+
 </WIOCCL:FOREACH>
 </WIOCCL:SET>
 </WIOCCL:SET>
@@ -181,6 +188,7 @@ Les dates clau, que també podeu consultar al calendari de l'aula, són les seg�
 ===== Dates de les recuperacions =====###:
 
 :###
+<WIOCCL:IF condition="{##anual##}==true">
 Les dates de recuperacions són les següents:
 
 ::table:T06
@@ -190,8 +198,17 @@ Les dates de recuperacions són les següents:
 | Semestre 1 |  {#_DATE("{##dataRecuSem1Inici##}")_#}  |  {#_DATE("{##dataRecuSem1Fi##}")_#}  |  {#_DATE("{##dataRecuQualificacioSem1##}")_#}  |
 | Semestre 2 |  {#_DATE("{##dataRecuSem2Inici##}")_#}  |  {#_DATE("{##dataRecuSem2Fi##}")_#}  |  {#_DATE("{##dataRecuQualificacioSem2##}")_#}  |
 :::
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##anual##}==false">
+Les dates de la recuperació són les següents:
 
-
+::table:T06
+  :title:Dates de recuperació
+  :type:pt_taula
+^  Inici  ^  Final  ^  Qualificació  ^
+|  {#_DATE("{##dataRecuSem1Inici##}")_#}  |  {#_DATE("{##dataRecuSem1Fi##}")_#}  |  {#_DATE("{##dataRecuQualificacioSem1##}")_#}  |
+:::
+</WIOCCL:IF>
 ###:
 
 

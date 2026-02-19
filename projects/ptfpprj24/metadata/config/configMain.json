@@ -205,7 +205,7 @@
                             "mandatory": true,
                             "default":""
                         },
-                        "nouCurr": {
+                        "anual": {
                             "type": "boolean",
                             "mandatory": false,
                             "default":false

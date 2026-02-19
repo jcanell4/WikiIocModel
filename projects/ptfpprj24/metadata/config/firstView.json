@@ -51,8 +51,7 @@
             "required": true,
             "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
           }
-        },      
-
+        }, 
         "cicle": {
           "label" : "Nom del cicle (cicle)",
           "n_columns": 6,
@@ -102,7 +101,15 @@
             "title": "indiqueu el codi del mòdul en format MXX. Per exemple: M02"
           }
         },
-       
+        "anual": {
+            "label": "Projecte anual",
+            "n_columns": 3,
+            "group": "dadesBasiques",
+            "type": "checkbox",
+            "props": {
+                "title": "Indiqueu si es anual"
+            }
+        },       
         "modul": {
           "label" : "Nom del mòdul (modul)",
           "n_columns": 8,
