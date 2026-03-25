@@ -1,6 +1,9 @@
 <!doctype html>
 <WIOCCL:SET var="tipusModCred" type="map" value="{##tipusCicle##}" map="{''LOE'':''mòdul'',''LOGSE'':''crèdit''}">
 <WIOCCL:SET var="elTipusTreball" type="map" value="{##tipusTreball##}" map="{''PROJ'':''el projecte'',''TREB'':''el treball'',''MEM'':''la memòria''}">
+<WIOCCL:CONDSET condition="{#_STR_CONTAINS(''/'', ''{##nomPeriode##}'')_#}" var="nomPeriodeSing" type="literal" value="{#_ARRAY_GET_VALUE(0,{#_EXPLODE(''/'',''{##nomPeriode##}'')_#})_#}">
+<WIOCCL:CONDSET condition="{#_STR_CONTAINS(''/'', ''{##nomPeriode##}'')_#}" var="nomPeriodePlur" type="literal" value="{#_ARRAY_GET_VALUE(1,{#_EXPLODE(''/'',''{##nomPeriode##}'')_#})_#}">
+
 <html lang="ca">
 <head>
   <meta charset="utf-8">
@@ -247,7 +250,7 @@
       </tr>
 <WIOCCL:FOREACH  var="itemCal" array="{##calendari##}" counter="cont">
       <tr>
-        <td>{#_UPPERCASE("{##nomPeriode##}", 1)_#} {##itemCal[període]##}</td>
+        <td>{#_UPPERCASE("{##nomPeriodeSing##}", 1)_#} {##itemCal[període]##}</td>
         <td>{#_DATE("{##itemCal[inici]##}")_#}</td>
         <td>{#_DATE("{##itemCal[final]##}")_#}</td>
       </tr>
@@ -393,5 +396,7 @@
 
 </body>
 </html>
+</WIOCCL:CONDSET>
+</WIOCCL:CONDSET>
 </WIOCCL:SET>
 </WIOCCL:SET>

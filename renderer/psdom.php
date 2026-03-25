@@ -99,7 +99,7 @@ class FigureFrame extends StructuredNodeDoc {
     public function getEncodeJson() {
 
         $sanitizedTitle = trim(str_replace("\"", "\\\"", $this->title));
-        $sanitizedFooter = trim(str_replace("\"", "\\\"", $this->footer));
+        $sanitizedFooter = trim(str_replace("\"", "\\\"", $this->footer));    
         $ret = "{\n\"type\":\"".trim($this->type)."\""
                 .",\n\"id\":\"".trim($this->id)."\""
                 .",\n\"title\":\"". $sanitizedTitle ."\""
