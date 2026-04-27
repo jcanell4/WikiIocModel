@@ -1,9 +1,11 @@
 <?php
 if (!defined('DOKU_INC')) die();
 
-class ViewProjectAction extends BasicViewProjectAction{
+class ViewProjectAction extends BasicViewProjectAction
+{
 
-    protected function runAction() {
+    protected function runAction()
+    {
         $projectModel = $this->getModel();
         $isProjectGenerated = $projectModel->isProjectGenerated();
 
@@ -19,13 +21,14 @@ class ViewProjectAction extends BasicViewProjectAction{
             //obtenir la ruta de la configuració per a aquest tipus de projecte
             $projectTypeConfigFile = $projectModel->getProjectTypeConfigFile();
 
-            $cfgProjectModel = $confProjectType."ProjectModel";
+            $cfgProjectModel = $confProjectType . "ProjectModel";
             $configProjectModel = new $cfgProjectModel($this->persistenceEngine);
 
-            $configProjectModel->init([ProjectKeys::KEY_ID              => $projectTypeConfigFile,
-                                       ProjectKeys::KEY_PROJECT_TYPE    => $confProjectType,
-                                       ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET
-                                    ]);
+            $configProjectModel->init([
+                ProjectKeys::KEY_ID              => $projectTypeConfigFile,
+                ProjectKeys::KEY_PROJECT_TYPE    => $confProjectType,
+                ProjectKeys::KEY_METADATA_SUBSET => ProjectKeys::VAL_DEFAULTSUBSET
+            ]);
             //Obtenir les dades de la configuració per a aquest tipus de projecte
             $metaDataConfigProject = $configProjectModel->getCurrentDataProject($metaDataSubSet);
 
@@ -36,19 +39,19 @@ class ViewProjectAction extends BasicViewProjectAction{
                 $dataActual->setTime(0, 0, 0);
 
                 foreach ($arraytaula as $elem) {
-                    if ($elem['key']==="inici_trimestre_1") {
+                    if ($elem['key'] === "inici_trimestre_1") {
                         $inici_1 = $this->_obtenirData($elem['value'], $anyActual);
-                    }else if ($elem['key']==="fi_trimestre_1") {
+                    } else if ($elem['key'] === "fi_trimestre_1") {
                         $fi_1 = $this->_obtenirData($elem['value'], $anyActual);
                     }
-                    if ($elem['key']==="inici_trimestre_2") {
+                    if ($elem['key'] === "inici_trimestre_2") {
                         $inici_2 = $this->_obtenirData($elem['value'], $anyActual);
-                    }else if ($elem['key']==="fi_trimestre_2") {
+                    } else if ($elem['key'] === "fi_trimestre_2") {
                         $fi_2 = $this->_obtenirData($elem['value'], $anyActual);
                     }
-                    if ($elem['key']==="inici_trimestre_3") {
+                    if ($elem['key'] === "inici_trimestre_3") {
                         $inici_3 = $this->_obtenirData($elem['value'], $anyActual);
-                    }else if ($elem['key']==="fi_trimestre_3") {
+                    } else if ($elem['key'] === "fi_trimestre_3") {
                         $fi_3 = $this->_obtenirData($elem['value'], $anyActual);
                     }
                 }
@@ -62,25 +65,26 @@ class ViewProjectAction extends BasicViewProjectAction{
                     $inici_3 = date_sub($inici_3, new DateInterval('P1Y'));
                 }
                 $finestraOberta = $dataActual >= $inici_1 && $dataActual <= $fi_1;
-                if($finestraOberta){
+                if ($finestraOberta) {
                     $inici = $inici_1;
-                    $fi= $fi_1;
-                }else{
+                    $fi = $fi_1;
+                } else {
                     $finestraOberta = $dataActual >= $inici_2 && $dataActual <= $fi_2;
-                    if($finestraOberta){
+                    if ($finestraOberta) {
                         $inici = $inici_2;
-                        $fi= $fi_2;
-                    }else{
+                        $fi = $fi_2;
+                    } else {
                         $finestraOberta = $dataActual >= $inici_3 && $dataActual <= $fi_3;
-                        if($finestraOberta){
+                        if ($finestraOberta) {
                             $inici = $inici_3;
-                            $fi= $fi_3;
+                            $fi = $fi_3;
                         }
                     }
                 }
 
                 if ($finestraOberta) {
                     $updetedDate = $projectModel->getProjectSystemSubSetAttr("updatedDate");
+                    //$interval = (!$updetedDate || $updetedDate < strtotime('2026-04-10 10:43:00'));  // Aparecer si nunca actualizado o antes del 10 de abril 2026 10:43
                     $interval = (!$updetedDate  || $updetedDate < $inici->getTimestamp());
                     $response[AjaxKeys::KEY_ACTIVA_UPDATE_BTN] = ($interval) ? "1" : "0";
                 }
@@ -92,7 +96,8 @@ class ViewProjectAction extends BasicViewProjectAction{
         return $response;
     }
 
-    public function responseProcess() {
+    public function responseProcess()
+    {
         $response = parent::responseProcess();
         $projectModel = $this->getModel();
         $response[AjaxKeys::KEY_FTPSEND_HTML] = $projectModel->get_ftpsend_metadata();
@@ -106,9 +111,9 @@ class ViewProjectAction extends BasicViewProjectAction{
      * @param string $anyActual
      * @return object DateTime
      */
-    private function _obtenirData($diames, $anyActual) {
+    private function _obtenirData($diames, $anyActual)
+    {
         $mesdia = explode("/", $diames);
-        return date_create($anyActual."/".$mesdia[1]."/".$mesdia[0]);
+        return date_create($anyActual . "/" . $mesdia[1] . "/" . $mesdia[0]);
     }
-
 }
