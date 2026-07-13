@@ -11,5 +11,9 @@ class GetProjectAction extends BasicGetUpdatableProjectAction {
         }
         return parent::runAction();
     }
+
+    protected function isUpdatedDate($metaDataSubSet) {
+        return ViewProjectAction::stIsUpdatedDatePtfpprj24($this, $metaDataSubSet);
+    }
     
 }

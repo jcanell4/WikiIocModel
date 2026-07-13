@@ -5,7 +5,7 @@
     "metaDataProjectConfig": [
         {
             "main": {
-                "projectTypeConfigFile": "admconfig:ptfploe"
+                "projectTypeConfigFile": "admconfig:ptfpprj24"
             }
         }        
     ],
@@ -362,7 +362,8 @@
                                               
                         "calendari": {
                             "type": "defCalendari",
-                            "mandatory": true
+                            "mandatory": false,
+                            "default": []
                         },
                         "datesAC": {
                             "type": "defDatesAC",

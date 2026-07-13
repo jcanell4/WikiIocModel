@@ -9,6 +9,7 @@ class ProjectUpdateDataAction extends ViewProjectAction {
 
         $projectModel = $this->getModel();
         $response = $projectModel->getCurrentDataProject();
+        $response["calendari"] = "[]";
 
         $confProjectType = $this->modelManager->getConfigProjectType();
         //obtenir la ruta de la configuració per a aquest tipus de projecte
@@ -27,21 +28,26 @@ class ProjectUpdateDataAction extends ViewProjectAction {
 
         if ($metaDataConfigProject['arraytaula']) {
             $arraytaula = IocCommon::toArrayThroughArrayOrJson($metaDataConfigProject['arraytaula']);
+            $this->applyUpdateMode($arraytaula, $response);
             $restoreData = !$projectModel->getProjectSystemSubSetAttr("updatedDate");
             if($restoreData){
                 //La primera vegada aquests camps no s'actualitzen!
-                $calendari = $response["calendari"];
-                $datesAC = $response["datesAC"];
-                $datesEAF = $response["datesEAF"];
-                $datesJT = $response["datesJT"];
+                $datesAC = array_key_exists("datesAC", $response) ? $response["datesAC"] : NULL;
+                $datesEAF = array_key_exists("datesEAF", $response) ? $response["datesEAF"] : NULL;
+                $datesJT = array_key_exists("datesJT", $response) ? $response["datesJT"] : NULL;
             }
             if(ManagerProjectUpdateProcessor::updateAll($arraytaula, $response)){
                 if($restoreData){
                     //La primera vegada aquests camps no s'actualitzen!
-                    $response["calendari"] = $calendari;
-                    $response["datesAC"] = $datesAC;
-                    $response["datesEAF"] = $datesEAF;
-                    $response["datesJT"] = $datesJT;
+                    if (array_key_exists("datesAC", $response)) {
+                        $response["datesAC"] = $datesAC;
+                    }
+                    if (array_key_exists("datesEAF", $response)) {
+                        $response["datesEAF"] = $datesEAF;
+                    }
+                    if (array_key_exists("datesJT", $response)) {
+                        $response["datesJT"] = $datesJT;
+                    }
                 }
                 $metaData = [
                     ProjectKeys::KEY_ID_RESOURCE => $this->params[ProjectKeys::KEY_ID],
@@ -63,6 +69,69 @@ class ProjectUpdateDataAction extends ViewProjectAction {
         }
 
         return $response;
+    }
+
+    private function applyUpdateMode(&$arraytaula, &$response) {
+        $anual = $this->isTrueValue(array_key_exists("anual", $response) ? $response["anual"] : FALSE);
+        $semestre = array_key_exists("semestre", $response) ? intval($response["semestre"]) : 1;
+
+        $incrementValue = 5;
+        $incrementUnit = "M";
+
+        if ($anual) {
+            $incrementValue = 1;
+            $incrementUnit = "Y";
+        } else if ($semestre === 2) {
+            $incrementValue = 7;
+            $response["semestre"] = "1";
+        } else {
+            $incrementValue = 5;
+            $response["semestre"] = "2";
+        }
+
+        $this->ensureIncrementDatesRule($arraytaula);
+
+        foreach ($arraytaula as &$elem) {
+            if ($elem["key"] === "increment_dates" && $elem["type"] === "arrayIncrement") {
+                $elem["value"] = (string) $incrementValue;
+                $params = IocCommon::toArrayThroughArrayOrJson($elem["parameters"]);
+                $params["unit"] = $incrementUnit;
+                $elem["parameters"] = json_encode($params);
+                break;
+            }
+        }
+    }
+
+    private function ensureIncrementDatesRule(&$arraytaula) {
+        foreach ($arraytaula as $elem) {
+            if ($elem["key"] === "increment_dates" && $elem["type"] === "arrayIncrement") {
+                return;
+            }
+        }
+
+        $arraytaula[] = [
+            "key" => "increment_dates",
+            "type" => "arrayIncrement",
+            "value" => "5",
+            "parameters" => json_encode([
+                "fields" => ["datesAC"],
+                "keysOfArray" => [["enunciat", "lliurament", "qualificació"]],
+                "conditions" => [[]],
+                "type" => "data",
+                "unit" => "M"
+            ])
+        ];
+    }
+
+    private function isTrueValue($value) {
+        if (is_bool($value)) {
+            return $value;
+        }
+        if (is_numeric($value)) {
+            return intval($value) !== 0;
+        }
+        $normalized = strtolower(trim((string) $value));
+        return in_array($normalized, ["1", "true", "yes", "si"]);
     }
 
 }
