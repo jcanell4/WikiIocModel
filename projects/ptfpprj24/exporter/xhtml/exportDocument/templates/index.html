@@ -139,7 +139,7 @@
 <section class="section section6b">
   <div class="own_container">
     <h2>Recuperacions</h2>
-    <p>Si no s'ha superat alguns dels reptes, els alumnes es poden presentar a la recuperació de les activitats no superades, al final de cada semestre. La competència de treball en equip no té opció de recuperació i, si no s'ha superat, cal fer una nova matrícula anual.</p>
+    <p>Si no s'ha superat algun dels reptes, els alumnes es poden presentar a la recuperació de les activitats no superades, al final de cada semestre. La competència de treball en equip no té opció de recuperació i, si no s'ha superat, cal fer una nova matrícula anual.</p>
     <br/>
     <table class="own_table">
       <tr>
@@ -161,7 +161,7 @@
         <td>{#_DATE("{##dataRecuQualificacioSem2##}")_#}</td>
       </tr>
     </table>
-    <p>La qualificació de cada etapa a la recuperació només podrà ser <strong>superat</strong> o <strong>no superat</strong>. Per al càlcul de la qualificació del mòdul, la qualificació de cada etapa superat serà un 5</p>
+    <p>La qualificació de cada repte a la recuperació només podrà ser <strong>superat</strong> o <strong>no superat</strong>. Per al càlcul de la qualificació del mòdul, la qualificació de cada repte superat serà un 5.</p>
   </div>
 </section>
 </WIOCCL:IF>
@@ -170,7 +170,7 @@
 <section class="section section6b">
   <div class="own_container">
     <h2>Recuperacions</h2>
-    <p>Si no s'ha superat alguns dels reptes, els alumnes es poden presentar a la recuperació de les activitats no superades, al final del semestre. </p>
+    <p>Si no s'ha superat algun dels lliuraments, els alumnes es poden presentar a la recuperació de les activitats no superades, al final del semestre. </p>
     <br/>
     <table class="own_table">
       <tr>
@@ -184,7 +184,7 @@
         <td>{#_DATE("{##dataRecuQualificacioSem1##}")_#}</td>
       </tr>
     </table>
-    <p>La qualificació de cada repte a la recuperació només podrà ser <strong>superat</strong> o <strong>no superat</strong>. Per al càlcul de la qualificació del mòdul, la qualificació de cada repte superat serà un 5</p>
+    <p>La qualificació de cada lliurament a la recuperació només podrà ser <strong>superat</strong> o <strong>no superat</strong>. Per al càlcul de la qualificació del mòdul, la qualificació de cada lliurament superat serà un 5.</p>
   </div>
 </section>
 </WIOCCL:IF>
@@ -208,18 +208,28 @@
                           name :"FINAL",
                           percent: 0
                         },
-
+<WIOCCL:IF condition="{##anual##}==true">
     <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUn##},''ponderació'')_#}">
     <WIOCCL:FOREACH var="item" array="{##taulaDadesUn##}">
                            {
-                              title :"Lliur.{##item[unitat]##}",
-                              name :"lliur.{##item[unitat]##}",
+                              title :"repte{##item[unitat]##}",
+                              name :"Repte {##item[unitat]##}",
                               percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}"
                             },
     </WIOCCL:FOREACH>
     </WIOCCL:SET>
-
-
+</WIOCCL:IF>
+<WIOCCL:IF condition="{##anual##}==false">
+    <WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##taulaDadesUn##},''ponderació'')_#}">
+    <WIOCCL:FOREACH var="item" array="{##taulaDadesUn##}">
+                           {
+                              title :"lliurament{##item[unitat]##}",
+                              name :"Lliurament {##item[unitat]##}",
+                              percent: "{#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}"
+                            },
+    </WIOCCL:FOREACH>
+    </WIOCCL:SET>
+</WIOCCL:IF>
       
                       ]
                     ];
