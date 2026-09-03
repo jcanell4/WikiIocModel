@@ -119,7 +119,47 @@
                 "defExtres": {
                     "type": "objectArray",
                     "typeDef":"entradaExtres"
-                },                
+                },    
+
+                "entradaDadesIA": {
+                    "type": "object",
+                    "keys": {
+                        "recurs": {
+                            "type": "string",
+                            "default": "materials",
+                            "mandatory": true
+                        },
+                        "redactar": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "editar": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "illustrar": {
+                            "type": "boolean",
+                            "default": false
+                        },   
+                        "locutar": {
+                            "type": "boolean",
+                            "default": false
+                        },     
+                        "revisar": {
+                            "type": "boolean",
+                            "default": false
+                        },     
+                        "formatar": {
+                            "type": "boolean",
+                            "default": false
+                        }                                                                                                           
+                    }
+                },
+                "defDadesIA": {
+                    "type": "objectArray",
+                    "typeDef":"entradaDadesIA"
+                },      
+
                 "entradaDatesAC": {
                     "type": "object",
                     "keys": {
@@ -157,13 +197,19 @@
                             "type": "date",
                             "default":"{#_TODAY()_#}",
                             "mandatory": true
+                        },
+                        "IA": {
+                            "type": "string",
+                            "default": "no autoritzada",
+                            "mandatory": true
                         }
                     }
                 },
                 "defDatesAC": {
                     "type": "objectArray",
                     "typeDef":"entradaDatesAC"
-                },                                                
+                },       
+
                 "entradaDatesEAF": {
                     "type": "object",
                     "keys": {
@@ -225,6 +271,11 @@
                         "qualificació recuperació": {
                             "type": "date",
                             "default":"{#_TODAY()_#}",
+                            "mandatory": true
+                        },
+                        "IA": {
+                            "type": "string",
+                            "default": "no autoritzada",
                             "mandatory": true
                         }
                     }
@@ -604,6 +655,20 @@
                             "type": "string",
                             "mandatory": true
                         },
+                        "usaIA": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
+                        "dadesIA":  {
+                            "type": "defDadesIA",
+                            "default":[{"recurs":"materials","redactar":"false","editar":"false","illustrar":"false","locutar":"false","revisar":"false","formatar":"false"},
+                                    {"recurs":"activitats","redactar":"false","editar":"false","illustrar":"false","locutar":"false","revisar":"false","formatar":"false"},
+                                    {"recurs":"proves","redactar":"false","editar":"false","illustrar":"false","locutar":"false","revisar":"false","formatar":"false"},
+                                    {"recurs":"rúbriques","redactar":"false","editar":"false","illustrar":"false","locutar":"false","revisar":"false","formatar":"false"}],
+                            "mandatory": true
+                        },
+
                         "itinerarisRecomanats": {
                             "type": "defItinerarisRecomanats",
                             "default":[{"mòdul":"--","itinerariRecomanatS1":"1","itinerariRecomanatS2":"1"}],

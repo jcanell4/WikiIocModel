@@ -201,6 +201,9 @@
             "title": "indiqueu quins són els requeriments de la matrícula d'aquest mòdul o bloc"
           }
         },
+        
+
+
         "descripcio": {
           "n_columns": 12,
           "label" : "Aquest bloc/mòdul ... (descripcio)",
@@ -216,6 +219,115 @@
           },
           "group": "main"
         },
+        "usaIA": {
+            "label": "Utilitza la IA",
+            "n_columns": 5,
+            "group": "main",
+            "type": "checkbox",
+            "props": {
+                "title": "Utilitza la IA en l'elaboració dels recursos"
+            }
+        },
+
+        "dadesIA": {
+          "label":"Fet amb la IA (dadesIA)",
+          "n_columns": 12,
+          "type": "editableObject",
+          "group": "main",
+          "n_rows": 4,
+          "props": {
+            "data-editable-element": "table",
+            "title": "Detalleu què s'ha fet amb la IA en l'elaboració dels recursos"
+          },
+          "config": {
+            "actions": {
+              "add_default_row": "Afegir un nou recurs",
+              "remove_rows": "Eliminar els recursos seleccionats",
+              "add_default_row_before": "Afegir recurs abans de la fila seleccionada"
+            },
+            "fields": {
+              "recurs": {
+                "type": "string"
+              },
+              "redactar": {
+                  "type": "boolean",
+                  "default": "false"
+              },
+              "editar": {
+                  "type": "boolean",
+                  "default": false
+              },
+              "illustrar": {
+                  "type": "boolean",
+                  "default": false
+              },   
+              "locutar": {
+                  "type": "boolean",
+                  "default": false
+              },     
+              "revisar": {
+                  "type": "boolean",
+                  "default": false
+              },     
+              "formatar": {
+                  "type": "boolean",
+                  "default": false
+              }   
+            },
+            "layout": [
+              {
+                "defaultCell": {
+                  "width" : "21%",
+                  "editable": true
+                },
+                "cells": [
+                  {
+                    "name": "recurs",
+                    "field": "recurs",
+                    "width": "5%"
+                  },
+                  {
+                    "name": "redactar",
+                    "field": "redactar",
+                    "width" : "10%",
+                    "editable": true
+                  },
+                  {
+                    "name": "editar",
+                    "field": "editar",
+                    "width" : "10%",
+                    "editable": true
+                  },
+                  {
+                    "name": "illustrar",
+                    "field": "illustrar",
+                    "width" : "10%",
+                    "editable": true
+                  },
+                  {
+                    "name": "locutar",
+                    "field": "locutar",
+                    "width" : "10%",
+                    "editable": true
+                  },
+                  {
+                    "name": "revisar",
+                    "field": "revisar",
+                    "width" : "10%",
+                    "editable": true
+                  },
+                  {
+                    "name": "formatar",
+                    "field": "formatar",
+                    "width" : "10%",
+                    "editable": true
+                  }
+                ]
+              }
+            ]
+          }
+        },
+
         "itinerarisRecomanats": {
           "label": "Taula dels itineraris recomanats (itinerarisRecomanats)",
           "n_columns": 12,
@@ -628,6 +740,11 @@
               },
               "qualificació": {
                 "type": "date"
+              },
+              "IA": {
+                  "type": "select",
+                  "options": ["no autoritzada", "no recomanada", "lliure però declarada", "IA integrada"],
+                  "default": "No en té"
               }
             },
             "layout": [
@@ -666,6 +783,12 @@
                   {
                     "name": "qualificació",
                     "field": "qualificació"
+                  },
+                  {
+                    "name": "IA",
+                    "field": "IA",
+                    "width" : "10%",
+                    "editable": true
                   }
                 ]
               }
@@ -724,6 +847,11 @@
             },
             "qualificació recuperació": {
                 "type": "date"
+            },
+            "IA": {
+                "type": "select",
+                "options": ["no autoritzada", "no recomanada", "lliure però declarada", "IA integrada"],
+                "default": "No en té"
             }
           },
           "layout": [
@@ -782,6 +910,12 @@
                 {
                   "name": "qualificació recuperació",
                   "field": "qualificació recuperació"
+                },
+                {
+                  "name": "IA",
+                  "field": "IA",
+                  "width" : "10%",
+                  "editable": true
                 }
               ]
             }

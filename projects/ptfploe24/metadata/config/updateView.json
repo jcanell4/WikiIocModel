@@ -54,6 +54,12 @@
         "requerimentsMatricula": {
             "type": "hidden"
         },
+        "usaIA": {
+            "type": "hidden"
+        },    
+        "dadesIA": {
+            "type": "hidden"
+        },            
         "descripcio": {
             "type": "hidden"
         },
