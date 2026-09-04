@@ -762,8 +762,8 @@
               },
               "IA": {
                   "type": "select",
-                  "options": ["no autoritzada", "no recomanada", "lliure però declarada", "IA integrada"],
-                  "default": "No en té"
+                  "options": ["no autoritzada", "no recomanada", "lliure però declarada", "integrada"],
+                  "default": "no autoritzada"
               }
             },
             "layout": [
@@ -869,8 +869,8 @@
               },
               "IA": {
                   "type": "select",
-                  "options": ["no autoritzada", "no recomanada", "lliure però declarada", "IA integrada"],
-                  "default": "No en té"
+                  "options": ["no autoritzada", "no recomanada", "lliure però declarada", "integrada"],
+                  "default": "no autoritzada"
               }
             },
             "layout": [
