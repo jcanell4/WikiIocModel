@@ -70,7 +70,7 @@
         "anual": {
             "label": "Mòdul anual",
             "n_columns": 6,
-            "group": "main",
+            "group": "dadesBasiques",
             "type": "checkbox",
             "props": {
                 "title": "Indiqueu si es anual"

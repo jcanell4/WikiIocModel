@@ -41,7 +41,44 @@ class upgrader_45 extends ProgramacionsCommonUpgrader
                 break;
 
             case "templates":
-                $ret = true;
+                if (FALSE) {
+                    if (!$this->upgradeDocumentVersion($ver)) return false;
+                }
+
+                //Transforma el archivo continguts.txt del proyecto desde la versión $ver a la versión $ver+1
+                if ($filename === NULL)
+                    $filename = $this->model->getProjectDocumentName();
+                $doc = $this->model->getRawProjectDocument($filename);
+
+                //upg45
+                /*
+                substringFromLineToLineAsPattern donats uns continguts.txt.v? crea un patro a partir del que recupera de la linia inicial - segon parametre- a la linia final -tercer parametre- i crea un patro
+                substringFromLineToLine fa el mateix, sense crear el patró
+                 * Aplico les diferències que trobo. I les aplico al txt_v45. Es seleccionen blocs no editables.
+                 *  */
+                $txt_v44 = $this->model->getRawProjectTemplate("continguts", 44);
+                $txt_v45 = $this->model->getRawProjectTemplate("continguts", 45);
+
+                $l180_l182_v44 = $this->substringFromLineToLineAsPattern($txt_v44, 180, 182); //el que busca
+                $l180_l182_v45 = $this->substringFromLineToLine($txt_v45, 180, 182); //on ho substitueix
+
+                $l284_l292_v44 = $this->substringFromLineToLineAsPattern($txt_v44, 284, 292); //el que busca
+                $l284_l300_v45 = $this->substringFromLineToLine($txt_v45, 284, 300); //on ho substitueix
+
+                $l762_l772_v44 = $this->substringFromLineToLineAsPattern($txt_v44, 762, 772); //el que busca
+                $l770_l803_v45 = $this->substringFromLineToLine($txt_v45, 770, 803); //on ho substitueix
+
+                $aTokRep = [
+                    [$l180_l182_v44, $l180_l182_v45],
+                    [$l284_l292_v44, $l284_l300_v45],
+                    [$l762_l772_v44, $l770_l803_v45]
+                ];
+
+                $dataChanged = $this->updateTemplateByReplace($doc, $aTokRep);
+
+                if (($ret = !empty($dataChanged))) {
+                    $this->model->setRawProjectDocument("$filename", $dataChanged, "Upgrade templates: version " . ($ver - 1) . " to $ver", $ver);
+                }
                 break;
         }
         return $ret;
