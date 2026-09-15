@@ -91,6 +91,15 @@
             "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
           }
         },
+        "anual": {
+            "label": "Mòdul anual",
+            "n_columns": 6,
+            "group": "main",
+            "type": "checkbox",
+            "props": {
+                "title": "Indiqueu si es anual"
+            }
+        },
         "cicle": {
           "label" : "Nom del cicle (cicle)",
           "n_columns": 8,
@@ -1100,6 +1109,42 @@
             "title": "Indiqueu la data en que es realitzarà la PAF 2"
           }
         },
+        "dataPaf11_sem2": {
+          "label": "Data de la PAF 1 sem2 (dataPaf11_sem2)",
+          "n_columns":6,
+          "group": "actualitzables",
+          "props": {
+            "required": true,
+            "title": "Indiqueu la data en que es realitzarà la PAF 1 - Semstre 2"
+          }
+        },
+        "dataQualificacioPaf1_sem2": {
+          "label": "Data de la qualificació de la PAF 1 - semestre 2 (dataQualificacioPaf1_sem2)",
+          "n_columns":6,
+          "group": "actualitzables",
+          "props": {
+            "required": true,
+            "title": "Indiqueu la data en que es realitzarà la PAF 1 - semestre 2"
+          }
+        },         
+        "dataPaf21_sem2": {
+          "label": "Data de la PAF 2 dissabte (dataPaf21_sem2)",
+          "n_columns":6,
+          "group": "actualitzables",
+          "props": {
+            "required": true,
+            "title": "Indiqueu la data en que es realitzarà la PAF 2 - Semstre 2"
+          }
+        },
+        "dataQualificacioPaf2_sem2": {
+          "label": "Data de la qualificació de la PAF 2 (dataQualificacioPaf2_sem2)",
+          "n_columns":6,
+          "group": "actualitzables",
+          "props": {
+            "required": true,
+            "title": "Indiqueu la data en que es realitzarà la PAF 2 - semestre 2"
+          }
+        },        
         "duradaPAF": {
           "label": "Durada de la PAF (duradaPAF)",
           "n_columns":12,

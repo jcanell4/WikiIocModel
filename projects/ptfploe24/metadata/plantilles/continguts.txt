@@ -73,6 +73,58 @@ Els resultats d’aprenentatge que s’avaluen en aquest <WIOCCL:IF condition="'
 </WIOCCL:FOREACH>
 :::
 
+:###====== Ús de la intel·ligència artificial ======###:
+:###
+
+<WIOCCL:IF condition="{##usaIA##}!==true"> 
+Per a l'elaboració dels recursos d'aquest curs no s'ha utilitzat la IA.
+</WIOCCL:IF>
+###:
+:###
+<WIOCCL:IF condition="{##usaIA##}===true"> 
+Per a l'elaboració dels recursos d'aquest curs s'ha utilitzat la IA per:
+<WIOCCL:FOREACH var="itemIA" array="{##dadesIA##}">
+<WIOCCL:SET var="pendent" type="literal" value="-1">
+<WIOCCL:SET var="primer" type="literal" value="1">
+  * {##itemIA[recurs]##}: <WIOCCL:IF condition="{##itemIA[redactar]##}==true"><WIOCCL:IF condition="{##pendent##}!=-1"><WIOCCL:IF condition="{##primer##}==0">, </WIOCCL:IF>{##pendent##}<WIOCCL:RESET var="primer" type="literal" value="0"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:RESET var="pendent" type="literal" value="redactar"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:IF condition="{##itemIA[editar]##}==true"><WIOCCL:IF condition="{##pendent##}!=-1"><WIOCCL:IF condition="{##primer##}==0">, </WIOCCL:IF>{##pendent##}<WIOCCL:RESET var="primer" type="literal" value="0"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:RESET var="pendent" type="literal" value="editar"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:IF condition="{##itemIA[illustrar]##}==true"><WIOCCL:IF condition="{##pendent##}!=-1"><WIOCCL:IF condition="{##primer##}==0">, </WIOCCL:IF>{##pendent##}<WIOCCL:RESET var="primer" type="literal" value="0"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:RESET var="pendent" type="literal" value="il·lustrar"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:IF condition="{##itemIA[locutar]##}==true"><WIOCCL:IF condition="{##pendent##}!=-1"><WIOCCL:IF condition="{##primer##}==0">, </WIOCCL:IF>{##pendent##}<WIOCCL:RESET var="primer" type="literal" value="0"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:RESET var="pendent" type="literal" value="locutar"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:IF condition="{##itemIA[revisar]##}==true"><WIOCCL:IF condition="{##pendent##}!=-1"><WIOCCL:IF condition="{##primer##}==0">, </WIOCCL:IF>{##pendent##}<WIOCCL:RESET var="primer" type="literal" value="0"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:RESET var="pendent" type="literal" value="revisar"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:IF condition="{##itemIA[formatar]##}==true"><WIOCCL:IF condition="{##pendent##}!=-1"><WIOCCL:IF condition="{##primer##}==0">, </WIOCCL:IF>{##pendent##}<WIOCCL:RESET var="primer" type="literal" value="0"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:RESET var="pendent" type="literal" value="formatar"></WIOCCL:RESET></WIOCCL:IF><WIOCCL:IF condition="{##pendent##}!=-1"><WIOCCL:IF condition="{##primer##}==0"> i </WIOCCL:IF>{##pendent##}</WIOCCL:IF><WIOCCL:IF condition="{##pendent##}==-1">res</WIOCCL:IF> 
+</WIOCCL:SET>
+</WIOCCL:SET>
+</WIOCCL:FOREACH>
+</WIOCCL:IF>
+
+L'alumnat, a l'hora de fer les activitats, heu de tenir en compte les indicacions de la Guia d’ús de la IA per als estudiants de l’IOC que trobareu al campus. 
+
+Les possibilitats d'ús de la IA en les activitats d'avaulació d'aquest mòdul són: 
+
+<WIOCCL:SET var="sortedDatesAC" type="literal" value="{#_ARRAY_SORT({##datesAC##},''lliurament'')_#}">
+<WIOCCL:FOREACH var="itemAC" array="{##sortedDatesAC##}" counter="idx" counterFromZero="true">
+<WIOCCL:SET var="valorIA" type="literal" value="{#_ARRAY_GET_VALUE(''IA'',{#_ARRAY_GET_VALUE(''{##idx##}'',{##sortedDatesAC##},[])_#},false)_#}">
+  * {##itemAC[id]##}: IA <WIOCCL:IF condition="{##valorIA##}===false">no autoritzada.</WIOCCL:IF><WIOCCL:IF condition="{##valorIA##}!==false">{##valorIA##}</WIOCCL:IF> 
+</WIOCCL:SET>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+
+<WIOCCL:SET var="sortedDatesEAF" type="literal" value="{#_ARRAY_SORT({##datesEAF##},''lliurament'')_#}">
+<WIOCCL:FOREACH var="itemEAF" array="{##sortedDatesEAF##}" counter="idx" counterFromZero="true">
+<WIOCCL:SET var="valorIA" type="literal" value="{#_ARRAY_GET_VALUE(''IA'',{#_ARRAY_GET_VALUE(''{##idx##}'',{##sortedDatesEAF##},[])_#},false)_#}">
+  * {##itemEAF[id]##}: IA <WIOCCL:IF condition="{##valorIA##}===false">no autoritzada.</WIOCCL:IF><WIOCCL:IF condition="{##valorIA##}!==false">{##valorIA##}</WIOCCL:IF> 
+</WIOCCL:SET>
+</WIOCCL:FOREACH>
+</WIOCCL:SET>
+
+L'ús inadequat de la IA pot suposar l'incompliment dels compromisos d'honestedat acadèmica i la qualificació dels lliuraments afectats amb un 0. En cas de dubte, heu de consultar al professor de l'aula abans de lliurar l'activitat.
+ 
+Llegenda:
+
+  * IA no autoritzada: no està permès utilitzar eines d'IA. Tot el treball ha de ser elaborat íntegrament per l'estudiant.
+  * IA no recomanada: no es recomana l'ús de la IA, perquè no permet assolir els objectius.
+  * IA lliure però declarada: es pot utilitzar la IA indicant l'ús que se'n fa i revisant críticament els resultats obtinguts.
+  * IA integrada: es proposa utilitzar la IA amb les pautes específiques indicades pel professorat.
+
+
+
+
+###:
 :###====== Avaluació ======###:
 L'avaluació del mòdul es porta a terme mitjançant les activitats d'avaluació contínua i les eines d'avaluació final que es detallen a continuació.
 :###
@@ -113,12 +165,12 @@ Les activitats de l'avaluació contínua inclouen la publicació d'una solució,
 
 La qualificació de l’AC s’obté a partir de la fórmula següent:
 
-<WIOCCL:SUBSET subsetvar="subtaulaAC" array="{##dadesQualificacioUns##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''AC''">
-<WIOCCL:SET var="sum_ponderacio" type="literal" value="{#_ARRAY_GET_SUM({##subtaulaAC##},''ponderació'')_#}">
- **AC = <WIOCCL:FOREACH var="item" array="{##subtaulaAC##}" counter="ind">{##item[abreviació qualificació]##} * {#_GET_PERCENT({##sum_ponderacio##}, {##item[ponderació]##})_#}% <WIOCCL:IF condition="{##ind##}\<{#_SUBS({#_ARRAY_LENGTH({##subtaulaAC##})_#},1)_#}"> + </WIOCCL:IF></WIOCCL:FOREACH>**                            
-</WIOCCL:SET>
-</WIOCCL:SUBSET>
-
+<WIOCCL:SUBSET subsetvar="subtaulaAC" array="{##dadesQualificacioUns##}" arrayitem="itemsub" filter="{##itemsub[tipus qualificació]##}==''AC''"><WIOCCL:SET var="sum_total" value="0">
+<WIOCCL:FOREACH var="t" array="{##subtaulaAC##}"><WIOCCL:SET var="sum_total" value="{#_SUMA({##sum_total##},{##t[ponderació]##})_#}"></WIOCCL:SET></WIOCCL:FOREACH>
+<WIOCCL:SET var="seen_list" value="|"><WIOCCL:SET var="first_item" value="true">
+ **AC = <WIOCCL:FOREACH var="item" array="{##subtaulaAC##}"><WIOCCL:SET var="search_term" value="{##item[abreviació qualificació]##}"><WIOCCL:SET var="es_repetit" value="{#_STR_CONTAINS(''{##search_term##}'',''{##seen_list##}'')_#}"><WIOCCL:IF condition="{##es_repetit##}==''false''"><WIOCCL:IF condition="{##first_item##}==''false''"> + </WIOCCL:IF><WIOCCL:SET var="first_item" value="false"><WIOCCL:SET var="local_sum" value="0"><WIOCCL:SUBSET subsetvar="subtaulaLocal" array="{##subtaulaAC##}" arrayitem="row" filter="{##row[abreviació qualificació]##}==''{##item[abreviació qualificació]##}''"><WIOCCL:FOREACH var="match" array="{##subtaulaLocal##}"><WIOCCL:SET var="local_sum" value="{#_SUMA({##local_sum##},{##match[ponderació]##})_#}"></WIOCCL:SET></WIOCCL:FOREACH></WIOCCL:SUBSET>{##item[abreviació qualificació]##} * {#_GET_PERCENT({##sum_total##},{##local_sum##})_#}%<WIOCCL:SET var="seen_list" value="{##seen_list##}{##item[abreviació qualificació]##}"> 
+</WIOCCL:SET></WIOCCL:SET></WIOCCL:SET></WIOCCL:IF></WIOCCL:SET></WIOCCL:SET></WIOCCL:FOREACH></WIOCCL:SET></WIOCCL:SET> </WIOCCL:SET> </WIOCCL:SUBSET>
+**
 
 Cal tenir en compte que:
   * La qualificació de l’AC forma part de la **qualificació final** .
@@ -159,6 +211,7 @@ En els exercicis d'avaluació final (EAF) es proposa una activitat relacionada a
   * Poden ser individuals o grupals.
   * S'avaluen numèricament del 0 al 10, amb dos decimals i la qualificació forma part de la qualificació final. 
   * Per poder tenir en compte la qualificació de l'EAF en el càlcul de la qualificació final, s’ha d’aconseguir una qualificació **mínima de {##notaMinimaPAF##},00 sense cap  arrodoniment** a la PAF.###:
+  * S'ha d’obtenir una qualificació mínima de {##notaMinimaEAF##},00 a l'EAF per superar-lo. 
 
 [##TODO: Definiu i determineu les característiques del treball en equip, si és el cas.##]
 
@@ -194,6 +247,7 @@ Les jornades tècniques tenen l'objectiu de consolidar els coneixements pràctic
   * Es fan al llarg del semestre (consulteu les taules :table:T08: i :table:T09:). 
   * S'avaluen numèricament del 0 al 10, amb dos decimals i la qualificació forma part de la qualificació final. 
   * Per poder tenir en compte la qualificació de la JT en el càlcul de la qualificació final, s’ha d’aconseguir una qualificació **mínima de {##notaMinimaPAF##},00 sense cap  arrodoniment** a la PAF.
+  * S'ha d’obtenir una qualificació mínima de {##notaMinimaJT##},00 a la JT per superar-la. 
 
 Per poder assistir a la JT és imprescindible apuntar-se a l'espai indicat pel professor dins dels terminis establerts.
 ###:

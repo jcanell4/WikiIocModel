@@ -799,6 +799,13 @@ hr {
 
 }
 
+/* Quan el panell només conté una PAF, els marges automàtics
+   tenen prioritat sobre justify-content i la centren */
+.section7 .panell_pafs > div:only-child {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .section7_icona {
   background-size: contain;
   background-repeat: no-repeat;
@@ -807,16 +814,19 @@ hr {
   margin: 0 auto 10px auto;
 }
 
-#paf-1-icona {
+#paf-1-icona,
+.paf-1-icona {
   background-image: url("img/paf-1-icona.svg");
 }
 
-#paf-2-icona {
+#paf-2-icona,
+.paf-2-icona {
   background-image: url("img/paf-2-icona.svg");
 }
 
 .section7 .panell_pafs p {
   font-size: 14px;
+  text-align: center;
 }
 
 .section7 h3 {

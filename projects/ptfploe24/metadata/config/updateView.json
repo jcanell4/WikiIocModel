@@ -24,6 +24,9 @@
         "moodleCourseId": {
             "type": "hidden"
         },
+        "anual": {
+            "type": "hidden"
+        },
         "cicle": {
             "type": "hidden"
         },
@@ -123,6 +126,18 @@
         "dataQualificacioPaf2": {
             "type": "hidden"
         },
+        "dataPaf11_sem2": {
+          "type" : "hidden"
+        },
+        "dataQualificacioPaf1_sem2": {
+          "type" : "hidden"
+        },         
+        "dataPaf21_sem2": {
+          "type" : "hidden"
+        },
+        "dataQualificacioPaf2_sem2": {
+          "type" : "hidden"
+        },         
         "duradaPAF": {
             "type": "hidden"
         },

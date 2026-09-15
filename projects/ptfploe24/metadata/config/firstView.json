@@ -66,7 +66,16 @@
             "required": true,
             "title": "Indiqueu el valor de l'identificador del curs de moodle al que pertany aquest pla de treball. Si no hi poseu un valor correcte no es pujaran les dades al calendari."
           }
-        },      
+        },   
+        "anual": {
+            "label": "Mòdul anual",
+            "n_columns": 6,
+            "group": "main",
+            "type": "checkbox",
+            "props": {
+                "title": "Indiqueu si es anual"
+            }
+        },   
         "nsProgramacio": {
             "type": "amd",
             "label": "Programació importada (nsProgramacio)",
@@ -1271,6 +1280,18 @@
         "dataQualificacioPaf2": {
           "type" : "hidden"
         },
+        "dataPaf11_sem2": {
+          "type" : "hidden"
+        },
+        "dataQualificacioPaf1_sem2": {
+          "type" : "hidden"
+        },         
+        "dataPaf21_sem2": {
+          "type" : "hidden"
+        },
+        "dataQualificacioPaf2_sem2": {
+          "type" : "hidden"
+        },          
         "hiHaRecuperacioPerJT":{
           "type" : "hidden"
         },

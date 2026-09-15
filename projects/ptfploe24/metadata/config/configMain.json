@@ -25,7 +25,7 @@
             "main": "meta.mdpr",
             "viewfiles": {"defaultView": "defaultView", "updateView" : "updateView", "firstView": "firstView"},
             "versions": {
-                "fields": 13,
+                "fields": 45,
                 "templates": {"continguts": 44}
             },
             "mainType": {
@@ -550,6 +550,11 @@
                             "mandatory": false,
                             "default":60
                         },
+                        "anual": {
+                            "type": "boolean",
+                            "mandatory": false,
+                            "default":false
+                        },
                         "semestre": {
                             "type": "number",
                             "mandatory": true,
@@ -884,7 +889,17 @@
                         "dataPaf22": {
                             "type": "date",
                             "default":""
-                        },                                                
+                        },   
+                        "dataPaf11_sem2": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"01/01/2000"
+                        }, 
+                        "dataPaf21_sem2": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"01/01/2000"
+                        },                                                                                              
                         "dataQualificacioPaf1": {
                             "type": "date",
                             "mandatory": true,
@@ -894,7 +909,17 @@
                             "type": "date",
                             "mandatory": true,
                             "default":"01/01/2000"
+                        },      
+                        "dataQualificacioPaf1_sem2": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"01/01/2000"
                         },                                                
+                        "dataQualificacioPaf2_sem2": {
+                            "type": "date",
+                            "mandatory": true,
+                            "default":"01/01/2000"
+                        },                                                                    
                         "notaMinimaPAF": {
                             "type": "number",
                             "mandatory": true,
