@@ -62,7 +62,13 @@
           }
         },
         "duradaCicle": {
-            "type": "hidden"
+          "label" : "Durada del Cicle(duradaCicle)",
+          "n_columns": 4,
+          "group": "dadesBasiques",
+          "props": {
+            "required": true,
+            "title": "Indiqueu la durada del cicle en hores"
+          }
         },
         "nsProgramacio": {
             "type": "amd",
